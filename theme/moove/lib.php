@@ -454,7 +454,7 @@ function theme_moove_buildnavnewsvnr(\flat_navigation $flatnav) {
 
 
     $coursesectionsoptions = [
-        'text' => 'NewsVnR',
+        'text' => get_string('learningplan','local_newsvnr'),
         'shorttext' => 'NewsVnR',
         'icon' => new pix_icon('t/viewdetails', ''),
         'type' => \navigation_node::TYPE_SYSTEM,

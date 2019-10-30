@@ -163,7 +163,7 @@
 									    </div>
 
 										<div class="form-group">
-									      <label class="control-label col-sm-2" for="email">{{#str}}Visible,local_newsvnr{{/str}}:</label>
+									      <label class="control-label col-sm-2" for="email">{{#str}}visible,local_newsvnr{{/str}}:</label>
 									      <div class="col-sm-3">
 									       		<select class="form-control" id="visible">
 									       			<option value="1">1</option>
@@ -328,3 +328,14 @@
 
 
 </script>
+{{#js}}
+require(['jquery'], function($) {
+   
+     $('[data-toggle="tab"]').click(function(){
+        setTimeout(function(){
+                $('#page').find('.dataTable[role="grid"][aria-describedby]').DataTable().columns.adjust().draw();
+        },500);
+       
+    });
+});
+{{/js}}
