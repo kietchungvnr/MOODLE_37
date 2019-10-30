@@ -1,0 +1,52 @@
+{{#active}}
+<header id="page-header" class="row">
+    <div class="col-12 pt-1 pb-1">
+        <div class="card {{^contextheader}}border-0 bg-transparent{{/contextheader}}">
+            <div class="card-body {{^contextheader}}p-2{{/contextheader}}">
+                <div class="d-flex">
+                    {{#contextheader}}
+                    <div class="mr-auto">
+                        {{{contextheader}}}
+                    </div>
+                    {{/contextheader}}
+
+                    {{#settingsmenu}}
+                    <div id="setting-context">
+                        <div class="context-header-settings-menu" style="z-index: 100000;">
+                            {{{settingsmenu}}}
+                        </div>
+                    </div>
+                    {{/settingsmenu}}
+                </div>
+                <div class="d-flex flex-wrap">
+
+                    {{#hasnavbar}}
+                    <div id="page-navbar">
+                        {{{navbar}}}
+                    </div>
+                    {{/hasnavbar}}
+                    <div class="ml-auto d-flex">
+                        {{{pageheadingbutton}}}
+                    </div>
+                    <div id="course-header">
+                        {{{courseheader}}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{{/active}}
+{{^active}}
+
+
+    {{#settingsmenu}}
+    <div id="setting-context">
+        <div class="context-header-settings-menu">
+            {{{settingsmenu}}}
+        </div>
+    </div>
+    {{/settingsmenu}}
+
+
+{{/active}}

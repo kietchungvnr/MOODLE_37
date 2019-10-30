@@ -99,6 +99,8 @@ $STD_FIELDS = array('id', 'username', 'email',
         'deleted',     // 1 means delete user
         'mnethostid',  // Can not be used for adding, updating or deleting of users - only for enrolments, groups, cohorts and suspending.
         'interests',
+        'orgpositionid', // Custom by Vũ: Thêm filed
+        'usercode', // Custom by Vũ: Thêm filed
     );
 // Include all name fields.
 $STD_FIELDS = array_merge($STD_FIELDS, get_all_user_name_fields());

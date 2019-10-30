@@ -1,0 +1,378 @@
+
+
+<div class="containter api">
+	<div class="col-md-12">
+		<h2 >Setting API</h2>
+	</div>
+
+	<div class="col-md-12 main">
+			<h3>Request</h3>
+
+			<div class="col-md-12">
+				<form class="form">
+					<div class="col-md-12 form-inline">
+						<div class="col-md-4 form-group" style="float: left;">
+					      <label class="control-label col-sm-6" >Method:</label>
+					        
+					        <select class="form-control" id="method">
+						        <option value="post">POST</option>
+						        <option value="get">GET</option>
+						        <option value="delete">DELETE</option>
+
+						     </select>
+					  
+					    </div>
+
+					    <div class="col-md-8 form-group" style="display: inline-block; ">
+					      <label class="control-label col-sm-6" >URL:</label>
+					           
+					        <input id="URL" type="text" class="form-control" placeholder="">
+							
+							 <span class=" error-url"></span>		
+
+					    </div>
+					</div>
+
+
+					<div class="col-md-12 form-inline">
+
+					    <div class="col-md-4 form-group" style="display: inline-block; ">
+					    	
+					    	 <label class="control-label col-sm-6" >Function:</label>
+					           
+					        <input id="function_api" type="text" class="form-control" placeholder="">
+							
+							 <span class=" error-function"></span>	
+					
+					    </div>
+					</div>			 
+			 
+
+				</form>
+			</div>
+
+			<div class="col-md-12">
+
+				<div class="block">
+					<h4>Header</h4>
+
+					<form class="form">
+
+						<div class="col-md-12  form-inline">
+
+						    <div class="col-md-4 form-group" style="display: inline-block; ">
+						         
+						         <label class="control-label col-sm-6" >Content-type</label>	
+
+						         <select class="form-control" id="contenttype">
+									<option value="" selected="selected"></option>
+							        <option value="application/json" >application/json</option>
+							        <option value="application/xml">application/xml</option>
+							        <option value="form-data">form-data</option>
+									
+							     </select>
+						  
+						    </div>
+						</div>
+
+						<div class="add-header">
+							<div class="col-md-12 form-inline">
+								<div class="col-md-4 form-group" >
+							         
+									<label class="control-label col-sm-6" > Header name</label>	
+
+							        <select class="form-control" name="header-name" >						        	
+							        	<option value="" selected="selected"></option>
+								        <option value="Cookie" >Cookie</option>
+								        <option value="Date" >Date</option>
+								        <option value="Authorization" >Authorization</option>
+								        <option value="Cache-Control" >Cache-Control</option>
+								        <option value="Host" >Host</option>
+								        <option value="Range" >Range</option>
+								     </select>
+							 
+							    </div>
+
+							    <div class="col-md-4 form-group" >
+							     	
+							     	<label class="control-label col-sm-6" > Header value</label>		
+
+							        <input id="header-value"  name="header-value" type="text" class="form-control" placeholder="Header value" />
+									
+									<span class="error-header" ></span>	
+
+							    </div>
+
+							</div>
+						</div>
+
+					    <div class="col-md-12  form-inline">
+					    	<div class="col-md-4 form-group">
+					    		<input type="button" value="Add form header" class="btn btn-primary" id="add-header" /> 
+					    	</div>
+					    </div>
+
+					</form>
+				</div>
+
+				<div class="block">
+					<h4>Body</h4>
+
+					<form class="form">
+						<div class="add-param">
+							<div class="col-md-12 form-inline" style="margin-bottom: 0;">		    		
+								<div class="col-md-4 form-group">
+					    			<h5>Client Paramater</h5>
+					    		</div>
+
+					    		<div class="col-md-4 form-group">
+					    			<h5>Server Paramater</h5>
+					    		</div>
+
+					    		<div class="col-md-3 form-group">
+					    			<h5>Default Value</h5>
+					    		</div>
+	
+							</div>
+						</div>
+					    <div class="add-body">
+							<div class="col-md-12 form-inline">		    		
+								<div class="col-md-4 form-group">
+					    		  <input type="text" class="form-control"  name="client_param"  placeholder="Paramater name" >
+					    		
+					    		</div>
+
+					    		<div class="col-md-4 form-group">
+					    			<input type="text" class="form-control" name="server_param"  placeholder="Paramater name" name="">
+					    		</div>
+						    	
+						    	<div class="col-md-3 form-group">
+									<input type="text" class="form-control" name="default_value"  placeholder="Default value" >
+						    	</div>		
+							</div>
+					    </div>
+
+					    <div class="col-md-12  form-inline">
+					    	<div class="col-md-4 form-group">
+					    		<input type="button" value="Add form paramater" class="btn btn-primary" id="add-body" /> 
+					    	</div>
+					    	<div class="col-md-4 form-group">
+					    		<input type="button" value="Create" class="btn btn-primary" id="create" >
+					    	</div>
+					    </div>
+
+					</form>
+
+
+				</div>
+
+			</div>
+	</div>
+</div>
+
+
+<script>
+
+	
+	$(document).ready(function(){	
+
+
+		$('#create').click(function(){
+
+			var method = $('#method').val();
+			var URL = $('#URL').val();
+			var function_api = $('#function_api').val();
+			var contenttype = $('#contenttype').val();
+
+
+			// CHECK VALIDATION
+			errorArr  = new Array();
+
+			if(URL == '')
+			{
+				$('.api .main .error-url').addClass('fa fa-times')
+				errorArr.push({'error-url': true});
+			}
+			else{
+				$('.api .main .error-url').removeClass('fa fa-times')
+			}
+
+			if(function_api == '')
+			{
+				$('.api .main .error-function').addClass('fa fa-times')
+				errorArr.push({'error-function': true})
+			}
+			else{
+				$('.api .main .error-function').removeClass('fa fa-times')
+
+			}
+
+			// HEADER
+			var headerNameArr = new Array()
+			var headerValueArr = new Array()
+
+			var header_name = $('select[name=header-name]')
+			var header_value = $('input[name=header-value]')
+
+			header_name.each(function(i) {
+				if(this.value != '')
+				{
+					headerNameArr.push({key: i, value: this.value})
+					$(this).removeClass('error-header-name')
+				}
+				else{
+					$(this).addClass('error-header-name')
+				}
+			});
+
+			header_value.each(function(i) {
+				if(this.value != '')
+				{
+					headerValueArr.push({key: i, value: this.value})
+					$(this).siblings('span').removeClass('fa fa-times')
+				}
+				else{
+					$(this).siblings('span').addClass('fa fa-times')
+					errorArr.push({'error-header': true})
+				}
+			});
+
+
+			// BODY
+			var clientArr =  new Array()
+			var serverArr = new Array()
+			var defaultArr = new Array()
+
+			var client_param = $('input[name=client_param]')
+			var server_param = $('input[name=server_param]')
+			var default_value = $('input[name=default_value]')
+
+			
+			$(client_param).each(function(i){
+			
+				clientArr.push({key: i, value: this.value})
+				
+			});
+
+			$(server_param).each(function(i){
+
+
+				serverArr.push({key: i, value: this.value})
+				
+			});
+
+			$(default_value).each(function(i){
+
+				defaultArr.push({key: i, value: this.value})
+				
+			});
+
+
+			// CALL API
+			if(errorArr.length > 0 || (headerNameArr.length != headerValueArr.length) )
+			{
+				console.log('Create fail');
+			}		
+			else{
+				var getURL =  window.origin + '/local/newsvnr/ajax.php';
+
+				$.ajax({
+					method: 'POST',
+					url: getURL,
+					data:{
+						action: 'api_created',
+						function_api: function_api,
+						method: method,
+						URL: URL,
+						contenttype:contenttype,
+						headerNameArr: headerNameArr,
+						headerValueArr: headerValueArr,
+						clientArr: clientArr,
+						serverArr: serverArr,
+						defaultArr: defaultArr
+					},
+					success: function(result){
+
+						alert(result);
+
+						$('.form').each(function(){
+						    this.reset();
+						});
+
+					}
+
+				});
+			}
+		});
+
+	});
+
+
+
+	
+
+	var numrowBody = 0;
+	var numrowHeader = 0;
+	$('#add-header').click(function(){
+		numrowHeader++;
+		var form = '<div class="col-md-12 form-inline">' +
+								'<div class="col-md-4 form-group" >'	+					          
+							        '<select class="form-control" name="header-name" >'    +
+							        	'<option selected="selected"></option>' +
+								        '<option>Cookie</option>' +
+								        '<option>Date</option>' +
+								        '<option>Authorization</option>' +
+								        '<option>Cache-Control</option>' +
+								        '<option>Host</option>' +
+								        '<option>Range</option>'  +
+								     '</select>' +							 
+							    '</div>' +
+							    '<div class="col-md-4 form-group" >' +	 				     
+							        '<input type="text" class="form-control" name="header-value"  placeholder="Header value" />		<span class=" error-header" style="top: 30%;"></span>'	 +	
+							    '</div>' +
+							    '<div class="col-md-1 form-group">' +
+					    		'<a href="javascript:void(0)" onclick="delete_header_form('+ numrowHeader +')" class="del-form-header'+ numrowHeader +'" >Xóa</a>' +
+					    		'</div>' +
+							'</div>';				    	
+
+		$('.add-header').append(form);
+
+	});
+
+	$('#add-body').click(function(){
+		numrowBody++;
+		var form = '<div class="col-md-12 form-inline"><div class="col-md-4 form-group">' +
+				    			'<input type="text" class="form-control" name="client_param"  placeholder="Paramater name" >' +
+				    		'</div>' +
+				    		'<div class="col-md-4 form-group">' +
+				    			'<input type="text" class="form-control" name="server_param" placeholder="Paramater name" name="">' +
+				    		'</div>' + 	
+					    		'<div class="col-md-3 form-group">' +
+								'<input type="text" class="form-control" name="default_value"  placeholder="Default value" >' +
+							    '</div>' +			    	
+					    	'<div class="col-md-1 form-group">' +
+					    		'<a href="javascript:void(0)" onclick="delete_body_form('+ numrowBody +')" class="del-form-body'+ numrowBody +'" >Xóa</a>' +
+					    	'</div></div>';				    	
+
+		$('.add-body').append(form);
+	});
+
+	function delete_header_form(id){
+
+		$('.del-form-header'+id).closest('.form-inline').fadeOut(300, function(){
+             $(this).remove();
+        });
+
+	}
+
+
+	function delete_body_form(id){
+
+		$('.del-form-body'+id).closest('.form-inline').fadeOut(300, function(){
+             $(this).remove();
+        });
+
+	}
+
+
+</script>

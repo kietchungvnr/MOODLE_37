@@ -649,20 +649,28 @@ DragDrop.prototype = {
     initializer: function() {
         var managementconsole = this.get('console'),
             container = managementconsole.get('element'),
-            categorylisting = container.one('#category-listing'),
+            categorylisting = container.one('#category-listing > .category-listing'),
             courselisting = container.one('#course-listing > .course-listing'),
-            categoryul = (categorylisting) ? categorylisting.one('ul.ml') : null,
+            categoryul = (categorylisting) ? categorylisting.one('ul.ml-1') : null,
             courseul = (courselisting) ? courselisting.one('ul.ml') : null,
             canmoveoutof = (courselisting) ? courselisting.getData('canmoveoutof') : false,
-            contstraint = (canmoveoutof) ? container : courseul;
+            canmoveoutofcate = (categorylisting) ? categorylisting.getData('canmoveoutofcate') : false,
+            contstraint = (canmoveoutof) ? container : courseul,
+            contstraintcate = (canmoveoutofcate) ? container : categoryul;
 
         if (!courseul) {
             // No course listings found.
             return false;
         }
 
+         if (!categoryul) {
+            // No course listings found.
+            return false;
+        }
+
         while (contstraint.get('scrollHeight') === 0 && !contstraint.compareTo(window.document.body)) {
             contstraint = contstraint.get('parentNode');
+            contstraintcate = contstraintcate.get('parentNode');
         }
 
         courseul.all('> li').each(function(li) {
@@ -671,16 +679,23 @@ DragDrop.prototype = {
         courseul.setData('dd', new Y.DD.Drop({
             node: courseul
         }));
+        categoryul.all('> li').each(function(li) {
+            this.initCategoryListitem2(li, contstraintcate);
+        }, this);
+        categoryul.setData('dd', new Y.DD.Drop({
+            node: categoryul
+        }));
         if (canmoveoutof && categoryul) {
             // Category UL may not be there if viewmode is just courses.
             categoryul.all('li > div').each(function(div) {
                 this.initCategoryListitem(div);
             }, this);
         }
-        Y.DD.DDM.on('drag:start', this.dragStart, this);
+        Y.DD.DDM.on('drag:start', this.dragStart, this);   
         Y.DD.DDM.on('drag:end', this.dragEnd, this);
         Y.DD.DDM.on('drag:drag', this.dragDrag, this);
-        Y.DD.DDM.on('drop:over', this.dropOver, this);
+        Y.DD.DDM.on('drop:over', this.dropOver2, this);
+        Y.DD.DDM.on('drop:over', this.dropOver, this); 
         Y.DD.DDM.on('drop:enter', this.dropEnter, this);
         Y.DD.DDM.on('drop:exit', this.dropExit, this);
         Y.DD.DDM.on('drop:hit', this.dropHit, this);
@@ -719,6 +734,22 @@ DragDrop.prototype = {
         }));
     },
 
+    initCategoryListitem2: function(node, contstraint) {
+        node.setData('dd', new Y.DD.Drag({
+            node: node,
+            target: {
+                padding: '0 0 0 20'
+            }
+        }).addHandle(
+            '.drag-handle'
+        ).plug(Y.Plugin.DDProxy, {
+            moveOnEnd: false,
+            borderStyle: false
+        }).plug(Y.Plugin.DDConstrained, {
+            constrain2node: contstraint
+        }));
+    },
+
     /**
      * Dragging has started.
      * @method dragStart
@@ -730,7 +761,11 @@ DragDrop.prototype = {
             node = drag.get('node'),
             dragnode = drag.get('dragNode');
         node.addClass('course-being-dragged');
-        dragnode.addClass('course-being-dragged-proxy').set('innerHTML', node.one('a.coursename').get('innerHTML'));
+        if (!node.test('.listitem-course')) {
+            dragnode.addClass('course-being-dragged-proxy').set('innerHTML', node.one('a.categoryname').get('innerHTML'));
+        } else {
+            dragnode.addClass('course-being-dragged-proxy').set('innerHTML', node.one('a.coursename').get('innerHTML'));
+        }
         this.previoussibling = node.get('previousSibling');
     },
 
@@ -787,6 +822,24 @@ DragDrop.prototype = {
             e.drop.sizeShim();
         }
     },
+     dropOver2: function(e) {
+        // Get a reference to our drag and drop nodes
+        var drag = e.drag.get('node'),
+            drop = e.drop.get('node'),
+            tag = drop.get('tagName').toLowerCase();
+        if (tag === 'li' && drop.hasClass('listitem-category')) {
+            if (!this.goingup) {
+                drop = drop.get('nextSibling');
+                if (!drop) {
+                    drop = e.drop.get('node');
+                    drop.get('parentNode').append(drag);
+                    return false;
+                }
+            }
+            drop.get('parentNode').insertBefore(drag, drop);
+            e.drop.sizeShim();
+        }
+    },
 
     /**
      * The course has been dragged over a drop target.
@@ -817,7 +870,7 @@ DragDrop.prototype = {
     },
 
     /**
-     * The course has been dropped on a target.
+     * The course and The category have been dropped on a target.
      * @method dropHit
      * @private
      * @param {EventFacade} e
@@ -833,34 +886,46 @@ DragDrop.prototype = {
             courseid,
             course,
             aftercourseid,
+            aftercategoryid,
             previoussibling,
             previousid;
-
+        //Drag category
         if (!drag.test('.listitem-course')) {
-            Y.log('It was not a course being dragged.', 'warn', 'moodle-course-management');
-            return false;
-        }
-        courseid = drag.getData('id');
-        if (iscategory) {
-            categoryid = drop.ancestor('.listitem-category').getData('id');
-            Y.log('Course ' + courseid + ' dragged into category ' + categoryid);
+
+            categoryid = drag.getData('id');
+            drop.ancestor('#category-listing')
             category = managementconsole.getCategoryById(categoryid);
-            if (category) {
-                course = managementconsole.getCourseById(courseid);
-                if (course) {
-                    category.moveCourseTo(course);
-                }
-            }
-        } else if (iscourse || drop.ancestor('#course-listing')) {
-            course = managementconsole.getCourseById(courseid);
             previoussibling = drag.get('previousSibling');
-            aftercourseid = (previoussibling) ? previoussibling.getData('id') || 0 : 0;
+            aftercategoryid = (previoussibling) ? previoussibling.getData('id') || 0 : 0;
             previousid = (this.previoussibling) ? this.previoussibling.getData('id') : 0;
-            if (aftercourseid !== previousid) {
-                course.moveAfter(aftercourseid, previousid);
+
+            if (aftercategoryid !== previousid) {
+                category.moveAfter(aftercategoryid, previousid);
             }
         } else {
-            Y.log('Course dropped over unhandled target.', 'info', 'moodle-course-management');
+            //Drag course
+            courseid = drag.getData('id');
+            if (iscategory) {
+                categoryid = drop.ancestor('.listitem-category').getData('id');
+                Y.log('Course ' + courseid + ' dragged into category ' + categoryid);
+                category = managementconsole.getCategoryById(categoryid);
+                if (category) {
+                    course = managementconsole.getCourseById(courseid);
+                    if (course) {
+                        category.moveCourseTo(course);
+                    }
+                }
+            } else if (iscourse || drop.ancestor('#course-listing')) {
+                course = managementconsole.getCourseById(courseid);
+                previoussibling = drag.get('previousSibling');
+                aftercourseid = (previoussibling) ? previoussibling.getData('id') || 0 : 0;
+                previousid = (this.previoussibling) ? this.previoussibling.getData('id') : 0;
+                if (aftercourseid !== previousid) {
+                    course.moveAfter(aftercourseid, previousid);
+                }
+            } else {
+                Y.log('Course dropped over unhandled target.', 'info', 'moodle-course-management');
+            }
         }
     }
 };
@@ -1641,7 +1706,56 @@ Category.prototype = {
             Y.log('Error trying to update category visibility: ' + err.message, 'warn', 'moodle-course-management');
         }
         return this;
+    },
+    /**
+     * Moves this category after another category.
+     *
+     * @method moveAfter
+     * @param {Number} moveaftercategory The category to move after or 0 to put it at the top.
+     * @param {Number} previousid the course it was previously after in case we need to revert.
+     */
+    
+    moveAfter: function(moveaftercategory, previousid) {
+        var managementconsole = this.get('console'),
+            args = {
+                categoryid: this.get('categoryid'),
+                moveafter: moveaftercategory,
+                previous: previousid
+            };
+        managementconsole.performAjaxAction('movecategoryafter', args, this.moveAfterResponse, this);
+    },
+
+    /**
+     * Performs the actual move.
+     *
+     * @method moveAfterResponse
+     * @protected
+     * @param {Number} transactionid The transaction ID for the request.
+     * @param {Object} response The response to the request.
+     * @param {Objects} args The arguments that were given with the request.
+     * @return {Boolean}
+     */
+    moveAfterResponse: function(transactionid, response, args) {
+        var outcome = this.checkAjaxResponse(transactionid, response, args),
+            node = this.get('node'),
+            previous;
+        if (outcome === false) {
+            previous = node.ancestor('ul').one('li[data-id=' + args.previous + ']');
+            Y.log('AJAX failed to move this course after the requested course', 'warn', 'moodle-course-management');
+            if (previous) {
+                // After the last previous.
+                previous.insertAfter(node, 'after');
+            } else {
+                // Start of the list.
+                node.ancestor('ul').one('li').insert(node, 'before');
+            }
+            return false;
+        }
+        Y.log('AJAX successfully moved category (' + this.getName() + ')', 'info', 'moodle-course-management');
+        this.highlight();
     }
+
+
 };
 Y.extend(Category, Item, Category.prototype);
 /* global Item */

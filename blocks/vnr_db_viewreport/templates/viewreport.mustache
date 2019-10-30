@@ -1,0 +1,196 @@
+<div class="container-fluid">
+    
+    <div class="row d-flex justify-content-center mb-3">
+        <div class="col-md-6 card border-0 shadow-nohover rounded p-2">
+            
+                <div class="row align-items-center m-0">
+                    <div class="col-12 col-lg-6 mt-1 mb-1">
+                        <div class="row">
+                           <!--  <div id="reportrange" class="form-control rounded">
+                                <div class="d-flex justify-content-center">
+                                    <i class="fa fa-calendar drpicker-icon"></i>
+                                    <span></span> 
+                                    <i class="fa fa-caret-down"></i>
+                                </div>
+                            </div> -->
+                            <input type="text" placeholder="Vui lòng chọn mốc thời gian" data-input class="form-control rounded" id="filterdate">
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 mt-1 mb-1">
+                            <div class="row align-items-center">
+                                <div class="col-auto d-inline">Jump to: </div>
+                                <select name="list_chart" id="list_chart" class="custom-select col rounded d-inline form-control">
+                                    <option selected>Chọn loại biểu đồ</option>
+                                    {{#list_chart}}
+                                    <option value="{{id}}">{{name}}</option>
+                                    {{/list_chart}}
+                                </select>
+                               
+                            </div>
+                      
+                    </div>
+                </div>
+            
+        </div>
+    </div>
+    <div class="row mb-3 justify-content-center">
+        <div class="col pr-0">
+            <select name="list_course" id="list_course" class="custom-select col rounded w-100">
+                <option selected value="0">Chọn khóc học</option>
+                {{#list_course}}
+                <option value="{{id}}">{{fullname}}</option>
+                {{/list_course}}
+                
+            </select>
+        </div>
+        <div class="col-auto">
+            <button class="input-button cl-button" title="Xóa tất cả filter" data-clear id="clear">RESET</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="card shadow-nohover w-100" style="border-top: 5px solid #1177d1;">
+            <div class="row p-2 align-items-center">
+                <div class="col-12 col-lg-4">
+                    <!-- <input id="list_course" class="w-100"/> -->
+                </div>
+                <div class="col-12 col-lg-8">
+                    <div id="showchart"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+</script>
+{{#js}}
+
+require.config({
+    packages: [{
+        name: 'highcharts',
+        main: 'highcharts'
+    }],
+    paths: {
+        highcharts: 'https://code.highcharts.com',
+        jspicker: '//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr',
+        kendo: '//kendo.cdn.telerik.com/2019.2.619/js/kendo.all.min',
+     
+    }
+});
+require(
+[
+    'highcharts',
+    'highcharts/modules/exporting',
+    'highcharts/modules/accessibility',
+    'jquery',
+    'core/config',
+    'core/notification',
+    'core/str',
+    'jspicker',
+    'kendo.all.min',
+],
+function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notification, Str, jspicker, kendo) {
+   
+    ExportingModule(Highcharts);
+    AccessibilityModule(Highcharts);
+    //Load data from ajax for coursecomp_chart
+    var script = Config.wwwroot + '/local/newsvnr/restfulapi/webservice.php';
+    var getUrlParam = new URLSearchParams(window.location.search);
+    var param = getUrlParam.get('id');
+    var paramJson = {};
+    paramJson['id'] = param;
+    $("#list_chart").val(param);
+
+    // Chọn loại biểu đồ
+    if(param == 1) {
+        paramJson['action'] = "coursecomp_chart";
+    } else if(param == 2) {
+        paramJson['action'] = "joincourse_chart";
+    }
+    var settings = {
+        type: 'GET',
+        data: paramJson,
+        processData: true,
+        contentType: "application/json"
+    };
+    //Gọi ajax load dữ liệu chưa qua filter
+    var callAjax = function loadchart() {
+        $.ajax(script,settings)
+        .then(function(response) {
+            if (response.error) {
+              Notification.addNotification({
+                  message: response.error,
+                  type: "error"
+              });
+            } else {
+                var strings = [{
+                    key: 'nodatatable',
+                    component: 'local_newsvnr'
+                },];
+                Str.get_strings(strings).then(function(s) {
+                    var data = response;
+                    data.title.text = "Xu hướng tham gia khóa học";
+                    // Create a chart.
+                    Highcharts.chart('showchart', data);
+                });
+           }
+          return;
+        }).fail(Notification.exception);
+    }
+    //Xóa phần tử trong object
+    var deteleParamJson = function deleteParam() {
+        delete paramJson.courseid;
+        delete paramJson.strdate;
+    }
+    callAjax();
+    //Gọi ajax load dữ liệu qua filter 1 khóa, 1 mốc thời gian...
+    $('#list_course').change(function(){
+        var courseid = $(this).val();
+        if(courseid != 0) {
+            paramJson['courseid'] = courseid;
+            callAjax();
+        } else {
+            deteleParamJson();
+            callAjax();
+        }
+       
+    });
+    $("#filterdate").flatpickr({
+        altInput: true,
+        altFormat: "F j, Y",
+        dateFormat: "Y-m-d",
+        onChange: function(dateObj, dateStr) {
+            if(dateStr) {
+                paramJson['strdate'] = dateStr;
+                callAjax();
+            } else {
+                deteleParamJson();
+                callAjax();
+            }
+        },
+        onReady: function(dateObj, dateStr, instance) {
+            var $cal = $(instance.calendarContainer);
+            if ($cal.find('.flatpickr-clear').length < 1) {
+                $cal.append('<div class="flatpickr-clear bg-primary text-white rounded-bottom">Clear</div>');
+                $cal.find('.flatpickr-clear').on('click', function() {
+                    instance.clear();
+                    instance.close();
+                });
+            }
+        }
+        
+    });    
+
+    //Xóa bỏ filter trả về dữ liệu ban đầu
+    $('#clear').click(function(){
+        deteleParamJson();
+        callAjax();
+    });
+
+
+
+});
+
+
+{{/js}}

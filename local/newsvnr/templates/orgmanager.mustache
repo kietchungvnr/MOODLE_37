@@ -1,0 +1,300 @@
+ <div data-region="orgmanager-page">
+   <div class="row justify-content-md-center">
+      <div class="col-md-auto">
+        <button class="btn" type="button" data-toggle="collapse" data-target="#orgcate_tb_wrapper" aria-expanded="false" aria-controls="orgcate_tb_wrapper" id="orgcate_list">Danh sách loại phòng ban</button>
+      </div>
+      <div class="col-md-auto">
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgstructure_tb_wrapper" aria-expanded="false" aria-controls="orgstructure_tb_wrapper" id="orgstructure_list">Danh sách phòng ban</button>
+      </div>
+      <div class="col-md-auto">
+       <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgjobtitle_tb_wrapper" aria-expanded="false" aria-controls="orgjobtitle_tb_wrapper" id="orgjobtitle_list">Danh sách chức danh</button>
+     </div>
+     <div class="col-md-auto">
+      <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgosition_tb_wrapper" aria-expanded="false" aria-controls="orgposition_tb_wrapper" id="orgposition_list">Danh sách chức vụ</button>
+    </div>
+  </div>
+</div>
+  <div class="form-group">
+    <input type="submit" name="act_orgcategory" id="orgcatemodalid" data-action="orgcategorypmodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
+  </div>
+  <div class="form-group">
+    <input type="submit" name="act_orgcategory" id="orgjobtitlemodalid" data-action="orgjobtitlemodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
+  </div>
+  <div class="form-group">
+    <input type="submit" name="act_orgcategory" id="orgpositionmodalid" data-action="orgpositionmodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
+  </div>
+  <div class="form-group">
+    <input type="submit" name="act_orgcategory" id="orgstructuremodalid" data-action="orgstructuremodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
+  </div>
+
+<div id="showtable_data"></div>
+<script type="text/javascript">
+//Xóa record PB-CD-CV
+function org_delete(section_id) {
+  var section = $("[data-section]").attr("data-section");
+  var confm = confirm("Bạn muốn xóa trường này?");
+  var script = location.origin + "/local/newsvnr/ajax/orgdeletedata.php";  
+  var settings = {
+    type: "GET",
+    processData: true,
+    data:{
+      section: section,
+      id: section_id
+    },
+    contentType: "application/json"
+  }; 
+  if(confm) {
+    $.ajax(script, settings)
+    .then(function(response) {
+     if(response)
+     {
+       $("#" + section_id).parents("tr").fadeOut(500, function(){
+        $("#" + section_id).remove();
+      });
+     }    
+   });
+  }
+}
+//Ản hiện record PB-CD-CV
+function org_active(section_id,visible) {
+  var section = $("[data-active]").attr("data-active");
+  if(visible == 0)
+    var confm = confirm("Bạn muốn ẩn trường này?");
+  else 
+    var confm = confirm("Bạn muốn hiện trường này?");
+  var script = location.origin + "/local/newsvnr/ajax/orgactive.php";  
+  var settings = {
+    type: "GET",
+    processData: true,
+    data:{
+      section: section,
+      id: section_id,
+      visible: visible
+    },
+    contentType: "application/json"
+  }; 
+  var callback_settings = {
+    type: "GET",
+    processData: true,
+    data:{
+      section: section
+    },
+    contentType: "application/json"
+  };
+  var callback_script = location.origin + "/local/newsvnr/ajax/orgdata.php";  
+  if(confm) {
+    $.ajax(script, settings)
+    .then(function(response) {
+     if(response)
+     {
+        document.getElementById(section).click();
+     }    
+    });
+  }
+}
+
+//chọn parentid cho phòng ban orgstructuer
+var orgstructure_clickparent = true;
+function org_treeview() {
+   if(orgstructure_clickparent == true){
+      
+      var settings = {
+          type: 'GET',
+          processData: true,
+          data:{
+            org_struct: 1
+          },
+          // cache:false,
+          contentType: "application/json"
+      };
+      var script = location.origin + '/local/newsvnr/ajax.php';
+      var tvajaxx = $.ajax(script, settings)
+      .then(function(response) {
+          if (response.error) {
+            
+              
+          } else {
+              // Reload the page, don't show changed data warnings.
+              if (typeof window.M.core_formchangechecker !== "undefined") {
+                  window.M.core_formchangechecker.reset_form_dirty_state();
+              }
+             
+              // window.location.reload();
+              var data = JSON.parse(response);
+              var tv = $("#treeview-orgstructure").kendoTreeView({
+                  dataSource: data,
+                  
+              }).data('kendoTreeView');
+              
+              $('#treeview-orgstructure').on('click','.k-item',function(){
+
+                  var selected = tv.select(),item;
+                 
+                  if(selected.length >0)
+                    item = tv.dataItem(selected);
+                  if (item) {
+                      document.getElementById('id_parentid').value = item.text;
+                     
+                  } else {
+                      $('#log').text('Nothing selected');
+                  }
+                   $('#treeview-orgstructure').mouseleave(function(){ 
+                      $(this).hide(500);
+                   });
+              });
+             
+          }
+
+          orgstructure_clickparent = false;
+          return;
+      })
+  } else {
+       $('#id_parentid').click(function() {
+           $('#treeview-orgstructure').show(500);
+       });
+  }
+}
+var orgposition_clickparent = true;
+function orgposition_treeview() {
+  // debugger;
+   if(orgposition_clickparent == true){
+      
+      var settings = {
+          type: 'GET',
+          processData: true,
+          data:{
+            org_struct: 1
+          },
+          // cache:false,
+          contentType: "application/json"
+      };
+      var script = location.origin + '/local/newsvnr/ajax.php';
+      var tvajaxx = $.ajax(script, settings)
+      .then(function(response) {
+          if (response.error) {
+            
+              
+          } else {
+              // Reload the page, don't show changed data warnings.
+              if (typeof window.M.core_formchangechecker !== "undefined") {
+                  window.M.core_formchangechecker.reset_form_dirty_state();
+              }
+             
+              // window.location.reload();
+              var data = JSON.parse(response);
+              var tv = $("#treeview-orgposition").kendoTreeView({
+                  dataSource: data,
+                  
+              }).data('kendoTreeView');
+              
+              $('#treeview-orgposition').on('click','.k-item',function(){
+
+                  var selected = tv.select(),item;
+                 
+                  if(selected.length >0)
+                    item = tv.dataItem(selected);
+                  if (item) {
+                      // document.getElementById('id_orgstructurename').value = item.id;
+                      document.getElementById('id_orgstructureid').value = item.text;
+                     
+                  } else {
+                      $('#log').text('Nothing selected');
+                  }
+                   $('#treeview-orgposition').mouseleave(function(){ 
+                      $(this).hide(500);
+                   });
+              });
+             
+          }
+
+          orgposition_clickparent = false;
+          return;
+      })
+  } else {
+       $('#id_orgstructureid').click(function() {
+           $('#treeview-orgposition').show(500);
+       });
+  }
+}
+$(document).ready(function(){
+  $('#orgstructuremodalid').click(function(){
+      orgstructure_clickparent = true;
+  })
+  $('#orgpositionmodalid').click(function(){
+      orgposition_clickparent = true;
+  })
+});
+</script>
+
+{{#js}}
+
+require(["local_newsvnr/orgcategory_modal"], function(NewGroup) {
+  NewGroup.init("[data-action=orgcategorypmodal]", 1);
+});
+require(["local_newsvnr/orgjobtitle_modal"], function(NewGroup) {
+  NewGroup.init("[data-action=orgjobtitlemodal]", 1);
+});
+require(["local_newsvnr/orgposition_modal"], function(NewGroup) {
+  NewGroup.init("[data-action=orgpositionmodal]", 1);
+});
+require(["local_newsvnr/orgstructure_modal"], function(NewGroup) {
+  NewGroup.init("[data-action=orgstructuremodal]", 1);
+});
+  $(document).ready(function() {
+      window.onload = function(){
+       document.getElementById("orgcate_list").click();
+     }
+   var orgcate_list = document.getElementById("orgcate_list");
+   var orgjobtitle_list = document.getElementById("orgjobtitle_list");
+   var orgposition_list = document.getElementById("orgposition_list");
+   var orgstructure_list = document.getElementById("orgstructure_list");
+   var orgcatemodal = document.getElementById("orgcatemodalid");
+   var orgjobtitlemodal = document.getElementById("orgjobtitlemodalid");
+   var orgpositionmodal = document.getElementById("orgpositionmodalid");
+   var orgstructuremodal = document.getElementById("orgstructuremodalid");
+
+   $("#orgcate_list").click(function(){
+    orgcatemodal.classList.remove("d-none");
+    orgjobtitlemodal.classList.add("d-none");
+    orgpositionmodal.classList.add("d-none");
+    orgstructuremodal.classList.add("d-none");
+    orgcate_list.classList.remove("btn-primary");
+    orgjobtitle_list.classList.add("btn-primary");
+    orgposition_list.classList.add("btn-primary");
+    orgstructure_list.classList.add("btn-primary");
+  });
+   $("#orgjobtitle_list").click(function(){
+    orgjobtitlemodal.classList.remove("d-none");
+    orgcatemodal.classList.add("d-none");
+    orgpositionmodal.classList.add("d-none");
+    orgstructuremodal.classList.add("d-none");
+    orgjobtitle_list.classList.remove("btn-primary");
+    orgposition_list.classList.add("btn-primary");
+    orgcate_list.classList.add("btn-primary");
+    orgstructure_list.classList.add("btn-primary");
+  });
+   $("#orgposition_list").click(function(){
+    orgpositionmodal.classList.remove("d-none");
+    orgcatemodal.classList.add("d-none");
+    orgjobtitlemodal.classList.add("d-none");
+    orgstructuremodal.classList.add("d-none");
+    orgposition_list.classList.remove("btn-primary");
+    orgjobtitle_list.classList.add("btn-primary");
+    orgcate_list.classList.add("btn-primary");
+    orgstructure_list.classList.add("btn-primary");
+  });
+   $("#orgstructure_list").click(function(){
+    orgstructuremodal.classList.remove("d-none");
+    orgcatemodal.classList.add("d-none");
+    orgjobtitlemodal.classList.add("d-none");
+    orgpositionmodal.classList.add("d-none");
+    orgstructure_list.classList.remove("btn-primary");
+    orgjobtitle_list.classList.add("btn-primary");
+    orgposition_list.classList.add("btn-primary");
+    orgcate_list.classList.add("btn-primary");
+  });
+
+ });
+  
+{{/js}}
+

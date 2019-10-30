@@ -1,0 +1,213 @@
+
+<div class="container-fluid p-0" id="nav-drawer-left">
+  
+    <div class="card h-100">
+        <div class="card-header has-arrow bg-info text-white border-0 font-weight-bold" href="javascript:void(0);" aria-expanded="false" data-toggle="collapse" data-target="#dskh">
+            DANH SÁCH KHÓA HỌC
+        </div>
+        <div class="collapse" id="dskh">
+            {{#list_course}}
+            <div class="card-body p-2 cl-border-bt cl-cursor">
+                <div class="row no-gutters align-items-center" id="clickcourse{{stt}}">
+                <div class="col">
+                  <div class="pl-2">{{{courselink}}}</div>
+                </div>
+                <div class="col-auto">
+                  <span class="badge badge-pill rounded-circle text-white " style="font-size:14px;background-color:#2fa426" >{{count_user}}</span>
+                </div>
+                </div>
+               <div class="row no-gutters align-items-center inside{{stt}}" style="display: none">
+                    <div class="card h-100 w-100">
+                        <div class="card-header bg-danger text-white border-0 font-weight-bold">
+                            DANH SÁCH HỌC VIÊN
+                        </div>
+                            {{#list_user}}
+                            <div class="card-body p-1 cl-border-bt">
+                              <div class="row no-gutters align-items-center">
+                                <div class="col">
+                                  <div class="pl-1">{{{.}}}</div>
+                                </div>
+                              </div>
+                            
+                            </div>
+                            {{/list_user}}
+                    </div>
+                </div>
+            </div>
+            {{/list_course}}
+        </div>
+    </div>
+    <div class="card h-100">
+        <div class="card-header has-arrow bg-info text-white border-0 font-weight-bold" href="javascript:void(0);" aria-expanded="false" data-toggle="collapse" data-target="#qlht">
+            QUẢN LÝ HỌC TẬP
+        </div>
+        <div class="collapse" id="qlht">
+            {{#list_assignment}}
+            <div class="card-body p-2 cl-border-bt">
+                <div class="row no-gutters align-items-center cl-cursor" id="click_assign">
+                <div class="col">
+                  <div class="pl-2">Assignment</div>
+                </div>
+                <div class="col-auto">
+                  <span class="badge badge-pill rounded-circle text-white " style="font-size:14px;background-color:#2fa426" >{{assignnumber}}</span>
+                </div>
+                </div>
+                <div data-region="list_assignment" style="display: none" id="ls_assign">
+                    <div class="row no-gutters align-items-center">
+                        <div class="card h-100 w-100">
+                            <div class="card-header bg-danger text-white border-0 font-weight-bold">
+                                DANH SÁCH KHÓA HỌC
+                            </div>
+                            {{#list_course_assign}}
+                            <div class="card-body p-1 cl-border-bt addactive">
+                              <div class="row no-gutters align-items-center">
+                                <div class="col">
+                                  {{{.}}}
+                                </div>
+                              </div>
+                            </div>
+                            {{/list_course_assign}}
+                        </div>
+                    </div>
+                    <div class="row no-gutters align-items-center d-none" id="dsbt">
+                        <div class="card h-100 w-100">
+                            <div class="card-header bg-danger text-white border-0 font-weight-bold">
+                                DANH SÁCH BÀI TẬP 
+                            </div>
+                            <div class="card-body p-1 cl-border-bt">
+                              <div class="row no-gutters align-items-center">
+                                <div class="col" id="list_assignment">
+                                   
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/list_assignment}}
+            {{#list_feedback}}
+            <div class="card-body p-2 cl-border-bt">
+                <div class="row no-gutters align-items-center cl-cursor" id="click_feedback">
+                <div class="col">
+                  <div class="pl-2">Feedback</div>
+                </div>
+                <div class="col-auto">
+                  <span class="badge badge-pill rounded-circle text-white " style="font-size:14px;background-color:#2fa426" >{{feedbacknumber}}</span>
+                </div>
+                </div>
+                <div data-region="list_feedback" style="display: none" id="ls_feedback">
+                    <div class="row no-gutters align-items-center">
+                        <div class="card h-100 w-100">
+                            <div class="card-header bg-danger text-white border-0 font-weight-bold">
+                                DANH SÁCH KHÓA HỌC
+                            </div>
+                            {{#list_course_feedback}}
+                            <div class="card-body p-1 cl-border-bt addactive">
+                              <div class="row no-gutters align-items-center">
+                                <div class="col">
+                                  {{{.}}}
+                                </div>
+                              </div>
+                            </div>
+                            {{/list_course_feedback}}
+                        </div>
+                    </div>
+                    <div class="row no-gutters align-items-center d-none" id="dsfb">
+                        <div class="card h-100 w-100">
+                            <div class="card-header bg-danger text-white border-0 font-weight-bold">
+                                DANH SÁCH FEEDBACK
+                            </div>
+                            <div class="card-body p-1 cl-border-bt">
+                              <div class="row no-gutters align-items-center">
+                                <div class="col" id="list_feedback">
+                                   
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/list_feedback}}
+        </div>
+    </div>
+
+   
+</div>
+
+<script type="text/javascript">
+    $('#qlht .addactive').click(function() {
+            $(this).addClass('cl-active').siblings().removeClass('cl-active');
+    });
+
+    function get_assignment_submit(course) {
+        var getURL = location.origin + '/local/newsvnr/ajax.php';
+        $.ajax({
+        url: getURL,
+        method: "GET",
+        data: {
+          action: "get_assignment_submit",
+          courseid: course
+        }
+        }).then(function(response) {
+            var data = JSON.parse(response);
+            $('#list_assignment').html(data.list_assignment);
+        });
+    }
+    function get_feedback(course) {
+        var getURL = location.origin + '/local/newsvnr/ajax.php';
+        $.ajax({
+        url: getURL,
+        method: "GET",
+        data: {
+          action: "get_feedback",
+          courseid: course
+        }
+        }).then(function(response) {
+            var data = JSON.parse(response);
+            $('#list_feedback').html(data.list_feedback);
+            
+
+        });
+    }
+</script>
+{{#js}}
+require(
+
+    [
+       
+        'jquery',
+        'core/config',
+        'core/notification',
+        'core/str'
+    ],
+
+    // This function runs when the above files have been loaded.
+    function ($,Config,Notification,Str) {
+
+        {{#list_course}}
+        $("#clickcourse{{stt}}").click(function(){
+               
+                $(".inside{{stt}}").fadeToggle("slow");
+            
+        });
+        {{/list_course}}
+        
+        $("#click_assign").click(function(){
+                $('#ls_assign').fadeToggle("slow");
+        });
+        $("#ls_assign").click(function(){
+                $('#dsbt').removeClass("d-none");
+               
+        });
+        $("#click_feedback").click(function(){
+                $('#ls_feedback').fadeToggle("slow");
+        });
+        $("#ls_feedback").click(function(){
+                $('#dsfb').removeClass("d-none");
+               
+        });
+     
+});
+{{/js}}

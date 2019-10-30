@@ -109,7 +109,55 @@ function user_create_user($user, $updatepassword = true, $triggerevent = true) {
 
     // Insert the user into the database.
     $newuserid = $DB->insert_record('user', $user);
+    /* --- Custom by Vũ --- */
+    // Khi thêm mới 1 user ở vị trí nào đó. Thì user đó sẽ nằm trong 
+    // kế hoạch đã được tạo từ trước.
 
+    // Insert competency_template table
+
+    if($newuserid)
+    {
+        $orgpositionid = '';
+        $orgpositionid = $user->orgpositionid;
+
+
+        $sql_comp_template = "SELECT * FROM {competency_template} where positionid = ?";      
+        $comp_template_data = '';
+        if($comp_template_data)
+        {
+            $comp_template_data = $DB->get_record_sql($sql_comp_template, array($orgpositionid));
+
+
+            $id_template = $comp_template_data->id;
+
+            $sql_comp_plan = "SELECT * FROM {competency_plan} where templateid = ?";
+
+            $comp_plan_data = $DB->get_records_sql($sql_comp_plan, array($id_template));
+
+
+            foreach ($comp_plan_data as $key => $value) {
+                    
+                $add_user_into_plan = new stdClass();
+
+                $add_user_into_plan->name = $value->name;
+                $add_user_into_plan->description = $value->description;
+                $add_user_into_plan->descriptionformat = $value->descriptionformat;
+                $add_user_into_plan->userid  = $newuserid;
+                $add_user_into_plan->templateid = $value->id;
+                $add_user_into_plan->status = $value->status;
+                $add_user_into_plan->duedate = $value->duedate;
+                $add_user_into_plan->timecreated = $value->timecreated;
+                $add_user_into_plan->timemodified = $value->timemodified;
+                $add_user_into_plan->usermodified = $value->usermodified;
+
+                $DB->insert_record('competency_plan', $add_user_into_plan);
+
+                break;
+            }
+        }
+
+    }
+    /* --- Kết thúc Custom ---*/
     // Create USER context for this user.
     $usercontext = context_user::instance($newuserid);
 

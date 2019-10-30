@@ -1,0 +1,125 @@
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-6 padding-db">
+
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <div class="card-group" style="border-top: 5px solid #1177d1;">
+
+                        <div class="card" style="border-bottom-left-radius: .5rem;border-bottom-right-radius: .5rem;">
+                            <div class="card-body">
+                                <div class="row align-items-start mb-3 pb-1" style="border-bottom: 1px solid wheat;">
+                                    <div class="col">
+                                        <span style="font-weight: 700; color: grey">TOP ĐẠT HUY HIỆU MỚI NHẤT</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-window-minimize m-0 cl-position cl-cursor" aria-hidden="true" data-toggle="collapse" data-target="#newest-modal"></i>
+                                        <i class="icon fa fa-th-large fa-fw m-0"></i>
+                                        <i class="icon fa fa-ellipsis-v fa-fw m-0"></i>
+                                    </div>
+
+                                </div>
+                                <div data-region="newest-modal" id="newest-modal" class="collapse show">
+                                    {{! <div class="row align-items-end mb-2">
+                                        <div class="col">
+
+                                        </div>
+                                        <div class="col-auto">
+                                            <select class="custom-select">
+                                                <option selected>Bộ lọc</option>
+                                                <option value="1">One</option>
+                                                <option value="2">Two</option>
+                                                <option value="3">Three</option>
+                                            </select>
+                                        </div>
+                                    </div> }}
+                                    {{#list_badges}}
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <img src="/theme/moove/pix/star.png" alt="Số thứ tự" height="40px" width="40px">
+                                            <div class="text-on-img text-white" style="font-weight: 700">{{stt}}</div>
+                                        </div>
+                                        <div class="col-auto pr-0">
+                                            {{! <img src="../theme/moove/pix/f2.png" width="54px" height="54px" class="rounded-circle"> }}
+                                            {{{imageuser}}}
+                                        </div>
+                                        <div class="col p-0">
+                                            <div class="text-primary font-weight-bold">
+                                                {{fullname}}
+                                            </div>
+                                            <div class="">
+                                                <small class="text-date">Ngày hoàn thành: {{timecomplete}}</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 pr-0">
+                                            <div class="resp-img d-flex justify-content-center">{{{imagebadges}}}</div>
+                                            <div class="d-flex justify-content-center" style="font-weight: 700;color: red;">{{name}}</div>
+                                        </div>  
+                                    </div>
+                                    <div class="cl-hr"></div>
+                                   {{/list_badges}}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 padding-db">
+
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <div class="card-group" style="border-top: 5px solid #1177d1;">
+                        <div class="card" style="border-bottom-left-radius: .5rem;border-bottom-right-radius: .5rem;">
+                            <div class="card-body">
+                                <div class="row align-items-start mb-3 pb-1" style="border-bottom: 1px solid wheat;">
+                                    <div class="col">
+                                        <span style="font-weight: 700; color: grey">TOP HỌC VIÊN ĐẠT NHIỀU HUY HIỆU NHẤT</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-window-minimize m-0 cl-position cl-cursor" aria-hidden="true" data-toggle="collapse" data-target="#most-modal"></i>
+                                        <i class="icon fa fa-th-large fa-fw m-0"></i>
+                                        <i class="icon fa fa-ellipsis-v fa-fw m-0"></i>
+                                    </div>
+                                </div>
+                                <div data-region="most-modal" id="most-modal" class="collapse show">
+                                   {{!  <div class="row align-items-end mb-2">
+                                        <div class="col">
+                                        </div>
+                                        <div class="col-auto">
+                                            <select class="custom-select">
+                                                <option selected>Bộ lọc</option>
+                                                <option value="1">One</option>
+                                                <option value="2">Two</option>
+                                                <option value="3">Three</option>
+                                            </select>
+                                        </div>
+                                    </div> }}
+                                    {{#count_list_badges}}
+                                    <div class="row">
+                                        <div class="col-auto">
+                                            <img src="/theme/moove/pix/star.png" alt="Số thứ tự" height="40" width="40">
+                                            <div class="text-on-img text-white" style="font-weight: 700">{{stt}}</div>
+                                        </div>
+                                        <div class="col-auto col-md-3 d-flex justify-content-md-end p-0">
+                                            {{{imageuser}}}
+                                        </div>
+                                        <div class="col">
+                                            <div class="d-inline text-primary font-weight-bold">{{fullname}}</div>
+                                            <div class="d-inline font-weight-bold pull-right">{{badgenumber}}</div>
+                                        </div>
+                                    </div>
+                                     <div class="cl-hrb"></div>
+                                    {{/count_list_badges}}
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

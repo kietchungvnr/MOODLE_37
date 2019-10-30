@@ -1,0 +1,30 @@
+
+<div id="newslider" class="container magrin-block outline-none" tabindex="1">
+  <div class="row mb-3">{{#btnaddnews}}{{{btnaddnews}}}{{/btnaddnews}}</div>
+  <div class="row"> 
+     <div id="news-slider" class="owl-carousel owl-theme">
+         {{#newslides}}
+          <div class="null">
+              <div class="column-33">
+                {{{image}}}
+              </div>
+              <div class="column-66" style="height:300px;background-color: white;">
+                <div class="text-news-tt"><a href="{{newurl}}"><p class="text-tt">{{subject}}</p></a></div>
+                <div class="text-news-ct"><p>{{message}}</p></div>
+                <button class="btn btn-slider" type="button"><a href="{{newurl}}" style="color:white">Đọc thêm</a></button>
+              </div>
+   
+          </div>
+         {{/newslides}}
+      </div>
+              <div class="slider_nav">
+                  <button class="am-next m-0 p-0 border-0 text-white"><a class="left fa fa-chevron-left btn btn-dark"></a></button>
+                  <button class="am-prev m-0 p-0 border-0 text-white"><a class="right fa fa-chevron-right btn btn-dark"></a></button>
+              </div>
+  </div>
+</div>
+
+
+
+
+

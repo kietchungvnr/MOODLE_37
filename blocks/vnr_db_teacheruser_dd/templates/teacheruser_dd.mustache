@@ -1,0 +1,255 @@
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-6 padding-db">
+
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <div class="card-group" style="border-top: 5px solid #1177d1;">
+
+                        <div class="card" style="border-bottom-left-radius: .5rem;border-bottom-right-radius: .5rem;">
+                            <div class="card-body">
+                                <div class="row align-items-start mb-3 pb-1" style="border-bottom: 1px solid wheat;">
+                                    <div class="col">
+                                        <span style="font-weight: 700; color: grey">XU HƯỚNG HOẠT ĐỘNG</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-window-minimize m-0 cl-position cl-cursor" aria-hidden="true" data-toggle="collapse" data-target="#coursemodulecomp_chart"></i>
+                                        <i class="icon fa fa-th-large fa-fw m-0"></i>
+                                        <i class="icon fa fa-ellipsis-v fa-fw m-0"></i>
+                                    </div>
+
+                                </div>
+                                <div data-region="coursemodulecomp_chart" id="coursemodulecomp_chart" class="collapse show">
+                                  
+                                   
+                                    <div class="row align-items-center">
+                                        <div id="coursemodulecomp_chart" class="container-fluid"></div>
+                                    </div>
+                                 
+                                 
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 padding-db">
+
+            <div class="row align-items-center mb-2">
+                <div class="col-12">
+                    <div class="card-group" style="border-top: 5px solid #1177d1;">
+
+                        <div class="card" style="border-bottom-left-radius: .5rem;border-bottom-right-radius: .5rem;">
+                            <div class="card-body">
+                                <div class="row align-items-start pb-1" style="border-bottom: 1px solid wheat;">
+                                    <div class="col">
+                                        <span style="font-weight: 700; color: grey">TOP HOẠT ĐỘNG DIỄN ĐÀN</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-window-minimize m-0 cl-position cl-cursor" aria-hidden="true" data-toggle="collapse" data-target="#hdhd"></i>
+                                         <i class="icon fa fa-th-large fa-fw m-0"></i>
+                                        <i class="icon fa fa-ellipsis-v fa-fw m-0"></i>
+                                    </div>
+
+                                </div>
+                                <div data-region="hdhd" id="hdhd" class="collapse show">
+                                    <div class="row align-items-center">
+                                        <table class="table table-striped mb-0">
+                                            <thead>
+                                              <tr>
+                                                <th>Chủ đề</th>
+                                                <th>Bài viết</th>
+                                                <th>Bình luận</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                            {{#top_activity}}
+                                              <tr>
+                                                <td>{{{forumname}}}</td>
+                                                <td>{{{discussname}}}</td>
+                                                <td>{{totalpost}}</td>
+                                              </tr>
+                                            {{/top_activity}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <div class="card-group" style="border-top: 5px solid #1177d1;">
+
+                        <div class="card" style="border-bottom-left-radius: .5rem;border-bottom-right-radius: .5rem;">
+                            <div class="card-body">
+                                <div class="row align-items-start pb-1" style="border-bottom: 1px solid wheat;">
+                                    <div class="col">
+                                        <span style="font-weight: 700; color: grey">BẢNG XẾP HẠNG</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-window-minimize mr-0 cl-position cl-cursor" aria-hidden="true" data-toggle="collapse" data-target="#bxh"></i>
+                                        <i class="icon fa fa-th-large fa-fw m-0"></i>
+                                        <i class="icon fa fa-ellipsis-v fa-fw m-0"></i>
+                                       
+                                    </div>
+
+                                </div>
+                                <div data-region="bxh" id="bxh" class="collapse show">
+                                    <div class="row align-items-center">
+                                        <table class="table table-striped mb-0">
+                                            <thead>
+                                              <tr>
+                                                <th>Tên</th>
+                                                <th>Bài viết</th>
+                                                <th>Bình luận</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                            {{#top_activity_by_user}}
+                                              <tr>
+                                                <td>{{{fullname}}}</td>
+                                                <td>{{{totaldisscus}}}</td>
+                                                <td>{{totalpost}}</td>
+                                              </tr>
+                                            {{/top_activity_by_user}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+    </div>
+</div>
+{{#js}}
+// Tell RequireJS how and where to search for the highcharts package
+require.config({
+    packages: [{
+        name: 'highcharts',
+        main: 'highcharts'
+    }],
+    paths: {
+        // Change this to your server if you do not wish to use our CDN.
+        highcharts: 'https://code.highcharts.com'
+    }
+});
+
+// Load the depedencies and create your chart
+require(
+
+    [
+        'highcharts',
+        'highcharts/modules/exporting',
+        'highcharts/modules/accessibility',
+        'jquery',
+        'core/config',
+        'core/notification',
+        'core/str'
+    ],
+
+    // This function runs when the above files have been loaded.
+    function (Highcharts, ExportingModule, AccessibilityModule,$,Config,Notification,Str) {
+
+        // We need to initialize module files and pass in Highcharts.
+        ExportingModule(Highcharts);
+
+        // Load accessibility after exporting.
+        AccessibilityModule(Highcharts);
+        //Load data from ajax for coursecomp_chart
+        var settings = {
+                type: 'GET',
+                data: {
+                    "action":"coursemodulecomp_chart"
+                },
+                processData: true,
+                contentType: "application/json"
+            };
+        var script = Config.wwwroot + '/local/newsvnr/restfulapi/webservice.php';
+        $.ajax(script,settings)
+        .then(function(response) {
+
+          if (response.error) {
+              Notification.addNotification({
+                  message: response.error,
+                  type: "error"
+              });
+          } else {
+              var strings = [{
+                  key: 'nodatatable',
+                  component: 'local_newsvnr'
+              }, ];
+              Str.get_strings(strings).then(function(s) {
+                    var list_coursename = response.list_coursename;
+                    var list_modules_comp = response.list_modules_comp;
+                    // Create a chart.
+                    Highcharts.chart('coursemodulecomp_chart', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: ''
+                    },
+                    subtitle: {
+                        text: ''
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        categories: list_coursename,
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Số lượng hoàn thành modules'
+                        }
+                    },
+
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.4,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: 'Số lượt đánh dấu hoàn thành khóa học',
+                        data: list_modules_comp,
+                        color: '#e87c01'
+                    }]
+                });
+                        
+            });
+
+          }
+          return;
+        }).fail(Notification.exception);
+        
+       
+
+    }
+
+);
+
+
+{{/js}}

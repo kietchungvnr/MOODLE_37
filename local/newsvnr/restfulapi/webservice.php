@@ -1,0 +1,1305 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Version details
+ *
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package local_newsvnr
+ * @copyright 2019 VnResource
+ * @author   Le Thanh Vu
+ **/
+
+define('AJAX_SCRIPT', true);
+
+require_once('../../../config.php');
+require("$CFG->dirroot/local/newsvnr/lib.php");
+
+$PAGE->set_context(context_system::instance());
+$_POST = json_decode(file_get_contents('php://input'), true);
+
+$action  = required_param('action',PARAM_RAW);
+$username  = optional_param('username','',PARAM_RAW);
+$password  = optional_param('password','',PARAM_RAW);
+
+/**
+ * API thêm, sửa loại phòng ban
+ */
+if($action == "orgstructure_category"){
+
+	$response = new stdClass();
+
+	$obj_orgstructure_category = new stdClass();
+
+	$name = isset($_POST['name']) ? $_POST['name'] : "";
+	$code = isset($_POST['code']) ? $_POST['code'] : "";
+	$description = isset($_POST['description']) ? $_POST['description'] : "";
+
+	$data = new stdClass();
+	$data->name = $name;
+	$data->code = $code;
+	$data->description = $description;
+
+	$checkAuthenticate = check_auth_api($username, $password);
+
+	if($checkAuthenticate == false)
+	{
+		$response->checkAuth = "Authenticate failed!";
+		
+	}
+	else{
+
+		$response->checkAuth = "Authenticate success!";
+		
+		
+		if(!$name)
+		{
+			$response->error['name'] = "Tên loại phòng ban không được bỏ trống";
+		}
+		if(!$code)
+		{
+			$response->error['code'] = "Mã loại phòng ban không được bỏ trống";
+		}
+
+		$check_categoryname =  find_orgstructure_category_by_name($name);
+		if($check_categoryname) {
+			$response->error['name'] = "Tên loại phòng ban '$check_categoryname->name' đã tồn tại";
+		}
+		$check_categorycode = find_orgstructure_category_by_code($code);
+		if(!$check_categorycode)
+		{
+			if(empty($response->error))
+			{
+
+				$obj_orgstructure_category->name = $name;
+				$obj_orgstructure_category->code = $code;
+				$obj_orgstructure_category->description = $description;
+
+				$success = $DB->insert_record('orgstructure_category', $obj_orgstructure_category);
+
+				if($success)
+				{
+					$response->message['success'] = "Thêm thành công";
+					$response->message['data'] = $data;
+				}
+				else{
+					$response->error[] = "Thêm thất bại";
+				}
+			}
+		}
+		else{
+
+			if(empty($response->error))
+			{
+				$obj_orgstructure_category->id = $check_categorycode->id;
+				$obj_orgstructure_category->name = $name;
+				$obj_orgstructure_category->description = $description;
+
+				$success = $DB->update_record('orgstructure_category', $obj_orgstructure_category);
+
+				if($success)
+				{
+					$response->message['success'] = "Chỉnh sửa thành công";
+					$response->message['data'] = $data;
+				}
+				else{
+					$response->error[] = "Thêm thất bại";
+				}
+			}
+			
+
+		}
+			
+	}
+
+	echo json_encode($response,JSON_UNESCAPED_UNICODE);	
+
+}
+
+
+/**
+ * API thêm, sửa phòng ban
+ */
+if($action == "orgstructure") {
+	$response = new stdClass();
+	$obj_orgstructure = new stdClass();
+
+	$name = isset($_POST['name']) ? $_POST['name'] : "";
+	$code = isset($_POST['code']) ? $_POST['code'] : "";
+	$description = isset($_POST['description']) ? $_POST['description'] : "";
+	$categoryname = isset($_POST['categoryname']) ? $_POST['categoryname'] : "";
+	$parentcode = isset($_POST['parentcode']) ? $_POST['parentcode'] : "";
+
+	$data = new stdClass();
+	$data->name = $name;
+	$data->code = $code;
+	$data->categoryname = $categoryname;
+	$data->parentcode = $parentcode;
+	$data->description = $description;
+
+	$checkAuthenticate = check_auth_api($username, $password);
+
+
+	if($checkAuthenticate == false)
+	{
+		$response->checkAuth = "Authenticate failed!";
+		
+	}
+	else{
+
+		$response->checkAuth = "Authenticate success!";
+
+		if(!$name)
+		{
+			$response->error['name'] = "Tên phòng ban không được bỏ trống";
+		}
+		if(!$code){
+			$response->error['code'] = "Mã phòng ban không được bỏ trống";
+		}
+		if(!$categoryname)
+		{
+			$response->error['categoryname'] = "Loại phòng ban không được bỏ trống";
+		}
+
+		if(!$parentcode)
+		{
+			$response->error['parentcode'] = "Phòng ban cha không được bỏ trống";
+		}
+
+		$check_orgstructure_by_code = find_orgstructure_by_code($code);
+
+		if(!$check_orgstructure_by_code)
+		{
+			if(empty($response->error))
+			{
+				
+
+				$orgstructureTypeData = find_orgstructure_category_by_name($categoryname);
+
+		
+				if(!$orgstructureTypeData){
+					$response->error['categoryname'] = 'Loại phòng ban không tồn tại' ;
+				}
+				else{
+					$obj_orgstructure->name = $name;
+					$obj_orgstructure->code = $code;
+
+
+					// phong ban lon nhat mac dinh parentid = 0
+
+					if($code == $parentcode)
+					{
+						$obj_orgstructure->parentid = 0;
+					}
+
+					else{
+						// check xem co phong ban cha hop le k?
+						$parentData = find_orgstructure_parrentcode($parentcode);
+						if(!$parentData)
+						{
+							$response->error['parentcode'] = 'Phòng ban cha không tồn tại' ;
+						}
+						else{
+							$obj_orgstructure->parentid = $parentData->id;
+						}
+
+					}
+			
+					$obj_orgstructure->orgstructuretypeid = $orgstructureTypeData->id;
+					$obj_orgstructure->numbermargin = 0;
+					$obj_orgstructure->numbercurrent = 0;
+					$obj_orgstructure->description = $description;
+
+
+					$success = $DB->insert_record('orgstructure', $obj_orgstructure);
+
+					if($success)
+					{
+						$response->message['success'] = "Thêm thành công";
+						$response->message['data'] = $data;
+					}
+					else{
+						$response->error[] = "Thêm thất bại";
+					}
+				}
+				
+			}
+		}
+		else{
+
+			if(empty($response->error))
+			{
+				$parentData = find_orgstructure_parrentcode($parentcode);
+
+				$orgstructureTypeData = find_orgstructure_category_by_name($categoryname);
+
+				if(!$parentData)
+				{
+					$response->error['parentcode'] = 'Phòng ban cha không tồn tại' ;
+				}
+				else if(!$orgstructureTypeData){
+					$response->error['categoryname'] = 'Loại phòng ban không tồn tại' ;
+				}
+				else{
+					$obj_orgstructure->id = $check_orgstructure_by_code->id;
+					$obj_orgstructure->name = $name;
+					$obj_orgstructure->parentid = $parentData->id;
+					$obj_orgstructure->orgstructuretypeid = $orgstructureTypeData->id;
+					$obj_orgstructure->numbermargin = 0;
+					$obj_orgstructure->numbercurrent = 0;
+					$obj_orgstructure->description = $description;
+
+					$success = $DB->update_record('orgstructure', $obj_orgstructure);
+
+					if($success)
+					{
+						$response->message['success'] = "Chỉnh sửa thành công";
+						$response->message['data'] = $data;
+					}
+					else{
+						$response->error[] = "Thêm thất bại";
+					}
+				}
+				
+			}
+		}
+
+		
+	}
+
+	echo json_encode($response,JSON_UNESCAPED_UNICODE);
+
+}
+
+/**
+ * API thêm, sửa chức danh
+ */
+if($action == "orgstructure_jobtitle") {
+	$response = new stdClass();
+	$orgstructure_jobtitle = new stdClass();
+
+	$name = isset($_POST['name']) ? $_POST['name'] : "";
+	$code = isset($_POST['code']) ? $_POST['code'] : "";
+	$description = isset($_POST['description']) ? $_POST['description'] : "";
+
+	$data = new stdClass();
+	$data->name = $name;
+	$data->code = $code;
+	$data->description = $description;
+
+	$checkAuthenticate = check_auth_api($username, $password);
+
+	if($checkAuthenticate == false)
+	{
+		$response->checkAuth = "Authenticate failed!";
+	}
+	else{
+
+		$response->checkAuth = "Authenticate success!";
+
+		if(!$name)
+		{
+			$response->error['name'] = "Tên chức danh không được bỏ trống";
+		}
+		if(!$code){
+			$response->error['code'] = "Mã chức danh không được bỏ trống";
+		}
+
+		$check_orgstructure_jobtitle_by_code = find_orgstructure_jobtitle_by_code($code);
+		$check_orgstructure_jobtitle_by_name = find_orgstructure_jobtitle_by_name($name);
+		if($check_orgstructure_jobtitle_by_name) {
+			$response->error['name'] = "Mã chức danh '$check_orgstructure_jobtitle_by_name->name' đã tồn tại";
+		}
+
+		if(empty($check_orgstructure_jobtitle_by_code))
+		{
+			if(empty($response->error))
+			{
+				$orgstructure_jobtitle->name = $name;
+				$orgstructure_jobtitle->code = $code;
+				$orgstructure_jobtitle->description = $description;
+
+				$success = $DB->insert_record('orgstructure_jobtitle', $orgstructure_jobtitle);
+
+				if($success)
+				{
+					$response->message['success'] = "Thêm thành công";
+					$response->message['data'] = $data;
+				}
+
+				else{
+					$response->error[] = "Thêm thất bại";
+				}
+
+			} 
+		}
+		else{
+
+			if(empty($response->error))
+			{
+				$orgstructure_jobtitle->id = $check_orgstructure_jobtitle_by_code->id;
+
+				$orgstructure_jobtitle->name = $name;
+				$orgstructure_jobtitle->description = $description;
+
+				$success = $DB->update_record('orgstructure_jobtitle', $orgstructure_jobtitle);
+
+				if($success)
+				{
+					$response->message['success'] = "Chỉnh sửa thành công";
+					$response->message['data'] = $data;
+				}
+
+				else{
+					$response->error[] = "Thêm thất bại";
+				}
+
+			} 
+		}
+
+		
+	}
+	
+	echo json_encode($response,JSON_UNESCAPED_UNICODE);
+
+}
+
+/**
+ * API thêm, sửa chức vụ(vị trí)
+ */
+if($action == "orgstructure_position") {
+
+	$response = new stdClass();
+
+	$code = isset($_POST['code']) ? $_POST['code'] : "";
+	$name = isset($_POST['name']) ? $_POST['name'] : "";
+	$jobtitlecode = isset($_POST['jobtitlecode']) ? $_POST['jobtitlecode'] : "";
+	$orgstructurecode = isset($_POST['orgstructurecode']) ? $_POST['orgstructurecode'] : "";
+	$description = isset($_POST['description']) ? $_POST['description'] : "";
+	$check_orgstructure_ins = preg_match("/\s|,/",$orgstructurecode);
+	if($check_orgstructure_ins == true) {
+		$orgstructurecode = "";
+	}
+	$data = new stdClass();
+	$data->name = $name;
+	$data->code = $code;
+	$data->jobtitlecode = $jobtitlecode;
+	$data->orgstructurecode = $orgstructurecode;
+	$data->description = $description;
+
+	$checkAuthenticate = check_auth_api($username, $password);
+
+	if($checkAuthenticate == false)
+	{
+		$response->checkAuth = "Authenticate failed!";
+	}
+	else{
+
+		$response->checkAuth = "Authenticate success!";
+
+		if(!$name)
+		{
+			$response->error['name'] = "Tên vị trí phòng ban không được bỏ trống";
+		}
+		if(!$code)
+		{
+			$response->error['code'] = "Mã vị trí phòng ban không được bỏ trống";
+		}
+
+	
+		
+		$check_orgstructure_jobtitle = find_orgstructure_jobtitle_by_code($jobtitlecode);
+		$check_orgstructure = find_orgstructure_by_code($orgstructurecode);
+
+		$check_orgstructure_position = find_orgstructure_position_by_code($code);
+
+		if(!$check_orgstructure_position)
+		{
+
+			if(empty($response->error))
+			{	
+				
+				
+					$orgstructure_position = new stdClass();
+					$orgstructure_position->name = $name;
+					$orgstructure_position->code = $code;
+					$orgstructure_position->jobtitleid = $check_orgstructure_jobtitle->id;
+					$orgstructure_position->orgstructureid = $check_orgstructure->id;
+					$orgstructure_position->description = $description;
+
+					$success = $DB->insert_record('orgstructure_position', $orgstructure_position);
+
+					if($success)
+					{
+						$response->message['success'] = "Thêm thành công";
+						$response->message['data'] = $data;
+					}
+
+					else{
+						$response->error[] = "Thêm thất bại";
+					}
+			}
+		}
+		else{
+
+			if(empty($response->error))
+			{	
+					$orgstructure_position = new stdClass();
+					$orgstructure_position->id = $check_orgstructure_position->id;
+					$orgstructure_position->name = $name;
+					$orgstructure_position->jobtitleid = $check_orgstructure_jobtitle->id;
+					$orgstructure_position->orgstructureid = $check_orgstructure->id;
+					$orgstructure_position->description = $description;
+			
+
+					
+
+					$success = $DB->update_record('orgstructure_position', $orgstructure_position);
+
+					if($success)
+					{
+						$response->message['success'] = "Chỉnh sửa thành công";
+						$response->message['data'] = $data;
+					}
+
+					else{
+						$response->error[] = "Thêm thất bại";
+					}
+				// }		
+			}
+		}
+
+	}
+
+	echo json_encode($response,JSON_UNESCAPED_UNICODE);
+}
+
+
+/**
+ * API tạo user và thêm user vào khóa học (Phân hệ đào tạo)
+ */
+if($action == "enroll_recruitment") {
+	require_once("$CFG->dirroot/user/lib.php");
+	$response = new stdClass();
+	
+	$checkAuthenticate = check_auth_api($username, $password);
+
+	if($checkAuthenticate == false)
+	{
+		$response->checkAuth = "Authenticate failed!";
+	} 
+	else {
+		$response->checkAuth = "Authenticate success!";
+		$usercode = isset($_POST['usercode']) ? $_POST['usercode'] : "";
+		$orgpositioncode = isset($_POST['orgpositioncode']) ? $_POST['orgpositioncode'] : "";
+		$orgjobtitlecode = isset($_POST['orgjobtitlecode']) ? $_POST['orgjobtitlecode'] : "";
+		$orgstructurecode = isset($_POST['orgstructurecode']) ? $_POST['orgstructurecode'] : "";
+		$teacherloginname = isset($_POST['teacherloginname']) ? $_POST['teacherloginname'] : "";
+		$fullname = isset($_POST['fullname']) ? $_POST['fullname'] : "";
+		$email = isset($_POST['email']) ? $_POST['email'] : "";
+		$userlogin = isset($_POST['userlogin']) ? $_POST['userlogin'] : "";
+		$phone1 = isset($_POST['phone1']) ? $_POST['phone1'] : "";
+		$phone2 = isset($_POST['phone2']) ? $_POST['phone2'] : "";
+		$identitycard = isset($_POST['identitycard']) ? $_POST['identitycard'] : "";
+		$parts = explode(" ", $fullname);
+		if(count($parts) > 1) {
+			$lastname = array_pop($parts);
+			$firstname = implode(" ", $parts);
+		}
+		else
+		{
+			$firstname = $fullname;
+			$lastname = " ";
+		}
+		$fullname_user = preg_replace('/\s+/', '', $fullname);
+		$fullname_tolower = mb_strtolower($fullname_user, 'UTF-8');
+		$fullname_without_tone = convert_name($fullname_tolower);
+		if(!$usercode)
+		{
+			$response->error['usercode'] = "usercode(Mã ứng viên) không được bỏ trống";
+		}
+		if(!$email)
+		{
+			$response->error['email'] = "email không được bỏ trống";
+		}
+		if(!$orgpositioncode)
+		{
+			$response->error['orgpositioncode'] = "orgpostioncode(Mã chức vụ) không được bỏ trống";
+		}
+		if(!$orgjobtitlecode)
+		{
+			$response->error['orgjobtitlecode'] = "orgjobtitlecode(Mã chức danh) không được bỏ trống";
+		}
+		if(!$orgstructurecode)
+		{
+			$response->error['orgstructurecode'] = "orgstructurecode(Mã phòng ban) không được bỏ trống";
+		}
+		if(!$fullname) {
+			$response->error['fullname'] = "fullname(Họ tên ứng viên) không được bỏ trống";
+		}
+		
+
+		if(empty($userlogin)) {
+			$userlogin = $fullname_without_tone;
+			$userlognin_user = find_username($fullname_without_tone);
+			if($userlognin_user) {
+				$time = time();
+				$userlogin = $fullname_without_tone . $time;
+			}
+		}
+
+		$check_orgpositioncode = find_id_orgpostion_by_code($orgpositioncode);
+		$check_orgstructurecode = find_id_orgstructure_by_code($orgstructurecode);
+		$check_orgjobtitlecode = find_id_orgjobtitle_by_code($orgjobtitlecode);
+		if(!$check_orgpositioncode) {
+			$response->error['orgpositioncode'] = "orgpositioncode(Mã chức vụ) không tồn tại chức vụ '$orgpositioncode'";
+		}
+		if(!$check_orgstructurecode) {
+			$response->error['orgstructurecode'] = "orgstructurecode(Mã phòng ban) không tồn tại phòng ban '$orgstructurecode'";
+		}
+		if(!$check_orgjobtitlecode) {
+			$response->error['orgjobtitlecode'] = "orgjobtitlecode(Mã chức danh) không tồn tại chức danh '$orgjobtitlecode'";
+		}
+
+		
+		// if(!$userlogin_teacher) {
+		// 	$response->error['teacherloginname'] = "teacherloginname(tài khoản giáo viên) không tồn tại giáo viên '$teacherloginname'";
+		// }
+		if (!validate_email($email)) {
+			$response->error['email'] = "email '$email' không đúng định dạng";
+		} else if (empty($CFG->allowaccountssameemail) and $DB->record_exists('user', array('email' => $email))) {
+			$response->error['email'] = "email '$email' đã được sử dụng vui lòng chọn email khác";
+		}
+
+		if(empty($response->error)) {
+			$check_usercode = find_usercode_by_code($usercode);
+			$response->checkAuth = "Authenticate success!";
+			if(!$check_usercode) {	
+				
+				$usernew = new stdClass();
+				$usernew->username = $userlogin;
+				$usernew->usercode = $usercode;
+				$usernew->orgpositionid = $check_orgpositioncode->id;
+				$usernew->mnethostid = $CFG->mnet_localhost_id;
+				$usernew->confirmed= 1;
+				$usernew->password = hash_internal_user_password('Vnr@1234');
+				$usernew->firstname = $firstname;
+				$usernew->lastname = $lastname;
+				$usernew->email = $email;
+				$usernew->identitycard = $identitycard;
+				$usernew->phone1 = $phone1;
+				$usernew->phone2 = $phone2;
+				$usernew->country = 'VN';
+				$usernew->lang = 'vi';
+				$course_for_orgpositioncode = get_course_by_orgpositioncode($check_orgpositioncode->id,$check_orgjobtitlecode->id,$check_orgstructurecode->id,1);
+				if($course_for_orgpositioncode) {
+					$courseid = $course_for_orgpositioncode->id;
+					$userlogin_teacher = find_username($teacherloginname);
+					if($userlogin_teacher) {
+						$teacherid = $userlogin_teacher->id;
+						$teacher_name = check_teacher_in_course($courseid,$teacherid);
+
+						if(!$teacher_name) {
+							enrol_user($teacherid, $courseid, 'editingteacher');
+						} 
+					}
+
+					$usernew->id = user_create_user($usernew,false,false);
+
+					$user_in_course = check_user_in_course($courseid,$usernew->id);
+					if(!$user_in_course) {
+						enrol_user($usernew->id, $courseid, 'student');
+						$response->message['success'] = "Thêm thành công";
+						$response->message['data'] = $usernew;
+					}
+
+					\core\event\user_created::create_from_userid($usernew->id)->trigger();
+					
+				} else {
+					$response->error['course'] = "Không tìm thấy khóa học phù hợp vui lòng tạo khóa học cho 'vị trí - $orgpositioncode , chức danh - $orgjobtitlecode , phòng ban - $orgstructurecode'";
+				}
+				
+			} else {
+				$response->error['usercode'] = "usercode(Mã ứng viên) '$usercode' đã tồn tại";
+			}
+		}
+	}
+
+	echo json_encode($response,JSON_UNESCAPED_UNICODE);
+}
+
+/**
+ * API tạo user và thêm user vào khóa học (Phân hệ tuyển dụng)
+ */
+if($action == "enroll_course") {
+	require_once("$CFG->dirroot/user/lib.php");
+	$response = new stdClass();
+
+	$checkAuthenticate = check_auth_api($username, $password);
+
+	if($checkAuthenticate == false)
+	{
+		$response->checkAuth = "Authenticate failed!";
+	} 
+	else {
+		$response->checkAuth = "Authenticate success!";
+
+		$usercode = isset($_POST['usercode']) ? $_POST['usercode'] : "";
+		$fullname = isset($_POST['fullname']) ? $_POST['fullname'] : "";
+		$email = isset($_POST['email']) ? $_POST['email'] : "";
+		$coursecode =isset($_POST['coursecode']) ? $_POST['coursecode'] : "";
+		$orgpositioncode = isset($_POST['orgpositioncode']) ? $_POST['orgpositioncode'] : "";
+		$parts = explode(" ", $fullname);
+		if(count($parts) > 1) {
+			$lastname = array_pop($parts);
+			$firstname = implode(" ", $parts);
+		}
+		else
+		{
+			$firstname = $fullname;
+			$lastname = " ";
+		}
+		$fullname_user = preg_replace('/\s+/', '', $fullname);
+		$fullname_tolower = mb_strtolower($fullname_user, 'UTF-8');
+		$fullname_without_tone = convert_name($fullname_tolower);
+
+		if(!$usercode)
+		{
+			$response->error['usercode'] = "usercode(Mã ứng viên) không được bỏ trống";
+		}
+		if(!$email)
+		{
+			$response->error['email'] = "email không được bỏ trống";
+			
+		}
+		if(!$coursecode)
+		{
+			$response->error['coursecode'] = "coursecode(Mã khóa học) không được bỏ trống";
+			
+		}
+		if(!$fullname) {
+			$response->error['fullname'] = "fullname(Họ tên ứng viên) không được bỏ trống";
+		}
+		// if(!$orgpositioncode) {
+		// 	$response->error['orgpositioncode'] = "orgpositioncode(Chức vụ - Vị trí) không được bỏ trống";
+		// }
+
+
+		if(empty($userlogin)) {
+			$userlogin = $fullname_without_tone;
+			$userlognin_user = find_username($fullname_without_tone);
+			if($userlognin_user) {
+				$time = time();
+				$userlogin = $fullname_without_tone . $time;
+			}
+		}
+		$check_usercode = find_usercode_by_code($usercode);
+		$get_orgpositionid = get_orgpositionid_by_code($orgpositioncode);
+		$get_course = get_course_by_idnumber($coursecode); 
+		if($get_course)
+			$courseid = $get_course->id;
+		if(!$check_usercode) {
+			if (!validate_email($email)) {
+				$response->error['email'] = "email '$email' không đúng định dạng";
+			} else if (empty($CFG->allowaccountssameemail) and $DB->record_exists('user', array('email' => $email))) {
+				$response->error['email'] = "email '$email' đã được sử dụng vui lòng chọn email khác";
+			}
+		}
+		if(empty($response->error)) {
+			$usernew = new stdClass();
+			$usernew->course = 1;
+			$usernew->username = $userlogin;
+			$usernew->usercode = $usercode;
+			$usernew->orgpositionid = $get_orgpositionid;
+			$usernew->auth = 'manual';
+			$usernew->suspended = '0';
+			$usernew->password = '';
+			$usernew->preference_auth_forcepasswordchange = 0;
+			$usernew->mnethostid = $CFG->mnet_localhost_id;
+			$usernew->confirmed= 1;
+			$usernew->firstname = $firstname;
+			$usernew->lastname = $lastname;
+			$usernew->email = $email;
+			$usernew->maildisplay = 2;
+			$usernew->country = 'VN';
+			$usernew->lang = 'vi';
+			$createpassword = true;
+			if(!$check_usercode) {	
+				if($get_course) {
+					
+				    $usernew->id = user_create_user($usernew,false,false);
+				    $usernew = $DB->get_record('user', array('id' => $usernew->id));
+				    $user_in_course = check_user_in_course($courseid,$usernew->id);
+				    if(!$user_in_course) {
+				    	enrol_user($usernew->id, $courseid, 'student');
+						$response->message['success'] = "Thêm thành công và tạo mới user '$fullname'";
+						$response->message['data'] = $usernew;
+				    }
+
+				    $usercontext = context_user::instance($usernew->id);
+				    
+				    if ($createpassword) {
+				    	setnew_password_and_mail($usernew);
+				    	unset_user_preference('create_password', $usernew);
+				    	set_user_preference('auth_forcepasswordchange', 1, $usernew);
+				    }
+				    \core\event\user_created::create_from_userid($usernew->id)->trigger();
+
+				} else {
+					$response->error['coursecode'] = "Không tìm thấy khóa học với mã '$coursecode'";
+				}
+				
+			} else {
+				if($get_course) {
+	
+				    $user_in_course = check_user_in_course($courseid,$check_usercode->id);
+
+				    if(!$user_in_course) {
+
+				    	enrol_user($check_usercode->id, $courseid, 'student');
+						$response->message['success'] = "Thêm thành công thêm user vào khóa học '$get_course->fullname'";
+						$response->message['data'] = $usernew;
+				    } else {
+				    	$response->message['success'] = "User đã tham gia vào khóa '$get_course->fullname'";
+				    }
+				} else {
+					$response->error['coursecode'] = "Không tìm thấy khóa học với mã '$coursecode'";
+				}
+			}
+		}	
+	}
+	echo json_encode($response,JSON_UNESCAPED_UNICODE);
+}
+
+
+/**
+ * API rút tên user ra khỏi khóa học, hàm dùng chung 2 phân hệ đào tạo và tuyển dụng
+ */
+if($action == "delete_enroll_course") {
+	require_once($CFG->dirroot . '/enrol/locallib.php');
+	$response = new stdClass();
+
+	$action = isset($_POST['action']) ? $_POST['action'] : "";
+
+	
+	$checkAuthenticate = check_auth_api($username, $password);
+
+	if($checkAuthenticate == false){
+		$response->checkAuth = "Authenticate failed!";
+	} 
+	else {
+		
+		$response->checkAuth = "Authenticate success!";
+
+		$usercode = isset($_POST['usercode']) ? $_POST['usercode'] : "";
+		$orgpositioncode = isset($_POST['orgpositioncode']) ? $_POST['orgpositioncode'] : "";
+		$orgjobtitlecode = isset($_POST['orgjobtitlecode']) ? $_POST['orgjobtitlecode'] : "";
+		$orgstructurecode = isset($_POST['orgstructurecode']) ? $_POST['orgstructurecode'] : "";
+
+		if(!$usercode) {
+			$response->error['usercode'] = "usercode('Mã nhân viên') không được bỏ trống";
+		}
+		if(!$orgpositioncode)
+		{
+			$response->error['orgpositioncode'] = "orgpostioncode(Mã chức vụ) không được bỏ trống";
+		}
+		if(!$orgjobtitlecode)
+		{
+			$response->error['orgjobtitlecode'] = "orgjobtitlecode(Mã chức danh) không được bỏ trống";
+		}
+		if(!$orgstructurecode)
+		{
+			$response->error['orgstructurecode'] = "orgstructurecode(Mã phòng ban) không được bỏ trống";
+		}
+
+		$check_orgpositioncode = find_id_orgpostion_by_code($orgpositioncode);
+		$check_orgstructurecode = find_id_orgstructure_by_code($orgstructurecode);
+		$check_orgjobtitlecode = find_id_orgjobtitle_by_code($orgjobtitlecode);
+		if(!$check_orgpositioncode) {
+			$response->error['orgpositioncode'] = "orgpositioncode(Mã chức vụ) không tồn tại chức vụ '$orgpositioncode'";
+		}
+		if(!$check_orgstructurecode) {
+			$response->error['orgstructurecode'] = "orgstructurecode(Mã phòng ban) không tồn tại phòng ban '$orgstructurecode'";
+		}
+		if(!$check_orgjobtitlecode) {
+			$response->error['orgjobtitlecode'] = "orgjobtitlecode(Mã chức danh) không tồn tại chức danh '$orgjobtitlecode'";
+		}
+
+		if(empty($response->error)) {
+			if($action == 'delete_recruitment') {
+				$find_course = get_course_by_orgpositioncode($check_orgpositioncode->id,$check_orgjobtitlecode->id,$check_orgstructurecode->id,1);
+				if(!$find_course) {
+					$response->message['success'] = "Ứng viên với mã '$usercode' chưa tham gia khóa học";
+				} else {
+					$get_userid = find_usercode_by_code($usercode);
+					if($get_userid) {
+						$instance = $DB->get_record('enrol', array('courseid'=>$find_course->id, 'enrol'=>'manual'), '*', MUST_EXIST);
+						$get_ueid = find_ueid_by_enrolid($instance->id,$get_userid->id);
+						$plugin = enrol_get_plugin($instance->enrol);
+						$plugin->unenrol_user($instance, $get_ueid->userid);
+						$response->message['success'] = "Rút ứng viên với mã '$usercode' từ khóa '$find_course->fullname' thành công";
+					}
+				}
+			} elseif ($action == 'delete_enroll_course') {
+				$find_course = get_course_by_orgpositioncode($check_orgpositioncode->id,$check_orgjobtitlecode->id,$check_orgstructurecode->id,2);
+				if(!$find_course) {
+					$response->message['success'] = "Ứng viên với mã '$usercode' chưa tham gia khóa học";
+				} else {
+					$get_userid = find_usercode_by_code($usercode);
+					if($get_userid) {
+						$instance = $DB->get_record('enrol', array('courseid'=>$find_course->id, 'enrol'=>'manual'), '*', MUST_EXIST);
+						$get_ueid = find_ueid_by_enrolid($instance->id,$get_userid->id);
+						$plugin = enrol_get_plugin($instance->enrol);
+						$plugin->unenrol_user($instance, $get_ueid->userid);
+						$response->message['success'] = "Rút ứng viên với mã '$usercode' từ khóa '$find_course->fullname' thành công";
+					}
+				}
+			}
+			
+		}
+	}
+	echo json_encode($response,JSON_UNESCAPED_UNICODE);
+}
+
+
+
+/**
+ * API trả điểm về cho HRM từ các bài quiz 
+ * lưu trong bảng {test}
+ */
+if($action == "test") {	
+
+	$usercode = $_POST['usercode'];
+	$grade = $_POST['grade'];
+	$result = $_POST['result'];
+	$orgstruct_position = $_POST['orgstruct_position'];
+	$quiz = $_POST['quiz'];
+	$type = $_POST['type'];
+
+	$timestart = $_POST['timestart'];
+
+
+	$sql = "SELECT * FROM {test} t where t.usercode = ?";
+
+	$checkExist = $DB->get_record_sql($sql, array($usercode));
+
+	$obj = new stdClass();
+
+	if(empty($checkExist))
+	{	
+
+		$obj->usercode = $usercode;
+		$obj->grade = $grade;
+		$obj->result = $result;
+		$obj->orgstruct_position = $orgstruct_position;
+		$obj->quiz = $quiz;
+		$obj->type = $type;
+		$obj->timestart = $timestart;
+
+		$DB->insert_record('test',  $obj );
+	}
+	else{
+
+
+		$obj->id = $checkExist->id;
+		$obj->grade = $grade;
+		$obj->result = $result;
+		$obj->timestart = $timestart;
+
+		$DB->update_record('test',  $obj );
+	}
+
+}
+
+
+// setting api and send data
+// cho nay em chi cau hinh luu xuong DB.
+// anh muon send data thi dung  CURL cua PHP.
+if($action ==  "api_created") {
+
+	$function_api = $_POST['function_api'];
+	$method = $_POST['method'];
+	$URL = $_POST['URL'];
+
+	$contenttype = isset($_POST['contenttype']) ? $_POST['contenttype'] : "";
+
+	$clientArr = $_POST['clientArr'];
+	$serverArr = $_POST['serverArr'];
+	$defaultArr = $_POST['defaultArr'];
+
+	$headerNameArr = $_POST['headerNameArr'];
+	$headerValueArr = $_POST['headerValueArr'];
+
+	$sortBody = array();
+
+	for($i = 0; $i < count($clientArr); $i++)
+	{
+		for($j = 0; $j < count($serverArr); $j++)
+		{
+			if($i == $j)
+			{
+				$sortBody[] = array(
+									'client_params' => $clientArr[$i]['value'],
+									'server_params' => $serverArr[$j]['value'],
+									'default_value' => $defaultArr[$j]['value']);
+			}
+		}
+	}
+
+	$sortHeader = array();
+	for($i = 0; $i < count($headerNameArr); $i++)
+	{
+		for($j = 0; $j < count($headerValueArr); $j++)
+		{
+			if($i == $j)
+			{
+				$sortHeader[] = array(
+							'name' => $headerNameArr[$i]['value'],
+							'value' => $headerValueArr[$j]['value']);
+			}
+		}
+	}
+
+	$api = new stdClass();
+	$api->url = $URL;
+	$api->method = $method;
+	$api->functionapi = $function_api;
+	$api->contenttype = $contenttype;
+
+	$api_id = $DB->insert_record('local_newsvnr_api', $api);	
+
+
+	for($i = 0; $i < count($sortHeader); $i++)
+	{
+		$apiHeader = new stdClass();
+		$apiHeader->name = $sortHeader[$i]['name'];
+		$apiHeader->value = $sortHeader[$i]['value'];
+		$apiHeader->api_id = $api_id;
+
+		$DB->insert_record('local_newsvnr_api_header', $apiHeader);	
+	}
+
+	for($i = 0; $i < count($sortBody); $i++)
+	{
+
+		$apiDetail = new stdClass();
+
+		$apiDetail->client_params = $sortBody[$i]['client_params'];
+
+		$apiDetail->server_params = $sortBody[$i]['server_params'];
+
+		$apiDetail->default_value = $sortBody[$i]['default_value'];
+
+		$apiDetail->api_id = $api_id;
+
+		$DB->insert_record('local_newsvnr_api_detail', $apiDetail);	
+	}
+
+	echo "Success";
+
+
+}
+
+// -- Get dữ liệu cho blocks chart (giáo viên)-- \\
+
+if($action == "coursecomp_chart_vp") {
+
+	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
+	if($courseid) {
+		$wheresql = 'ra.roleid =? AND u.id = ? AND c.id = ?';
+		$params = [3,268,$courseid];
+	} else {
+		$wheresql = 'ra.roleid =? AND u.id = ?';
+		$params = [3,268];
+	}
+	$sql = "
+			SELECT c.id, c.fullname
+		    FROM mdl_role_assignments as ra
+		        join mdl_user as u on u.id = ra.userid
+		        join mdl_user_enrolments as ue on ue.userid = u.id
+		        join mdl_enrol as e on e.id = ue.enrolid
+		        join mdl_course as c on c.id = e.courseid
+		        join mdl_context as ct on ct.id = ra.contextid and ct.instanceid = c.id
+		        join mdl_role as r on r.id = ra.roleid
+   			WHERE $wheresql";
+   	$sql_compcourse = '
+   			SELECT COUNT(*) AS completed_courses
+			FROM mdl_course_completions
+			WHERE course = ? AND timecompleted IS NOT NULL';
+   	$record = $DB->get_records_sql($sql,$params);
+   	$list_coursename = array();
+   	$list_enroll = array();
+   	$list_completion_course = array();
+   	foreach ($record as $value) {
+   		$coursecontext = context_course::instance($value->id, IGNORE_MISSING);
+   		$list_coursename[] = $value->fullname;
+   		$list_enroll[] = count_enrolled_users($coursecontext);
+   		$list_cc_data = $DB->get_record_sql($sql_compcourse,[$value->id]);
+   		$list_completion_course[] = $list_cc_data->completed_courses;
+   	}
+
+   	$response = new stdClass();
+    $response->chart = (object)['height' => 400,'type' => 'column'];
+    $response->title = (object)['text' => ''];
+    $response->subtitle = (object)['text' => ''];
+    $response->xAxis = (object)['categories' => $list_coursename,'crosshair' => true];
+    $response->yAxis = (object)['min' => 0, 'title' => (object)['text' => 'Số lượng học viên']];
+    $response->credits = (object)['enabled' => false];
+    $response->tooltip = (object)[
+    								'headerFormat' => '<span style="font-size:10px">{point.key}</span><table>',
+    								'pointFormat' => '<tr><td style="color:{series.color};padding:0">{series.name}: </td>'.'<td style="padding:0"><b>{point.y:.0f}</b></td></tr>', 
+    								'footerFormat' => '</table>', 
+    								'shared' => true, 
+    								'useHTML' => true
+    							];
+    $response->plotOptions = (object)['column' => (object)['pointPadding' => 0.2, 'borderWidth' => 0]];
+    $response->series = [
+    						(object)['name' => 'Tổng số học viên','data' => $list_enroll,'color' => '#223dc4'],
+    						(object)['name' => 'Số học viên hoàn thành khóa học','data' => $list_completion_course,'color' => '#f24012']
+    					];
+
+    echo json_encode($response,JSON_UNESCAPED_UNICODE);
+}
+
+if($action == "coursecomp_chart") {
+
+	$sql = '
+			SELECT c.id, c.fullname
+		        from mdl_role_assignments as ra
+		        join mdl_user as u on u.id = ra.userid
+		        join mdl_user_enrolments as ue on ue.userid = u.id
+		        join mdl_enrol as e on e.id = ue.enrolid
+		        join mdl_course as c on c.id = e.courseid
+		        join mdl_context as ct on ct.id = ra.contextid and ct.instanceid = c.id
+		        join mdl_role as r on r.id = ra.roleid
+   			WHERE  ra.roleid=3 and u.id = ?';
+   	$sql_compcourse = '
+   			SELECT COUNT(*) AS completed_courses
+			FROM mdl_course_completions
+			WHERE course = ? and timecompleted IS NOT NULL';
+   	$record = $DB->get_records_sql($sql,[268]);
+   	$list_coursename = array();
+   	$list_enroll = array();
+   	$list_completion_course = array();
+   	foreach ($record as $value) {
+   		$coursecontext = context_course::instance($value->id, IGNORE_MISSING);
+   		$list_coursename[] = $value->fullname;
+   		$list_enroll[] = count_enrolled_users($coursecontext);
+   		$list_cc_data = $DB->get_record_sql($sql_compcourse,[$value->id]);
+   		$list_completion_course[] = $list_cc_data->completed_courses;
+   	}
+
+   	$response = new stdClass();
+   	$response->list_coursename = $list_coursename;
+   	$response->list_enroll = $list_enroll;
+   	$response->list_completion_course = $list_completion_course;
+    
+    echo json_encode($response,JSON_UNESCAPED_UNICODE);
+}
+if($action == "coursemodulecomp_chart") {
+	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
+	if($courseid) {
+		$wheresql = 'ra.roleid =? AND u.id = ? AND c.id = ?';
+		$params = [3,268,$courseid];
+	} else {
+		$wheresql = 'ra.roleid =? AND u.id = ?';
+		$params = [3,268];
+	}
+	
+	$sql = "
+			SELECT COUNT(cmc.id) as slht,c.fullname
+		        from mdl_role_assignments as ra
+		        join mdl_user as u on u.id= ra.userid
+		        join mdl_user_enrolments as ue on ue.userid=u.id
+		        join mdl_enrol as e on e.id=ue.enrolid
+		        join mdl_course as c on c.id=e.courseid
+		        join mdl_context as ct on ct.id=ra.contextid and ct.instanceid= c.id
+		        join mdl_role as r on r.id= ra.roleid
+				join mdl_course_modules cm on c.id = cm.course
+				join mdl_course_modules_completion cmc on cm.id = cmc.coursemoduleid
+	        where $wheresql
+			group by c.fullname";
+
+   	$record = $DB->get_records_sql($sql,$params);
+   	$list_coursename = array();
+   	$list_modules_comp = array();
+   	foreach ($record as $value) {
+   		$list_coursename[] = $value->fullname;
+   		$list_modules_comp[] = (int)$value->slht;
+   	}
+   	$response = new stdClass();
+   	$response->list_coursename = $list_coursename;
+   	$response->list_modules_comp = $list_modules_comp;
+
+    echo json_encode($response,JSON_UNESCAPED_UNICODE);
+}
+if($action == "joincourse_chart_vp") {
+	$strdate = isset($_GET['strdate']) ? $_GET['strdate'] : "";
+	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
+	$strdate_unix = strtotime($strdate);
+	$strtoday_unix = time();
+	$srt_courseid = get_list_courseid_by_teacher(268);
+	$params = [];
+	if($strdate) {
+		$wheresql = "e.courseid In($srt_courseid) AND c.startdate >= $strdate_unix";
+	} elseif($strdate and $courseid) {
+		$wheresql = "e.courseid = ? AND c.startdate >= $strdate_unix";
+		$params = [$courseid];
+	} elseif($courseid) {
+		$wheresql = "e.courseid = ?";
+		$params = [$courseid];
+	} else {
+		$wheresql = "e.courseid In($srt_courseid)";
+	}
+
+	$sql = "
+			SELECT COUNT(e.id) as cid, e.courseid, c.fullname 
+			FROM mdl_enrol e 
+				right join mdl_user_enrolments ue on e.id = ue.enrolid
+				join mdl_course c on c.id = e.courseid 
+			WHERE $wheresql
+			GROUP BY e.courseid,c.fullname";
+
+	$record = $DB->get_records_sql($sql,$params);
+	$list_coursename = array();
+   	$list_joincourse = array();
+   	foreach ($record as $value) {
+   		$list_coursename[] = $value->fullname;
+   		$list_joincourse[] = (int)$value->cid;
+   	}
+ 
+   	$response = new stdClass();
+    $response->chart = (object)['height' => 400 ,'type' => 'line'];
+    $response->title = (object)['text' => ''];
+    $response->subtitle = (object)['text' => ''];
+    $response->xAxis = (object)['categories' => $list_coursename];
+    $response->yAxis = (object)['title' => (object)['text' => 'Số lượng học viên']];
+    $response->credits = (object)['enabled' => false];
+    $response->plotOptions = (object)['line' => (object)['dataLabels' => (object)['enabled' => true], 'enableMouseTracking' => true]];
+    $response->series = [(object)['name' => 'Học viên mới tham gia lớp học','data' => $list_joincourse,'color' => '#ef4914']];
+
+	echo json_encode($response,JSON_UNESCAPED_UNICODE);
+}
+
+if($action == "joincourse_chart") {
+	$strdate = isset($_GET['strdate']) ? $_GET['strdate'] : "";
+	$strdate_unix = strtotime($strdate);
+	$strtoday_unix = time();
+	$conditionsql = '';
+	$srt_courseid = get_list_courseid_by_teacher(268);
+	if(!empty($strdate))
+		$conditionsql .= "and c.startdate >= $strdate_unix";
+	
+	$sql = "SELECT 
+			COUNT(e.id) as cid, 
+			e.courseid, c.fullname from mdl_enrol e right join mdl_user_enrolments ue on e.id = ue.enrolid
+			join mdl_course c on c.id = e.courseid 
+			where e.courseid In($srt_courseid) 
+			$conditionsql
+			group by e.courseid,c.fullname";
+	$record = $DB->get_records_sql($sql,[]);
+	$list_coursename = array();
+   	$list_joincourse = array();
+   	foreach ($record as $value) {
+   		$list_coursename[] = $value->fullname;
+   		$list_joincourse[] = (int)$value->cid;
+   	}
+   	$response = new stdClass();
+   	$response->list_coursename = $list_coursename;
+   	$response->list_joincourse = $list_joincourse;
+	echo json_encode($response,JSON_UNESCAPED_UNICODE);
+}
+
+if($action == "viewcount_chart") {
+
+	
+	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
+	$params = [];
+	if($courseid) {
+		$wheresql = "courseid = ? and c.startdate >= lsl.timecreated";
+		$params = [$courseid];
+	} else {
+		$srt_courseid = get_list_courseid_by_teacher(268);
+		$wheresql = "courseid IN($srt_courseid) AND c.startdate >= lsl.timecreated";
+	}
+	$sql = "SELECT COUNT(lsl.id) as vc,lsl.courseid, c.fullname
+			FROM mdl_logstore_standard_log lsl
+			 	left join mdl_course c on  lsl.courseid = c.id 
+			WHERE $wheresql
+			GROUP BY lsl.courseid,c.fullname";
+	$record = $DB->get_records_sql($sql,$params);
+	$list_coursename = array();
+   	$list_viewcount = array();
+   	foreach ($record as $value) {
+   		$list_coursename[] = $value->fullname;
+   		$list_viewcount[] = (int)$value->vc;
+   	}
+   	$response = new stdClass();
+   	$response->list_coursename = $list_coursename;
+   	$response->list_viewcount = $list_viewcount;
+	echo json_encode($response,JSON_UNESCAPED_UNICODE);
+}
+
+if($action == "quizoverview_chart") {
+	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
+	$params = [];
+	if($courseid) {
+		$wheresql = "q.course = ?";
+		$params = [$courseid];
+	} else
+		$srt_courseid = get_list_courseid_by_teacher(268);
+		$wheresql = "q.course IN($srt_courseid)";
+	$sql = "
+			SELECT q.id,q.course, AVG(qg.grade) AS gradesorce,q.name 
+			FROM mdl_quiz q 
+				JOIN mdl_quiz_grades qg ON q.id = qg.quiz 
+            WHERE $wheresql
+            GROUP BY q.course,q.name,q.id";
+	$list_coursename_sql = "SELECT q.course,c.fullname FROM mdl_quiz q JOIN mdl_quiz_grades qg ON q.id = qg.quiz JOIN mdl_course c ON q.course = c.id WHERE q.course IN($srt_courseid) GROUP BY q.course,c.fullname";
+	$record = $DB->get_records_sql($sql,$params);
+	$list_coursename_ex = $DB->get_records_sql($list_coursename_sql,[]);
+	$list_coursename = array();
+	$list_quizname = array();
+	$list_quizname_parent = array();
+   
+   	foreach ($list_coursename_ex as $cname) {
+   		$list_coursename[] = $cname->fullname;
+   	}
+
+   	foreach ($record as $value) {
+   		$list_quiz = new stdClass();
+   		$list_quizscore = array();
+   		$list_quizname = $value->name;
+   		$list_quizscore[] = round((float)$value->gradesorce,2);
+   		$list_quiz->name = $list_quizname;
+   		$list_quiz->data = $list_quizscore;
+   		$list_quizname_parent[] = $list_quiz;
+   	}
+   	
+   	$response = new stdClass();
+   	$response->list_coursename = $list_coursename;
+   	$response->list_quizname_parent = $list_quizname_parent;
+	echo json_encode($response,JSON_UNESCAPED_UNICODE);
+}
+
+// -- End Get dữ liệu cho blocks chart -- \\
+
+die();
+
+
+
+

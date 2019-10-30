@@ -1,0 +1,288 @@
+
+
+
+{{#news}}
+
+<div class="container-new">
+
+	<div class="new-head" style="margin-left: 10px; margin-right: 10px;">
+		<div class="row">
+			<div class="col-md-6 col-lg-8 mb-1">
+				<div class="mb-3">{{#btnaddnews}}{{{btnaddnews}}}{{/btnaddnews}}</div>
+				<h3 style="font-weight: bold;">Tin tức nổi bật</h3>
+			</div>
+			<div class="col-md-12 col-lg-4 mb-1">
+				<form class="form-inline" method="get">
+					<div class="form-control-size">
+						<div class="input-group">
+							<input type="text" class="form-control" name="search" placeholder="Search">
+							<button type="submit" class="btn btn-primary">
+								<i class="	fa fa-search"></i>
+							</button>
+						</div>
+					</div>
+				</form>
+
+			</div>
+		</div>
+	</div>
+
+
+	<div class="hero-area d-flex flex-wrap">
+	<div class="hero-single-section">
+		{{#forumdata}}
+		{{#key1}}
+		<!-- Single Welcome Post -->
+		<div class="single-welcome-post bg-img item1 wow fadeInUp" style="background-image: url({{image}});">
+			<!-- Play Button -->
+
+			<!-- Content -->
+			<div class="welcome-post-content">
+				<!-- Single Blog Post -->
+				<div class="single-blog-post white">
+					<div class="blog-content">
+
+						<a href="{{newsurl}}" class="post-title">{{title}}</a>
+						<div class="post-meta">
+							<a href="#"><img src="../newsvnr/pix/author.png" alt=""> By {{username}}</a>
+							<a href="#"><img src="../newsvnr/pix/calender.png" alt=""> {{time}}</a>
+							<a href="#"><img src="../newsvnr/pix/chat.png" alt=""> {{countcomments}}</a>
+							{{! <a href="#"><img src="../newsvnr/pix/like.png" alt=""> 12k</a> }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{{/key1}}
+		{{/forumdata}}
+	</div>
+
+	<div class="hero-single-section">
+		{{#forumdata}}
+		{{#key2}}
+		<!-- Single Welcome Post -->
+		<div class="single-welcome-post bg-img item2 wow fadeInUp" style="background-image: url({{image}});">
+			<!-- Content -->
+			<div class="welcome-post-content">
+				<!-- Single Blog Post -->
+				<div class="single-blog-post white">
+					<div class="blog-content">
+
+						<a href="{{newsurl}}" class="post-title">{{title}}</a>
+						<div class="post-meta">
+							<a href="#"><img src="../newsvnr/pix/author.png" alt=""> By {{username}}</a>
+							<a href="#"><img src="../newsvnr/pix/calender.png" alt=""> {{time}}</a>
+							<a href="#"><img src="../newsvnr/pix/chat.png" alt=""> {{countcomments}} </a>
+							{{! <a href="#"><img src="../newsvnr/pix/like.png" alt=""> 12k</a> }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{{/key2}}
+		{{/forumdata}}
+		<div class="hero-second-section d-flex flex-wrap">
+			{{#forumdata}}
+			{{#key3}}
+			<!-- Single Welcome Post -->
+			<div class="single-welcome-post bg-img item3 wow fadeInUp" style="background-image: url({{image}});">
+				<!-- Content -->
+				<div class="welcome-post-content">
+					<!-- Single Blog Post -->
+					<div class="single-blog-post style2 white">
+						<div class="blog-content">
+
+							<a href="{{newsurl}}" class="post-title">{{title}}</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			{{/key3}}
+			{{/forumdata}}
+			{{#forumdata}}
+			{{#key4}}
+			<!-- Single Welcome Post -->
+			<div class="single-welcome-post bg-img item4 wow fadeInUp"  style="background-image: url({{image}});">
+				<!-- Content -->
+				<div class="welcome-post-content">
+					<!-- Single Blog Post -->
+					<div class="single-blog-post style2 white">
+						<div class="blog-content">
+
+							<a href="{{newsurl}}" class="post-title">{{title}}</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			{{/key4}}
+			{{/forumdata}}
+		</div>
+
+	</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="btn-new-latest">
+			<h3 style="font-weight: bold;">Tin mới nhất</h3>
+		</div>
+		<div class="row new-latest-body">
+			{{#forumnewestdata}}
+
+			<div class="col-lg-3 ">
+				<div class="new-latest-box">
+					<a href="{{newsurl}}"><img class="new-latest-image" src="{{image}}"></a>
+					<a href="{{newsurl}}"><label class="new-latest-title mt-1" title="{{title}}">{{title}}</label></a>
+					
+					<small class="new-latest-time text-date">{{time}}</small>
+					
+					<div class="row">
+						<div class="col-lg-12">
+							<p class="new-latest-content">
+								{{content}}
+							</p>
+						</div>
+						<div class="col-lg-12">
+							<div class="new-latest-comment-info">
+								<i class="fa fa-eye" aria-hidden="true"> {{countviews}} &nbsp&nbsp</i>
+								<i class="fa fa-comment-o" aria-hidden="true"> {{countcomments}} &nbsp&nbsp</i>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+			{{/forumnewestdata}}
+
+
+		</div>
+
+		<div class="btn-new-course">
+			<h3 style="font-weight: bold;">Tin tức khóa học</h3>
+		</div>
+		<div class="row new-latest-body">
+
+				
+					{{#forumcoursenewsndata}}
+					<div class="col-lg-3">
+						<div class="new-latest-box">
+							<a href="{{newsurl}}"><img class="new-latest-image" src="{{image}}"></a>
+							<a href="{{newsurl}}"><label class="new-latest-title mt-1" title="{{title}}">{{title}}</label></a>
+							<br />
+							<small class="new-latest-time text-date">{{time}}</small>
+							<div class="row">
+								<div class="col-lg-12">
+									<p class="new-latest-content">
+										{{content}}
+									</p>
+								</div>
+								<div class="col-lg-12">
+									<div class="new-latest-comment-info">
+										<i class="fa fa-eye" aria-hidden="true"> {{countviews}} &nbsp&nbsp</i>
+										<i class="fa fa-comment-o" aria-hidden="true"> {{countcomments}} &nbsp&nbsp</i>
+					
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					{{/forumcoursenewsndata}}
+		
+		</div>
+
+		<label class="view-more">{{/news}}  <a id="view-more-news" href="{{showallurl}}">Xem thêm</a>
+		</label>
+
+	</div>
+</div>
+
+
+
+{{#showall}}
+
+	<div class="container">
+		<div class="col-md-6 btn-new-latest">
+			<h3>Tất cả tin tức theo khóa học</h3>
+		</div>
+
+		<hr>
+		<div class="row">
+			<div class="col-md-7 page-content">
+					<div style="border-bottom: #F0F0F0 1px solid;margin-bottom: 15px;">
+					Danh mục:<br> <select class="pagination-setting" onchange="FilterDicussionByCourseId(this.value);" >
+						<option value="" selected="selected">Xem tất cả</option>
+						{{#list_news_of_course}}
+							<option value="{{courseid}}">{{fullname}}</option>
+						{{/list_news_of_course}}		
+					</select>
+					</div>
+					
+					<div id="pagination-result">
+						<input type="hidden" name="rowcount" id="rowcount" />
+					</div>
+			</div>
+
+
+		</div>
+
+		<div class="row new-latest-body" id="see-all-news">		
+
+			<!-- Pagination -->
+			
+		</div>
+
+
+				
+
+	</div>
+
+{{/showall}}
+
+
+
+{{#forumdatasearch}}
+
+<div class="container-new">
+
+	<div class="container">
+		<div class="btn-new-latest">
+			<h3>Tìm thấy {{newsnumber}} tin với từ khóa "{{searchquery}}"</h3>
+		</div>
+		<hr>
+		<div class="row new-latest-body">
+			{{#courseendable}}
+			{{#forumsearchdata}}
+				<div class="col-lg-3 mb-3 ">
+				<div class="new-latest-box">
+					<a href="{{newsurl}}"><img class="new-latest-image" src="{{imageurl}}"></a>
+					<a href="{{newsurl}}"><label class="new-latest-title mt-1" title="{{subject}}">{{subject}}</label></a>
+					<br />
+					<small class="new-latest-time text-date">{{time}}</small>
+					<br />
+					<div class="row">
+						<div class="col-lg-12">
+							<p class="new-latest-content">
+								{{message}}
+							</p>
+						</div>
+						<div class="col-lg-12">
+							<div class="new-latest-comment-info">
+								<i class="fa fa-eye" aria-hidden="true"> {{countviews}} &nbsp&nbsp</i>
+								<i class="fa fa-comment-o" aria-hidden="true"> {{countcomments}} &nbsp&nbsp</i>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+			{{/forumsearchdata}}
+			{{/courseendable}}
+
+		</div>
+	</div>
+</div>
+
+{{/forumdatasearch}}
+

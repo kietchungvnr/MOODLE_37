@@ -1,0 +1,356 @@
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-6 padding-db">
+
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <div class="card-group" style="border-top: 5px solid #1177d1;">
+
+                        <div class="card" style="border-bottom-left-radius: .5rem;border-bottom-right-radius: .5rem;">
+                            <div class="card-body">
+                                <div class="row align-items-start mb-3 pb-1" style="border-bottom: 1px solid wheat;">
+                                    <div class="col">
+                                        <span style="font-weight: 700; color: grey">LƯỢT XEM KHÓA HỌC</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-window-minimize m-0 cl-cursor cl-position" aria-hidden="true" data-toggle="collapse" data-target="#lgtkh"></i>
+                                        <i class="icon fa fa-th-large fa-fw m-0"></i>
+                                        <i class="icon fa fa-ellipsis-v fa-fw m-0"></i>
+                                    </div>
+
+                                </div>
+                                <div data-region="lgtkh" id="lgtkh" class="collapse show">
+
+                                    <div class="row align-items-center">
+                                        <div id="viewcount_chart" class="container-fluid"></div>
+                                    </div>
+                                 
+                                 
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <div class="col-md-6 padding-db">
+
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <div class="card-group" style="border-top: 5px solid #1177d1;">
+
+                        <div class="card" style="border-bottom-left-radius: .5rem;border-bottom-right-radius: .5rem;">
+                            <div class="card-body">
+                                <div class="row align-items-start mb-3 pb-1" style="border-bottom: 1px solid wheat;">
+                                    <div class="col">
+                                        <span style="font-weight: 700; color: grey">XU HƯỚNG GHI DANH KHÓA HỌC</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-window-minimize mr-0 cl-position cl-cursor" aria-hidden="true" data-toggle="collapse" data-target="#xhtgkh"></i>
+                                        <i class="icon fa fa-th-large fa-fw m-0"></i>
+                                        <i class="icon fa fa-ellipsis-v fa-fw m-0 dropdown cl-cursor" data-toggle="dropdown">
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" id="date-fillter">Ẩn/hiện bộ lộc</a>
+                                            </div>
+                                        </i>
+                                    </div>
+
+                                </div>
+                                <div data-region="xhtgkh" id="xhtgkh" class="collapse show">
+                                  
+                                     <div class="row align-items-end mb-2 d-none" id="fade-date-fillter">
+                                        <div class="col">
+                                            
+                                           <div class="resetDate">
+                                                <input type="text" placeholder="Chọn ngày.." data-input class="form-control cl-input d-inline">
+                                                <button class="input-button cl-button d-inline" title="clear" data-clear>RESET</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row align-items-center">
+                                        <div id="joincourse_chart" class="container-fluid"></div>
+                                    </div>
+                                 
+                                 
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+     $(document).ready(function(){
+          $("#date-fillter").click(function(){
+            $("#fade-date-fillter").toggleClass("d-none"); 
+          });
+      });
+</script>
+{{#js}}
+
+require.config({
+    packages: [{
+        name: 'highcharts',
+        main: 'highcharts'
+    }],
+    paths: {
+        // Change this to your server if you do not wish to use our CDN.
+        highcharts: 'https://code.highcharts.com',
+        jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr"
+    }
+});
+
+// Load the depedencies and create your chart
+require(
+
+    [
+        'highcharts',
+        'highcharts/modules/exporting',
+        'highcharts/modules/accessibility',
+        'jquery',
+        'core/config',
+        'core/notification',
+        'core/str',
+        'jspicker'
+    ],
+
+    // This function runs when the above files have been loaded.
+    function (Highcharts, ExportingModule, AccessibilityModule,$,Config,Notification,Str,jspicker) {
+
+        // We need to initialize module files and pass in Highcharts.
+        ExportingModule(Highcharts);
+
+        // Load accessibility after exporting.
+        AccessibilityModule(Highcharts);
+        //Load data from ajax for viewcount_chart
+        var settings = {
+                type: 'GET',
+                data: {
+                    "action":"viewcount_chart"
+                },
+                processData: true,
+                contentType: "application/json"
+        };
+        var script = Config.wwwroot + '/local/newsvnr/restfulapi/webservice.php';
+        $.ajax(script,settings)
+        .then(function(response) {
+
+          if (response.error) {
+              Notification.addNotification({
+                  message: response.error,
+                  type: "error"
+              });
+          } else {
+              var strings = [{
+                  key: 'nodatatable',
+                  component: 'local_newsvnr'
+              }, ];
+              Str.get_strings(strings).then(function(s) {
+                    var list_coursename = response.list_coursename;
+                    var list_viewcount = response.list_viewcount;
+                    // Create a chart.
+                    Highcharts.chart('viewcount_chart', {
+                        chart: {
+                                type: 'line'
+                            },
+                            title: {
+                                text: ''
+                            },
+                            subtitle: {
+                                text: ''
+                            }, 
+                            xAxis: {
+                                categories: list_coursename
+                            },
+                            yAxis: {
+                                title: {
+                                    text: 'Số lượt ghé thăm'
+                                }
+                            },
+                            credits: {
+                                enabled: false
+                            },
+                            plotOptions: {
+                                line: {
+                                    dataLabels: {
+                                        enabled: true
+                                    },
+                                    enableMouseTracking: true
+                                }
+                            },
+                            series: [{
+                                name: 'Số lượt xem khóa học',
+                                data: list_viewcount,
+                                color: '#1120f3'
+
+                            }]
+                });
+                        
+            });
+
+          }
+          return;
+        }).fail(Notification.exception);
+        var joincourse_settings = {
+                type: 'GET',
+                data: {
+                    "action":"joincourse_chart"
+                },
+                processData: true,
+                contentType: "application/json"
+        };
+        $.ajax(script,joincourse_settings)
+        .then(function(response) {
+
+          if (response.error) {
+              Notification.addNotification({
+                  message: response.error,
+                  type: "error"
+              });
+          } else {
+              var strings = [{
+                  key: 'nodatatable',
+                  component: 'local_newsvnr'
+              }, ];
+              Str.get_strings(strings).then(function(s) {
+                    var list_coursename = response.list_coursename;
+                    var list_joincourse = response.list_joincourse;
+
+                    // Create a chart.
+                    Highcharts.chart('joincourse_chart', {
+                        chart: {
+                            type: 'line'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        subtitle: {
+                            text: ''
+                        }, 
+                        xAxis: {
+                            categories: list_coursename
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Số lượng học viên'
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            line: {
+                                dataLabels: {
+                                    enabled: true
+                                },
+                                enableMouseTracking: true
+                            }
+                        },
+                        series: [{
+                            name: 'Học viên mới tham gia lớp học',
+                            data: list_joincourse,
+                            color: '#ef4914'
+                        }]
+                    });
+                        
+            });
+
+          }
+          return;
+        }).fail(Notification.exception);
+        $(".resetDate").flatpickr({
+            wrap: true,
+            weekNumbers: true,
+            onChange: function(dateObj, dateStr) {
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, '0');
+                var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                var yyyy = today.getFullYear();
+                var settings = {
+                    type: 'GET',
+                    data: {
+                        "action" : "joincourse_chart",
+                        "strdate" : dateStr
+                    },
+                    processData: true,
+                    contentType: "application/json"
+                };
+
+                $.ajax(script,settings)
+                .then(function(response) {
+
+                  if (response.error) {
+                      Notification.addNotification({
+                          message: response.error,
+                          type: "error"
+                      });
+                  } else {
+                      var strings = [{
+                          key: 'nodatatable',
+                          component: 'local_newsvnr'
+                      }, ];
+                      Str.get_strings(strings).then(function(s) {
+                        var list_coursename = response.list_coursename;
+                        var list_joincourse = response.list_joincourse;
+                        if(list_coursename != "" && list_joincourse != "") {
+                            // Create a chart.
+                            Highcharts.chart('joincourse_chart', {
+                                chart: {
+                                    type: 'line'
+                                },
+                                title: {
+                                    text: ''
+                                },
+                                subtitle: {
+                                    text: ''
+                                }, 
+                                xAxis: {
+                                    categories: list_coursename
+                                },
+                                yAxis: {
+                                    title: {
+                                        text: 'Số lượng học viên'
+                                    }
+                                },
+                                lang: {
+                                    noData: "Không có dữ liệu!"
+                                },
+                                credits: {
+                                    enabled: false
+                                },
+                                plotOptions: {
+                                    line: {
+                                        dataLabels: {
+                                            enabled: true
+                                        },
+                                        enableMouseTracking: false
+                                    }
+                                },
+                                series: [{
+                                    name: 'Học viên mới tham gia lớp học',
+                                    data: list_joincourse,
+                                    color: '#ef4914'
+                                }]
+                            });
+                        } else {
+                           $('#joincourse_chart').html('<div class="alert alert-info" role="alert"><strong>!Empty Data</strong> Không có dữ liệu</div>');
+                        }
+                    });
+
+                  }
+                  return;
+                }).fail(Notification.exception);
+            }
+
+        });
+        
+
+});
+
+
+{{/js}}

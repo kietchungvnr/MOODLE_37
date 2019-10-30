@@ -16,7 +16,7 @@ class course_edit_form extends moodleform {
      * Form definition.
      */
     function definition() {
-        global $CFG, $PAGE;
+        global $CFG, $PAGE, $DB;
 
         $mform    = $this->_form;
         $PAGE->requires->yui_module('moodle-course-formatchooser', 'M.course.init_formatchooser',
@@ -72,7 +72,57 @@ class course_edit_form extends moodleform {
             $mform->hardFreeze('shortname');
             $mform->setConstant('shortname', $course->shortname);
         }
+        //custom by Vũ -- thêm field loại kì thi
+        $toclist = array(
+            '1' => 'Tuyển dụng',
+            '2' => 'Đào tạo',
+        );
 
+        //Lấy danh sách chức vụ
+        $orgpositionlist = $DB->get_records('orgstructure_position');
+        $orgpositionnames = array();
+        foreach ($orgpositionlist as $key => $value) {
+            $orgpositionnames[$key] = $value->name;
+        }
+        //Lấy danh sách chức danh
+        $orgjobtitlelist = $DB->get_records('orgstructure_jobtitle');
+        $orgjobtitlenames = array();
+        foreach ($orgjobtitlelist as $key => $value) {
+            $orgjobtitlenames[$key] = $value->name;
+        }
+        //Lấy danh sách phòng ban
+        $orgstructurelist = $DB->get_records('orgstructure');
+        $orgstructurenames = array();
+        foreach ($orgstructurelist as $key => $value) {
+            $orgstructurenames[$key] = $value->name;
+        }
+        
+
+        $mform->addElement('select', 'typeofcourse', get_string('typeofcourse','local_newsvnr'), $toclist);
+        // $mform->addHelpButton('typeofcourse', 'typeofcourse','local_newsvnr');
+        $mform->addRule('typeofcourse', get_string('missingtypeofcourse','local_newsvnr'), 'required', null, 'client');
+        $mform->setType('typeofcourse', PARAM_INT);
+        $mform->addElement('text', 'courseoforgstructure', get_string('courseoforgstructure','local_newsvnr'), 'maxlength="254" size="30"');
+        $mform->setType('courseoforgstructure', PARAM_INT);
+        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3"></div><div class="col-md-3 pr-0 ml-3 form-inline felement" id="treeview-orgstructure-course" style="background-color: #e9ecef"></div></div>');
+
+        // $mform->addHelpButton('courseoforgstructure', 'courseoforgstructure','local_newsvnr');
+        // $mform->addRule('courseoforgstructure', get_string('missingcourseoforgstructure','local_newsvnr'), 'required', null, 'client');
+       
+
+        $mform->addElement('select', 'courseofjobtitle', get_string('courseofjobtitle','local_newsvnr'), $orgjobtitlenames);
+        // $mform->addHelpButton('courseofjobtitle', 'courseofjobtitle','local_newsvnr');
+        // $mform->addRule('courseofjobtitle', get_string('missingcourseofjobtitle','local_newsvnr'), 'required', null, 'client');
+        $mform->setType('courseofjobtitle', PARAM_INT);
+        
+        $mform->addElement('select', 'courseofposition', get_string('courseofposition','local_newsvnr'), $orgpositionnames);
+        // $mform->addHelpButton('courseofposition', 'courseofposition','local_newsvnr');
+        // $mform->addRule('courseofposition', get_string('missingcourseofpostion','local_newsvnr'), 'required', null, 'client');
+        $mform->setType('courseofposition', PARAM_INT);
+
+        $mform->addElement('advcheckbox', 'pinned', get_string('pinned', 'local_newsvnr'), ' ', array('group' => 1), array(0, 1));
+
+        // --- Kết thúc custom --- ///
         // Verify permissions to change course category or keep current.
         if (empty($course->id)) {
             if (has_capability('moodle/course:create', $categorycontext)) {
