@@ -244,7 +244,7 @@ if (!empty($course->id)) {
 
 $PAGE->set_title($title);
 $PAGE->set_heading($fullname);
-
+$PAGE->requires->js_call_amd('core_course/orgtreeview','orgtreeview');
 echo $OUTPUT->header();
 echo $OUTPUT->heading($pagedesc);
 
