@@ -260,6 +260,7 @@ class core_course_management_renderer extends plugin_renderer_base {
 
         $html = html_writer::start_tag('li', $attributes);
         $html .= html_writer::start_div('clearfix');
+        $html .= html_writer::div($this->output->pix_icon('i/move_2d', get_string('dndcourse')), 'float-left drag-handle');
         $html .= html_writer::start_div('float-left ba-checkbox');
         $html .= html_writer::empty_tag('input', $bcatinput).'&nbsp;';
         $html .= html_writer::end_div();

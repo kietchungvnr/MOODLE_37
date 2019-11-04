@@ -74,7 +74,7 @@ class admin_uploaduser_form1 extends moodleform {
  */
 class admin_uploaduser_form2 extends moodleform {
     function definition () {
-        global $CFG, $USER;
+        global $CFG, $USER, $DB;
 
         $mform   = $this->_form;
         $columns = $this->_customdata['columns'];
