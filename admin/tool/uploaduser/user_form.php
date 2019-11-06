@@ -304,27 +304,27 @@ class admin_uploaduser_form2 extends moodleform {
         $mform->setAdvanced('phone2');
         $mform->setForceLtr('phone2');
 
-        /**
-         * Custom by Vũ
-         *
-         */
-        $orgpositionlist = $DB->get_records('orgstructure_position');
-        $orgpositionnames = array();
+        // /**
+        //  * Custom by Vũ
+        //  *
+        //  */
+        // $orgpositionlist = $DB->get_records('orgstructure_position');
+        // $orgpositionnames = array();
         
-        foreach ($orgpositionlist as $key => $value) {    
-            $orgpositionnames[$key] = $value->name;                     
-        }
+        // foreach ($orgpositionlist as $key => $value) {    
+        //     $orgpositionnames[$key] = $value->name;                     
+        // }
 
-        $options = array(
-            'placeholder' => get_string('search', 'local_newsvnr'),
-        );
+        // $options = array(
+        //     'placeholder' => get_string('search', 'local_newsvnr'),
+        // );
 
-        $mform->addElement('autocomplete', 'orgpositionid', get_string('orgpositionid', 'local_newsvnr'), $orgpositionnames, $options);
-        // $mform->addRule('orgpositionid', get_string('required'), 'required', null, 'client');
-        $mform->setType('orgpositionid', PARAM_INT);
-        /**
-         * Kết thúc Custom
-         */
+        // $mform->addElement('autocomplete', 'orgpositionid', get_string('orgpositionid', 'local_newsvnr'), $orgpositionnames, $options);
+        // // $mform->addRule('orgpositionid', get_string('required'), 'required', null, 'client');
+        // $mform->setType('orgpositionid', PARAM_INT);
+        // /**
+        //  * Kết thúc Custom
+        //  */
 
         $mform->addElement('text', 'address', get_string('address'), 'maxlength="255" size="25"');
         $mform->setType('address', PARAM_TEXT);

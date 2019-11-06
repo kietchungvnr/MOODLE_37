@@ -99,7 +99,7 @@ $STD_FIELDS = array('id', 'username', 'email',
         'deleted',     // 1 means delete user
         'mnethostid',  // Can not be used for adding, updating or deleting of users - only for enrolments, groups, cohorts and suspending.
         'interests',
-        'orgpositionid', // Custom by Vũ: Thêm filed
+        'orgpositionname', // Custom by Vũ: Thêm filed
         'usercode', // Custom by Vũ: Thêm filed
     );
 // Include all name fields.
@@ -269,6 +269,17 @@ if ($formdata = $mform2->is_cancelled()) {
                 $upt->track('lastname', $errorstr, 'error');
                 $error = true;
             }
+
+            if($DB->record_exists('user',['usercode' => $user->usercode])) {
+                $upt->track('usercode', get_string('duplicateusercode','local_newsvnr'),'error');
+                $error = true;
+            }
+
+            if(!$DB->record_exists('orgstructure_position',['name' => $user->orgpositionname])) {
+                $upt->track('orgpositionname', get_string('invalidorgposition','local_newsvnr'),'error');
+                $error = true;
+            }
+
             if ($error) {
                 $userserrors++;
                 continue;
@@ -618,6 +629,8 @@ if ($formdata = $mform2->is_cancelled()) {
                             }
                         }
 
+                        $existinguser->orgpositionname = $DB->get_field('orgstructure_position', 'name', ['id' => $existinguser->orgpositionid]);
+
                         if (in_array($column, $upt->columns)) {
                             $upt->track($column, s($existinguser->$column).'-->'.s($user->$column), 'info', false);
                         }
@@ -696,6 +709,9 @@ if ($formdata = $mform2->is_cancelled()) {
 
             if ($doupdate or $existinguser->password !== $oldpw) {
                 // We want only users that were really updated.
+                 
+                if($existinguser->orgpositionid)
+                    $existinguser->orgpositionid = $DB->get_field('orgstructure_position', 'id', ['name' => $user->orgpositionname]);
                 user_update_user($existinguser, false, false);
 
                 $upt->track('status', $struserupdated);
@@ -828,6 +844,10 @@ if ($formdata = $mform2->is_cancelled()) {
             } else {
                 $user->password = AUTH_PASSWORD_NOT_CACHED;
                 $upt->track('password', '-', 'normal', false);
+            }
+
+            if($user->orgpositionname) {
+                $user->orgpositionid = $DB->get_field('orgstructure_position', 'id', ['name' => $user->orgpositionname]);
             }
 
             $user->id = user_create_user($user, false, false);
@@ -1230,6 +1250,19 @@ while ($linenum <= $previewrows and $fields = $cir->next()) {
         list($status, $message) = field_value_validators::validate_theme($rowcols['theme']);
         if ($status !== 'normal' && !empty($message)) {
             $rowcols['status'][] = $message;
+        }
+    }
+
+    if(isset($rowcols['usercode'])) {
+        if($DB->record_exists('user', ['usercode' => $rowcols['usercode']])) {
+            $rowcols['status'][] = get_string('duplicateusercode','local_newsvnr');
+                
+        }
+    }
+
+    if(isset($rowcols['orgpositionname'])) {
+        if(!$DB->record_exists('orgstructure_position',['name' => $rowcols['orgpositionname']])) {
+            $rowcols['status'][] = get_string('invalidorgposition','local_newsvnr');
         }
     }
 
