@@ -56,6 +56,7 @@ if($id){
     foreach($orgcatedb as $value){
         $orgcate->id = $value->id;
         $orgcate->catename = $value->name;
+        $orgcate->catecode = $value->code;
         $orgcate->orgcate_description = $value->description;
     }
 }else{
@@ -105,7 +106,7 @@ if ($mform_orgcate->is_cancelled()){
       redirect($orgmanagerurl);
 } else if ($orgcate = $mform_orgcate->get_data()) {
   if($id){
-      $orgcateupdate = (object)array('id' => $orgcate->id, 'name' => $orgcate->catename,'description' => $orgcate->orgcate_description);
+      $orgcateupdate = (object)array('id' => $orgcate->id, 'name' => $orgcate->catename, 'code' => $orgcate->catecode,'description' => $orgcate->orgcate_description);
       if (isset($orgcate->submitbutton)) {
           $message = $strupdate;
       }
@@ -116,6 +117,7 @@ if ($mform_orgcate->is_cancelled()){
   }
   else{
       $orgcate->name = $orgcate->catename;
+      $orgcate->code = $orgcate->catecode;
       $orgcate->description = $orgcate->orgcate_description;
 
       if (isset($orgcate->submitbutton)) {

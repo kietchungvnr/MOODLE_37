@@ -21,7 +21,7 @@ class news_page implements renderable, templatable {
     public function export_for_template(renderer_base $output) {
         global $DB,$USER,$CFG;
         $theme_settings = new theme_settings();
-        $searchquery  = optional_param('search', '', PARAM_RAW);
+        $searchquery  = optional_param('q', '', PARAM_RAW);
         $showalldata = optional_param('showall','', PARAM_RAW);
         $data = \core_webservice_external::get_site_info();
         $data['news'] = true;

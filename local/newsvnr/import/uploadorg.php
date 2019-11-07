@@ -40,7 +40,7 @@ $strnumbercurrent = get_string('numbercurrent', 'local_newsvnr');
 $strmessage = get_string('errordataimport', 'local_newsvnr'); 
 
 // array of all valid fields for validation
-$STD_FIELDS = array('id', 'name', 'code','jobtitlename','orgstructurename','parentname','managername','numbercurrent','numbermargin','namebylaw','description','visible');
+$STD_FIELDS = array('id', 'name', 'code','jobtitlename', 'categoryname', 'orgstructurename','parentname','managername','numbercurrent','numbermargin','namebylaw','description','visible');
 
 $PRF_FIELDS = array();
 
@@ -145,6 +145,19 @@ if($formdata = $mform2->is_cancelled()) {
             $orgcate->jobtitleid = $jobtitleid;   
         } 
     }
+    if(isset($orgcate->categoryname)) {
+        $categoryid = $DB->get_field_select('orgstructure_category','id','name = :name',['name' => $orgcate->categoryname]);
+        if($categoryid) {
+            $orgcate->orgstructuretypeid = $categoryid;
+        }
+    }
+    if(isset($orgcate->parentname)) {
+        $parentid = $DB->get_field_select('orgstructure','id','name = :name',['name' => $orgcate->parentname]);
+        if($parentid) {
+            $orgcate->parentid = $parentid;
+        }
+    }
+
     $DB->insert_record($formdata->tablename,$orgcate);
     $cir->close();
     $cir->cleanup(true);
@@ -208,6 +221,24 @@ while ($linenum <= $previewrows and $fields = $cir->next()) {
         	if(!$jobtitleid) {
         		$orgcate['status'][] = get_string('notfoundorgjobtitle', 'local_newsvnr',format_string($orgcate['jobtitlename']));
         	}
+        }
+
+        if(isset($orgcate['categoryname'])) {
+            $categoryid = $DB->get_field_select('orgstructure_category','id','name = :name',['name' => $orgcate['categoryname']]);
+            if(!$categoryid) {
+                $orgcate['status'][] = get_string('notfoundorgcategory', 'local_newsvnr',format_string($orgcate['jobtitlename']));
+            }
+        }
+
+        if(isset($orgcate['parentname'])) {    
+            if($DB->record_exists('orgstructure', ['parentid' => 0])) {
+                $parentid = $DB->get_field_select('orgstructure','id','name = :name',['name' => $orgcate['parentname']]);
+                if(!$parentid) {
+                    $orgcate['status'][] = get_string('notfoundorgparent', 'local_newsvnr', format_string($orgcate['parentname'])); 
+                }    
+            } else {
+                $orgcate['status'][] = get_string('missingorgparent', 'local_newsvnr'); 
+            }
         }
     }
     $orgcate['status'] = implode(', <br />', $orgcate['status']);

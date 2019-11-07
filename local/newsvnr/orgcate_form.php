@@ -44,6 +44,9 @@ class orgcate_form extends moodleform {
         $mform->addElement('text','catename', get_string('catename', 'local_newsvnr'),'maxlength="200" size="50"');
         $mform->addRule('catename', get_string('required'), 'required', null, 'server');
         $mform->setType('catename', PARAM_TEXT);
+        $mform->addElement('text', 'catecode', get_string('catecode', 'local_newsvnr'), 'maxlength="50" size="50"');
+        $mform->addRule('catecode', get_string('required'), 'required', null, 'client');
+        $mform->setType('catecode', PARAM_TEXT);
         $mform->addElement('textarea', 'orgcate_description', get_string('description', 'local_newsvnr'),'wrap="virtual" rows="10" cols="52"');
         // $mform->addRule('orgcate_description',get_string('required'),'required',null,'client');
         $mform->setType('orgcate_description', PARAM_RAW);

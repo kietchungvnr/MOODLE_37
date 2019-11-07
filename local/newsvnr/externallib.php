@@ -97,6 +97,7 @@ class local_newsvnr_external extends external_api {
         if ($validateddata) {
             // Do the action.
              $orgcate->name = $validateddata->catename;
+             $orgcate->code = $validateddata->catecode;
              $orgcate->description = $validateddata->orgcate_description;
 
        

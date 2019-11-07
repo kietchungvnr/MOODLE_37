@@ -25,7 +25,7 @@
  **/
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
-$searchquery  = optional_param('search', '', PARAM_RAW);
+$searchquery  = optional_param('q', '', PARAM_RAW);
 $showalldata = optional_param('showall','', PARAM_RAW);
 require_login();
 $title = get_string('pagetitle', 'local_newsvnr');
