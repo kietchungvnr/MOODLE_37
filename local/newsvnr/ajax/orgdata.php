@@ -289,7 +289,7 @@ switch ($section) {
 
 				//lấy danh danh sách khóa học theo năng lực
 				if($value->competencyid) {
-					$list_comp = $DB->get_record('competency_coursepositioncomp',['competencyid' => $value->competencyid]);
+					$list_comp = $DB->get_record('competency_coursepositioncomp',['competencyid' => $value->competencyid, 'orgpositionid' => $userstd->orgpositionid]);
 				}
 
 				$list_comp_name = [];
@@ -446,7 +446,7 @@ switch ($section) {
 
 		
 			if($np->competencyid) {
-				$list_comp = $DB->get_record('competency_coursepositioncomp',['competencyid' => $np->competencyid]);
+				$list_comp = $DB->get_record('competency_coursepositioncomp',['competencyid' => $np->competencyid, 'orgpositionid' => $value->positionid]);
 			}
 		
 			$list_comp_name = [];
