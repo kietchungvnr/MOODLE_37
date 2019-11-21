@@ -16,5 +16,19 @@
         "moodlehq/behat-extension": "3.37.2",
         "mikey179/vfsstream": "^1.6",
         "instaclick/php-webdriver": "dev-local as 1.x-dev"
+    },
+    "require": {
+        "slim/slim": "^3.0",
+        "davidepastore/slim-validation": "^0.5.1",
+        "awurth/slim-validation": "^3.2",
+        "tuupola/slim-jwt-auth": "^3.4",
+        "ramsey/uuid": "^3.8",
+        "moontoast/math": "^1.1",
+        "monolog/monolog": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "local_newsvnr\\api\\": "local/newsvnr/api/src/"
+        }
     }
 }

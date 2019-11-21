@@ -27,6 +27,7 @@
 /.patches/
 /.idea/
 /nbproject/
+/local/commander/
 CVS
 .DS_Store
 /.settings/

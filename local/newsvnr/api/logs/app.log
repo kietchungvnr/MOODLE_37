@@ -1,0 +1,230 @@
+[2019-11-14T18:59:52.676103+07:00] api-app.DEBUG: Using token from request header [] {"uid":"649d4ab"}
+[2019-11-14T18:59:52.682957+07:00] api-app.INFO: Lấy thông tin user ....! [] {"uid":"649d4ab"}
+[2019-11-15T08:56:48.788918+07:00] api-app.DEBUG: Using token from request header [] {"uid":"e0285b5"}
+[2019-11-15T08:56:48.882274+07:00] api-app.WARNING: Expired token ["eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1NzM3MzIzOTIsImp0aSI6IjU1ZDJiMjhhLTA2ZDUtMTFlYS04OTQyLTk0ZGU4MDcwYWNiMyIsImlzcyI6e30sIm5iZiI6MTU3MzczMjM5MiwiZXhwIjoxNTczNzM1OTkyfQ.f5n0D594NP3iLL9DGbXg-IxVV8ADNutZSDURaprZ_9eUzwo6AOKngXJ0iw9bjuFQnRVhPvHRkJdhqjxXh_pC7g"] {"uid":"e0285b5"}
+[2019-11-15T08:57:31.715473+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"dc91283"}
+[2019-11-15T08:57:43.999175+07:00] api-app.DEBUG: Using token from request header [] {"uid":"c55079c"}
+[2019-11-15T08:57:44.008542+07:00] api-app.INFO: Lấy thông tin user ....! [] {"uid":"c55079c"}
+[2019-11-15T08:57:54.428343+07:00] api-app.DEBUG: Using token from request header [] {"uid":"d91cc2f"}
+[2019-11-15T08:59:26.014316+07:00] api-app.DEBUG: Using token from request header [] {"uid":"a82c1dc"}
+[2019-11-15T09:14:00.333485+07:00] api-app.DEBUG: Using token from request header [] {"uid":"b1d23a1"}
+[2019-11-15T09:14:12.049019+07:00] api-app.DEBUG: Using token from request header [] {"uid":"b43f57c"}
+[2019-11-15T09:14:17.439484+07:00] api-app.DEBUG: Using token from request header [] {"uid":"0b50e57"}
+[2019-11-15T09:49:01.044826+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"0c17cd9"}
+[2019-11-15T09:50:23.779437+07:00] api-app.WARNING: Token not found [] {"uid":"583e97c"}
+[2019-11-15T09:50:46.561532+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"31aa39d"}
+[2019-11-15T09:50:59.061218+07:00] api-app.DEBUG: Using token from request header [] {"uid":"0918d7d"}
+[2019-11-15T09:51:04.777071+07:00] api-app.DEBUG: Using token from request header [] {"uid":"3a58ffa"}
+[2019-11-15T09:51:04.779834+07:00] api-app.WARNING: Signature verification failed ["eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1NzM3ODYyNDYsImp0aSI6ImI5NThjODc2LTA3NTItMTFlYS05Yjk1LTk0ZGU4MDcwYWNiMyIsImlzcyI6e30sIm5iZiI6MTU3Mzc4NjI0NiwiZXhwIjoxNTczNzg5ODQ2fQ.ByAeC9gMFcqinL4YXZvx1U-A0pxT8t80aEYG8gmSO2ailUjz6PfNGLw8DuIENsQV9IwZeFpuSyMzX_QgglfKq"] {"uid":"3a58ffa"}
+[2019-11-15T09:51:13.909613+07:00] api-app.DEBUG: Using token from request header [] {"uid":"956bf47"}
+[2019-11-15T09:51:13.912787+07:00] api-app.WARNING: Signature verification failed ["eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1NzM3ODYyNDYsImp0aSI6ImI5NThjODc2LTA3NTItMTFlYS05Yjk1LTk0ZGU4MDcwYWNiMyIsImlzcyI6e30sIm5iZiI6MTU3Mzc4NjI0NiwiZXhwIjoxNTczNzg5ODQ2fQ.ByAeC9gMFcqinL4YXZvx1U-A0pxT8t80aEYG8gmSO2ailUjz6PfNGLw8DuIENsQV9IwZeFpuSyMzX_QgglfKq,"] {"uid":"956bf47"}
+[2019-11-15T09:51:27.248177+07:00] api-app.DEBUG: Using token from request header [] {"uid":"218e147"}
+[2019-11-15T10:21:55.000964+07:00] api-app.DEBUG: Using token from request header [] {"uid":"0ec11e1"}
+[2019-11-15T10:22:45.419098+07:00] api-app.DEBUG: Using token from request header [] {"uid":"0551983"}
+[2019-11-15T10:22:53.515343+07:00] api-app.DEBUG: Using token from request header [] {"uid":"7b82a03"}
+[2019-11-15T10:22:53.517978+07:00] api-app.WARNING: Malformed UTF-8 characters ["eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1NzM3ODYyNDYsImp0aSI6ImI5NThjODc2LTA3NTItMTFlYS05Yjkx1LTk0ZGU4MDcwYWNiMyIsImlzcyI6e30sIm5iZiI6MTU3Mzc4NjI0NiwiZXhwIjoxNTczNzg5ODQ2fQ.ByAeC9gMFcqinL4YXZvx1U-A0pxT8t80aEYG8gmSO2ailUjz6PfNGLw8DuIENsQV9IwZeFpuSyMzX_QgglfKqw"] {"uid":"7b82a03"}
+[2019-11-15T10:23:07.006556+07:00] api-app.DEBUG: Using token from request header [] {"uid":"256cb6b"}
+[2019-11-15T10:23:07.009027+07:00] api-app.WARNING: Signature verification failed ["eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1NzM3ODYyNDYsImp0aSI6ImI5NThjODc2LTA3NTItMTFlYS05Yjk1LTk0ZGU4MDcwYWNiMyIsImlzcyI6e30sIm5iZiI6MTU3Mzc4NjI0NiwiZXhwIjoxNTczNzg5ODQ2fQ.ByAeC9gMFcqinL4YXZvx1U-A0pxT8t80aEYG8gmSO2ailUjz6PfNGLw8DuIENsQV9IwZeFpuSyMzX_QgglfKqwas"] {"uid":"256cb6b"}
+[2019-11-15T10:24:38.480220+07:00] api-app.DEBUG: Using token from request header [] {"uid":"ef1fad3"}
+[2019-11-15T11:08:51.853552+07:00] api-app.DEBUG: Using token from request header [] {"uid":"a630546"}
+[2019-11-15T11:08:51.856801+07:00] api-app.WARNING: Expired token ["eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1NzM3ODYyNDYsImp0aSI6ImI5NThjODc2LTA3NTItMTFlYS05Yjk1LTk0ZGU4MDcwYWNiMyIsImlzcyI6e30sIm5iZiI6MTU3Mzc4NjI0NiwiZXhwIjoxNTczNzg5ODQ2fQ.ByAeC9gMFcqinL4YXZvx1U-A0pxT8t80aEYG8gmSO2ailUjz6PfNGLw8DuIENsQV9IwZeFpuSyMzX_QgglfKqw"] {"uid":"a630546"}
+[2019-11-15T11:08:58.964934+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"2a69081"}
+[2019-11-15T11:09:07.473138+07:00] api-app.DEBUG: Using token from request header [] {"uid":"46e24fb"}
+[2019-11-15T11:10:07.177358+07:00] api-app.DEBUG: Using token from request header [] {"uid":"a3d011f"}
+[2019-11-15T11:11:17.430207+07:00] api-app.DEBUG: Using token from request header [] {"uid":"f0e81d3"}
+[2019-11-15T11:12:35.935960+07:00] api-app.DEBUG: Using token from request header [] {"uid":"09c39e3"}
+[2019-11-15T11:14:06.905371+07:00] api-app.DEBUG: Using token from request header [] {"uid":"edf3078"}
+[2019-11-15T11:25:12.855820+07:00] api-app.DEBUG: Using token from request header [] {"uid":"2df217a"}
+[2019-11-15T11:37:24.701246+07:00] api-app.DEBUG: Using token from request header [] {"uid":"e9d8255"}
+[2019-11-15T11:42:47.396308+07:00] api-app.DEBUG: Using token from request header [] {"uid":"01dd3ff"}
+[2019-11-15T11:43:35.454686+07:00] api-app.DEBUG: Using token from request header [] {"uid":"71acfbb"}
+[2019-11-15T11:44:07.591996+07:00] api-app.DEBUG: Using token from request header [] {"uid":"70c3273"}
+[2019-11-15T11:44:32.703275+07:00] api-app.DEBUG: Using token from request header [] {"uid":"3b60609"}
+[2019-11-15T11:45:42.051890+07:00] api-app.DEBUG: Using token from request header [] {"uid":"80d2e64"}
+[2019-11-15T11:45:55.667112+07:00] api-app.DEBUG: Using token from request header [] {"uid":"27f9611"}
+[2019-11-15T11:46:38.106435+07:00] api-app.DEBUG: Using token from request header [] {"uid":"43215e2"}
+[2019-11-15T11:47:18.374457+07:00] api-app.DEBUG: Using token from request header [] {"uid":"5c1f94e"}
+[2019-11-15T11:47:49.354804+07:00] api-app.DEBUG: Using token from request header [] {"uid":"682cc80"}
+[2019-11-15T11:50:28.232495+07:00] api-app.DEBUG: Using token from request header [] {"uid":"ee40251"}
+[2019-11-15T11:50:49.866787+07:00] api-app.DEBUG: Using token from request header [] {"uid":"0801d3b"}
+[2019-11-15T11:50:58.137835+07:00] api-app.DEBUG: Using token from request header [] {"uid":"284b22b"}
+[2019-11-15T11:52:49.782395+07:00] api-app.DEBUG: Using token from request header [] {"uid":"4b7b411"}
+[2019-11-15T11:54:04.501834+07:00] api-app.DEBUG: Using token from request header [] {"uid":"0b8c3fa"}
+[2019-11-15T11:54:16.866791+07:00] api-app.DEBUG: Using token from request header [] {"uid":"34a72e7"}
+[2019-11-15T11:54:28.389883+07:00] api-app.DEBUG: Using token from request header [] {"uid":"626f8dc"}
+[2019-11-15T11:56:01.916056+07:00] api-app.DEBUG: Using token from request header [] {"uid":"1510ae2"}
+[2019-11-15T15:10:33.859168+07:00] api-app.DEBUG: Using token from request header [] {"uid":"925b6ae"}
+[2019-11-15T15:10:33.862511+07:00] api-app.WARNING: Expired token ["eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1NzM3OTA5MzksImp0aSI6ImE2M2Q3ZDZjLTA3NWQtMTFlYS04NzgyLTk0ZGU4MDcwYWNiMyIsImlzcyI6e30sIm5iZiI6MTU3Mzc5MDkzOSwiZXhwIjoxNTczNzk0NTM5fQ.lUCA_WsCHKF9u980Een-xfF4rx59lLVWC1yPCKsOgHWI57QYZKNIpwZW7nTjsUa71CMXHbdR6RkLYriULnc0Jw"] {"uid":"925b6ae"}
+[2019-11-15T15:10:39.794139+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"2445b0b"}
+[2019-11-15T15:10:49.537739+07:00] api-app.DEBUG: Using token from request header [] {"uid":"51be871"}
+[2019-11-15T15:13:23.994318+07:00] api-app.DEBUG: Using token from request header [] {"uid":"50b8f75"}
+[2019-11-15T15:14:33.422972+07:00] api-app.DEBUG: Using token from request header [] {"uid":"b854d9c"}
+[2019-11-15T15:14:51.799694+07:00] api-app.DEBUG: Using token from request header [] {"uid":"3d6091c"}
+[2019-11-15T15:15:44.332074+07:00] api-app.DEBUG: Using token from request header [] {"uid":"89afe3e"}
+[2019-11-15T15:16:03.065982+07:00] api-app.DEBUG: Using token from request header [] {"uid":"da6cf5e"}
+[2019-11-15T15:16:38.334138+07:00] api-app.DEBUG: Using token from request header [] {"uid":"406f0ea"}
+[2019-11-15T15:16:52.857057+07:00] api-app.DEBUG: Using token from request header [] {"uid":"9d2c482"}
+[2019-11-15T15:17:07.549544+07:00] api-app.DEBUG: Using token from request header [] {"uid":"6518dd3"}
+[2019-11-15T15:18:59.910403+07:00] api-app.DEBUG: Using token from request header [] {"uid":"0341672"}
+[2019-11-15T15:19:48.149773+07:00] api-app.DEBUG: Using token from request header [] {"uid":"109ec43"}
+[2019-11-15T10:17:22.088150+01:00] api-app.DEBUG: Using token from request header [] {"uid":"d55ecfc"}
+[2019-11-15T10:17:22.091741+01:00] api-app.WARNING: Expired token ["eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1NzM4MDU0MzksImp0aSI6IjY5NjdhZDAwLTA3N2YtMTFlYS04YjA3LTk0ZGU4MDcwYWNiMyIsImlzcyI6e30sIm5iZiI6MTU3MzgwNTQzOSwiZXhwIjoxNTczODA5MDM5fQ.0EqDEoyPicSzJgBdUB1tU37fvohJa7UweqZCiXes_Go65zoUvmbbnahCILVFHavWn4ND9Cy_QhuVb0YS5rUOUg"] {"uid":"d55ecfc"}
+[2019-11-15T17:07:24.429582+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"821ea26"}
+[2019-11-15T17:07:55.084830+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"e96bffe"}
+[2019-11-15T17:08:35.726629+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"f3cabb4"}
+[2019-11-15T17:09:25.404401+07:00] api-app.INFO: Xác thực thành cđông! [] {"uid":"e77a93d"}
+[2019-11-15T17:11:00.079348+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"174f175"}
+[2019-11-15T17:13:04.750715+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"974487a"}
+[2019-11-15T17:13:22.918730+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"b025f84"}
+[2019-11-15T17:14:21.102309+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"ff6b8ed"}
+[2019-11-15T17:14:37.416009+07:00] api-app.DEBUG: Using token from request header [] {"uid":"4de75ed"}
+[2019-11-15T17:14:37.418545+07:00] api-app.WARNING: Signature verification failed ["\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1NzM4MTI4NjEsImp0aSI6ImIwZDZlNDU2LTA3OTAtMTFlYS1iZmI3LTk0ZGU4MDcwYWNiMyIsImlzcyI6e30sIm5iZiI6MTU3MzgxMjg2MSwiZXhwIjoxNTczODE2NDYxfQ.J8qAOuZLopbOiPNBA4_4V0AWiSVNOgMvckqomFgyXqizDtuP3sA-netR7XibPy6JmVTcE2gUcaLLmIGwWwugZQ"] {"uid":"4de75ed"}
+[2019-11-15T17:14:49.948703+07:00] api-app.DEBUG: Using token from request header [] {"uid":"18842cb"}
+[2019-11-15T11:15:17.300308+01:00] api-app.DEBUG: Using token from request header [] {"uid":"ae55188"}
+[2019-11-15T11:15:24.670197+01:00] api-app.DEBUG: Using token from request header [] {"uid":"1fd47bb"}
+[2019-11-15T11:17:21.099360+01:00] api-app.DEBUG: Using token from request header [] {"uid":"ada40cd"}
+[2019-11-15T11:20:54.119166+01:00] api-app.DEBUG: Using token from request header [] {"uid":"52923bf"}
+[2019-11-15T11:22:03.453882+01:00] api-app.DEBUG: Using token from request header [] {"uid":"23db4c4"}
+[2019-11-15T11:35:07.901675+01:00] api-app.DEBUG: Using token from request header [] {"uid":"9275bf0"}
+[2019-11-15T11:38:16.286816+01:00] api-app.DEBUG: Using token from request header [] {"uid":"d1adb6c"}
+[2019-11-15T11:38:24.770296+01:00] api-app.DEBUG: Using token from request header [] {"uid":"61b7316"}
+[2019-11-15T11:38:40.064401+01:00] api-app.DEBUG: Using token from request header [] {"uid":"4e09fa0"}
+[2019-11-15T11:39:57.432655+01:00] api-app.DEBUG: Using token from request header [] {"uid":"58b2e7b"}
+[2019-11-15T11:40:24.854235+01:00] api-app.DEBUG: Using token from request header [] {"uid":"568120c"}
+[2019-11-15T11:40:56.119770+01:00] api-app.DEBUG: Using token from request header [] {"uid":"feafff9"}
+[2019-11-15T11:41:29.999744+01:00] api-app.DEBUG: Using token from request header [] {"uid":"55a77cb"}
+[2019-11-15T11:41:44.709994+01:00] api-app.DEBUG: Using token from request header [] {"uid":"21efad9"}
+[2019-11-15T11:42:03.643985+01:00] api-app.DEBUG: Using token from request header [] {"uid":"1cde12f"}
+[2019-11-15T11:42:11.630108+01:00] api-app.DEBUG: Using token from request header [] {"uid":"b217896"}
+[2019-11-15T11:42:43.286944+01:00] api-app.DEBUG: Using token from request header [] {"uid":"8874357"}
+[2019-11-15T11:47:19.914529+01:00] api-app.DEBUG: Using token from request header [] {"uid":"9968d09"}
+[2019-11-15T11:50:06.241668+01:00] api-app.DEBUG: Using token from request header [] {"uid":"df4e366"}
+[2019-11-15T11:50:21.024367+01:00] api-app.DEBUG: Using token from request header [] {"uid":"f3b7dd6"}
+[2019-11-15T11:50:32.740750+01:00] api-app.DEBUG: Using token from request header [] {"uid":"176e247"}
+[2019-11-15T11:50:56.006998+01:00] api-app.DEBUG: Using token from request header [] {"uid":"b6bbfc3"}
+[2019-11-15T11:51:29.297055+01:00] api-app.DEBUG: Using token from request header [] {"uid":"56267a7"}
+[2019-11-15T11:52:19.354502+01:00] api-app.DEBUG: Using token from request header [] {"uid":"9fadd62"}
+[2019-11-15T11:54:31.577503+01:00] api-app.DEBUG: Using token from request header [] {"uid":"61d45db"}
+[2019-11-15T11:54:43.695759+01:00] api-app.DEBUG: Using token from request header [] {"uid":"e4c4763"}
+[2019-11-15T11:54:59.597373+01:00] api-app.DEBUG: Using token from request header [] {"uid":"cdb396c"}
+[2019-11-15T11:57:14.157311+01:00] api-app.DEBUG: Using token from request header [] {"uid":"f6302f2"}
+[2019-11-15T11:59:09.112241+01:00] api-app.INFO: Xác thực thành công! [] {"uid":"538e9d9"}
+[2019-11-15T11:59:40.255402+01:00] api-app.INFO: Xác thực thành công! [] {"uid":"284b33f"}
+[2019-11-15T11:59:56.513246+01:00] api-app.INFO: Xác thực thành công! [] {"uid":"d882afe"}
+[2019-11-15T12:15:48.975190+01:00] api-app.WARNING: Token not found [] {"uid":"91c4939"}
+[2019-11-15T12:16:01.997351+01:00] api-app.INFO: Xác thực thành công! [] {"uid":"aad3842"}
+[2019-11-15T12:16:15.630380+01:00] api-app.DEBUG: Using token from request header [] {"uid":"f0004a6"}
+[2019-11-16T10:40:25.544625+01:00] api-app.INFO: Xác thực thành công! [] {"uid":"d5f55c8"}
+[2019-11-16T10:41:12.236270+01:00] api-app.DEBUG: Using token from request header [] {"uid":"b58ff82"}
+[2019-11-16T10:41:56.706633+01:00] api-app.DEBUG: Using token from request header [] {"uid":"f6082a7"}
+[2019-11-16T10:42:10.935485+01:00] api-app.DEBUG: Using token from request header [] {"uid":"5838fd4"}
+[2019-11-16T10:42:30.027306+01:00] api-app.DEBUG: Using token from request header [] {"uid":"45138a9"}
+[2019-11-16T10:42:58.415852+01:00] api-app.DEBUG: Using token from request header [] {"uid":"e847803"}
+[2019-11-16T10:43:36.556271+01:00] api-app.DEBUG: Using token from request header [] {"uid":"0b3a473"}
+[2019-11-16T10:56:14.053861+01:00] api-app.DEBUG: Using token from request header [] {"uid":"ab8c010"}
+[2019-11-16T10:56:43.504030+01:00] api-app.DEBUG: Using token from request header [] {"uid":"0d31184"}
+[2019-11-16T10:59:12.814480+01:00] api-app.DEBUG: Using token from request header [] {"uid":"a2b5ecb"}
+[2019-11-16T11:00:02.064565+01:00] api-app.DEBUG: Using token from request header [] {"uid":"8e48200"}
+[2019-11-16T11:00:11.456455+01:00] api-app.DEBUG: Using token from request header [] {"uid":"4187b20"}
+[2019-11-18T03:29:46.902215+01:00] api-app.INFO: Xác thực thành công! [] {"uid":"b6ae966"}
+[2019-11-18T03:30:33.717889+01:00] api-app.DEBUG: Using token from request header [] {"uid":"c04758d"}
+[2019-11-18T03:33:09.305632+01:00] api-app.DEBUG: Using token from request header [] {"uid":"1895737"}
+[2019-11-18T03:33:23.997482+01:00] api-app.DEBUG: Using token from request header [] {"uid":"0cbdd5c"}
+[2019-11-18T03:33:37.966138+01:00] api-app.DEBUG: Using token from request header [] {"uid":"de76a30"}
+[2019-11-18T03:35:03.151307+01:00] api-app.DEBUG: Using token from request header [] {"uid":"c254e51"}
+[2019-11-18T03:35:22.223664+01:00] api-app.DEBUG: Using token from request header [] {"uid":"e0d4ad3"}
+[2019-11-18T03:36:12.321793+01:00] api-app.DEBUG: Using token from request header [] {"uid":"f38c78b"}
+[2019-11-18T03:36:24.657711+01:00] api-app.DEBUG: Using token from request header [] {"uid":"114b082"}
+[2019-11-18T03:36:51.782997+01:00] api-app.DEBUG: Using token from request header [] {"uid":"56e3a80"}
+[2019-11-18T03:38:02.279672+01:00] api-app.DEBUG: Using token from request header [] {"uid":"a1b744c"}
+[2019-11-18T03:45:43.929965+01:00] api-app.DEBUG: Using token from request header [] {"uid":"942abfc"}
+[2019-11-18T03:46:14.618246+01:00] api-app.DEBUG: Using token from request header [] {"uid":"a3937c8"}
+[2019-11-18T03:46:56.120641+01:00] api-app.DEBUG: Using token from request header [] {"uid":"04c5a09"}
+[2019-11-18T03:47:08.793007+01:00] api-app.DEBUG: Using token from request header [] {"uid":"b6874c8"}
+[2019-11-18T03:47:46.943137+01:00] api-app.DEBUG: Using token from request header [] {"uid":"eb16b17"}
+[2019-11-18T03:47:54.548708+01:00] api-app.DEBUG: Using token from request header [] {"uid":"6186796"}
+[2019-11-18T03:48:20.919492+01:00] api-app.DEBUG: Using token from request header [] {"uid":"d8ef5d4"}
+[2019-11-18T03:48:58.627763+01:00] api-app.DEBUG: Using token from request header [] {"uid":"644f4ec"}
+[2019-11-18T03:56:56.207229+01:00] api-app.DEBUG: Using token from request header [] {"uid":"c55b17f"}
+[2019-11-18T03:57:10.425226+01:00] api-app.DEBUG: Using token from request header [] {"uid":"ecb7e1e"}
+[2019-11-18T03:58:37.863122+01:00] api-app.DEBUG: Using token from request header [] {"uid":"0a4bae9"}
+[2019-11-18T04:01:24.837813+01:00] api-app.INFO: Xác thực sai! [] {"uid":"7f7756d"}
+[2019-11-18T04:06:12.275556+01:00] api-app.DEBUG: Using token from request header [] {"uid":"1080030"}
+[2019-11-18T04:06:21.321476+01:00] api-app.DEBUG: Using token from request header [] {"uid":"7a87e8d"}
+[2019-11-18T04:10:37.092895+01:00] api-app.DEBUG: Using token from request header [] {"uid":"be61d0f"}
+[2019-11-18T04:10:46.029932+01:00] api-app.DEBUG: Using token from request header [] {"uid":"899b5cd"}
+[2019-11-18T04:31:44.275002+01:00] api-app.INFO: Xác thực sai! [] {"uid":"c10a5a3"}
+[2019-11-18T04:31:58.404623+01:00] api-app.INFO: Xác thực sai! [] {"uid":"5ed44e6"}
+[2019-11-18T04:32:02.310964+01:00] api-app.INFO: Xác thực sai! [] {"uid":"173c061"}
+[2019-11-18T04:32:20.073495+01:00] api-app.INFO: Xác thực thành công! [] {"uid":"e8cc502"}
+[2019-11-18T04:33:04.081053+01:00] api-app.INFO: Xác thực thành công! [] {"uid":"3251db4"}
+[2019-11-18T04:33:06.975242+01:00] api-app.INFO: Xác thực thành công! [] {"uid":"69a6ccb"}
+[2019-11-18T04:33:52.729505+01:00] api-app.DEBUG: Using token from request header [] {"uid":"64c144d"}
+[2019-11-18T04:33:52.743185+01:00] api-app.WARNING: Signature verification failed ["\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1NzQwNDc5ODcsImp0aSI6IjIyY2NjN2E0LTA5YjQtMTFlYS1hMmZlLTk0ZGU4MDcwYWNiMyIsImlzcyI6e30sIm5iZiI6MTU3NDA0Nzk4NywiZXhwIjoxNTc0MDUxNTg3fQ.XTIKGYGFqFgZjOv9Osm6DObPaDGxfV8jf8QyBeGOHj-gaUSqkuyX_0X8rlRZcc4LuPnB0dBuoc6i0ghJvAyNWA"] {"uid":"64c144d"}
+[2019-11-18T04:34:00.355570+01:00] api-app.DEBUG: Using token from request header [] {"uid":"26a31e8"}
+[2019-11-18T04:34:16.373083+01:00] api-app.DEBUG: Using token from request header [] {"uid":"a2a69c9"}
+[2019-11-18T04:34:20.287868+01:00] api-app.DEBUG: Using token from request header [] {"uid":"301dbd9"}
+[2019-11-18T04:34:22.212572+01:00] api-app.DEBUG: Using token from request header [] {"uid":"8274562"}
+[2019-11-18T04:34:33.733046+01:00] api-app.DEBUG: Using token from request header [] {"uid":"9406122"}
+[2019-11-18T04:34:53.055044+01:00] api-app.DEBUG: Using token from request header [] {"uid":"16243c0"}
+[2019-11-18T04:35:38.916542+01:00] api-app.DEBUG: Using token from request header [] {"uid":"b5d6e1c"}
+[2019-11-18T04:35:52.711382+01:00] api-app.DEBUG: Using token from request header [] {"uid":"e3da963"}
+[2019-11-18T04:36:01.956907+01:00] api-app.DEBUG: Using token from request header [] {"uid":"452a3cf"}
+[2019-11-18T04:36:08.953130+01:00] api-app.DEBUG: Using token from request header [] {"uid":"dacb49a"}
+[2019-11-18T05:21:45.992604+01:00] api-app.INFO: Xác thực thành công! [] {"uid":"221002f"}
+[2019-11-18T05:21:49.658436+01:00] api-app.INFO: Xác thực thành công! [] {"uid":"aa9da81"}
+[2019-11-18T05:21:53.412541+01:00] api-app.INFO: Xác thực thành công! [] {"uid":"a7dbb3b"}
+[2019-11-18T08:27:40.216092+01:00] api-app.INFO: Xác thực thành công! [] {"uid":"5c63a3d"}
+[2019-11-18T08:27:56.247830+01:00] api-app.DEBUG: Using token from request header [] {"uid":"e1772c6"}
+[2019-11-18T08:28:12.973824+01:00] api-app.DEBUG: Using token from request header [] {"uid":"6b8aa06"}
+[2019-11-18T08:28:23.998859+01:00] api-app.DEBUG: Using token from request header [] {"uid":"ebd7ea1"}
+[2019-11-18T08:28:53.203286+01:00] api-app.DEBUG: Using token from request header [] {"uid":"794c1dd"}
+[2019-11-18T08:29:44.400472+01:00] api-app.DEBUG: Using token from request header [] {"uid":"8235750"}
+[2019-11-18T08:31:24.986753+01:00] api-app.DEBUG: Using token from request header [] {"uid":"161e482"}
+[2019-11-18T08:31:58.100936+01:00] api-app.DEBUG: Using token from request header [] {"uid":"92fdd73"}
+[2019-11-18T09:30:22.349583+01:00] api-app.INFO: Xác thực thành công! [] {"uid":"1c8975b"}
+[2019-11-18T15:31:16.523486+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"fd36ce9"}
+[2019-11-18T15:52:46.466552+07:00] api-app.DEBUG: Using token from request header [] {"uid":"ee49879"}
+[2019-11-18T15:52:46.477084+07:00] api-app.WARNING: Expired token ["eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1NzQwNjIwNjAsImp0aSI6ImU3NDJlYWM2LTA5ZDQtMTFlYS1iYTFiLTk0ZGU4MDcwYWNiMyIsImlzcyI6e30sIm5iZiI6MTU3NDA2MjA2MCwiZXhwIjoxNTc0MDY1NjYwfQ.D82zY7CO92IQVE4xD2yLYzb4gTk0WfOl143kIGQwmlpIsc2ooba0kAIXezgIMj2pjNG7TR0IgNjaKpiUjVNjEA"] {"uid":"ee49879"}
+[2019-11-18T15:52:52.331885+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"0436367"}
+[2019-11-18T15:53:03.207574+07:00] api-app.DEBUG: Using token from request header [] {"uid":"a777906"}
+[2019-11-18T15:53:36.610425+07:00] api-app.DEBUG: Using token from request header [] {"uid":"246b41e"}
+[2019-11-18T16:03:40.214958+07:00] api-app.DEBUG: Using token from request header [] {"uid":"87a2158"}
+[2019-11-18T16:03:50.590496+07:00] api-app.DEBUG: Using token from request header [] {"uid":"7d927b3"}
+[2019-11-18T16:05:54.086887+07:00] api-app.DEBUG: Using token from request header [] {"uid":"1eb6235"}
+[2019-11-18T16:06:03.472768+07:00] api-app.DEBUG: Using token from request header [] {"uid":"a61dff9"}
+[2019-11-18T16:06:19.433476+07:00] api-app.DEBUG: Using token from request header [] {"uid":"e2576dc"}
+[2019-11-18T16:06:59.132222+07:00] api-app.DEBUG: Using token from request header [] {"uid":"62b46eb"}
+[2019-11-18T16:07:17.265083+07:00] api-app.DEBUG: Using token from request header [] {"uid":"44eccad"}
+[2019-11-18T16:07:31.344172+07:00] api-app.DEBUG: Using token from request header [] {"uid":"8da6863"}
+[2019-11-18T16:07:42.241173+07:00] api-app.DEBUG: Using token from request header [] {"uid":"f5c9eba"}
+[2019-11-18T16:07:49.213478+07:00] api-app.DEBUG: Using token from request header [] {"uid":"3820b1e"}
+[2019-11-18T16:08:04.851622+07:00] api-app.DEBUG: Using token from request header [] {"uid":"0bc20e4"}
+[2019-11-18T16:08:54.594248+07:00] api-app.DEBUG: Using token from request header [] {"uid":"45f1abe"}
+[2019-11-18T16:09:05.763671+07:00] api-app.DEBUG: Using token from request header [] {"uid":"6b0f650"}
+[2019-11-18T16:09:17.045797+07:00] api-app.DEBUG: Using token from request header [] {"uid":"03f3c86"}
+[2019-11-18T16:17:11.262080+07:00] api-app.DEBUG: Using token from request header [] {"uid":"3c9cd93"}
+[2019-11-18T16:17:52.473431+07:00] api-app.DEBUG: Using token from request header [] {"uid":"c62bd49"}
+[2019-11-18T16:18:10.953105+07:00] api-app.DEBUG: Using token from request header [] {"uid":"a06d5e1"}
+[2019-11-18T16:36:47.829832+07:00] api-app.DEBUG: Using token from request header [] {"uid":"4543caf"}
+[2019-11-18T16:46:13.057687+07:00] api-app.DEBUG: Using token from request header [] {"uid":"f800899"}
+[2019-11-18T16:46:49.508239+07:00] api-app.DEBUG: Using token from request header [] {"uid":"02f9b87"}
+[2019-11-18T16:48:18.457442+07:00] api-app.DEBUG: Using token from request header [] {"uid":"5bf8722"}
+[2019-11-18T17:10:21.907540+07:00] api-app.DEBUG: Using token from request header [] {"uid":"64ccb1a"}
+[2019-11-18T17:10:21.910716+07:00] api-app.WARNING: Expired token ["eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1NzQwNjcxNzIsImp0aSI6ImNlMjUxNzQyLTA5ZTAtMTFlYS04NTc2LTk0ZGU4MDcwYWNiMyIsImlzcyI6e30sIm5iZiI6MTU3NDA2NzE3MiwiZXhwIjoxNTc0MDcwNzcyfQ.v8zDDDPL7I_WCrikBVKR6_T9xjYjp7we-TBv7q3RN3vqrerqz5541CL8c2c5mZyxa5d8iOJzmIWMlgFZxTky1g"] {"uid":"64ccb1a"}
+[2019-11-18T17:10:27.523031+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"f46d67e"}
+[2019-11-18T17:10:40.581937+07:00] api-app.DEBUG: Using token from request header [] {"uid":"931e260"}
+[2019-11-18T17:15:17.115090+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"a50f655"}
+[2019-11-18T17:16:33.404335+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"3cc17a4"}
+[2019-11-18T17:16:37.700285+07:00] api-app.DEBUG: Using token from request header [] {"uid":"f0e5992"}
+[2019-11-18T17:25:43.178228+07:00] api-app.DEBUG: Using token from request header [] {"uid":"d2b0c88"}
+[2019-11-18T18:22:05.571479+07:00] api-app.DEBUG: Using token from request header [] {"uid":"170bfcf"}
+[2019-11-18T18:22:05.574751+07:00] api-app.WARNING: Expired token ["eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1NzQwNzE4MjcsImp0aSI6ImE0ZGM4NDZlLTA5ZWItMTFlYS05MWI5LTk0ZGU4MDcwYWNiMyIsImlzcyI6e30sIm5iZiI6MTU3NDA3MTgyNywiZXhwIjoxNTc0MDc1NDI3fQ.uAGOxnuCcbO3tEQavse9vn_fpsxfl6_sz4QIblwcy3bHho0maw24O_8hqiJyIEzdLMkgyzgivGiCAjafGgKfvQ"] {"uid":"170bfcf"}
+[2019-11-18T18:39:57.041455+07:00] api-app.DEBUG: Using token from request header [] {"uid":"bb1ad40"}
+[2019-11-18T18:39:57.044440+07:00] api-app.WARNING: Expired token ["eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1NzQwNzE4MjcsImp0aSI6ImE0ZGM4NDZlLTA5ZWItMTFlYS05MWI5LTk0ZGU4MDcwYWNiMyIsImlzcyI6e30sIm5iZiI6MTU3NDA3MTgyNywiZXhwIjoxNTc0MDc1NDI3fQ.uAGOxnuCcbO3tEQavse9vn_fpsxfl6_sz4QIblwcy3bHho0maw24O_8hqiJyIEzdLMkgyzgivGiCAjafGgKfvQ"] {"uid":"bb1ad40"}
+[2019-11-18T18:40:04.065558+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"95890b8"}
+[2019-11-18T18:40:18.123581+07:00] api-app.DEBUG: Using token from request header [] {"uid":"d7940ce"}
+[2019-11-18T18:46:40.950999+07:00] api-app.DEBUG: Using token from request header [] {"uid":"d361168"}
+[2019-11-18T18:46:45.882910+07:00] api-app.DEBUG: Using token from request header [] {"uid":"780a512"}
+[2019-11-18T18:46:50.460771+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"855db2e"}
+[2019-11-18T18:46:55.068415+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"e51de89"}

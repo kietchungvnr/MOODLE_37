@@ -1,0 +1,60 @@
+<?php 
+
+namespace local_newsvnr\api\controllers;
+
+use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use Ramsey\Uuid\Uuid;
+use Firebase\JWT\JWT;
+
+defined('MOODLE_INTERNAL') || die;
+
+class TokenController extends BaseController
+{
+
+   	public function __construct($container) {
+      	parent::__construct($container);
+   	}
+
+   	public function checkUser($username,$password) {
+   		global $DB;
+	    $sql = "
+	            SELECT u.id, u.username, u.password
+	            FROM {user} AS u 
+	            WHERE u.username =  ?";
+	    $findUser = $DB->get_record_sql($sql, array($username));
+	    if($findUser)
+	    {
+	        $checkAuthenticate = password_verify($password, $findUser->password);
+	        return $checkAuthenticate; 
+	    }
+   	}
+   	
+    public function getToken() {
+   
+	    // error_reporting(E_ALL & ~E_NOTICE);
+	    if(!$this->checkUser($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
+	        $this->logger->info("Xác thực sai!");
+	        header('WWW-Authenticate: Basic realm="Elearning"'); 
+	        header('HTTP/1.0 401 Unauthorized'); 
+	        echo "You need to enter a valid username and password."; exit; 
+	    }
+	    else {
+	        $this->logger->info("Xác thực thành công!");
+	        $settings = $this->settings;
+	        $tokenId = Uuid::uuid1()->toString();
+	        $issuedAt = time();
+	        $notBefore = $issuedAt;
+	        $expire = $notBefore + 60 * 60;
+	        $serverName = $this->request->withUri($this->request->getUri(), true);
+	        $token = JWT::encode([
+	            'iat'  => $issuedAt,         // Issued at: time when the token was generated
+	            'jti'  => $tokenId,          // Json Token Id: an unique identifier for the token
+	            'iss'  => $serverName,       // Issuer
+	            'nbf'  => $notBefore,        // Not before
+	            'exp'  => $expire,
+	        ], "5U3Gn3gp4LrQpS34d7Gjxxxx", "HS512");
+	        return $this->response->withJson(['token' => $token]);
+	    }
+    }
+   
+}
