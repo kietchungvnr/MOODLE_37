@@ -61,6 +61,8 @@ class discussion {
     private $timeend;
     /** @var bool $pinned Is the discussion pinned? */
     private $pinned;
+
+    private $countviews;
     /** @var int $locked The timestamp of when the discussion was locked */
     private $timelocked;
 
@@ -96,7 +98,9 @@ class discussion {
         int $timestart,
         int $timeend,
         bool $pinned,
+        int $countviews,
         int $locked
+        
     ) {
         $this->id = $id;
         $this->courseid = $courseid;
@@ -111,6 +115,7 @@ class discussion {
         $this->timestart = $timestart;
         $this->timeend = $timeend;
         $this->pinned = $pinned;
+        $this->countviews = $countviews;
         $this->timelocked = $locked;
     }
 
@@ -233,6 +238,10 @@ class discussion {
         return $this->pinned;
     }
 
+
+    public function get_countviews() : int {
+        return $this->countviews;
+    }
     /**
      * Get the locked time of this discussion.
      *

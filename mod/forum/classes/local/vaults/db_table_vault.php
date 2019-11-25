@@ -183,7 +183,7 @@ abstract class db_table_vault {
         $wheresql = $alias . '.id ' . $insql;
         $sql = $this->generate_get_records_sql($wheresql);
         $records = $this->get_db()->get_records_sql($sql, $params);
-
+        // var_dump($records);die;
         return $this->transform_db_records_to_entities($records);
     }
 }

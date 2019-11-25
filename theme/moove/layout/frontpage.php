@@ -91,6 +91,7 @@ if (isloggedin()) {
     $templatecontext['competencyplans'] = $competencyplans;
 
     $templatecontext['headerbuttons'] = \theme_moove\util\extras::get_mypublic_headerbuttons($context, $user);
+    // var_dump($templatecontext);die;
     echo $OUTPUT->render_from_template('theme_moove/frontpage', $templatecontext);
 } else {
     $sliderfrontpage = false;

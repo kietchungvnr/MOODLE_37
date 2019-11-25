@@ -415,7 +415,7 @@ class theme_settings {
 
 
         $arr = array();
-        $sql = "SELECT p.subject, p.message, d.name,d.id,d.forum,d.course,p.id as postid FROM {forum} as f
+        $sql = "SELECT p.subject, LEFT(p.message, 500) as message, d.name,d.id,d.forum,d.course,p.id as postid FROM {forum} as f
         LEFT JOIN  {forum_discussions} as d on f.id  = d.forum 
         INNER JOIN {forum_posts} as p on d.id = p.discussion
         where f.type = ? and d.pinned= ? 
