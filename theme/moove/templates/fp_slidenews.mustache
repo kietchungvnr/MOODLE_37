@@ -5,10 +5,10 @@
      <div id="news-slider" class="owl-carousel owl-theme">
          {{#newslides}}
           <div class="null">
-              <div class="column-33">
+              <div class="column-33 d-flex align-items-center bg-white img-size" >
                 {{{image}}}
               </div>
-              <div class="column-66" style="height:300px;background-color: white;">
+              <div class="column-66 img-size bg-white">
                 <div class="text-news-tt"><a href="{{newurl}}"><p class="text-tt">{{subject}}</p></a></div>
                 <div class="text-news-ct"><p>{{message}}</p></div>
                 <button class="btn btn-slider" type="button"><a href="{{newurl}}" style="color:white">Đọc thêm</a></button>
@@ -23,6 +23,7 @@
               </div>
   </div>
 </div>
+
 
 
 

@@ -68,7 +68,7 @@ function get_forums_header_data_id($id) {
 function get_context_module($course_id, $discussionid) {
     global $DB;
     $sql = "
-            SELECT cm.id AS context_id FROM mdl_course_modules cm JOIN mdl_forum f ON cm.instance = f.id
+            SELECT DISTINCT cm.id AS context_id FROM mdl_course_modules cm JOIN mdl_forum f ON cm.instance = f.id
                 JOIN mdl_forum_discussions fd ON f.id = fd.forum
                 JOIN mdl_forum_posts fp ON fd.id = fp.discussion
             WHERE  fd.id = ? AND cm.course = ?";
@@ -363,9 +363,12 @@ function get_count_comment_by_discussionid($discussionid) {
      global $DB;
 
     $sql = "
-            SELECT fd.id AS disid,((SELECT count(id) FROM mdl_local_newsvnr_comments lnc WHERE lnc.discussionid = fd.id) + (SELECT count(lnr.id) FROM mdl_local_newsvnr_replies lnr 
-            JOIN mdl_local_newsvnr_comments lnc ON lnr.commentid = lnc.id
-            WHERE lnc.discussionid = fd.id)) AS countcomments
+            SELECT DISTINCT fd.id AS disid,
+                ((SELECT count(id) 
+                    FROM mdl_local_newsvnr_comments lnc 
+                    WHERE lnc.discussionid = fd.id) + (SELECT count(lnr.id) FROM mdl_local_newsvnr_replies lnr 
+                        LEFT JOIN mdl_local_newsvnr_comments lnc ON lnr.commentid = lnc.id
+                    WHERE lnc.discussionid = fd.id)) AS countcomments
             FROM mdl_forum_discussions fd JOIN mdl_forum_posts fp ON fd.id = fp.discussion
             WHERE fd.id = ?";
     $data = $DB->get_record_sql($sql, array($discussionid));

@@ -1,10 +1,11 @@
  
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
 
-
+       
         {{#coursedata}}
         <div class="container">
             <div class="new-detail-container">
+
                 <div class="new-detail-title">
                     {{title}}
                 </div>
@@ -20,6 +21,13 @@
                     </div>
                     <div class="col-md-6" style="text-align:right">
                         <i>Người đăng: </i> <i class="new-detail-user">{{{discussionart}}}</i>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                    </div>
+                    <div class="col-md-6" style="text-align:right">
+                        {{#btneditnews}}{{{btneditnews}}}{{/btneditnews}}</div>
                     </div>
                 </div>
                 <div id="fb-root"></div>

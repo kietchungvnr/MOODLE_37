@@ -361,7 +361,8 @@ class theme_settings {
 
         return $contentimage;
     }
-     public function get_btn_add_news()
+
+    public function get_btn_add_news()
     {
         global $OUTPUT,$USER;
         if(is_siteadmin($USER->id) == 2)
@@ -380,6 +381,7 @@ class theme_settings {
         } 
            
     }
+    
     public function get_courses_data()
     {
         global $DB;
@@ -442,7 +444,7 @@ class theme_settings {
                     $mimetype = $file->get_mimetype();
                     $iconimage = $OUTPUT->pix_icon(file_file_icon($file), get_mimetype_description($file), 'moodle', array('class' => 'icon'));
                     $path = file_encode_url($CFG->wwwroot.'/pluginfile.php', '/'.$context->id.'/mod_forum/attachment/'.$post->id.'/'.$filename);
-                    $imagereturn .= "<img src=\"$path\" alt=\"\" height='300px' />";
+                    $imagereturn .= "<img src=\"$path\" alt=\"\" />";
                 }
             }
             

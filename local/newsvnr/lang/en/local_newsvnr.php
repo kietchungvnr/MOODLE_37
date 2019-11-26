@@ -153,3 +153,4 @@ $string['nocourserq'] = 'Không có yêu cầu mở khoá học nào';
 $string['learningplan'] = 'Lộ trình đào tạo';
 $string['mycourses'] = 'Khoá học của tôi';
 $string['mycourses_by_teacher'] = 'Khoá giảng của tôi';
+$string['btneditnews'] = 'Chỉnh sửa tin tức';
