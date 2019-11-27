@@ -35,14 +35,14 @@ $string['prev_section'] = 'Previous section';
 $string['next_section'] = 'Next section';
 $string['search_site'] = 'Search on site';
 $string['search_forums'] = 'Search on course forums';
-$string['platform_access'] = 'Đăng nhập';
+$string['platform_access'] = 'Access to the platform';
 $string['readmore'] = 'Read More';
 $string['stayintouch'] = 'Stay in touch';
 $string['madewitmoodle'] = 'Proudly made with';
 $string['madeby'] = 'Made with';
 $string['by'] = 'by';
 $string['discipline_progress'] = 'Topic\'s progress';
-$string['access'] = 'Tham gia';
+$string['access'] = 'Access';
 $string['cachedef_admininfos'] = 'Site administrator dashboard infos';
 $string['diskusage'] = 'Disk usage(moodledata)';
 $string['totalusers'] = 'Active / Suspended users';
@@ -60,7 +60,7 @@ $string['favicondesc'] = 'Upload your own favicon.  It should be an .ico file.';
 $string['preset'] = 'Theme preset';
 $string['preset_desc'] = 'Pick a preset to broadly change the look of the theme.';
 $string['presetfiles'] = 'Additional theme preset files';
-$string['presetfiles_desc'] = 'Preset files can be used to dramatically alter the appearance of the theme. See <a href=https://docs.moodle.org/dev/Boost_Presets>Boost presets</a> for information on creating and sharing your own preset files, and see the <a href=http://moodle.net/boost>Presets repository</a> for presets that others have shared.';
+$string['presetfiles_desc'] = 'Preset files can be used to dramatically alter the appearance of the theme. See <a href="https://docs.moodle.org/dev/Boost_Presets">Boost presets</a> for information on creating and sharing your own preset files.';
 $string['loginbgimg'] = 'Login page background';
 $string['loginbgimg_desc'] = 'Upload your custom background image for the login page.';
 $string['brandcolor'] = 'Brand colour';
@@ -89,6 +89,8 @@ $string['googleanalyticsdesc'] = 'Please enter your Google Analytics code to ena
 
 // Frontpage settings tab.
 $string['frontpagesettings'] = 'Frontpage';
+$string['disablefrontpageloginbox'] = 'Disable frontpage login box';
+$string['disablefrontpageloginboxdesc'] = 'If you check it, the frontpage login box will be hidden and a link to the login page will be printed in the header bar.';
 $string['headerimg'] = 'Header image';
 $string['headerimgdesc'] = 'Upload your custom header-image here if you want to add it to the header.mage works best if (Image size should be 1500px x 700px)';
 $string['bannerheading'] = 'Banner Heading';
@@ -153,8 +155,8 @@ $string['slidercaptiondesc'] = 'Add a caption for your slide';
 
 $string['numbersfrontpage'] = 'Show site numbers on frontpage';
 $string['numbersfrontpagedesc'] = 'If enabled, display the number of active users, courses and activities in the frontpage.';
-$string['frontpagenumbersome'] = 'Số liệu';
-$string['frontpagenumbernumbers'] = 'Thống kê';
+$string['frontpagenumbersome'] = 'Some';
+$string['frontpagenumbernumbers'] = 'Numbers';
 $string['frontpagenumberusers'] = 'Users';
 $string['frontpagenumbercourses'] = 'Courses';
 $string['frontpagenumberactivities'] = 'Activities';

@@ -21,60 +21,10 @@
 
     Example context (json): {}
 }}
-
-
-{{! <script type="text/javascript">
-  var urlParams = new URLSearchParams(window.location.search);
-
-if(urlParams.get('showall') == -1)
-{
-  $('#view-more-news').hide();
-}
-
-     
-function getresultCourseNews(url) { 
-
-  $.ajax({
-    url: url,
-    method: "GET",
-    data:  {
-        rowcount: $("#rowcount").val(),
-        pagination_setting: $("#pagination-setting").val()
-      },
-
-    success: function(data){  
-
-        $("#see-all-news").html(data);
-    }         
-   });
-}
-
-
-function changePagination(option) {
-
-  if(option!= "") {
-
-
-    getresultCourseNews(window.origin + '/local/newsvnr/ajax/pagination_coursenews.php');
-  }
-}
-
-
-</script>
-
-
-<script type="text/javascript">
-  
-getresultCourseNews(window.origin + '/local/newsvnr/ajax/pagination_coursenews.php');
-
-</script> }}
-
-
 <div id="top-footer">
   <div class="container-fluid">
     <div class="row">
         <div class="col-md-7 contact">
-         
             <ul>
                 {{#website}}
                     <li>
@@ -100,7 +50,7 @@ getresultCourseNews(window.origin + '/local/newsvnr/ajax/pagination_coursenews.p
           <ul>
               {{#facebook}}
                 <li>
-                  <a href="{{{facebook}}}" target="_blank" class="facebook">
+                  <a href="{{{facebook}}}" target="_blank" class="facebook btn">
                     <i class="slicon-social-facebook"></i>
                   </a>
                 </li>
@@ -108,7 +58,7 @@ getresultCourseNews(window.origin + '/local/newsvnr/ajax/pagination_coursenews.p
 
               {{#twitter}}
                 <li>
-                  <a href="{{{twitter}}}" target="_blank" class="twitter">
+                  <a href="{{{twitter}}}" target="_blank" class="twitter btn">
                     <i class="slicon-social-twitter"></i>
                   </a>
                 </li>
@@ -116,15 +66,15 @@ getresultCourseNews(window.origin + '/local/newsvnr/ajax/pagination_coursenews.p
 
               {{#googleplus}}
                 <li>
-                  <a href="{{{googleplus}}}" target="_blank" class="googleplus">
-                    <i class="slicon-social-gplus"></i>
+                  <a href="{{{googleplus}}}" target="_blank" class="googleplus btn">
+                    <i class="slicon-social-google"></i>
                   </a>
                 </li>
               {{/googleplus}}
 
               {{#linkedin}}
                 <li>
-                  <a href="{{{linkedin}}}" target="_blank" class="linkedin">
+                  <a href="{{{linkedin}}}" target="_blank" class="linkedin btn">
                     <i class="slicon-social-linkedin"></i>
                   </a>
                 </li>
@@ -132,7 +82,7 @@ getresultCourseNews(window.origin + '/local/newsvnr/ajax/pagination_coursenews.p
 
               {{#youtube}}
                 <li>
-                  <a href="{{{youtube}}}" target="_blank" class="youtube">
+                  <a href="{{{youtube}}}" target="_blank" class="youtube btn">
                     <i class="slicon-social-youtube"></i>
                   </a>
                 </li>
@@ -140,7 +90,7 @@ getresultCourseNews(window.origin + '/local/newsvnr/ajax/pagination_coursenews.p
 
               {{#instagram}}
                 <li>
-                  <a href="{{{instagram}}}" target="_blank" class="instagram">
+                  <a href="{{{instagram}}}" target="_blank" class="instagram btn">
                     <i class="slicon-social-instagram"></i>
                   </a>
                 </li>

@@ -39,7 +39,7 @@ $PAGE->navbar->ignore_active();
 $PAGE->navbar->add($title);
 // $PAGE->requires->css('/local/newsvnr/css/bootstrap.min.css');
 $PAGE->requires->css('/local/newsvnr/css/diendan3.css');
-$PAGE->requires->js('/local/newsvnr/js/jquery-3.2.1.min.js', true);
+// $PAGE->requires->js('/local/newsvnr/js/jquery-3.2.1.min.js', true);
 $output = $PAGE->get_renderer('local_newsvnr');
 $page = new \local_newsvnr\output\forum_page();
 // var_dump($page);die();

@@ -41,7 +41,7 @@ $PAGE->set_title($title);
 
 $PAGE->requires->css('/local/newsvnr/css/trangChuTinTuc.css');
 $PAGE->requires->css('/local/newsvnr/css/style.css');
-$PAGE->requires->js('/local/newsvnr/js/jquery-3.2.1.min.js', true);
+// $PAGE->requires->js('/local/newsvnr/js/jquery-3.2.1.min.js', true);
 $PAGE->requires->js('/local/newsvnr/js/trangChuTintuc.js', true);
 $PAGE->requires->js('/local/newsvnr/js/diendan1.js', true);
 $PAGE->requires->js('/local/newsvnr/js/pagination_coursenews.js');

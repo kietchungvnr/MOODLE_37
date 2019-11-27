@@ -180,7 +180,7 @@ class extras {
             if (empty($plans)) {
                 return [];
             }
-           
+
             foreach ($plans as $plan) {
                 $pclist = competency_api::list_plan_competencies($plan);
 
@@ -192,6 +192,7 @@ class extras {
                 $proficientcount = 0;
                 foreach ($pclist as $pc) {
                     $usercomp = $pc->$ucproperty;
+
                     if ($usercomp->get('proficiency')) {
                         $proficientcount++;
                     }
@@ -214,9 +215,10 @@ class extras {
                     'progressclass' => $progressclass
                 ];
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return [];
         }
+
         return $retorno;
     }
 
@@ -244,7 +246,7 @@ class extras {
             $contactimage = $iscontact ? 'slicon-user-unfollow' : 'slicon-user-follow';
             $headerbuttons = [
                 [
-                    'title' => 'Enviar mensagem',
+                    'title' => get_string('sendmessage', 'core_message'),
                     'url' => new \moodle_url('/message/index.php', array('id' => $user->id)),
                     'icon' => 'fa fa-comment-o',
                     'class' => 'btn btn-block btn-outline-primary'

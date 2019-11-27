@@ -53,7 +53,7 @@ $PAGE->navbar->ignore_active();
 
 
 $PAGE->requires->css('/local/newsvnr/css/api.css');
-$PAGE->requires->js('/local/newsvnr/js/jquery-3.2.1.min.js', true);
+// $PAGE->requires->js('/local/newsvnr/js/jquery-3.2.1.min.js', true);
 
 // $PAGE->requires->js('/local/newsvnr/js/owl.carousel.min.js', true);
 // $PAGE->requires->js('/local/newsvnr/js/khoahoc.js', true);

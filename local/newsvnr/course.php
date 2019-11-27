@@ -55,7 +55,7 @@ else{
 // $PAGE->requires->css('/local/newsvnr/css/owl.carousel.min.css');
 // $PAGE->requires->css('/local/newsvnr/css/owl.theme.default.min.css');
 $PAGE->requires->css('/local/newsvnr/css/KhoaHoc.css');
-$PAGE->requires->js('/local/newsvnr/js/jquery-3.2.1.min.js', true);
+// $PAGE->requires->js('/local/newsvnr/js/jquery-3.2.1.min.js', true);
 // $PAGE->requires->js('/local/newsvnr/js/owl.carousel.min.js', true);
 // $PAGE->requires->js('/local/newsvnr/js/khoahoc.js', true);
 $output = $PAGE->get_renderer('local_newsvnr');
