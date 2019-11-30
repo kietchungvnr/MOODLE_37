@@ -154,3 +154,15 @@ $string['learningplan'] = 'Lộ trình đào tạo';
 $string['mycourses'] = 'Khoá học của tôi';
 $string['mycourses_by_teacher'] = 'Khoá giảng của tôi';
 $string['btneditnews'] = 'Chỉnh sửa tin tức';
+
+// Strings cho core_course
+$string['coursesetup'] = 'Setup khoá học';
+$string['editcoursesetup'] = 'Setup khoá học';
+$string['category_cs'] = 'Mục';
+$string['fullname_cs'] = 'Tên khoá học';
+$string['shortname_cs'] = 'Tên rút gọn';
+$string['duplicate_shortname_cs'] = 'Tên rút gọn \'{$a}\' đã tồn tại';
+$string['invalid_courseoforgstructure'] = 'Phòng ban \'{$a}\' không tồn tại';
+$string['invalid_category_cs'] = 'Mục \'{$a}\' không tồn tại';
+$string['competency_cs'] = 'Năng lực';
+$string['invalid_competency_cs'] = 'Năng lực \'{$a}\' không tồn tại';

@@ -66,6 +66,16 @@ else if(isset($_GET['org_competency']) && $_GET['org_competency'] == 1)
 	$treeview = $DB->get_records_sql($query, array($frameid));
 
 	echo showMenuLi($treeview, $table_name);
+} else if(isset($_GET['coursesetup']) && $_GET['coursesetup'] == 1) {
+	$table_name = 'mdl_course_categories';
+	$query = "SELECT id,name,parent
+			   FROM mdl_course_categories
+			   -- WHERE visible = 1
+			  ";
+
+	$treeview = $DB->get_records_sql($query);
+
+	echo showMenuLi($treeview, $table_name);
 }
 
 if(isset($_GET['action']) && $_GET['action'] == "delete")

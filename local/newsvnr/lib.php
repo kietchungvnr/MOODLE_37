@@ -527,6 +527,37 @@ function showMenuLi($menus, $table_name)
             }
             echo json_encode(array_values($data));
             break;    
+        case 'mdl_course_categories':
+            $arr = array();
+            foreach ($menus as $value) {
+                $arr['id'] = $value->id;
+                $arr['text'] = $value->name; 
+                $arr['parent'] = $value->parent;
+                $arr['encoded'] = false;
+
+                // $arr['expanded'] = true;
+                $data[] = $arr;
+            }
+            foreach($data as $key => &$item) {
+
+               $itemsByReference[$item['id']] = &$item;
+               // Children array:
+               $itemsByReference[$item['id']]['items'] = array();
+               // Empty data class (so that json_encode adds "data: {}" ) 
+            }
+            // Set items as children of the relevant parent item.
+            foreach($data as $key => &$item) {
+               if($item['parent'] && isset($itemsByReference[$item['parent']]))
+                  $itemsByReference [$item['parent']]['items'][] = &$item;
+            }
+            //Remove items that were added to parents elsewhere:
+            foreach($data as $key => &$item) {
+               if($item['parent'] && isset($itemsByReference[$item['parent']]))
+                  unset($data[$key]);
+
+            }
+            echo json_encode(array_values($data));
+            break;    
         default:
             break;
     }
