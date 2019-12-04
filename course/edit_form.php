@@ -72,22 +72,7 @@ class course_edit_form extends moodleform {
             $mform->hardFreeze('shortname');
             $mform->setConstant('shortname', $course->shortname);
         }
-        //custom by Vũ - add cousesetup
-     
-        //Lấy danh sách khoá học setup
-        $coursesetuplist = $DB->get_records('course_setup');
-        $coursesetupnames = array();
-        foreach ($coursesetuplist as $key => $value) {
-            $coursesetupnames[$key] = $value->fullname;
-        }
-       
-        $mform->addElement('select', 'coursesetup', get_string('coursesetup','local_newsvnr'), $coursesetupnames);
-        // $mform->addRule('courseofposition', get_string('missingcourseofpostion','local_newsvnr'), 'required', null, 'client');
-        $mform->setType('coursesetup', PARAM_INT);
 
-    
-
-        // --- Kết thúc custom --- ///
         // Verify permissions to change course category or keep current.
         if (empty($course->id)) {
             if (has_capability('moodle/course:create', $categorycontext)) {
@@ -117,6 +102,33 @@ class course_edit_form extends moodleform {
                 $mform->setConstant('category', $course->category);
             }
         }
+
+        //custom by Vũ - add cousesetup
+        $strcoursesetup = get_string('coursesetup','local_newsvnr');
+        // //Lấy danh sách khoá học setup
+        // $coursesetuplist = $DB->get_records('course_setup');
+        // $coursesetupnames = array();
+        // foreach ($coursesetuplist as $key => $value) {
+        //     $coursesetupnames[$key] = $value->fullname;
+        // }
+        // $mform->addElement('select', 'coursesetup', get_string('coursesetup','local_newsvnr'), $coursesetupnames);
+        // $mform->addRule('courseofposition', get_string('missingcourseofpostion','local_newsvnr'), 'required', null, 'client');
+        // $mform->setType('coursesetup', PARAM_INT);
+        //Khoá học bắt buộc
+        
+        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3">'.$strcoursesetup.'</div><div class="col-md-3 felement" ><select class="form-control" id="listcoursesetup" name="coursesetup" required></select></div></div>');
+        $mform->addElement('advcheckbox', 'required', get_string('required', 'local_newsvnr'), ' ', array('group' => 1), array(0, 1));
+
+        $toclist = array(
+            '0' => 'Online',
+            '1' => 'Offline',
+        );
+        $mform->addElement('select', 'typeclass', get_string('typeclass','local_newsvnr'), $toclist);
+        $mform->addRule('typeclass', get_string('missingtypeclass','local_newsvnr'), 'required', null, 'client');
+        $mform->setType('typeclass', PARAM_INT);
+
+        
+        // --- Kết thúc custom --- ///
 
         $choices = array();
         $choices['0'] = get_string('hide');

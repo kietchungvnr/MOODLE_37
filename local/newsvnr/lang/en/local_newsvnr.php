@@ -157,7 +157,7 @@ $string['btneditnews'] = 'Chỉnh sửa tin tức';
 
 // Strings cho core_course
 $string['coursesetup'] = 'Setup khoá học';
-$string['editcoursesetup'] = 'Setup khoá học';
+$string['editcoursesetup'] = 'Chỉnh sứa setup khoá học';
 $string['category_cs'] = 'Mục';
 $string['fullname_cs'] = 'Tên khoá học';
 $string['shortname_cs'] = 'Tên rút gọn';
@@ -166,3 +166,8 @@ $string['invalid_courseoforgstructure'] = 'Phòng ban \'{$a}\' không tồn tạ
 $string['invalid_category_cs'] = 'Mục \'{$a}\' không tồn tại';
 $string['competency_cs'] = 'Năng lực';
 $string['invalid_competency_cs'] = 'Năng lực \'{$a}\' không tồn tại';
+$string['required'] = 'Khoá học bắt buộc';
+$string['choices_coursesetup'] = 'Chọn Khoá';
+$string['noitem_coursesetup'] = 'Không có Khoá học';
+$string['typeclass'] = 'Kiểu Lớp';
+$string['missingtypeclass'] = 'Chọn kiểu lớp';

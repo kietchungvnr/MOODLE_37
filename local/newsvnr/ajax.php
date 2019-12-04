@@ -108,6 +108,28 @@ if(isset($_GET['action']) && $_GET['action'] == "get_orgstruct_position")
 
 	echo $select;
 }
+// danh sách khoá theo theo cây thư mục khoá học
+if(isset($_GET['action']) && $_GET['action'] == "get_list_coursesetup")
+{
+	$categoryid = $_GET['categoryid'];
+	$strcousesetup = get_string('choices_coursesetup', 'local_newsvnr');
+	$strnoitem = get_string('noitem_coursesetup', 'local_newsvnr');
+	$sql = "SELECT * FROM {course_setup} WHERE category = ?";
+
+	$result = $DB->get_records_sql($sql, array($categoryid));
+
+	if($result) {
+		$select = '<option class="active" id disabled="" selected="selected" value="">'.$strcousesetup.'</option>';
+		foreach ($result as $value) {
+			$select .= '<option value='. $value->id .'> '. $value->fullname .'</option>';
+		}
+	}
+	else
+		$select = '<option class="active" id disabled="" selected="selected" value="">'.$strnoitem.'</option>';
+	
+
+	echo $select;
+}
 
 //Chức năng thêm năng lực cho vị trí (Lập kế hoạch)
 if(isset($_POST['action']) && $_POST['action'] == "add")

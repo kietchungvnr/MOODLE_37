@@ -37,7 +37,8 @@ class coursesetup_form extends moodleform {
         global $USER, $CFG, $DB;;
 
         $mform =$this->_form;
-        $coursesetup = $this->_customdata['coursesetup'];   
+        $coursesetup = $this->_customdata['coursesetup'];
+        // $competencylist = $this->_customdata['competencylist'];
 
         $mform->addElement('header', 'general', get_string('coursesetup', 'local_newsvnr'));
 
@@ -50,6 +51,9 @@ class coursesetup_form extends moodleform {
         $mform->addElement('text','competency_cs', get_string('competency_cs', 'local_newsvnr'),'maxlength="200" size="50"');
         $mform->addRule('competency_cs', get_string('required'), 'required', null, 'client');
         $mform->setType('competency_cs', PARAM_TEXT);
+
+        // $mform->addElement('hidden', 'competencylist', $competencylist);
+        //     $mform->setType('competencylist', PARAM_RAW);
 
         $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3"></div><div class="col-md-3 pr-0 ml-3 form-inline felement" id="treeview-category-competency" style="background-color: #e9ecef"></div></div>');
 
@@ -99,7 +103,7 @@ class coursesetup_form extends moodleform {
 
         $mform->addElement('select', 'courseofposition', get_string('courseofposition','local_newsvnr'), $orgpositionnames);
         $mform->setType('courseofposition', PARAM_INT);
-        // $mform->addElement('advcheckbox', 'pinned', get_string('pinned', 'local_newsvnr'), ' ', array('group' => 1), array(0, 1));
+        $mform->addElement('advcheckbox', 'pinned', get_string('pinned', 'local_newsvnr'), ' ', array('group' => 1), array(0, 1));
 
         $mform->addElement('textarea', 'description', get_string('description', 'local_newsvnr'),'wrap="virtual" rows="10" cols="52"');
         // $mform->addRule('description',get_string('required'),'required',null,'client');
