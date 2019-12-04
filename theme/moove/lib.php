@@ -283,7 +283,9 @@ function theme_moove_extend_flat_navigation(\flat_navigation $flatnav) {
     theme_moove_buildnavnewsvnr_by_teacher($flatnav);
 
     // theme_moove_buildnavnewsvnr_allpage($flatnav);
-    theme_moove_buildnavnewsvnr($flatnav);
+    if(is_siteadmin()) {
+        theme_moove_buildnavnewsvnr($flatnav);    
+    }
     // theme_moove_buildnavnewsvnr_sitewide($flatnav);
 }
 
@@ -470,46 +472,46 @@ function theme_moove_buildnavnewsvnr(\flat_navigation $flatnav) {
     $orgmainurl = new moodle_url('/local/newsvnr/orgmain.php');
     $coursesections = new \flat_navigation_node($coursesectionsoptions, 0);
 
-    if(is_siteadmin()) {
-        $coursesections->add_node(new \navigation_node([
-                    'text' => get_string('orgmanagertitle', 'local_newsvnr'),
-                    'shorttext' => 'orgmanager',
-                    'icon' => '',
-                    'type' => \navigation_node::TYPE_CUSTOM,
-                    'key' => 'orgmanagervnr',
-                    'parent' => $coursesections,
-                    'action' => $orgmanagerurl
-                ]));
-        
-        $coursesections->add_node(new \navigation_node([
-                    'text' => get_string('questionbank_title', 'local_newsvnr'),
-                    'shorttext' => 'questionbank',
-                    'icon' => '',
-                    'type' => \navigation_node::TYPE_CUSTOM,
-                    'key' => 'questionbankvnr',
-                    'parent' => $coursesections,
-                    'action' => $questionbank_url
-                ]));
-        $coursesections->add_node(new \navigation_node([
-                    'text' => get_string('orgcomp_position', 'local_newsvnr'),
-                    'shorttext' => 'orgcomp',
-                    'icon' => '',
-                    'type' => \navigation_node::TYPE_CUSTOM,
-                    'key' => 'orgcompvnr',
-                    'parent' => $coursesections,
-                    'action' => $orgcomp_positionurl
-                ]));
-        
-        $coursesections->add_node(new \navigation_node([
-                    'text' => get_string('orgmaintitle', 'local_newsvnr'),
-                    'shorttext' => 'orgmain',
-                    'icon' => '',
-                    'type' => \navigation_node::TYPE_CUSTOM,
-                    'key' => 'orgmainvnr',
-                    'parent' => $coursesections,
-                    'action' => $orgmainurl
-                ]));
-    }
+   
+    $coursesections->add_node(new \navigation_node([
+                'text' => get_string('orgmanagertitle', 'local_newsvnr'),
+                'shorttext' => 'orgmanager',
+                'icon' => '',
+                'type' => \navigation_node::TYPE_CUSTOM,
+                'key' => 'orgmanagervnr',
+                'parent' => $coursesections,
+                'action' => $orgmanagerurl
+            ]));
+    
+    $coursesections->add_node(new \navigation_node([
+                'text' => get_string('questionbank_title', 'local_newsvnr'),
+                'shorttext' => 'questionbank',
+                'icon' => '',
+                'type' => \navigation_node::TYPE_CUSTOM,
+                'key' => 'questionbankvnr',
+                'parent' => $coursesections,
+                'action' => $questionbank_url
+            ]));
+    $coursesections->add_node(new \navigation_node([
+                'text' => get_string('orgcomp_position', 'local_newsvnr'),
+                'shorttext' => 'orgcomp',
+                'icon' => '',
+                'type' => \navigation_node::TYPE_CUSTOM,
+                'key' => 'orgcompvnr',
+                'parent' => $coursesections,
+                'action' => $orgcomp_positionurl
+            ]));
+    
+    $coursesections->add_node(new \navigation_node([
+                'text' => get_string('orgmaintitle', 'local_newsvnr'),
+                'shorttext' => 'orgmain',
+                'icon' => '',
+                'type' => \navigation_node::TYPE_CUSTOM,
+                'key' => 'orgmainvnr',
+                'parent' => $coursesections,
+                'action' => $orgmainurl
+            ]));
+
    
     $flatnav->add($coursesections);
 }

@@ -818,7 +818,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
     {
         global $PAGE;
         $output = '';
-        // $output .= $PAGE->requires->js('/theme/moove/js/jquery-3.2.1.min.js', true);
+        $output .= $PAGE->requires->js('/theme/moove/js/jquery-3.2.1.min.js', true);
         $output .= $PAGE->requires->js('/theme/moove/js/owl.carousel.js', true);
         $output .= $PAGE->requires->js('/theme/moove/js/style.js', true);
        
@@ -834,6 +834,12 @@ class core_renderer extends \theme_boost\output\core_renderer {
         // $output .= $PAGE->requires->css('/theme/moove/css/themes/light.css');
 
         return $output;
+    }
+    public function get_autologin() {
+        global $DB;
+        
+        $output = '';
+        return $output .= \core\session\manager::get_login_token();
     }
 
 }

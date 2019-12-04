@@ -1,0 +1,111 @@
+
+<div id="loginbox" class="d-none d-lg-block" style="top: 69px;right: 378px;">
+                            
+    <ul class="list-group" style="
+                            -webkit-box-shadow: 0 10px 16px 10px rgba(25,64,87,.16), 0 10px 16px 10px rgba(25,64,87,.12);
+                            box-shadow: 0 10px 16px 10px rgba(25,64,87,.16), 0 10px 16px 10px rgba(25,64,87,.12);
+                            color: #404040;
+                            background-color: #eef0f1;">
+        <li class="list-group-item" style="background-color: #0e3b51">
+            <h5 class="d-flex justify-content-center text-white">Tài khoản Demo</h5>
+            <h6 class="d-flex justify-content-center text-white">Chọn tài khoản đăng nhập</h6>
+        </li>
+        <li class="list-group-item cl-cursor" onclick="submitform('admin','Vnr@1234')" style="border-bottom: 2px solid ##eff1f1;">
+            Super Admin
+        <span class="fa fa-sign-in" style="float: right; font-size: 20px; width: 21px; font-family: fontAwesome; line-height: 22px;"></span>
+        </li>
+        <li class="list-group-item cl-cursor" onclick="submitform('viduong','Vnr@1234')" style="border-bottom: 2px solid ##eff1f1;">
+            Quản trị viên
+        <span class="fa fa-sign-in" style="float: right; font-size: 20px; width: 21px; font-family: fontAwesome; line-height: 22px;"></span>
+        </li>
+        <li class="list-group-item cl-cursor" onclick="submitform('vulethanh','L3thanhvu@')" style="border-bottom: 2px solid ##eff1f1;">
+            Học viên
+        <span class="fa fa-sign-in" style="float: right; font-size: 20px; width: 21px; font-family: fontAwesome; line-height: 22px;"></span>
+        </li>
+
+    </ul>
+
+</div>
+<script type="text/javascript">
+    
+    var i = 0;
+    var j = 0;
+    var txtusername = '';
+    var txtpassword = '';
+    var repeatun = true;
+    var repeatpw = true;
+    var speed = 100;
+    
+
+    function typeWriterEffect(username, password) {
+
+        if(repeatun == true) {
+            txtusername = username;
+            // txtpassword = password;    
+        }
+        repeatun = false;
+        if (i < txtusername.length) {
+            document.getElementById("username").value += txtusername.charAt(i);
+            i++;
+            setTimeout(typeWriterEffect, speed);
+        }
+        // if (i < txtpassword.length) {
+        //     document.getElementById("password").value += txtpassword.charAt(j);
+        //     j++;
+        //     setTimeout(typeWriterEffect, speed);
+        // }
+        return true;
+    }
+
+    function typeWriterEffect_password(username, password) {
+
+        if(repeatpw == true) {
+            // txtusername = username;
+            txtpassword = password;    
+        }
+        repeatpw = false;
+        // if (i < txtusername.length) {
+        //     document.getElementById("username").value += txtusername.charAt(i);
+        //     i++;
+        //     setTimeout(typeWriterEffect_password, speed);
+        // }
+        if (i < txtpassword.length) {
+            document.getElementById("password").value += txtpassword.charAt(j);
+            j++;
+            setTimeout(typeWriterEffect_password, speed);
+        }
+        return true;
+    }
+
+    function typeWriter(username, password){
+        let p = new Promise(function(resolve,reject){
+            resolve(typeWriterEffect(username, password));
+        });
+        p.then(() => {
+                return new Promise(function(resolve, reject) { 
+                    setTimeout(() => {
+                        resolve();
+                    }, 1000)
+                });
+            }).then(() => {
+                return new Promise(function(resolve, reject) { 
+                    resolve(typeWriterEffect_password(username, password));
+                });
+        });
+        return p;
+    }
+    function submitform (username, password) {
+        typeWriter(username, password).then(() => {
+                return new Promise(function(resolve, reject) { 
+                    setTimeout(() => {
+                        resolve();
+                    }, 2000)
+                });
+            }).then(function(res){
+                var x = document.getElementsByClassName('signup-form');
+                x[0].submit();
+            });
+    }
+    
+    
+</script>
