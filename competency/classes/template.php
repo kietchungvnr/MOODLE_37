@@ -71,6 +71,10 @@ class template extends persistent {
             'contextid' => array(
                 'type' => PARAM_INT
             ),
+            'positionid' => array(
+                'default' => 0,
+                'type' => PARAM_INT
+            ),
         );
     }
 

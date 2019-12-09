@@ -104,6 +104,47 @@ class course_edit_form extends moodleform {
         }
 
         //custom by Vũ - add cousesetup
+        
+        $toclist = array(
+            '1' => 'Tuyển dụng',
+            '2' => 'Đào tạo',
+        );
+
+        //Lấy danh sách chức vụ
+        $orgpositionlist = $DB->get_records('orgstructure_position');
+        $orgpositionnames = array();
+        foreach ($orgpositionlist as $key => $value) {
+            $orgpositionnames[$key] = $value->name;
+        }
+        //Lấy danh sách chức danh
+        $orgjobtitlelist = $DB->get_records('orgstructure_jobtitle');
+        $orgjobtitlenames = array();
+        foreach ($orgjobtitlelist as $key => $value) {
+            $orgjobtitlenames[$key] = $value->name;
+        }
+        //Lấy danh sách phòng ban
+        $orgstructurelist = $DB->get_records('orgstructure');
+        $orgstructurenames = array();
+        foreach ($orgstructurelist as $key => $value) {
+            $orgstructurenames[$key] = $value->name;
+        }
+
+        $mform->addElement('select', 'typeofcourse', get_string('typeofcourse','local_newsvnr'), $toclist);
+        $mform->addRule('typeofcourse', get_string('missingtypeofcourse','local_newsvnr'), 'required', null, 'client');
+        $mform->setType('typeofcourse', PARAM_INT);
+        
+        $mform->addElement('text', 'courseoforgstructure', get_string('courseoforgstructure','local_newsvnr'), 'maxlength="254" size="30"');
+        $mform->setType('courseoforgstructure', PARAM_TEXT);
+
+        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3"></div><div class="col-md-3 pr-0 ml-3 form-inline felement" id="treeview-orgstructure-course" style="background-color: #e9ecef"></div></div>');
+
+        $mform->addElement('select', 'courseofjobtitle', get_string('courseofjobtitle','local_newsvnr'), $orgjobtitlenames);
+        $mform->setType('courseofjobtitle', PARAM_INT);
+
+        $mform->addElement('select', 'courseofposition', get_string('courseofposition','local_newsvnr'), $orgpositionnames);
+        $mform->setType('courseofposition', PARAM_INT);
+        $mform->addElement('advcheckbox', 'pinned', get_string('pinned', 'local_newsvnr'), ' ', array('group' => 1), array(0, 1));
+        
         $strcoursesetup = get_string('coursesetup','local_newsvnr');
         // //Lấy danh sách khoá học setup
         // $coursesetuplist = $DB->get_records('course_setup');
@@ -116,7 +157,7 @@ class course_edit_form extends moodleform {
         // $mform->setType('coursesetup', PARAM_INT);
         //Khoá học bắt buộc
         
-        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3">'.$strcoursesetup.'</div><div class="col-md-3 felement" ><select class="form-control" id="listcoursesetup" name="coursesetup" required></select></div></div>');
+        // $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3">'.$strcoursesetup.'</div><div class="col-md-3 felement" ><select class="form-control" id="listcoursesetup" name="coursesetup" required></select></div></div>');
         $mform->addElement('advcheckbox', 'required', get_string('required', 'local_newsvnr'), ' ', array('group' => 1), array(0, 1));
 
         $toclist = array(

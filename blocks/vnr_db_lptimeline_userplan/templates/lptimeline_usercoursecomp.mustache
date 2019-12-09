@@ -1,0 +1,59 @@
+
+               {{#listusercoursecomp}}
+               {{#newscourse}}
+                <div class="post-slide6">
+                  
+                 
+                    <div class="post-img">
+                        {{{courseimage}}}
+                        <div class="post-info">
+                            <ul class="category">
+                                <li>Học viên <a href="#">{{countstudent}}</a></li>
+                                <li>Giáo viên <a href="#">{{fullnamet}}</a></li>
+                               
+                            </ul>
+          
+                        </div>
+                    </div>
+                    <div class="post-review">
+                        <span class="icons">
+                               {{{imageteacher}}}
+                        </span>
+                        <h3 class="post-title"><a href="{{{link}}}" title="{{fullname}}">{{fullname}}</a></h3>
+                        <p class="post-description" style="height:104px">{{summary}}</p>
+                      
+                    </div>
+                    
+                 
+                </div>
+                {{/newscourse}}
+                {{/listusercoursecomp}}                
+
+{{#js}}
+require(['jquery', 'core/templates', 'core/notification'], function($, templates, notification) {
+    $('#listuserplan').change(function(){
+        var userplanid = $(this).val();
+        var settings = {
+                type: 'GET',
+                processData: true,
+                data:{
+                    action: 'get_courseplan',
+                    pinned: 1,
+                },
+                contentType: "application/json"
+        };
+        var script = location.origin + '/local/newsvnr/ajax.php';
+        $.ajax(script, settings)
+        .then(function(response) {
+            var data = JSON.parse(response);
+            templates.render('block_vnr_db_lptimeline_userplan/lptimeline_usercoursecomp', data).done(function(html, js) {
+    			
+                $('#requiredcourse-position-slider').replaceWith(html);
+					alert('xx');
+                templates.runTemplateJS(js);
+            }).fail(notification.exception);
+        });
+    });
+    
+});
+{{/js}}

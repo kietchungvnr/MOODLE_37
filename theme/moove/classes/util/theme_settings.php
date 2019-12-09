@@ -251,7 +251,7 @@ class theme_settings {
         global $DB,$CFG;
         $arrc = array();
         $imgurl = $CFG->wwwroot."/theme/moove/pix/f2.png";
-        $imgdefault = \html_writer::empty_tag('img',array('src' => $imgurl,'class'=>'userpicture defaultuserpic','width' => '50px','height'=>'50px','alt' => 'Default picture','title'=>'Default picture'));
+        $imgdefault = \html_writer::empty_tag('img',array('data-src' => $imgurl,'class'=>'userpicture defaultuserpic owl-lazy','width' => '50px','height'=>'50px','alt' => 'Default picture','title'=>'Default picture'));
         $sql = "SELECT concat(u.firstname,' ',u.lastname) as fullnamet,(select COUNT(*) as sts
         FROM {user_enrolments} ue
         JOIN {enrol} e ON ue.enrolid = e.id
@@ -289,36 +289,51 @@ class theme_settings {
         // var_dump($rolecourse);die();
 
     }
+     /**
+     * pinned = 0 : Khoác học bắt buộc chung
+     * pinned = 1 : Khoác học đc ghim
+     * pinned = 2 : Khoác học bắt buộc chung theo vị trí
+     * @param  integer $pinned [description]
+     * @return [array]          [description]
+     */
+    public static function user_courses_list($pinned = 1, $required = 1, $suggest = 1) {
 
-    public static function user_courses_list() {
         global $USER,$CFG,$DB,$OUTPUT;
         require_once($CFG->dirroot.'/course/renderer.php');
         $chelper = new \coursecat_helper();
-        $courses = $DB->get_records_sql("SELECT TOP(8) * from {course} where pinned = 1");
+        if($pinned == 1) {
+            $courses = $DB->get_records_sql("SELECT TOP(8) * from {course} where pinned = 1");
+        } elseif($pinned == 1 and $required == 1) {
+            $courses = $DB->get_records_sql("SELECT * from {course} where required = 1 and courseofposition = ?",[$USER->orgpositionid]);
+        } elseif($suggest == 1) {
+            $courses = $DB->get_records_sql("SELECT TOP 8 PERCENT * FROM {course} WHERE courseofposition = ? ORDER by newid()", [$USER->orgpositionid]);
+        } else {
+            $courses = $DB->get_records_sql("SELECT * from {course} where required = 1");
+        }
         foreach ($courses as $course) {
 
-        $course->fullname = strip_tags($chelper->get_course_formatted_name($course));
-        $courseobj = new \core_course_list_element($course);
-        $course->link = $CFG->wwwroot."/course/view.php?id=".$course->id;
-        $course->summary = strip_tags($chelper->get_course_formatted_summary($courseobj,array('overflowdiv' => false, 'noclean' => false, 'para' => false)));
-        $course->courseimage = self::get_course_images($courseobj, $course->link);
-        $courseid = $course->id;
-        $arr = self::role_courses_teacher($courseid);
-        $course->fullnamet = $arr->fullnamet;
-        $course->countstudent = $arr->studentnumber;
-        if (isset($arr->id)) {
-          $stduser = new stdClass();
-          $userid = $DB->get_records('user',array('id' => $arr->id));
-          foreach ($userid as $userdata)
-             $stduser = (object)$userdata;
+            $course->fullname = strip_tags($chelper->get_course_formatted_name($course));
+            $courseobj = new \core_course_list_element($course);
+            $course->link = $CFG->wwwroot."/course/view.php?id=".$course->id;
+            $course->summary = strip_tags($chelper->get_course_formatted_summary($courseobj,array('overflowdiv' => false, 'noclean' => false, 'para' => false)));
+            $course->courseimage = self::get_course_images($courseobj, $course->link);
+            $courseid = $course->id;
+            $arr = self::role_courses_teacher($courseid);
+            $course->fullnamet = $arr->fullnamet;
+            $course->countstudent = $arr->studentnumber;
+            if (isset($arr->id)) {
+              $stduser = new stdClass();
+              $userid = $DB->get_records('user',array('id' => $arr->id));
+              foreach ($userid as $userdata)
+                 $stduser = (object)$userdata;
 
-           $course->imageteacher = $OUTPUT->user_picture($stduser, array('size'=>72));
+               $course->imageteacher = $OUTPUT->user_picture($stduser, array('size'=>72));
+            }
+            else
+            {
+              $course->imageteacher = $arr->imgdefault;
+            }
         }
-        else
-        {
-          $course->imageteacher = $arr->imgdefault;
-        }
-    }
         return array_values($courses);
 
     }
@@ -341,9 +356,9 @@ class theme_settings {
                 $file->get_filearea(). $file->get_filepath(). $file->get_filename(), !$isimage);
             if ($isimage) {
                 $contentimage = \html_writer::link($courselink, \html_writer::empty_tag('img', array(
-                    'src' => $url,
+                    'data-src' => $url,
                     'alt' => $course->fullname,
-                    'class' => 'img-responsive',
+                    'class' => 'img-responsive owl-lazy',
                 )));
                 break;
             }
@@ -353,9 +368,9 @@ class theme_settings {
             $url = $CFG->wwwroot . "/theme/moove/pix/default_course.jpg";
 
             $contentimage = \html_writer::link($courselink, \html_writer::empty_tag('img', array(
-                'src' => $url,
+                'data-src' => $url,
                 'alt' => $course->fullname,
-                'class' => 'img-responsive',
+                'class' => 'img-responsive owl-lazy',
             )));
         }
 
@@ -381,12 +396,18 @@ class theme_settings {
         } 
            
     }
-    
-    public function get_courses_data()
+    /**
+     * pinned = 0 : Khoác học bắt buộc chung
+     * pinned = 1 : Khoác học đc ghim
+     * pinned = 2 : Khoác học bắt buộc chung theo vị trí
+     * @param  integer $pinned [description]
+     * @return [array]          [description]
+     */
+    public function get_courses_data($pinned = 1)
     {
         global $DB;
         $arr = array();
-        $courses = self::user_courses_list();
+        $courses = self::user_courses_list($pinned);
         $templatecontext['courseendable'] = "1";
 
         foreach ($courses as $key => $value) {        
@@ -444,7 +465,7 @@ class theme_settings {
                     $mimetype = $file->get_mimetype();
                     $iconimage = $OUTPUT->pix_icon(file_file_icon($file), get_mimetype_description($file), 'moodle', array('class' => 'icon'));
                     $path = file_encode_url($CFG->wwwroot.'/pluginfile.php', '/'.$context->id.'/mod_forum/attachment/'.$post->id.'/'.$filename);
-                    $imagereturn .= "<img src=\"$path\" alt=\"\" />";
+                    $imagereturn .= "<img class='owl-lazy' data-src=\"$path\" alt=\"\" />";
                 }
             }
             

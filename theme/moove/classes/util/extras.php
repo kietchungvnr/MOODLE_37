@@ -199,6 +199,7 @@ class extras {
                 }
 
                 $competencycount = count($pclist);
+                
                 $proficientcompetencypercentage = ((float) $proficientcount / (float) $competencycount) * 100.0;
 
                 $progressclass = '';

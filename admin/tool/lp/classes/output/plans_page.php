@@ -62,11 +62,12 @@ class plans_page implements renderable, templatable {
      * @param int $userid
      */
     public function __construct($userid) {
+        global $USER;
         $this->userid = $userid;
         $this->plans = api::list_user_plans($userid);
         $this->context = context_user::instance($userid);
 
-        if (plan::can_manage_user($userid) || plan::can_manage_user_draft($userid)) {
+        if (plan::can_manage_user($userid) || plan::can_manage_user_draft($userid) || $USER->id == $userid) {
             $addplan = new single_button(
                 new moodle_url('/admin/tool/lp/editplan.php', array('userid' => $userid)),
                 get_string('addnewplan', 'tool_lp'), 'get'
@@ -82,6 +83,7 @@ class plans_page implements renderable, templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output) {
+        global $USER;
         $data = new stdClass();
         $data->userid = $this->userid;
         $data->pluginbaseurl = (new moodle_url('/admin/tool/lp'))->out(true);

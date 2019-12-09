@@ -28,7 +28,7 @@ require_once(__DIR__ . '/../../config.php');
 require_once('lib.php');
 
 require_login();
-require_capability('moodle/site:approvecourse', context_system::instance());
+// require_capability('moodle/site:approvecourse', context_system::instance());
 $url = new moodle_url('/local/newsvnr/orgmain.php');
 $orgmanagerurl = new moodle_url('/local/newsvnr/orgmanager.php');
 $strorrgmanegertitle = get_string('orgmanagertitle','local_newsvnr');

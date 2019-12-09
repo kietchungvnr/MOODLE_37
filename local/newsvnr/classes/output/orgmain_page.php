@@ -17,12 +17,18 @@ use stdClass;
 use context_module;
 use context_course;
 use context_system;
-
+use core_competency\api;
 class orgmain_page implements renderable, templatable {
 
 	public function export_for_template(renderer_base $output) {
     global $DB,$USER,$PAGE;
     $data = array();
+
+
+    $courses = api::list_courses_using_competency(29);
+       
+   var_dump($courses);die;
+
 //      $context =  context_course::instance(150);
 // $roles = get_user_roles($context, $USER->id, true);
 // $role = key($roles);

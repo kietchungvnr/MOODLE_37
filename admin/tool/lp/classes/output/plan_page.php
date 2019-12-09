@@ -67,6 +67,7 @@ class plan_page implements renderable, templatable {
 
         $data = new stdClass();
         $data->plan = $planexporter->export($output);
+
         $data->competencies = array();
         $data->pluginbaseurl = (new moodle_url('/admin/tool/lp'))->out(false);
         $data->contextid = $this->plan->get_context()->id;

@@ -60,7 +60,7 @@ class plan_exporter extends \core\external\persistent_exporter {
         $values->canmanage = $this->persistent->can_manage();
         $values->canrequestreview = $this->persistent->can_request_review();
         $values->canreview = $this->persistent->can_review();
-        $values->canbeedited = $this->persistent->can_be_edited();
+        $values->canbeedited = true;
 
         $values->isactive = $status == $classname::STATUS_ACTIVE;
         $values->isdraft = $status == $classname::STATUS_DRAFT;

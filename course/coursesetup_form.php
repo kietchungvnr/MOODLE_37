@@ -48,9 +48,9 @@ class coursesetup_form extends moodleform {
 
         $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3"></div><div class="col-md-3 pr-0 ml-3 form-inline felement" id="treeview-category-course" style="background-color: #e9ecef"></div></div>');
 
-        $mform->addElement('text','competency_cs', get_string('competency_cs', 'local_newsvnr'),'maxlength="200" size="50"');
-        $mform->addRule('competency_cs', get_string('required'), 'required', null, 'client');
-        $mform->setType('competency_cs', PARAM_TEXT);
+        // $mform->addElement('text','competency_cs', get_string('competency_cs', 'local_newsvnr'),'maxlength="200" size="50"');
+        // $mform->addRule('competency_cs', get_string('required'), 'required', null, 'client');
+        // $mform->setType('competency_cs', PARAM_TEXT);
 
         // $mform->addElement('hidden', 'competencylist', $competencylist);
         //     $mform->setType('competencylist', PARAM_RAW);

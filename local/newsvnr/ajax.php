@@ -31,8 +31,8 @@ require_once('lib.php');
 
 // require_login();
 
-// $PAGE->set_url('/local/newsvnr/ajax.php');
-// $PAGE->set_context(context_system::instance());
+$PAGE->set_url('/local/newsvnr/ajax.php');
+$PAGE->set_context(context_system::instance());
 
 // Unlock session during potentially long curl request.
 // \core\session\manager::write_close();
@@ -130,6 +130,22 @@ if(isset($_GET['action']) && $_GET['action'] == "get_list_coursesetup")
 
 	echo $select;
 }
+if(isset($_GET['action']) && $_GET['action'] == "get_courseplan")
+{
+	// $userplanid = $_GET['userplanid'];
+	$pinned = 1;
+	$theme_settings = new theme_moove\util\theme_settings();
+        //Lấy danh sách khoá học bắt buộc với required = 1
+    $data = 
+    	array(
+    		'listusercoursecomp' => $theme_settings->get_courses_data($pinned)
+    	);
+
+	echo json_encode($data, JSON_UNESCAPED_UNICODE);
+
+}
+
+
 
 //Chức năng thêm năng lực cho vị trí (Lập kế hoạch)
 if(isset($_POST['action']) && $_POST['action'] == "add")

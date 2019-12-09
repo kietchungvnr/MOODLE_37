@@ -565,12 +565,15 @@ class plan extends persistent {
      */
     public static function get_status_list($userid) {
         $status = array();
-        if (self::can_manage_user_draft($userid)) {
-            $status[self::STATUS_DRAFT] = get_string('planstatusdraft', 'core_competency');
-        }
-        if (self::can_manage_user($userid)) {
-            $status[self::STATUS_ACTIVE] = get_string('planstatusactive', 'core_competency');
-        }
+        // if (self::can_manage_user_draft($userid)) {
+        //     $status[self::STATUS_DRAFT] = get_string('planstatusdraft', 'core_competency');
+        // }
+        // if (self::can_manage_user($userid)) {
+        //     $status[self::STATUS_ACTIVE] = get_string('planstatusactive', 'core_competency');
+        // }
+        $status[self::STATUS_DRAFT] = get_string('planstatusdraft', 'core_competency');
+        $status[self::STATUS_ACTIVE] = get_string('planstatusactive', 'core_competency');
+
         return $status;
     }
 
