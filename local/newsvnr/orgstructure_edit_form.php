@@ -108,15 +108,30 @@ class orgstructure_edit_form extends moodleform {
         $orgcode = trim($data['orgcode']);
         if ($data['id']) {
             $current = $DB->get_record('orgstructure', array('id'=>$data['id']), '*', MUST_EXIST);
-            if ($current->name !== $orgname || $current->code !== $orgcode ) {
+            if ($current->name !== $orgname) {
                 if ($DB->record_exists('orgstructure', array('name'=>$orgname))) {
                     $errors['orgname'] = get_string('duplicatename', 'local_newsvnr');
-                } elseif ($DB->record_exists('orgstructure', array('code'=>$orgcode))) {
+                } 
+
+            }
+            if($current->code !== $orgcode) {
+                if ($DB->record_exists('orgstructure', array('code'=>$orgcode))) {
                     $errors['orgcode'] = get_string('duplicatecode', 'local_newsvnr');
                 }
             }
+        } else {
+            if ($current->name !== $orgname) {
+                if ($DB->record_exists('orgstructure', array('name'=>$orgname))) {
+                    $errors['orgname'] = get_string('duplicatename', 'local_newsvnr');
+                } 
 
-        } 
+            }
+            if($current->code !== $orgcode) {
+                if ($DB->record_exists('orgstructure', array('code'=>$orgcode))) {
+                    $errors['orgcode'] = get_string('duplicatecode', 'local_newsvnr');
+                }
+            }
+        }
 
         return $errors;
     }

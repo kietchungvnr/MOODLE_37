@@ -47,7 +47,7 @@ class requirecourse_page implements renderable, templatable {
         $pinned = 0;
         //Lấy danh sách khoá học bắt buộc với required = 1
         $data['requiredcourse'] = $theme_settings->get_courses_data($pinned);
-
+        // var_dump($data['requiredcourse']);die;
         return $data;
     }
 }

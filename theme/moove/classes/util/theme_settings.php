@@ -307,23 +307,25 @@ class theme_settings {
      * @param  integer $planid [description]
      * @return [type]                  [description]
      */
-    public static function user_courses_list($pinned = 1, $required = 1, $suggest = 1, $userplancourse = 1, $planid = 0) {
+    public static function user_courses_list($pinned = 1, $required = null, $suggest = null, $userplancourse = null, $planid = 0) {
 
         global $USER,$CFG,$DB,$OUTPUT;
         require_once($CFG->dirroot.'/course/renderer.php');
         $chelper = new \coursecat_helper();
+     
         if($pinned == 1) {
             $courses = $DB->get_records_sql("SELECT TOP(8) * from {course} where pinned = 1");
-        } elseif($pinned == 1 and $required == 1) {
+     
+        } elseif($required == 1) {
             $courses = $DB->get_records_sql("SELECT * from {course} where required = 1 and courseofposition = ?",[$USER->orgpositionid]);
         } elseif($suggest == 1) {
-            $courses = $DB->get_records_sql("SELECT TOP 8 PERCENT * FROM {course} WHERE courseofposition = ? ORDER by newid()", [$USER->orgpositionid]);
+            $courses = $DB->get_records_sql("SELECT TOP (8) * FROM {course} WHERE courseofposition = ? ORDER by newid()", [$USER->orgpositionid]);
         } elseif($userplancourse == 1) {
-            // $plans = array_values(competency_api::list_user_plans($USER->id));
+            $plans = array_values(competency_api::list_user_plans($USER->id));
           
-            // if (empty($plans)) {
-            //     return [];
-            // }
+            if (empty($plans)) {
+                return [];
+            }
 
                 $pclist = competency_api::list_plan_competencies($planid);
             
@@ -339,7 +341,7 @@ class theme_settings {
                     }
                 }
                // var_dump($pclist);die;
-            // }
+            
             $listuserplancourse = [];
             $courses = [];
             $listcourseid = [];
@@ -356,9 +358,10 @@ class theme_settings {
                     $listcourseid[] = $courseid->id;
                 }
             }
-        } else {
+        } elseif($pinned == 0) {
             //khoá học bắt buộc chung
             $courses = $DB->get_records_sql("SELECT * from {course} where required = 1");
+
         }
         foreach ($courses as $course) {
 
@@ -462,7 +465,7 @@ class theme_settings {
      * @param  integer $planid [description]
      * @return [type]                  [description]
      */
-    public function get_courses_data($pinned = 1, $required = 1, $suggest = 1, $userplancourse = 1, $planid = 0)
+    public function get_courses_data($pinned = 1, $required = null, $suggest = null, $userplancourse = null, $planid = 0)
     {
         global $DB;
         $arr = array();

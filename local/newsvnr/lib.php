@@ -824,10 +824,11 @@ function get_newest_badge() {
 /**
  * Lấy danh sách khóa học của giáo viên
  * @param  [type] $userid [description]
- * @return [type]         [description]
+ * @return [array] $list_courseid [description]
  */
 function get_list_course_by_teacher($userid) {
     global $DB;
+    $list_courseid = [];
     $list_course_by_user_sql = "
                                 SELECT DISTINCT c.fullname,c.id,c.shortname
                                 FROM mdl_role_assignments AS ra

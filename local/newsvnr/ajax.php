@@ -31,8 +31,8 @@ require_once('lib.php');
 
 // require_login();
 
-// $PAGE->set_url('/local/newsvnr/ajax.php');
-// $PAGE->set_context(context_system::instance());
+$PAGE->set_url('/local/newsvnr/ajax.php');
+$PAGE->set_context(context_system::instance());
 
 // Unlock session during potentially long curl request.
 // \core\session\manager::write_close();

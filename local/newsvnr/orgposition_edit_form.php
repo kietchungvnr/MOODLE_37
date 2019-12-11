@@ -118,10 +118,14 @@ class orgposition_edit_form extends moodleform {
         $poscode = trim($data['poscode']);
         if ($data['id']) {
             $current = $DB->get_record('orgstructure_position', array('id'=>$data['id']), '*', MUST_EXIST);
-            if ($current->name !== $posname and $current->code !== $poscode ) {
+            if ($current->name !== $posname) {
                 if ($DB->record_exists('orgstructure_position', array('name'=>$posname))) {
                     $errors['posname'] = get_string('duplicatename', 'local_newsvnr');
-                } elseif ($DB->record_exists('orgstructure_position', array('code'=>$poscode))) {
+                }
+            }
+
+            if ($current->code !== $poscode) {
+                if ($DB->record_exists('orgstructure_position', array('code'=>$poscode))) {
                     $errors['poscode'] = get_string('duplicatecode', 'local_newsvnr');
                 }
             }
@@ -129,7 +133,8 @@ class orgposition_edit_form extends moodleform {
         } else {
             if ($DB->record_exists('orgstructure_position', array('name'=>$posname))) {
                 $errors['posname'] = get_string('duplicatename', 'local_newsvnr');
-            }elseif ($DB->record_exists('orgstructure_position', array('code'=>$poscode))) {
+            }
+            if ($DB->record_exists('orgstructure_position', array('code'=>$poscode))) {
                 $errors['poscode'] = get_string('duplicatecode', 'local_newsvnr');
             }
         }

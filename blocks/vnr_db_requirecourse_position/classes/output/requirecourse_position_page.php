@@ -44,10 +44,10 @@ class requirecourse_position_page implements renderable, templatable {
     public function export_for_template(renderer_base $output) {
         $data = array();
         $theme_settings = new theme_settings();
-        $pinned = 1;
+
         $required = 1;
         //Lấy danh sách khoá học bắt buộc với required = 1
-        $data['requiredpositioncourse'] = $theme_settings->get_courses_data($pinned, $required);
+        $data['requiredpositioncourse'] = $theme_settings->get_courses_data(null, $required);
 
         return $data;
     }

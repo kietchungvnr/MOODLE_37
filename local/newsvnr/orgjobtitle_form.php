@@ -80,18 +80,22 @@ class orgjobtitle_form extends moodleform {
         $jobtitlecode = trim($data['jobtitlecode']);
         if ($data['id']) {
             $current = $DB->get_record('orgstructure_jobtitle', array('id'=>$data['id']), '*', MUST_EXIST);
-            if ($current->name !== $jobtitlename and $current->code !== $jobtitlecode ) {
+            if ($current->name !== $jobtitlename) {
                 if ($DB->record_exists('orgstructure_jobtitle', array('name'=>$jobtitlename))) {
                     $errors['jobtitlename'] = get_string('duplicatename', 'local_newsvnr');
-                } elseif ($DB->record_exists('orgstructure_jobtitle', array('code'=>$jobtitlecode))) {
+                } 
+            }
+            if ($current->code !== $jobtitlecode) {
+                if ($DB->record_exists('orgstructure_jobtitle', array('code'=>$jobtitlecode))) {
                     $errors['jobtitlecode'] = get_string('duplicatecode', 'local_newsvnr');
-                }
+                } 
             }
 
         } else {
             if ($DB->record_exists('orgstructure_jobtitle', array('name'=>$jobtitlename))) {
                 $errors['jobtitlename'] = get_string('duplicatename', 'local_newsvnr');
-            }elseif ($DB->record_exists('orgstructure_jobtitle', array('code'=>$jobtitlecode))) {
+            }
+            if ($DB->record_exists('orgstructure_jobtitle', array('code'=>$jobtitlecode))) {
                 $errors['jobtitlecode'] = get_string('duplicatecode', 'local_newsvnr');
             }
         }

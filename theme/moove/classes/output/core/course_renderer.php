@@ -132,19 +132,24 @@ class course_renderer extends \core_course_renderer {
         }
 
         $coursecount = 1;
-        $content .= html_writer::start_tag('div', array('class' => 'card-deck mt-2'));
+        $content .= html_writer::start_tag('div', array('class' => 'row mt-2'));
+   
+        // $content .= html_writer::start_tag('div', array('class' => 'card-deck mt-2'));
         foreach ($courses as $course) {
             $content .= $this->coursecat_coursebox($chelper, $course);
 
             if ($coursecount % 4 == 0) {
                 $content .= html_writer::end_tag('div');
-                $content .= html_writer::start_tag('div', array('class' => 'card-deck mt-2'));
+                // $content .= html_writer::start_tag('div', array('class' => 'row mt-2'));
+                // $content .= html_writer::start_tag('div', array('class' => 'card-deck mt-2'));
             }
 
             $coursecount ++;
         }
 
+        // $content .= html_writer::end_tag('div');
         $content .= html_writer::end_tag('div');
+       
 
         if (!empty($pagingbar)) {
             $content .= $pagingbar;
@@ -199,6 +204,10 @@ class course_renderer extends \core_course_renderer {
 
         // End coursebox.
         $content = html_writer::start_tag('div', array(
+            'class' => 'col-md-3 col-sm-12 mb-1'
+           
+        ));
+        $content .= html_writer::start_tag('div', array(
             'class' => $classes,
             'data-courseid' => $course->id,
             'data-type' => self::COURSECAT_TYPE_COURSE,
@@ -206,6 +215,7 @@ class course_renderer extends \core_course_renderer {
 
         $content .= $this->coursecat_coursebox_content($chelper, $course);
 
+        $content .= html_writer::end_tag('div');
         $content .= html_writer::end_tag('div'); // End coursebox.
    
         return $content;

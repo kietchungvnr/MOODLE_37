@@ -14,12 +14,10 @@
 
  <div class="container-fluid outline-none " id="courseuserplanslider" tabindex="1">
     <div class="row align-content-start">
+            {{#listusercoursecomp}}
             <div id="course-userplan-slider" class="owl-carousel owl-theme">
-                {{#listusercoursecomp}}
                 {{#newscourse}}
                 <div class="post-slide6">
-                  
-                 
                     <div class="post-img">
                         {{{courseimage}}}
                         <div class="post-info">
@@ -39,14 +37,13 @@
                         <p class="post-description" style="height:104px">{{summary}}</p>
                       
                     </div>
-                    
-                 
                 </div>
                 {{/newscourse}}
-                {{/listusercoursecomp}}
-
-
             </div>
+            {{/listusercoursecomp}}
+            {{#nohascusercoursecomp}}
+                <div class="d-flex justify-content-center alert alert-info alert-block fade in w-100 ">Không có khoá học cho kế hoạch này!</div>
+            {{/nohascusercoursecomp}}
 </div>
 </div>
 {{#js}}

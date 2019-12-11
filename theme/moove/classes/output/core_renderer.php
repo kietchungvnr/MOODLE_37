@@ -72,7 +72,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
     public function full_header() {
         global $PAGE,$COURSE;
         $urlpara = $_SERVER['REQUEST_URI'];
-        if($urlpara === "/" or $urlpara === "/?redirect=0")
+        if($urlpara === "/" or $urlpara === "/?redirect=0" or $urlpara === "/index.php" or $urlpara ==="/index.php?redirect=0")
         {
             $header = new stdClass();
             $header->active = false;

@@ -412,36 +412,38 @@ function theme_moove_buildnavnewsvnr_by_student(\flat_navigation $flatnav) {
 function theme_moove_buildnavnewsvnr_by_teacher(\flat_navigation $flatnav) {
     global $PAGE,$USER,$CFG;
     require_once($CFG->dirroot . '/local/newsvnr/lib.php');
-    $sitesettings = $flatnav->find('sitesettings',\navigation_node::TYPE_SITE_ADMIN);
-
-    if (!$sitesettings) {
-        return;
-    }
-    $coursesectionsoptions = [
-        'text' => get_string('mycourses_by_teacher','local_newsvnr'),
-        'shorttext' => 'mycourses_by_teacher',
-        'icon' => new pix_icon('i/mycourses', ''),
-        'type' => \navigation_node::TYPE_SYSTEM,
-        'key' => 'mycourses_by_teacher_vnr',
-        'parent' => $sitesettings
-    ];
     $listcourse = get_list_course_by_teacher($USER->id);
+    if($listcourse) {
+        $sitesettings = $flatnav->find('sitesettings',\navigation_node::TYPE_SITE_ADMIN);
 
-    $coursesections = new \flat_navigation_node($coursesectionsoptions, 0);
-    foreach ($listcourse as $course) {
-        $course->link = $CFG->wwwroot."/course/view.php?id=".$course->id;
-        $coursesections->add_node(new \navigation_node([
-                    'text' => $course->fullname,
-                    'shorttext' => $course->shortname,
-                    'icon' => '',
-                    'type' => \navigation_node::TYPE_COURSE,
-                    'key' => $course->id,
-                    'parent' => $coursesections,
-                    'action' => $course->link
-                ]));
-    }      
-   
-    $flatnav->add($coursesections,$sitesettings->key);
+        if (!$sitesettings) {
+            return;
+        }
+        $coursesectionsoptions = [
+            'text' => get_string('mycourses_by_teacher','local_newsvnr'),
+            'shorttext' => 'mycourses_by_teacher',
+            'icon' => new pix_icon('i/mycourses', ''),
+            'type' => \navigation_node::TYPE_SYSTEM,
+            'key' => 'mycourses_by_teacher_vnr',
+            'parent' => $sitesettings
+        ];
+        
+        $coursesections = new \flat_navigation_node($coursesectionsoptions, 0);
+        foreach ($listcourse as $course) {
+            $course->link = $CFG->wwwroot."/course/view.php?id=".$course->id;
+            $coursesections->add_node(new \navigation_node([
+                        'text' => $course->fullname,
+                        'shorttext' => $course->shortname,
+                        'icon' => '',
+                        'type' => \navigation_node::TYPE_COURSE,
+                        'key' => $course->id,
+                        'parent' => $coursesections,
+                        'action' => $course->link
+                    ]));
+        }      
+       
+        $flatnav->add($coursesections,$sitesettings->key);
+    }
 }
 
 

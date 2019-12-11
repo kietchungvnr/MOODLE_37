@@ -68,6 +68,7 @@ class orgcate_form extends moodleform {
         $errors = parent::validation($data, $files);
 
         $catename = trim($data['catename']);
+        $catecode = trim($data['catecode']);
         if ($data['id']) {
             $current = $DB->get_record('orgstructure_category', array('id'=>$data['id']), '*', MUST_EXIST);
             if ($current->name !== $catename) {
@@ -75,10 +76,18 @@ class orgcate_form extends moodleform {
                     $errors['catename'] = get_string('duplicatename', 'local_newsvnr');
                 }
             }
+            if ($current->code !== $catecode) {
+                if ($DB->record_exists('orgstructure_category', array('code'=>$catecode))) {
+                    $errors['catecode'] = get_string('duplicatecode', 'local_newsvnr');
+                }
+            }
 
         } else {
             if ($DB->record_exists('orgstructure_category', array('name'=>$catename))) {
                 $errors['catename'] = get_string('duplicatename', 'local_newsvnr');
+            }
+            if ($DB->record_exists('orgstructure_category', array('code'=>$catecode))) {
+                $errors['catecode'] = get_string('duplicatecode', 'local_newsvnr');
             }
         }
 
