@@ -32,10 +32,7 @@ use templatable;
 use renderer_base;
 use stdClass;
 use theme_moove\util\theme_settings;
-use core_competency\api;
-use core_competency\external\competency_exporter;
-use core_competency\external\plan_exporter;
-use core_competency\external\user_competency_exporter;
+
 class lptimeline_usercoursecomp_page implements renderable, templatable {
 
     /**
@@ -45,13 +42,15 @@ class lptimeline_usercoursecomp_page implements renderable, templatable {
      */
     public function export_for_template(renderer_base $output) {
         global $DB,$USER,$CFG,$OUTPUT;
-        $data = array();
-        // $theme_settings = new theme_settings();
+        // $data = [];
+        // $listuserplan = array_values($DB->get_records_sql('SELECT * FROM {competency_plan} WHERE userid = ?', [$USER->id]));
         
-        // $pinned = 0;
-        // //Lấy danh sách khoá học bắt buộc với required = 1
-        // $data['listusercoursecomp'] = $theme_settings->get_courses_data($pinned);
-      
+        // $data['listuserplan'] = $listuserplan;
+        // $theme_settings = new theme_settings();
+        // $planid = end($listuserplan);
+
+        // //Lấy danh sách khoá học theo lộ trình cá nhân
+        // $data['listusercoursecomp'] = $theme_settings->get_courses_data($pinned = null, $required = null, $suggest = null, $userplancourse = 1, $planid->id);
         return $data;
     }
 }

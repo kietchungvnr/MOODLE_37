@@ -39,8 +39,8 @@ class renderer extends plugin_renderer_base {
         return $this->render_from_template('block_vnr_db_lptimeline_userplan/lptimeline_userplan',
             $page->export_for_template($this));
     }
-    // public function render_lptimeline_usercoursecomp_page(lptimeline_usercoursecomp_page $page) {
-    //     return $this->render_from_template('block_vnr_db_lptimeline_userplan/lptimeline_usercoursecomp',
-    //         $page->export_for_template($this));
-    // }
+    public function render_lptimeline_usercoursecomp_page(lptimeline_usercoursecomp_page $page) {
+        return $this->render_from_template('block_vnr_db_lptimeline_userplan/lptimeline_usercoursecomp',
+            $page->export_for_template($this));
+    }
 }

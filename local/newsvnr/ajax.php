@@ -31,8 +31,8 @@ require_once('lib.php');
 
 // require_login();
 
-$PAGE->set_url('/local/newsvnr/ajax.php');
-$PAGE->set_context(context_system::instance());
+// $PAGE->set_url('/local/newsvnr/ajax.php');
+// $PAGE->set_context(context_system::instance());
 
 // Unlock session during potentially long curl request.
 // \core\session\manager::write_close();
@@ -132,15 +132,18 @@ if(isset($_GET['action']) && $_GET['action'] == "get_list_coursesetup")
 }
 if(isset($_GET['action']) && $_GET['action'] == "get_courseplan")
 {
-	// $userplanid = $_GET['userplanid'];
-	$pinned = 1;
+	$userplanid = $_GET['userplanid'];
 	$theme_settings = new theme_moove\util\theme_settings();
-        //Lấy danh sách khoá học bắt buộc với required = 1
+
+	$listusercoursecomp = $theme_settings->get_courses_data(null,null,null, $userplancourse = 1, $userplanid );
+	
+    //Lấy danh sách khoá học bắt buộc với required = 1
     $data = 
     	array(
-    		'listusercoursecomp' => $theme_settings->get_courses_data($pinned)
+    		'listusercoursecomp' => $listusercoursecomp,
+   
     	);
-
+    
 	echo json_encode($data, JSON_UNESCAPED_UNICODE);
 
 }

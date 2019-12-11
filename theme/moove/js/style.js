@@ -41,7 +41,7 @@
         var owlsuggestcourse = $('#suggest-course-slider');
         var owluserplancourse = $('#course-userplan-slider');
         owlcourse.owlCarousel({
-            loop:true,
+            loop:false,
             margin:10,
             lazyLoad:true,
             autoplay:true,
@@ -61,7 +61,7 @@
 
         });
         owlnews.owlCarousel({
-            loop:true,
+            loop:false,
             margin:10,
             nav:true,
             lazyLoad:true,
@@ -83,7 +83,7 @@
 
         });
         owlrequiredcourse.owlCarousel({
-            loop:true,
+            loop:false,
             margin:10,
             lazyLoad:true,
             // autoplay:true,
@@ -98,12 +98,15 @@
                 },
                 1000:{
                     items:4, 
+                },
+                1450:{
+                    items:5, 
                 }
             }
 
         });
         owlsuggestcourse.owlCarousel({
-            loop:true,
+            loop:false,
             margin:10,
             lazyLoad:true,
             // autoplay:true,
@@ -118,12 +121,15 @@
                 },
                 1000:{
                     items:4, 
+                },
+                1450:{
+                    items:5, 
                 }
             }
 
         });
         owlrequiredpositioncourse.owlCarousel({
-            loop:true,
+            loop:false,
             margin:10,
             lazyLoad:true,
             // autoplay:true,
@@ -138,12 +144,15 @@
                 },
                 1000:{
                     items:4, 
+                },
+                1450:{
+                    items:5, 
                 }
             }
 
         });
         owluserplancourse.owlCarousel({
-            loop:true,
+            loop:false,
             margin:10,
             lazyLoad:true,
             // autoplay:true,
@@ -158,6 +167,9 @@
                 },
                 1000:{
                     items:4, 
+                },
+                1450:{
+                    items:5, 
                 }
             }
 

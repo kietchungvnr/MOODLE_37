@@ -1,26 +1,86 @@
-
-<div class="container-fulid mb-2">
-     {{#listuserplan}}
+ <div class="container-fulid mb-2" id="testthoi">
+     
     <div class="row">
          <div class="col-md-3">
-
-                    <select class="form-control" id="listuserplan">
-                        
-                        <option disabled selected="selected" value="">Chọn kế hoạch</option>
-
-                        <option value="{{id}}"  >{{name}}</option>
-                        
-                        <option value="1"  >vvvv</option>
-
-                    </select>
-                </div>
+            <select class="form-control" id="listuserplan">
+                {{! <option    selected="selected" value="">Chọn kế hoạch</option> }}
+                {{#listuserplan}}
+                <option value="{{id}}"  selected="selected">{{name}}</option>
+                {{/listuserplan}}
+            </select>
+        </div>
     </div>
-    {{/listuserplan}}
 </div>
- <div class="container outline-none" id="courseuserplanslider" tabindex="1">
-    <div class="row">
+
+ <div class="container-fluid outline-none " id="courseuserplanslider" tabindex="1">
+    <div class="row align-content-start">
             <div id="course-userplan-slider" class="owl-carousel owl-theme">
-              {{>block_vnr_db_lptimeline_userplan/lptimeline_usercoursecomp}}
+                {{#listusercoursecomp}}
+                {{#newscourse}}
+                <div class="post-slide6">
+                  
+                 
+                    <div class="post-img">
+                        {{{courseimage}}}
+                        <div class="post-info">
+                            <ul class="category">
+                                <li>Học viên <a href="#">{{countstudent}}</a></li>
+                                <li>Giáo viên <a href="#">{{fullnamet}}</a></li>
+                               
+                            </ul>
+          
+                        </div>
+                    </div>
+                    <div class="post-review">
+                        <span class="icons">
+                               {{{imageteacher}}}
+                        </span>
+                        <h3 class="post-title"><a href="{{{link}}}" title="{{fullname}}">{{fullname}}</a></h3>
+                        <p class="post-description" style="height:104px">{{summary}}</p>
+                      
+                    </div>
+                    
+                 
+                </div>
+                {{/newscourse}}
+                {{/listusercoursecomp}}
+
+
             </div>
-    </div>
 </div>
+</div>
+{{#js}}
+require(['jquery', 'core/templates', 'core/notification', 'core/config'], function($, templates, notification, Config) {
+    
+    $('#listuserplan').on('change', function(){
+
+        var userplanid = $(this).val();
+        var owluserplancourse_block = $('#course-userplan-slider');
+        var settings = {
+                type: 'GET',
+                processData: true,
+                data:{
+                    action: 'get_courseplan',
+                    userplanid: userplanid,
+                },
+                contentType: "application/json"
+        };
+        var script = Config.wwwroot + '/local/newsvnr/ajax.php';
+        $.ajax(script, settings)
+        .then(function(response) {
+            var data = JSON.parse(response);
+            
+            if(data.listusercoursecomp.length != 0) {
+                templates.render('block_vnr_db_lptimeline_userplan/lptimeline_usercoursecomp', data).done(function(html, js) {
+                    owluserplancourse_block.replaceWith(html);
+                    templates.runTemplateJS(js);
+                }).fail(notification.exception);
+            } 
+            else {
+                owluserplancourse_block.html('<div class="d-flex justify-content-center alert alert-info alert-block fade in ">Không có khoá học cho kế hoạch này!</div>');
+            }
+        }).fail(notification.exception);
+    });
+
+});
+{{/js}}

@@ -9,7 +9,7 @@ class block_vnr_db_lptimeline_userplan extends block_base {
   
     
     function get_content() {
-        global $CFG, $USER, $DB, $OUTPUT;
+        global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 
         if($this->content !== NULL) {
             return $this->content;

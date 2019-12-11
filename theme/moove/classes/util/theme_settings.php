@@ -26,7 +26,6 @@ namespace theme_moove\util;
 require_once($CFG->libdir.'/filelib.php');
 require_once($CFG->dirroot.'/mod/forum/lib.php');
 
-
 use theme_config;
 use stdClass;
 use single_button;
@@ -38,6 +37,8 @@ use core_course_category;
 use core_course_list_element;
 use DateTime;
 use context_module;
+use core_competency\api as competency_api;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -289,14 +290,24 @@ class theme_settings {
         // var_dump($rolecourse);die();
 
     }
-     /**
-     * pinned = 0 : Khoác học bắt buộc chung
-     * pinned = 1 : Khoác học đc ghim
-     * pinned = 2 : Khoác học bắt buộc chung theo vị trí
-     * @param  integer $pinned [description]
-     * @return [array]          [description]
+
+    /**
+     * [user_courses_list description]
+     * Lấy danh sách khoá học cho slider
+     * pinned = 1, required = 1 : Khoá học bắt buộc chung
+     * pinned = 1 : Khoá học đc ghim
+     * pinned = 0 : Khoá học bắt buộc
+     * suggest = 1 : Khoá học đề xuất theo vị trí
+     * planid = 0 : ID kế hoạch cá nhân của user
+     * userplancourse = 1 : Khoá học theo kế hoạch cá nhân
+     * @param  integer $pinned         [description]
+     * @param  integer $required       [description]
+     * @param  integer $suggest        [description]
+     * @param  integer $userplancourse [description]
+     * @param  integer $planid [description]
+     * @return [type]                  [description]
      */
-    public static function user_courses_list($pinned = 1, $required = 1, $suggest = 1) {
+    public static function user_courses_list($pinned = 1, $required = 1, $suggest = 1, $userplancourse = 1, $planid = 0) {
 
         global $USER,$CFG,$DB,$OUTPUT;
         require_once($CFG->dirroot.'/course/renderer.php');
@@ -307,7 +318,46 @@ class theme_settings {
             $courses = $DB->get_records_sql("SELECT * from {course} where required = 1 and courseofposition = ?",[$USER->orgpositionid]);
         } elseif($suggest == 1) {
             $courses = $DB->get_records_sql("SELECT TOP 8 PERCENT * FROM {course} WHERE courseofposition = ? ORDER by newid()", [$USER->orgpositionid]);
+        } elseif($userplancourse == 1) {
+            // $plans = array_values(competency_api::list_user_plans($USER->id));
+          
+            // if (empty($plans)) {
+            //     return [];
+            // }
+
+                $pclist = competency_api::list_plan_competencies($planid);
+            
+                $ucproperty = 'competency';
+               
+                $listcomp = [];
+                foreach ($pclist as $pc) {
+                   
+                    $usercomp = $pc->$ucproperty;
+
+                    if ($usercomp->get('id')) {
+                        $listcomp[] = $usercomp->get('id');
+                    }
+                }
+               // var_dump($pclist);die;
+            // }
+            $listuserplancourse = [];
+            $courses = [];
+            $listcourseid = [];
+            foreach ($listcomp as $competency) {
+                $listuserplancourse[] = competency_api::list_courses_using_competency($competency);
+            }
+           
+            foreach ($listuserplancourse as $course) {
+                foreach ($course as  $courseid) {
+                    if (in_array($courseid->id, $listcourseid))
+                        continue;
+                    else
+                        $courses[] = $DB->get_record("course", ['id' => $courseid->id], '*');
+                    $listcourseid[] = $courseid->id;
+                }
+            }
         } else {
+            //khoá học bắt buộc chung
             $courses = $DB->get_records_sql("SELECT * from {course} where required = 1");
         }
         foreach ($courses as $course) {
@@ -396,19 +446,29 @@ class theme_settings {
         } 
            
     }
-    /**
-     * pinned = 0 : Khoác học bắt buộc chung
-     * pinned = 1 : Khoác học đc ghim
-     * pinned = 2 : Khoác học bắt buộc chung theo vị trí
-     * @param  integer $pinned [description]
-     * @return [array]          [description]
+   /**
+     * [user_courses_list description]
+     * Lấy danh sách khoá học cho slide
+     * pinned = 1, required = 1 : Khoá học bắt buộc chung
+     * pinned = 1 : Khoá học đc ghim
+     * pinned = 0 : Khoá học bắt buộc
+     * suggest = 1 : Khoá học đề xuất theo vị trí
+     * planid = 0 : ID kế hoạch cá nhân của user
+     * userplancourse = 1 : Khoá học theo kế hoạch cá nhân
+     * @param  integer $pinned         [description]
+     * @param  integer $required       [description]
+     * @param  integer $suggest        [description]
+     * @param  integer $userplancourse [description]
+     * @param  integer $planid [description]
+     * @return [type]                  [description]
      */
-    public function get_courses_data($pinned = 1)
+    public function get_courses_data($pinned = 1, $required = 1, $suggest = 1, $userplancourse = 1, $planid = 0)
     {
         global $DB;
         $arr = array();
-        $courses = self::user_courses_list($pinned);
-        $templatecontext['courseendable'] = "1";
+        $courses = self::user_courses_list($pinned, $required, $suggest, $userplancourse, $planid);
+        // $templatecontext['courseendable'] = "1";
+        $templatecontext = [];
 
         foreach ($courses as $key => $value) {        
             $arr[] = (array)$value;
