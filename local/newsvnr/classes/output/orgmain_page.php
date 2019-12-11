@@ -22,14 +22,14 @@ class orgmain_page implements renderable, templatable {
 
 	public function export_for_template(renderer_base $output) {
     global $DB,$USER,$PAGE;
-    // $data = array();
+    $data = array();
     // $courses = $DB->get_records_sql("SELECT * from {course} where required = 1");
     // var_dump($courses);die;
 
     // $courses = api::list_courses_using_competency(29);
     // foreach ($courses as $key => $value) {
     //    var_dump($value->id);die;  
-    }
+    // }
 
    
 

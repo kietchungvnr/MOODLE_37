@@ -156,8 +156,13 @@ if ($editform->is_cancelled()) {
     // The form has been cancelled, take them back to what ever the return to is.
     redirect($returnurl);
 } else if ($data = $editform->get_data()) {
+    //Custom by Vũ : Add coursesetup vào course data
     if(isset($_REQUEST['coursesetup'])) {
         $data->coursesetup = $_REQUEST['coursesetup'];
+    }
+    
+    if($data->courseoforgstructure) {
+        $data->courseoforgstructure = $DB->get_field('orgstructure', 'id', ['name' => $data->courseoforgstructure]);
     }
     
     // Process data if submitted.

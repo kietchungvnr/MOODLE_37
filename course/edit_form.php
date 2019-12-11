@@ -133,10 +133,12 @@ class course_edit_form extends moodleform {
         $mform->addRule('typeofcourse', get_string('missingtypeofcourse','local_newsvnr'), 'required', null, 'client');
         $mform->setType('typeofcourse', PARAM_INT);
         
-        $mform->addElement('text', 'courseoforgstructure', get_string('courseoforgstructure','local_newsvnr'), 'maxlength="254" size="30"');
+        $mform->addElement('text', 'courseoforgstructure', get_string('courseoforgstructure', 'local_newsvnr'), 'maxlength="200" size="50" class="mb-0"');
+        $mform->addRule('courseoforgstructure', get_string('required'), 'required', null, 'client');
         $mform->setType('courseoforgstructure', PARAM_TEXT);
-
         $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3"></div><div class="col-md-3 pr-0 ml-3 form-inline felement" id="treeview-orgstructure-course" style="background-color: #e9ecef"></div></div>');
+        
+        
 
         $mform->addElement('select', 'courseofjobtitle', get_string('courseofjobtitle','local_newsvnr'), $orgjobtitlenames);
         $mform->setType('courseofjobtitle', PARAM_INT);
@@ -145,7 +147,7 @@ class course_edit_form extends moodleform {
         $mform->setType('courseofposition', PARAM_INT);
         $mform->addElement('advcheckbox', 'pinned', get_string('pinned', 'local_newsvnr'), ' ', array('group' => 1), array(0, 1));
         
-        $strcoursesetup = get_string('coursesetup','local_newsvnr');
+        // $strcoursesetup = get_string('coursesetup','local_newsvnr');
         // //Lấy danh sách khoá học setup
         // $coursesetuplist = $DB->get_records('course_setup');
         // $coursesetupnames = array();
@@ -160,13 +162,13 @@ class course_edit_form extends moodleform {
         // $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3">'.$strcoursesetup.'</div><div class="col-md-3 felement" ><select class="form-control" id="listcoursesetup" name="coursesetup" required></select></div></div>');
         $mform->addElement('advcheckbox', 'required', get_string('required', 'local_newsvnr'), ' ', array('group' => 1), array(0, 1));
 
-        $toclist = array(
-            '0' => 'Online',
-            '1' => 'Offline',
-        );
-        $mform->addElement('select', 'typeclass', get_string('typeclass','local_newsvnr'), $toclist);
-        $mform->addRule('typeclass', get_string('missingtypeclass','local_newsvnr'), 'required', null, 'client');
-        $mform->setType('typeclass', PARAM_INT);
+        // $toclist = array(
+        //     '0' => 'Online',
+        //     '1' => 'Offline',
+        // );
+        // $mform->addElement('select', 'typeclass', get_string('typeclass','local_newsvnr'), $toclist);
+        // $mform->addRule('typeclass', get_string('missingtypeclass','local_newsvnr'), 'required', null, 'client');
+        // $mform->setType('typeclass', PARAM_INT);
 
         
         // --- Kết thúc custom --- ///

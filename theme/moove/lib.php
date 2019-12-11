@@ -467,7 +467,7 @@ function theme_moove_buildnavnewsvnr(\flat_navigation $flatnav) {
     $courseurl = new moodle_url('/local/newsvnr/course.php');
     $forumurl = new moodle_url('/local/newsvnr/forum.php');
     $orgcomp_positionurl = new moodle_url('/local/newsvnr/orgcomp_position.php');
-    $questionbank_url = new moodle_url('/question/edit.php?courseid=1');
+    // $questionbank_url = new moodle_url('/question/edit.php?courseid=1');
     $orgmanagerurl = new moodle_url('/local/newsvnr/orgmanager.php');
     $orgmainurl = new moodle_url('/local/newsvnr/orgmain.php');
     $coursesections = new \flat_navigation_node($coursesectionsoptions, 0);
@@ -483,15 +483,15 @@ function theme_moove_buildnavnewsvnr(\flat_navigation $flatnav) {
                 'action' => $orgmanagerurl
             ]));
     
-    $coursesections->add_node(new \navigation_node([
-                'text' => get_string('questionbank_title', 'local_newsvnr'),
-                'shorttext' => 'questionbank',
-                'icon' => '',
-                'type' => \navigation_node::TYPE_CUSTOM,
-                'key' => 'questionbankvnr',
-                'parent' => $coursesections,
-                'action' => $questionbank_url
-            ]));
+    // $coursesections->add_node(new \navigation_node([
+    //             'text' => get_string('questionbank_title', 'local_newsvnr'),
+    //             'shorttext' => 'questionbank',
+    //             'icon' => '',
+    //             'type' => \navigation_node::TYPE_CUSTOM,
+    //             'key' => 'questionbankvnr',
+    //             'parent' => $coursesections,
+    //             'action' => $questionbank_url
+    //         ]));
     $coursesections->add_node(new \navigation_node([
                 'text' => get_string('orgcomp_position', 'local_newsvnr'),
                 'shorttext' => 'orgcomp',
