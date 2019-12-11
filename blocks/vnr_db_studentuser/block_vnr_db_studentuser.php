@@ -6,11 +6,8 @@ class block_vnr_db_studentuser extends block_base {
         $this->title = get_string('pluginname', 'block_vnr_db_studentuser');
     }
 
-  
-    
     function get_content() {
-        global $CFG, $USER, $DB, $OUTPUT;
-
+        
         if($this->content !== NULL) {
             return $this->content;
         }

@@ -26,15 +26,14 @@ namespace block_vnr_db_teacheruser_rm\output;
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/local/newsvnr/lib.php');
-require_once($CFG->libdir . '/badgeslib.php');
 
 use renderable;
 use templatable;
 use renderer_base;
 use stdClass;
-use badge;
 use user_picture;
 use html_writer;
+
 class teacheruser_rm_page implements renderable, templatable {
 
     /**
@@ -43,7 +42,7 @@ class teacheruser_rm_page implements renderable, templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output) {
-        global $DB,$USER,$CFG,$OUTPUT;
+        global $DB,$USER,$CFG;
        
         $data = array();
         //danh sách khóa học theo user giáo viên
@@ -58,7 +57,7 @@ class teacheruser_rm_page implements renderable, templatable {
                                     join mdl_course_modules cm on c.id = cm.course
                                     join mdl_course_modules_completion cmc on cm.id = cmc.coursemoduleid
                                 where  ra.roleid=3 and u.id = ?";
-        $list_course_by_user_ex = $DB->get_records_sql($list_course_by_user_sql,[268]);
+        $list_course_by_user_ex = $DB->get_records_sql($list_course_by_user_sql,[$USER->id]);
         
          if (!empty($list_course_by_user_ex)) {
             foreach ($list_course_by_user_ex as $value) {

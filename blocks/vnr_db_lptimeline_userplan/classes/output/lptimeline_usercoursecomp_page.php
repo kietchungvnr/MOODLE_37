@@ -41,8 +41,7 @@ class lptimeline_usercoursecomp_page implements renderable, templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output) {
-        global $DB,$USER,$CFG,$OUTPUT;
-        // $data = [];
+        $data = [];
         // $listuserplan = array_values($DB->get_records_sql('SELECT * FROM {competency_plan} WHERE userid = ?', [$USER->id]));
         
         // $data['listuserplan'] = $listuserplan;

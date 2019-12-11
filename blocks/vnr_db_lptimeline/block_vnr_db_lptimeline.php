@@ -25,14 +25,12 @@
 // include_once($CFG->dirroot . '/course/lib.php');
 
 class block_vnr_db_lptimeline extends block_base {
+    
     function init() {
         $this->title = get_string('pluginname', 'block_vnr_db_lptimeline');
     }
 
-  
-
     function get_content() {
-        global $CFG, $USER, $DB, $OUTPUT;
         
         if($this->content !== NULL) {
             return $this->content;
@@ -40,8 +38,6 @@ class block_vnr_db_lptimeline extends block_base {
 
         $renderable = new \block_vnr_db_lptimeline\output\lptimeline_page();
         $renderer = $this->page->get_renderer('block_vnr_db_lptimeline');
-        // var_dump($renderer);die();
-        
         $this->content = new stdClass();
         $this->content->text = $renderer->render($renderable);
         $this->content->footer = '';

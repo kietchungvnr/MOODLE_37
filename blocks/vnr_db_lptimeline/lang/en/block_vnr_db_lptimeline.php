@@ -23,10 +23,9 @@
  */
 
 $string['pluginname'] = 'Lộ trình đào tạo';
-$string['simple_text'] = 'Hoạt động thành công';
-$string['vnr_db_lptimeline:addinstance'] = 'Add a new top courses block';
-$string['vnr_db_lptimeline:myaddinstance'] = 'Add a new top courses block to Dashboard';
-$string['privacy:metadata'] = 'The Courses block only shows data about courses and does not store any data itself.';
+$string['vnr_db_lptimeline:addinstance'] = 'Add a new lptimeline block';
+$string['vnr_db_lptimeline:myaddinstance'] = 'Add a new lptimeline block to Dashboard';
+$string['privacy:metadata'] = 'The lptimeline block only shows data stored in other locations.';
 
 //dashboard
 $string['detail'] = 'Chi tiết';

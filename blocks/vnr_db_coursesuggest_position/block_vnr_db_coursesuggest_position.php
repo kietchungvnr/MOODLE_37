@@ -9,7 +9,6 @@ class block_vnr_db_coursesuggest_position extends block_base {
   
     
     function get_content() {
-        global $CFG, $USER, $DB, $OUTPUT;
 
         if($this->content !== NULL) {
             return $this->content;

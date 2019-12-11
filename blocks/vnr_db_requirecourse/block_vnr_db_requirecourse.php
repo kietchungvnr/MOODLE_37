@@ -5,11 +5,8 @@ class block_vnr_db_requirecourse extends block_base {
      public function init() {
         $this->title = get_string('pluginname', 'block_vnr_db_requirecourse');
     }
-
-  
     
     function get_content() {
-        global $CFG, $USER, $DB, $OUTPUT;
 
         if($this->content !== NULL) {
             return $this->content;

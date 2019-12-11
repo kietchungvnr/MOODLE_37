@@ -1,15 +1,11 @@
 <?php
 
-
 class block_vnr_db_requirecourse_position extends block_base {
      public function init() {
         $this->title = get_string('pluginname', 'block_vnr_db_requirecourse_position');
     }
-
-  
     
     function get_content() {
-        global $CFG, $USER, $DB, $OUTPUT;
 
         if($this->content !== NULL) {
             return $this->content;

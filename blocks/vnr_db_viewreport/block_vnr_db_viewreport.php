@@ -24,7 +24,6 @@ class block_vnr_db_viewreport extends block_base {
         return parent::user_can_edit();
     }
     function get_content() {
-        global $CFG, $USER, $DB, $OUTPUT;
        
         if(!has_capability('moodle/tag:editblocks',$this->context) or $this->content !== NULL) {
             return $this->content;

@@ -26,14 +26,12 @@ namespace block_vnr_db_viewreport\output;
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/local/newsvnr/lib.php');
-require_once($CFG->libdir . '/badgeslib.php');
 
 use renderable;
 use templatable;
 use renderer_base;
 use stdClass;
-use badge;
-use user_picture;
+
 class viewreport_page implements renderable, templatable {
 
     /**
@@ -42,7 +40,7 @@ class viewreport_page implements renderable, templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output) {
-        global $DB,$USER,$CFG,$OUTPUT,$COURSE;
+        global $DB,$USER;
         $data = array();
         $list_chart = [];
         $list_chart_std = new stdClass();

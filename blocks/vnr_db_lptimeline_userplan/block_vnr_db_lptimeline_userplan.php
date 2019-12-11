@@ -5,11 +5,8 @@ class block_vnr_db_lptimeline_userplan extends block_base {
      public function init() {
         $this->title = get_string('pluginname', 'block_vnr_db_lptimeline_userplan');
     }
-
-  
     
     function get_content() {
-        global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 
         if($this->content !== NULL) {
             return $this->content;

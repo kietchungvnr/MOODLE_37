@@ -7,7 +7,7 @@ class block_vnr_db_teacheruser_dd extends block_base {
     }
 
     function get_content() {
-        global $CFG, $USER, $DB, $OUTPUT;
+        global $CFG, $USER;
        
         require_once($CFG->dirroot . '/local/newsvnr/lib.php');
         $get_list_courseid_by_teacher = get_list_courseid_by_teacher($USER->id);

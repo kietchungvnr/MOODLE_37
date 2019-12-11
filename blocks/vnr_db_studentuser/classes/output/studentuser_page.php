@@ -91,7 +91,7 @@ class studentuser_page implements renderable, templatable {
         }
         $data['list_badges'] = $badarr;
         $data['count_list_badges'] = $clbadge; 
-        // var_dump($data);die;
+
         return $data;
     }
 }

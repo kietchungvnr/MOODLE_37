@@ -42,7 +42,6 @@ class requirecourse_page implements renderable, templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output) {
-        global $DB,$USER,$CFG,$OUTPUT;
         $data = array();
         $theme_settings = new theme_settings();
         $pinned = 0;

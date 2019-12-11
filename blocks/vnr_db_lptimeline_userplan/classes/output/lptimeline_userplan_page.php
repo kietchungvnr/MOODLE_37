@@ -41,7 +41,7 @@ class lptimeline_userplan_page implements renderable, templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output) {
-        global $DB,$USER,$CFG,$OUTPUT;
+        global $DB,$USER;
         $data = [];
         $listuserplan = array_values($DB->get_records_sql('SELECT * FROM {competency_plan} WHERE userid = ?', [$USER->id]));
         

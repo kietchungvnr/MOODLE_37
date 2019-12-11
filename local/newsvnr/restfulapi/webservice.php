@@ -1021,10 +1021,10 @@ if($action == "coursecomp_chart_vp") {
 	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
 	if($courseid) {
 		$wheresql = 'ra.roleid =? AND u.id = ? AND c.id = ?';
-		$params = [3,268,$courseid];
+		$params = [3,$USER->id,$courseid];
 	} else {
 		$wheresql = 'ra.roleid =? AND u.id = ?';
-		$params = [3,268];
+		$params = [3,$USER->id];
 	}
 	$sql = "
 			SELECT c.id, c.fullname
@@ -1091,7 +1091,7 @@ if($action == "coursecomp_chart") {
    			SELECT COUNT(*) AS completed_courses
 			FROM mdl_course_completions
 			WHERE course = ? and timecompleted IS NOT NULL';
-   	$record = $DB->get_records_sql($sql,[268]);
+   	$record = $DB->get_records_sql($sql,[$USER->id]);
    	$list_coursename = array();
    	$list_enroll = array();
    	$list_completion_course = array();
@@ -1114,10 +1114,10 @@ if($action == "coursemodulecomp_chart") {
 	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
 	if($courseid) {
 		$wheresql = 'ra.roleid =? AND u.id = ? AND c.id = ?';
-		$params = [3,268,$courseid];
+		$params = [3,$USER->id,$courseid];
 	} else {
 		$wheresql = 'ra.roleid =? AND u.id = ?';
-		$params = [3,268];
+		$params = [3,$USER->id];
 	}
 	
 	$sql = "
@@ -1152,7 +1152,7 @@ if($action == "joincourse_chart_vp") {
 	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
 	$strdate_unix = strtotime($strdate);
 	$strtoday_unix = time();
-	$srt_courseid = get_list_courseid_by_teacher(268);
+	$srt_courseid = get_list_courseid_by_teacher($USER->id);
 	$params = [];
 	if($strdate) {
 		$wheresql = "e.courseid In($srt_courseid) AND c.startdate >= $strdate_unix";
@@ -1200,7 +1200,7 @@ if($action == "joincourse_chart") {
 	$strdate_unix = strtotime($strdate);
 	$strtoday_unix = time();
 	$conditionsql = '';
-	$srt_courseid = get_list_courseid_by_teacher(268);
+	$srt_courseid = get_list_courseid_by_teacher($USER->id);
 	if(!empty($strdate))
 		$conditionsql .= "and c.startdate >= $strdate_unix";
 	
@@ -1233,7 +1233,7 @@ if($action == "viewcount_chart") {
 		$wheresql = "courseid = ? and c.startdate >= lsl.timecreated";
 		$params = [$courseid];
 	} else {
-		$srt_courseid = get_list_courseid_by_teacher(268);
+		$srt_courseid = get_list_courseid_by_teacher($USER->id);
 		$wheresql = "courseid IN($srt_courseid) AND c.startdate >= lsl.timecreated";
 	}
 	$sql = "SELECT COUNT(lsl.id) as vc,lsl.courseid, c.fullname
@@ -1261,7 +1261,7 @@ if($action == "quizoverview_chart") {
 		$wheresql = "q.course = ?";
 		$params = [$courseid];
 	} else
-		$srt_courseid = get_list_courseid_by_teacher(268);
+		$srt_courseid = get_list_courseid_by_teacher($USER->id);
 		$wheresql = "q.course IN($srt_courseid)";
 	$sql = "
 			SELECT q.id,q.course, AVG(qg.grade) AS gradesorce,q.name 

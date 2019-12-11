@@ -26,15 +26,14 @@ namespace block_vnr_db_teacheruser_dd\output;
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/local/newsvnr/lib.php');
-require_once($CFG->libdir . '/badgeslib.php');
 
 use renderable;
 use templatable;
 use renderer_base;
 use stdClass;
-use badge;
 use user_picture;
 use html_writer;
+
 class teacheruser_dd_page implements renderable, templatable {
 
     /**
@@ -43,9 +42,9 @@ class teacheruser_dd_page implements renderable, templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output) {
-        global $DB,$USER,$CFG,$OUTPUT;
+        global $DB,$USER,$CFG;
         $data = array();
-        $str_courseid = get_list_courseid_by_teacher(268);
+        $str_courseid = get_list_courseid_by_teacher($USER->id);
         $list_forum_sql = "SELECT TOP 3 fd.id as fdid,f.id as fid, COUNT(fd.id) as tbv ,f.name as fname,fd.name as fdname, cm.id as viewid from mdl_forum f 
                                 left join mdl_forum_discussions fd on f.id = fd.forum 
                                 left join mdl_forum_posts fp on fd.id = fp.discussion

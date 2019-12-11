@@ -26,7 +26,6 @@ namespace block_vnr_db_coursesuggest_position\output;
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/local/newsvnr/lib.php');
-require_once($CFG->libdir . '/badgeslib.php');
 
 use renderable;
 use templatable;
@@ -42,7 +41,6 @@ class coursesuggest_position_page implements renderable, templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output) {
-        global $DB,$USER,$CFG,$OUTPUT;
         $data = array();
         $theme_settings = new theme_settings();
         $pinned = 0;
