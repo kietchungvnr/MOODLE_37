@@ -140,7 +140,7 @@ class course_renderer extends \core_course_renderer {
 
             if ($coursecount % 4 == 0) {
                 $content .= html_writer::end_tag('div');
-                // $content .= html_writer::start_tag('div', array('class' => 'row mt-2'));
+                $content .= html_writer::start_tag('div', array('class' => 'row mt-2'));
                 // $content .= html_writer::start_tag('div', array('class' => 'card-deck mt-2'));
             }
 

@@ -100,7 +100,6 @@ class course_page implements renderable, templatable
       $arr = $theme_settings::role_courses_teacher($courseid);
       $coursestd->fullnamet = $arr->fullnamet;
       $coursestd->countstudent = $arr->studentnumber;
-  
       if (isset($arr->id)) {
           $stduser = new stdClass();
           $userid = $DB->get_records('user',array('id' => $arr->id));

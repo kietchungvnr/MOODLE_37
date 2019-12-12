@@ -247,7 +247,7 @@ class theme_settings {
     }
     //custom
 
-     public static function role_courses_teacher($courseid)
+     public static function role_courses_teacher_slider($courseid)
     {
         global $DB,$CFG;
         $arrc = array();
@@ -288,6 +288,48 @@ class theme_settings {
            return $infoteacher;
 
         // var_dump($rolecourse);die();
+
+    }
+
+    public static function role_courses_teacher($courseid)
+    {
+        global $DB,$CFG;
+        $arrc = array();
+        $imgurl = $CFG->wwwroot."/theme/moove/pix/f2.png";
+        $imgdefault = \html_writer::empty_tag('img',array('src' => $imgurl,'class'=>'userpicture defaultuserpic','width' => '50px','height'=>'50px','alt' => 'Default picture','title'=>'Default picture'));
+        $sql = "SELECT concat(u.firstname,' ',u.lastname) as fullnamet,(SELECT COUNT(*) as sts
+                    FROM {user_enrolments} ue
+                    JOIN {enrol} e ON ue.enrolid = e.id
+                    JOIN {course} c ON e.courseid = c.id
+                    JOIN {role_assignments} ra ON ra.userid = ue.userid
+                    JOIN {context} as ct on ra.contextid= ct.id AND ct.instanceid = c.id
+                    WHERE ra.roleid=5 and c.id=?) as studentnumber,u.id
+                    FROM {role_assignments} as ra
+                    JOIN {user} as u on u.id= ra.userid
+                    JOIN {user_enrolments} as ue on ue.userid=u.id
+                    JOIN {enrol} as e on e.id=ue.enrolid
+                    JOIN {course} as c on c.id=e.courseid
+                    JOIN {context} as ct on ct.id=ra.contextid and ct.instanceid= c.id
+                    JOIN {role} as r on r.id= ra.roleid
+                    where c.id=? and ra.roleid=3";
+        $rolecourse = $DB->get_records_sql($sql,array($courseid,$courseid));
+        
+        if (!empty($rolecourse)) 
+        {
+             foreach ($rolecourse as $value) 
+             {
+                $infoteacher = new stdclass();
+                $infoteacher = $value;
+             } 
+         }
+          else
+          {
+                    $infoteacher = new stdClass();
+                    $infoteacher->fullnamet = 'No Teacher';
+                    $infoteacher->studentnumber = 0;
+                    $infoteacher->imgdefault = $imgdefault;
+          }
+           return $infoteacher;
 
     }
 
@@ -369,9 +411,9 @@ class theme_settings {
             $courseobj = new \core_course_list_element($course);
             $course->link = $CFG->wwwroot."/course/view.php?id=".$course->id;
             $course->summary = strip_tags($chelper->get_course_formatted_summary($courseobj,array('overflowdiv' => false, 'noclean' => false, 'para' => false)));
-            $course->courseimage = self::get_course_images($courseobj, $course->link);
+            $course->courseimage = self::get_course_images_slider($courseobj, $course->link);
             $courseid = $course->id;
-            $arr = self::role_courses_teacher($courseid);
+            $arr = self::role_courses_teacher_slider($courseid);
             $course->fullnamet = $arr->fullnamet;
             $course->countstudent = $arr->studentnumber;
             if (isset($arr->id)) {
@@ -399,6 +441,38 @@ class theme_settings {
      * @return string
      */
     public static function get_course_images($course, $courselink) {
+        global $CFG;
+
+        $contentimage = '';
+        foreach ($course->get_course_overviewfiles() as $file) {
+            $isimage = $file->is_valid_image();
+            $url = file_encode_url("$CFG->wwwroot/pluginfile.php",
+                '/'. $file->get_contextid(). '/'. $file->get_component(). '/'.
+                $file->get_filearea(). $file->get_filepath(). $file->get_filename(), !$isimage);
+            if ($isimage) {
+                $contentimage = \html_writer::link($courselink, \html_writer::empty_tag('img', array(
+                    'src' => $url,
+                    'alt' => $course->fullname,
+                    'class' => 'img-responsive',
+                )));
+                break;
+            }
+        }
+
+        if (empty($contentimage)) {
+            $url = $CFG->wwwroot . "/theme/moove/pix/default_course.jpg";
+
+            $contentimage = \html_writer::link($courselink, \html_writer::empty_tag('img', array(
+                'src' => $url,
+                'alt' => $course->fullname,
+                'class' => 'img-responsive',
+            )));
+        }
+
+        return $contentimage;
+    }
+
+    public static function get_course_images_slider($course, $courselink) {
         global $CFG;
 
         $contentimage = '';
