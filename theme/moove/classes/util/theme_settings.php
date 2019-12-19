@@ -359,9 +359,11 @@ class theme_settings {
             $courses = $DB->get_records_sql("SELECT TOP(8) * from {course} where pinned = 1");
      
         } elseif($required == 1) {
-            $courses = $DB->get_records_sql("SELECT * from {course} where required = 1 and courseofposition = ?",[$USER->orgpositionid]);
+            $courses = $DB->get_records_sql("SELECT DISTINCT c.* from {course} c JOIN {course_position} cp ON c.id = cp.course where c.required = 1 and cp.courseofposition = ?",[$USER->orgpositionid]);
         } elseif($suggest == 1) {
-            $courses = $DB->get_records_sql("SELECT TOP (8) * FROM {course} WHERE courseofposition = ? ORDER by newid()", [$USER->orgpositionid]);
+            $courses = $DB->get_records_sql("SELECT TOP (8) c.* FROM {course} c 
+              -- JOIN {course_position} cp ON c.id = cp.course 
+              WHERE c.courseofposition = ? ORDER by newid()", [$USER->orgpositionid]);
         } elseif($userplancourse == 1) {
             $plans = array_values(competency_api::list_user_plans($USER->id));
           
@@ -402,9 +404,10 @@ class theme_settings {
             }
         } elseif($pinned == 0) {
             //khoá học bắt buộc chung
-            $courses = $DB->get_records_sql("SELECT * from {course} where required = 1");
+            $courses = $DB->get_records_sql("SELECT c.* from {course} c where c.required = 1");
 
         }
+    
         foreach ($courses as $course) {
 
             $course->fullname = strip_tags($chelper->get_course_formatted_name($course));

@@ -56,7 +56,9 @@
             {{>theme_moove/mydashboard_admin}}
         {{/is_siteadmin}}
         {{^is_siteadmin}}
-            {{{ output.full_header }}}
+            <div class="admininfos">
+                {{{ output.mydashboard_user_header }}}
+            </div>
         {{/is_siteadmin}}
 
         <div id="page-content" class="row">
@@ -67,7 +69,7 @@
                 </div>
                 {{/hasregionmainsettingsmenu}}
                 <section id="region-main">
-                        <div class="card-body">
+                        <div class="card-body p-2">
                             {{#hasregionmainsettingsmenu}}
                                 <div class="region_main_settings_menu_proxy"></div>
                             {{/hasregionmainsettingsmenu}}

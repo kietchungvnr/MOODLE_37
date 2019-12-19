@@ -144,6 +144,22 @@ if (!empty($course)) {
 }
 
 // First create the form.
+if(!empty($course->id)) {
+    $courseofjobtitle = [];
+    $courseofposition = [];
+    $courseposition = $DB->get_records_sql('SELECT id, courseofposition, courseofjobtitle FROM {course_position} WHERE course = ?', [$course->id]);
+    foreach ($courseposition as $value) {
+        if(in_array($value->courseofjobtitle, $courseofjobtitle) == false)
+            $courseofjobtitle[] = $value->courseofjobtitle;
+        if(in_array($value->courseofposition, $courseofposition) == false)
+            $courseofposition[] = $value->courseofposition;
+    }
+    $course->courseoforgstructure = $DB->get_field_sql('SELECT TOP(1) courseoforgstructure FROM {course_position} WHERE course = ?', [$course->id]);
+    $course->courseoforgstructure = $DB->get_field('orgstructure', 'name', ['id' => $course->courseoforgstructure]);
+    $course->courseofjobtitle = $courseofjobtitle;
+    $course->courseofposition = $courseofposition;
+}
+
 $args = array(
     'course' => $course,
     'category' => $category,
@@ -164,11 +180,45 @@ if ($editform->is_cancelled()) {
     if($data->courseoforgstructure) {
         $data->courseoforgstructure = $DB->get_field('orgstructure', 'id', ['name' => $data->courseoforgstructure]);
     }
-    
+    $courseposition = [];
+    //Nếu bảng course k còn pb - cd - cv thì không cần những dòng này
+    if($data->courseofposition)
+        $courseofposition = $data->courseofposition;
+    if($data->courseofposition)
+        $courseofjobtitle = $data->courseofjobtitle;
+    unset($data->courseofposition);
+    unset($data->courseofjobtitle);
+   
+        
     // Process data if submitted.
     if (empty($course->id)) {
         // In creating the course.
+        
+       
         $course = create_course($data, $editoroptions);
+        if(!empty($courseposition)) {
+            if($courseofposition and $courseofjobtitle) {
+                foreach ($courseofjobtitle as $jobtitile) {
+                    foreach ($courseofposition as $position) {
+                        $courseposition_data = new stdClass;
+                        $courseposition_data->course = $course->id;
+                        $courseposition_data->courseoforgstructure = $data->courseoforgstructure;
+                        $courseposition_data->courseofjobtitle = $jobtitile;
+                        $courseposition_data->courseofposition = $position;
+                        $courseposition_data->usermodified = $USER->id;
+                        $courseposition_data->timecreated = time();
+                        $courseposition_data->timemodified = time();
+                        $courseposition[] = $courseposition_data;
+                    }
+                }
+            }
+            if($course->id) {
+                $courseposition = $DB->insert_records('course_position',$courseposition);
+            } else {
+                throw new coding_exception("Không tồn tại bảng course_position");
+                
+            }
+        }
 
         // Get the context of the newly created course.
         $context = context_course::instance($course->id, MUST_EXIST);
@@ -200,8 +250,50 @@ if ($editform->is_cancelled()) {
             }
         }
     } else {
+        if($courseofposition and $courseofjobtitle) {
+            $olddata = $DB->get_records('course_position', ['course' => $data->id]);
+            foreach($olddata as $value) {
+                if($value->courseoforgstructure != $data->courseoforgstructure)
+                    $DB->delete_records('course_position', ['courseoforgstructure' => $value->courseoforgstructure]);
+            }
+            foreach ($courseofjobtitle as $jobtitile) {
+                foreach($olddata as $value) {
+                    if(in_array($value->courseofjobtitle, $courseofjobtitle) == false)
+                        $DB->delete_records('course_position', ['courseofjobtitle' => $value->courseofjobtitle, 'courseoforgstructure' => $data->courseoforgstructure]);
+                }
+                foreach ($courseofposition as $position) {
+                    foreach($olddata as $value) {
+                        if(in_array($value->courseofposition, $courseofjobtitle) == false)
+                            $DB->delete_records('course_position', ['courseofposition' => $value->courseofposition, 'courseoforgstructure' => $data->courseoforgstructure, 'courseofjobtitle' => $jobtitile]);
+                    }
+                    $courseposition_data = $DB->get_record('course_position', ['course' => $data->id, 'courseoforgstructure' => $data->courseoforgstructure, 'courseofjobtitle' => $jobtitile, 'courseofposition' => $position],'*');
+                    if($courseposition_data) {
+                        $courseposition_data->usermodified = $USER->id;
+                        $courseposition_data->timemodified = time();
+                        $DB->update_record('course_position', $courseposition_data);
+                    } 
+                    else {
+                        $courseposition_data = new stdClass;
+                        $courseposition_data->course = $course->id;
+                        $courseposition_data->courseoforgstructure = $data->courseoforgstructure;
+                        $courseposition_data->courseofjobtitle = $jobtitile;
+                        $courseposition_data->courseofposition = $position;
+                        $courseposition_data->usermodified = $USER->id;
+                        $courseposition_data->timecreated = time();
+                        $courseposition_data->timemodified = time();
+                        $courseposition[] = $courseposition_data;
+                        
+                    }
+                }
+            }
+            if($courseposition)
+                $DB->insert_records('course_position', $courseposition);
+        }
         // Save any changes to the files used in the editor.
         update_course($data, $editoroptions);
+
+
+
         // Set the URL to take them too if they choose save and display.
         $courseurl = new moodle_url('/course/view.php', array('id' => $course->id));
     }

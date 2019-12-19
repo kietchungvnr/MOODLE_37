@@ -1,6 +1,7 @@
 <?php 
 
 $string['pluginname'] = 'News VNR';
+$string['newsvnr:edit'] = 'Chỉnh sửa lộ trình đào tạo';
 $string['pagetitle'] = 'Trang tin tức';
 $string['forumtitle'] = 'Trang diễn đàn';
 $string['coursetitle'] = 'Trang khóa học';
@@ -145,7 +146,7 @@ $string['errordataimport'] = 'Dữ liệu nhập lỗi, xin vui lòng kiểm tra
 $string['reimport'] = 'Nhập lại';
 $string['successimport'] = 'Nhập dữ liệu thành công';
 $string['orgvalidation'] = 'Xuất kiểm tra tập tin lỗi';
-$string['pinned'] = 'Ghim';
+$string['pinned'] = 'Ghim khoá';
 $string['missingorgstructure'] = 'Phòng ban không tồn tại';
 $string['listcourserqtitle'] = 'Danh sách yêu cầu khoá học';
 $string['deletecourserq'] = 'Xoá yêu cầu mở khoá học thành công';
@@ -154,6 +155,8 @@ $string['learningplan'] = 'Lộ trình đào tạo';
 $string['mycourses'] = 'Khoá học của tôi';
 $string['mycourses_by_teacher'] = 'Khoá giảng của tôi';
 $string['btneditnews'] = 'Chỉnh sửa tin tức';
+$string['duplicateusercode'] = 'Mã nhân viên đã được sử dụng';
+$string['invalidorgposition'] = 'Chức vụ không tồn tại';
 
 // Strings cho core_course
 $string['coursesetup'] = 'Setup khoá học';
@@ -171,3 +174,5 @@ $string['choices_coursesetup'] = 'Chọn Khoá';
 $string['noitem_coursesetup'] = 'Không có Khoá học';
 $string['typeclass'] = 'Kiểu Lớp';
 $string['missingtypeclass'] = 'Chọn kiểu lớp';
+$string['requiredorgstructure'] = 'Khoá cho PB - CD - CV';
+$string['novalue'] = "Không có dữ liệu";

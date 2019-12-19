@@ -110,6 +110,12 @@ class course_edit_form extends moodleform {
             '2' => 'Đào tạo',
         );
 
+        $options = array(
+            'placeholder' => get_string('search', 'local_newsvnr'),
+            'multiple' => true,                                                  
+            'noselectionstring' => get_string('novalue', 'local_newsvnr'),
+        );      
+   
         //Lấy danh sách chức vụ
         $orgpositionlist = $DB->get_records('orgstructure_position');
         $orgpositionnames = array();
@@ -132,20 +138,23 @@ class course_edit_form extends moodleform {
         $mform->addElement('select', 'typeofcourse', get_string('typeofcourse','local_newsvnr'), $toclist);
         $mform->addRule('typeofcourse', get_string('missingtypeofcourse','local_newsvnr'), 'required', null, 'client');
         $mform->setType('typeofcourse', PARAM_INT);
-        
+
         $mform->addElement('text', 'courseoforgstructure', get_string('courseoforgstructure', 'local_newsvnr'), 'maxlength="200" size="50" class="mb-0"');
-        $mform->addRule('courseoforgstructure', get_string('required'), 'required', null, 'client');
+        // $mform->addRule('courseoforgstructure', get_string('required'), 'required', null, 'client');
         $mform->setType('courseoforgstructure', PARAM_TEXT);
         $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3"></div><div class="col-md-3 pr-0 ml-3 form-inline felement" id="treeview-orgstructure-course" style="background-color: #e9ecef"></div></div>');
         
-        
 
-        $mform->addElement('select', 'courseofjobtitle', get_string('courseofjobtitle','local_newsvnr'), $orgjobtitlenames);
-        $mform->setType('courseofjobtitle', PARAM_INT);
+        $mform->addElement('autocomplete', 'courseofjobtitle', get_string('courseofjobtitle','local_newsvnr'), $orgjobtitlenames, $options);
+        $mform->setType('courseofjobtitle', PARAM_TEXT);
+        $mform->hideIf('courseofjobtitle', 'courseoforgstructure', 'eq', '');
 
-        $mform->addElement('select', 'courseofposition', get_string('courseofposition','local_newsvnr'), $orgpositionnames);
-        $mform->setType('courseofposition', PARAM_INT);
-        $mform->addElement('advcheckbox', 'pinned', get_string('pinned', 'local_newsvnr'), ' ', array('group' => 1), array(0, 1));
+        $mform->addElement('autocomplete', 'courseofposition', get_string('courseofposition','local_newsvnr'), $orgpositionnames, $options);
+        $mform->setType('courseofposition', PARAM_TEXT);
+        $mform->hideIf('courseofposition', 'courseoforgstructure', 'eq', '');
+
+        $mform->addElement('advcheckbox', 'pinned', '', get_string('pinned', 'local_newsvnr'), array('group' => 1), array(0, 1));
+        $mform->addElement('advcheckbox', 'required', '', get_string('required', 'local_newsvnr'), array('group' => 1), array(0, 1));
         
         // $strcoursesetup = get_string('coursesetup','local_newsvnr');
         // //Lấy danh sách khoá học setup
@@ -160,7 +169,6 @@ class course_edit_form extends moodleform {
         //Khoá học bắt buộc
         
         // $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3">'.$strcoursesetup.'</div><div class="col-md-3 felement" ><select class="form-control" id="listcoursesetup" name="coursesetup" required></select></div></div>');
-        $mform->addElement('advcheckbox', 'required', get_string('required', 'local_newsvnr'), ' ', array('group' => 1), array(0, 1));
 
         // $toclist = array(
         //     '0' => 'Online',

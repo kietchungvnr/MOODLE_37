@@ -73,7 +73,7 @@ $templatecontext = [
 ];
 
 // Improve boost navigation.
-theme_moove_extend_flat_navigation($PAGE->flatnav);
+theme_moove_extend_flat_navigation($PAGE->flatnav, 'incourse');
 
 $templatecontext['flatnavigation'] = $PAGE->flatnav;
 

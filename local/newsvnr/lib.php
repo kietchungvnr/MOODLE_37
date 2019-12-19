@@ -838,8 +838,7 @@ function get_list_course_by_teacher($userid) {
                                     JOIN mdl_course AS c ON c.id=e.courseid
                                     JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
                                     JOIN mdl_role AS r ON r.id= ra.roleid
-                                    JOIN mdl_course_modules cm ON c.id = cm.course
-                                    JOIN mdl_course_modules_completion cmc ON cm.id = cmc.coursemoduleid
+                                
                                 WHERE  ra.roleid=3 AND u.id = ?";
     $list_course_by_user_ex = $DB->get_records_sql($list_course_by_user_sql,[$userid]);
     if ($list_course_by_user_ex) {
@@ -849,6 +848,35 @@ function get_list_course_by_teacher($userid) {
        
     return $list_courseid;
 }
+
+/**
+ * Lấy danh sách khóa học của học viên
+ * @param  [type] $userid [description]
+ * @return [array] $list_courseid [description]
+ */
+function get_list_course_by_student($userid) {
+    global $DB;
+    $list_courseid = [];
+    $list_course_by_user_sql = "
+                                SELECT DISTINCT c.fullname,c.id,c.shortname
+                                FROM mdl_role_assignments AS ra
+                                    JOIN mdl_user AS u ON u.id= ra.userid
+                                    JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
+                                    JOIN mdl_enrol AS e ON e.id=ue.enrolid
+                                    JOIN mdl_course AS c ON c.id=e.courseid
+                                    JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
+                                    JOIN mdl_role AS r ON r.id= ra.roleid
+                                    
+                                WHERE  ra.roleid=5 AND u.id = ?";
+    $list_course_by_user_ex = $DB->get_records_sql($list_course_by_user_sql,[$userid]);
+    if ($list_course_by_user_ex) {
+        foreach ($list_course_by_user_ex as $value) 
+            $list_courseid[] = $value;
+    }
+       
+    return $list_courseid;
+}
+
 /**
  * Lấy courseid khóa học của giáo viên
  * @param  [type] $userid [description]

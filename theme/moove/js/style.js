@@ -61,7 +61,7 @@
 
         });
         owlnews.owlCarousel({
-            loop:false,
+            loop:true,
             margin:10,
             nav:true,
             lazyLoad:true,

@@ -139,7 +139,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         global $PAGE;
 
         $html = html_writer::start_div('row');
-        $html .= html_writer::start_div('col-xs-12 p-a-1');
+        $html .= html_writer::start_div('col-xs-12 mt-3');
 
         $pageheadingbutton = $this->page_heading_button();
         if (empty($PAGE->layout_options['nonavbar'])) {
@@ -149,6 +149,32 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $html .= html_writer::end_div();
         } else if ($pageheadingbutton) {
             $html .= html_writer::div($pageheadingbutton, 'breadcrumb-button nonavbar pull-xs-right m-r-1');
+        }
+
+        $html .= html_writer::end_div(); // End .row.
+        $html .= html_writer::end_div(); // End .col-xs-12.
+
+        return $html;
+    }
+    /**
+     * Wrapper for header elements.
+     *
+     * @return string HTML to display the main header.
+     */
+    public function mydashboard_user_header() {
+        global $PAGE;
+
+        $html = html_writer::start_div('row');
+        $html .= html_writer::start_div('col-xs-12 mt-2');
+
+        $pageheadingbutton = $this->page_heading_button();
+        if (empty($PAGE->layout_options['nonavbar'])) {
+            $html .= html_writer::start_div('clearfix w-100 pull-xs-left', array('id' => 'page-navbar'));
+            $html .= html_writer::tag('div', $this->navbar(), array('class' => 'breadcrumb-nav'));
+            $html .= html_writer::div($pageheadingbutton, 'breadcrumb-button');
+            $html .= html_writer::end_div();
+        } else if ($pageheadingbutton) {
+            $html .= html_writer::div($pageheadingbutton, 'd-flex justify-content-end mr-2');
         }
 
         $html .= html_writer::end_div(); // End .row.
@@ -684,18 +710,18 @@ class core_renderer extends \theme_boost\output\core_renderer {
             return $output;
         }
 
-        $pluginswithfunction = get_plugins_with_function('standard_footer_html', 'lib.php');
-        foreach ($pluginswithfunction as $plugins) {
-            foreach ($plugins as $function) {
-                if ($function === 'tool_mobile_standard_footer_html') {
-                    $output .= $this->get_mobileappurl();
+        // $pluginswithfunction = get_plugins_with_function('standard_footer_html', 'lib.php');
+        // foreach ($pluginswithfunction as $plugins) {
+        //     foreach ($plugins as $function) {
+        //         if ($function === 'tool_mobile_standard_footer_html') {
+        //             $output .= $this->get_mobileappurl();
 
-                    continue;
-                }
+        //             continue;
+        //         }
 
-                $output .= $function();
-            }
-        }
+        //         $output .= $function();
+        //     }
+        // }
 
         $output .= $this->unique_performance_info_token;
         if ($this->page->devicetypeinuse == 'legacy') {
