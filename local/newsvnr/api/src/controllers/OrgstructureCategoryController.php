@@ -35,10 +35,8 @@ class OrgstructureCategoryController extends BaseController {
 	    	$name = $this->request->getParam('name');
 		    $code = $this->request->getParam('code');
 		    $description = $this->request->getParam('description');
-
 	    } else {
 	        $errors = $this->validate->getErrors();
-	        // if($)
 	        return $this->response->withStatus(422)->withJson($errors);
 	    }
 	}

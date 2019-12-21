@@ -228,3 +228,15 @@
 [2019-11-18T18:46:45.882910+07:00] api-app.DEBUG: Using token from request header [] {"uid":"780a512"}
 [2019-11-18T18:46:50.460771+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"855db2e"}
 [2019-11-18T18:46:55.068415+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"e51de89"}
+[2019-12-19T16:42:22.584441+07:00] api-app.INFO: Xác thực sai! [] {"uid":"f6627e8"}
+[2019-12-19T16:42:32.296991+07:00] api-app.INFO: Xác thực sai! [] {"uid":"7de068e"}
+[2019-12-19T16:42:45.055940+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"b83a283"}
+[2019-12-19T16:44:24.517224+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"0fbafc2"}
+[2019-12-19T16:44:43.376529+07:00] api-app.DEBUG: Using token from request header [] {"uid":"f6df8c6"}
+[2019-12-19T16:45:13.367173+07:00] api-app.DEBUG: Using token from request header [] {"uid":"e61b920"}
+[2019-12-19T16:45:22.632302+07:00] api-app.DEBUG: Using token from request header [] {"uid":"c3806af"}
+[2019-12-19T16:46:33.131666+07:00] api-app.DEBUG: Using token from request header [] {"uid":"1ae21e6"}
+[2019-12-19T16:46:52.991331+07:00] api-app.DEBUG: Using token from request header [] {"uid":"48a4a42"}
+[2019-12-19T16:48:18.279085+07:00] api-app.DEBUG: Using token from request header [] {"uid":"a0b3e09"}
+[2019-12-19T16:51:11.997734+07:00] api-app.DEBUG: Using token from request header [] {"uid":"bbf49a3"}
+[2019-12-19T16:51:29.895873+07:00] api-app.DEBUG: Using token from request header [] {"uid":"045a1a4"}

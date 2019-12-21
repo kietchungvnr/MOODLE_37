@@ -1,7 +1,6 @@
 <?php
 // Application middleware
 
-
 // Khai báo Authentication cho API dùng JWT
 // Truy cập https://github.com/tuupola/slim-jwt-auth để xem hướng dẫn
 $app->add(new Tuupola\Middleware\JwtAuthentication([
@@ -10,12 +9,12 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
 	    				"/orgstructures","/orgstructure",
 	    				"/orgstructure-categories","/orgstructure-category",
 	    				"/orgstructure-jobtitles","/orgstructure-jobtitle",
-	    				"/orgstructure-positions","orgstructure-position"
+	    				"/orgstructure-positions","orgstructure-position",
+	    				"/quiz"
     				],
     "ignore"    => ["/api/token"],
     "secure"    => false,
     "error" 	=> function ($response, $arguments) {
-
     	// switch (json_last_error()) {
 	    //     case JSON_ERROR_NONE:
 	    //         $arguments["message"] = 'No errors';

@@ -350,49 +350,50 @@ class theme_settings {
      * @return [type]                  [description]
      */
     public static function user_courses_list($pinned = 1, $required = null, $suggest = null, $userplancourse = null, $planid = 0) {
-
         global $USER,$CFG,$DB,$OUTPUT;
+
         require_once($CFG->dirroot.'/course/renderer.php');
+
         $chelper = new \coursecat_helper();
-     
+        
         if($pinned == 1) {
-            $courses = $DB->get_records_sql("SELECT TOP(8) * from {course} where pinned = 1");
-     
+            $courses = $DB->get_records_sql("SELECT TOP(8) * 
+                FROM {course} 
+                WHERE pinned = 1");
         } elseif($required == 1) {
-            $courses = $DB->get_records_sql("SELECT DISTINCT c.* from {course} c JOIN {course_position} cp ON c.id = cp.course where c.required = 1 and cp.courseofposition = ?",[$USER->orgpositionid]);
+            $courses = $DB->get_records_sql("SELECT DISTINCT c.* 
+                FROM {course} c 
+                JOIN {course_position} cp ON c.id = cp.course 
+                WHERE c.required = 1 AND cp.courseofposition = ?",[$USER->orgpositionid]);
         } elseif($suggest == 1) {
-            $courses = $DB->get_records_sql("SELECT TOP (8) c.* FROM {course} c 
-              -- JOIN {course_position} cp ON c.id = cp.course 
-              WHERE c.courseofposition = ? ORDER by newid()", [$USER->orgpositionid]);
+            $courses = $DB->get_records_sql("SELECT * 
+                FROM (
+                    SELECT DISTINCT TOP(8) c.* 
+                    FROM {course_position} cp 
+                    JOIN {course} c ON cp.course = c.id
+                    WHERE cp.courseofposition = ?
+                    ) AS t
+                ORDER BY NEWID()", [$USER->orgpositionid]);
         } elseif($userplancourse == 1) {
             $plans = array_values(competency_api::list_user_plans($USER->id));
-          
             if (empty($plans)) {
                 return [];
             }
-
                 $pclist = competency_api::list_plan_competencies($planid);
-            
                 $ucproperty = 'competency';
-               
                 $listcomp = [];
                 foreach ($pclist as $pc) {
-                   
                     $usercomp = $pc->$ucproperty;
-
                     if ($usercomp->get('id')) {
                         $listcomp[] = $usercomp->get('id');
                     }
                 }
-               // var_dump($pclist);die;
-            
             $listuserplancourse = [];
             $courses = [];
             $listcourseid = [];
             foreach ($listcomp as $competency) {
                 $listuserplancourse[] = competency_api::list_courses_using_competency($competency);
             }
-           
             foreach ($listuserplancourse as $course) {
                 foreach ($course as  $courseid) {
                     if (in_array($courseid->id, $listcourseid))
@@ -409,7 +410,6 @@ class theme_settings {
         }
     
         foreach ($courses as $course) {
-
             $course->fullname = strip_tags($chelper->get_course_formatted_name($course));
             $courseobj = new \core_course_list_element($course);
             $course->link = $CFG->wwwroot."/course/view.php?id=".$course->id;
