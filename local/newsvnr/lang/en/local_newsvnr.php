@@ -176,3 +176,4 @@ $string['typeclass'] = 'Kiểu Lớp';
 $string['missingtypeclass'] = 'Chọn kiểu lớp';
 $string['requiredorgstructure'] = 'Khoá cho PB - CD - CV';
 $string['novalue'] = "Không có dữ liệu";
+$string['sitetabadmin'] = 'Cơ cấu tổ chức';

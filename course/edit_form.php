@@ -109,8 +109,13 @@ class course_edit_form extends moodleform {
             '1' => 'Tuyển dụng',
             '2' => 'Đào tạo',
         );
-
+        $orgjobtitle_options = array(
+            'placeholder' => get_string('search', 'local_newsvnr'),
+            'multiple' => true,                                                  
+            'noselectionstring' => get_string('novalue', 'local_newsvnr'),
+        );      
         $options = array(
+            'ajax' => 'local_newsvnr/form-search-orgjobtitle',
             'placeholder' => get_string('search', 'local_newsvnr'),
             'multiple' => true,                                                  
             'noselectionstring' => get_string('novalue', 'local_newsvnr'),
@@ -145,7 +150,7 @@ class course_edit_form extends moodleform {
         $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3"></div><div class="col-md-3 pr-0 ml-3 form-inline felement" id="treeview-orgstructure-course" style="background-color: #e9ecef"></div></div>');
         
 
-        $mform->addElement('autocomplete', 'courseofjobtitle', get_string('courseofjobtitle','local_newsvnr'), $orgjobtitlenames, $options);
+        $mform->addElement('autocomplete', 'courseofjobtitle', get_string('courseofjobtitle','local_newsvnr'), $orgjobtitlenames, $orgjobtitle_options);
         $mform->setType('courseofjobtitle', PARAM_TEXT);
         $mform->hideIf('courseofjobtitle', 'courseoforgstructure', 'eq', '');
 
@@ -155,6 +160,7 @@ class course_edit_form extends moodleform {
 
         $mform->addElement('advcheckbox', 'pinned', '', get_string('pinned', 'local_newsvnr'), array('group' => 1), array(0, 1));
         $mform->addElement('advcheckbox', 'required', '', get_string('required', 'local_newsvnr'), array('group' => 1), array(0, 1));
+
         
         // $strcoursesetup = get_string('coursesetup','local_newsvnr');
         // //Lấy danh sách khoá học setup

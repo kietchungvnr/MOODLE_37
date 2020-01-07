@@ -196,29 +196,29 @@ if ($editform->is_cancelled()) {
         
        
         $course = create_course($data, $editoroptions);
-        if(!empty($courseposition)) {
-            if($courseofposition and $courseofjobtitle) {
-                foreach ($courseofjobtitle as $jobtitile) {
-                    foreach ($courseofposition as $position) {
-                        $courseposition_data = new stdClass;
-                        $courseposition_data->course = $course->id;
-                        $courseposition_data->courseoforgstructure = $data->courseoforgstructure;
-                        $courseposition_data->courseofjobtitle = $jobtitile;
-                        $courseposition_data->courseofposition = $position;
-                        $courseposition_data->usermodified = $USER->id;
-                        $courseposition_data->timecreated = time();
-                        $courseposition_data->timemodified = time();
-                        $courseposition[] = $courseposition_data;
-                    }
+  
+        if($courseofposition and $courseofjobtitle) {
+            foreach ($courseofjobtitle as $jobtitile) {
+                foreach ($courseofposition as $position) {
+                    $courseposition_data = new stdClass;
+                    $courseposition_data->course = $course->id;
+                    $courseposition_data->courseoforgstructure = $data->courseoforgstructure;
+                    $courseposition_data->courseofjobtitle = $jobtitile;
+                    $courseposition_data->courseofposition = $position;
+                    $courseposition_data->usermodified = $USER->id;
+                    $courseposition_data->timecreated = time();
+                    $courseposition_data->timemodified = time();
+                    $courseposition[] = $courseposition_data;
                 }
             }
-            if($course->id) {
-                $courseposition = $DB->insert_records('course_position',$courseposition);
-            } else {
-                throw new coding_exception("Không tồn tại bảng course_position");
-                
-            }
         }
+        if($course->id) {
+            $courseposition = $DB->insert_records('course_position',$courseposition);
+        } else {
+            throw new coding_exception("Không tồn tại bảng course_position");
+            
+        }
+        
 
         // Get the context of the newly created course.
         $context = context_course::instance($course->id, MUST_EXIST);

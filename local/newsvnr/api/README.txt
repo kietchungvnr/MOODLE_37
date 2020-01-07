@@ -14,7 +14,7 @@ composer require monolog/monolog //cài đặt ghi log cho api
 composer require ramsey/uuid //mã hoá id
 composer require moontoast/math //đi kèm với uuid
 // Câu lệnh chung
-composer require require phpoffice/phpspreadsheet require slim/slim "^3.0" awurth/slim-validation tuupola/slim-jwt-auth monolog/monolog ramsey/uuid moontoast/math
+composer require phpoffice/phpspreadsheet slim/slim "^3.0" awurth/slim-validation tuupola/slim-jwt-auth monolog/monolog ramsey/uuid moontoast/math
 
 //Thêm autoload vào composer.json ở composer.json tổng: 
  	- Ví dụ Path xampp: htdocs/vendor/....

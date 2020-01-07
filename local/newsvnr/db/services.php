@@ -67,6 +67,15 @@ $functions = array(
         'type' => 'read',
         'ajax' => true,
         'capabilities'=> '',
+    ),
+    'local_newsvnr_loadingorgposition' => array(
+        'classname' => 'local_newsvnr_external',
+        'methodname' => 'loadingorgposition',
+        'classpath' => 'local/newsvnr/externallib.php',
+        'description' => 'Get The orgposition with orgstructure and orgjobtitle',
+        'type' => 'read',
+        'ajax' => true,
+        'capabilities'=> '',
     )
 
 

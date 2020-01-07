@@ -4,14 +4,58 @@ require_once("$CFG->libdir/externallib.php");
 
 class local_newsvnr_external extends external_api {
 
+    public static function loadingorgposition_parameters() {
+        return new external_function_parameters(
+            array(
+                'orgstructureid' => new external_value(PARAM_INT, 'The orgstructure id'),
+                'orgjobtitleid' => new external_value(PARAM_TEXT, 'The orgjobtitle id'),
+            )    
+        );
+    }
+
+    
+        
+    public static function loadingorgposition($orgstructureid, $orgjobtitleid) {
+        global $DB;
+        //$params = self::validate_parameters(self::getExample_parameters(), array());
+        $params = self::validate_parameters(self::loadingorgposition_parameters(), 
+                array(
+                        'orgstructureid' => $orgstructureid,
+                        'orgjobtitleid'  => $orgjobtitleid
+                    ));
+        $list_orgjobtitleid =  (explode(",", $params['orgjobtitleid']));
+        $str_orgstructureid = $params['orgstructureid'];
+        $str_orgjobtitleid = implode(',', $list_orgjobtitleid);
+        $sql = "SELECT * FROM {orgstructure_position} WHERE orgstructureid IN($str_orgstructureid) AND jobtitleid IN($str_orgjobtitleid)";
+        $result = [];
+        $data = $DB->get_records_sql($sql,[]);
+        foreach ($data as $value) {
+            $result[] = (object)['id' => $value->id, 'name' => $value->name];
+        }
+              
+        return $result;
+    }
+
+
+    private static function loadingorgposition_returns() {
+        return new external_single_structure(
+            array(
+                'id' => new external_value(PARAM_INT, 'The id of the orgposition'),
+                'name' => new external_value(PARAM_RAW, 'The name of the orgposition'),
+               
+            )
+        );
+    }
+
     public static function loadsettings_allowed_from_ajax() {
         return true;
     }
     public static function loadsettings_parameters() {
         return new external_function_parameters(
             array(
-                'itemid' => new external_value(PARAM_INT, 'The item id to operate on'),
-            )    
+                   ' id' => new external_value(PARAM_INT, 'The orgposition id'),
+                    'name' => new external_value(PARAM_RAW, 'The name orgposition'),
+                )   
         );
     }
 

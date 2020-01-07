@@ -501,59 +501,138 @@ function theme_moove_buildnavnewsvnr_by_incourse(\flat_navigation $flatnav) {
     require_once($CFG->dirroot . '/course/lib.php');
     require_once($CFG->libdir . '/completionlib.php');
 
-    $course = $DB->get_record('course',['id' => 1102]);
-    $modinfo = get_fast_modinfo($course);
-    $modnames = get_module_types_names();
-    $modnamesplural = get_module_types_names(true);
-    $modnamesused = $modinfo->get_used_module_names();
-    $mods = $modinfo->get_cms();
-    $sections = $modinfo->get_section_info_all();
+    // $course = $DB->get_record('course',['id' => 1102]);
+    // $modinfo = get_fast_modinfo($course);
+    // $modnames = get_module_types_names();
+    // $modnamesplural = get_module_types_names(true);
+    // $modnamesused = $modinfo->get_used_module_names();
+    // $mods = $modinfo->get_cms();
+    // $sections = $modinfo->get_section_info_all();
 
-    if($mods and $sections) {
-        $sitesettings = $flatnav->find('course-sections',\navigation_node::COURSE_CURRENT);
+    // $coursesections = $DB->get_records_sql('SELECT * FROM mdl_course_sections WHERE course = ?', [1102]);
+    
+    // if($coursesections) {
+    //     // $sitesettings = $flatnav->find('course-sections',\navigation_node::COURSE_CURRENT);
+    //     $sitesettings = $flatnav->find('participants', \navigation_node::TYPE_CONTAINER);
+
+    //     if (!$sitesettings) {
+    //         return;
+    //     }
+    //     // $chelper = new \coursecat_helper();
+    //     foreach ($coursesections as $section) {
+    //         $module_sections = $DB->get_records_sql('SELECT cm.id AS coursemoduleid, cs.id AS sectionid, cs.name AS sectionname, m.name AS modulename,cm.instance AS viewid 
+    //                 FROM mdl_course_modules cm  
+    //                     LEFT JOIN mdl_modules m ON cm.module = m.id 
+    //                     JOIN mdl_course_sections cs ON cm.section = cs.id 
+    //                 WHERE cm.course = ?', [1102]);
+    //         if($section->section == 0) {
+    //             $coursesectionsoptions2 = [
+    //                 'text' => 'TOPIC 0',
+    //                 'shorttext' => 'TOPIC 0',
+    //                 'icon' => '',
+    //                 'type' => \navigation_node::TYPE_SECTION,
+    //                 'key' => $section->section,
+    //                 'parent' => $sitesettings
+    //             ];
+    //             $coursesections2 = new \flat_navigation_node($coursesectionsoptions2, 0);
+            
+    //             foreach ($module_sections as $value) {
+    //                 if($section->id === $value->sectionid) {
+    //                     $module = new stdClass;
+    //                     $modname = $DB->get_record_sql('SELECT * FROM {'.$value->modulename.'} WHERE id = ?', [$value->viewid]);
+    //                     $module->link = $CFG->wwwroot."/mod/$value->modulename/view.php?id=".$value->viewid;
+    //                     $coursesections2->add_node(new \navigation_node([
+    //                                 'text' => 'congacon0',
+    //                                 'shorttext' => 'congacon0',
+    //                                 'icon' => '',
+    //                                 'type' => \navigation_node::TYPE_SECTION,
+    //                                 'key' => 49292,
+    //                                 'parent' => $coursesections2,
+    //                                 'action' => $module->link
+    //                             ]));
+    //                             $flatnav->add($coursesections2,$sitesettings->key);
+                                
+    //                 } else {
+    //                     continue;
+    //                 }
+    //             }    
+               
+                
+    //         } 
+            
+    //     //     else {
+                
+    //     //         $coursesectionsoptions2 = [
+    //     //             'text' => $section->name,
+    //     //             'shorttext' => $section->name,
+    //     //             'icon' => '',
+    //     //             'type' => \navigation_node::TYPE_SECTION,
+    //     //             'key' => $section->section,
+    //     //             'parent' => $sitesettings
+    //     //         ];
+    //     //         $coursesections2 = new \flat_navigation_node($coursesectionsoptions2, 0);
+    //     //         foreach ($module_sections as $value) {
+    //     //             if($section->id === $value->sectionid) {
+    //     //                 $module = new stdClass;
+    //     //                 $modname = $DB->get_record_sql('SELECT * FROM {'.$value->modulename.'} WHERE id = ?', [$value->viewid]);
+    //     //                 $module->link = $CFG->wwwroot."/mod/$value->modulename/view.php?id=".$value->viewid;
+    //     //                 $coursesections->add_node(new \navigation_node([
+    //     //                             'text' => $modname->name,
+    //     //                             'shorttext' => $modname->name,
+    //     //                             'icon' => '',
+    //     //                             'type' => \navigation_node::TYPE_COURSE,
+    //     //                             'key' => $modname->id,
+    //     //                             'parent' => $coursesections,
+    //     //                             'action' => $module->link
+    //     //                         ]));
+                                
+    //     //             } else {
+    //     //                 continue;
+    //     //             }
+    //     //         }  
+    //     //         $flatnav->add($coursesections2,$sitesettings->key); 
+    //     //         break;    
+    //     //     }
+    //     }
+    // }
+        require_once($CFG->dirroot.'/course/renderer.php');
+    $courses = get_list_course_by_student($USER->id);
+
+    if($courses) {
+        $sitesettings = $flatnav->find('sitesettings',\navigation_node::TYPE_SITE_ADMIN);
 
         if (!$sitesettings) {
             return;
         }
-        // $chelper = new \coursecat_helper();
-        foreach ($sections as $section) {
-            if($sections->_name == 0) {
-                continue;
-            }
-            $coursesectionsoptions = [
-                'text' => $section->_name,
-                'shorttext' => $section->_name,
-                'icon' => '',
-                'type' => \navigation_node::TYPE_SECTION,
-                'key' => $section->_id,
-                'parent' => $sitesettings
-            ];
 
-            $coursesections = new \flat_navigation_node($coursesectionsoptions, 0);
-            // foreach ($listcourse as $course) {
-            //     $course->fullname = strip_tags($chelper->get_course_formatted_name($course));
-            //     $course->link = $CFG->wwwroot."/mod/$sections/view.php?id=".$course->id;
-            //     $coursesections->add_node(new \navigation_node([
-            //                 'text' => $course->fullname,
-            //                 'shorttext' => $course->shortname,
-            //                 'icon' => '',
-            //                 'type' => \navigation_node::TYPE_ACTIVITY,
-            //                 'key' => $course->id,
-            //                 'parent' => $coursesections,
-            //                 'action' => $course->link
-            //             ]));
-            // }     
-            $flatnav->add($coursesections,$sitesettings->key); 
-        }
-        
-        
+        $coursesectionsoptions = [
+            'text' => get_string('mycourses','local_newsvnr'),
+            'shorttext' => 'mycoursesvnr',
+            'icon' => new pix_icon('i/mycourses', ''),
+            'type' => \navigation_node::TYPE_SYSTEM,
+            'key' => 'mycourses_by_student_vnr2',
+            'parent' => $sitesettings
+        ];
        
+        $chelper = new \coursecat_helper();
+        $coursesections = new \flat_navigation_node($coursesectionsoptions, 0);
+        foreach ($courses as $course) {
+            $course->fullname = strip_tags($chelper->get_course_formatted_name($course));
+            $course->link = $CFG->wwwroot."/course/view.php?id=".$course->id;
+            $coursesections->add_node(new \navigation_node([
+                        'text' => $course->fullname,
+                        'shorttext' => $course->shortname,
+                        'icon' => '',
+                        'type' => \navigation_node::TYPE_COURSE,
+                        'key' => $course->id,
+                        'parent' => $coursesections,
+                        'action' => $course->link
+                    ]));
+        }      
+       
+        $flatnav->add($coursesections,$sitesettings->key);
     }
-
-
-    
 }
-
 
 function theme_moove_buildnavnewsvnr(\flat_navigation $flatnav) {
     global $PAGE;
