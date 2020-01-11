@@ -62,13 +62,9 @@ if($id){
     foreach($coursesetupdb as $value) {
         $coursesetup->id = $value->id;
         $coursesetup->category_cs = $DB->get_field('course_categories','name',['id' => $value->category]);
-        $coursesetup->competency_cs = $DB->get_field('competency','name',['id' => $competencydb->shortname]);
+        // $coursesetup->competency_cs = $DB->get_field('competency','name',['id' => $competencydb->shortname]);
         $coursesetup->fullname_cs = $value->fullname;
         $coursesetup->shortname_cs =  $value->shortname;
-        $coursesetup->typeofcourse = $value->typeofcourse;
-        $coursesetup->courseoforgstructure = $DB->get_field('orgstructure','name',['id' => $value->courseoforgstructure]);
-        $coursesetup->courseofjobtitle = $value->courseofjobtitle;
-        $coursesetup->courseofposition =  $value->courseofposition;
         $coursesetup->description =  $value->description;
        
     }
@@ -85,12 +81,11 @@ if ($editform->is_cancelled()) {
     // The form has been cancelled, take them back to what ever the return to is.
     redirect($returnurl);
 } else if ($data = $editform->get_data()) {
-    if($data->courseoforgstructure)
-        $getorgstructeid = $DB->get_field('orgstructure','id',['name' => $data->courseoforgstructure]);
+    
     if($data->category_cs)
         $getcategory = $DB->get_field('course_categories','id',['name' => $data->category_cs]);
     if($id){
-        $coursesetup_update = (object)array('id' => $data->id, 'category' => $getcategory, 'fullname' => $data->fullname_cs, 'shortname' => $data->shortname_cs, 'typeofcourse' => $data->typeofcourse, 'courseoforgstructure' => $getorgstructeid, 'courseofjobtitle' => $data->courseofjobtitle, 'courseofposition' => $data->courseofposition, 'description' => $data->description, 'usermodified' => $USER->id, 'timemodified' => time());
+        $coursesetup_update = (object)array('id' => $data->id, 'category' => $getcategory, 'fullname' => $data->fullname_cs, 'shortname' => $data->shortname_cs, 'description' => $data->description, 'usermodified' => $USER->id, 'timemodified' => time());
         if (isset($data->submitbutton)) {
             $message = $strupdate;
         }
@@ -103,10 +98,10 @@ if ($editform->is_cancelled()) {
         $coursesetup->category = $getcategory;
         $coursesetup->fullname = $data->fullname_cs;
         $coursesetup->shortname =  $data->shortname_cs;
-        $coursesetup->typeofcourse = $data->typeofcourse;
-        $coursesetup->courseoforgstructure = $getorgstructeid;
-        $coursesetup->courseofjobtitle = $data->courseofjobtitle;
-        $coursesetup->courseofposition =  $data->courseofposition;
+        // $coursesetup->typeofcourse = $data->typeofcourse;
+        // $coursesetup->courseoforgstructure = $getorgstructeid;
+        // $coursesetup->courseofjobtitle = $data->courseofjobtitle;
+        // $coursesetup->courseofposition =  $data->courseofposition;
         $coursesetup->description = $data->description;
         $coursesetup->usermodified = $USER->id;
         $coursesetup->timecreated = time();

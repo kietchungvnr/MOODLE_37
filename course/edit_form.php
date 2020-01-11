@@ -24,6 +24,7 @@ class course_edit_form extends moodleform {
 
         $course        = $this->_customdata['course']; // this contains the data of this form
         $category      = $this->_customdata['category'];
+        $coursesetup   = $this->_customdata['coursesetup'];
         $editoroptions = $this->_customdata['editoroptions'];
         $returnto = $this->_customdata['returnto'];
         $returnurl = $this->_customdata['returnurl'];
@@ -104,11 +105,21 @@ class course_edit_form extends moodleform {
         }
 
         //custom by Vũ - add cousesetup
-        
+        $strcoursesetup = get_string('coursesetup','local_newsvnr');
+        if(!empty($course->id)) {
+            $listcoursesetup = array(
+                $coursesetup->id => $coursesetup->fullname
+            );
+            $mform->addElement('select', 'coursesetup', $strcoursesetup, $listcoursesetup);
+        } else {
+            $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3">'.$strcoursesetup.'</div><div class="col-md-3 felement" ><select class="form-control" id="id_coursesetup" name="coursesetup" required></select></div></div>');
+        }
+
         $toclist = array(
             '1' => 'Tuyển dụng',
             '2' => 'Đào tạo',
         );
+
         $orgjobtitle_options = array(
             'placeholder' => get_string('search', 'local_newsvnr'),
             'multiple' => true,                                                  
@@ -161,20 +172,15 @@ class course_edit_form extends moodleform {
         $mform->addElement('advcheckbox', 'pinned', '', get_string('pinned', 'local_newsvnr'), array('group' => 1), array(0, 1));
         $mform->addElement('advcheckbox', 'required', '', get_string('required', 'local_newsvnr'), array('group' => 1), array(0, 1));
 
-        
-        // $strcoursesetup = get_string('coursesetup','local_newsvnr');
-        // //Lấy danh sách khoá học setup
-        // $coursesetuplist = $DB->get_records('course_setup');
-        // $coursesetupnames = array();
-        // foreach ($coursesetuplist as $key => $value) {
-        //     $coursesetupnames[$key] = $value->fullname;
-        // }
+        //Lấy danh sách khoá học setup
+        $coursesetuplist = $DB->get_records('course_setup');
+        $coursesetupnames = array();
+        foreach ($coursesetuplist as $key => $value) {
+            $coursesetupnames[$key] = $value->fullname;
+        }
         // $mform->addElement('select', 'coursesetup', get_string('coursesetup','local_newsvnr'), $coursesetupnames);
         // $mform->addRule('courseofposition', get_string('missingcourseofpostion','local_newsvnr'), 'required', null, 'client');
         // $mform->setType('coursesetup', PARAM_INT);
-        //Khoá học bắt buộc
-        
-        // $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3">'.$strcoursesetup.'</div><div class="col-md-3 felement" ><select class="form-control" id="listcoursesetup" name="coursesetup" required></select></div></div>');
 
         // $toclist = array(
         //     '0' => 'Online',
@@ -184,7 +190,6 @@ class course_edit_form extends moodleform {
         // $mform->addRule('typeclass', get_string('missingtypeclass','local_newsvnr'), 'required', null, 'client');
         // $mform->setType('typeclass', PARAM_INT);
 
-        
         // --- Kết thúc custom --- ///
 
         $choices = array();

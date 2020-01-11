@@ -24,7 +24,7 @@ class block_vnr_db_teacheruser_rp extends block_base {
     }
 
      public function applicable_formats() {
-        return array('my' => true);
+        return array('my' => true, 'my-newsvnr' => true);
     }
 }
 

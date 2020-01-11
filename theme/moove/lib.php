@@ -330,17 +330,20 @@ function theme_moove_delete_menuitems(\flat_navigation $flatnav) {
 function theme_moove_delete_menuitems_incourse(\flat_navigation $flatnav) {
     // var_dump($flatnav);die;
     $itemstodelete = [
-        'home',
-        'myhome',
+        // 'home',
+        // 'myhome',
+        // 'coursehome',
+        // 'mycourses',
+        // 'mycohorts1',
+        // 'mycohorts2',
+        // 'mycohorts3',
+        // 'calendar',
+        // 'privatefiles',
+        // 'mycourses_by_student_vnr',
+        // 'mycourses_by_teacher_vnr',
+
         'coursehome',
-        'mycourses',
-        'mycohorts1',
-        'mycohorts2',
-        'mycohorts3',
-        'calendar',
-        'privatefiles',
-        'mycourses_by_student_vnr',
-        'mycourses_by_teacher_vnr',
+        'mycourses'
     ];
 
     foreach ($flatnav as $item) {

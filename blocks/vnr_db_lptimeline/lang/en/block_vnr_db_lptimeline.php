@@ -41,3 +41,6 @@ $string['nocomp'] = 'Chức vụ của bạn chưa có lộ trình đào tạo';
 $string['timereview'] = 'Ngày review';
 $string['userreview'] = 'Người review';
 $string['status'] = 'Trạng thái';
+$string['prestudy'] = 'Chưa học';
+$string['studying'] = 'Đang học';
+$string['finishedstudy'] ='Đã học';

@@ -23,7 +23,7 @@ class block_vnr_db_studentuser extends block_base {
     }
 
      public function applicable_formats() {
-        return array('my' => true);
+        return array('my' => true, 'my-newsvnr-student' => true);
     }
 }
 

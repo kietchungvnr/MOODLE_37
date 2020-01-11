@@ -142,7 +142,7 @@ if (!empty($course)) {
         file_prepare_standard_filemanager($course, 'overviewfiles', $overviewfilesoptions, null, 'course', 'overviewfiles', 0);
     }
 }
-
+$coursesetup = '';
 // First create the form.
 if(!empty($course->id)) {
     $courseofjobtitle = [];
@@ -158,11 +158,13 @@ if(!empty($course->id)) {
     $course->courseoforgstructure = $DB->get_field('orgstructure', 'name', ['id' => $course->courseoforgstructure]);
     $course->courseofjobtitle = $courseofjobtitle;
     $course->courseofposition = $courseofposition;
+    $coursesetup = $DB->get_record_sql('SELECT cs.* FROM {course} c JOIN {course_setup} cs ON c.category = cs.category WHERE c.id = ?', [$course->id]);
 }
 
 $args = array(
     'course' => $course,
     'category' => $category,
+    'coursesetup' => $coursesetup,
     'editoroptions' => $editoroptions,
     'returnto' => $returnto,
     'returnurl' => $returnurl

@@ -48,7 +48,7 @@ class viewreport_page implements renderable, templatable {
         $list_chart_std->name = "Báo cáo hoàn thành khóa học";
         $list_chart[] = $list_chart_std;
 
-        $list_course = get_listcourse_by_teacher($USER->id);
+        $list_course = get_list_course_by_teacher($USER->id);
 
         $data['list_course'] = $list_course;
         $data['list_chart'] = $list_chart;

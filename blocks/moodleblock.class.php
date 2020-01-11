@@ -582,6 +582,40 @@ class block_base {
 
         // The blocks in My Moodle are a special case and use a different capability.
         $mypagetypes = my_page_type_list($page->pagetype); // Get list of possible my page types.
+        //Custom by Vũ: Chia Dashboard ra 2 phần giáo viên và học viên
+        $studentpagetypes = ['my-newsvnr-student' => get_string('studentdashboard', 'local_newsvnr')];
+        $teacherpagetypes = ['my-newsvnr-teacher' => get_string('teacherdashboard', 'local_newsvnr')];
+        if (array_key_exists($page->pagetype, $studentpagetypes)) { // Ensure we are on a page with a my page type.
+            // If the block cannot be displayed on /my it is ok if the myaddinstance capability is not defined.
+            // Is 'my' explicitly forbidden?
+            // If 'all' has not been allowed, has 'my' been explicitly allowed?
+            if ((isset($formats['my']) && $formats['my'] == false)
+                || (empty($formats['all']) && empty($formats['my']))) {
+
+                // Block cannot be added to /my regardless of capabilities.
+                return false;
+            } else {
+                $capability = 'block/' . $this->name() . ':myaddinstance';
+                return $this->has_add_block_capability($page, $capability)
+                       && has_capability('moodle/my:manageblocks', $page->context);
+            }
+        }
+
+        if (array_key_exists($page->pagetype, $teacherpagetypes)) { // Ensure we are on a page with a my page type.
+            // If the block cannot be displayed on /my it is ok if the myaddinstance capability is not defined.
+            // Is 'my' explicitly forbidden?
+            // If 'all' has not been allowed, has 'my' been explicitly allowed?
+            if ((isset($formats['my']) && $formats['my'] == false)
+                || (empty($formats['all']) && empty($formats['my']))) {
+
+                // Block cannot be added to /my regardless of capabilities.
+                return false;
+            } else {
+                $capability = 'block/' . $this->name() . ':myaddinstance';
+                return $this->has_add_block_capability($page, $capability)
+                       && has_capability('moodle/my:manageblocks', $page->context);
+            }
+        }
 
         if (array_key_exists($page->pagetype, $mypagetypes)) { // Ensure we are on a page with a my page type.
             // If the block cannot be displayed on /my it is ok if the myaddinstance capability is not defined.
@@ -598,6 +632,7 @@ class block_base {
                        && has_capability('moodle/my:manageblocks', $page->context);
             }
         }
+        
         // Check if this is a block only used on /my.
         unset($formats['my']);
         if (empty($formats)) {

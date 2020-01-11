@@ -610,6 +610,14 @@ class theme_settings {
             }
             
             
+            
+
+            if(!$imagereturn) {
+              $courseimage = $OUTPUT->get_generated_image_for_id($arr[$j]['postid']);
+              $imagereturn = "<div style='background-image: url($courseimage); width: 100%;
+    height: 85%;'></div>";
+            }
+
             $templatecontext['newslides'][$j]['subject'] = $arr[$j]['subject'];
             $templatecontext['newslides'][$j]['message'] = strip_tags($arr[$j]['message']);
             $templatecontext['newslides'][$j]['name'] = $arr[$j]['name'];
@@ -619,10 +627,7 @@ class theme_settings {
                 $templatecontext['newslides'][$j]['active'] = true;
             }
         }
-        $templatecontext['test'] = "test";
-        $btnurl = new moodle_url('/mod/forum/discuss.php', array('id'=>$templatecontext['test']));
-        $templatecontext['btnurl'] = $btnurl;
-        
+       
         return $templatecontext;
     }
 

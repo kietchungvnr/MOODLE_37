@@ -175,5 +175,9 @@ $string['noitem_coursesetup'] = 'Không có Khoá học';
 $string['typeclass'] = 'Kiểu Lớp';
 $string['missingtypeclass'] = 'Chọn kiểu lớp';
 $string['requiredorgstructure'] = 'Khoá cho PB - CD - CV';
-$string['novalue'] = "Không có dữ liệu";
+$string['novalue'] = 'Không có dữ liệu';
 $string['sitetabadmin'] = 'Cơ cấu tổ chức';
+
+$string['studentdashboard'] = 'Dashboard học viên';
+$string['teacherdashboard'] = 'Dashboard giáo viên';
+$string['invalidrequest'] = 'Request không tồn tại';
