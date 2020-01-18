@@ -9,8 +9,10 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
 	    				"/orgstructures","/orgstructure",
 	    				"/orgstructure-categories","/orgstructure-category",
 	    				"/orgstructure-jobtitles","/orgstructure-jobtitle",
-	    				"/orgstructure-positions","orgstructure-position",
-	    				"/quiz"
+	    				"/orgstructure-positions","/orgstructure-position",
+	    				"/quiz",
+	    				"/courses",
+	    				"/course-category",
     				],
     "ignore"    => ["/api/token"],
     "secure"    => false,
@@ -41,7 +43,7 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
     	$data["status"] = "error";
         $data["message"] = $arguments["message"];
         return $response
-            ->withHeader("Content-Type", "application/json")
+            ->withHeader("Content-Type", "application/json;charset=utf-8")
             ->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
     },
     // "header" 	=> "X-Token",

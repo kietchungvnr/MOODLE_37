@@ -798,7 +798,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
         if ($PAGE->pagelayout == 'mypublic') {
             $header->contextheader = "<h2>". get_string('userprofile', 'theme_moove') ."</h2>";
         }
-
+        $header->settingsmenu = $this->context_header_settings_menu();
+        $header->pageheadingbutton = $this->page_heading_button();
+        $header->courseheader = $this->course_header();
         return $this->render_from_template('theme_moove/breadcrumb', $header);
     }
     //my custom

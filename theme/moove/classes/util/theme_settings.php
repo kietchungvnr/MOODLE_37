@@ -540,7 +540,7 @@ class theme_settings {
      * @param  integer $suggest        [description]
      * @param  integer $userplancourse [description]
      * @param  integer $planid [description]
-     * @return [type]                  [description]
+     * @return [array]                  [description]
      */
     public function get_courses_data($pinned = 1, $required = null, $suggest = null, $userplancourse = null, $planid = 0)
     {

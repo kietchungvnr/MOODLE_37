@@ -44,7 +44,7 @@ class TokenController extends BaseController
 	        $tokenId = Uuid::uuid1()->toString();
 	        $issuedAt = time();
 	        $notBefore = $issuedAt;
-	        $expire = $notBefore + 60 * 60;
+	        $expire = $notBefore + 60 * 600;
 	        $serverName = $this->request->withUri($this->request->getUri(), true);
 	        $token = JWT::encode([
 	            'iat'  => $issuedAt,         // Issued at: time when the token was generated

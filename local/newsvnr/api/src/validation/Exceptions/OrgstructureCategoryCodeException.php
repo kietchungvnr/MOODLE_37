@@ -4,14 +4,14 @@ namespace local_newsvnr\api\Validation\Exceptions;
 
 use Respect\Validation\Exceptions\ValidationException;
 
-class MyRuleException extends ValidationException
-{
+class OrgstructureCategoryCodeException extends ValidationException
+{	
     public static $defaultTemplates = [
         self::MODE_DEFAULT => [
-            self::STANDARD => 'Con ga.',
+            self::STANDARD => 'Mã loại phòng ban đã tồn tại',
         ],
         self::MODE_NEGATIVE => [
-            self::STANDARD => 'Ga con.',
+            self::STANDARD => 'Mã loại phòng ban đã tồn tại',
         ],
     ];
 }

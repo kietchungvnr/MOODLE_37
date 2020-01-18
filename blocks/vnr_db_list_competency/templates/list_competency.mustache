@@ -1,0 +1,13 @@
+
+ <div class="container-fluid outline-none">
+    <div class="row align-content-start">
+        <div class="list-group list-group-flush">
+            <button type="button" class="list-group-item list-group-item-action active">
+                {{#str}}listcompetency, block_vnr_db_list_competency{{/str}}
+            </button>
+            {{#listcompetency}}
+            <button type="button" class="list-group-item list-group-item-action">{{.}}</button>
+            {{/listcompetency}}
+        </div>     
+    </div>
+</div>
