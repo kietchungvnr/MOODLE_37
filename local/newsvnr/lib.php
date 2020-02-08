@@ -507,6 +507,7 @@ function showMenuLi($menus, $table_name)
                 // $arr['expanded'] = true;
                 $data[] = $arr;
             }
+
             foreach($data as $key => &$item) {
 
                $itemsByReference[$item['id']] = &$item;
@@ -514,6 +515,7 @@ function showMenuLi($menus, $table_name)
                $itemsByReference[$item['id']]['items'] = array();
                // Empty data class (so that json_encode adds "data: {}" ) 
             }
+            // var_dump($data);die;
             // Set items as children of the relevant parent item.
             foreach($data as $key => &$item) {
                if($item['parentid'] && isset($itemsByReference[$item['parentid']]))
@@ -1427,6 +1429,15 @@ function convertunixtime($format="r", $timestamp=false, $timezone=false) {
     $myDateTime = new DateTime(($timestamp!=false?date("r",(int)$timestamp):date("r")), $gmtTimezone);
     $offset = $userTimezone->getOffset($myDateTime);
     return date($format, ($timestamp!=false?(int)$timestamp:$myDateTime->format('U')) + $offset);
+}
+/**
+ * Đăng nhập moodle khi sử dụng API
+ * [user_login_via_api description]
+ * @return [type] [Đăng nhập thành công]
+ */
+function user_login_via_api() {
+    $adminuser = get_complete_user_data('id', 2);
+    complete_user_login($adminuser);
 }
 
 /**

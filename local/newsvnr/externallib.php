@@ -37,7 +37,7 @@ class local_newsvnr_external extends external_api {
     }
 
 
-    private static function loadingorgposition_returns() {
+    public static function loadingorgposition_returns() {
         return new external_single_structure(
             array(
                 'id' => new external_value(PARAM_INT, 'The id of the orgposition'),

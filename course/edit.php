@@ -191,14 +191,10 @@ if ($editform->is_cancelled()) {
     unset($data->courseofposition);
     unset($data->courseofjobtitle);
    
-        
     // Process data if submitted.
     if (empty($course->id)) {
         // In creating the course.
-        
-       
         $course = create_course($data, $editoroptions);
-  
         if($courseofposition and $courseofjobtitle) {
             foreach ($courseofjobtitle as $jobtitile) {
                 foreach ($courseofposition as $position) {
@@ -252,6 +248,7 @@ if ($editform->is_cancelled()) {
             }
         }
     } else {
+        //Vũ custom: tạo lớp học theo vị trí PB-CD-CV
         if($courseofposition and $courseofjobtitle) {
             $olddata = $DB->get_records('course_position', ['course' => $data->id]);
             foreach($olddata as $value) {
