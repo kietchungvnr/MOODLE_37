@@ -1,7 +1,7 @@
 require.config({
     paths: {
-        "kendo.all.min": "/local/newsvnr/js/kendo.all.min",
-        "dttable": "/local/newsvnr//js/datatable.min",
+        "kendo.all.min": "/moodle_37/local/newsvnr/js/kendo.all.min",
+        "dttable": "/moodle_37/local/newsvnr//js/datatable.min",
     }
 });
 define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable', 'core/modal_factory', 'core/modal_events', 'core/str'], function($, kendo, Config, Notification, dttable, ModalFactory, ModalEvents, Str) {

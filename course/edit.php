@@ -158,7 +158,7 @@ if(!empty($course->id)) {
     $course->courseoforgstructure = $DB->get_field('orgstructure', 'name', ['id' => $course->courseoforgstructure]);
     $course->courseofjobtitle = $courseofjobtitle;
     $course->courseofposition = $courseofposition;
-    $coursesetup = $DB->get_record_sql('SELECT cs.* FROM {course} c JOIN {course_setup} cs ON c.category = cs.category WHERE c.id = ?', [$course->id]);
+    $coursesetup = $DB->get_record_sql('SELECT TOP 1 cs.* FROM {course} c JOIN {course_setup} cs ON c.category = cs.category WHERE c.id = ?', [$course->id]);
 }
 
 $args = array(
@@ -184,18 +184,18 @@ if ($editform->is_cancelled()) {
     }
     $courseposition = [];
     //Nếu bảng course k còn pb - cd - cv thì không cần những dòng này
-    if($data->courseofposition)
-        $courseofposition = $data->courseofposition;
-    if($data->courseofposition)
-        $courseofjobtitle = $data->courseofjobtitle;
-    unset($data->courseofposition);
-    unset($data->courseofjobtitle);
+    // if($data->courseofposition)
+    //     $courseofposition = $data->courseofposition;
+    // if($data->courseofposition)
+    //     $courseofjobtitle = $data->courseofjobtitle;
+    // unset($data->courseofposition);
+    // unset($data->courseofjobtitle);
    
     // Process data if submitted.
     if (empty($course->id)) {
         // In creating the course.
         $course = create_course($data, $editoroptions);
-        if($courseofposition and $courseofjobtitle) {
+        if($data->courseoforgstructure) {
             foreach ($courseofjobtitle as $jobtitile) {
                 foreach ($courseofposition as $position) {
                     $courseposition_data = new stdClass;

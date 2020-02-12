@@ -549,7 +549,7 @@ class theme_settings {
         $courses = self::user_courses_list($pinned, $required, $suggest, $userplancourse, $planid);
         // $templatecontext['courseendable'] = "1";
         $templatecontext = [];
-
+        $templatecontext['hascourse'] = 1;
         foreach ($courses as $key => $value) {        
             $arr[] = (array)$value;
         }
@@ -564,8 +564,6 @@ class theme_settings {
             $templatecontext['newscourse'][$j]['countstudent'] = $arr[$j]['countstudent'];
             $templatecontext['newscourse'][$j]['imageteacher'] = $arr[$j]['imageteacher'];
             $templatecontext['newscourse'][$j]['fullnamet'] = $arr[$j]['fullnamet'];
-            
-
         }
       
         return $templatecontext;
@@ -575,7 +573,6 @@ class theme_settings {
     public function get_news_data()
     {
         global $OUTPUT,$DB,$CFG,$USER;
-
 
         $arr = array();
         $sql = "SELECT p.subject, LEFT(p.message, 500) as message, d.name,d.id,d.forum,d.course,p.id as postid FROM {forum} as f
@@ -653,7 +650,11 @@ class theme_settings {
         where (f.type IN(?,?,?)) and fd.pinned = ?
         ";
         $data = $DB->get_records_sql($sql,array('news','general','blog',1));
-
+          $templatecontext['hasforum'] = 0;
+        
+        if($data) {
+          $templatecontext['hasforum'] = 1;
+        }
         foreach ($data as $forum) {
             $date = new DateTime("@$forum->lastpost");
             $lastpost = $date->format('l, d m Y, H:i: A');
