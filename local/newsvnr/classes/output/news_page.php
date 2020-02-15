@@ -26,8 +26,6 @@ class news_page implements renderable, templatable {
         $data = \core_webservice_external::get_site_info();
         $data['news'] = true;
         $data['showallurl'] = $CFG->wwwroot.'/local/newsvnr/index.php?showall=-1';
-        $data['courselist'] = array_values($DB->get_records_sql("SELECT TOP(4) fullname from {course} where id>149"));
-        $data['courselist2'] = array_values($DB->get_records_sql("SELECT TOP(4) fullname from {course} where id>149"));
         $data['forumdata'] = self::get_forums_header_data();
         $data['forumnewestdata'] = self::get_forums_newest_data();
         $data['forumcoursenewsndata'] = self::get_froums_coursenews_data();
@@ -49,9 +47,10 @@ class news_page implements renderable, templatable {
     }
     public static function get_forums_header_data() {
         global $DB,$CFG;
+        $forumid = $DB->get_field_sql("SELECT DISTINCT f.id FROM mdl_forum_discussions fd JOIN mdl_forum f ON fd.forum = f.id WHERE f.name = 'Site announcements'", []);
         $sql = "SELECT fd.id,fd.name,fd.timemodified,fn.contextid,fn.component,fn.filearea,fn.filepath,fn.itemid,fn.filename,CONCAT(u.firstname,' ',u.lastname) as username,fd.countviews
             from mdl_forum_discussions fd join mdl_files fn on fd.firstpost = fn.itemid join mdl_user u on fd.userid = u.id 
-            where filesize > 0 and fd.forum = 85 and fd.pinned=1 and fn.filearea='attachment'";
+            where filesize > 0 and fd.forum = $forumid and fd.pinned=1 and fn.filearea='attachment'";
         $forumimg = $DB->get_recordset_sql($sql);
 
 
@@ -83,8 +82,9 @@ class news_page implements renderable, templatable {
     }
     public static function get_forums_newest_data(){
         global $DB,$CFG;
+        $forumid = $DB->get_field_sql("SELECT DISTINCT f.id FROM mdl_forum_discussions fd JOIN mdl_forum f ON fd.forum = f.id WHERE f.name = 'Site announcements'", []);
         $sql = "SELECT fd.id as disid, fd.countviews, fp.message,fp.subject,fd.timemodified, fn.* from mdl_forum_discussions fd join mdl_forum_posts fp on fd.id = fp.discussion join mdl_files fn on fd.firstpost = fn.itemid 
-        where filesize > 0 and fd.forum = 85 and fn.filearea='attachment' order by fd.timemodified DESC
+        where filesize > 0 and fd.forum = $forumid and fn.filearea='attachment' order by fd.timemodified DESC
         ";
         $forumnewstdata = $DB->get_recordset_sql($sql);
         
