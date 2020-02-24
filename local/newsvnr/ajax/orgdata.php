@@ -39,7 +39,10 @@ $section  = required_param('section',PARAM_ALPHANUMEXT);
 $modalsection = optional_param('modalsection','',PARAM_RAW);
 $orgstructureid = optional_param('orgstructureid',0,PARAM_INT);
 $usercode = optional_param('usercode','',PARAM_RAW);
-
+$pagesize = optional_param('pagesize',10, PARAM_INT);
+$pagetake = optional_param('take',0, PARAM_INT);
+$pageskip = optional_param('skip',0, PARAM_INT);
+$q = optional_param('q','', PARAM_RAW);
 $params = [];
 if($section){
 	$params['section'] = $section;
@@ -61,7 +64,26 @@ $strdata = '';
 
 switch ($section) {
 	case 'orgcate_list':
-	$get_list = $DB->get_records('orgstructure_category');
+	$odersql = "";
+	$wheresql = "";
+	if($q) {
+		$wheresql = "WHERE name LIKE N'%$q%'";
+	}
+	if($pagetake == 0) {
+		$ordersql = "RowNum";
+	} else {
+		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
+	}
+	$sql = "
+			SELECT *, (SELECT COUNT(id) FROM {orgstructure_category}) AS total
+			FROM (
+			    SELECT *, ROW_NUMBER() OVER (ORDER BY id) AS RowNum
+			    FROM {orgstructure_category}
+			) AS Mydata
+			$wheresql
+			ORDER BY $ordersql";
+	$get_list = $DB->get_records_sql($sql);
+	$data = [];
 	foreach ($get_list as $value) {
 		$buttons = array();
 		if($value->visible == 1) {
@@ -80,14 +102,38 @@ switch ($section) {
 			$OUTPUT->pix_icon('t/delete', get_string('delete')),
 			array('title' => get_string('delete'),'id' => $value->id, 'class' => 'delete-item','data-section' => 'orgcate','id' => $value->id,'onclick' => 'org_delete('.$value->id.')'));
 		$showbuttons = implode(' ', $buttons);
-		$strdata .='<tr>';
-		$strdata .='<td>'.$value->name.'</td><td>'.$value->code.'</td><td>'.$value->description.'</td><td>'.$showbuttons.'</td>';
-		$strdata .='</tr>';
+		$object = new stdclass;
+		$object->name = $value->name;		
+		$object->code = $value->code;
+		$object->description = $value->description;
+		$object->listbtn = $showbuttons;
+		$object->total = $value->total;
+		$data[] = $object;		
 	}
-	$objdata->header = '<table class="display hover order-column table table-bordered table-striped nowrap" cellspacing="0" width="100%" id="org_datatable"><thead><tr><th>Tên loại phòng ban</th><th>Mã loại phòng ban</th><th>Mô tả</th><th>Chức năng</th></tr></thead><tbody>'.$strdata.'</tbody></table>';
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+	
 	break;
 	case 'orgjobtitle_list':
-	$get_list = $DB->get_records('orgstructure_jobtitle');
+	$odersql = "";
+	$wheresql = "";
+	if($q) {
+		$wheresql = "WHERE name LIKE N'%$q%'";
+	}
+	if($pagetake == 0) {
+		$ordersql = "RowNum";
+	} else {
+		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
+	}
+	$sql = "
+			SELECT *, (SELECT COUNT(id) FROM {orgstructure_jobtitle}) AS total
+			FROM (
+			    SELECT *, ROW_NUMBER() OVER (ORDER BY id) AS RowNum
+			    FROM {orgstructure_jobtitle}
+			) AS Mydata
+			$wheresql
+			ORDER BY $ordersql";
+	$get_list = $DB->get_records_sql($sql);
+	$data = [];
 	foreach ($get_list as $value) {
 		$buttons = array();
 		if($value->visible == 1) {
@@ -106,14 +152,39 @@ switch ($section) {
 			$OUTPUT->pix_icon('t/delete', get_string('delete')),
 			array('title' => get_string('delete'),'id' => $value->id, 'class' => 'delete-item','data-section' => 'orgjobtitle','id' => $value->id,'onclick' => 'org_delete('.$value->id.')'));
 		$showbuttons = implode(' ', $buttons);
-		$strdata .='<tr>';
-		$strdata .='<td>'.$value->name.'</td><td>'.$value->code.'</td><td>'.$value->namebylaw.'</td><td>'.$value->description.'</td><td>'.$showbuttons.'</td>';
-		$strdata .='</tr>';
+		$object = new stdclass;
+		$object->name = $value->name;		
+		$object->code = $value->code;
+		$object->namebylaw = $value->namebylaw;
+		$object->description = $value->description;
+		$object->listbtn = $showbuttons;
+		$object->total = $value->total;
+		$data[] = $object;		
 	}
-	$objdata->header = '<table class="display hover order-column table table-bordered table-striped nowrap" cellspacing="0" width="100%" id="org_datatable"><thead><tr><th>Tên chức danh</th><th>Mã chức danh</th><th>Tên theo pháp luật</th><th>Mô tả</th><th>Chức năng</th></tr></thead><tbody>'.$strdata.'</tbody></table>';
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+	
 	break;
 	case 'orgposition_list':
-	$get_list = $DB->get_records('orgstructure_position');
+	$odersql = "";
+	$wheresql = "";
+	if($q) {
+		$wheresql = "WHERE name LIKE N'%$q%'";
+	}
+	if($pagetake == 0) {
+		$ordersql = "RowNum";
+	} else {
+		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
+	}
+	$sql = "
+			SELECT *, (SELECT COUNT(id) FROM {orgstructure_position}) AS total
+			FROM (
+			    SELECT *, ROW_NUMBER() OVER (ORDER BY id) AS RowNum
+			    FROM {orgstructure_position}
+			) AS Mydata
+			$wheresql
+			ORDER BY $ordersql";
+	$get_list = $DB->get_records_sql($sql);
+	$data = [];
 	foreach ($get_list as $value) {
 		$buttons = array();
 		if($value->visible == 1) {
@@ -123,7 +194,7 @@ switch ($section) {
 		} else {
 			$buttons[] = html_writer::link('javascript:void(0)',
 			$OUTPUT->pix_icon('t/show', get_string('show')),
-			array('title' => get_string('show'),'id' => $value->id, 'class' => 'show-item','data-active' => 'orgposition_list','id' => $value->id,'onclick' => 'org_active('.$value->id.',1)'));	
+			array('title' => get_string('show'),'id' => $value->id, 'class' => 'show-item dim','data-active' => 'orgposition_list','id' => $value->id,'onclick' => 'org_active('.$value->id.',1)'));	
 		}
 		$buttons[] = html_writer::link(new moodle_url('/local/newsvnr/orgposition.php',array('id' => $value->id)),
 			$OUTPUT->pix_icon('t/edit', get_string('edit')),
@@ -142,14 +213,41 @@ switch ($section) {
 		} else {
 			$orgstructurename = "";
 		}
-		$strdata .='<tr>';
-		$strdata .='<td>'.$value->name.'</td><td>'.$value->code.'</td><td>'.$value->namebylaw.'</td><td>'.$orgjobtitlename.'</td><td>'.$orgstructurename.'</td><td>'.$value->description.'</td><td>'.$showbuttons.'</td>';
-		$strdata .='</tr>';
+		$object = new stdclass;
+		$object->name = $value->name;		
+		$object->code = $value->code;
+		$object->namebylaw = $value->namebylaw;
+		$object->orgjobtitlename = $orgjobtitlename;
+		$object->orgstructurename = $orgstructurename;
+		$object->description = $value->description;
+		$object->listbtn = $showbuttons;
+		$object->total = $value->total;
+		$data[] = $object;		
 	}
-	$objdata->header = '<table class="display hover order-column table table-bordered table-striped nowrap" cellspacing="0" width="100%" id="org_datatable"><thead><tr><th>Tên chức vụ</th><th>Mã chức vụ</th><th>Tên theo pháp luật</th><th>Tên chức danh</th><th>Tên phòng ban</th><th>Mô tả</th><th>Chức năng</th></tr></thead><tbody>'.$strdata.'</tbody></table>';
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+	
 	break;
 	case 'orgstructure_list':
-	$get_list = $DB->get_records('orgstructure');
+	$odersql = "";
+	$wheresql = "";
+	if($q) {
+		$wheresql = "WHERE name LIKE N'%$q%'";
+	}
+	if($pagetake == 0) {
+		$ordersql = "RowNum";
+	} else {
+		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
+	}
+	$sql = "
+			SELECT *, (SELECT COUNT(id) FROM {orgstructure}) AS total
+			FROM (
+			    SELECT *, ROW_NUMBER() OVER (ORDER BY id) AS RowNum
+			    FROM {orgstructure}
+			) AS Mydata
+			$wheresql
+			ORDER BY $ordersql";
+	$get_list = $DB->get_records_sql($sql);
+	$data = [];
 	foreach ($get_list as $value) {
 		$buttons = array();
 		if($value->visible == 1) {
@@ -179,32 +277,43 @@ switch ($section) {
 		} else {
 			$username = get_name_userid($value->managerid);	
 		}
-		$strdata .='<tr>';
-		$strdata .='<td>'.$value->name.'</td><td>'.$value->code.'</td><td>'.$orgcatename.'</td><td>'.$username.'</td><td>'.$parentname.'</td><td>'.$value->numbermargin.'</td><td>'.$value->numbercurrent.'</td><td>'.$value->description.'</td><td>'.$showbuttons.'</td>';
-		$strdata .='</tr>';
+		$object = new stdclass;
+		$object->name = $value->name;		
+		$object->code = $value->code;
+		$object->orgcatename = $orgcatename;
+		$object->managername = $username;
+		$object->parentname = $parentname;
+		$object->numbermargin = $value->numbermargin;
+		$object->numbercurrent = $value->numbercurrent;
+		$object->description = $value->description;
+		$object->listbtn = $showbuttons;
+		$object->total = $value->total;
+		$data[] = $object;		
 	}
-	$objdata->header = '<table class="display hover order-column table table-bordered table-striped nowrap" cellspacing="0" width="100%" id="org_datatable"><thead><tr><th>Tên phòng ban</th><th>Mã phòng ban</th><th>Loại phòng ban</th><th>Tên trưởng phòng ban</th><th>Phòng ban cha</th><th>Số lượng định biên</th><th>Số lượng hiện tại</th><th>Mô tả</th><th>Chức năng</th></tr></thead><tbody>'.$strdata.'</tbody></table>';
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+	
 	break;
 	case 'orgmain_list';
 	require_once("$CFG->libdir/completionlib.php"); 
+	$userarr = get_user_with_usercode($usercode);
+	
+	//lấy thông tin user theo PB-CD-CV để hiện thị chi tiết user
+	$userstd = new stdclass();
+	foreach ($userarr as $userinfo) {
+		$userstd->userid = $userinfo->userid;
+		$userstd->orgpositionid = $userinfo->positionid;
+		$userstd->usercode = $userinfo->usercode;
+		$userstd->username = $userinfo->uname;
+		$userstd->oname = $userinfo->oname;
+		$userstd->opname = $userinfo->opname;
+	}
 	switch ($modalsection) {
 		case 'modalinfo':
-			$userarr = get_user_with_usercode($usercode);
-
-			//lấy thông tin user theo PB-CD-CV để hiện thị chi tiết user
-			$userstd = new stdclass();
-			foreach ($userarr as $userinfo) {
-				$userstd->userid = $userinfo->userid;
-				$userstd->orgpositionid = $userinfo->positionid;
-				$userstd->usercode = $userinfo->usercode;
-				$userstd->username = $userinfo->uname;
-				$userstd->oname = $userinfo->oname;
-				$userstd->opname = $userinfo->opname;
-			}
+			
 		
 			$strmodal = '';
 			$strmodal .= '<div class="modal  fade" id="userdetail" role="dialog">
-								<div class="modal-dialog modal-lg mw-100 w-75">
+								<div class="modal-dialog modal-lg mw-100 modal-width">
 									<div class="modal-content fs-14">
 										<div class="modal-header">
 											<h5 class="modal-title">Chi tiết học viên</h5>
@@ -225,23 +334,26 @@ switch ($section) {
 						      <div class="col-md-4"><input type="text" class="form-control fs-14" placeholder="" id="orgposition_inp" name="orgposition_inp" value="'.$userstd->opname.'" disabled></div>
 						    </div>  
   						   </div>';
-			$strmodal .='</div><div data-region=userdetailtable-iframe>
-								<div id="userdetailtable123" class="mt-2">
-									<table class="display hover order-column table table-bordered table-striped nowrap" cellspacing="0" width="100%" id="userdetailtable">
-										<thead>
-											<tr>
-												<th>Tiêu chuẩn năng lực</th>
-												<th>Khóa học liên kết</th>
-												<th>Bằng cấp bên ngoài</th>
-												<th>Ngày hoàn thành</th>
-												<th>Trạng thái</th>
-											</tr>
-										</thead>
-										<tbody>';
+  			$strmodal .=' 						<div id="userdetailtable"></div>
+											</div>
+										</div>	
+									
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+									</div>
+								</div>
+							</div>
+						</div>';
+			$objdata->modal = $strmodal;
+			echo json_encode($objdata,JSON_UNESCAPED_UNICODE);
+			die;
+			break;
+		case 'gridinfo':
 			//lấy danh sách tất cả năng lực theo vị trí
 			$get_name_competency = get_name_competency_position($userstd->orgpositionid);
-			
+			$data = [];
 			foreach ($get_name_competency as $value) {
+				$griddata = new stdclass;
 				$completecourse_evid = false;
 				$completecourse_prog = false;
 				$tcnlht = 0;
@@ -285,7 +397,7 @@ switch ($section) {
 					}
 			    }
 
-				$strmodal .= '<tr><td>'.$value->shortname.'</td>';
+			
 
 				//lấy danh danh sách khóa học theo năng lực
 				if($value->competencyid) {
@@ -355,6 +467,7 @@ switch ($section) {
 			                   
 			                  </div>
 			                </div>';
+
 								break;
 							
 							default:
@@ -365,7 +478,7 @@ switch ($section) {
 				
 				}
 				if(empty($list_comp)){
-					$strmodal .= '<td><div class="row align-items-center">
+					$strcourselink = '<div class="row align-items-center">
 		                  <div class="col-auto pr-5">
 		                    	
 		                  </div>
@@ -373,33 +486,41 @@ switch ($section) {
 		                    Không có khóa học phù hợp
 		                   
 		                  </div>
-		                </div></td><td><span class="badge badge-pill badge-cornflowerblue text-black">'.$strevidence.'</span></td>';
+		                </div>';
+		             $strevidences = '<span class="badge badge-pill badge-cornflowerblue text-black">'.$strevidence.'</span>';
+		            $griddata->courselink = $strcourselink;
+		            $griddata->evidence = $strevidences;
+
 				} else {
-					$strmodal .= '<td><div data-region="progress-circle">'.$strhtml.'</div></td><td><span class="badge badge-pill badge-cornflowerblue text-black">'.$strevidence.'</span></td>';
+					$strcourselink = '<div data-region="progress-circle">'.$strhtml.'</div>';
+					$strevidences = '<span class="badge badge-pill badge-cornflowerblue text-black">'.$strevidence.'</span>';
+					$griddata->courselink = $strcourselink;
+		            $griddata->evidence = $strevidences;
 				}
 				if(!empty($timecompleted))
-					$strmodal .='<td>'.$timecompleted.'</td>';
-				else
-					$strmodal .='<td><span class="badge badge-pill badge-secondary text-black">Chưa hoàn thành</span></td>';
-				if($completecourse_prog == true || $completecourse_evid == true )
-					$strmodal .='<td><span class="badge badge-pill badge-success">Hoàn thành</span></td></tr>';
-				else
-					$strmodal .='<td><span class="badge badge-pill badge-secondary text-black">Chưa hoàn thành</span></td></tr>';
+					$griddata->timecompleted = $timecompleted;
+				else {
+					$strtimecompleted = '<span class="badge badge-pill badge-secondary text-black">Chưa hoàn thành</span>';
+					$griddata->timecompleted = $strtimecompleted;
+				}
+				if($completecourse_prog == true || $completecourse_evid == true ) {
+					$strcompleted = '<span class="badge badge-pill badge-success">Hoàn thành</span>';
+					$griddata->completed = $strcompleted;
+				}
+				else {
+					$strcompleted = '<span class="badge badge-pill badge-secondary text-black">Chưa hoàn thành</span>';
+					$griddata->completed = $strcompleted;
+				}
+				
+				$griddata->competency = $value->shortname;
+				
+				$data[] = $griddata;	
 			}
-			$strmodal .='</tbody>
-												</table>
-											</div>
-										</div>	
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
-									</div>
-								</div>
-							</div>
-						</div>';
-		
-			$objdata->modal = $strmodal;		
-	
+			
+			echo json_encode($data,JSON_UNESCAPED_UNICODE);
+
+			
+			die;
 			break;
 		
 		default:
@@ -407,7 +528,7 @@ switch ($section) {
 			break;
 	}
 
-	$get_list = get_listusers_orgstructure($orgstructureid);
+	$get_list = get_listusers_orgstructure($orgstructureid,$pageskip,$pagetake,$q);
 	//đếm tiêu chuẩn năng lực
 	foreach ($get_list as $value) {
 		$get_tcnl_position = get_tcnl($value->positionid)[0]->tcnlcd;
@@ -477,7 +598,6 @@ switch ($section) {
 						if($completecourse_evid == false) {
 							$tcnlht++;
 						}
-
 					
 						break;
 					
@@ -491,10 +611,22 @@ switch ($section) {
 
 		$tcnlcht = $get_tcnl_position - $tcnlht;
 
-		$strdata .='<tr>';
-		$strdata .='<td class="hyperlink" data-toggle="tooltip-usercode" title="Nhấn DoubleClick xem chi tiết nhân viên">'.$value->usercode.'</td><td class="hyperlink" data-toggle="tooltip-username" title="Nhấn DoubleClick xem chi tiết nhân viên">'.$value->uname.'</td><td>'.$value->oname.'</td><td>'.$value->opname.'</td><td>'.$get_tcnl_position.'</td><td>'.$tcnlcht.'</td>';
-		$strdata .='</tr>';
-	}	
+		$userdata = new stdclass;
+		$userdata->usercode = $value->usercode;		
+		$userdata->uname = $value->uname;
+		$userdata->oname = $value->oname;
+		$userdata->opname = $value->opname;
+		$userdata->positioncomp = $get_tcnl_position;
+		$userdata->positioncomp_number = $tcnlcht;
+		$userdata->total = $value->total;
+		$data[] = $userdata;		
+		
+	}
+	if(isset($data))
+		$objdata->userdata = $data;
+	else {
+		$objdata->userdata = [];
+	}
 	//chi tiết phòng ban
 	$orgdetail = get_detail_orgstructure($orgstructureid);
 	$orgcatename_detail = get_name_orgcateid($orgdetail->orgstructuretypeid);
@@ -508,7 +640,6 @@ switch ($section) {
 	} else {
 		$parentname_detail = 'Head Office';
 	}
-	$objdata->header = '<table class="display hover order-column table table-bordered table-striped nowrap" cellspacing="0" width="100%" id="orgmain_datatable"><thead><tr><th>Mã nhân viên</th><th>Tên nhân viên</th><th>Phòng ban trực thuộc</th><th>Chức vụ</th><th>Tiểu chuẩn năng lực</th><th>Năng lực còn thiếu</th></tr></thead><tbody>'.$strdata.'</tbody></table>';
 	$objdata->form = '<div class="container mt-3">
 		<div class="form-group row">
 	    <label for="orgname" class="col-sm-2 col-form-label">Tên phòng ban</label>
@@ -559,14 +690,9 @@ switch ($section) {
 	    </div>
 	  </div>
   </div>';
-			
-
-	
+   echo json_encode($objdata,JSON_UNESCAPED_UNICODE);
 	break;
-	
 }   
-
-echo json_encode($objdata,JSON_UNESCAPED_UNICODE);
 
 die();
 

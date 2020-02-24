@@ -1177,6 +1177,16 @@ div.dataTables_wrapper {
 .card {
     border: none;
 }
+.modal-width {
+    width: 75% !important;
+}
+
+@media only screen and (max-width: 768px) {
+    .modal-width {
+        width: 100% !important;
+    }
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -1200,6 +1210,7 @@ div.dataTables_wrapper {
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
 }
+
 </style>
 
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.common.min.css"/>

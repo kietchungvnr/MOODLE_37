@@ -14,7 +14,7 @@ class CourseCreateController extends BaseController {
 	public $name;
 	public $code;
 	public $categoryname;
-	public $categorytid;
+	public $categorycode;
 	public $check_code;
 	public $data;
 	public $resp;
@@ -32,7 +32,7 @@ class CourseCreateController extends BaseController {
             'name' => $this->v::notEmpty()->notBlank()->noWhitespace(),
             'code' => $this->v::notEmpty()->notBlank(),
             'categoryname' => $this->v::notEmpty()->notBlank(),
-            'categorytid' => $this->v::notEmpty()->notBlank(),
+            'categorycode' => $this->v::notEmpty()->notBlank(),
             'setupcode' => $this->v::notEmpty()->notBlank(),
         ]);
     }
@@ -54,7 +54,7 @@ class CourseCreateController extends BaseController {
 		    $this->data->shortname = $request->getParam('code');
 		    $this->data->coursesetup = $request->getParam('setupcode');
 		    $this->data->categoryname = $request->getParam('categoryname');
-		    $this->data->categorytid = $request->getParam('categorytid');
+		    $this->data->categorycode = $request->getParam('categorycode');
 		    $this->data->startdate = $request->getParam('startdate');
 		    $this->data->enddate = $request->getParam('enddate');
 		    if($request->getParam('startdate') == '') 
@@ -72,8 +72,8 @@ class CourseCreateController extends BaseController {
 	        return $response->withStatus(422)->withJson($this->resp);
 	    }
 		
-		if($this->data->categoryname and $this->data->categorytid) {
-			$existing = $DB->get_field('course_categories','id',['name' => $this->data->categoryname, 'idnumber' => $this->data->categorytid]);
+		if($this->data->categoryname and $this->data->categorycode) {
+			$existing = $DB->get_field('course_categories','id',['name' => $this->data->categoryname, 'idnumber' => $this->data->categorycode]);
 			if($existing) {
 				$this->data->category = $existing;
 			} else {
@@ -81,7 +81,7 @@ class CourseCreateController extends BaseController {
 				$this->resp->data['categoryname'] = "Không tìm thấy tên '$categoryname' trong danh mục khoá học ";
 			}
 		} else {
-			$this->resp->data['category'] = "Thiếu 'categoryname' hoặc 'categorytid";
+			$this->resp->data['category'] = "Thiếu 'categoryname' hoặc 'categorycode";
 		}
 
 		if (!empty($this->data->shortname)) {
@@ -132,7 +132,7 @@ class CourseCreateController extends BaseController {
 		    $this->data->shortname = $request->getParam('code');
 		    $this->data->coursesetup = $request->getParam('setupcode');
 		    $this->data->categoryname = $request->getParam('categoryname');
-		    $this->data->categorytid = $request->getParam('categorytid');
+		    $this->data->categorycode = $request->getParam('categorycode');
 		    $this->data->startdate = $request->getParam('startdate');
 		    $this->data->enddate = $request->getParam('enddate');
 		    if($request->getParam('startdate') == '') 
@@ -162,8 +162,8 @@ class CourseCreateController extends BaseController {
 				}
 	        }
 
-	        if($this->data->categoryname and $this->data->categorytid) {
-				$existing = $DB->get_field('course_categories','id',['name' => $this->data->categoryname, 'idnumber' => $this->data->categorytid]);
+	        if($this->data->categoryname and $this->data->categorycode) {
+				$existing = $DB->get_field('course_categories','id',['name' => $this->data->categoryname, 'idnumber' => $this->data->categorycode]);
 				if($existing) {
 					$this->data->category = $existing;
 				} else {
@@ -171,7 +171,7 @@ class CourseCreateController extends BaseController {
 					$this->resp->data['categoryname'] = "Không tìm thấy tên '$categoryname' trong danh mục khoá học ";
 				}
 			} else {
-				$this->resp->data['category'] = "Thiếu 'categoryname' hoặc 'categorytid";
+				$this->resp->data['category'] = "Thiếu 'categoryname' hoặc 'categorycode";
 			}
 			
 			

@@ -650,18 +650,34 @@ function password_generate($chars) {
 
 /* Cơ cấu phòng ban */
 
-function get_listusers_orgstructure($orgstructure){
+function get_listusers_orgstructure($orgstructure, $pageskip, $pagetake, $q){
     global $DB;
+    $odersql = "";
+    $wheresql = "";
+    if($q) {
+        $wheresql = "WHERE o.id = $orgstructure AND u.usercode LIKE N'%$q%'";
+    } else {
+        $wheresql = "WHERE o.id = $orgstructure";
+    }
+    if($pagetake == 0) {
+        $ordersql = "ORDER BY uname DESC";
+    } else {
+        $ordersql = "ORDER BY uname DESC OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
+    }
     $query ="
-            SELECT u.id AS userid,u.usercode,CONCAT(u.firstname,' ',u.lastname) AS uname,op.name AS opname,o.name AS oname, op.id AS positionid
+            SELECT u.id AS userid,u.usercode,CONCAT(u.firstname,' ',u.lastname) AS uname,op.name AS opname,o.name AS oname, op.id AS positionid, (SELECT COUNT(*) FROM mdl_user u 
+                LEFT JOIN mdl_orgstructure_position op ON u.orgpositionid = op.id
+                LEFT JOIN mdl_orgstructure o ON o.id = op.orgstructureid 
+                $wheresql
+              ) AS total
             FROM mdl_user u 
                 LEFT JOIN mdl_orgstructure_position op ON u.orgpositionid = op.id 
                 LEFT JOIN mdl_orgstructure o ON op.orgstructureid = o.id 
                 LEFT JOIN mdl_competency_position cp ON cp.id = op.id
-            WHERE o.id = ?
+            $wheresql
             GROUP BY u.usercode,u.firstname,u.lastname,op.name,o.name,op.id,u.id
-            ORDER BY uname DESC";
-    $data = $DB->get_records_sql($query,[$orgstructure]);
+            $ordersql";
+    $data = $DB->get_records_sql($query,[]);
     return $data;
 }
 function get_user_with_usercode($userid){
@@ -1447,22 +1463,22 @@ function user_login_via_api() {
  */
 function local_newsvnr_extend_navigation($navigation) {
     $newsurl = new moodle_url('/local/newsvnr/index.php');
-    $news = navigation_node::create(get_string('pagetitle', 'local_newsvnr'), $newsurl,navigation_node::TYPE_CUSTOM,'mycohorts1',
-        'mycohorts1',
+    $news = navigation_node::create(get_string('pagetitle', 'local_newsvnr'), $newsurl,navigation_node::TYPE_CUSTOM,'newspage',
+        'newspage',
         new pix_icon('t/viewdetails','Tin tức'));
     $news->showinflatnavigation = true;
     $navigation->add_node($news,'1');
     
     $courseurl = new moodle_url('/local/newsvnr/course.php');
-    $course = navigation_node::create(get_string('coursetitle', 'local_newsvnr'), $courseurl,navigation_node::TYPE_CUSTOM,'mycohorts2',
-        'mycohorts2',
+    $course = navigation_node::create(get_string('coursetitle', 'local_newsvnr'), $courseurl,navigation_node::TYPE_CUSTOM,'coursepage',
+        'coursepage',
         new pix_icon('t/viewdetails','Khóa học'));
     $course->showinflatnavigation = true;
     $navigation->add_node($course,'1');
 
     $forumurl = new moodle_url('/local/newsvnr/forum.php');
-    $forum = navigation_node::create(get_string('forumtitle', 'local_newsvnr'), $forumurl,navigation_node::TYPE_CUSTOM,'mycohorts3',
-        'mycohorts3',
+    $forum = navigation_node::create(get_string('forumtitle', 'local_newsvnr'), $forumurl,navigation_node::TYPE_CUSTOM,'forumpage',
+        'forumpage',
         new pix_icon('t/viewdetails','Diễn đàn'));
     $forum->showinflatnavigation = true;
     $navigation->add_node($forum,'1');

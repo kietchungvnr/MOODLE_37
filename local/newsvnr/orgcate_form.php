@@ -74,12 +74,12 @@ class orgcate_form extends moodleform {
             if ($current->name !== $catename) {
                 if ($DB->record_exists('orgstructure_category', array('name'=>$catename))) {
                     $errors['catename'] = get_string('duplicatename', 'local_newsvnr');
-                }
+                } 
             }
             if ($current->code !== $catecode) {
                 if ($DB->record_exists('orgstructure_category', array('code'=>$catecode))) {
                     $errors['catecode'] = get_string('duplicatecode', 'local_newsvnr');
-                }
+                } 
             }
 
         } else {

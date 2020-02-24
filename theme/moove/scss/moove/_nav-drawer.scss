@@ -75,6 +75,16 @@
             &[data-key="mycourses_by_teacher_vnr"] a:before {
                 content: "\e019";
             }
+            //local
+            &[data-key="newspage"] a:before {
+                content: "\e013";
+            }
+            &[data-key="coursepage"] a:before {
+                content: "\e013";
+            }
+            &[data-key="forumpage"] a:before {
+                content: "\e013";
+            }
 
             &[data-key="participants"] a:before,
             &[data-key="studentreport"] a:before {

@@ -56,10 +56,12 @@ class CompetencyCreateController extends BaseController {
 
 		$this->validate();
       	if ($this->validate->isValid()) {
-	    	$this->data->name = $request->getParam('name');
-		    $this->data->code = $request->getParam('code');
-		    $this->data->parentname = $request->getParam('parentname');
-		    $this->data->parentcode = $request->getParam('parentcode');
+	    	$this->data->name = $request->getParam('name'); //tên khung năng lực
+		    $this->data->code = $request->getParam('code'); // mã khung năng lực
+		    $this->data->parentid = 0;
+		    //không cần truyền parent 
+		    //$this->data->parentname = $request->getParam('parentname');
+		    //$this->data->parentcode = $request->getParam('parentcode');
 		    $this->data->competencyname = $request->getParam('competencyname');
 		    $this->data->competencycode = $request->getParam('competencycode');
 		    $this->data->description = $request->getParam('description');
@@ -71,19 +73,19 @@ class CompetencyCreateController extends BaseController {
 	        return $response->withStatus(422)->withJson($this->resp);
 	    }
 
-		if($this->data->parentname and $this->data->parentcode) {
-			$existing = $DB->get_field($this->table,'id',['shortname' => $this->data->parentname, 'idnumber' => $this->data->parentcode]);
-			if($existing) {
-				$this->data->parentid = $existing;
-			} else {
-				$parentname = $this->data->parentname;
-				$this->resp->data['parent'] = "Không tìm thấy tên '$parentname' trong danh sách năng lực ";
-			}
-		} elseif($this->data->parentname or $this->data->parentcode) {
-			$this->resp->data['parent'] = "Thiếu 'parentname' hoặc 'parentcode";
-		} else {
-			$this->data->parentid = 0;
-		}
+		// if($this->data->parentname and $this->data->parentcode) {
+		// 	$existing = $DB->get_field($this->table,'id',['shortname' => $this->data->parentname, 'idnumber' => $this->data->parentcode]);
+		// 	if($existing) {
+		// 		$this->data->parentid = $existing;
+		// 	} else {
+		// 		$parentname = $this->data->parentname;
+		// 		$this->resp->data['parent'] = "Không tìm thấy tên '$parentname' trong danh sách năng lực ";
+		// 	}
+		// } elseif($this->data->parentname or $this->data->parentcode) {
+		// 	$this->resp->data['parent'] = "Thiếu 'parentname' hoặc 'parentcode";
+		// } else {
+		// 	$this->data->parentid = 0;
+		// }
 
 		if(empty($this->resp->data)) {
 			//tạo competency framework

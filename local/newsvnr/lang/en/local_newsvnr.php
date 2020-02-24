@@ -34,8 +34,8 @@ $string['cateheader']	= 'Cây phòng ban';
 $string['orgheader']	= 'Danh mục phòng ban';
 $string['posheader']	= 'Danh mục chức vụ';
 $string['jobtitheader']	= 'Danh mục chức danh';
-$string['catename'] = 'Tên kiểu phòng ban';
-$string['catecode'] = 'Mã kiểu phòng ban';
+$string['catename'] = 'Tên loại phòng ban';
+$string['catecode'] = 'Mã loại phòng ban';
 $string['addorgcate'] = 'Thêm cây phòng ban';
 $string['namebylaw'] = 'Tên theo pháp luật';
 $string['orgcatecreated'] = 'Tạo danh mục phòng ban thành công';
@@ -83,7 +83,14 @@ $string['userlist'] = 'Danh sách nhân viên';
 $string['orgstructuredetail'] = 'Thông tin phòng ban';
 $string['duplicatename'] = 'Tên này đã được sử dụng';
 $string['duplicatecode'] = 'Mã này đã được sử dụng';
-
+$string['action'] = 'Chức năng';
+$string['orgstructureunder'] = 'Phòng ban trực thuộc';
+$string['compstandard'] = 'Tiêu chuẩn năng lực';
+$string['compless'] = 'Năng lực còn thiếu';
+$string['courselink'] = 'Khoá học liên kết';
+$string['evidence'] = 'Chứng chỉ';
+$string['timecompletecourse'] = 'Thời gian hoàn thành khoá học';
+$string['completed'] = 'Hoàn thành khoá học';
 //String của Phong
 $string['selectorgstructure'] = 'Chọn phòng ban';
 $string['selectorgposition'] = 'Chọn chức vụ';

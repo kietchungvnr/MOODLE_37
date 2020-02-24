@@ -142,7 +142,7 @@ $THEME->layouts = [
     'mypublic' => array(
         'file' => 'mypublic.php',
         'regions' => array('side-pre'),
-        'defaultregion' => 'content',
+        'defaultregion' => 'side-pre',
         'options' => array('nonavbar' => false, 'langmenu' => true),
     ),
     'login' => array(

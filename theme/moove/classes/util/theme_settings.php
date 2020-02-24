@@ -512,7 +512,7 @@ class theme_settings {
         global $OUTPUT,$USER, $DB;
         if(is_siteadmin($USER->id) == 2)
         { 
-            $forumid = $DB->get_field_sql("SELECT DISTINCT f.id FROM mdl_forum_discussions fd JOIN mdl_forum f ON fd.forum = f.id WHERE f.name = 'Site announcements'", []);
+            $forumid = $DB->get_field_sql("SELECT TOP 1 id FROM mdl_forum", []);
             $buttonadd = get_string('addanewdiscussion', 'forum');
             $button = new single_button(new moodle_url('/mod/forum/post.php', ['forum' => $forumid]), $buttonadd, 'get');
             $button->class = 'singlebutton forumaddnew';

@@ -98,7 +98,7 @@ $PAGE->blocks->add_region('content');
 $PAGE->set_subpage($currentpage->id);
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($header);
-
+$PAGE->requires->js('/local/newsvnr/js/dashboard.js', true);
 if (!isguestuser()) {   // Skip default home page for guests
     if (get_home_page() != HOMEPAGE_MY) {
         if (optional_param('setdefaulthome', false, PARAM_BOOL)) {
@@ -164,7 +164,7 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
     }
     $params['view'] = $view;
     $url = new moodle_url("$CFG->wwwroot/local/newsvnr/dashboard.php", $params);
-    $button = $OUTPUT->single_button($url, $editstring);
+    $button = $OUTPUT->single_button($url, $editstring, 'get');
     $PAGE->set_button($resetbutton . $button);
 
 } else {

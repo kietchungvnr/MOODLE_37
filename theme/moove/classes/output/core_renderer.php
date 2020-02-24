@@ -169,8 +169,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $html .= html_writer::start_div('col-xs-12 mt-2');
 
         $pageheadingbutton = $this->page_heading_button();
-        $studentdbbutton  = new single_button(new moodle_url('/local/newsvnr/dashboard.php?view=student'), get_string('studentdashboard', 'local_newsvnr'), 'post', true);
-        $teacherdbbutton  = new single_button(new moodle_url('/local/newsvnr/dashboard.php?view=teacher'), get_string('teacherdashboard', 'local_newsvnr'), 'post', true);
+
+        $studentdbbutton  = $this->render(new single_button(new moodle_url('/local/newsvnr/dashboard.php?view=student'), get_string('studentdashboard', 'local_newsvnr'), 'get', true, ['class' => 'mb-3']));
+        $teacherdbbutton  = $this->render(new single_button(new moodle_url('/local/newsvnr/dashboard.php?view=teacher'), get_string('teacherdashboard', 'local_newsvnr'), 'get', true));
         if (empty($PAGE->layout_options['nonavbar'])) {
             $html .= html_writer::start_div('clearfix w-100 pull-xs-left', array('id' => 'page-navbar'));
             $html .= html_writer::tag('div', $this->navbar(), array('class' => 'breadcrumb-nav'));
@@ -178,7 +179,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $html .= html_writer::end_div();
         } else if ($pageheadingbutton) {
             // $html .= html_writer::div($this->render($studentdbbutton), 'd-flex justify-content-end mr-2');
-            $html .= html_writer::div($this->render($teacherdbbutton) . $this->render($studentdbbutton) . $pageheadingbutton, 'd-flex justify-content-end mr-2');
+            $html .= html_writer::div($pageheadingbutton . $teacherdbbutton . $studentdbbutton, 'breadcrumb-button nonavbar pull-right m-r-1');
         }
 
         $html .= html_writer::end_div(); // End .row.

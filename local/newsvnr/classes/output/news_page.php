@@ -47,7 +47,7 @@ class news_page implements renderable, templatable {
     }
     public static function get_forums_header_data() {
         global $DB,$CFG;
-        $forumid = $DB->get_field_sql("SELECT DISTINCT f.id FROM mdl_forum_discussions fd JOIN mdl_forum f ON fd.forum = f.id WHERE f.name = 'Site announcements'", []);
+        $forumid = $DB->get_field_sql("SELECT TOP 1 id FROM mdl_forum", []);
         $sql = "SELECT fd.id,fd.name,fd.timemodified,fn.contextid,fn.component,fn.filearea,fn.filepath,fn.itemid,fn.filename,CONCAT(u.firstname,' ',u.lastname) as username,fd.countviews
             from mdl_forum_discussions fd join mdl_files fn on fd.firstpost = fn.itemid join mdl_user u on fd.userid = u.id 
             where filesize > 0 and fd.forum = $forumid and fd.pinned=1 and fn.filearea='attachment'";
@@ -82,7 +82,7 @@ class news_page implements renderable, templatable {
     }
     public static function get_forums_newest_data(){
         global $DB,$CFG;
-        $forumid = $DB->get_field_sql("SELECT DISTINCT f.id FROM mdl_forum_discussions fd JOIN mdl_forum f ON fd.forum = f.id WHERE f.name = 'Site announcements'", []);
+        $forumid = $DB->get_field_sql("SELECT TOP 1 id FROM mdl_forum", []);
         $sql = "SELECT fd.id as disid, fd.countviews, fp.message,fp.subject,fd.timemodified, fn.* from mdl_forum_discussions fd join mdl_forum_posts fp on fd.id = fp.discussion join mdl_files fn on fd.firstpost = fn.itemid 
         where filesize > 0 and fd.forum = $forumid and fn.filearea='attachment' order by fd.timemodified DESC
         ";

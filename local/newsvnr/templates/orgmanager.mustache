@@ -14,19 +14,20 @@
     </div>
   </div>
 </div>
-  <div class="form-group">
+<div style="margin-bottom: 60px">
+  
     <input type="submit" name="act_orgcategory" id="orgcatemodalid" data-action="orgcategorypmodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
-  </div>
-  <div class="form-group">
+ 
+  
     <input type="submit" name="act_orgcategory" id="orgjobtitlemodalid" data-action="orgjobtitlemodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
-  </div>
-  <div class="form-group">
-    <input type="submit" name="act_orgcategory" id="orgpositionmodalid" data-action="orgpositionmodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
-  </div>
-  <div class="form-group">
-    <input type="submit" name="act_orgcategory" id="orgstructuremodalid" data-action="orgstructuremodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
-  </div>
+ 
 
+    <input type="submit" name="act_orgcategory" id="orgpositionmodalid" data-action="orgpositionmodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
+ 
+
+    <input type="submit" name="act_orgcategory" id="orgstructuremodalid" data-action="orgstructuremodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
+ 
+</div>
 <div id="showtable_data"></div>
 
 <script type="text/javascript">
@@ -208,15 +209,6 @@ const org_active = (section_id, visible) => {
             },
             contentType: "application/json"
           }; 
-          var callback_settings = {
-            type: "GET",
-            processData: true,
-            data:{
-              section: section
-            },
-            contentType: "application/json"
-          };
-          var callback_script = location.origin + "/local/newsvnr/ajax/orgdata.php";  
           if(confm) {
             $.ajax(script, settings)
             .then(function(response) {
@@ -229,6 +221,14 @@ const org_active = (section_id, visible) => {
     })
 }
 
+$(window).on('load', function() {
+  setTimeout(function(){ 
+    $("#orgcate_list").trigger('click');
+   }, 500);
+
+});
+
+
 $(document).ready(function(){
   $('#orgstructuremodalid').click(function(){
       orgstructure_clickparent = true;
@@ -236,7 +236,12 @@ $(document).ready(function(){
   $('#orgpositionmodalid').click(function(){
       orgposition_clickparent = true;
   })
+  $(document).ajaxStop(function() {
+    $('tr td a.show-item').closest("tr").addClass('dimmed_text');
+  });
+
 });
+
 </script>
 
 
@@ -255,9 +260,7 @@ require(["local_newsvnr/orgstructure_modal"], function(NewGroup) {
   NewGroup.init("[data-action=orgstructuremodal]", 1);
 });
   $(document).ready(function() {
-      window.onload = function(){
-       document.getElementById("orgcate_list").click();
-     }
+
    var orgcate_list = document.getElementById("orgcate_list");
    var orgjobtitle_list = document.getElementById("orgjobtitle_list");
    var orgposition_list = document.getElementById("orgposition_list");
@@ -275,7 +278,7 @@ require(["local_newsvnr/orgstructure_modal"], function(NewGroup) {
     orgcate_list.classList.remove("btn-primary");
     orgjobtitle_list.classList.add("btn-primary");
     orgposition_list.classList.add("btn-primary");
-    orgstructure_list.classList.add("btn-primary");
+    orgstructure_list.classList.add("btn-primary");    
   });
    $("#orgjobtitle_list").click(function(){
     orgjobtitlemodal.classList.remove("d-none");
