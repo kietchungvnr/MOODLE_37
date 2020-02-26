@@ -41,10 +41,10 @@ require_once($CFG->libdir.'/adminlib.php');
 
 $resetall = optional_param('resetall', null, PARAM_BOOL);
 
-$header = "$SITE->shortname: ".get_string('myhome')." (".get_string('mypage', 'admin').")";
+$header = "$SITE->shortname: ".get_string('myhome')." (".get_string('studentdb', 'local_newsvnr').")";
 
 $PAGE->set_blocks_editing_capability('moodle/my:configsyspages');
-admin_externalpage_setup('mypage', '', null, '', array('pagelayout' => 'mytest'));
+admin_externalpage_setup('studentdashboard', '', null, '', array('pagelayout' => 'mystudentdashboard'));
 
 if ($resetall && confirm_sesskey()) {
     my_reset_page_for_all_users(MY_PAGE_PRIVATE, 'my-newsvnr-student');

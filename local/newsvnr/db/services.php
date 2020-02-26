@@ -76,6 +76,15 @@ $functions = array(
         'type' => 'read',
         'ajax' => true,
         'capabilities'=> '',
+    ),
+    'local_newsvnr_loadingcoursesetup' => array(
+        'classname' => 'local_newsvnr_external',
+        'methodname' => 'loadingcoursesetup',
+        'classpath' => 'local/newsvnr/externallib.php',
+        'description' => 'Get The coursesetup from course category',
+        'type' => 'read',
+        'ajax' => true,
+        'capabilities'=> '',
     )
 
 

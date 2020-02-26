@@ -174,22 +174,23 @@ if ($editform->is_cancelled()) {
     // The form has been cancelled, take them back to what ever the return to is.
     redirect($returnurl);
 } else if ($data = $editform->get_data()) {
+    
     //Custom by Vũ : Add coursesetup vào course data
     if(isset($_REQUEST['coursesetup'])) {
-        $data->coursesetup = $_REQUEST['coursesetup'];
+        $data->coursesetup = $_REQUEST['coursesetup'][0];
     }
-    
     if($data->courseoforgstructure) {
         $data->courseoforgstructure = $DB->get_field('orgstructure', 'id', ['name' => $data->courseoforgstructure]);
     }
     $courseposition = [];
+    
+    if($data->courseofposition)
+        $courseofposition = $data->courseofposition;
+    if($data->courseofposition)
+        $courseofjobtitle = $data->courseofjobtitle;
     //Nếu bảng course k còn pb - cd - cv thì không cần những dòng này
-    // if($data->courseofposition)
-    //     $courseofposition = $data->courseofposition;
-    // if($data->courseofposition)
-    //     $courseofjobtitle = $data->courseofjobtitle;
-    // unset($data->courseofposition);
-    // unset($data->courseofjobtitle);
+    unset($data->courseofposition);
+    unset($data->courseofjobtitle);
    
     // Process data if submitted.
     if (empty($course->id)) {

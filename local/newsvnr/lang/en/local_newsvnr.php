@@ -91,6 +91,8 @@ $string['courselink'] = 'Khoá học liên kết';
 $string['evidence'] = 'Chứng chỉ';
 $string['timecompletecourse'] = 'Thời gian hoàn thành khoá học';
 $string['completed'] = 'Hoàn thành khoá học';
+$string['studentdb'] = 'Default Student page';
+$string['teacherdb'] = 'Default Teacher page';
 //String của Phong
 $string['selectorgstructure'] = 'Chọn phòng ban';
 $string['selectorgposition'] = 'Chọn chức vụ';

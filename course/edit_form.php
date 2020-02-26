@@ -104,17 +104,6 @@ class course_edit_form extends moodleform {
             }
         }
 
-        //custom by Vũ - add cousesetup
-        $strcoursesetup = get_string('coursesetup','local_newsvnr');
-        if(!empty($course->id)) {
-            $listcoursesetup = array(
-                $coursesetup->id => $coursesetup->fullname
-            );
-            $mform->addElement('select', 'coursesetup', $strcoursesetup, $listcoursesetup);
-        } else {
-            $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3">'.$strcoursesetup.'</div><div class="col-md-3 felement" ><select class="form-control" id="id_coursesetup" name="coursesetup" required></select></div></div>');
-        }
-
         $toclist = array(
             '1' => 'Tuyển dụng',
             '2' => 'Đào tạo',
@@ -125,13 +114,25 @@ class course_edit_form extends moodleform {
             'multiple' => true,                                                  
             'noselectionstring' => get_string('novalue', 'local_newsvnr'),
         );      
-        $options = array(
+        $courseofposition_options = array(
             'ajax' => 'local_newsvnr/form-search-orgjobtitle',
             'placeholder' => get_string('search', 'local_newsvnr'),
             'multiple' => true,                                                  
             'noselectionstring' => get_string('novalue', 'local_newsvnr'),
-        );      
-   
+        );
+        $coursesetup_options = array(
+            'ajax' => 'local_newsvnr/form-search-coursesetup',
+            'placeholder' => get_string('search', 'local_newsvnr'),
+            'multiple' => false,                                                  
+            'noselectionstring' => get_string('novalue', 'local_newsvnr'),
+        );     
+        
+        //Lấy danh sách khoá học setup
+        $coursesetuplist = $DB->get_records('course_setup');
+        $coursesetupnames = array();
+        foreach ($coursesetuplist as $key => $value) {
+            $coursesetupnames[$key] = $value->fullname;
+        }
         //Lấy danh sách chức vụ
         $orgpositionlist = $DB->get_records('orgstructure_position');
         $orgpositionnames = array();
@@ -151,6 +152,10 @@ class course_edit_form extends moodleform {
             $orgstructurenames[$key] = $value->name;
         }
 
+        //custom by Vũ - add cousesetup
+        $mform->addElement('autocomplete', 'coursesetup', get_string('coursesetup','local_newsvnr'), $coursesetupnames, $coursesetup_options);
+        $mform->setType('coursesetup', PARAM_TEXT);
+
         $mform->addElement('select', 'typeofcourse', get_string('typeofcourse','local_newsvnr'), $toclist);
         $mform->addRule('typeofcourse', get_string('missingtypeofcourse','local_newsvnr'), 'required', null, 'client');
         $mform->setType('typeofcourse', PARAM_INT);
@@ -165,7 +170,7 @@ class course_edit_form extends moodleform {
         $mform->setType('courseofjobtitle', PARAM_TEXT);
         $mform->hideIf('courseofjobtitle', 'courseoforgstructure', 'eq', '');
 
-        $mform->addElement('autocomplete', 'courseofposition', get_string('courseofposition','local_newsvnr'), $orgpositionnames, $options);
+        $mform->addElement('autocomplete', 'courseofposition', get_string('courseofposition','local_newsvnr'), $orgpositionnames, $courseofposition_options);
         $mform->setType('courseofposition', PARAM_TEXT);
         $mform->hideIf('courseofposition', 'courseoforgstructure', 'eq', '');
 

@@ -20,36 +20,19 @@ define(['jquery', 'core/ajax', 'core/templates'], function($, Ajax, Templates) {
             // Search within specific course if known and if the 'search within' dropdown is set
             // to search within course or activity.
             var args = {};
-            var str = '';
-            var treeview = $("#treeview-orgstructure-course").data("kendoTreeView");
-            var selected = treeview.select(),item;
-            var listorgjobtitle = $('#id_courseofjobtitle').parent().find('[id^="form_autocomplete_selection"] .badge');
-
-            $.each(listorgjobtitle, function(index, value) {
-                var isLastElement = index == listorgjobtitle.length -1;
-                var data = $(this).attr('data-value');
-                if (isLastElement) {
-                    str = str + data;
-                } else {
-                    str = str + data + ',';
-                }
-               
-            })
+            
+            var categoryid = $('select[id=id_category]').val();
+            
            
             if (typeof courseid !== "undefined" && $('#id_searchwithin').val() !== '') {
                 args.courseid = courseid;
             } else {
-                if(selected.length >0)
-                    item = treeview.dataItem(selected);
-                if (item) {
-                    args.orgstructureid = item.id;
-                }
-                
-                args.orgjobtitleid = str;
+               
+                args.categoryid = categoryid;
 
             }
             // Call AJAX request.
-            promise = Ajax.call([{methodname: 'local_newsvnr_loadingorgposition', args: args}]);
+            promise = Ajax.call([{methodname: 'local_newsvnr_loadingcoursesetup', args: args}]);
 
             // When AJAX request returns, handle the results.
             promise[0].then(function(results) {
@@ -58,7 +41,7 @@ define(['jquery', 'core/ajax', 'core/templates'], function($, Ajax, Templates) {
 
                 // Render label with user name and picture.
                 $.each(results, function(index, orgposition) {
-                    promises.push(Templates.render('local_newsvnr/form-orgposition-selector', orgposition));
+                    promises.push(Templates.render('local_newsvnr/form-coursesetup-selector', orgposition));
                 });
 
                 // Apply the label to the results.

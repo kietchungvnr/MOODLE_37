@@ -98,6 +98,7 @@ $PAGE->blocks->add_region('content');
 $PAGE->set_subpage($currentpage->id);
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($header);
+$PAGE->requires->js('/local/newsvnr/js/jquery-3.2.1.min.js', true);
 $PAGE->requires->js('/local/newsvnr/js/dashboard.js', true);
 if (!isguestuser()) {   // Skip default home page for guests
     if (get_home_page() != HOMEPAGE_MY) {
