@@ -251,25 +251,6 @@ class course_renderer extends \core_course_renderer {
 
         $content = extras::get_course_summary_image($course, $courselink);
 
-
-
-        // Sửa ở đây
-
-        $content .= html_writer::start_tag('div', array('class' => 'grid-stud'));
-
-                $content .= html_writer::start_tag('p', array('class' => 'fa fa-user'));
-
-                    $content .= html_writer::tag('span', $course_count_student->studentnumber);
-
-                    $content .= html_writer::end_tag('span');
- 
-                $content .= html_writer::end_tag('p');
-
-        $content .= html_writer::end_tag('div');
-
-
-
-
         // Course instructors.
         if ($course->has_course_contacts()) {
             $content .= html_writer::start_tag('div', array('class' => 'course-contacts'));
