@@ -99,7 +99,7 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                     item = tv.dataItem(selected);
 
                                 if (item) {
-                                    document.getElementById("value-item").value = item.text;
+                                    document.getElementById("value-item").value = item.id;
 
                                 } else {
                                     $('#log').text('Nothing selected');

@@ -263,14 +263,10 @@
 <script type="text/javascript">
 	
         // DELETE COMPETENCY POSITION
-           
-
-
-          function DeleteCompPosition(comp_postion_id,orgpositionid,competencyid)
-          {
-
-                  var confm = confirm("Bạn muốn xóa trường này?");
-                  var getURL = location.origin + '/local/newsvnr/ajax.php';
+    const DeleteCompPosition = (comp_postion_id,orgpositionid,competencyid) => {
+    	require(['jquery', 'core/config'], ($, Config) => { 
+    		var confm = confirm("Bạn muốn xóa trường này?");
+                  var getURL = Config.wwwroot + '/local/newsvnr/ajax.php';
 
                   if(confm)
                   {         
@@ -297,10 +293,12 @@
                         }
                       });
                   }
-          }
-          function maneger_enrol(orgpositionid,competencyid) {
-          	var courseid = $("input[type=radio][name=list_course]:checked").attr('value');
-          	var getURL = location.origin + '/local/newsvnr/ajax.php';
+    	});
+    }
+    const maneger_enrol = (orgpositionid,competencyid) => {
+    	require(['jquery', 'core/config'], ($, Config) => { 
+    		var courseid = $("input[type=radio][name=list_course]:checked").attr('value');
+          	var getURL = Config.wwwroot + '/local/newsvnr/ajax.php';
  			$.ajax({
                 url: getURL,
                 method: "GET",
@@ -316,7 +314,9 @@
                 	}
               });	
 
-          }
+    	});
+    }      
+          
         $('.date-picker').datepicker({format: "dd.mm.yyyy"}); 
 
 		$(".date-picker").on("change", function () {
