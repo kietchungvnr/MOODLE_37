@@ -30,6 +30,7 @@ require_once($CFG->libdir.'/gradelib.php');
 require_once($CFG->libdir.'/completionlib.php');
 require_once($CFG->libdir.'/plagiarismlib.php');
 require_once($CFG->dirroot . '/course/modlib.php');
+require_once($CFG->dirroot . '/local/newsvnr/lib.php');
 
 $add    = optional_param('add', '', PARAM_ALPHA);     // module name
 $update = optional_param('update', 0, PARAM_INT);
@@ -148,9 +149,39 @@ if ($mform->is_cancelled()) {
         redirect(course_get_url($course, $cw->section, array('sr' => $sectionreturn)));
     }
 } else if ($fromform = $mform->get_data()) {
+    //Custom by Vũ: Đẩy danh sách quiz qua hrm via api
+    
+    if($data->modulename == 'quiz') {
+        $params_el = [
+                'NameEntityName' => $fromform->name,
+                'Code' =>  $fromform->code,
+                'CourseCode' => $course->code
+        ];
+        $quiz_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'UpdateTraineeResult']);
+        if($quiz_api) {
+            $getparams_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $quiz_api->id]);
+            $params_hrm = [];
+            foreach ($getparams_hrm as $key => $value) {
+                if(array_key_exists($value->client_params, $params_el)) {
+                    $params_hrm[$value->client_params] = $params_el[$value->client_params];
+                } else {
+                    $params_hrm[$value->client_params] = $value->default_value;
+                }
+            }
+        }
+        $url_hrm = $quiz_api->url;
+    }
     if (!empty($fromform->update)) {
+        if($data->modulename == 'quiz') {
+            $params_hrm['Status'] = "E_UPDATE";
+            HTTPPost($url_hrm, json_encode($params_hrm));
+        }
         list($cm, $fromform) = update_moduleinfo($cm, $fromform, $course, $mform);
     } else if (!empty($fromform->add)) {
+        if($data->modulename == 'quiz') {
+            $params_hrm['Status'] = "E_CREATE";
+            HTTPPost($url_hrm, json_encode($params_hrm));
+        }
         $fromform = add_moduleinfo($fromform, $course, $mform);
     } else {
         print_error('invaliddata');

@@ -13,13 +13,16 @@ if($id){
 }
 // $CFG->jsrev = -1;
 $baseurl = new moodle_url('/blocks/vnr_db_viewreport/viewreport.php',$params);
-$strviewreport = "Trang quản lý báo cáo";
+$dashboardurl = new moodle_url('/my/index.php');
+$strviewreport = get_string('detailreport', 'block_vnr_db_viewreport');
 $PAGE->set_context($context);
 $PAGE->set_url($baseurl);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title($strviewreport);
 $PAGE->set_heading($strviewreport);
-
+$PAGE->navbar->ignore_active();
+$PAGE->navbar->add(get_string('dashboard', 'block_vnr_db_viewreport'),$dashboardurl);
+$PAGE->navbar->add($strviewreport);
 $output = $PAGE->get_renderer('block_vnr_db_viewreport');
 $page = new \block_vnr_db_viewreport\output\viewreport_page();
 echo $output->header();

@@ -25,6 +25,7 @@
 require_once('../config.php');
 require_once('lib.php');
 require_once('edit_form.php');
+require_once($CFG->dirroot . '/local/newsvnr/lib.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course id.
 $categoryid = optional_param('category', 0, PARAM_INT); // Course category - can be changed in edit form.
@@ -145,6 +146,7 @@ if (!empty($course)) {
 $coursesetup = '';
 // First create the form.
 if(!empty($course->id)) {
+    //Custom by Vũ: Lưu khoá học cho từng PB - CD - CV
     $courseofjobtitle = [];
     $courseofposition = [];
     $courseposition = $DB->get_records_sql('SELECT id, courseofposition, courseofjobtitle FROM {course_position} WHERE course = ?', [$course->id]);
@@ -174,7 +176,24 @@ if ($editform->is_cancelled()) {
     // The form has been cancelled, take them back to what ever the return to is.
     redirect($returnurl);
 } else if ($data = $editform->get_data()) {
-    
+    //Custom by Vũ: Params and url hrm api
+    $params_el = [
+                'NameEntityName' => $data->fullname,
+                'Code' =>  $data->code,
+            ];
+    $course_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'UpdateTraineeResult']);
+    if($course_api) {
+        $getparams_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $course_api->id]);
+        $params_hrm = [];
+        foreach ($getparams_hrm as $key => $value) {
+            if(array_key_exists($value->client_params, $params_el)) {
+                $params_hrm[$value->client_params] = $params_el[$value->client_params];
+            } else {
+                $params_hrm[$value->client_params] = $value->default_value;
+            }
+        }
+    }
+    $url_hrm = $course_api->url;
     //Custom by Vũ : Add coursesetup vào course data
     if(isset($_REQUEST['coursesetup'])) {
         $data->coursesetup = $_REQUEST['coursesetup'][0];
@@ -191,11 +210,17 @@ if ($editform->is_cancelled()) {
     //Nếu bảng course k còn pb - cd - cv thì không cần những dòng này
     unset($data->courseofposition);
     unset($data->courseofjobtitle);
-   
+    
     // Process data if submitted.
     if (empty($course->id)) {
         // In creating the course.
         $course = create_course($data, $editoroptions);
+        
+        //Đẩy khoá học khi tạo mới realtime qua HRM
+        if($course) {
+            $params_hrm['Status'] = "E_CREATE";
+            HTTPPost($url_hrm, json_encode($params_hrm));
+        }
         if($data->courseoforgstructure) {
             foreach ($courseofjobtitle as $jobtitile) {
                 foreach ($courseofposition as $position) {
@@ -291,8 +316,18 @@ if ($editform->is_cancelled()) {
         }
         // Save any changes to the files used in the editor.
         update_course($data, $editoroptions);
-
-
+        // Cutstom by Vũ: Đẩy khoá học khi cập nhật realtime qua HRM
+        $quizzes = $DB->get_records_sql('SELECT * FROM {quiz} WHERE course = :course',['course' => $data->id]);
+        if($quizzes) {
+            $examcode = [];
+            foreach($quizzes as $quiz) {
+                $examcode[] = $quiz->code;
+            }
+            $strexamcode = implode(",", $examcode);
+            $params_hrm['ExamCode'] = $strexamcode;
+        }
+        $params_hrm['Status'] = "E_UPDATE";
+        HTTPPost($url_hrm, json_encode($params_hrm));
 
         // Set the URL to take them too if they choose save and display.
         $courseurl = new moodle_url('/course/view.php', array('id' => $course->id));

@@ -4,7 +4,7 @@
         <div class="col-md-6 card border-0 shadow-nohover rounded p-2">
             
                 <div class="row align-items-center m-0">
-                    <div class="col-12 col-lg-6 mt-1 mb-1">
+                    <div class="col-12 col-lg-4 mt-1 mb-1">
                         <div class="row">
                            <!--  <div id="reportrange" class="form-control rounded">
                                 <div class="d-flex justify-content-center">
@@ -16,14 +16,16 @@
                             <input type="text" placeholder="Vui lòng chọn mốc thời gian" data-input class="form-control rounded" id="filterdate">
                         </div>
                     </div>
-                    <div class="col-12 col-lg-6 mt-1 mb-1">
+                    <div class="col-12 col-lg-8 mt-1 mb-1">
                             <div class="row align-items-center">
                                 <div class="col-auto d-inline">Jump to: </div>
                                 <select name="list_chart" id="list_chart" class="custom-select col rounded d-inline form-control">
-                                    <option selected>Chọn loại biểu đồ</option>
-                                    {{#list_chart}}
-                                    <option value="{{id}}">{{name}}</option>
-                                    {{/list_chart}}
+                                    <!-- <option selected>Chọn loại biểu đồ</option> -->
+                                    <option value="1" selected>Số lượng học viên hoàn thành khoá học</option>
+                                    <option value="2">Báo cáo điểm</option>
+                                    <option value="3">Lượt xem khoá học</option>
+                                    <option value="4">Xu hướng tham gia hoạt động</option>
+                                    <option value="5">Xu hướng ghi danh khoá học</option>
                                 </select>
                                
                             </div>
@@ -101,13 +103,24 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
     var paramJson = {};
     paramJson['id'] = param;
     $("#list_chart").val(param);
-
+    
     // Chọn loại biểu đồ
-    if(param == 1) {
-        paramJson['action'] = "coursecomp_chart";
-    } else if(param == 2) {
-        paramJson['action'] = "joincourse_chart";
+    var chartname = function (param) {
+        var action = '';
+        if(param == 1) {
+            action= "coursecomp_chart_vp";
+        } else if(param == 2) {
+            action = "quizoverview_chart_vp";
+        } else if(param == 3) {
+            action = "viewcount_chart_vp"
+        } else if(param == 4) {
+            action = "coursemodulecomp_chart_vp"
+        } else if(param == 5) {
+            action = "joincourse_chart_vp"
+        } 
+        return action;
     }
+    paramJson['action'] = chartname(param);
     var settings = {
         type: 'GET',
         data: paramJson,
@@ -115,7 +128,7 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
         contentType: "application/json"
     };
     //Gọi ajax load dữ liệu chưa qua filter
-    var callAjax = function loadchart() {
+    var callAjax = function (script, settings) {
         $.ajax(script,settings)
         .then(function(response) {
             if (response.error) {
@@ -130,7 +143,7 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
                 },];
                 Str.get_strings(strings).then(function(s) {
                     var data = response;
-                    data.title.text = "Xu hướng tham gia khóa học";
+                    <!-- data.title.text = "Xu hướng tham gia khóa học"; -->
                     // Create a chart.
                     Highcharts.chart('showchart', data);
                 });
@@ -143,16 +156,16 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
         delete paramJson.courseid;
         delete paramJson.strdate;
     }
-    callAjax();
+    callAjax(script, settings);
     //Gọi ajax load dữ liệu qua filter 1 khóa, 1 mốc thời gian...
     $('#list_course').change(function(){
         var courseid = $(this).val();
         if(courseid != 0) {
             paramJson['courseid'] = courseid;
-            callAjax();
+            callAjax(script, settings);
         } else {
             deteleParamJson();
-            callAjax();
+            callAjax(script, settings);
         }
        
     });
@@ -163,16 +176,16 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
         onChange: function(dateObj, dateStr) {
             if(dateStr) {
                 paramJson['strdate'] = dateStr;
-                callAjax();
+                callAjax(script, settings);
             } else {
                 deteleParamJson();
-                callAjax();
+                callAjax(script, settings);
             }
         },
         onReady: function(dateObj, dateStr, instance) {
             var $cal = $(instance.calendarContainer);
             if ($cal.find('.flatpickr-clear').length < 1) {
-                $cal.append('<div class="flatpickr-clear bg-primary text-white rounded-bottom">Clear</div>');
+                $cal.append('<div class="flatpickr-clear bg-primary text-white rounded-bottom cl-cursor">Clear</div>');
                 $cal.find('.flatpickr-clear').on('click', function() {
                     instance.clear();
                     instance.close();
@@ -185,9 +198,20 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
     //Xóa bỏ filter trả về dữ liệu ban đầu
     $('#clear').click(function(){
         deteleParamJson();
-        callAjax();
+        callAjax(script, settings);
     });
-
+    $('#list_chart').change(function() {
+        var chartid = $('select[id=list_chart]').val();
+        paramJson['id'] = chartid;
+        paramJson['action'] = chartname(chartid);
+        var settings = {
+            type: 'GET',
+            data: paramJson,
+            processData: true,
+            contentType: "application/json"
+        };
+        callAjax(script, settings);
+    });
 
 
 });

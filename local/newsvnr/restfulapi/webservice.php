@@ -490,7 +490,7 @@ if($action == "orgstructure_position") {
 
 
 /**
- * API tạo user và thêm user vào khóa học (Phân hệ đào tạo)
+ * API tạo user và thêm user vào khóa học (Phân hệ tuyển dụng)
  */
 if($action == "enroll_recruitment") {
 	require_once("$CFG->dirroot/user/lib.php");
@@ -643,7 +643,7 @@ if($action == "enroll_recruitment") {
 }
 
 /**
- * API tạo user và thêm user vào khóa học (Phân hệ tuyển dụng)
+ * API tạo user và thêm user vào khóa học (Phân hệ đào tạo)
  */
 if($action == "enroll_course") {
 	require_once("$CFG->dirroot/user/lib.php");
@@ -926,96 +926,9 @@ if($action == "test") {
 }
 
 
-// setting api and send data
-// cho nay em chi cau hinh luu xuong DB.
-// anh muon send data thi dung  CURL cua PHP.
-if($action ==  "api_created") {
-
-	$function_api = $_POST['function_api'];
-	$method = $_POST['method'];
-	$URL = $_POST['URL'];
-
-	$contenttype = isset($_POST['contenttype']) ? $_POST['contenttype'] : "";
-
-	$clientArr = $_POST['clientArr'];
-	$serverArr = $_POST['serverArr'];
-	$defaultArr = $_POST['defaultArr'];
-
-	$headerNameArr = $_POST['headerNameArr'];
-	$headerValueArr = $_POST['headerValueArr'];
-
-	$sortBody = array();
-
-	for($i = 0; $i < count($clientArr); $i++)
-	{
-		for($j = 0; $j < count($serverArr); $j++)
-		{
-			if($i == $j)
-			{
-				$sortBody[] = array(
-									'client_params' => $clientArr[$i]['value'],
-									'server_params' => $serverArr[$j]['value'],
-									'default_value' => $defaultArr[$j]['value']);
-			}
-		}
-	}
-
-	$sortHeader = array();
-	for($i = 0; $i < count($headerNameArr); $i++)
-	{
-		for($j = 0; $j < count($headerValueArr); $j++)
-		{
-			if($i == $j)
-			{
-				$sortHeader[] = array(
-							'name' => $headerNameArr[$i]['value'],
-							'value' => $headerValueArr[$j]['value']);
-			}
-		}
-	}
-
-	$api = new stdClass();
-	$api->url = $URL;
-	$api->method = $method;
-	$api->functionapi = $function_api;
-	$api->contenttype = $contenttype;
-
-	$api_id = $DB->insert_record('local_newsvnr_api', $api);	
-
-
-	for($i = 0; $i < count($sortHeader); $i++)
-	{
-		$apiHeader = new stdClass();
-		$apiHeader->name = $sortHeader[$i]['name'];
-		$apiHeader->value = $sortHeader[$i]['value'];
-		$apiHeader->api_id = $api_id;
-
-		$DB->insert_record('local_newsvnr_api_header', $apiHeader);	
-	}
-
-	for($i = 0; $i < count($sortBody); $i++)
-	{
-
-		$apiDetail = new stdClass();
-
-		$apiDetail->client_params = $sortBody[$i]['client_params'];
-
-		$apiDetail->server_params = $sortBody[$i]['server_params'];
-
-		$apiDetail->default_value = $sortBody[$i]['default_value'];
-
-		$apiDetail->api_id = $api_id;
-
-		$DB->insert_record('local_newsvnr_api_detail', $apiDetail);	
-	}
-
-	echo "Success";
-
-
-}
-
 // -- Get dữ liệu cho blocks chart (giáo viên)-- \\
 
+//Số lượng học viên hoàn thành khoá học
 if($action == "coursecomp_chart_vp") {
 
 	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
@@ -1110,6 +1023,57 @@ if($action == "coursecomp_chart") {
     
     echo json_encode($response,JSON_UNESCAPED_UNICODE);
 }
+
+//Xu hướng hoạt động (modules)
+if($action == "coursemodulecomp_chart_vp") {
+	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
+	if($courseid) {
+		$wheresql = 'ra.roleid =? AND u.id = ? AND c.id = ?';
+		$params = [3,$USER->id,$courseid];
+	} else {
+		$wheresql = 'ra.roleid =? AND u.id = ?';
+		$params = [3,$USER->id];
+	}
+	
+	$sql = "
+			SELECT COUNT(cmc.id) as slht,c.fullname
+		        from mdl_role_assignments as ra
+		        join mdl_user as u on u.id= ra.userid
+		        join mdl_user_enrolments as ue on ue.userid=u.id
+		        join mdl_enrol as e on e.id=ue.enrolid
+		        join mdl_course as c on c.id=e.courseid
+		        join mdl_context as ct on ct.id=ra.contextid and ct.instanceid= c.id
+		        join mdl_role as r on r.id= ra.roleid
+				join mdl_course_modules cm on c.id = cm.course
+				join mdl_course_modules_completion cmc on cm.id = cmc.coursemoduleid
+	        where $wheresql
+			group by c.fullname";
+
+   	$record = $DB->get_records_sql($sql,$params);
+   	$list_coursename = array();
+   	$list_modules_comp = array();
+   	foreach ($record as $value) {
+   		$list_coursename[] = $value->fullname;
+   		$list_modules_comp[] = (int)$value->slht;
+   	}
+   	$response = new stdClass();
+   	$response->chart = (object)['type' => 'column'];
+    $response->title = (object)['text' => ''];
+    $response->subtitle = (object)['text' => ''];
+    $response->credits = (object)['enabled' => false];
+    $response->xAxis = (object)['categories' => $list_coursename, 'crosshair' => true];
+    $response->yAxis = (object)['min' => 0, 'title' => (object)['text' => 'Số lượng hoàn thành modules']];
+    $response->tooltip = (object)['headerFormat' => '<span style="font-size:10px">{point.key}</span><table>', 'pointFormat' => '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>', 'footerFormat' => '</table>', 'shared' => true, 'useHTML' => true];
+    $response->plotOptions = (object)['column' => (object)['pointPadding' => 0.4, 'borderWidth' => 0]];
+    $response->series = [(object)['name' => 'Số lượt đánh dấu hoàn thành khóa học','data' => $list_modules_comp,'color' => '#e87c01']];
+
+   	// $response->list_coursename = $list_coursename;
+   	// $response->list_modules_comp = $list_modules_comp;
+
+    echo json_encode($response,JSON_UNESCAPED_UNICODE);
+}
+
 if($action == "coursemodulecomp_chart") {
 	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
 	if($courseid) {
@@ -1147,6 +1111,8 @@ if($action == "coursemodulecomp_chart") {
 
     echo json_encode($response,JSON_UNESCAPED_UNICODE);
 }
+
+//Xu hướng ghi danh khoá học
 if($action == "joincourse_chart_vp") {
 	$strdate = isset($_GET['strdate']) ? $_GET['strdate'] : "";
 	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
@@ -1224,9 +1190,43 @@ if($action == "joincourse_chart") {
 	echo json_encode($response,JSON_UNESCAPED_UNICODE);
 }
 
-if($action == "viewcount_chart") {
+//Lượt xem khoá học
+if($action == "viewcount_chart_vp") {
+	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
+	$params = [];
+	if($courseid) {
+		$wheresql = "courseid = ? and c.startdate >= lsl.timecreated";
+		$params = [$courseid];
+	} else {
+		$srt_courseid = get_list_courseid_by_teacher($USER->id);
+		$wheresql = "courseid IN($srt_courseid) AND c.startdate >= lsl.timecreated";
+	}
+	$sql = "SELECT COUNT(lsl.id) as vc,lsl.courseid, c.fullname
+			FROM mdl_logstore_standard_log lsl
+			 	left join mdl_course c on  lsl.courseid = c.id 
+			WHERE $wheresql
+			GROUP BY lsl.courseid,c.fullname";
+	$record = $DB->get_records_sql($sql,$params);
+	$list_coursename = array();
+   	$list_viewcount = array();
+   	foreach ($record as $value) {
+   		$list_coursename[] = $value->fullname;
+   		$list_viewcount[] = (int)$value->vc;
+   	}
+   	$response = new stdClass();
+   	$response->chart = (object)['type' => 'line'];
+    $response->title = (object)['text' => ''];
+    $response->subtitle = (object)['text' => ''];
+    $response->xAxis = (object)['categories' => $list_coursename];
+    $response->yAxis = (object)['title' => (object)['text' => 'Số lượng học viên']];
+    $response->credits = (object)['enabled' => false];
+    $response->plotOptions = (object)['line' => (object)['dataLabels' => (object)['enabled' => true], 'enableMouseTracking' => true]];
+    $response->series = [(object)['name' => 'Số lượt xem khóa học','data' => $list_viewcount,'color' => '#1120f3']];
+   	
+	echo json_encode($response,JSON_UNESCAPED_UNICODE);
+}
 
-	
+if($action == "viewcount_chart") {
 	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
 	$params = [];
 	if($courseid) {
@@ -1254,49 +1254,148 @@ if($action == "viewcount_chart") {
 	echo json_encode($response,JSON_UNESCAPED_UNICODE);
 }
 
+//Báo cáo điểm
+if($action == "quizoverview_chart_vp") {
+	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
+	$params = [];
+	if($courseid) {
+		$wheresql = "q.course = ?";
+		$params = [$courseid];
+	} else {
+		$srt_courseid = get_list_courseid_by_teacher($USER->id);
+		$wheresql = "q.course IN($srt_courseid)";
+	}
+	$sql = "
+			SELECT q.course, SUM(qg.grade)/COUNT(qg.grade) AS gradescore
+			FROM mdl_quiz q 
+				JOIN mdl_quiz_grades qg ON q.id = qg.quiz 
+            WHERE $wheresql
+            GROUP BY q.course";
+	$list_coursename_sql = "SELECT q.course,c.fullname FROM mdl_quiz q JOIN mdl_quiz_grades qg ON q.id = qg.quiz JOIN mdl_course c ON q.course = c.id WHERE $wheresql GROUP BY q.course,c.fullname";
+	$record = $DB->get_records_sql($sql,$params);
+	$list_coursename_ex = $DB->get_records_sql($list_coursename_sql,$params);
+	$list_coursename = array();
+	$list_quizname_parent = array();
+   	$list_quiz = new stdClass();
+   	$list_quizscore = array();
+   	foreach ($list_coursename_ex as $cname) {
+   		foreach ($record as $value) {
+   			if($cname->course == $value->course) {
+   				$list_coursename[] = $cname->fullname;
+   				$list_quizscore[] = round((float)$value->gradescore,2);
+   			}
+   		}
+   	}
+   	$list_quiz->name = 'Điểm trung bình khoá';
+   	$list_quiz->data = $list_quizscore;
+   	$list_quizname_parent[] = $list_quiz;
+   	
+   	$response = new stdClass();
+   	$response->chart = (object)['type' => 'bar'];
+   	$response->title = (object)['text' => ''];
+   	$response->subtitle = (object)['text' => ''];
+   	$response->xAxis = (object)['categories' => $list_coursename];
+   	$response->yAxis = (object)['min' => 0, 'title' => (object)['text' => 'Điểm trung bình', 'align' => 'high'], 'labels' => (object)['overflow' => 'justify']];
+   	$response->tooltip = (object)['valueSuffix' => ' Điểm'];
+   	$response->plotOptions = (object)['bar' => (object)['dataLabels' => (object)['enabled' => true]]];
+   	$response->legend = (object)['borderWidth' => 1, 'backgroundColor' => '#FFFFFF', 'shadow' => true];
+   	$response->credits = (object)['enabled' => false];
+   	$response->series = $list_quizname_parent;
+   	
+	echo json_encode($response,JSON_UNESCAPED_UNICODE);
+}
+
 if($action == "quizoverview_chart") {
 	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
 	$params = [];
 	if($courseid) {
 		$wheresql = "q.course = ?";
 		$params = [$courseid];
-	} else
+	} else {
 		$srt_courseid = get_list_courseid_by_teacher($USER->id);
 		$wheresql = "q.course IN($srt_courseid)";
+	}
 	$sql = "
-			SELECT q.id,q.course, AVG(qg.grade) AS gradesorce,q.name 
+			SELECT q.course, SUM(qg.grade)/COUNT(qg.grade) AS gradescore
 			FROM mdl_quiz q 
 				JOIN mdl_quiz_grades qg ON q.id = qg.quiz 
             WHERE $wheresql
-            GROUP BY q.course,q.name,q.id";
-	$list_coursename_sql = "SELECT q.course,c.fullname FROM mdl_quiz q JOIN mdl_quiz_grades qg ON q.id = qg.quiz JOIN mdl_course c ON q.course = c.id WHERE q.course IN($srt_courseid) GROUP BY q.course,c.fullname";
+            GROUP BY q.course";
+	$list_coursename_sql = "SELECT q.course,c.fullname FROM mdl_quiz q JOIN mdl_quiz_grades qg ON q.id = qg.quiz JOIN mdl_course c ON q.course = c.id WHERE $wheresql GROUP BY q.course,c.fullname";
 	$record = $DB->get_records_sql($sql,$params);
-	$list_coursename_ex = $DB->get_records_sql($list_coursename_sql,[]);
+	$list_coursename_ex = $DB->get_records_sql($list_coursename_sql,$params);
 	$list_coursename = array();
-	$list_quizname = array();
 	$list_quizname_parent = array();
-   
+   	$list_quiz = new stdClass();
+   	$list_quizscore = array();
    	foreach ($list_coursename_ex as $cname) {
-   		$list_coursename[] = $cname->fullname;
+   		foreach ($record as $value) {
+   			if($cname->course == $value->course) {
+   				$list_coursename[] = $cname->fullname;
+   				$list_quizscore[] = round((float)$value->gradescore,2);
+   			}
+   		}
    	}
-
-   	foreach ($record as $value) {
-   		$list_quiz = new stdClass();
-   		$list_quizscore = array();
-   		$list_quizname = $value->name;
-   		$list_quizscore[] = round((float)$value->gradesorce,2);
-   		$list_quiz->name = $list_quizname;
-   		$list_quiz->data = $list_quizscore;
-   		$list_quizname_parent[] = $list_quiz;
-   	}
+   	$list_quiz->name = 'Điểm trung bình khoá';
+   	$list_quiz->data = $list_quizscore;
+   	$list_quizname_parent[] = $list_quiz;
    	
    	$response = new stdClass();
+   	// $response->chart = (object)['type' => 'bar'];
+   	// $response->title = (object)['text' => ''];
+   	// $response->subtitle = (object)['text' => ''];
+   	// $response->xAxis = (object)['categories' => $list_coursename];
+   	// $response->yAxis = (object)['min' => 0, 'title' => (object)['text' => 'Điểm trung bình', 'align' => 'high'], 'labels' => (object)['overflow' => 'justify']];
+   	// $response->tooltip = (object)['valueSuffix' => ' Điểm'];
+   	// $response->plotOptions = (object)['bar' => (object)['dataLabels' => (object)['enabled' => true]]];
+   	// $response->legend = (object)['borderWidth' => 1, 'backgroundColor' => '#FFFFFF', 'shadow' => true];
+   	// $response->credits = (object)['enabled' => false];
+   	// $response->series = $list_quizname_parent;
    	$response->list_coursename = $list_coursename;
    	$response->list_quizname_parent = $list_quizname_parent;
 	echo json_encode($response,JSON_UNESCAPED_UNICODE);
 }
 
 // -- End Get dữ liệu cho blocks chart -- \\
+
+//Get dữ liệu cho grid api_managerment
+if($action == 'api_managerment') {
+	$pagesize = optional_param('pagesize',10, PARAM_INT);
+	$pagetake = optional_param('take',0, PARAM_INT);
+	$pageskip = optional_param('skip',0, PARAM_INT);
+	$q = optional_param('q','', PARAM_RAW);
+	$odersql = "";
+	$wheresql = "";
+	if($q) {
+		$wheresql = "WHERE functionapi LIKE N'%$q%'";
+	}
+	if($pagetake == 0) {
+		$ordersql = "RowNum";
+	} else {
+		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
+	}
+	$sql = "
+			SELECT *, (SELECT COUNT(id) FROM {local_newsvnr_api}) AS total
+			FROM (
+			    SELECT *, ROW_NUMBER() OVER (ORDER BY id) AS RowNum
+			    FROM {local_newsvnr_api}
+			) AS Mydata
+			$wheresql
+			ORDER BY $ordersql";
+	$get_list = $DB->get_records_sql($sql);
+	$data = [];
+	foreach ($get_list as $value) {
+		$object = new stdclass;
+		$object->functionapi = $value->functionapi;		
+		$object->url = $value->url;
+		$object->method = $value->method;
+		$object->contenttype = $value->contenttype;
+		$object->description = $value->description;
+		$object->total = $value->total;
+		$data[] = $object;		
+	}
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+}
 
 die();
 

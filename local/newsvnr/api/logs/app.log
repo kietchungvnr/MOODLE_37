@@ -801,3 +801,8 @@
 [2020-02-07T11:04:33.789114+07:00] api-app.DEBUG: Using token from request header [] {"uid":"9af1794"}
 [2020-02-07T11:06:21.572811+07:00] api-app.DEBUG: Using token from request header [] {"uid":"c05f5b0"}
 [2020-02-07T11:08:39.056404+07:00] api-app.DEBUG: Using token from request header [] {"uid":"abcae5c"}
+[2020-03-04T14:10:16.046641+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"9895055"}
+[2020-03-04T14:11:28.336664+07:00] api-app.DEBUG: Using token from request header [] {"uid":"3cdd2f5"}
+[2020-03-04T14:12:42.154418+07:00] api-app.DEBUG: Using token from request header [] {"uid":"42ce607"}
+[2020-03-04T14:24:52.755777+07:00] api-app.DEBUG: Using token from request header [] {"uid":"f9a1852"}
+[2020-03-04T14:25:31.244303+07:00] api-app.DEBUG: Using token from request header [] {"uid":"e00b741"}

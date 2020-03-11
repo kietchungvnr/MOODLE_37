@@ -7,10 +7,7 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
     "path"      => [
 	    				"/users","/user",
 	    				"/orgstructures","/orgstructure",
-	    				"/orgstructure-categories","/orgstructure-category",
-	    				"/orgstructure-jobtitles","/orgstructure-jobtitle",
-	    				"/orgstructure-positions","/orgstructure-position",
-	    				"/quiz",
+	    				"/quizes","quiz",
 	    				"/courses",
 	    				"/competencies",
 	    				// "/course-category",

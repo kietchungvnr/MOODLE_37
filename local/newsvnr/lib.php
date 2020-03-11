@@ -1456,6 +1456,60 @@ function user_login_via_api() {
     complete_user_login($adminuser);
 }
 
+
+// Get Domain URL
+// Ex: vnresource.vn/
+function curPageURL() {
+  if(isset($_SERVER["HTTPS"]) && !empty($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] != 'on' )) {
+        $url = 'https://'.$_SERVER["SERVER_NAME"];//https url
+  }  else {
+    $url =  'http://'.$_SERVER["SERVER_NAME"];//http url
+  }
+  if(( $_SERVER["SERVER_PORT"] != 80 )) {
+     $url .= ':' . $_SERVER["SERVER_PORT"];
+  }
+  return $url;
+}
+
+
+//CURL kieu du lieu form-data
+function HTTP_POST($ch, $params = array(), $url){
+
+    curl_setopt($ch, CURLOPT_URL, $url  );
+    curl_setopt($ch, CURLOPT_POST,  count($params));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+
+    // Receive server response ...
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $server_output = curl_exec($ch);
+
+    curl_close ($ch);
+}
+
+
+//curl gửi dữ liệu kiểu json
+function HTTPPost($url,$datajs) {
+        
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_HEADER => true,
+    CURLOPT_URL => $url,
+    CURLOPT_POST => true,
+    CURLOPT_SSL_VERIFYPEER => false,
+    CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($datajs)
+    ),
+    CURLOPT_POSTFIELDS => $datajs));
+    $resp = curl_exec($curl);
+    curl_close($curl);
+}
+
+
+
 /**
  * Tạo node trên menu flat_nav
  * @param  global_navigation $navigation []

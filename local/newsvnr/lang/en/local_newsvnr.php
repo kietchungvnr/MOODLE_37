@@ -186,7 +186,16 @@ $string['missingtypeclass'] = 'Chọn kiểu lớp';
 $string['requiredorgstructure'] = 'Khoá cho PB - CD - CV';
 $string['novalue'] = 'Không có dữ liệu';
 $string['sitetabadmin'] = 'Cơ cấu tổ chức';
+$string['codecourse'] = 'Mã khoá học';
 
 $string['studentdashboard'] = 'Dashboard học viên';
 $string['teacherdashboard'] = 'Dashboard giáo viên';
 $string['invalidrequest'] = 'Request không tồn tại';
+$string['viewmore'] = 'Xem thêm';
+$string['managermentapi'] = 'Cấu hình API';
+$string['managermentapi_list'] = 'Quản lý API';
+$string['addnewapi'] = "Thêm mới API";
+$string['functionapi'] = "Tên API";
+$string['urlapi'] = "Đường dẫn URL";
+$string['methodapi'] = "Phương thức";
+$string['contenttypeapi'] = "Định dạng dữ liệu";

@@ -160,6 +160,10 @@ class course_edit_form extends moodleform {
         $mform->addRule('typeofcourse', get_string('missingtypeofcourse','local_newsvnr'), 'required', null, 'client');
         $mform->setType('typeofcourse', PARAM_INT);
 
+        $mform->addElement('text', 'code', get_string('codecourse', 'local_newsvnr'), 'maxlength="100" size="50"');
+        $mform->setType('code', PARAM_TEXT);
+        $mform->hideIf('code', 'typeofcourse', 'eq', 2);
+
         $mform->addElement('text', 'courseoforgstructure', get_string('courseoforgstructure', 'local_newsvnr'), 'maxlength="200" size="50" class="mb-0"');
         // $mform->addRule('courseoforgstructure', get_string('required'), 'required', null, 'client');
         $mform->setType('courseoforgstructure', PARAM_TEXT);

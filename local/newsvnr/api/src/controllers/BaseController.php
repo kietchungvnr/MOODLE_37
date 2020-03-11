@@ -16,12 +16,12 @@ class BaseController {
 
    	public function __construct(Container $container) {
    		$this->container = $container;
-        $this->logger = $container['logger'];
-        $this->settings = $container['settings'];
-        $this->validator = $container['validator'];
-        $this->response = $container['response'];
-        $this->request = $container['request'];
-        $this->v = $container['v'];
+      $this->logger = $container['logger'];
+      $this->settings = $container['settings'];
+      $this->validator = $container['validator'];
+      $this->response = $container['response'];
+      $this->request = $container['request'];
+      $this->v = $container['v'];
    	}
 
     // public function validate() {

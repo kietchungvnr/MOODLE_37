@@ -5,10 +5,11 @@ namespace local_newsvnr\api\controllers;
 defined('MOODLE_INTERNAL') || die;
 use stdClass;
 
-class OrgstructureCategoryController extends BaseController {
+class OrgstructureJobtitleController extends BaseController {
 
-	private $table = 'orgstructure_category';
+	private $table = 'orgstructure_jobtitle';
 
+	
 	public $data;
 	public $resp;
 
@@ -48,14 +49,16 @@ class OrgstructureCategoryController extends BaseController {
         	$this->resp->data[] = $errors;
 	        return $response->withStatus(422)->withJson($this->resp);
 	    }
-        $check_categoryname =  find_orgstructure_category_by_name($this->data->name);
-		if($check_categoryname) {
-			$this->resp->data['name'] = "Tên loại phòng ban '$check_categoryname' đã tồn tại";
+        $check_jobtitlename =  find_orgstructure_jobtitle_by_name($this->data->name);
+		if($check_jobtitlename) {
+			$this->resp->error = true;
+			$this->resp->data['name'] = "Tên loại phòng ban '$check_jobtitlename' đã tồn tại";
 		}
-		$check_categorycode = find_orgstructure_category_by_code($this->data->code);
-		if($check_categorycode) {
-			$check_categorycode = $check_categorycode->code;
-			$this->resp->data['code'] = "Mã loại phòng ban '$check_categorycode' đã tồn tại";
+		$check_jobtitlecode = find_orgstructure_jobtitle_by_code($this->data->code);
+		if($check_jobtitlecode) {
+			$check_jobtitlecode = $check_jobtitlecode->code;
+			$this->resp->error = true;
+			$this->resp->data['code'] = "Mã loại phòng ban '$check_jobtitlecode' đã tồn tại";
 		}
 		if(empty($this->resp->data)) {
 			$success = $DB->insert_record($this->table, $this->data);
@@ -88,12 +91,13 @@ class OrgstructureCategoryController extends BaseController {
         	$this->resp->data[] = $errors;
 	        return $response->withStatus(422)->withJson($this->resp);
 	    }
-		$orgcategoryid = $request->getAttribute('id');
-		$check_orgcategoryid = $DB->get_record($this->table, ['id' => $orgcategoryid], '*');
-		if($check_orgcategoryid) {
-			if($check_orgcategoryid->name == $this->data->name || $check_orgcategoryid->code == $this->data->code) {
+  
+		$orgjobtitleid = $request->getAttribute('id');
+		$check_orgjobtitleid = $DB->get_record($this->table, ['id' => $orgjobtitleid], '*');
+		if($check_orgjobtitleid) {
+			if($check_orgjobtitleid->name == $this->data->name || $check_orgjobtitleid->code == $this->data->code) {
 				if(empty($this->resp->data)) {
-					$this->data->id = $orgcategoryid;
+					$this->data->id = $orgjobtitleid;
 					$success = $DB->update_record($this->table, $this->data);
 					if($success) {
 						$this->resp->error = false;
@@ -114,7 +118,7 @@ class OrgstructureCategoryController extends BaseController {
 		} else {
 			$this->resp->error = true;
 			$this->resp->message['info'] = "Chỉnh sửa thất bại";
-			$this->resp->data['id'] = "Không tìm thấy loại phòng ban với id '$orgcategoryid'";
+			$this->resp->data['id'] = "Không tìm thấy chức danh với id '$orgjobtitleid'";
 			
 		}
 		return $this->response->withStatus(200)->withJson($this->resp);

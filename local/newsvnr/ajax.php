@@ -24,7 +24,7 @@
  * @author   Le Thanh Vu
  **/
 
-// define('AJAX_SCRIPT', true);
+define('AJAX_SCRIPT', false);
 
 require_once(__DIR__ . '/../../config.php');
 require_once('lib.php');
@@ -265,7 +265,7 @@ if(isset($_POST['action']) && $_POST['action'] == "add")
 			
 
 		}
-		echo json_encode($result);  
+		echo json_encode($result, JSON_UNESCAPED_UNICODE);  
 	}
 
 	
@@ -618,6 +618,94 @@ if(isset($_POST['action']) && $_POST['action'] == "test")
 
 		$DB->update_record('test',  $obj );
 	}
+
+}
+if(isset($_POST['action']) && $_POST['action'] == "api_created") {
+	// setting api and send data
+	// cho nay em chi cau hinh luu xuong DB.
+	// anh muon send data thi dung  CURL cua PHP.
+
+	$function_api = $_POST['function_api'];
+	$method = $_POST['method'];
+	$URL = $_POST['URL'];
+	$description = $_POST['description'];
+
+	$contenttype = isset($_POST['contenttype']) ? $_POST['contenttype'] : "";
+
+	$clientArr = $_POST['clientArr'];
+	$serverArr = $_POST['serverArr'];
+	$defaultArr = $_POST['defaultArr'];
+
+	$headerNameArr = $_POST['headerNameArr'];
+	$headerValueArr = $_POST['headerValueArr'];
+
+	$sortBody = array();
+
+	for($i = 0; $i < count($clientArr); $i++)
+	{
+		for($j = 0; $j < count($serverArr); $j++)
+		{
+			if($i == $j)
+			{
+				$sortBody[] = array(
+									'client_params' => $clientArr[$i]['value'],
+									'server_params' => $serverArr[$j]['value'],
+									'default_value' => $defaultArr[$j]['value']);
+			}
+		}
+	}
+
+	$sortHeader = array();
+	for($i = 0; $i < count($headerNameArr); $i++)
+	{
+		for($j = 0; $j < count($headerValueArr); $j++)
+		{
+			if($i == $j)
+			{
+				$sortHeader[] = array(
+							'name' => $headerNameArr[$i]['value'],
+							'value' => $headerValueArr[$j]['value']);
+			}
+		}
+	}
+
+	$api = new stdClass();
+	$api->url = $URL;
+	$api->method = $method;
+	$api->functionapi = $function_api;
+	$api->contenttype = $contenttype;
+	$api->description = $description;
+
+	$api_id = $DB->insert_record('local_newsvnr_api', $api);	
+
+
+	for($i = 0; $i < count($sortHeader); $i++)
+	{
+		$apiHeader = new stdClass();
+		$apiHeader->name = $sortHeader[$i]['name'];
+		$apiHeader->value = $sortHeader[$i]['value'];
+		$apiHeader->api_id = $api_id;
+
+		$DB->insert_record('local_newsvnr_api_header', $apiHeader);	
+	}
+
+	for($i = 0; $i < count($sortBody); $i++)
+	{
+
+		$apiDetail = new stdClass();
+
+		$apiDetail->client_params = $sortBody[$i]['client_params'];
+
+		$apiDetail->server_params = $sortBody[$i]['server_params'];
+
+		$apiDetail->default_value = $sortBody[$i]['default_value'];
+
+		$apiDetail->api_id = $api_id;
+
+		$DB->insert_record('local_newsvnr_api_detail', $apiDetail);	
+	}
+
+	echo "Success";
 
 }
 die();

@@ -7,8 +7,8 @@
 }
 
 
-.api .block h4{
-  margin-left: 27px;
+.api .block h5{
+  /*margin-left: 27px;*/
   position: relative;
 
   padding-bottom: 5px;
@@ -18,7 +18,7 @@
   display: inline-block;
 
 }
-.api .main > h3{
+.api .main > h5{
   margin-top: 20px;
   font-weight: bold;
   text-transform: uppercase;

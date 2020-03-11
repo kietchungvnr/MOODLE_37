@@ -25,38 +25,32 @@
  **/
  
 require_once(__DIR__ . '/../../config.php');
-
+require_once($CFG->libdir.'/adminlib.php');
 // $id = optional_param('id',0,PARAM_INT);
 // $array_id = array('id' => $id);
 
-$url = new moodle_url('/local/newsvnr/api_managerment.php');
+// $url = new moodle_url('/local/newsvnr/api_managerment.php');
+
+admin_externalpage_setup('managermentapivnr');
+require_capability('moodle/site:uploadusers', context_system::instance());
+// $PAGE->set_url($url);
+
+// $title = get_string('api_title','local_newsvnr');
+// $navbarcourse = get_string('navbarcourse','local_newsvnr');
+// $search = get_string('search','local_newsvnr');
+// $PAGE->set_context(context_system::instance());
 
 
-$PAGE->set_url($url);
-
-$title = get_string('api_title','local_newsvnr');
-$navbarcourse = get_string('navbarcourse','local_newsvnr');
-$search = get_string('search','local_newsvnr');
-$PAGE->set_context(context_system::instance());
-
-
-$PAGE->set_title($title);
+// $PAGE->set_title($title);
 // $PAGE->set_heading($title);
 
-$PAGE->navbar->ignore_active();
+// $PAGE->navbar->ignore_active();
 
-	$PAGE->navbar->add($title);
-
-// $PAGE->requires->css('/local/newsvnr/css/owl.carousel.min.css');
-// $PAGE->requires->css('/local/newsvnr/css/owl.theme.default.min.css');
-
+// $PAGE->navbar->add($title);
 
 
 $PAGE->requires->css('/local/newsvnr/css/api.css');
-// $PAGE->requires->js('/local/newsvnr/js/jquery-3.2.1.min.js', true);
-
-// $PAGE->requires->js('/local/newsvnr/js/owl.carousel.min.js', true);
-// $PAGE->requires->js('/local/newsvnr/js/khoahoc.js', true);
+$PAGE->requires->js_call_amd('local_newsvnr/api_managerment','api_managerment');
 $output = $PAGE->get_renderer('local_newsvnr');
 $page = new \local_newsvnr\output\api_managerment();
 

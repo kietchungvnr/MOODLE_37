@@ -28,84 +28,41 @@
 </div>
 <script type="text/javascript">
     
-    var i = 0;
-    var j = 0;
-    var txtusername = '';
-    var txtpassword = '';
-    var repeatun = true;
-    var repeatpw = true;
-    var speed = 100;
-    
+    function submitform(username, password){
+        var username = username;
+        var password = password;
+        var intervalID = setInterval(function() {
+            if(document.getElementById('username').className != 'complete'){
+                var val = document.getElementById('username').value;
+                if(val.length == username.length){
+                    document.getElementById('username').classList.add("complete");
+                }else{
+                    for(var i = 0; i < username.length; i++){
+                        if(val.length <= i){
+                            document.getElementById('username').value = val + username.charAt(i);
+                            return;
+                        }
+                    }
+                }
+            }
+            if(document.getElementById('password').className != 'complete'){
+                var val = document.getElementById('password').value;
+                if(val.length == password.length){
+                    document.getElementById('password').classList.add("complete");
+                }else{
+                    for(var i = 0; i < password.length; i++){
+                        if(val.length <= i){
+                            document.getElementById('password').value = val + password.charAt(i);
+                            return;
+                        }
+                    }
+                }
+            }
+            var x = document.getElementsByClassName('signup-form');
+            x[0].submit();
+            clearInterval(intervalID);
 
-    function typeWriterEffect(username, password) {
-
-        if(repeatun == true) {
-            txtusername = username;
-            // txtpassword = password;    
-        }
-        repeatun = false;
-        if (i < txtusername.length) {
-            document.getElementById("username").value += txtusername.charAt(i);
-            i++;
-            setTimeout(typeWriterEffect, speed);
-        }
-        // if (i < txtpassword.length) {
-        //     document.getElementById("password").value += txtpassword.charAt(j);
-        //     j++;
-        //     setTimeout(typeWriterEffect, speed);
-        // }
-        return true;
+        }, 100);
     }
-
-    function typeWriterEffect_password(username, password) {
-
-        if(repeatpw == true) {
-            // txtusername = username;
-            txtpassword = password;    
-        }
-        repeatpw = false;
-        // if (i < txtusername.length) {
-        //     document.getElementById("username").value += txtusername.charAt(i);
-        //     i++;
-        //     setTimeout(typeWriterEffect_password, speed);
-        // }
-        if (i < txtpassword.length) {
-            document.getElementById("password").value += txtpassword.charAt(j);
-            j++;
-            setTimeout(typeWriterEffect_password, speed);
-        }
-        return true;
-    }
-
-    function typeWriter(username, password){
-        let p = new Promise(function(resolve,reject){
-            resolve(typeWriterEffect(username, password));
-        });
-        p.then(() => {
-                return new Promise(function(resolve, reject) { 
-                    setTimeout(() => {
-                        resolve();
-                    }, 1000)
-                });
-            }).then(() => {
-                return new Promise(function(resolve, reject) { 
-                    resolve(typeWriterEffect_password(username, password));
-                });
-        });
-        return p;
-    }
-    function submitform (username, password) {
-        typeWriter(username, password).then(() => {
-                return new Promise(function(resolve, reject) { 
-                    setTimeout(() => {
-                        resolve();
-                    }, 2000)
-                });
-            }).then(function(res){
-                var x = document.getElementsByClassName('signup-form');
-                x[0].submit();
-            });
-    }
-    
     
 </script>

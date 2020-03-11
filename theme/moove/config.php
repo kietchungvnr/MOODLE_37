@@ -138,6 +138,13 @@ $THEME->layouts = [
         'defaultregion' => 'side-pre',
         'options' => array('nonavbar' => true, 'langmenu' => true),
     ),
+    // My dashboard page.
+    'mystudentdashboard' => array(
+        'file' => 'mydashboard.php',
+        'regions' => array('side-pre'),
+        'defaultregion' => 'side-pre',
+        'options' => array('nonavbar' => true, 'langmenu' => true),
+    ),
     // My public page.
     'mypublic' => array(
         'file' => 'mypublic.php',

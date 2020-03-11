@@ -1187,9 +1187,49 @@ div.dataTables_wrapper {
     }
 }
 
-body#page-enrol-index #region-main .generalbox.info .col-md-3 {
-    flex: 0 0 50%;
-    max-width: 50%;
+@media only screen and (min-width: 768px)  and (max-width: 1200px){
+    body#page-enrol-index #region-main .generalbox.info .col-md-3 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }    
+}
+@media only screen and (max-width: 576px) {
+    body#page-enrol-index #region-main .generalbox {
+        width: 100%;
+        justify-content: center;
+        display: flex;
+    }
+
+    body#page-enrol-index #region-main .generalbox.info .col-md-3 {
+        width: 100%
+    }
+    body#page-enrol-index #region-main .generalbox:last-of-type {
+        width: 100%;
+        justify-content: center;
+        display: flex;
+    }
+}
+@media only screen and (min-width: 1200px) {
+    body#page-enrol-index #region-main .generalbox.info .col-md-3 {
+        flex: 0 0 75%;
+        max-width: 75%;
+    }
+}
+
+.viewmorebtn {
+    color: #fff;
+    background-color: #17a2b8;
+    border-radius: 10rem;
+    display: inline-block;
+    padding: .5em .6em;
+    font-size: 85%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    float: right;
 }
 
 ::-webkit-scrollbar {
