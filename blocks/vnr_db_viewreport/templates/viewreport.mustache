@@ -49,22 +49,47 @@
             <button class="input-button cl-button" title="Xóa tất cả filter" data-clear id="clear">RESET</button>
         </div>
     </div>
-    <div class="row">
-        <div class="card shadow-nohover w-100" style="border-top: 5px solid #1177d1;">
-            <div class="row p-2 align-items-center">
-                <div class="col-12 col-lg-4">
-                    <!-- <input id="list_course" class="w-100"/> -->
-                </div>
-                <div class="col-12 col-lg-8">
-                    <div id="showchart"></div>
-                </div>
-            </div>
-
-        </div>
+    <div class="card shadow-nohover w-100 path-report path-report-completion path-grade path-grade-report path-grade-report-grader chrome dir-ltr pagelayout-report jsenabled drawer-ease p-2">
+        <div class="showchart" id="showchart"></div>
+       
     </div>
+   
 </div>
+<style type="text/css">
+.export-actions,.progress-actions {
+    text-align: center;
+    list-style: none;
+}
+table#completion-progress {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+</style>
 <script type="text/javascript">
-
+    // var getUrlParam = new URLSearchParams(window.location.search);
+    // var param = getUrlParam.get('id');
+    // var paramJson = {};
+    // paramJson['id'] = param;
+    // $("#list_chart").val(param);
+    
+    // // Chọn loại biểu đồ
+    // var courseid = $('#list_course').val();
+    // $('#list_course').change(function(){
+    //     courseid = $(this).val();
+    //     if(param == 1) {
+    //             action= "coursecomp_chart_vp";
+    //     } else if(param == 2) {
+    //         url = 'http://localhost:8080/grade/report/grader/index.php?id=' + courseid + ' .gradeparent';
+    //         $('.showchart').load(url);
+    //     } else if(param == 3) {
+    //         action = "viewcount_chart_vp"
+    //     } else if(param == 4) {
+    //         action = "coursemodulecomp_chart_vp"
+    //     } else if(param == 5) {
+    //         action = "joincourse_chart_vp"
+    //     } 
+    // });
+    
 </script>
 {{#js}}
 
@@ -91,20 +116,19 @@ require(
     'core/str',
     'jspicker',
     'kendo.all.min',
+    'block_vnr_db_viewreport/viewreport'
 ],
-function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notification, Str, jspicker, kendo) {
+function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notification, Str, jspicker, kendo, vpgrid) {
    
     ExportingModule(Highcharts);
     AccessibilityModule(Highcharts);
-    //Load data from ajax for coursecomp_chart
     var script = Config.wwwroot + '/local/newsvnr/restfulapi/webservice.php';
     var getUrlParam = new URLSearchParams(window.location.search);
     var param = getUrlParam.get('id');
     var paramJson = {};
     paramJson['id'] = param;
     $("#list_chart").val(param);
-    
-    // Chọn loại biểu đồ
+     // Chọn loại biểu đồ
     var chartname = function (param) {
         var action = '';
         if(param == 1) {
@@ -116,7 +140,7 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
         } else if(param == 4) {
             action = "coursemodulecomp_chart_vp"
         } else if(param == 5) {
-            action = "joincourse_chart_vp"
+            action = "joincourse_grid"
         } 
         return action;
     }
@@ -156,19 +180,9 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
         delete paramJson.courseid;
         delete paramJson.strdate;
     }
-    callAjax(script, settings);
-    //Gọi ajax load dữ liệu qua filter 1 khóa, 1 mốc thời gian...
-    $('#list_course').change(function(){
-        var courseid = $(this).val();
-        if(courseid != 0) {
-            paramJson['courseid'] = courseid;
-            callAjax(script, settings);
-        } else {
-            deteleParamJson();
-            callAjax(script, settings);
-        }
-       
-    });
+    if(paramJson['action'] == 'viewcount_chart_vp')
+        callAjax(script, settings);
+   
     $("#filterdate").flatpickr({
         altInput: true,
         altFormat: "F j, Y",
@@ -176,10 +190,12 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
         onChange: function(dateObj, dateStr) {
             if(dateStr) {
                 paramJson['strdate'] = dateStr;
-                callAjax(script, settings);
+                if(paramJson['action'] == 'viewcount_chart_vp')
+            callAjax(script, settings);
             } else {
                 deteleParamJson();
-                callAjax(script, settings);
+                if(paramJson['action'] == 'viewcount_chart_vp')
+                    callAjax(script, settings);
             }
         },
         onReady: function(dateObj, dateStr, instance) {
@@ -198,9 +214,13 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
     //Xóa bỏ filter trả về dữ liệu ban đầu
     $('#clear').click(function(){
         deteleParamJson();
-        callAjax(script, settings);
+        if(paramJson['action'] == 'viewcount_chart_vp')
+            callAjax(script, settings);
     });
+    
+    // Chọn loại biểu đồ
     $('#list_chart').change(function() {
+        param = $('select[id=list_chart]').val();
         var chartid = $('select[id=list_chart]').val();
         paramJson['id'] = chartid;
         paramJson['action'] = chartname(chartid);
@@ -210,11 +230,49 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
             processData: true,
             contentType: "application/json"
         };
-        callAjax(script, settings);
+        if(paramJson['action'] == 'viewcount_chart_vp')
+            callAjax(script, settings);
     });
+    var courseid = $('#list_course').val();
+    $('#list_course').change(function() {
+        courseid = $(this).val();
+        if (param == 1) {
+            url = Config.wwwroot + '/report/completion/index.php?course=' + courseid + ' [role=main]';
+            $('.showchart').load(url, function(response, status, xhr) {
+                if (status == "error") {
 
-
+                    $(".showchart").html('<div class="d-flex justify-content-center alert alert-info alert-block fade in ">Khoá học này chưa cài đặt điều kiện hoàn thành</div>');
+                }
+            });
+        } else if (param == 2) {
+            url = Config.wwwroot + '/grade/report/grader/index.php?id=' + courseid + ' .gradeparent';
+            $('.showchart').load(url, function(response, status, xhr) {
+                if (status == "error") {
+                    $(".showchart").html(msg + xhr.status + " " + xhr.statusText);
+                }
+            });
+        } else if (param == 3) {
+            action = "viewcount_chart_vp"
+        } else if (param == 4) {
+            url = Config.wwwroot + '/report/progress/index.php?course=' + courseid + ' [role=main]';
+            $('.showchart').load(url, function(response, status, xhr) {
+                if (status == "error") {
+                    $(".showchart").html('<div class="d-flex justify-content-center alert alert-info alert-block fade in ">Khoá học này chưa có hoạt động nào</div>');
+                }
+            });
+        } else if (param == 5) {
+            vpgrid.viewreport(courseid);
+        }
+        var chart_courseid = $(this).val();
+        if(chart_courseid != 0) {
+            paramJson['courseid'] = chart_courseid;
+            if(paramJson['action'] == 'viewcount_chart_vp')
+                callAjax(script, settings);
+        } else {
+            deteleParamJson();
+            if(paramJson['action'] == 'viewcount_chart_vp')
+                callAjax(script, settings);
+        }
+    });
 });
-
-
 {{/js}}

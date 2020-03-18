@@ -6,3 +6,6 @@ $string['vnr_db_viewreport:myaddinstance'] = 'Add a new viewreport block to Dash
 $string['privacy:metadata'] = 'The viewreport block only shows data stored in other locations.';
 $string['detailreport'] = 'Chi tiết báo cáo';
 $string['dashboard'] = 'Nhà của tôi';
+$string['fullname'] = 'Họ và tên';
+$string['joincoursedate'] = 'Ngày tham gia';
+$string['methodenrol'] = 'Phương thức tham gia';

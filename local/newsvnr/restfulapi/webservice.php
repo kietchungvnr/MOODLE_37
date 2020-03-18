@@ -1355,6 +1355,57 @@ if($action == "quizoverview_chart") {
    	$response->list_quizname_parent = $list_quizname_parent;
 	echo json_encode($response,JSON_UNESCAPED_UNICODE);
 }
+//Get dữ liệu cho block xu hướng ghi dnah
+if($action == 'joincourse_grid') {
+	$pagesize = optional_param('pagesize',10, PARAM_INT);
+	$pagetake = optional_param('take',0, PARAM_INT);
+	$pageskip = optional_param('skip',0, PARAM_INT);
+	$q = optional_param('q','', PARAM_RAW);
+	$courseid = optional_param('courseid',0, PARAM_INT);
+	$odersql = "";
+	$wheresql = "";
+	if($q) {
+		$wheresql = "WHERE fullnamet LIKE N'%$q%'";
+	}
+	if($pagetake == 0) {
+		$ordersql = "RowNum";
+	} else {
+		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
+	}
+	$sql = "
+			SELECT *, (SELECT COUNT(ra.id) FROM mdl_role_assignments as ra
+                    JOIN mdl_user as u on u.id= ra.userid
+                    JOIN mdl_user_enrolments as ue on ue.userid=u.id
+                    JOIN mdl_enrol as e on e.id=ue.enrolid
+                    JOIN mdl_course as c on c.id=e.courseid
+                    JOIN mdl_context as ct on ct.id=ra.contextid and ct.instanceid= c.id
+                    JOIN mdl_role as r on r.id= ra.roleid
+                    where c.id=? and ra.roleid=5) AS total FROM (
+			SELECT concat(u.firstname,' ',u.lastname) as fullnamet,u.id, e.enrol, e.timecreated, ROW_NUMBER() OVER (ORDER BY u.id) AS RowNum
+                    FROM mdl_role_assignments as ra
+                    JOIN mdl_user as u on u.id= ra.userid
+                    JOIN mdl_user_enrolments as ue on ue.userid=u.id
+                    JOIN mdl_enrol as e on e.id=ue.enrolid
+                    JOIN mdl_course as c on c.id=e.courseid
+                    JOIN mdl_context as ct on ct.id=ra.contextid and ct.instanceid= c.id
+                    JOIN mdl_role as r on r.id= ra.roleid
+					
+                    where c.id=? and ra.roleid=5
+					GROUP BY u.id, u.firstname, u.lastname, e.enrol, e.timecreated) AS MyData
+			$wheresql
+			ORDER BY $ordersql";
+	$get_list = $DB->get_records_sql($sql,[$courseid,$courseid]);
+	$data = [];
+	foreach ($get_list as $value) {
+		$object = new stdclass;
+		$object->fullnamet = $value->fullnamet;		
+		$object->timecreated = convertunixtime('l, d m Y',$value->timecreated);
+		$object->enrol = $value->enrol;
+		$object->total = $value->total;
+		$data[] = $object;		
+	}
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+}
 
 // -- End Get dữ liệu cho blocks chart -- \\
 
