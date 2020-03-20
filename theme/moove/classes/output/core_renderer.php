@@ -78,7 +78,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $header = new stdClass();
             $header->active = false;
             $header->settingsmenu = $this->context_header_settings_menu();
-            $header->contextheader = $this->context_header();
+            $header->contextheader = $this->context_header(null,2);
             $header->hasnavbar = empty($PAGE->layout_options['nonavbar']);
             $header->navbar = $this->navbar();
             $header->pageheadingbutton = $this->page_heading_button();
@@ -89,7 +89,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $header = new stdClass();
             $header->active = true;
             $header->settingsmenu = $this->context_header_settings_menu();
-            $header->contextheader = $this->context_header();
+            $header->contextheader = $this->context_header(null,2);
             $header->hasnavbar = empty($PAGE->layout_options['nonavbar']);
             $header->navbar = $this->navbar();
             $header->pageheadingbutton = $this->page_heading_button();

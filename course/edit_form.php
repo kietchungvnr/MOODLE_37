@@ -181,12 +181,7 @@ class course_edit_form extends moodleform {
         $mform->addElement('advcheckbox', 'pinned', '', get_string('pinned', 'local_newsvnr'), array('group' => 1), array(0, 1));
         $mform->addElement('advcheckbox', 'required', '', get_string('required', 'local_newsvnr'), array('group' => 1), array(0, 1));
 
-        //Lấy danh sách khoá học setup
-        $coursesetuplist = $DB->get_records('course_setup');
-        $coursesetupnames = array();
-        foreach ($coursesetuplist as $key => $value) {
-            $coursesetupnames[$key] = $value->fullname;
-        }
+       
         // $mform->addElement('select', 'coursesetup', get_string('coursesetup','local_newsvnr'), $coursesetupnames);
         // $mform->addRule('courseofposition', get_string('missingcourseofpostion','local_newsvnr'), 'required', null, 'client');
         // $mform->setType('coursesetup', PARAM_INT);

@@ -248,6 +248,7 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                 },
                                 field: "description",
                                 title: s[10],
+                                width: 200
                                 
                             },
                             {
