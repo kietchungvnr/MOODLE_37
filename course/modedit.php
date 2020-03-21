@@ -168,8 +168,8 @@ if ($mform->is_cancelled()) {
                     $params_hrm[$value->client_params] = $value->default_value;
                 }
             }
+            $url_hrm = $quiz_api->url;
         }
-        $url_hrm = $quiz_api->url;
     }
     if (!empty($fromform->update)) {
         if($data->modulename == 'quiz') {
