@@ -192,8 +192,9 @@ if ($editform->is_cancelled()) {
                 $params_hrm[$value->client_params] = $value->default_value;
             }
         }
+        $url_hrm = $course_api->url;
     }
-    $url_hrm = $course_api->url;
+    
     //Custom by Vũ : Add coursesetup vào course data
     if(isset($_REQUEST['coursesetup'])) {
         $data->coursesetup = $_REQUEST['coursesetup'][0];

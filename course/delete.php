@@ -25,7 +25,7 @@
 require_once(__DIR__ . '/../config.php');
 require_once($CFG->dirroot . '/course/lib.php');
 require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
-require_once($CFG->dirroot . '/local/newsvnr/lib.php')
+require_once($CFG->dirroot . '/local/newsvnr/lib.php');
 
 $id = required_param('id', PARAM_INT); // Course ID.
 $delete = optional_param('delete', '', PARAM_ALPHANUM); // Confirmation hash.
@@ -84,7 +84,7 @@ if ($delete === md5($course->timemodified)) {
             }
             
         }
-        if($params_hrm['Status'] == '') {
+        if(isset($params_hrm['Status']) == '') {
             $params_hrm['Status'] = 'E_DELETE';
         }
         $url_hrm = $detete_course_api->url;

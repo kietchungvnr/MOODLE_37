@@ -38,9 +38,9 @@
     <div class="row mb-3 justify-content-center">
         <div class="col pr-0">
             <select name="list_course" id="list_course" class="custom-select col rounded w-100">
-                <option selected value="0">Chọn khóc học</option>
+                {{! <option selected value="0">Chọn khoá học</option> }}
                 {{#list_course}}
-                <option value="{{id}}">{{fullname}}</option>
+                <option value="{{id}}" selected>{{fullname}}</option>
                 {{/list_course}}
                 
             </select>
@@ -51,6 +51,7 @@
     </div>
     <div class="card shadow-nohover w-100 path-report path-report-completion path-grade path-grade-report path-grade-report-grader chrome dir-ltr pagelayout-report jsenabled drawer-ease p-2">
         <div class="showchart" id="showchart"></div>
+        <div class="showchart_grid" id="showchart_grid"></div>
        
     </div>
    
@@ -128,6 +129,7 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
     var paramJson = {};
     paramJson['id'] = param;
     $("#list_chart").val(param);
+    $body = $('body');
      // Chọn loại biểu đồ
     var chartname = function (param) {
         var action = '';
@@ -153,6 +155,9 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
     };
     //Gọi ajax load dữ liệu chưa qua filter
     var callAjax = function (script, settings) {
+        $body.addClass("loading");
+        $('.showchart').removeClass('d-none');
+        $('.showchart_grid').addClass('d-none');
         $.ajax(script,settings)
         .then(function(response) {
             if (response.error) {
@@ -170,6 +175,7 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
                     <!-- data.title.text = "Xu hướng tham gia khóa học"; -->
                     // Create a chart.
                     Highcharts.chart('showchart', data);
+                    $body.removeClass("loading");
                 });
            }
           return;
@@ -232,21 +238,30 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
         };
         if(paramJson['action'] == 'viewcount_chart_vp')
             callAjax(script, settings);
-    });
+    }).change();
     var courseid = $('#list_course').val();
     $('#list_course').change(function() {
         courseid = $(this).val();
+        $('.showchart').removeClass('d-none');
+        $('.showchart_grid').addClass('d-none');
         if (param == 1) {
             url = Config.wwwroot + '/report/completion/index.php?course=' + courseid + ' [role=main]';
+            $body.addClass("loading");
             $('.showchart').load(url, function(response, status, xhr) {
+                if(status) {
+                    $body.removeClass("loading");
+                }
                 if (status == "error") {
-
                     $(".showchart").html('<div class="d-flex justify-content-center alert alert-info alert-block fade in ">Khoá học này chưa cài đặt điều kiện hoàn thành</div>');
                 }
             });
         } else if (param == 2) {
             url = Config.wwwroot + '/grade/report/grader/index.php?id=' + courseid + ' .gradeparent';
+            $body.addClass("loading");
             $('.showchart').load(url, function(response, status, xhr) {
+                if(status) {
+                    $body.removeClass("loading");
+                }
                 if (status == "error") {
                     $(".showchart").html(msg + xhr.status + " " + xhr.statusText);
                 }
@@ -254,14 +269,20 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
         } else if (param == 3) {
             action = "viewcount_chart_vp"
         } else if (param == 4) {
-            url = Config.wwwroot + '/report/progress/index.php?course=' + courseid + ' [role=main]';
+            url = Config.wwwroot + '/report/progress/index.php?course=' + courseid + ' #completion-progress';
+            $body.addClass("loading");
             $('.showchart').load(url, function(response, status, xhr) {
+                if(status) {
+                    $body.removeClass("loading");
+                }
                 if (status == "error") {
                     $(".showchart").html('<div class="d-flex justify-content-center alert alert-info alert-block fade in ">Khoá học này chưa có hoạt động nào</div>');
                 }
             });
         } else if (param == 5) {
-            vpgrid.viewreport(courseid);
+            $('.showchart_grid').removeClass('d-none');
+             vpgrid.viewreport(courseid);
+             $('.showchart').addClass('d-none');
         }
         var chart_courseid = $(this).val();
         if(chart_courseid != 0) {
@@ -273,6 +294,6 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
             if(paramJson['action'] == 'viewcount_chart_vp')
                 callAjax(script, settings);
         }
-    });
+    }).change();
 });
 {{/js}}

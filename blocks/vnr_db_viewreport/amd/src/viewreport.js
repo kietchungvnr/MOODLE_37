@@ -3,7 +3,6 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
     return {
 
         viewreport: function(courseid) {
-            // $body.addClass("loading");
             var strings = [
                 {
                     key: 'fullname',
@@ -19,8 +18,9 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                 },
                
             ];
+            $body = $('body');
             Str.get_strings(strings).then(function(s) {
-
+                $body.addClass('loading');
                 var gird, createGrid = function() {
                     
                     var columns =  [{
@@ -47,7 +47,7 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                         processData: true,
                         contentType: "application/json"
                     };
-                    grid = $('#showchart').kendoGrid({
+                    grid = $('.showchart_grid').kendoGrid({
                         dataSource: {
                             transport: {
                                 read: {
@@ -55,8 +55,6 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                     dataType: "json",
                                     contentType: 'application/json; charset=utf-8',
                                     type: "GET",
-
-
                                 },
                                 parameterMap: function(options, operation) {
                                     if (operation == "read") {
@@ -66,7 +64,6 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                         return options;
                                     }
                                 }
-
                             },
                             schema: {
                                 total: function(data) {
@@ -101,12 +98,14 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                             pageSizes: true,
                             buttonCount: 5
                         },
-                        columns: columns
+                        columns: columns,
+                        dataBound: function(e) {
+                            $body.removeClass('loading');
+                      }
                     }).data('kendoGrid');
+                    
                 };
-
                 createGrid();
-               
             });
             
         }
