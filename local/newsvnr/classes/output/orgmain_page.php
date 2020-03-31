@@ -23,6 +23,18 @@ class orgmain_page implements renderable, templatable {
 	public function export_for_template(renderer_base $output) {
     global $DB,$USER,$PAGE;
     $data = array();
+
+    // $contextmodule = context_course::instance(150);
+    // $contextModuleData = get_enrolled_users(context_course::instance(150));
+
+    // $roles = $DB->get_records('SELECT * FROM {role_assignments}');
+    // foreach($roles as $role) {
+    //     if($role->roleid == 5) {
+            
+    //     }  
+    // }
+    // var_dump($contextModuleData);die;
+
     // $courses = $DB->get_records_sql("SELECT * from {course} where required = 1");
     // var_dump($courses);die;
 

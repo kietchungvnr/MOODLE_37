@@ -325,7 +325,12 @@
 		    $("#msg").text(val + " changed");
 		});
           // DATE PICKER
-
+    const rs_radiobtn = () => {
+    	$('input[type=radio]').prop('checked', function () {
+    		return this.getAttribute('checked') == 'checked';
+		});
+    }
+     
 
 </script>
 {{#js}}

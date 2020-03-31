@@ -209,7 +209,6 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                             } else {
                                 $('#add_planning').prop('disabled', false);
                             }
-                            console.log(data);
                             $('[data-region="orgcomp-position"]').html(data.comp_table);
 
                             $('[data-region="orgcomp-plan"]').html(data.plan_table);

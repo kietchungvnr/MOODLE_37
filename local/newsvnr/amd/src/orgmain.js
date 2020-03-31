@@ -183,12 +183,12 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                         width: "200px"
                                     },
                                     {
-                                        field: "opname",
+                                        field: "oname",
                                         title: s[3],
                                         width: "200px"
                                     },
                                     {
-                                        field: "uname",
+                                        field: "opname",
                                         title: s[4],
                                         width: "200px"
                                     },

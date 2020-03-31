@@ -163,15 +163,22 @@ class core_renderer extends \theme_boost\output\core_renderer {
      * @return string HTML to display the main header.
      */
     public function mydashboard_user_header() {
-        global $PAGE;
+        global $PAGE,$DB,$USER;
 
         $html = html_writer::start_div('row');
         $html .= html_writer::start_div('col-xs-12 mt-2');
-
+        $teacherdbbutton = '';
+        $studentdbbutton = '';
         $pageheadingbutton = $this->page_heading_button();
-
-        $studentdbbutton  = $this->render(new single_button(new moodle_url('/local/newsvnr/dashboard.php?view=student'), get_string('studentdashboard', 'local_newsvnr'), 'get', true, ['class' => 'mb-3']));
-        $teacherdbbutton  = $this->render(new single_button(new moodle_url('/local/newsvnr/dashboard.php?view=teacher'), get_string('teacherdashboard', 'local_newsvnr'), 'get', true));
+        $roles = $DB->get_records_sql('SELECT DISTINCT roleid FROM {role_assignments} WHERE userid = ?',[$USER->id]);
+        foreach($roles as $role) {
+            if($role->roleid == 3) {
+                $teacherdbbutton = $this->render(new single_button(new moodle_url('/local/newsvnr/dashboard.php?view=teacher'), get_string('teacherdashboard', 'local_newsvnr'), 'get', true));
+            } else if($role->roleid == 5) {
+                $studentdbbutton = $this->render(new single_button(new moodle_url('/local/newsvnr/dashboard.php?view=student'), get_string('studentdashboard', 'local_newsvnr'), 'get', true, ['class' => 'mb-3']));
+            }
+        }
+        
         if (empty($PAGE->layout_options['nonavbar'])) {
             $html .= html_writer::start_div('clearfix w-100 pull-xs-left', array('id' => 'page-navbar'));
             $html .= html_writer::tag('div', $this->navbar(), array('class' => 'breadcrumb-nav'));

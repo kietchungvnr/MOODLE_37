@@ -424,9 +424,9 @@ function theme_moove_buildnavnewsvnr_by_student(\flat_navigation $flatnav) {
     $courses = get_list_course_by_student($USER->id);
 
     if($courses) {
-        $sitesettings = $flatnav->find('sitesettings',\navigation_node::TYPE_SITE_ADMIN);
+        $parentnode = $flatnav->find('grabnode',\navigation_node::TYPE_CUSTOM);
 
-        if (!$sitesettings) {
+        if (!$parentnode) {
             return;
         }
 
@@ -436,7 +436,7 @@ function theme_moove_buildnavnewsvnr_by_student(\flat_navigation $flatnav) {
             'icon' => new pix_icon('i/mycourses', ''),
             'type' => \navigation_node::TYPE_SYSTEM,
             'key' => 'mycourses_by_student_vnr',
-            'parent' => $sitesettings
+            'parent' => $parentnode
         ];
        
         $chelper = new \coursecat_helper();
@@ -454,8 +454,7 @@ function theme_moove_buildnavnewsvnr_by_student(\flat_navigation $flatnav) {
                         'action' => $course->link
                     ]));
         }      
-       
-        $flatnav->add($coursesections,$sitesettings->key);
+        $flatnav->add($coursesections,$parentnode->key);
     }
 }
 
@@ -466,9 +465,9 @@ function theme_moove_buildnavnewsvnr_by_teacher(\flat_navigation $flatnav) {
 
     if($listcourse) {
         
-        $sitesettings = $flatnav->find('sitesettings',\navigation_node::TYPE_SITE_ADMIN);
+        $parentnode = $flatnav->find('grabnode',\navigation_node::TYPE_CUSTOM);
 
-        if (!$sitesettings) {
+        if (!$parentnode) {
             return;
         }
         $coursesectionsoptions = [
@@ -477,7 +476,7 @@ function theme_moove_buildnavnewsvnr_by_teacher(\flat_navigation $flatnav) {
             'icon' => new pix_icon('i/mycourses', ''),
             'type' => \navigation_node::TYPE_SYSTEM,
             'key' => 'mycourses_by_teacher_vnr',
-            'parent' => $sitesettings
+            'parent' => $parentnode
         ];
         $chelper = new \coursecat_helper();
         $coursesections = new \flat_navigation_node($coursesectionsoptions, 0);
@@ -495,7 +494,7 @@ function theme_moove_buildnavnewsvnr_by_teacher(\flat_navigation $flatnav) {
                     ]));
         }      
         
-        $flatnav->add($coursesections,$sitesettings->key);
+        $flatnav->add($coursesections,$parentnode->key);
     }
 }
 function theme_moove_buildnavnewsvnr_by_incourse(\flat_navigation $flatnav) {

@@ -807,9 +807,9 @@ function get_teachername($courseid) {
     $rolecourse = $DB->get_records_sql($sql,array($courseid,$courseid));
     if (!empty($rolecourse)) {
         foreach ($rolecourse as $value) {
-            $infoteacher[] = $value->fullnamet;
+            $infoteacher[] = "<a href='$CFG->wwwroot/user/profile.php?id=$value->id' /> $value->fullnamet </a>";
         }
-        $teachername = implode(',',$infoteacher);
+        $teachername = implode(', ',$infoteacher);
     } else
     $teachername = '';
 
@@ -1536,6 +1536,15 @@ function local_newsvnr_extend_navigation($navigation) {
         new pix_icon('t/viewdetails','Diễn đàn'));
     $forum->showinflatnavigation = true;
     $navigation->add_node($forum,'1');
+
+
+    $grabnodeurl = new moodle_url('/my');
+    $grab = navigation_node::create('grabnode', $grabnodeurl,navigation_node::TYPE_CUSTOM,'grabnode',
+        'grabnode',
+        new pix_icon('t/viewdetails','Rác'));
+    $grab->showinflatnavigation = true;
+    $navigation->add_node($grab,'users');
+
 
 
     // if(is_siteadmin())

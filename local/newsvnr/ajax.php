@@ -218,7 +218,7 @@ if(isset($_POST['action']) && $_POST['action'] == "add")
     				'. $value->framework_name .'
     			</td>
     			<td>
-    				<a data-toggle="modal" data-target="#myModal'. $value->competencyid .'" href="javascript:void(0)" id ="'. $value->competencyid .'">Danh sách khóa học</a>
+    				<a data-toggle="modal" data-target="#myModal'. $value->competencyid .'" href="javascript:void(0)" onclick="rs_radiobtn()" id ="'. $value->competencyid .'">Danh sách khóa học</a>
     			</td>
     			<td class="center"><i onclick="DeleteCompPosition('. $value->com_positionid .','. $value->orgpositionid.','.$value->competencyid.')" class="fa fa-trash-o delete_comp" id="'. $value->com_positionid .'"></i></td>
     			</tr>';
@@ -236,7 +236,7 @@ if(isset($_POST['action']) && $_POST['action'] == "add")
 
 				}
 		
-				$strbtn = '<button type="submit" class="btn btn-default" id="manage-enrol" onclick="maneger_enrol('.$value->orgpositionid.','.$value->competencyid.')">Ghi danh</button>
+				$strbtn = '<button type="submit" class="btn btn-default" onclick="maneger_enrol('.$value->orgpositionid.','.$value->competencyid.')">Ghi danh</button>
 					         '; 
 			} else {
 				$list_course .= '<div class="d-flex justify-content-center alert alert-info alert-block fade in ">Năng lực chưa có khóa học liên kết</div>';
@@ -348,7 +348,7 @@ if(isset($_GET['action']) && $_GET['action'] == "load_comp_postion")
 		    				'. $value->framework_name .'
 		    			</td>
 		    			<td>
-		    				<a data-toggle="modal" data-target="#myModal'. $value->competencyid .'" href="javascript:void(0)" id ="'. $value->competencyid .'">Danh sách khóa học</a>
+		    				<a data-toggle="modal" data-target="#myModal'. $value->competencyid .'" href="javascript:void(0)" onClick="rs_radiobtn()" id ="'. $value->competencyid .'">Danh sách khóa học</a>
 		    			</td>
 		    			<td class="center"><i onclick="DeleteCompPosition('. $value->com_positionid .','. $value->orgpositionid.','.$value->competencyid.')" class="fa fa-trash-o delete_comp" id="'. $value->com_positionid .'"></i></td>
 		    		</tr>';
@@ -360,7 +360,7 @@ if(isset($_GET['action']) && $_GET['action'] == "load_comp_postion")
 
 				}
 		
-				$strbtn = '<button type="submit" class="btn btn-default" id="manage-enrol" onclick="maneger_enrol('.$value->orgpositionid.','.$value->competencyid.')">Ghi danh</button>'; 
+				$strbtn = '<button type="submit" class="btn btn-default" onclick="maneger_enrol('.$value->orgpositionid.','.$value->competencyid.')">Ghi danh</button>'; 
 			} else {
 				$list_course .= '<div class="d-flex justify-content-center alert alert-info alert-block fade in ">Năng lực chưa có khóa học liên kết</div>';
 				$strbtn = '';
