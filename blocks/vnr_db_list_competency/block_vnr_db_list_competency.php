@@ -25,7 +25,7 @@ class block_vnr_db_list_competency extends block_base {
     }
 
      public function applicable_formats() {
-        return array('all' => true);
+        return array('user-profile' => true);
     }
 }
 

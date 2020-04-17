@@ -130,6 +130,8 @@ if(isset($_GET['action']) && $_GET['action'] == "get_list_coursesetup")
 
 	echo $select;
 }
+
+//Lấy danh sách khoá học cho plan cá nhân block khoá học theo kế hoạch
 if(isset($_GET['action']) && $_GET['action'] == "get_courseplan")
 {
 	$userplanid = $_GET['userplanid'];
@@ -148,7 +150,20 @@ if(isset($_GET['action']) && $_GET['action'] == "get_courseplan")
 
 }
 
-
+//Lấy danh sách học viên xuất sắc nhất trong 1 khoá học
+if(isset($_GET['action']) && $_GET['action'] == "get_topgrade")
+{
+	$courseid = $_GET['courseid'];
+	
+	$listuser = $DB->get_records_sql("select gg.userid,gi.courseid,gi.itemmodule, gg.finalgrade, CONCAT(u.lastname,' ',u.firstname) AS fullname from
+mdl_grade_grades gg join mdl_grade_items gi on gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id
+where gg.finalgrade is not null and gi.itemtype= ? AND gi.courseid = ?", ['course', $courseid]);
+    $data = 
+    	array(
+    		'listuser' => array_values($listuser),
+    	);
+	echo json_encode($data, JSON_UNESCAPED_UNICODE);
+}
 
 //Chức năng thêm năng lực cho vị trí (Lập kế hoạch)
 if(isset($_POST['action']) && $_POST['action'] == "add")

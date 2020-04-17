@@ -59,7 +59,7 @@ $templatecontext = [
     'sidepreblocks' => $blockshtml,
     'hasblocks' => $hasblocks,
     'bodyattributes' => $bodyattributes,
-    'hasdrawertoggle' => $hasdrawertoggle,
+    'hasdrawertoggle' => true,
     'navdraweropen' => $navdraweropen,
     'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
@@ -67,7 +67,7 @@ $templatecontext = [
 ];
 
 // Improve boost navigation.
-theme_moove_extend_flat_navigation($PAGE->flatnav);
+theme_moove_extend_flat_navigation($PAGE->flatnav, 'default');
 
 $templatecontext['flatnavigation'] = $PAGE->flatnav;
 

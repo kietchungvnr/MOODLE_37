@@ -141,13 +141,14 @@ function zoom_get_state($zoom) {
  */
 function zoom_get_user_id($required = true) {
     global $USER;
-
+    $config = get_config('mod_zoom');
     $cache = cache::make('mod_zoom', 'zoomid');
+   
     if (!($zoomuserid = $cache->get($USER->id))) {
         $zoomuserid = false;
         $service = new mod_zoom_webservice();
         try {
-            $zoomuser = $service->get_user($USER->email);
+            $zoomuser = $service->get_user($config->zoomemail);
             if ($zoomuser !== false) {
                 $zoomuserid = $zoomuser->id;
             }

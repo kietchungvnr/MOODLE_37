@@ -41,6 +41,7 @@ use context_module;
 use moodle_page;
 use single_button;
 use theme_moove\output\core\course_renderer;
+use theme_moove\util\theme_settings;
 defined('MOODLE_INTERNAL') || die;
 
 /**
@@ -96,6 +97,154 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $header->courseheader = $this->course_header();
             return $this->render_from_template('theme_moove/fp_header', $header);
         }
+    }
+    
+    public function showMenuLi($menus, $id_parent = 0, &$output = '') 
+    {
+        global $DB, $CFG;
+        $courselink = $CFG->wwwroot . '/course/view.php?id=';
+        // $theme_settings = new theme_settings();
+        $menu_tmp = array();
+        foreach ($menus as $key => $item) {
+            if ((int) $item->parent == (int) $id_parent) {
+                $menu_tmp[] = $item;
+            
+                unset($menus[$key]);
+            }
+        }
+
+        if ($menu_tmp) 
+        {
+            // $output .= '<ul class="dropdown-menu text-dark" role="menu" id="drop-course-category">';
+            foreach ($menu_tmp as $item) 
+            {   
+                $output .= '<li class="dropdown-submenu">';
+
+                $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $item->name . ' </a>';
+
+                 if($id_parent == 0) {
+                    $courses = $DB->get_records('course',['category' => $item->id]);
+                    $output .= '<ul class="dropdown-menu">';
+
+                    
+                   
+                    foreach($courses as $course) {
+                        // $courseobj = new \core_course_list_element($course);
+                        // $courselink = $CFG->wwwroot."/course/view.php?id=".$course->id;
+                        // $courseimage = $theme_settings::get_course_images_nav($courseobj, $courselink);
+                        // $output .= '<li class="dropdown-item"><div class="d-flex"><div style="width:150px;height:100px">'.$courseimage.'</div><div><a tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a><div></div></li>';
+                        $output .= '<li class="dropdown-item"><a tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a></li>';
+                    }
+                    $output .= '</ul>';
+                } 
+
+                $this->showMenuLi($menus, $item->id, $output);
+                $output .= '</li>';
+            }
+            // $output .= '</ul>';
+
+        }
+       
+        return $output;
+       
+        
+    }
+    public function nav_course_categories() {
+        global $DB;
+
+        $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent FROM mdl_course_categories cc JOIN mdl_course c ON cc.id = c.category');
+        // $categories = $DB->get_records_sql('SELECT * FROM mdl_course_categories');
+        // ini_set("xdebug.var_display_max_children", -1);
+        // ini_set("xdebug.var_display_max_data", -1);
+        // ini_set("xdebug.var_display_max_depth", -1);
+        // var_dump($this->showMenuLi($categories));die;
+        return $this->showMenuLi($categories);
+        // foreach($categoriesa as $category) {
+        //     $courses = $DB->get_records('course', ['category' => $category->id]);
+        //     foreach($courses as $course) {
+
+        //     }
+        // }
+    }
+
+
+    public function nav_coursebystudent() {
+        global $USER, $CFG;
+        $output = '';
+        $courselink = $CFG->wwwroot . '/course/view.php?id=';
+        $listcourse = get_list_course_by_student($USER->id);
+        if ($listcourse) 
+        {
+
+            foreach ($listcourse as $item) 
+            {   
+                $output .= '<li class="dropdown-item">';
+                $output .= '<a tabindex="-1" href="'.$courselink . $item->id.'">' . $item->fullname . ' </a>';
+                $output .= '</li>';
+            }
+
+        }
+        return $output;
+    }
+    public function nav_coursebyteacher() {
+        global $USER, $CFG;
+        $output = '';
+        $courselink = $CFG->wwwroot . '/course/view.php?id=';
+        $listcourse = get_list_course_by_teacher($USER->id);
+        if ($listcourse) 
+        {
+
+            foreach ($listcourse as $item) 
+            {   
+                $output .= '<li class="dropdown-item">';
+
+                $output .= '<a tabindex="-1" href="'.$courselink . $item->id.'">' . $item->fullname . ' </a>';
+                
+                $output .= '</li>';
+            }
+
+        }
+        return $output;
+    }
+
+    public function nav_course() {
+        global $DB, $CFG;
+        $header = new stdClass();
+        $navdraweropen = (get_user_preferences('drawer-open-nav', 'true') == 'true');
+        $draweropenright = (get_user_preferences('sidepre-open', 'true') == 'true');
+
+        if(isloggedin()) {
+            $header->active = true;
+            $header->nav_course_categories = $this->nav_course_categories();
+            $header->nav_coursebyteacher = $this->nav_coursebyteacher();
+            $header->nav_coursebystudent = $this->nav_coursebystudent();
+            $header->course_search_form_fp = $this->course_search_form_fp();
+            $header->hasdrawertoggle = true;
+            $header->navdraweropen = $navdraweropen;
+            $header->draweropenright = $draweropenright;
+
+        } else {
+            $header->active = false;
+        }
+        return $this->render_from_template('theme_moove/fp_flatnavigation', $header);
+    }
+
+    public function nav_header() {
+        global $CFG;
+        $output = '';
+        $dashboard = $CFG->wwwroot . '/my';
+        $course = $CFG->wwwroot . '/local/newsvnr/course.php';
+        $news = $CFG->wwwroot . '/local/newsvnr/index.php';
+        $forum = $CFG->wwwroot . '/local/newsvnr/forum.php';
+        $calendar = $CFG->wwwroot . '/calendar/view.php?view=month';
+        $files = $CFG->wwwroot . '/user/files.php';
+        $output .='<li class="active"><a href="'.$dashboard .'">Dash board</a></li>
+            <li><a href="'.$course .'">Khoá học</a></li>
+            <li><a href="'.$news .'">Tin tức</a></li>
+            <li><a href="'.$forum .'">Diễn đàn</a></li>
+            <li><a href="'.$calendar .'">Lịch</a></li>
+            <li><a href="'.$files .'">Tài liệu cá nhân</a></li>';
+        return $output;
     }
 
     /**
@@ -166,16 +315,18 @@ class core_renderer extends \theme_boost\output\core_renderer {
         global $PAGE,$DB,$USER;
 
         $html = html_writer::start_div('row');
-        $html .= html_writer::start_div('col-xs-12 mt-2');
+        $html .= html_writer::start_div('col-xs-12 mt-2 mb-2');
         $teacherdbbutton = '';
         $studentdbbutton = '';
         $pageheadingbutton = $this->page_heading_button();
         $roles = $DB->get_records_sql('SELECT DISTINCT roleid FROM {role_assignments} WHERE userid = ?',[$USER->id]);
         foreach($roles as $role) {
             if($role->roleid == 3) {
-                $teacherdbbutton = $this->render(new single_button(new moodle_url('/local/newsvnr/dashboard.php?view=teacher'), get_string('teacherdashboard', 'local_newsvnr'), 'get', true));
+                $url = new moodle_url('/local/newsvnr/dashboard.php?view=teacher');
+                $teacherdbbutton = '<a href="'.$url.'"><i class="fa fa-eye text-icon-dashboard" aria-hidden="true">'. get_string('teacherdashboard', 'local_newsvnr') .'</i></a>';
             } else if($role->roleid == 5) {
-                $studentdbbutton = $this->render(new single_button(new moodle_url('/local/newsvnr/dashboard.php?view=student'), get_string('studentdashboard', 'local_newsvnr'), 'get', true, ['class' => 'mb-3']));
+                $url = new moodle_url('/local/newsvnr/dashboard.php?view=student');
+                $studentdbbutton = '<a href="'.$url.'"><i class="fa fa-eye text-icon-dashboard" aria-hidden="true">'. get_string('studentdashboard', 'local_newsvnr') .'</i></a>';
             }
         }
         
@@ -186,7 +337,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $html .= html_writer::end_div();
         } else if ($pageheadingbutton) {
             // $html .= html_writer::div($this->render($studentdbbutton), 'd-flex justify-content-end mr-2');
-            $html .= html_writer::div($pageheadingbutton . $teacherdbbutton . $studentdbbutton, 'breadcrumb-button nonavbar pull-right m-r-1');
+            $html .= html_writer::div($pageheadingbutton .' | ' . $teacherdbbutton .' | '. $studentdbbutton, 'breadcrumb-button nonavbar pull-right m-r-1');
         }
 
         $html .= html_writer::end_div(); // End .row.
@@ -839,13 +990,13 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $searchurl = new moodle_url('/course/search.php');
 
         $output = html_writer::start_tag('form', array('id' => $formid, 'action' => $searchurl, 'method' => 'get','class' => 'form-inline'));
-        $output .= html_writer::start_tag('fieldset', array('class' => 'coursesearchbox invisiblefieldset automargin'));
+        $output .= html_writer::start_tag('fieldset', array('class' => 'coursesearchbox invisiblefieldset automargin', 'style' => 'border: 0.01rem solid #93b4c7; border-right: unset;'));
 
-        $output .= html_writer::empty_tag('input', array('type' => 'text', 'id' => $inputid,
-            'size' => $inputsize, 'name' => 'search', 'value' => s($value),'class' => 'form-control'));
+        $output .= html_writer::empty_tag('input', array('type' => 'text', 'id' => $inputid, 'placeholder' => 'Tìm kiếm khoá bạn muốn học',
+            'size' => $inputsize, 'name' => 'search', 'value' => s($value),'class' => 'form-control' ,'style' => 'border: 0px'));
         $output .= html_writer::start_tag('button', array('type' => 'submit',
-          'class' => 'btn btn-secondary'));
-        $output .= get_string('search');
+          'class' => 'btn', 'style' => 'background-color: #fff; border: 0.01rem solid #93b4c7 !important; border-left: unset !important;'));
+        $output .= '<i class="fa fa-search" aria-hidden="true"></i>';
         $output .= html_writer::end_tag('button');
         $output .= html_writer::end_tag('fieldset');
 

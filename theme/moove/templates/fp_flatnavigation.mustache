@@ -1,0 +1,36 @@
+
+{{#active}}
+    <nav style="background-color: #3c8dbc; width: 100%;height: 70px;margin-top: 70px;" id="nav-course">
+        <div class="row pr-2 pl-2 w-100">
+            <div class="col-auto text-white font-weight-bold cl-cursor" style="padding: 24px;">
+                <i class="fa fa-list-ul"></i><span class="sr-only">{{#str}}sidepanel, core{{/str}}</span>
+            </div>
+            <div class="col-auto text-white font-weight-bold cl-cursor dropdown" style="padding: 24px;">
+
+                <span data-toggle="dropdown">Danh mục khoá học</span>
+                <ul class="dropdown-menu text-dark" role="menu" id="drop-course-category">
+                  {{#nav_course_categories}}{{{nav_course_categories}}}{{/nav_course_categories}}
+                </ul>
+            </div>
+            <div class="col-auto text-white font-weight-bold cl-cursor dropdown" style="padding: 24px;">
+
+                <span data-toggle="dropdown">Khoá học của tôi</span>
+
+                <ul class="dropdown-menu text-dark" role="menu" id="drop-course-by-student">
+                   {{#nav_coursebyteacher}}{{{nav_coursebyteacher}}}{{/nav_coursebyteacher}}
+                </ul>
+            </div>
+            <div class="col-auto text-white font-weight-bold cl-cursor dropdown" style="padding: 24px;">
+
+                <span data-toggle="dropdown">Khoá giảng của tôi</span>
+                <ul class="dropdown-menu text-dark" role="menu" id="drop-course-by-teacher">
+                  {{#nav_coursebyteacher}}{{{nav_coursebyteacher}}}{{/nav_coursebyteacher}}
+                </ul>
+            </div>
+            <div class="col d-flex">
+                {{#course_search_form_fp}}{{{course_search_form_fp}}}{{/course_search_form_fp}}
+            </div>
+        </div>
+
+    </nav>
+{{/active}}

@@ -1,0 +1,82 @@
+{{! <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
+    </div>
+       
+</div> }}
+
+<style type="text/css">
+    @media (min-width: 576px) {
+        .card-deck .card {
+            margin-right: 1rem;
+            margin-bottom: 0;
+            margin-left: 1rem;
+        }
+        #first-column.card {
+            margin-left: 0px;
+            padding: 0 30px 0 30px;
+        }
+         #first-column.card .card-body {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+            
+    }
+
+</style>
+<div class="container-fluid p-0">
+ 
+  <div class="card-deck">
+    <div class="card" style="background-color: #f3a837" id="first-column">
+      <div class="card-body text-center text-white">
+        <div class="d-flex justify-content-center">
+          <div class="flex-fill" style="border-right: 1px solid #fff;"><p class="card-text block-text-number">{{#countcourse}}{{countcourse}}{{/countcourse}}{{^countcourse}}0{{/countcourse}}</p>
+        <p class="card-text p-1 font-weight-bold">Khoá học đang tham gia</p></div>
+          <div class="flex-fill"><p class="card-text block-text-number">{{#completedcourses}}{{completedcourses}}{{/completedcourses}}{{^completedcourses}}0{{/completedcourses}}</p>
+        <p class="card-text p-1 font-weight-bold">Khoá học hoàn thành</p></div>
+         
+        </div>
+     
+      </div>
+    </div>
+    <div class="card" style="background-color: #272453">
+      <div class="card-body text-center text-white">
+        <p class="card-text block-text-number">{{#completed_percent_requirecourses}}{{completed_percent_requirecourses}}%{{/completed_percent_requirecourses}}{{^completed_percent_requirecourses}}0%{{/completed_percent_requirecourses}}</p>
+        <p class="card-text font-weight-bold">({{#completed_requirecourses}}{{completed_requirecourses}}{{/completed_requirecourses}}{{^completed_requirecourses}}0{{/completed_requirecourses}}/{{#total_requirecourses}}{{total_requirecourses}}{{/total_requirecourses}}{{^total_requirecourses}}0{{/total_requirecourses}} khoá học)</p>
+        <p class="card-text">Tỉ lệ hoàn thành khoá học đào tạo bắt buộc</p>
+      </div>
+    </div>
+    <div class="card" style="background-color: #272453">
+      <div class="card-body text-center text-white">
+        <p class="card-text block-text-number">{{#completed_percent_positioncourses}}{{completed_percent_positioncourses}}%{{/completed_percent_positioncourses}}{{^completed_percent_positioncourses}}0%{{/completed_percent_positioncourses}}</p>
+        <p class="card-text font-weight-bold">({{#completed_positioncourses}}{{completed_positioncourses}}{{/completed_positioncourses}}{{^completed_positioncourses}}0{{/completed_positioncourses}}/{{#total_positioncourses}}{{total_positioncourses}}{{/total_positioncourses}}{{^total_positioncourses}}0{{/total_positioncourses}} khoá học)</p>
+        <p class="card-text">Tỉ lệ hoàn thành khoá học đào tạo theo vị trí</p>
+      </div>
+    </div>
+    <div class="card" style="background-color: #272453">
+      <div class="card-body text-center text-white">
+        <p class="card-text block-text-number">{{#completed_percent_plancourses}}{{completed_percent_plancourses}}%{{/completed_percent_plancourses}}{{^completed_percent_plancourses}}0%{{/completed_percent_plancourses}}</p>
+        <p class="card-text font-weight-bold">({{#completed_plancourses}}{{completed_plancourses}}{{/completed_plancourses}}{{^completed_plancourses}}0{{/completed_plancourses}}/{{#total_plancourses}}{{total_plancourses}}{{/total_plancourses}}{{^total_plancourses}}0{{/total_plancourses}} khoá học)</p>
+        <p class="card-text">Tỉ lệ hoàn thành lộ trình cá nhân</p>
+      </div>
+    </div>
+    <div class="card" style="background-color: #1cc560">
+      <div class="card-body text-center text-white">
+        <p class="card-text block-text-number">{{#countcompetencies}}{{countcompetencies}}{{/countcompetencies}}{{^countcompetencies}}0{{/countcompetencies}}</p>
+        <p class="card-text font-weight-bold">Năng lực đạt được</p>
+        <p class="card-text">Tổng số năng lực(chứng chỉ) học viên đã đạt được</p>
+      </div>
+    </div>  
+    <div class="card" style="background-color: #1cc560">
+      <div class="card-body text-center text-white">
+        <p class="card-text block-text-number">{{#countbadges}}{{countbadges}}{{/countbadges}}{{^countbadges}}0{{/countbadges}}</p>
+        <p class="card-text font-weight-bold">Huy hiệu đạt được</p>
+        <p class="card-text">Tổng số huy hiệu học viên đã đạt được</p>
+      </div>
+  </div>
+</div>
+</div>

@@ -73,7 +73,7 @@ if (isloggedin()) {
     ];
 
     // Improve boost navigation.
-    theme_moove_extend_flat_navigation($PAGE->flatnav);
+    theme_moove_extend_flat_navigation($PAGE->flatnav,'frontpage');
    
     $templatecontext['flatnavigation'] = $PAGE->flatnav;
 

@@ -199,3 +199,6 @@ $string['functionapi'] = "Tên API";
 $string['urlapi'] = "Đường dẫn URL";
 $string['methodapi'] = "Phương thức";
 $string['contenttypeapi'] = "Định dạng dữ liệu";
+$string['manual_enrol'] = 'Ghi danh thủ công';
+$string['self_enrol'] = 'Tự do ghi danh';
+$string['key_enrol'] = 'Nhập key để ghi danh';

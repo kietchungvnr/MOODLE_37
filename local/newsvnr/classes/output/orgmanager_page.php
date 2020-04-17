@@ -16,14 +16,8 @@ class orgmanager_page implements renderable, templatable {
 
 	   public function export_for_template(renderer_base $output) {
         global $DB,$USER,$PAGE;
-
-        $data = \core_webservice_external::get_site_info(); 
-
         $data = [
         ];
-
-
-        
         return $data;
     }
 }

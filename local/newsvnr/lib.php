@@ -876,7 +876,7 @@ function get_list_course_by_student($userid) {
     global $DB;
     $list_courseid = [];
     $list_course_by_user_sql = "
-                                SELECT DISTINCT c.fullname,c.id,c.shortname
+                                SELECT DISTINCT c.fullname,c.id,c.shortname, c.required
                                 FROM mdl_role_assignments AS ra
                                     JOIN mdl_user AS u ON u.id= ra.userid
                                     JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
@@ -924,6 +924,31 @@ function get_list_courseid_by_teacher($userid) {
     } else
         $str_courseid = '';
     return $str_courseid;
+}
+
+function transfer_enrol_method($method) {
+    if($method == 'manual')
+        $strmethod = get_string('manual_enrol', 'local_newsvnr');
+    else if($method == 'key')
+        $strmethod = get_string('key_enrol', 'local_newsvnr');
+    else if($method == 'self')
+        $strmethod = get_string('self_enrol', 'local_newsvnr');
+    return $strmethod;
+}
+
+function get_enrol_method($courseid) {
+    global $DB;
+    $query = "
+            SELECT c.id, c.fullname AS 'course',
+       e.enrol AS 'method'
+            FROM mdl_user_enrolments AS ue
+                JOIN mdl_enrol AS e ON e.id = ue.enrolid
+                JOIN mdl_course AS c ON c.id = e.courseid
+            WHERE c.id = ?
+            GROUP BY c.id, c.fullname, e.enrol";
+    $execute = $DB->get_record_sql($query, [$courseid]);
+    $data = transfer_enrol_method($execute->method);
+    return $data;
 }
 
 /**

@@ -90,7 +90,7 @@ $THEME->iconsystem = '\theme_moove\util\icon_system';
 $THEME->layouts = [
     // Most backwards compatible layout without the blocks - this is the layout used by default.
     'base' => array(
-        'file' => 'columns2.php',
+        'file' => 'adminpage.php',
         'regions' => array(),
     ),
     // Standard layout with blocks, this is recommended for most pages with general information.
@@ -127,7 +127,7 @@ $THEME->layouts = [
     ),
     // Server administration scripts.
     'admin' => array(
-        'file' => 'columns2.php',
+        'file' => 'adminpage.php',
         'regions' => array('side-pre'),
         'defaultregion' => 'side-pre',
     ),
@@ -195,7 +195,7 @@ $THEME->layouts = [
     ),
     // The pagelayout used for reports.
     'report' => array(
-        'file' => 'columns2.php',
+        'file' => 'reportpage.php',
         'regions' => array('side-pre'),
         'defaultregion' => 'side-pre',
     ),

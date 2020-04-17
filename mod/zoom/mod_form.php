@@ -47,7 +47,7 @@ class mod_zoom_mod_form extends moodleform_mod {
         global $PAGE, $USER;
         $config = get_config('mod_zoom');
         $service = new mod_zoom_webservice();
-        $zoomuser = $service->get_user($USER->email);
+        $zoomuser = $service->get_user($config->zoomemail);
         if ($zoomuser === false) {
             // Assume user is using Zoom for the first time.
             $errstring = 'zoomerr_usernotfound';

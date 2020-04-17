@@ -53,12 +53,14 @@
 <div id="page" class="container-fluid p-0">
 
     {{{ output.full_header }}}
+    
+    <div id="page-content" style="outline: none;">
     {{>theme_moove/fp_slideshow}}
     <div class="p-3">
     {{>theme_moove/fp_slidenews}}
+
     {{>theme_moove/fp_slidecourse}}
     {{# hascourses }}<h4 class="text-dark md-block font-weight-bold" align="center">KHÓA HỌC CỦA TÔI</h4>{{/ hascourses }}
-    <div id="page-content" style="outline: none;">
         <div id="region-main-box">
             <section id="region-main" style="overflow: unset;">
             {{>theme_moove/fp_mycourse}}

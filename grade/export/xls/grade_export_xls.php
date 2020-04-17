@@ -57,6 +57,23 @@ class grade_export_xls extends grade_export {
 
         // Print names of all the fields
         $profilefields = grade_helper::get_user_profile_fields($this->course->id, $this->usercustomfields);
+        //Custom by Vũ: Thêm các field usercode, courseid, coursename khi export bảng điểm của khoá học
+        $profilefields[2] = (object)[
+            'customid' => 0,
+            'shortname' => 'usercode',
+            'fullname' => 'Mã nhân viên'
+        ];
+        $profilefields[3] = (object)[
+            'customid' => 0,
+            'shortname' => 'courseid',
+            'fullname' => 'Mã khoá học'
+        ];
+        $profilefields[4] = (object)[
+            'customid' => 0,
+            'shortname' => 'coursename',
+            'fullname' => 'Tên khoá học'
+        ];
+
         foreach ($profilefields as $id => $field) {
             $myxls->write_string(0, $id, $field->fullname);
         }
@@ -86,6 +103,10 @@ class grade_export_xls extends grade_export {
         while ($userdata = $gui->next_user()) {
             $i++;
             $user = $userdata->user;
+            
+            //Custom by Vũ: Thêm các field usercode, courseid, coursename khi export bảng điểm của khoá học
+            $user->courseid = $this->course->id;
+            $user->coursename = $this->course->fullname;
 
             foreach ($profilefields as $id => $field) {
                 $fieldvalue = grade_helper::get_user_field_value($user, $field);

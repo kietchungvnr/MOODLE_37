@@ -5,30 +5,26 @@
                    {{#requiredpositioncourse}}
                    {{#newscourse}}
                     <div class="post-slide6">
-                      
-                     
-                        <div class="post-img">
-                            {{{courseimage}}}
-                            <div class="post-info">
-                                <ul class="category">
-                                    <li>Học viên <a href="#">{{countstudent}}</a></li>
-                                    <li>Giáo viên <a href="#">{{fullnamet}}</a></li>
-                                   
-                                </ul>
-              
-                            </div>
+                    <div class="post-img">
+                        {{{courseimage}}}
+                        <div class="post-info">
+                            <ul class="category">
+                                <li>Học viên <a href="#">{{countstudent}}</a></li>
+                                <li>Giáo viên <a href="#">{{fullnamet}}</a></li>
+                               
+                            </ul>
+          
                         </div>
-                        <div class="post-review">
-                            <span class="icons">
-                                   {{{imageteacher}}}
-                            </span>
-                            <h3 class="post-title"><a href="{{{link}}}" title="{{fullname}}">{{fullname}}</a></h3>
-                            <p class="post-description" style="height:104px">{{summary}}</p>
-                          
-                        </div>
-                        
-                     
                     </div>
+                    <div class="post-review">
+                        <span class="icons">
+                               {{{imageteacher}}}
+                        </span>
+                        <h3 class="post-title"><a href="{{{link}}}" title="{{fullname}}">{{#shortentext}}60, {{fullname}}{{/shortentext}}</a></h3>
+                            <p class="post-teachername">{{#shortentext}}30, {{fullnamet}}{{/shortentext}}</p>
+                            <p class="post-description">{{#shortentext}}145, {{summary}}{{/shortentext}}</p>
+                    </div>
+                </div>
                     {{/newscourse}}
                     {{/requiredpositioncourse}}                
                 </div>

@@ -6,23 +6,6 @@ class block_vnr_db_viewreport extends block_base {
         $this->title = get_string('pluginname', 'block_vnr_db_viewreport');
     }
 
-    function user_can_addto($page) {
-        // Don't allow people to add the block if they can't even use it
-        if (!has_capability('moodle/community:add', $page->context)) {
-            return false;
-        }
-
-        return parent::user_can_addto($page);
-    }
-
-    function user_can_edit() {
-        // Don't allow people to edit the block if they can't even use it
-        if (!has_capability('moodle/community:add',
-                        context::instance_by_id($this->instance->parentcontextid))) {
-            return false;
-        }
-        return parent::user_can_edit();
-    }
     function get_content() {
        
         if(!has_capability('moodle/tag:editblocks',$this->context) or $this->content !== NULL) {

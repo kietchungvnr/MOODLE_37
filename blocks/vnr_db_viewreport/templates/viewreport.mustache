@@ -238,8 +238,50 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
         };
         if(paramJson['action'] == 'viewcount_chart_vp')
             callAjax(script, settings);
-    }).change();
-    var courseid = $('#list_course').val();
+        courseid = $('#list_course').val();
+        $('.showchart').removeClass('d-none');
+        $('.showchart_grid').addClass('d-none');
+        if (param == 1) {
+            url = Config.wwwroot + '/report/completion/index.php?course=' + courseid + ' [role=main]';
+            $body.addClass("loading");
+            $('.showchart').load(url, function(response, status, xhr) {
+                if(status) {
+                    $body.removeClass("loading");
+                }
+                if (status == "error") {
+                    $(".showchart").html('<div class="d-flex justify-content-center alert alert-info alert-block fade in ">Khoá học này chưa cài đặt điều kiện hoàn thành</div>');
+                }
+            });
+        } else if (param == 2) {
+            url = Config.wwwroot + '/grade/report/grader/index.php?id=' + courseid + ' [role=main]';
+            $body.addClass("loading");
+            $('.showchart').load(url, function(response, status, xhr) {
+                if(status) {
+                    $body.removeClass("loading");
+                }
+                if (status == "error") {
+                    $(".showchart").html(msg + xhr.status + " " + xhr.statusText);
+                }
+            });
+        } else if (param == 3) {
+            action = "viewcount_chart_vp"
+        } else if (param == 4) {
+            url = Config.wwwroot + '/report/progress/index.php?course=' + courseid + ' [role=main]';
+            $body.addClass("loading");
+            $('.showchart').load(url, function(response, status, xhr) {
+                if(status) {
+                    $body.removeClass("loading");
+                }
+                if (status == "error") {
+                    $(".showchart").html('<div class="d-flex justify-content-center alert alert-info alert-block fade in ">Khoá học này chưa có hoạt động nào</div>');
+                }
+            });
+        } else if (param == 5) {
+            $('.showchart_grid').removeClass('d-none');
+             vpgrid.viewreport(courseid);
+             $('.showchart').addClass('d-none');
+        }
+    });
     $('#list_course').change(function() {
         courseid = $(this).val();
         $('.showchart').removeClass('d-none');
@@ -256,7 +298,7 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
                 }
             });
         } else if (param == 2) {
-            url = Config.wwwroot + '/grade/report/grader/index.php?id=' + courseid + ' .gradeparent';
+            url = Config.wwwroot + '/grade/report/grader/index.php?id=' + courseid + ' [role=main]';
             $body.addClass("loading");
             $('.showchart').load(url, function(response, status, xhr) {
                 if(status) {
@@ -269,7 +311,7 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
         } else if (param == 3) {
             action = "viewcount_chart_vp"
         } else if (param == 4) {
-            url = Config.wwwroot + '/report/progress/index.php?course=' + courseid + ' #completion-progress';
+            url = Config.wwwroot + '/report/progress/index.php?course=' + courseid + ' [role=main]';
             $body.addClass("loading");
             $('.showchart').load(url, function(response, status, xhr) {
                 if(status) {

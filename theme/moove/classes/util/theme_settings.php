@@ -353,6 +353,7 @@ class theme_settings {
         global $USER,$CFG,$DB,$OUTPUT;
 
         require_once($CFG->dirroot.'/course/renderer.php');
+        require_once($CFG->dirroot.'/local/newsvnr/lib.php');
 
         $chelper = new \coursecat_helper();
         
@@ -419,6 +420,7 @@ class theme_settings {
             $arr = self::role_courses_teacher_slider($courseid);
             $course->fullnamet = $arr->fullnamet;
             $course->countstudent = $arr->studentnumber;
+            // $course->enrolmethod = get_enrol_method($course->id);
             if (isset($arr->id)) {
               $stduser = new stdClass();
               $userid = $DB->get_records('user',array('id' => $arr->id));
@@ -432,6 +434,7 @@ class theme_settings {
               $course->imageteacher = $arr->imgdefault;
             }
         }
+        // var_dump($courses);die;
         return array_values($courses);
 
     }
@@ -469,6 +472,46 @@ class theme_settings {
                 'src' => $url,
                 'alt' => $course->fullname,
                 'class' => 'img-responsive',
+            )));
+        }
+
+        return $contentimage;
+    }
+
+     /**
+     * Returns the first course's summary issue
+     *
+     * @param $course
+     * @param $courselink
+     *
+     * @return string
+     */
+    public static function get_course_images_nav($course, $courselink) {
+        global $CFG;
+
+        $contentimage = '';
+        foreach ($course->get_course_overviewfiles() as $file) {
+            $isimage = $file->is_valid_image();
+            $url = file_encode_url("$CFG->wwwroot/pluginfile.php",
+                '/'. $file->get_contextid(). '/'. $file->get_component(). '/'.
+                $file->get_filearea(). $file->get_filepath(). $file->get_filename(), !$isimage);
+            if ($isimage) {
+                $contentimage = \html_writer::link($courselink, \html_writer::empty_tag('img', array(
+                    'src' => $url,
+                    'alt' => $course->fullname,
+                    'style' => 'height:100px; max-width: 100%; width: auto;'
+                )));
+                break;
+            }
+        }
+
+        if (empty($contentimage)) {
+            $url = $CFG->wwwroot . "/theme/moove/pix/default_course.jpg";
+
+            $contentimage = \html_writer::link($courselink, \html_writer::empty_tag('img', array(
+                'src' => $url,
+                'alt' => $course->fullname,
+                'style' => 'height:100px; max-width: 100%; width: auto;'
             )));
         }
 

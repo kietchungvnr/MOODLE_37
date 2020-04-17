@@ -280,12 +280,19 @@ function theme_moove_extend_flat_navigation(\flat_navigation $flatnav, $layout =
 
     theme_moove_buildnavnewsvnr_by_student($flatnav);
     theme_moove_buildnavnewsvnr_by_teacher($flatnav);
-    
-    if($layout === 'course' or $layout === 'incourse') {
+    $listlayout = [
+        'course',
+        'incourse',
+        'default',
+        'report'
+    ];
+    // var_dump($layout);die;
+    if(in_array($layout, $listlayout)) {
         theme_moove_delete_menuitems_incourse($flatnav);
     } else {
         theme_moove_delete_menuitems($flatnav);
     }
+    
    
     // theme_moove_buildnavnewsvnr_allpage($flatnav);
     if(is_siteadmin()) {
@@ -330,20 +337,22 @@ function theme_moove_delete_menuitems(\flat_navigation $flatnav) {
 function theme_moove_delete_menuitems_incourse(\flat_navigation $flatnav) {
     // var_dump($flatnav);die;
     $itemstodelete = [
-        // 'home',
-        // 'myhome',
-        // 'coursehome',
-        // 'mycourses',
-        // 'mycohorts1',
-        // 'mycohorts2',
-        // 'mycohorts3',
-        // 'calendar',
-        // 'privatefiles',
-        // 'mycourses_by_student_vnr',
-        // 'mycourses_by_teacher_vnr',
+        'home',
+        'myhome',
+        'coursepage',
+        'mycourses',
+        'newspage',
+        'forumpage',
+        'calendar',
+        'privatefiles',
+        'mycourses_by_student_vnr',
+        'mycourses_by_teacher_vnr',
+        'grabnode',
+        'newsvnr-sections',
+        // 'sitesettings'
 
-        'coursehome',
-        'mycourses'
+        // 'coursehome',
+        // 'mycourses'
     ];
 
     foreach ($flatnav as $item) {

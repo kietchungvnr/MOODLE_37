@@ -15,9 +15,7 @@
 
     {{{ output.standard_after_main_region_html }}}
 
-    {{#hasdrawertoggle}}
-        {{> theme_moove/nav-drawer }}
-    {{/hasdrawertoggle}}
+    
 </div><!-- Ends .page-wrapper -->
 
 {{> theme_moove/footer }}
@@ -66,6 +64,16 @@ require(['jquery'], function($) {
         },500);
        
     });
+    var courseurl = '/course/view.php';
+    if($('[data-region="drawer"]')) {
+        $('[data-region="drawer"]').removeClass('closed');
+        $('[data-region="drawer"]').addClass('open');
+    }
+
+    {{! $(document).ready(function() {
+      $('li.active').removeClass('active');
+      $('a[href="' + location.pathname + '"]').closest('li').addClass('active'); 
+}); }}
 
 });
 
