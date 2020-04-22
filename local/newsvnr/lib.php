@@ -929,26 +929,40 @@ function get_list_courseid_by_teacher($userid) {
 function transfer_enrol_method($method) {
     if($method == 'manual')
         $strmethod = get_string('manual_enrol', 'local_newsvnr');
-    else if($method == 'key')
-        $strmethod = get_string('key_enrol', 'local_newsvnr');
+    else if($method == 'apply')
+        $strmethod = get_string('apply_enrol', 'local_newsvnr');
     else if($method == 'self')
         $strmethod = get_string('self_enrol', 'local_newsvnr');
+    else if($method == 'guest')
+        $strmethod = get_string('guest_enrol', 'local_newsvnr');
     return $strmethod;
 }
 
 function get_enrol_method($courseid) {
-    global $DB;
+    global $DB,$CFG;
+    $courseurl = $CFG->wwwroot . '/course/view.php?id=' . $courseid;
     $query = "
-            SELECT c.id, c.fullname AS 'course',
-       e.enrol AS 'method'
-            FROM mdl_user_enrolments AS ue
-                JOIN mdl_enrol AS e ON e.id = ue.enrolid
-                JOIN mdl_course AS c ON c.id = e.courseid
-            WHERE c.id = ?
-            GROUP BY c.id, c.fullname, e.enrol";
-    $execute = $DB->get_record_sql($query, [$courseid]);
-    $data = transfer_enrol_method($execute->method);
-    return $data;
+            SELECT enrol FROM mdl_enrol WHERE status = 0 AND courseid = ?
+            ";
+    $execute = $DB->get_records_sql($query, [$courseid]);
+    $methodarr = [];
+    foreach($execute as $method) {
+        array_push($methodarr, $method->enrol);
+    }
+   
+    if(in_array('guest', $methodarr)) {
+        return '<a href="'.$courseurl.'"><i class="fa fa-unlock-alt fa-fw " title="Guest access" aria-label="Guest access"></i>' . get_string('guest_enrol', 'local_newsvnr') . '</a>'; 
+    }
+    if(in_array('self', $methodarr)) {
+        return '<a href="'.$courseurl.'"><i class="fa fa-key fa-fw " title="Self enrolment" aria-label="Self enrolment"></i>' . get_string('self_enrol', 'local_newsvnr') . '</a>';
+    }
+    if(in_array('apply', $methodarr)) {
+        return '<a href="'.$courseurl.'">' . get_string('apply_enrol', 'local_newsvnr') . '</a>'; 
+    }
+    if(in_array('manual', $methodarr)) {
+        return '<a href="'.$courseurl.'" style="color:red"><i class="fa fa-lock fa-fw " title="Manual Access" aria-label="Manual Access"></i>' . get_string('manual_enrol', 'local_newsvnr') . '</a>'; 
+    }
+    
 }
 
 /**

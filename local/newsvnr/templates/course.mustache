@@ -97,13 +97,25 @@
                             </div>
                             <div class="post-review">
                                 <span class="icons">
-
                                        {{{imageteacher}}}
                                 </span>
-                                <h3 class="post-title"><a href="{{{link}}}" title="{{fullname}}">{{fullname}}</a></h3>
-                                <p class="post-description" >{{summary}}</p>
-                              
-                            </div> 
+                                <h3 class="post-title"><a href="{{{link}}}" title="{{fullname}}">{{#shortentext}}80, {{{fullname}}}{{/shortentext}}</a></h3>
+                                <p class="post-teachername">{{#shortentext}}30, {{fullnamet}}{{/shortentext}}</p>
+                                
+                                <p class="post-description">{{#shortentext}}90, {{summary}}{{/shortentext}}</p>
+
+                                <p class="post-enrolmethod">
+                                    {{#enrolmethod}}{{{enrolmethod}}}{{/enrolmethod}}
+                                    {{#progress}}
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}"
+                                          aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%">
+                                                {{progress}}%
+                                            </div>
+                                        </div>
+                                    {{/progress}}
+                                </p>
+                            </div>
                         </div>
                         {{/newscourse}}
                         {{/popularcourse}}                
@@ -136,10 +148,23 @@
                                     <span class="icons">
                                            {{{imageteacher}}}
                                     </span>
-                                    <h3 class="post-title"><a href="{{{link}}}" title="{{fullname}}">{{{fullnameurl}}}</a></h3>
-                                    <p class="post-description" >{{summary}}</p>
-                                  
-                                </div> 
+                                    <h3 class="post-title"><a href="{{{link}}}" title="{{fullname}}">{{#shortentext}}80, {{{fullnameurl}}}{{/shortentext}}</a></h3>
+                                    <p class="post-teachername">{{#shortentext}}30, {{fullnamet}}{{/shortentext}}</p>
+                                    
+                                    <p class="post-description">{{#shortentext}}90, {{summary}}{{/shortentext}}</p>
+
+                                    <p class="post-enrolmethod">
+                                        {{#enrolmethod}}{{{enrolmethod}}}{{/enrolmethod}}
+                                        {{#progress}}
+                                            <div class="progress">
+                                                <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}"
+                                              aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%">
+                                                    {{progress}}%
+                                                </div>
+                                            </div>
+                                        {{/progress}}
+                                    </p>
+                                </div>
                           </div>
 
                      {{/newestcourse}}
@@ -201,10 +226,23 @@
                                     <span class="icons">
                                            {{{imageteacher}}}
                                     </span>
-                                    <h3 class="post-title"><a href="{{{link}}}" title="{{fullname}}">{{{fullnameurl}}}</a></h3>
-                                    <p class="post-description" >{{summary}}</p>
-                                  
-                                </div> 
+                                    <h3 class="post-title"><a href="{{{link}}}" title="{{fullname}}">{{#shortentext}}80, {{{fullnameurl}}}{{/shortentext}}</a></h3>
+                                    <p class="post-teachername">{{#shortentext}}30, {{fullnamet}}{{/shortentext}}</p>
+                                    
+                                    <p class="post-description">{{#shortentext}}90, {{summary}}{{/shortentext}}</p>
+
+                                    <p class="post-enrolmethod">
+                                        {{#enrolmethod}}{{{enrolmethod}}}{{/enrolmethod}}
+                                        {{#progress}}
+                                            <div class="progress">
+                                                <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}"
+                                              aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%">
+                                                    {{progress}}%
+                                                </div>
+                                            </div>
+                                        {{/progress}}
+                                    </p>
+                                </div>
                             </div>
          
                             {{/allcourse}}                

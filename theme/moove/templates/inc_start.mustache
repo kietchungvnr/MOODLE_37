@@ -308,6 +308,7 @@ body {
     padding: 0;
     background-color: #fff;
     margin-right: 10px;
+    height: 330px;
 }
 
 .post-slide6 .post-img {
@@ -434,14 +435,41 @@ body {
     color: #6f6f6f;
     font-size: 14px;
     margin-left: 34px;
-    height: 40px;
+    /*height: 60px;*/
+    margin-bottom: 5px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+
 }
 .post-slide6 .post-teachername {
     
     color: #6f6f6f;
     font-size: 14px;
     margin-left: 34px;
-    margin-bottom: 5px;
+    margin-bottom: 2px;
+}
+.post-slide6 .post-enrolmethod {
+    color: #6f6f6f;
+    font-size: 13px;
+    margin-left: 34px;
+    margin-bottom: 0px;
+}
+
+.post-slide6 .progress {
+    height: 10px;
+    margin-bottom: 0px; 
+    margin-left: 34px;
+    margin-top: 8px;
+}
+
+.post-slide6 .fa-fw {
+    text-align: left;
+}
+
+.post-slide6 .progress .progress-bar {
+    font-size: 10px;
 }
 
 .post-slide6 .read {
@@ -1377,7 +1405,7 @@ nav.navbar .navbar-brand .logo img {
         position: absolute;
         width: 100%;
         height: 100vh;
-        top: 70px;
+        top: 52px;
         left: 0px;
         background-color: rebeccapurple;
        /* margin-left: auto!important;
@@ -1399,6 +1427,9 @@ nav.navbar .navbar-brand .logo img {
     }
     .navbar-expand .navbar-toggler {
         display: block;
+    }
+    #nav-course {
+        display: none;
     }
 }
 @media only screen and (min-width: 600px) {
@@ -1432,8 +1463,8 @@ nav.navbar .navbar-brand .logo img {
 #nav-course #drop-course-by-teacher,
 #nav-course #drop-course-by-student {
     background-color: #306b8e;
-    left: -24px !important;
-    top: 25px !important;
+    left: -16px !important;
+    top: 16px !important;
 }
 @media only screen and (min-width: 600px) and (max-width: 1366px) {
     #nav-course input#coursesearchbox.form-control {
@@ -1462,9 +1493,16 @@ nav.navbar .navbar-brand .logo img {
     color: #16181b !important;
     text-decoration: none;
 }
+#nav-course .dropdown-item a{
+    color: #fff;
+}
 
 .dropdown-submenu {
     position: relative;
+}
+
+.dropdown-submenu a{
+    color: #fff;
 }
 
 .dropdown-submenu>.dropdown-menu {
@@ -1701,6 +1739,53 @@ li {
  }
 }
 
+nav.navbar {
+    min-height: 52px;
+}
+.navbar {
+    max-height: 52px
+}
+nav.navcourse {
+    background-color: #3c8dbc;
+    width: 100%;
+    height: 52px;
+    margin-top: 52px;
+}
+.nav-course-padding {
+    padding: 15px;
+}
+nav.navbar ul.navbar-nav .lang-menu .dropdown-menu {
+    margin-top: -20px;
+}
+nav.navbar ul.navbar-nav .usermenu {
+    line-height: 85px;
+}
+nav.navbar ul.navbar-nav .popover-region .popover-region-container {
+    top: 68px;
+}
+nav.navbar .moove-search-input .search-input-form .close-search {
+    top: -10px;
+    right: 15px;
+}
+nav.navbar .moove-search-input .search-input-form .form-control {
+    padding: 13px 40px 13px 20px
+}
+nav.navbar ul.navbar-nav .popover-region .popover-region-toggle .count-container {
+    top: 19px;
+}
+.message-app.drawer {
+    top: 52px;
+}
+[data-region="blocks-column"] {
+    top: 52px;
+}
+#action-menu-2-menu.dropdown-menu {
+    left: 6px !important;
+}
+#sidepre-blocks .card-title {
+    border-left: 5px solid;
+    padding-left: 5px;
+}
 </style>
 
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.common.min.css"/>

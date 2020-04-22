@@ -77,9 +77,8 @@ $templatecontext['flatnavigation'] = $PAGE->flatnav;
 $themesettings = new \theme_moove\util\theme_settings();
 
 $templatecontext = array_merge($templatecontext, $themesettings->footer_items());
-
 if (!$coursepresentation || $coursepresentation == 1) {
-    echo $OUTPUT->render_from_template('theme_moove/columns2', $templatecontext);
+    echo $OUTPUT->render_from_template('theme_moove/coursepage', $templatecontext);
 } else if ($coursepresentation == 2) {
     echo $OUTPUT->render_from_template('theme_moove/course_cover', $templatecontext);
 }

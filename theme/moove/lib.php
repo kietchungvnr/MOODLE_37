@@ -286,7 +286,6 @@ function theme_moove_extend_flat_navigation(\flat_navigation $flatnav, $layout =
         'default',
         'report'
     ];
-    // var_dump($layout);die;
     if(in_array($layout, $listlayout)) {
         theme_moove_delete_menuitems_incourse($flatnav);
     } else {

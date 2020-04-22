@@ -588,7 +588,7 @@ class theme_settings {
      */
     public function get_courses_data($pinned = 1, $required = null, $suggest = null, $userplancourse = null, $planid = 0)
     {
-        global $DB;
+        global $DB, $USER;
         $arr = array();
         $courses = self::user_courses_list($pinned, $required, $suggest, $userplancourse, $planid);
         // $templatecontext['courseendable'] = "1";
@@ -598,8 +598,9 @@ class theme_settings {
             $arr[] = (array)$value;
         }
 
-        for ($i = 1, $j = 0; $i <= count($courses); $i++, $j++) 
-        {
+        for ($i = 1, $j = 0; $i <= count($courses); $i++, $j++) {
+            $enrolmethod = get_enrol_method($courses[$j]->id);
+            $progress = \core_completion\progress::get_course_progress_percentage($courses[$j],$USER->id);
             $templatecontext['newscourse'][$j]['key'] = $j;
             $templatecontext['newscourse'][$j]['fullname'] = $arr[$j]['fullname'];
             $templatecontext['newscourse'][$j]['summary'] = $arr[$j]['summary'];
@@ -608,8 +609,13 @@ class theme_settings {
             $templatecontext['newscourse'][$j]['countstudent'] = $arr[$j]['countstudent'];
             $templatecontext['newscourse'][$j]['imageteacher'] = $arr[$j]['imageteacher'];
             $templatecontext['newscourse'][$j]['fullnamet'] = $arr[$j]['fullnamet'];
+            if($progress) {
+                $templatecontext['newscourse'][$j]['progress'] = round($progress);
+            } else {
+                $templatecontext['newscourse'][$j]['enrolmethod'] = $enrolmethod;
+            }
         }
-      
+        // var_dump($templatecontext);die;
         return $templatecontext;
 
     }
