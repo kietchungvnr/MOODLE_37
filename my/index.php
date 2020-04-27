@@ -134,18 +134,16 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
             $USER->editing = $edit = 0;          // Disable editing completely, just to be safe
         }
     }
-
     // Add button for editing page
     $params = array('edit' => !$edit);
 
     $resetbutton = '';
     $resetstring = get_string('resetpage', 'my');
-    $reseturl = new moodle_url("$CFG->wwwroot/my/index.php", array('edit' => 1, 'reset' => 1));
+    $reseturl = new moodle_url("$CFG->wwwroot/my/index.php", array('edit' => 1, 'reset' => 1, 'sesskey'=>sesskey()));
     $url = new moodle_url("$CFG->wwwroot/my/index.php", $params);
     if (!$currentpage->userid) {
         // viewing a system page -- let the user customise it
         $editstring = '<a href="'.$url.'"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true">'.get_string('updatemymoodleon').'</i></a>';
-        $params['edit'] = 1;
     } else if (empty($edit)) {
         // $editstring = get_string('updatemymoodleon');
         $editstring = '<a href="'.$url.'"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true">'.get_string('updatemymoodleon').'</i></a>';
@@ -155,7 +153,9 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
         $resetbutton = '<a href="'.$reseturl.'"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true">'.$resetstring.'</i></a>';
         ;
     }
-
+    if (!$currentpage->userid) {
+        $params['edit'] = 1;
+    }
     
     $button = $editstring;
     if($resetbutton !== '') 

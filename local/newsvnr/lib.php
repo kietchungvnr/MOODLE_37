@@ -884,8 +884,7 @@ function get_list_course_by_student($userid) {
                                     JOIN mdl_course AS c ON c.id=e.courseid
                                     JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
                                     JOIN mdl_role AS r ON r.id= ra.roleid
-                                    
-                                WHERE  ra.roleid=5 AND u.id = ?";
+                                WHERE  ra.roleid=5 AND ue.status = 0 AND u.id = ? AND c.visible = 1";
     $list_course_by_user_ex = $DB->get_records_sql($list_course_by_user_sql,[$userid]);
     if ($list_course_by_user_ex) {
         foreach ($list_course_by_user_ex as $value) 
@@ -913,7 +912,7 @@ function get_list_courseid_by_teacher($userid) {
                                     JOIN mdl_role AS r ON r.id= ra.roleid
                                     JOIN mdl_course_modules cm ON c.id = cm.course
                                     JOIN mdl_course_modules_completion cmc ON cm.id = cmc.coursemoduleid
-                                WHERE  ra.roleid=3 AND u.id = ?";
+                                WHERE  ra.roleid=3 AND u.id = ? AND c.visible = 1";
     $list_course_by_user_ex = $DB->get_records_sql($list_course_by_user_sql,[$userid]);
     $list_courseid = array();
      if (!empty($list_course_by_user_ex)) {

@@ -100,6 +100,15 @@ class course_page implements renderable, templatable
       $arr = $theme_settings::role_courses_teacher($courseid);
       $coursestd->fullnamet = $arr->fullnamet;
       $coursestd->countstudent = $arr->studentnumber;
+      $enrolmethod = get_enrol_method($courseid);
+      $progress = \core_completion\progress::get_course_progress_percentage($course,$USER->id);
+      if(isset($progress)) {
+        $coursestd->progress = round($progress);
+        if($coursestd->progress == 0) 
+          $coursestd->progress = -1;
+      } else {
+        $coursestd->enrolmethod = $enrolmethod;
+      }
       if (isset($arr->id)) {
           $stduser = new stdClass();
           $userid = $DB->get_records('user',array('id' => $arr->id));
@@ -147,7 +156,15 @@ class course_page implements renderable, templatable
       $arr = $theme_settings::role_courses_teacher($courseid);
       $coursestd->fullnamet = $arr->fullnamet;
       $coursestd->countstudent = $arr->studentnumber;
-  
+      $enrolmethod = get_enrol_method($courseid);
+      $progress = \core_completion\progress::get_course_progress_percentage($course,$USER->id);
+      if(isset($progress)) {
+        $coursestd->progress = round($progress);
+        if($coursestd->progress == 0) 
+          $coursestd->progress = -1;
+      } else {
+        $coursestd->enrolmethod = $enrolmethod;
+      }
       if (isset($arr->id)) {
           $stduser = new stdClass();
           $userid = $DB->get_records('user',array('id' => $arr->id));

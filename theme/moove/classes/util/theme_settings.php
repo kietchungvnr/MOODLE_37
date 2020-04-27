@@ -36,6 +36,7 @@ use coursecat_helper;
 use core_course_category;
 use core_course_list_element;
 use DateTime;
+use context_system;
 use context_module;
 use core_competency\api as competency_api;
 
@@ -553,7 +554,7 @@ class theme_settings {
     public function get_btn_add_news()
     {
         global $OUTPUT,$USER, $DB;
-        if(is_siteadmin($USER->id) == 2)
+        if(has_capability('moodle/site:configview', context_system::instance()))
         { 
             $forumid = $DB->get_field_sql("SELECT TOP 1 id FROM mdl_forum", []);
             $buttonadd = get_string('addanewdiscussion', 'forum');
@@ -609,8 +610,10 @@ class theme_settings {
             $templatecontext['newscourse'][$j]['countstudent'] = $arr[$j]['countstudent'];
             $templatecontext['newscourse'][$j]['imageteacher'] = $arr[$j]['imageteacher'];
             $templatecontext['newscourse'][$j]['fullnamet'] = $arr[$j]['fullnamet'];
-            if($progress) {
+            if(isset($progress)) {
                 $templatecontext['newscourse'][$j]['progress'] = round($progress);
+                if($templatecontext['newscourse'][$j]['progress'] == 0)
+                    $templatecontext['newscourse'][$j]['progress'] = -1;
             } else {
                 $templatecontext['newscourse'][$j]['enrolmethod'] = $enrolmethod;
             }

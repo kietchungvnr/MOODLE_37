@@ -20,13 +20,16 @@
                    {{#nav_coursebystudent}}{{{nav_coursebystudent}}}{{/nav_coursebystudent}}{{^nav_coursebystudent}}<li class="dropdown-item"><a href="#">Chưa tham gia khoá học</a></li>{{/nav_coursebystudent}}
                 </ul>
             </div>
+             {{#nav_coursebyteacher}}
             <div class="col-auto text-white font-weight-bold cl-cursor dropdown nav-course-padding">
-
+               
                 <span data-toggle="dropdown">Khoá giảng của tôi</span>
                 <ul class="dropdown-menu text-dark" role="menu" id="drop-course-by-teacher">
-                  {{#nav_coursebyteacher}}{{{nav_coursebyteacher}}}{{/nav_coursebyteacher}} {{^nav_coursebyteacher}}<li class="dropdown-item"><a href="#">Chưa có khoá học</a></li>{{/nav_coursebyteacher}}
+                  {{#nav_coursebyteacher}}{{{nav_coursebyteacher}}}{{/nav_coursebyteacher}}
                 </ul>
+               
             </div>
+             {{/nav_coursebyteacher}}
             <div class="col d-flex">
                 {{#course_search_form_fp}}{{{course_search_form_fp}}}{{/course_search_form_fp}}
             </div>

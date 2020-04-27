@@ -152,7 +152,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
     public function nav_course_categories() {
         global $DB;
 
-        $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent FROM mdl_course_categories cc JOIN mdl_course c ON cc.id = c.category');
+        $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent FROM mdl_course_categories cc JOIN mdl_course c ON cc.id = c.category WHERE cc.visible = 1');
         // $categories = $DB->get_records_sql('SELECT * FROM mdl_course_categories');
         // ini_set("xdebug.var_display_max_children", -1);
         // ini_set("xdebug.var_display_max_data", -1);
@@ -208,15 +208,18 @@ class core_renderer extends \theme_boost\output\core_renderer {
     }
 
     public function nav_course() {
-        global $DB, $CFG;
+        global $DB, $CFG, $USER;
         $header = new stdClass();
         $navdraweropen = (get_user_preferences('drawer-open-nav', 'true') == 'true');
         $draweropenright = (get_user_preferences('sidepre-open', 'true') == 'true');
-
         if(isloggedin()) {
+            $roleid = $DB->get_field('role', 'id', ['shortname' => 'editingteacher']);
+            $isteacheranywhere = $DB->record_exists('role_assignments', ['userid' => $USER->id, 'roleid' => $roleid]);
             $header->active = true;
             $header->nav_course_categories = $this->nav_course_categories();
-            $header->nav_coursebyteacher = $this->nav_coursebyteacher();
+            if($isteacheranywhere) {
+                $header->nav_coursebyteacher = $this->nav_coursebyteacher();
+            }
             $header->nav_coursebystudent = $this->nav_coursebystudent();
             $header->course_search_form_fp = $this->course_search_form_fp();
             $header->hasdrawertoggle = true;
@@ -232,18 +235,19 @@ class core_renderer extends \theme_boost\output\core_renderer {
     public function nav_header() {
         global $CFG;
         $output = '';
-        $dashboard = $CFG->wwwroot . '/my';
+        $home = $CFG->wwwroot;
+        $dashboard = $CFG->wwwroot . '/my/';
         $course = $CFG->wwwroot . '/local/newsvnr/course.php';
         $news = $CFG->wwwroot . '/local/newsvnr/index.php';
         $forum = $CFG->wwwroot . '/local/newsvnr/forum.php';
         $calendar = $CFG->wwwroot . '/calendar/view.php?view=month';
         $files = $CFG->wwwroot . '/user/files.php';
-        $output .='<li class="active"><a href="'.$dashboard .'">Dash board</a></li>
-            <li><a href="'.$course .'">Khoá học</a></li>
-            <li><a href="'.$news .'">Tin tức</a></li>
-            <li><a href="'.$forum .'">Diễn đàn</a></li>
-            <li><a href="'.$calendar .'">Lịch</a></li>
-            <li><a href="'.$files .'">Tài liệu cá nhân</a></li>';
+        $output .='<li><a class="nav-active" href="'.$home .'">Trang chủ</a></li><li><a class="nav-active" href="'.$dashboard .'">Dash board</a></li>
+            <li><a class="nav-active" href="'.$course .'">Khoá học</a></li>
+            <li><a class="nav-active" href="'.$news .'">Tin tức</a></li>
+            <li><a class="nav-active" href="'.$forum .'">Diễn đàn</a></li>
+            <li><a class="nav-active" href="'.$calendar .'">Lịch</a></li>
+            <li><a class="nav-active" href="'.$files .'">Tài liệu cá nhân</a></li>';
         return $output;
     }
 
@@ -313,17 +317,21 @@ class core_renderer extends \theme_boost\output\core_renderer {
      */
     public function mydashboard_user_header() {
         global $PAGE,$DB,$USER;
-
+        // var_dump($USER->editing);die;
         $html = html_writer::start_div('row');
         $html .= html_writer::start_div('col-xs-12 mt-2 mb-2');
         $teacherdbbutton = '';
         $studentdbbutton = '';
         $pageheadingbutton = $this->page_heading_button();
+        if ($PAGE->user_is_editing() && $PAGE->user_can_edit_blocks() && ($PAGE->blocks->get_addable_blocks())) {
+            $url = new moodle_url($PAGE->url, ['bui_addblock' => '', 'sesskey' => sesskey()]);
+            $addblockbutton = '<a href="'.$url.'" class="metismenu" data-key="addblock"><i class="fa fa-eye text-icon-dashboard" aria-hidden="true">'. get_string('addblock') .'</i></a> | ';
+        }
         $roles = $DB->get_records_sql('SELECT DISTINCT roleid FROM {role_assignments} WHERE userid = ?',[$USER->id]);
         foreach($roles as $role) {
             if($role->roleid == 3) {
                 $url = new moodle_url('/local/newsvnr/dashboard.php?view=teacher');
-                $teacherdbbutton = '<a href="'.$url.'"><i class="fa fa-eye text-icon-dashboard" aria-hidden="true">'. get_string('teacherdashboard', 'local_newsvnr') .'</i></a>';
+                $teacherdbbutton = '<a href="'.$url.'"><i class="fa fa-eye text-icon-dashboard" aria-hidden="true">'. get_string('teacherdashboard', 'local_newsvnr') .'</i></a> | ';
             } else if($role->roleid == 5) {
                 $url = new moodle_url('/local/newsvnr/dashboard.php?view=student');
                 $studentdbbutton = '<a href="'.$url.'"><i class="fa fa-eye text-icon-dashboard" aria-hidden="true">'. get_string('studentdashboard', 'local_newsvnr') .'</i></a>';
@@ -337,7 +345,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $html .= html_writer::end_div();
         } else if ($pageheadingbutton) {
             // $html .= html_writer::div($this->render($studentdbbutton), 'd-flex justify-content-end mr-2');
-            $html .= html_writer::div($pageheadingbutton .' | ' . $teacherdbbutton .' | '. $studentdbbutton, 'breadcrumb-button nonavbar pull-right m-r-1');
+            $html .= html_writer::div($addblockbutton . $pageheadingbutton .' | '. $teacherdbbutton . $studentdbbutton, 'breadcrumb-button nonavbar pull-right m-r-1');
         }
 
         $html .= html_writer::end_div(); // End .row.

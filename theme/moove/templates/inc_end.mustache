@@ -69,12 +69,21 @@ require(['jquery'], function($) {
         $('[data-region="drawer"]').removeClass('closed');
         $('[data-region="drawer"]').addClass('open');
     }
-
-    {{! $(document).ready(function() {
-      $('li.active').removeClass('active');
-      $('a[href="' + location.pathname + '"]').closest('li').addClass('active'); 
-}); }}
-
+   $(document).ready(function() {
+        const regex = /http:\/\/.*\/(.*)\//g;
+        const match = regex.exec(window.location.href);
+        if(match) {
+            $(".nav-active").each(function() {
+                var url = $(this).attr("href");
+                if(url == match.input) {
+                    $(this).addClass("active-nav");
+                }
+            });
+        }
+        else {
+            $(".nav-active:first").addClass("active-nav");
+        }
+    });
 });
 
 

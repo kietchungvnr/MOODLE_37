@@ -151,23 +151,30 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
 
     $resetbutton = '';
     $resetstring = get_string('resetpage', 'my');
-    $reseturl = new moodle_url("$CFG->wwwroot/local/newsvnr/dashboard.php", array('view' => $view, 'edit' => 1, 'reset' => 1));
-
-    if (!$currentpage->userid) {
-        // viewing a system page -- let the user customise it
-        $editstring = get_string('updatemymoodleon');
-        $params['edit'] = 1;
-    } else if (empty($edit)) {
-        $editstring = get_string('updatemymoodleon');
-    } else {
-        $editstring = get_string('updatemymoodleoff');
-        $resetbutton = $OUTPUT->single_button($reseturl, $resetstring);
-    }
+    $reseturl = new moodle_url("$CFG->wwwroot/local/newsvnr/dashboard.php", array('view' => $view, 'edit' => 1, 'reset' => 1, 'sesskey'=>sesskey()));
     $params['view'] = $view;
     $url = new moodle_url("$CFG->wwwroot/local/newsvnr/dashboard.php", $params);
-    $button = $OUTPUT->single_button($url, $editstring, 'get');
-    $PAGE->set_button($resetbutton . $button);
-
+    if (!$currentpage->userid) {
+        // viewing a system page -- let the user customise it
+        $editstring = '<a href="'.$url.'"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true">'.get_string('updatemymoodleon').'</i></a>';
+    } else if (empty($edit)) {
+        // $editstring = get_string('updatemymoodleon');
+        $editstring = '<a href="'.$url.'"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true">'.get_string('updatemymoodleon').'</i></a>';
+    } else {
+        $editstring = '<a href="'.$url.'"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true">'.get_string('updatemymoodleoff').'</i></a>';
+        // $resetbutton = $OUTPUT->single_button($reseturl, $resetstring);
+        $resetbutton = '<a href="'.$reseturl.'"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true">'.$resetstring.'</i></a>';
+        ;
+    }
+    if (!$currentpage->userid) {
+        $params['edit'] = 1;
+    }
+    
+    $button = $editstring;
+    if($resetbutton !== '') 
+        $PAGE->set_button($resetbutton .' | '. $button);
+    else 
+        $PAGE->set_button($button);
 } else {
     $USER->editing = $edit = 0;
 }
