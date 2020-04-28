@@ -1394,8 +1394,8 @@ nav.navbar .navbar-brand .logo img {
 }
 .nav-draw li {
     font-weight: 600;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
     text-align: center;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -1447,7 +1447,7 @@ nav.navbar .navbar-brand .logo img {
 [data-region="drawer"] {
     position: unset !important;
 }
-#nav-course .col-auto:hover {
+#nav-course .col-auto:not(:first-child):hover {
     background-color: #306b8e;
 }
 #nav-draw li:hover {
@@ -1590,6 +1590,10 @@ nav.navbar .navbar-brand .logo img {
 .admininfos .fa-eye:before {
     margin-right: 5px;
 }
+.admininfos .fa-empire:before {
+    margin-right: 5px;
+}
+
 #nav-drawer.closed {
     display: none;
 }
@@ -1638,6 +1642,7 @@ li {
 .footer-menu ul li a span {
     line-height: 20px;
     margin-left: 7px;
+    font-family: arial,verdana,helvetica,tahoma;
 }
 
 .no-padding {

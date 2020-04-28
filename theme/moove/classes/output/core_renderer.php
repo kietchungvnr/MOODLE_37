@@ -99,8 +99,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
     }
     
-    public function showMenuLi($menus, $id_parent = 0, &$output = '') 
-    {
+    public function showMenuLi($menus, $id_parent = 0, &$output = '',$stt = 0) {
         global $DB, $CFG;
         $courselink = $CFG->wwwroot . '/course/view.php?id=';
         // $theme_settings = new theme_settings();
@@ -114,20 +113,18 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
 
         if ($menu_tmp) 
-        {
-            // $output .= '<ul class="dropdown-menu text-dark" role="menu" id="drop-course-category">';
+        {   
+            if($stt == 0)
+                $output .= '<ul class="dropdown-menu text-dark" role="menu" id="drop-course-category">';
+            else 
+                $output .= '<ul class="dropdown-menu">';
             foreach ($menu_tmp as $item) 
             {   
-                $output .= '<li class="dropdown-submenu">';
-
-                $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $item->name . ' </a>';
-
-                 if($id_parent == 0) {
+                if(!$DB->record_exists('course_categories', ['parent' => $item->id])) {
+                    $output .= '<li class="dropdown-submenu">';
+                    $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $item->name . ' </a>';
                     $courses = $DB->get_records('course',['category' => $item->id]);
                     $output .= '<ul class="dropdown-menu">';
-
-                    
-                   
                     foreach($courses as $course) {
                         // $courseobj = new \core_course_list_element($course);
                         // $courselink = $CFG->wwwroot."/course/view.php?id=".$course->id;
@@ -136,27 +133,28 @@ class core_renderer extends \theme_boost\output\core_renderer {
                         $output .= '<li class="dropdown-item"><a tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a></li>';
                     }
                     $output .= '</ul>';
-                } 
-
-                $this->showMenuLi($menus, $item->id, $output);
-                $output .= '</li>';
+                    $this->showMenuLi($menus, $item->id, $output, ++$stt);
+                    $output .= '</li>';
+                } else {
+                    $output .= '<li class="dropdown-submenu">';
+                    $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $item->name . ' </a>';
+                    $this->showMenuLi($menus, $item->id, $output, ++$stt);
+                    $output .= '</li>';
+                }
             }
-            // $output .= '</ul>';
-
+            $output .= '</ul>';
         }
-       
         return $output;
-       
-        
     }
+
     public function nav_course_categories() {
         global $DB;
 
-        $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent FROM mdl_course_categories cc JOIN mdl_course c ON cc.id = c.category WHERE cc.visible = 1');
+        $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent FROM mdl_course_categories cc JOIN mdl_course c ON cc.id = c.category');
         // $categories = $DB->get_records_sql('SELECT * FROM mdl_course_categories');
-        // ini_set("xdebug.var_display_max_children", -1);
-        // ini_set("xdebug.var_display_max_data", -1);
-        // ini_set("xdebug.var_display_max_depth", -1);
+        ini_set("xdebug.var_display_max_children", -1);
+        ini_set("xdebug.var_display_max_data", -1);
+        ini_set("xdebug.var_display_max_depth", -1);
         // var_dump($this->showMenuLi($categories));die;
         return $this->showMenuLi($categories);
         // foreach($categoriesa as $category) {
@@ -322,10 +320,11 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $html .= html_writer::start_div('col-xs-12 mt-2 mb-2');
         $teacherdbbutton = '';
         $studentdbbutton = '';
+        $addblockbutton = '';
         $pageheadingbutton = $this->page_heading_button();
         if ($PAGE->user_is_editing() && $PAGE->user_can_edit_blocks() && ($PAGE->blocks->get_addable_blocks())) {
             $url = new moodle_url($PAGE->url, ['bui_addblock' => '', 'sesskey' => sesskey()]);
-            $addblockbutton = '<a href="'.$url.'" class="metismenu" data-key="addblock"><i class="fa fa-eye text-icon-dashboard" aria-hidden="true">'. get_string('addblock') .'</i></a> | ';
+            $addblockbutton = '<a href="'.$url.'" class="metismenu" data-key="addblock"><i class="fa fa-empire text-icon-dashboard" aria-hidden="true">'. get_string('addblock') .'</i></a> | ';
         }
         $roles = $DB->get_records_sql('SELECT DISTINCT roleid FROM {role_assignments} WHERE userid = ?',[$USER->id]);
         foreach($roles as $role) {

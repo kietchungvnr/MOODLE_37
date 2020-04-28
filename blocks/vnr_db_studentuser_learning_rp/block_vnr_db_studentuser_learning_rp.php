@@ -3,7 +3,8 @@
 
 class block_vnr_db_studentuser_learning_rp extends block_base {
      public function init() {
-        $this->title = get_string('pluginname', 'block_vnr_db_studentuser_learning_rp');
+        // $this->title = get_string('pluginname', 'block_vnr_db_studentuser_learning_rp');
+        $this->title = '';
     }
 
     function get_content() {

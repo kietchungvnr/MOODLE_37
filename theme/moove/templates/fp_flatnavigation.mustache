@@ -2,15 +2,15 @@
 {{#active}}
     <nav class="navcourse" id="nav-course">
         <div class="row pr-2 pl-2 w-100">
-            <div class="col-auto text-white font-weight-bold cl-cursor nav-course-padding">
+            <div class="col-auto text-white font-weight-bold nav-course-padding">
                 <i class="fa fa-list-ul"></i><span class="sr-only">{{#str}}sidepanel, core{{/str}}</span>
             </div>
             <div class="col-auto text-white font-weight-bold cl-cursor dropdown nav-course-padding">
 
                 <span data-toggle="dropdown">Danh mục khoá học</span>
-                <ul class="dropdown-menu text-dark" role="menu" id="drop-course-category">
+                {{! <ul class="dropdown-menu text-dark" role="menu" id="drop-course-category"> }}
                   {{#nav_course_categories}}{{{nav_course_categories}}}{{/nav_course_categories}}
-                </ul>
+                {{! </ul> }}
             </div>
             <div class="col-auto text-white font-weight-bold cl-cursor dropdown nav-course-padding">
 
