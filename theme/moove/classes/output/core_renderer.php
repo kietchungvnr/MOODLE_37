@@ -99,7 +99,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
     }
     
-    public function showMenuLi($menus, $id_parent = 0, &$output = '',$stt = 0) {
+    public function showMenuLi($menus, $id_parent = 0, &$output = '',$stt = 0, $dequy = 0) {
         global $DB, $CFG;
         $courselink = $CFG->wwwroot . '/course/view.php?id=';
         // $theme_settings = new theme_settings();
@@ -116,15 +116,18 @@ class core_renderer extends \theme_boost\output\core_renderer {
         {   
             if($stt == 0)
                 $output .= '<ul class="dropdown-menu text-dark" role="menu" id="drop-course-category">';
-            else 
-                $output .= '<ul class="dropdown-menu">';
+            else {
+                if($id_parent == 0)
+                    $output .= '<ul class="dropdown-menu 4">';
+            }
             foreach ($menu_tmp as $item) 
             {   
+
                 if(!$DB->record_exists('course_categories', ['parent' => $item->id])) {
-                    $output .= '<li class="dropdown-submenu">';
+                    $output .= '<li class="dropdown-submenu 2">';
                     $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $item->name . ' </a>';
                     $courses = $DB->get_records('course',['category' => $item->id]);
-                    $output .= '<ul class="dropdown-menu">';
+                    $output .= '<ul class="dropdown-menu 2">';
                     foreach($courses as $course) {
                         // $courseobj = new \core_course_list_element($course);
                         // $courselink = $CFG->wwwroot."/course/view.php?id=".$course->id;
@@ -138,11 +141,53 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 } else {
                     $output .= '<li class="dropdown-submenu">';
                     $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $item->name . ' </a>';
+                    
+                    //if($item->parent == 0) {
+                        $courses = $DB->get_records('course',['category' => $item->id, 'visible' => 1]);
+                        $output .= '<ul class="dropdown-menu 3">';
+                        foreach($courses as $course) {
+                            // $courseobj = new \core_course_list_element($course);
+                            // $courselink = $CFG->wwwroot."/course/view.php?id=".$course->id;
+                            // $courseimage = $theme_settings::get_course_images_nav($courseobj, $courselink);
+                            // $output .= '<li class="dropdown-item"><div class="d-flex"><div style="width:150px;height:100px">'.$courseimage.'</div><div><a tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a><div></div></li>';
+                            $output .= '<li><a class="dropdown-item" tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a></li>';
+                        }
+                        foreach($menus as $childkey => $childitem) {
+                            if($childitem->parent == $item->id) {
+                                $courses = $DB->get_records('course',['category' => $childitem->id, 'visible' => 1]);
+                                if($courses) {
+                                    $output .= '<li class="dropdown-submenu">';
+                                    $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $childitem->name . ' </a>';
+                                    
+                                    $output .= '<ul class="dropdown-menu 3">';
+                                    foreach($courses as $childcourse) {
+                                        // $courseobj = new \core_course_list_element($course);
+                                        // $courselink = $CFG->wwwroot."/course/view.php?id=".$course->id;
+                                        // $courseimage = $theme_settings::get_course_images_nav($courseobj, $courselink);
+                                        // $output .= '<li class="dropdown-item"><div class="d-flex"><div style="width:150px;height:100px">'.$courseimage.'</div><div><a tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a><div></div></li>';
+                                        $output .= '<li><a class="dropdown-item" tabindex="-1" href="'.$courselink . $childcourse->id.'">' . $childcourse->fullname . '</a></li>';
+                                    }
+                                    $output .= '</ul>';
+                                }
+                                unset($menus[$childkey]);
+                            }
+                            
+                        }
+                        $output .= '</ul>';
+                        
+                    //}
                     $this->showMenuLi($menus, $item->id, $output, ++$stt);
                     $output .= '</li>';
                 }
             }
-            $output .= '</ul>';
+            $output .= '</ul';
+            if($stt == 0)
+                $output .= '</ul';
+            else {
+                if($id_parent == 0)
+                    $output .= '</ul>';
+            }
+            
         }
         return $output;
     }
@@ -150,14 +195,14 @@ class core_renderer extends \theme_boost\output\core_renderer {
     public function nav_course_categories() {
         global $DB;
 
-        $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent FROM mdl_course_categories cc JOIN mdl_course c ON cc.id = c.category');
+        $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent FROM mdl_course_categories cc JOIN mdl_course c ON cc.id = c.category WHERE cc.visible = 1');
         // $categories = $DB->get_records_sql('SELECT * FROM mdl_course_categories');
         ini_set("xdebug.var_display_max_children", -1);
         ini_set("xdebug.var_display_max_data", -1);
         ini_set("xdebug.var_display_max_depth", -1);
         // var_dump($this->showMenuLi($categories));die;
         return $this->showMenuLi($categories);
-        // foreach($categoriesa as $category) {
+        // foreach($categories as $category) {
         //     $courses = $DB->get_records('course', ['category' => $category->id]);
         //     foreach($courses as $course) {
 
@@ -324,16 +369,16 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $pageheadingbutton = $this->page_heading_button();
         if ($PAGE->user_is_editing() && $PAGE->user_can_edit_blocks() && ($PAGE->blocks->get_addable_blocks())) {
             $url = new moodle_url($PAGE->url, ['bui_addblock' => '', 'sesskey' => sesskey()]);
-            $addblockbutton = '<a href="'.$url.'" class="metismenu" data-key="addblock"><i class="fa fa-empire text-icon-dashboard" aria-hidden="true">'. get_string('addblock') .'</i></a> | ';
+            $addblockbutton = '<a href="'.$url.'" class="metismenu text-icon-dashboard" data-key="addblock"><i class="fa fa-empire text-icon-dashboard" aria-hidden="true"></i>'. get_string('addblock') .'</a> | ';
         }
         $roles = $DB->get_records_sql('SELECT DISTINCT roleid FROM {role_assignments} WHERE userid = ?',[$USER->id]);
         foreach($roles as $role) {
             if($role->roleid == 3) {
                 $url = new moodle_url('/local/newsvnr/dashboard.php?view=teacher');
-                $teacherdbbutton = '<a href="'.$url.'"><i class="fa fa-eye text-icon-dashboard" aria-hidden="true">'. get_string('teacherdashboard', 'local_newsvnr') .'</i></a> | ';
+                $teacherdbbutton = '<a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-eye text-icon-dashboard" aria-hidden="true"></i>'. get_string('teacherdashboard', 'local_newsvnr') .'</a> | ';
             } else if($role->roleid == 5) {
                 $url = new moodle_url('/local/newsvnr/dashboard.php?view=student');
-                $studentdbbutton = '<a href="'.$url.'"><i class="fa fa-eye text-icon-dashboard" aria-hidden="true">'. get_string('studentdashboard', 'local_newsvnr') .'</i></a>';
+                $studentdbbutton = '<a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-eye text-icon-dashboard" aria-hidden="true"></i>'. get_string('studentdashboard', 'local_newsvnr') .'</a>';
             }
         }
         

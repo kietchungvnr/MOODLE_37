@@ -806,3 +806,5 @@
 [2020-03-04T14:12:42.154418+07:00] api-app.DEBUG: Using token from request header [] {"uid":"42ce607"}
 [2020-03-04T14:24:52.755777+07:00] api-app.DEBUG: Using token from request header [] {"uid":"f9a1852"}
 [2020-03-04T14:25:31.244303+07:00] api-app.DEBUG: Using token from request header [] {"uid":"e00b741"}
+[2020-04-29T11:00:17.864674+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"cb08f54"}
+[2020-04-29T11:03:12.829054+07:00] api-app.DEBUG: Using token from request header [] {"uid":"9286a5f"}

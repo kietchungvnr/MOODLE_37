@@ -1568,6 +1568,9 @@ nav.navbar .navbar-brand .logo img {
     body.drawer-open-right {
         margin-right: 0px !important;
     }
+    body#page-mod-quiz-attempt.drawer-open-right {
+        margin-right: 280px !important;
+    }
     body.drawer-open-left {
         margin-left: 0px !important;
     }
@@ -1582,7 +1585,7 @@ nav.navbar .navbar-brand .logo img {
 }
 .text-icon-dashboard {
     font-weight: 600;
-    font-size: 16px;
+    font-size: 14px;
 }
 .admininfos .fa-gear:before, .admininfos .fa-cog:before {
     margin-right: 5px;
@@ -1825,17 +1828,6 @@ nav.navbar ul.navbar-nav .popover-region .popover-region-toggle .count-container
 {{! <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css" /> }}
 {{! <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.js"></script> }}
 {{{output.get_js_moove}}}
-<script type="text/javascript">
-function myFunction() {
-  var x = document.getElementById("myTopnav");
-  if (x.className === "topnav") {
-    x.className += " responsive";
-  } else {
-    x.className = "topnav";
-  }
-}
-
-</script>
 </head>
 <body {{{ bodyattributes }}}>
     <a href="javascript:" id="return-to-top"><i class="fa fa-arrow-up"></i></a>

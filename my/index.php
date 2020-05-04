@@ -143,14 +143,14 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
     $url = new moodle_url("$CFG->wwwroot/my/index.php", $params);
     if (!$currentpage->userid) {
         // viewing a system page -- let the user customise it
-        $editstring = '<a href="'.$url.'"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true">'.get_string('updatemymoodleon').'</i></a>';
+        $editstring = '<a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.get_string('updatemymoodleon').'</a>';
     } else if (empty($edit)) {
         // $editstring = get_string('updatemymoodleon');
-        $editstring = '<a href="'.$url.'"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true">'.get_string('updatemymoodleon').'</i></a>';
+        $editstring = '<a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.get_string('updatemymoodleon').'</a>';
     } else {
-        $editstring = '<a href="'.$url.'"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true">'.get_string('updatemymoodleoff').'</i></a>';
+        $editstring = '<a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.get_string('updatemymoodleoff').'</a>';
         // $resetbutton = $OUTPUT->single_button($reseturl, $resetstring);
-        $resetbutton = '<a href="'.$reseturl.'"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true">'.$resetstring.'</i></a>';
+        $resetbutton = '<a href="'.$reseturl.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.$resetstring.'</a>';
         ;
     }
     if (!$currentpage->userid) {
