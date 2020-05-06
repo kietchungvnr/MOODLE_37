@@ -118,16 +118,16 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 $output .= '<ul class="dropdown-menu text-dark" role="menu" id="drop-course-category">';
             else {
                 if($id_parent == 0)
-                    $output .= '<ul class="dropdown-menu 4">';
+                    $output .= '<ul class="dropdown-menu">';
             }
             foreach ($menu_tmp as $item) 
             {   
 
                 if(!$DB->record_exists('course_categories', ['parent' => $item->id])) {
-                    $output .= '<li class="dropdown-submenu 2">';
+                    $output .= '<li class="dropdown-submenu">';
                     $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $item->name . ' </a>';
                     $courses = $DB->get_records('course',['category' => $item->id]);
-                    $output .= '<ul class="dropdown-menu 2">';
+                    $output .= '<ul class="dropdown-menu">';
                     foreach($courses as $course) {
                         // $courseobj = new \core_course_list_element($course);
                         // $courselink = $CFG->wwwroot."/course/view.php?id=".$course->id;
@@ -144,7 +144,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                     
                     //if($item->parent == 0) {
                         $courses = $DB->get_records('course',['category' => $item->id, 'visible' => 1]);
-                        $output .= '<ul class="dropdown-menu 3">';
+                        $output .= '<ul class="dropdown-menu">';
                         foreach($courses as $course) {
                             // $courseobj = new \core_course_list_element($course);
                             // $courselink = $CFG->wwwroot."/course/view.php?id=".$course->id;
@@ -159,7 +159,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                                     $output .= '<li class="dropdown-submenu">';
                                     $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $childitem->name . ' </a>';
                                     
-                                    $output .= '<ul class="dropdown-menu 3">';
+                                    $output .= '<ul class="dropdown-menu">';
                                     foreach($courses as $childcourse) {
                                         // $courseobj = new \core_course_list_element($course);
                                         // $courselink = $CFG->wwwroot."/course/view.php?id=".$course->id;

@@ -69,7 +69,7 @@ class course_page implements renderable, templatable
 
   public static function get_newest_course() 
   {
-    global $CFG,$DB, $OUTPUT;
+    global $CFG, $DB ,$OUTPUT, $USER;
     require_once($CFG->dirroot.'/course/renderer.php');
     $chelper = new \coursecat_helper();
 
@@ -131,7 +131,7 @@ class course_page implements renderable, templatable
 
   public static function get_all_course() 
   {
-    global $CFG,$DB,$OUTPUT;
+    global $CFG,$DB,$OUTPUT,$USER;
     require_once($CFG->dirroot.'/course/renderer.php');
     $chelper = new \coursecat_helper();
     $sql = "SELECT top 8 * from mdl_course order by timecreated desc";

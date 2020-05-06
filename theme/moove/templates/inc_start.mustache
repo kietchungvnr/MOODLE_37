@@ -604,7 +604,7 @@ body.drawer-open-right #setting-context {
     background-color: white;
     position: fixed;
     right: -23px;
-    top: 100px;
+    top: 105px;
     color: #ffffff;
     width: 48px;
     height: 50px;
@@ -1766,7 +1766,10 @@ nav.navcourse {
     padding: 15px;
 }
 nav.navbar ul.navbar-nav .lang-menu .dropdown-menu {
-    margin-top: -20px;
+    top: 60px;
+}
+#page-site-index nav.navbar ul.navbar-nav .lang-menu .dropdown-menu {
+    top: -20px;
 }
 nav.navbar ul.navbar-nav .usermenu {
     line-height: 85px;
@@ -1810,6 +1813,13 @@ nav.navbar ul.navbar-nav .popover-region .popover-region-toggle .count-container
 }
 [data-block="lp"] h3 {
     font-size: 14px;
+}
+[data-block="course_list"] ul.unlist {
+    max-height: 450px;
+    overflow-y: hidden;
+}
+[data-block="course_list"] ul.unlist:hover {
+    overflow-y: scroll;
 }
 </style>
 
