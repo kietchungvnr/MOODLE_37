@@ -115,7 +115,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         if ($menu_tmp) 
         {   
             if($stt == 0)
-                $output .= '<ul class="dropdown-menu text-dark" role="menu" id="drop-course-category">';
+                $output .= '<ul class="dropdown-menu" role="menu" id="drop-course-category">';
             else {
                 if($id_parent == 0)
                     $output .= '<ul class="dropdown-menu">';
@@ -285,12 +285,14 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $forum = $CFG->wwwroot . '/local/newsvnr/forum.php';
         $calendar = $CFG->wwwroot . '/calendar/view.php?view=month';
         $files = $CFG->wwwroot . '/user/files.php';
-        $output .='<li><a class="nav-active" href="'.$home .'">Trang chủ</a></li><li><a class="nav-active" href="'.$dashboard .'">Dash board</a></li>
-            <li><a class="nav-active" href="'.$course .'">Khoá học</a></li>
-            <li><a class="nav-active" href="'.$news .'">Tin tức</a></li>
-            <li><a class="nav-active" href="'.$forum .'">Diễn đàn</a></li>
-            <li><a class="nav-active" href="'.$calendar .'">Lịch</a></li>
-            <li><a class="nav-active" href="'.$files .'">Tài liệu cá nhân</a></li>';
+        $output .='
+            <a class="nav-active" href="'.$home .'"><li>Trang chủ</li></a>
+            <a class="nav-active" href="'.$dashboard .'"><li>Dashboard</li></a>
+            <a class="nav-active" href="'.$course .'"><li>Khoá học</li></a>
+            <a class="nav-active" href="'.$news .'"><li>Tin tức</li></a>
+            <a class="nav-active" href="'.$forum .'"><li>Diễn đàn</li></a>
+            <a class="nav-active" href="'.$calendar .'"><li>Lịch</li></a>
+            <a class="nav-active" href="'.$files .'"><li>Tài liệu cá nhân</li></a>';
         return $output;
     }
 
@@ -388,8 +390,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $html .= html_writer::div($pageheadingbutton, 'breadcrumb-button');
             $html .= html_writer::end_div();
         } else if ($pageheadingbutton) {
-            // $html .= html_writer::div($this->render($studentdbbutton), 'd-flex justify-content-end mr-2');
-            $html .= html_writer::div($addblockbutton . $pageheadingbutton .' | '. $teacherdbbutton . $studentdbbutton, 'breadcrumb-button nonavbar pull-right m-r-1');
+            $html .= html_writer::div($addblockbutton . $pageheadingbutton, 'breadcrumb-button nonavbar pull-right m-r-1');
+            // $html .= html_writer::div($addblockbutton . $pageheadingbutton .' | '. $teacherdbbutton . $studentdbbutton, 'breadcrumb-button nonavbar pull-right m-r-1');
         }
 
         $html .= html_writer::end_div(); // End .row.

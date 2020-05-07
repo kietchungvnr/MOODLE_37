@@ -37,7 +37,7 @@ $PAGE->set_context(context_system::instance());
 $PAGE->set_url($url);
 $PAGE->set_title($title);
 
-// $PAGE->set_heading($title);
+$PAGE->set_heading($title);
 
 $PAGE->requires->css('/local/newsvnr/css/trangChuTinTuc.css');
 $PAGE->requires->css('/local/newsvnr/css/style.css');

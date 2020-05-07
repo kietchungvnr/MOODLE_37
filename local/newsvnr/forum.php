@@ -34,7 +34,7 @@ $PAGE->set_url($url);
 $title = get_string('forumtitle','local_newsvnr');
 $PAGE->set_context(context_system::instance());
 $PAGE->set_title($title);
-// $PAGE->set_heading($title);
+$PAGE->set_heading($title);
 $PAGE->navbar->ignore_active();
 $PAGE->navbar->add($title);
 // $PAGE->requires->css('/local/newsvnr/css/bootstrap.min.css');

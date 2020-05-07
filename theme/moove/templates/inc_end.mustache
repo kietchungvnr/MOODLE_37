@@ -84,7 +84,10 @@ require(['jquery'], function($) {
             $(".nav-active:first").addClass("active-nav");
         }
     });
-});
+}); 
+    var quizblock = $('#page-mod-quiz-attempt');
+    if(quizblock.length > 0)
+        $('body').addClass('drawer-open-right')
 
 
 {{/js}}

@@ -62,7 +62,7 @@
         });
         owlnews.owlCarousel({
             loop:true,
-            margin:10,
+            margin:20,
             nav:true,
             lazyLoad:true,
             navText: [$('.am-next'),$('.am-prev')],
@@ -84,7 +84,7 @@
         });
         owlrequiredcourse.owlCarousel({
             loop:false,
-            margin:10,
+            margin:20,
             lazyLoad:true,
             // autoplay:true,
             autoplayTimeout:5000,
@@ -97,17 +97,17 @@
                     items:2,
                 },
                 1000:{
-                    items:4, 
-                },
-                1450:{
                     items:5, 
+                },
+                1400:{
+                    items:6, 
                 }
             }
 
         });
         owlsuggestcourse.owlCarousel({
             loop:false,
-            margin:10,
+            margin:20,
             lazyLoad:true,
             // autoplay:true,
             autoplayTimeout:5000,
@@ -120,17 +120,17 @@
                     items:2,
                 },
                 1000:{
-                    items:4, 
-                },
-                1450:{
                     items:5, 
+                },
+                1400:{
+                    items:6, 
                 }
             }
 
         });
         owlrequiredpositioncourse.owlCarousel({
             loop:false,
-            margin:10,
+            margin:20,
             lazyLoad:true,
             // autoplay:true,
             autoplayTimeout:5000,
@@ -143,17 +143,17 @@
                     items:2,
                 },
                 1000:{
-                    items:4, 
-                },
-                1450:{
                     items:5, 
+                },
+                1400:{
+                    items:6, 
                 }
             }
 
         });
         owluserplancourse.owlCarousel({
             loop:false,
-            margin:10,
+            margin:20,
             lazyLoad:true,
             // autoplay:true,
             autoplayTimeout:5000,
@@ -166,10 +166,10 @@
                     items:2,
                 },
                 1000:{
-                    items:4, 
-                },
-                1450:{
                     items:5, 
+                },
+                1400:{
+                    items:6, 
                 }
             }
 

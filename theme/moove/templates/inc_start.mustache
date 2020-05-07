@@ -308,7 +308,7 @@ body {
     padding: 0;
     background-color: #fff;
     margin-right: 10px;
-    height: 330px;
+    height: 300px;
 }
 
 .post-slide6 .post-img {
@@ -333,7 +333,7 @@ body {
 
 .post-slide6 .post-img img {
     width: 100%;
-    height: 175px;
+    height: 140px;
     cursor: pointer;
 }
 
@@ -490,7 +490,6 @@ body {
     position: relative;
     font-weight: bold;
     font-size: 25px;
-    padding-top: 30px;
 }
 
 
@@ -1301,7 +1300,8 @@ div.dataTables_wrapper {
     margin-top: 10px;
 }*/
 div.page-header-headings h2 {
-    font-size: 22px;
+    font-size: 18px;
+    margin-bottom: 0;
 }
 #page-header .card-body {
     margin-left: 10px;
@@ -1394,11 +1394,8 @@ nav.navbar .navbar-brand .logo img {
 }
 .nav-draw li {
     font-weight: 600;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 5px 10px;
     text-align: center;
-    padding-top: 5px;
-    padding-bottom: 5px;
 }
 
 @media only screen and (max-width: 600px) {
@@ -1447,7 +1444,7 @@ nav.navbar .navbar-brand .logo img {
 [data-region="drawer"] {
     position: unset !important;
 }
-#nav-course .col-auto:not(:first-child):hover {
+#nav-course .dropdown:not(:first-child):hover {
     background-color: #306b8e;
 }
 #nav-draw li:hover {
@@ -1456,9 +1453,10 @@ nav.navbar .navbar-brand .logo img {
 #nav-draw li:hover>a {
     color: #fff !important;
 }
-/*#nav-draw li a:hover {
-    color: #fff;
-}*/
+#nav-draw ul a:hover {
+    color: #fff !important;
+    text-decoration: none;
+}
 #nav-course #coursesearch {
     margin-top: 0px;
 }
@@ -1488,9 +1486,16 @@ nav.navbar .navbar-brand .logo img {
         margin-left: 0px !important;
     }
 }
+/*#nav-course .dropdown-submenu:hover {
+    color: #16181b !important;
+}
+#nav-course .dropdown-submenu:active {
+    color: #16181b !important;
+    background-color: #fff;
+}
 #nav-course .dropdown-item:hover, 
 #nav-course .dropdown-item:focus {
-    color: #16181b !important;
+    color: #16181b;
 }
 #nav-course .dropdown-item a:hover {
     color: #16181b !important;
@@ -1499,13 +1504,26 @@ nav.navbar .navbar-brand .logo img {
 #nav-course .dropdown-item a{
     color: #fff;
 }
-
+*/
 .dropdown-submenu {
     position: relative;
 }
 
-.dropdown-submenu a{
+#nav-course .dropdown-submenu a{
     color: #fff;
+}
+#nav-course .dropdown-submenu a:hover{
+    color: #16181b;
+}
+#nav-course li.dropdown-item a:hover {
+    color: #16181b;
+    text-decoration: none;
+}
+#nav-course .dropdown-item a {
+    color: #fff;
+}
+#nav-course li:hover>a:last-child {
+    color:#16181b;
 }
 
 .dropdown-submenu>.dropdown-menu {
@@ -1764,6 +1782,7 @@ nav.navcourse {
 }
 .nav-course-padding {
     padding: 15px;
+    color: #fff;
 }
 nav.navbar ul.navbar-nav .lang-menu .dropdown-menu {
     top: 60px;
@@ -1821,15 +1840,18 @@ nav.navbar ul.navbar-nav .popover-region .popover-region-toggle .count-container
 [data-block="course_list"] ul.unlist:hover {
     overflow-y: scroll;
 }
+#page-mod-quiz-view h2 {
+    font-size: 18px;
+}
 </style>
 
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.common.min.css"/>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.rtl.min.css"/>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.silver.min.css"/>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.mobile.all.min.css"/>
-    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.common-bootstrap.min.css" />
-    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.bootstrap.min.css" />
-    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.bootstrap.mobile.min.css" />
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.common-bootstrap.min.css" />
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.bootstrap.min.css" />
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.bootstrap.mobile.min.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/themes/dark.css">

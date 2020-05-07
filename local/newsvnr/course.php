@@ -37,7 +37,7 @@ $navbarcourse = get_string('navbarcourse','local_newsvnr');
 $search = get_string('search','local_newsvnr');
 $PAGE->set_context(context_system::instance());
 $PAGE->set_title($title);
-// $PAGE->set_heading($title);
+$PAGE->set_heading($title);
 $PAGE->navbar->ignore_active();
 if ($searchquery) {
 	$PAGE->navbar->add($title,$url);
