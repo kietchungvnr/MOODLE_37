@@ -1437,6 +1437,24 @@ if($action == 'api_managerment') {
 	$data = [];
 	foreach ($get_list as $value) {
 		$object = new stdclass;
+		$buttons = array();
+		// if($value->visible == 1) {
+		// 	$buttons[] = html_writer::link('javascript:void(0)',
+		// 	$OUTPUT->pix_icon('t/hide', get_string('hide')),
+		// 	array('title' => get_string('hide'),'id' => $value->id, 'class' => 'hide-item','data-active' => 'orgcate_list','id' => $value->id,'onclick' => 'org_active('.$value->id.',0)'));	
+		// } else {
+		// 	$buttons[] = html_writer::link('javascript:void(0)',
+		// 	$OUTPUT->pix_icon('t/show', get_string('show')),
+		// 	array('title' => get_string('show'),'id' => $value->id, 'class' => 'show-item','data-active' => 'orgcate_list','id' => $value->id,'onclick' => 'org_active('.$value->id.',1)'));	
+		// }
+		// $buttons[] = html_writer::link(new moodle_url('/local/newsvnr/orgcate.php',array('id' => $value->id)),
+		// $OUTPUT->pix_icon('t/edit', get_string('edit')),
+		// array('title' => get_string('edit')));
+		$buttons[] = html_writer::link('javascript:void(0)',
+		$OUTPUT->pix_icon('t/delete', get_string('delete')),
+		array('title' => get_string('delete'),'id' => $value->id, 'class' => 'delete-item','data-section' => 'apidelete','id' => $value->id,'onclick' => 'api_delete('.$value->id.')'));
+		$showbuttons = implode(' ', $buttons);
+		$object->listbtn = $showbuttons;
 		$object->functionapi = $value->functionapi;		
 		$object->url = $value->url;
 		$object->method = $value->method;

@@ -342,4 +342,31 @@
             $(this).remove();
         });
     }
+    const api_delete = (section_id) => {
+    require(['jquery', 'core/config'], ($, config) => {
+          var section = $("[data-section]").attr("data-section");
+          var confm = confirm("Bạn muốn xóa trường này?");
+          var script = config.wwwroot + "/local/newsvnr/ajax/apideletedata.php";  
+          var settings = {
+            type: "GET",
+            processData: true,
+            data:{
+              section: section,
+              id: section_id
+            },
+            contentType: "application/json"
+          }; 
+          if(confm) {
+            $.ajax(script, settings)
+            .then(function(response) {
+             if(response)
+             {
+               $("#" + section_id).parents("tr").fadeOut(500, function(){
+                $("#" + section_id).remove();
+              });
+             }    
+           });
+          }
+    })
+}
 </script>

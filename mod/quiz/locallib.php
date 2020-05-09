@@ -892,7 +892,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                     }
                 }
                 $url_training_hrm = $training_api->url;
-                HTTPPost($url_training_hrm, json_encode($params_training_hrm));
+                HTTPPost($url_training_hrm, $params_training_hrm);
                 HTTP_POST($ch = curl_init(), $params_el, $url_el);
             }
             if($interview_api) {
@@ -958,7 +958,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                     }
                 }
                 $url_training_hrm = $training_api->url;
-                HTTPPost($url_training_hrm, json_encode($params_training_hrm));
+                HTTPPost($url_training_hrm, $params_training_hrm);
             }
             if($interview_api) {
                 $getparams_interview_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $interview_api->id]);
@@ -984,7 +984,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                     
                 }
                 $url_interview_hrm = $interview_api->url;
-                HTTPPost($url_interview_hrm, json_encode($params_interview_hrm));
+                HTTPPost($url_interview_hrm, $params_interview_hrm);
             }
             HTTP_POST($ch = curl_init(), $params_el, $url_el);
         }

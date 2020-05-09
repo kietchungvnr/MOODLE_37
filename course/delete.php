@@ -88,7 +88,7 @@ if ($delete === md5($course->timemodified)) {
             $params_hrm['Status'] = 'E_DELETE';
         }
         $url_hrm = $detete_course_api->url;
-        HTTPPost($url_hrm, json_encode($params_hrm));
+        HTTPPost($url_hrm, $params_hrm);
     }
     /* -- Kết thúc custom -- */
     // We do this here because it spits out feedback as it goes.

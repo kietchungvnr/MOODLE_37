@@ -1524,25 +1524,72 @@ function HTTP_POST($ch, $params = array(), $url){
 
     curl_close ($ch);
 }
+function encode_array($args)
+{
+      if(!is_array($args)) return false;
+      $c = 0;
+      $out = '';
+      foreach($args as $name => $value)
+      {
+        if($c++ != 0) $out .= '&';
+        $out .= urlencode("$name").'=';
+        if(is_array($value))
+        {
+          $out .= urlencode(serialize($value));
+        }else{
+          $out .= urlencode("$value");
+        }
+      }
+      return $out;
+}
 
-
-//curl gửi dữ liệu kiểu json
-function HTTPPost($url,$datajs) {
-        
+function getToken($url) {
+    $data = [
+        'grant_type' => 'password',
+        'username' => 'hong.nguyen',
+        'password' => '123'
+    ];
+    $params = encode_array($data);
     $curl = curl_init();
-
     curl_setopt_array($curl, array(
     CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_HEADER => true,
+    // CURLOPT_HEADER => true,
     CURLOPT_URL => $url,
     CURLOPT_POST => true,
     CURLOPT_SSL_VERIFYPEER => false,
     CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($datajs)
+            'Content-Type: application/x-www-form-urlencoded',
+            // 'Content-Length: ' . strlen($data),
+            $auth
     ),
-    CURLOPT_POSTFIELDS => $datajs));
+    CURLOPT_POSTFIELDS => $params));
     $resp = curl_exec($curl);
+    curl_close($curl);
+    return json_decode($resp,JSON_UNESCAPED_UNICODE)['access_token'];
+}
+
+//curl gửi dữ liệu kiểu json
+function HTTPPost($url,$data) {
+    $urltoken = 'http://192.168.1.3:2707/Token';
+    $token = getToken($urltoken);
+    // var_dump($token);die;
+    $auth = 'Authorization: Bearer ' . $token;
+    $params = encode_array($data);
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+    CURLOPT_RETURNTRANSFER => true,
+    // CURLOPT_HEADER => true,
+    CURLOPT_URL => $url,
+    CURLOPT_POST => true,
+    CURLOPT_SSL_VERIFYPEER => false,
+    CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/x-www-form-urlencoded',
+            // 'Content-Length: ' . strlen($data),
+            $auth
+    ),
+    CURLOPT_POSTFIELDS => $params));
+    $resp = curl_exec($curl);
+    // var_dump(json_decode($resp,JSON_UNESCAPED_UNICODE)['data']);die;
     curl_close($curl);
 }
 

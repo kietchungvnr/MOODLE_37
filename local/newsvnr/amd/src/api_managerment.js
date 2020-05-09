@@ -24,6 +24,11 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                     key: 'description',
                     component: 'local_newsvnr'
                 },
+                {
+                    key: 'action',
+                    component: 'local_newsvnr'
+                }
+
                
                
                
@@ -60,6 +65,15 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                 title: s[4],
                                 width: "300px"
                             },
+                            {
+                                template: function(e) {
+                                    return e.listbtn;
+                                },
+                                field: "listbtn",
+                                title: s[5],
+                                width: "200px"
+                            }
+
                         ];
                     var script = Config.wwwroot + '/local/newsvnr/restfulapi/webservice.php?action=api_managerment';
                     var settings = {

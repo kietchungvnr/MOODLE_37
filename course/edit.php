@@ -178,10 +178,10 @@ if ($editform->is_cancelled()) {
 } else if ($data = $editform->get_data()) {
     //Custom by Vũ: Params and url hrm api
     $params_el = [
-                'NameEntityName' => $data->fullname,
-                'Code' =>  $data->code,
+                'CourseName' => $data->fullname,
+                'CourseCode' =>  $data->code,
             ];
-    $course_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'UpdateTraineeResult']);
+    $course_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecCourse']);
     if($course_api) {
         $getparams_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $course_api->id]);
         $params_hrm = [];
@@ -220,7 +220,7 @@ if ($editform->is_cancelled()) {
         //Đẩy khoá học khi tạo mới realtime qua HRM
         if($course) {
             $params_hrm['Status'] = "E_CREATE";
-            HTTPPost($url_hrm, json_encode($params_hrm));
+            HTTPPost($url_hrm, $params_hrm);
         }
         if($data->courseoforgstructure) {
             foreach ($courseofjobtitle as $jobtitile) {
@@ -328,7 +328,7 @@ if ($editform->is_cancelled()) {
             $params_hrm['ExamCode'] = $strexamcode;
         }
         $params_hrm['Status'] = "E_UPDATE";
-        HTTPPost($url_hrm, json_encode($params_hrm));
+        HTTPPost($url_hrm, $params_hrm);
 
         // Set the URL to take them too if they choose save and display.
         $courseurl = new moodle_url('/course/view.php', array('id' => $course->id));

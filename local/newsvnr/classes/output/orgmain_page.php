@@ -24,6 +24,54 @@ class orgmain_page implements renderable, templatable {
     global $DB,$USER,$PAGE;
     $data = array();
 
+
+    $params_arr = [
+        'grant_type' => 'password',
+        'username' =>  'hong.nguyen',
+        'password' =>  '123'
+    ];
+    $params_arr2 = [
+        'CourseName' => '123',
+        'CourseCode' => '123',
+    ];
+    $url = "http://192.168.1.3:2707/api/Rec_InterviewCampaignDetail/CreateOrUpdateRecCourse";
+    // var_dump(HTTPPost($url, json_encode($params_el)));die; 
+    //HTTP_POST($ch = curl_init(), $params_el, 'http://192.168.1.3:2707/Token');
+    $params = encode_array($params_arr2);
+    // var_dump($params);die;
+    // $ch = curl_init();
+
+    // curl_setopt($ch, CURLOPT_URL,$url);
+    // curl_setopt($ch, CURLOPT_POST, 1);
+    // curl_setopt($ch, CURLOPT_POSTFIELDS,
+    //             $params);
+    // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+
+
+    // // receive server response ...
+    // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // $server_output = curl_exec ($ch);
+    // curl_close ($ch);
+    // $hrmtoken = 'NzbUIUqjpHmARi9_15It0pWmHc6rs9ZYtBg-XDnVrZNOcYB_R77M7S3DaXvJfeBTT-SFjDC-hh1DpSCbkVDL8SDcopKKuykUK1v7PuuuIlxszvmEZTh4Mx4VhsW3aRmFryZu48uwV6PCK7aA47E-x0I5rDmbO72Q92z0fWGEMh3z5XgYhNKBxKXF1vFiAME7wpPRtCMt79tj7CvI_VSukQKZOzeQ8q5Ob8kYA1WWbP6gKD2_xydmLhH_HvERTKveiReFxptID4CAZKbX_4wPLYydFbq5uPUfnB3KlVEyElWkZh2eruXNyhCCOdFifJ4Q';
+    // $token = 'Authorization: Bearer ' . $hrmtoken;
+    // $ch = curl_init();
+
+    // curl_setopt($ch, CURLOPT_URL,$url);
+    // curl_setopt($ch, CURLOPT_POST, 1);
+    // curl_setopt($ch, CURLOPT_POSTFIELDS,
+    //             $params);
+    // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded', $token));
+
+
+    // // receive server response ...
+    // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // $server_output2 = curl_exec ($ch);
+    // var_dump(json_decode($server_output2,JSON_UNESCAPED_UNICODE));die;
+    // curl_close ($ch);
+
+    // HTTPPost($url, $params_arr2);
     // $contextmodule = context_course::instance(150);
     // $contextModuleData = get_enrolled_users(context_course::instance(150));
 

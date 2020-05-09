@@ -174,13 +174,13 @@ if ($mform->is_cancelled()) {
     if (!empty($fromform->update)) {
         if($data->modulename == 'quiz') {
             $params_hrm['Status'] = "E_UPDATE";
-            HTTPPost($url_hrm, json_encode($params_hrm));
+            HTTPPost($url_hrm, $params_hrm);
         }
         list($cm, $fromform) = update_moduleinfo($cm, $fromform, $course, $mform);
     } else if (!empty($fromform->add)) {
         if($data->modulename == 'quiz') {
             $params_hrm['Status'] = "E_CREATE";
-            HTTPPost($url_hrm, json_encode($params_hrm));
+            HTTPPost($url_hrm, $params_hrm);
         }
         $fromform = add_moduleinfo($fromform, $course, $mform);
     } else {

@@ -23,8 +23,8 @@ class OrgstructureJobtitleController extends BaseController {
    	public function validate() {
         //Khai báo new rules cho validation
         $this->validate = $this->validator->validate($this->request, [
-            'name' => $this->v::notEmpty()->notBlank()->noWhitespace(),
-            'code' => $this->v::notEmpty()->notBlank(),
+            'code' => $this->v::notEmpty()->notBlank()->noWhitespace(),
+            'name' => $this->v::notEmpty()->notBlank(),
         ]);
     }
 
