@@ -28,6 +28,7 @@ $app->post('/courses/course-add-teacher', local_newsvnr\api\controllers\CourseAd
 $app->get('/courses/course-list', local_newsvnr\api\controllers\ListModuleController::class . ':read_course');
 
 $app->post('/competencies/competency-create', local_newsvnr\api\controllers\CompetencyCreateController::class . ':create');
+$app->post('/competencies/competency-framework-create', local_newsvnr\api\controllers\CompetencyFrameWorkController::class . ':create');
 $app->put('/competencies/competency-create/{id}', local_newsvnr\api\controllers\CompetencyCreateController::class . ':update');
 $app->post('/competencies/competency-add-orgposition', local_newsvnr\api\controllers\CompetencyAddOrgPositionController::class . ':create');
 $app->put('/competencies/competency-add-orgposition/{id}', local_newsvnr\api\controllers\CompetencyAddOrgPositionController::class . ':update');

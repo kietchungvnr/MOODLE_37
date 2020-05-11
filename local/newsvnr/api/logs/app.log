@@ -808,3 +808,12 @@
 [2020-03-04T14:25:31.244303+07:00] api-app.DEBUG: Using token from request header [] {"uid":"e00b741"}
 [2020-04-29T11:00:17.864674+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"cb08f54"}
 [2020-04-29T11:03:12.829054+07:00] api-app.DEBUG: Using token from request header [] {"uid":"9286a5f"}
+[2020-05-09T10:39:19.715934+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"deff383"}
+[2020-05-09T10:40:42.307171+07:00] api-app.DEBUG: Using token from request header [] {"uid":"d7e4ba1"}
+[2020-05-09T10:40:54.590243+07:00] api-app.DEBUG: Using token from request header [] {"uid":"fe87c1e"}
+[2020-05-09T10:41:13.423719+07:00] api-app.DEBUG: Using token from request header [] {"uid":"1cfd671"}
+[2020-05-09T10:52:45.969653+07:00] api-app.DEBUG: Using token from request header [] {"uid":"ef80044"}
+[2020-05-09T10:53:49.500177+07:00] api-app.DEBUG: Using token from request header [] {"uid":"a0572b3"}
+[2020-05-09T11:51:09.819299+07:00] api-app.DEBUG: Using token from request header [] {"uid":"1da2d44"}
+[2020-05-09T11:51:54.309013+07:00] api-app.DEBUG: Using token from request header [] {"uid":"956e820"}
+[2020-05-09T11:54:01.514703+07:00] api-app.DEBUG: Using token from request header [] {"uid":"7f74ae8"}

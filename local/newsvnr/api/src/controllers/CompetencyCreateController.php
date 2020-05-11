@@ -38,8 +38,8 @@ class CompetencyCreateController extends BaseController {
             'name' => $this->v::notEmpty()->notBlank(),
             // 'parentname' => $this->v::notEmpty()->notBlank(),
             // 'parentcode' => $this->v::notEmpty()->notBlank(),
-            'competencyname' => $this->v::notEmpty()->notBlank(),
-            'competencycode' => $this->v::notEmpty()->notBlank(),
+            'frameworkname' => $this->v::notEmpty()->notBlank(),
+            'frameworkcode' => $this->v::notEmpty()->notBlank(),
         ]);
     }
 
@@ -62,8 +62,8 @@ class CompetencyCreateController extends BaseController {
 		    //không cần truyền parent 
 		    //$this->data->parentname = $request->getParam('parentname');
 		    //$this->data->parentcode = $request->getParam('parentcode');
-		    $this->data->competencyname = $request->getParam('competencyname');
-		    $this->data->competencycode = $request->getParam('competencycode');
+		    $this->data->frameworkname = $request->getParam('frameworkname');
+		    $this->data->frameworkcode = $request->getParam('frameworkcode');
 		    $this->data->description = $request->getParam('description');
 
 	    } else {
@@ -89,48 +89,49 @@ class CompetencyCreateController extends BaseController {
 
 		if(empty($this->resp->data)) {
 			//tạo competency framework
-			if($this->data->name and $this->data->code) {
-				$existing = $DB->get_field('competency_framework','id',['shortname' => $this->data->name, 'idnumber' => $this->data->code]);
-				if($existing) {
-					$frameworkid = $existing;
-				} else {
-					$data = new stdClass;
-					$data->shortname = $this->data->name;
-		            $data->idnumber = $this->data->code;
-		            $data->description = '';
-		            $data->descriptionformat = FORMAT_HTML;
-		            $data->visible = true;
-		            $data->contextid = context_system::instance()->id;
-		            $data->scaleid = 2;
-			        $data->taxonomies = 'competency,competency,competency,competency';
-			        $data->usermodified = $USER->id;
-			        if (!isset($data->scaleconfiguration)) {
-			            $data->scaleconfiguration = '[{"scaleid":"2"},{"id":2,"scaledefault":1,"proficient":1}]';
-			        }
-			       	try {
-			       		$framework = api::create_framework($data);
-			       		$frameworkid = $framework->get('id');
-			       	} catch (Exception $e) {
-			       		$this->resp->data[] = "Lỗi: $e->getMessage()";
-			       	}
+			// if($this->data->name and $this->data->code) {
+			// 	$existing = $DB->get_field('competency_framework','id',['shortname' => $this->data->name, 'idnumber' => $this->data->code]);
+			// 	if($existing) {
+			// 		$frameworkid = $existing;
+			// 	} else {
+			// 		$data = new stdClass;
+			// 		$data->shortname = $this->data->name;
+		 //            $data->idnumber = $this->data->code;
+		 //            $data->description = '';
+		 //            $data->descriptionformat = FORMAT_HTML;
+		 //            $data->visible = true;
+		 //            $data->contextid = context_system::instance()->id;
+		 //            $data->scaleid = 2;
+			//         $data->taxonomies = 'competency,competency,competency,competency';
+			//         $data->usermodified = $USER->id;
+			//         if (!isset($data->scaleconfiguration)) {
+			//             $data->scaleconfiguration = '[{"scaleid":"2"},{"id":2,"scaledefault":1,"proficient":1}]';
+			//         }
+			//        	try {
+			//        		$framework = api::create_framework($data);
+			//        		$frameworkid = $framework->get('id');
+			//        	} catch (Exception $e) {
+			//        		$this->resp->data[] = "Lỗi: $e->getMessage()";
+			//        	}
 				    
-				}
-			}
+			// 	}
+			// }
+			$frameworkid = get_field('competency_framework', 'id', ['shortname' => ?, 'idnumber' => ?])
 			//tạo competency
 			if($frameworkid) {
 				$sql = 'idnumber = :idnumber AND competencyframeworkid = :competencyframeworkid';
 		        $params = array(
-		            'idnumber' => $this->data->competencycode,
+		            'idnumber' => $this->data->code,
 		            'competencyframeworkid' => $frameworkid
 		        );
 		        if ($DB->record_exists_select($this->table, $sql, $params)) {
-		        	$competencycode = $this->data->competencycode;
+		        	$code = $this->data->code;
 		        	$this->resp->error = true;
-		            $this->resp->data['competencycode'] = "Mã năng lực '$competencycode' đã tồn tại";
+		            $this->resp->data['code'] = "Mã năng lực '$code' đã tồn tại";
 		        } else {
 		        	$data = new stdClass;
 		        	$data->shortname = $this->data->name;
-		        	$data->idnumber = $this->data->competencycode;
+		        	$data->idnumber = $this->data->code;
 		        	$data->description = $this->data->description;
 		        	$data->parentid = $this->data->parentid;
 		        	$data->descriptionformat = FORMAT_HTML;
