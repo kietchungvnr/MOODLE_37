@@ -88,7 +88,7 @@ class CourseCreateController extends BaseController {
             $this->check_code = $DB->get_record($this->table,['shortname' => $this->data->shortname], 'shortname');
 			if($this->check_code) {
 				$check_code = $this->check_code->shortname;
-				$this->resp->data['code'] = "Mã khoá học '$check_code' đã tồn tại";
+				$this->resp->data['code'] = "Mã khoá học '$check_code' đã tồn tại!";
 			}
         }
 		if(empty($this->resp->data)) {
