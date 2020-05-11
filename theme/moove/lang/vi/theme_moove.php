@@ -237,3 +237,9 @@ $string['details'] = 'Details';
 $string['startedon'] = 'Started on';
 $string['addcontact'] = 'Add contact';
 $string['removecontact'] = 'Remove contact';
+
+// Footer
+$string['address'] = 'Địa chỉ';
+$string['addressdesc'] = 'Địa chỉ của công ty';
+$string['slogan'] = 'Slogan';
+$string['slogandesc'] = 'Slogan của công ty';

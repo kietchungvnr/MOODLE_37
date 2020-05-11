@@ -237,3 +237,9 @@ $string['details'] = 'Details';
 $string['startedon'] = 'Started on';
 $string['addcontact'] = 'Add contact';
 $string['removecontact'] = 'Remove contact';
+
+// Footer
+$string['address'] = 'Address';
+$string['addressdesc'] = 'Company Address';
+$string['slogan'] = 'Slogan';
+$string['slogandesc'] = 'Company Slogan';

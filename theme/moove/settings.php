@@ -619,6 +619,24 @@ if ($ADMIN->fulltree) {
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
+    // Address setting
+    $name = 'theme_moove/address';
+    $title = get_string('address', 'theme_moove');
+    $description = get_string('addressdesc', 'theme_moove');
+    $default = 'Contact@VnResource.vn';
+    $setting = new admin_setting_configtext($name, $title, $description, $default);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    // Slogan setting
+    $name = 'theme_moove/slogan';
+    $title = get_string('slogan', 'theme_moove');
+    $description = get_string('slogandesc', 'theme_moove');
+    $default = 'YOUR TRUST, OUR SUCCESS';
+    $setting = new admin_setting_configtext($name, $title, $description, $default);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
     // Mobile.
     $name = 'theme_moove/mobile';
     $title = get_string('mobile', 'theme_moove');
