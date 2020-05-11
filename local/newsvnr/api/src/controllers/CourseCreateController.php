@@ -91,6 +91,13 @@ class CourseCreateController extends BaseController {
 				$this->resp->data['code'] = "Mã khoá học '$check_code' đã tồn tại!";
 			}
         }
+        if(!empty($this->data->coursesetup)) {
+        	$this->data->coursesetup = $DB->get_field('course_setup', 'id', ['shortname' => $this->data->coursesetup]);
+        	if(!$this->data->coursesetup) {
+        		$coursesetup = $this->data->coursesetup;
+				$this->resp->data['coursesetup'] = "Mã khoá setup '$coursesetup' không tồn tại!";
+        	}
+        }
 		if(empty($this->resp->data)) {
 			$this->data->idnumber = '';
 			$this->data->format = 'topics';
@@ -173,7 +180,13 @@ class CourseCreateController extends BaseController {
 			} else {
 				$this->resp->data['category'] = "Thiếu 'categoryname' hoặc 'categorycode";
 			}
-			
+			if(!empty($this->data->coursesetup)) {
+	        	$this->data->coursesetup = $DB->get_field('course_setup', 'id', ['shortname' => $this->data->coursesetup]);
+	        	if(!$this->data->coursesetup) {
+	        		$coursesetup = $this->data->coursesetup;
+					$this->resp->data['coursesetup'] = "Mã khoá setup '$coursesetup' không tồn tại!";
+	        	}
+	        }
 			
 			if(empty($this->resp->data)) {
 				$this->data->idnumber = '';

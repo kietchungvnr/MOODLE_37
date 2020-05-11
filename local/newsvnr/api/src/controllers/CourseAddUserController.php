@@ -13,7 +13,7 @@ class CourseAddUserController extends BaseController {
 
 	private $table = 'competency_position';
 	private $student = 'student';
-	private $teacher = 'teacher';
+	private $teacher = 'editingteacher';
 	public $check_code;
 	public $data;
 	public $resp;
@@ -104,7 +104,7 @@ class CourseAddUserController extends BaseController {
 				$userlogin = $fullname_without_tone . $time;
 			}
 		} else {
-			$userlogin = $this->data->userlogin
+			$userlogin = $this->data->userlogin;
 		}
 		$check_orgpositioncode = find_id_orgpostion_by_code($this->data->orgpositioncode);
 		$check_orgstructurecode = find_id_orgstructure_by_code($this->data->orgstructurecode);
@@ -198,9 +198,34 @@ class CourseAddUserController extends BaseController {
 		return $this->response->withStatus(200)->withJson($this->resp);
 	}
 
+	public function enrol_user($userid, $courseid, $roleidorshortname = null, $enrol = 'manual',
+    $timestart = 0, $timeend = 0, $status = null) {
+    global $DB;
+        // If role is specified by shortname, convert it into an id.
+    if (!is_numeric($roleidorshortname) && is_string($roleidorshortname)) {
+        $roleid = $DB->get_field('role', 'id', array('shortname' => $roleidorshortname), MUST_EXIST);
+    } else {
+        $roleid = $roleidorshortname;
+    }
+    if (!$plugin = enrol_get_plugin($enrol)) {
+        return false;
+    }
+    $instances = $DB->get_records('enrol', array('courseid'=>$courseid, 'enrol'=>$enrol));
+    if (count($instances) != 1) {
+        return false;
+    }
+    $instance = reset($instances);
+    if (is_null($roleid) and $instance->roleid) {
+        $roleid = $instance->roleid;
+    }
+    $plugin->enrol_user($instance, $userid, $roleid, $timestart, $timeend, $status);
+    return true;
+}
+
 	public function add($request, $response, $args, $roleidorshortname) {
 		global $DB, $CFG;
 		require_once("$CFG->dirroot/user/lib.php");
+		require_once("$CFG->dirroot/local/newsvnr/lib.php");
 		
 		$this->validate = $this->validator->validate($this->request, [
             'usercode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
@@ -218,39 +243,46 @@ class CourseAddUserController extends BaseController {
 		}
 		if($this->data->usercode) {
 			$userid = find_usercode_by_code($this->data->usercode);
+			$usercode = $this->data->usercode;
+			$coursecode = $this->data->coursecode;
 			if($userid) {
-				$courseid = $DB->get_field('course', 'id', ['shortname' => $this->data->coursecode]);
+				$courseid = $DB->get_field('course', 'id', ['shortname' => $coursecode]);
 				if($courseid) {
 					$user_in_course = check_user_in_course($courseid,$userid->id);
+
 					if(!$user_in_course) {
-						enrol_user($usernew->id, $courseid, $roleidorshortname);
-						$this->reps->error = false;
-						$this->resp->message['info'] = "Thêm thành công '$roleidorshortname' vào lớp";
+						enrol_user($userid->id, $courseid, $roleidorshortname);
+						$this->resp->error = false;
+						if($roleidorshortname == 'student')
+							$this->resp->message['info'] = "Thêm thành công mã nhân viên'$usercode' vào mã lớp '$coursecode'";
+						else
+							$this->resp->message['info'] = "Thêm thành công giáo viên với mã '$usercode' vào mã lớp '$coursecode'";
 						$this->resp->data[] = $this->data;
 					} else {
-						$this->reps->error = false;
-						$this->resp->message['info'] = "Thêm thất bại";
+						$this->resp->error = false;
+						if($roleidorshortname == 'student')
+							$this->resp->message['info'] = "Mã nhân viên '$usercode' đã tồn tại trong mã lớp '$coursecode'";
+						else
+							$this->resp->message['info'] = "Mã nhân viên '$usercode' với vai trò giáo viên đã tồn tại trong mã lớp '$coursecode'";
 					} 
 				}
 				else {
-					$coursecode = $this->data->coursecode;
 					$this->resp->error = true;
 					$this->resp->data['coursecode'] = "Không tìm thấy khoá học với mã '$coursecode'";
 				}
 			} else {
-				$usercode = $this->data->usercode;
 				$this->resp->error = true;
-				$this->resp->data['usercode'] = "Không tìm thấy học viên với mã '$usercode'";
+				$this->resp->data['usercode'] = "Không tìm thấy học viên với mã nhân viên '$usercode'";
 			}
 		}
 		return $response->withStatus(200)->withJson($this->resp);
 	}
 
 	public function add_student($request, $response, $args) {
-		$this->add($request, $response, $args, $this->student);
+		return $this->add($request, $response, $args, $this->student);
 	}
 	public function add_teacher($request, $response, $args) {
-		$this->add($request, $response, $args, $this->teacher);
+		return $this->add($request, $response, $args, $this->teacher);
 	}
 
 	

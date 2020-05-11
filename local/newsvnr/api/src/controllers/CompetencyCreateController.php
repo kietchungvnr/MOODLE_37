@@ -116,7 +116,7 @@ class CompetencyCreateController extends BaseController {
 				    
 			// 	}
 			// }
-			$frameworkid = get_field('competency_framework', 'id', ['shortname' => ?, 'idnumber' => ?])
+			$frameworkid = $DB->get_field('competency_framework', 'id', ['shortname' => $this->data->frameworkname, 'idnumber' => $this->data->frameworkcode]);
 			//tạo competency
 			if($frameworkid) {
 				$sql = 'idnumber = :idnumber AND competencyframeworkid = :competencyframeworkid';
