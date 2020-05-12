@@ -62,7 +62,7 @@ class CourseCreateController extends BaseController {
 		    if($request->getParam('enddate'))
 		    	$this->data->enddate = strtotime($request->getParam('enddate'));
 		    else 
-		    $this->data->enddate = $request->getParam('enddate');
+		    	$this->data->enddate = 0;
 		    $this->data->description = $request->getParam('description');
 
 	    } else {
@@ -72,59 +72,118 @@ class CourseCreateController extends BaseController {
 	        return $response->withStatus(422)->withJson($this->resp);
 	    }
 		
-		if($this->data->categoryname and $this->data->categorycode) {
-			$existing = $DB->get_field('course_categories','id',['name' => $this->data->categoryname, 'idnumber' => $this->data->categorycode]);
-			if($existing) {
-				$this->data->category = $existing;
+		$courseid = $DB->get_field('course', 'id', ['fullname' => $this->data->fullname, 'shortname' => $this->data->shortname]);
+		if($courseid) {
+			$this->data->id = $courseid;
+			$course = $DB->get_record($this->table, ['id' => $courseid]);
+			if (!empty($this->data->shortname) && $course->shortname !== $this->data->shortname ) {
+	            $this->check_code = $DB->get_record($this->table,['shortname' => $this->data->shortname], 'shortname');
+				if($this->check_code) {
+					$check_code = $this->check_code->shortname;
+					$this->resp->data['code'] = "Mã khoá học'$check_code' đã tồn tại";
+				}
+	        }
+
+	        if($this->data->categoryname and $this->data->categorycode) {
+				$existing = $DB->get_field('course_categories','id',['name' => $this->data->categoryname, 'idnumber' => $this->data->categorycode]);
+				if($existing) {
+					$this->data->category = $existing;
+				} else {
+					$categoryname = $this->data->categoryname;
+					$this->resp->data['categoryname'] = "Không tìm thấy tên '$categoryname' trong danh mục khoá học ";
+				}
 			} else {
-				$categoryname = $this->data->categoryname;
-				$this->resp->data['categoryname'] = "Không tìm thấy tên '$categoryname' trong danh mục khoá học ";
+				$this->resp->data['category'] = "Thiếu 'categoryname' hoặc 'categorycode";
 			}
-		} else {
-			$this->resp->data['category'] = "Thiếu 'categoryname' hoặc 'categorycode";
-		}
-
-		if (!empty($this->data->shortname)) {
-            $this->check_code = $DB->get_record($this->table,['shortname' => $this->data->shortname], 'shortname');
-			if($this->check_code) {
-				$check_code = $this->check_code->shortname;
-				$this->resp->data['code'] = "Mã khoá học '$check_code' đã tồn tại!";
-			}
-        }
-        if(!empty($this->data->coursesetup)) {
-        	$this->data->coursesetup = $DB->get_field('course_setup', 'id', ['shortname' => $this->data->coursesetup]);
-        	if(!$this->data->coursesetup) {
-        		$coursesetup = $this->data->coursesetup;
-				$this->resp->data['coursesetup'] = "Mã khoá setup '$coursesetup' không tồn tại!";
-        	}
-        }
-		if(empty($this->resp->data)) {
-			$this->data->idnumber = '';
-			$this->data->format = 'topics';
-			$this->data->showgrades = 1;
-			$this->data->numsections = 4;
-			$this->data->newsitems = 10;
-			$this->data->visible = 0;
-			$this->data->showreports = 1;
-			$this->data->summary = '';
-			$this->data->summaryformat = FORMAT_HTML;
-			$this->data->lang = 'vi';
-			$this->data->typeofcourse = 2;
-			$this->data->enablecompletion = 1;
+			if(!empty($this->data->coursesetup)) {
+	        	$this->data->coursesetup = $DB->get_field('course_setup', 'id', ['shortname' => $this->data->coursesetup]);
+	        	if(!$this->data->coursesetup) {
+	        		$coursesetup = $this->data->coursesetup;
+					$this->resp->data['coursesetup'] = "Mã khoá setup '$coursesetup' không tồn tại!";
+	        	}
+	        }
 			
-		    $success = create_course($this->data);
-
-			if($success) {
-				$this->resp->error = false;
-				$this->resp->message['info'] = "Thêm thành công";
-				$this->resp->data[] = $this->data;
-			}
-			else {
+			if(empty($this->resp->data)) {
+				$this->data->idnumber = '';
+				$this->data->format = 'topics';
+				$this->data->showgrades = 1;
+				$this->data->numsections = 4;
+				$this->data->newsitems = 10;
+				$this->data->visible = 0;
+				$this->data->showreports = 1;
+				$this->data->summary = '';
+				$this->data->summaryformat = FORMAT_HTML;
+				$this->data->lang = 'vi';
+				$this->data->typeofcourse = 2;
+				$this->data->enablecompletion = 1;	
+				try {
+					update_course($this->data);
+					$this->resp->error = false;
+					$this->resp->message['info'] = "Chỉnh sửa thành công";
+					$this->resp->data[] = $this->data;
+				} catch (Exception $e) {
+					$this->resp->error = true;
+					$this->resp->data->message['info'] = "Thêm thất bại với lỗi: $e->getMessage()";
+				}		
+			} else {
 				$this->resp->error = true;
-				$this->resp->message['info'] = "Thêm thất bại";
 			}
 		} else {
-			$this->resp->error = true;
+
+			if($this->data->categoryname and $this->data->categorycode) {
+				$existing = $DB->get_field('course_categories','id',['name' => $this->data->categoryname, 'idnumber' => $this->data->categorycode]);
+				if($existing) {
+					$this->data->category = $existing;
+				} else {
+					$categoryname = $this->data->categoryname;
+					$this->resp->data['categoryname'] = "Không tìm thấy tên '$categoryname' trong danh mục khoá học ";
+				}
+			} else {
+				$this->resp->data['category'] = "Thiếu 'categoryname' hoặc 'categorycode";
+			}
+
+			if (!empty($this->data->shortname)) {
+	            $this->check_code = $DB->get_record($this->table,['shortname' => $this->data->shortname], 'shortname');
+				if($this->check_code) {
+					$check_code = $this->check_code->shortname;
+					$this->resp->data['code'] = "Mã khoá học '$check_code' đã tồn tại!";
+				}
+	        }
+	        if(!empty($this->data->coursesetup)) {
+	        	$this->data->coursesetup = $DB->get_field('course_setup', 'id', ['shortname' => $this->data->coursesetup]);
+	        	if(!$this->data->coursesetup) {
+	        		$coursesetup = $this->data->coursesetup;
+					$this->resp->data['coursesetup'] = "Mã khoá setup '$coursesetup' không tồn tại!";
+	        	}
+	        }
+			if(empty($this->resp->data)) {
+				$this->data->idnumber = '';
+				$this->data->format = 'topics';
+				$this->data->showgrades = 1;
+				$this->data->numsections = 4;
+				$this->data->newsitems = 10;
+				$this->data->visible = 0;
+				$this->data->showreports = 1;
+				$this->data->summary = '';
+				$this->data->summaryformat = FORMAT_HTML;
+				$this->data->lang = 'vi';
+				$this->data->typeofcourse = 2;
+				$this->data->enablecompletion = 1;
+				
+			    $success = create_course($this->data);
+
+				if($success) {
+					$this->resp->error = false;
+					$this->resp->message['info'] = "Thêm thành công";
+					$this->resp->data[] = $this->data;
+				}
+				else {
+					$this->resp->error = true;
+					$this->resp->message['info'] = "Thêm thất bại";
+				}
+			} else {
+				$this->resp->error = true;
+			}
 		}
 		
 		return $this->response->withStatus(200)->withJson($this->resp);
@@ -147,7 +206,7 @@ class CourseCreateController extends BaseController {
 		    if($request->getParam('enddate'))
 		    	$this->data->enddate = strtotime($request->getParam('enddate'));
 		    else 
-		    $this->data->enddate = $request->getParam('enddate');
+		    	$this->data->enddate = 0;
 		    $this->data->description = $request->getParam('description');
 
 	    } else {

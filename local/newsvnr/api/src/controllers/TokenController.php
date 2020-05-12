@@ -29,17 +29,11 @@ class TokenController extends BaseController
 	    }
    	}
    	
-    public function getToken() {
-   
+    public function getToken($request, $response, $args) {
 	    // error_reporting(E_ALL & ~E_NOTICE);
-	    if(!$this->checkUser($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
-	        $this->logger->info("Xác thực sai!");
-	        header('WWW-Authenticate: Basic realm="Elearning"'); 
-	        header('HTTP/1.0 401 Unauthorized'); 
-	        echo "You need to enter a valid username and password."; exit; 
-	    }
-	    else {
-	        $this->logger->info("Xác thực thành công!");
+	    $checkUser = $this->checkUser($request->getParam('username'),$request->getParam('password'));
+	    if($checkUser) {
+	    	$this->logger->info("Xác thực thành công!");
 	        $settings = $this->settings;
 	        $tokenId = Uuid::uuid1()->toString();
 	        $issuedAt = time();
@@ -53,8 +47,11 @@ class TokenController extends BaseController
 	            'nbf'  => $notBefore,        // Not before
 	            'exp'  => $expire,
 	        ], "5U3Gn3gp4LrQpS34d7Gjxxxx", "HS512");
-	        return $this->response->withJson(['token' => $token]);
+	        return $this->response->withJson(['token_type' => 'Bearer', 'access_token' => $token]);
+	    } else {
+	    	return $this->response->withJson(['message' => 'Sai tên đăng nhập hoặc mật khẩu!']);
 	    }
+        
     }
    
 }

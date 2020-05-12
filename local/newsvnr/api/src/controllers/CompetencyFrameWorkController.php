@@ -72,95 +72,58 @@ class CompetencyFrameWorkController extends BaseController {
         	$this->resp->data[] = $errors;
 	        return $response->withStatus(422)->withJson($this->resp);
 	    }
+	    if($this->data->name and $this->data->code) {
+	    	$data = new stdClass;
+			$data->shortname = $this->data->name;
+            $data->idnumber = $this->data->code;
+            $data->description = '';
+            $data->descriptionformat = FORMAT_HTML;
+            $data->visible = true;
+            $data->contextid = context_system::instance()->id;
+            $data->scaleid = 2;
+	        $data->taxonomies = 'competency,competency,competency,competency';
+	        $data->usermodified = $USER->id;
+	        if (!isset($data->scaleconfiguration)) {
+	            $data->scaleconfiguration = '[{"scaleid":"2"},{"id":2,"scaledefault":1,"proficient":1}]';
+	        }
+	    	$frameworkid = $DB->get_field('competency_framework','id',['shortname' => $this->data->name, 'idnumber' => $this->data->code]);
+		    if($frameworkid) {
+		    	try {
+	       			$framework = api::update_framework($data);
+		       		$frameworkid = $framework->get('id');
+		       		if($frameworkid) {
+				   		$this->resp->error = false;
+						$this->resp->message['info'] = "Chỉnh sửa thành công";
+						$this->resp->data[] = $data;
+				   	} else {
+				   		$this->resp->error = true;
+						$this->resp->message['info'] = "Chỉnh sửa thất bại";
+				   	}
+		       	} catch (Exception $e) {
+		       		$this->resp->data[] = "Lỗi: $e->getMessage()";
+		       	}
+		       	
+		    } else {
+		    	try {
+	       			$framework = api::create_framework($data);
+		       		$frameworkid = $framework->get('id');
+		       		if($frameworkid) {
+				   		$this->resp->error = false;
+						$this->resp->message['info'] = "Thêm thành công";
+						$this->resp->data[] = $data;
+				   	} else {
+				   		$this->resp->error = true;
+						$this->resp->message['info'] = "Thêm thất bại";
+				   	}
+		       	} catch (Exception $e) {
+		       		$this->resp->data[] = "Lỗi: $e->getMessage()";
+		       	}
+		    }
 
-		// if($this->data->parentname and $this->data->parentcode) {
-		// 	$existing = $DB->get_field($this->table,'id',['shortname' => $this->data->parentname, 'idnumber' => $this->data->parentcode]);
-		// 	if($existing) {
-		// 		$this->data->parentid = $existing;
-		// 	} else {
-		// 		$parentname = $this->data->parentname;
-		// 		$this->resp->data['parent'] = "Không tìm thấy tên '$parentname' trong danh sách năng lực ";
-		// 	}
-		// } elseif($this->data->parentname or $this->data->parentcode) {
-		// 	$this->resp->data['parent'] = "Thiếu 'parentname' hoặc 'parentcode";
-		// } else {
-		// 	$this->data->parentid = 0;
-		// }
-
-		if(empty($this->resp->data)) {
-			//tạo competency framework
-			if($this->data->name and $this->data->code) {
-				$existing = $DB->get_field('competency_framework','id',['shortname' => $this->data->name, 'idnumber' => $this->data->code]);
-				if($existing) {
-					$frameworkid = $existing;
-				} else {
-					$data = new stdClass;
-					$data->shortname = $this->data->name;
-		            $data->idnumber = $this->data->code;
-		            $data->description = '';
-		            $data->descriptionformat = FORMAT_HTML;
-		            $data->visible = true;
-		            $data->contextid = context_system::instance()->id;
-		            $data->scaleid = 2;
-			        $data->taxonomies = 'competency,competency,competency,competency';
-			        $data->usermodified = $USER->id;
-			        if (!isset($data->scaleconfiguration)) {
-			            $data->scaleconfiguration = '[{"scaleid":"2"},{"id":2,"scaledefault":1,"proficient":1}]';
-			        }
-			       	try {
-			       		$framework = api::create_framework($data);
-			       		$frameworkid = $framework->get('id');
-			       		if($frameworkid) {
-					   		$this->resp->error = false;
-							$this->resp->message['info'] = "Thêm thành công";
-							$this->resp->data[] = $data;
-					   	} else {
-					   		$this->resp->error = true;
-							$this->resp->message['info'] = "Thêm thất bại";
-					   	}
-			       	} catch (Exception $e) {
-			       		$this->resp->data[] = "Lỗi: $e->getMessage()";
-			       	}
-				    
-				}
-			}
-			//tạo competency
-			// if($frameworkid) {
-			// 	$sql = 'idnumber = :idnumber AND competencyframeworkid = :competencyframeworkid';
-		 //        $params = array(
-		 //            'idnumber' => $this->data->competencycode,
-		 //            'competencyframeworkid' => $frameworkid
-		 //        );
-		 //        if ($DB->record_exists_select($this->table, $sql, $params)) {
-		 //        	$competencycode = $this->data->competencycode;
-		 //        	$this->resp->error = true;
-		 //            $this->resp->data['competencycode'] = "Mã năng lực '$competencycode' đã tồn tại";
-		 //        } else {
-		 //        	$data = new stdClass;
-		 //        	$data->shortname = $this->data->name;
-		 //        	$data->idnumber = $this->data->competencycode;
-		 //        	$data->description = $this->data->description;
-		 //        	$data->parentid = $this->data->parentid;
-		 //        	$data->descriptionformat = FORMAT_HTML;
-		 //    		$data->competencyframeworkid = $frameworkid;
-			// 	   	$competency = api::create_competency($data);
-			// 	   	if($competency) {
-			// 	   		$this->resp->error = false;
-			// 			$this->resp->message['info'] = "Thêm thành công";
-			// 			$this->resp->data[] = $data;
-			// 	   	} else {
-			// 	   		$this->resp->error = true;
-			// 			$this->resp->message['info'] = "Thêm thất bại";
-			// 	   	}
-		 //        }
-			// }
-			else {
-				$this->resp->error = true;
-				$this->resp->message['info'] = "Thêm thất bại";
-			}
-		} else {
-			$this->resp->error = true;
-		}
+	    } else {
+	    	$this->resp->error = true;
+			$this->resp->message['info'] = "Thêm/Chỉnh sửa thất bại";
+	    }
 		
 		return $this->response->withStatus(200)->withJson($this->resp);
 	}

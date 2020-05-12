@@ -60,41 +60,81 @@ class CourseSetupController extends BaseController {
         	$this->resp->data[] = $errors;
 	        return $response->withStatus(422)->withJson($this->resp);
 	    }
-		
-		if($this->data->parentname and $this->data->parentid) {
-			$existing = $DB->get_field('course_categories','id',['name' => $this->data->parentname, 'idnumber' => $this->data->parentid]);
-			if($existing) {
-				$this->data->category = $existing;
+		$coursesetupid = $DB->get_field('course_setup', 'id',['fullname' => $this->data->fullname, 'shortname' => $this->data->shortname]);
+		if($coursesetupid) {
+			$this->data->id = $coursesetupid;
+			$coursesetup = $DB->get_record($this->table, ['id' => $coursesetupid]);
+			if (!empty($this->data->shortname) && $coursesetup->shortname !== $this->data->shortname ) {
+	            $this->check_code = $DB->get_record($this->table,['shortname' => $this->data->shortname], 'shortname');
+				if($this->check_code) {
+					$check_code = $this->check_code->shortname;
+					$this->resp->data['code'] = "Mã khoá setup'$check_code' đã tồn tại";
+				}
+	        }
+
+	        if($this->data->parentname and $this->data->parentid) {
+				$existing = $DB->get_field('course_categories','id',['name' => $this->data->parentname, 'idnumber' => $this->data->parentid]);
+				if($existing) {
+					$this->data->category = $existing;
+				} else {
+					$parentname = $this->data->parentname;
+					$this->resp->data['parentname'] = "Không tìm thấy tên '$parentname' trong danh mục khoá học ";
+				}
 			} else {
-				$parentname = $this->data->parentname;
-				$this->resp->data['parentname'] = "Không tìm thấy tên '$parentname' trong danh muc khoá học ";
+				$this->resp->data['parent'] = "Thiếu 'parentname' hoặc 'parentid";
 			}
-		} else {
-			$this->resp->data['parent'] = "Thiếu 'parentname' hoặc 'parentid";
-		}
-
-		if (!empty($this->data->shortname)) {
-            $this->check_code = $DB->get_record($this->table,['shortname' => $this->data->shortname], 'shortname');
-			if($this->check_code) {
-				$check_code = $this->check_code->shortname;
-				$this->resp->data['code'] = "Mã khoá setup '$check_code' đã tồn tại";
-			}
-        }
-
-
-		if(empty($this->resp->data)) {
-			$success = $DB->insert_record($this->table, $this->data);
-			if($success) {
-				$this->resp->error = false;
-				$this->resp->message['info'] = "Thêm thành công";
-				$this->resp->data[] = $this->data;
-			}
-			else {
+			
+			
+			if(empty($this->resp->data)) {
+				unset($this->data->parentid,$this->data->parentname);
+				$success = $DB->update_record($this->table, $this->data);
+				if($success) {
+			        $this->resp->error = false;
+					$this->resp->message['info'] = "Chỉnh sửa thành công";
+					$this->resp->data[] = $this->data;
+			    } else {
+					$this->resp->error = true;
+					$this->resp->data->message['info'] = "Chỉnh sửa thất bại";
+				}
+			} else {
 				$this->resp->error = true;
-				$this->resp->message['info'] = "Thêm thất bại";
 			}
 		} else {
-			$this->resp->error = true;
+			if($this->data->parentname and $this->data->parentid) {
+				$existing = $DB->get_field('course_categories','id',['name' => $this->data->parentname, 'idnumber' => $this->data->parentid]);
+				if($existing) {
+					$this->data->category = $existing;
+				} else {
+					$parentname = $this->data->parentname;
+					$this->resp->data['parentname'] = "Không tìm thấy tên '$parentname' trong danh muc khoá học ";
+				}
+			} else {
+				$this->resp->data['parent'] = "Thiếu 'parentname' hoặc 'parentid";
+			}
+
+			if (!empty($this->data->shortname)) {
+	            $this->check_code = $DB->get_record($this->table,['shortname' => $this->data->shortname], 'shortname');
+				if($this->check_code) {
+					$check_code = $this->check_code->shortname;
+					$this->resp->data['code'] = "Mã khoá setup '$check_code' đã tồn tại";
+				}
+	        }
+
+
+			if(empty($this->resp->data)) {
+				$success = $DB->insert_record($this->table, $this->data);
+				if($success) {
+					$this->resp->error = false;
+					$this->resp->message['info'] = "Thêm thành công";
+					$this->resp->data[] = $this->data;
+				}
+				else {
+					$this->resp->error = true;
+					$this->resp->message['info'] = "Thêm thất bại";
+				}
+			} else {
+				$this->resp->error = true;
+			}
 		}
 		
 		return $this->response->withStatus(200)->withJson($this->resp);
