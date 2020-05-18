@@ -837,21 +837,21 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
         'CodeEmp' => $usercode,
         'CourseCode' => $coursecode,
         'TestScore' =>  $bestgrade,
-        'TestResult' => $result_traning,
+        'Result' => $result_traning,
         'TestName' => $quiz->name,
         'TestCode' => $quiz->code,
     ];
     $params_interview_el = [
         'CodeCandidate' => $usercode,
         'TestScore' =>  $bestgrade,
-        'TestResult' => $result_interview,
+        'Result' => $result_interview,
         'TestName' => $quiz->name,
-        'CourseCode' => $coursecode,
+        // 'CourseCode' => $coursecode,
         'TestCode' => $quiz->code,
         'DateInterview' => $date->format('Y-m-d H:i:sP'),  
     ];
     $training_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'UpdateTraineeResult']);
-    $interview_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'Rec_InterviewCampaignDetail']);
+    $interview_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateInterviewResult']);
     
     $url_el = curPageURL() . '/local/newsvnr/ajax.php';
 

@@ -29,6 +29,7 @@ require_once(__DIR__ . '/../../config.php');
 // $id = optional_param('id',0,PARAM_INT);
 // $array_id = array('id' => $id);
 // $baseurl = new moodle_url('/local/newsvnr/index.php');
+require_login();
 $url = new moodle_url('/local/newsvnr/forum.php');
 $PAGE->set_url($url);
 $title = get_string('forumtitle','local_newsvnr');

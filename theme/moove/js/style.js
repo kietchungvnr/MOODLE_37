@@ -34,17 +34,20 @@
             }, 500);
         });
 
+        var owlfrontpage = $('#frontpage-course-slider');
         var owlcourse = $('#news-slider6');
+        var owlnewestcourse = $('#newest-course-slider');
+        var owlallcourse = $('#all-course-slider');
         var owlnews = $('#news-slider');
         var owlrequiredcourse = $('#requiredcourse-slider');
         var owlrequiredpositioncourse = $('#requiredcourse-position-slider');
         var owlsuggestcourse = $('#suggest-course-slider');
         var owluserplancourse = $('#course-userplan-slider');
-        owlcourse.owlCarousel({
+        owlfrontpage.owlCarousel({
             loop:false,
             margin:10,
             lazyLoad:true,
-            autoplay:true,
+            // autoplay:true,
             autoplayTimeout:5000,
             responsiveClass:true,
             responsive:{
@@ -56,6 +59,78 @@
                 },
                 1000:{
                     items:4, 
+                },
+                1400:{
+                    items:5, 
+                }
+            }
+
+        });
+        owlcourse.owlCarousel({
+            loop:false,
+            margin:20,
+            lazyLoad:true,
+            // autoplay:true,
+            autoplayTimeout:5000,
+            responsiveClass:true,
+            responsive:{
+                0:{
+                    items:1,
+                },
+                600:{
+                    items:2,
+                },
+                1000:{
+                    items:5, 
+                },
+                1400:{
+                    items:6, 
+                }
+            }
+
+        });
+        owlnewestcourse.owlCarousel({
+            loop:false,
+            margin:20,
+            lazyLoad:true,
+            // autoplay:true,
+            autoplayTimeout:5000,
+            responsiveClass:true,
+            responsive:{
+                0:{
+                    items:1,
+                },
+                600:{
+                    items:2,
+                },
+                1000:{
+                    items:5, 
+                },
+                1400:{
+                    items:6, 
+                }
+            }
+
+        });
+        owlallcourse.owlCarousel({
+            loop:false,
+            margin:20,
+            lazyLoad:true,
+            // autoplay:true,
+            autoplayTimeout:5000,
+            responsiveClass:true,
+            responsive:{
+                0:{
+                    items:1,
+                },
+                600:{
+                    items:2,
+                },
+                1000:{
+                    items:5, 
+                },
+                1400:{
+                    items:6, 
                 }
             }
 

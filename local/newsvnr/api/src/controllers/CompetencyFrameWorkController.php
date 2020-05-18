@@ -11,7 +11,7 @@ use core_competency\competency_framework;
 use core_competency\competency;
 class CompetencyFrameWorkController extends BaseController {
 
-	private $table = 'competency';
+	private $table = 'competency_framework';
 
 	public $check_code;
 	public $data;
@@ -76,7 +76,7 @@ class CompetencyFrameWorkController extends BaseController {
 	    	$data = new stdClass;
 			$data->shortname = $this->data->name;
             $data->idnumber = $this->data->code;
-            $data->description = '';
+            $data->description = $this->data->description;
             $data->descriptionformat = FORMAT_HTML;
             $data->visible = true;
             $data->contextid = context_system::instance()->id;
@@ -86,12 +86,13 @@ class CompetencyFrameWorkController extends BaseController {
 	        if (!isset($data->scaleconfiguration)) {
 	            $data->scaleconfiguration = '[{"scaleid":"2"},{"id":2,"scaledefault":1,"proficient":1}]';
 	        }
+	        
 	    	$frameworkid = $DB->get_field('competency_framework','id',['shortname' => $this->data->name, 'idnumber' => $this->data->code]);
 		    if($frameworkid) {
 		    	try {
+		    		$data->id = $frameworkid;
 	       			$framework = api::update_framework($data);
-		       		$frameworkid = $framework->get('id');
-		       		if($frameworkid) {
+		       		if($framework) {
 				   		$this->resp->error = false;
 						$this->resp->message['info'] = "Chỉnh sửa thành công";
 						$this->resp->data[] = $data;
@@ -105,16 +106,20 @@ class CompetencyFrameWorkController extends BaseController {
 		       	
 		    } else {
 		    	try {
-	       			$framework = api::create_framework($data);
-		       		$frameworkid = $framework->get('id');
-		       		if($frameworkid) {
-				   		$this->resp->error = false;
-						$this->resp->message['info'] = "Thêm thành công";
-						$this->resp->data[] = $data;
-				   	} else {
-				   		$this->resp->error = true;
-						$this->resp->message['info'] = "Thêm thất bại";
-				   	}
+		    		if($DB->record_exists($this->table, ['idnumber' => $this->data->code])) {
+			        	$this->resp->data['idnumber'] = 'Mã khung năng lực đã tồn tại';
+			        }
+		    		if(empty($this->resp->data)) {
+		    			$framework = api::create_framework($data);
+			       		if($framework) {
+					   		$this->resp->error = false;
+							$this->resp->message['info'] = "Thêm thành công";
+							$this->resp->data[] = $data;
+					   	} else {
+					   		$this->resp->error = true;
+							$this->resp->message['info'] = "Thêm thất bại";
+					   	}
+					} 
 		       	} catch (Exception $e) {
 		       		$this->resp->data[] = "Lỗi: $e->getMessage()";
 		       	}

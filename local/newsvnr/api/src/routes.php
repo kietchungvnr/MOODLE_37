@@ -18,18 +18,22 @@ $app->post('/courses/course-category', local_newsvnr\api\controllers\CourseCateg
 $app->put('/courses/course-category/{id}', local_newsvnr\api\controllers\CourseCategoryController::class . ':update');
 $app->post('/courses/course-setup', local_newsvnr\api\controllers\CourseSetupController::class . ':create');
 $app->put('/courses/course-setup/{id}', local_newsvnr\api\controllers\CourseSetupController::class . ':update');
-$app->post('/courses/course-create', local_newsvnr\api\controllers\CourseCreateController::class . ':create');
-$app->put('/courses/course-create/{id}', local_newsvnr\api\controllers\CourseCreateController::class . ':update');
+$app->post('/courses/course-create', local_newsvnr\api\controllers\CourseController::class . ':create');
+$app->put('/courses/course-create/{id}', local_newsvnr\api\controllers\CourseController::class . ':update');
 $app->post('/courses/course-add-competency', local_newsvnr\api\controllers\CourseAddCompetencyController::class . ':create');
 $app->put('/courses/course-add-competency/{id}', local_newsvnr\api\controllers\CourseAddCompetencyController::class . ':update');
 $app->post('/courses/course-add-student', local_newsvnr\api\controllers\CourseAddUserController::class . ':add_student');
 $app->post('/courses/course-add-teacher', local_newsvnr\api\controllers\CourseAddUserController::class . ':add_teacher');
+$app->post('/courses/training/course-add-student', local_newsvnr\api\controllers\CourseAddUserController::class . ':enroll_user_training');
+$app->post('/courses/training/course-delete-student', local_newsvnr\api\controllers\CourseAddUserController::class . ':delete_enroll_course');
+$app->post('/courses/interview/course-add-student', local_newsvnr\api\controllers\CourseAddUserController::class . ':create_and_enroll_user_interview');
+$app->post('/courses/interview/course-delete-student', local_newsvnr\api\controllers\CourseAddUserController::class . ':delete_recruitment');
 
 $app->get('/courses/course-list', local_newsvnr\api\controllers\ListModuleController::class . ':read_course');
 
-$app->post('/competencies/competency-create', local_newsvnr\api\controllers\CompetencyCreateController::class . ':create');
+$app->post('/competencies/competency-create', local_newsvnr\api\controllers\CompetencyController::class . ':create');
 $app->post('/competencies/competency-framework-create', local_newsvnr\api\controllers\CompetencyFrameWorkController::class . ':create');
-$app->put('/competencies/competency-create/{id}', local_newsvnr\api\controllers\CompetencyCreateController::class . ':update');
+$app->put('/competencies/competency-create/{id}', local_newsvnr\api\controllers\CompetencyController::class . ':update');
 $app->post('/competencies/competency-add-orgposition', local_newsvnr\api\controllers\CompetencyAddOrgPositionController::class . ':create');
 $app->put('/competencies/competency-add-orgposition/{id}', local_newsvnr\api\controllers\CompetencyAddOrgPositionController::class . ':update');
 

@@ -1560,7 +1560,6 @@ function getToken($url) {
     CURLOPT_HTTPHEADER => array(
             'Content-Type: application/x-www-form-urlencoded',
             // 'Content-Length: ' . strlen($data),
-            $auth
     ),
     CURLOPT_POSTFIELDS => $params));
     $resp = curl_exec($curl);
@@ -1572,7 +1571,6 @@ function getToken($url) {
 function HTTPPost($url,$data) {
     $urltoken = 'http://192.168.1.3:2707/Token';
     $token = getToken($urltoken);
-    // var_dump($token);die;
     $auth = 'Authorization: Bearer ' . $token;
     $params = encode_array($data);
     $curl = curl_init();
@@ -1589,7 +1587,7 @@ function HTTPPost($url,$data) {
     ),
     CURLOPT_POSTFIELDS => $params));
     $resp = curl_exec($curl);
-    // var_dump(json_decode($resp,JSON_UNESCAPED_UNICODE)['data']);die;
+    var_dump(json_decode($resp,JSON_UNESCAPED_UNICODE));
     curl_close($curl);
 }
 

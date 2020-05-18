@@ -71,7 +71,7 @@
 </style>
 
  {{#course}}
- <div class="container">
+ <div class="container-fluid">
         <div class="course-box">
             <div class="row">
                  <h4 class="title">Phổ biến</h4>
@@ -129,45 +129,45 @@
             <div class="course-new-latest">
              
                 <div class="row">
+                    <div id="newest-course-slider" class="owl-carousel owl-theme">
                      {{#newestcourse}}
-                       <div class="col-md-3 col-sm-6 post-slide6" style="margin-bottom: 10px;">
-                                            
-                                <div class="post-img">
-                                      {{{imageurl}}}
-                                    <div class="post-info">
-                                        <ul class="category">
-                                            <li>Học viên: <a href="#">{{countstudent}}</a></li>
-                                            <li>Giáo viên: <a href="#">{{fullnamet}}</a></li>
-                                           
-                                        </ul>
-                      
-                                    </div>
+                       <div class=" post-slide6">
+                                             
+                            <div class="post-img">
+                                {{{imageurl}}}
+                                <div class="post-info">
+                                    <ul class="category">
+                                        <li>Học viên: <a href="#">{{countstudent}}</a></li>
+                                        <li>Giáo viên: <a href="#">{{fullnamet}}</a></li>
+                                       
+                                    </ul>
+                  
                                 </div>
+                            </div>
+                            <div class="post-review">
+                                <span class="icons">
+                                       {{{imageteacher}}}
+                                </span>
+                                <h3 class="post-title"><a href="{{{link}}}" title="{{fullname}}">{{#shortentext}}80, {{{fullnameurl}}}{{/shortentext}}</a></h3>
+                                <p class="post-teachername">{{#shortentext}}30, {{fullnamet}}{{/shortentext}}</p>
+                                
+                                <p class="post-description">{{#shortentext}}90, {{summary}}{{/shortentext}}</p>
 
-                                <div class="post-review">
-                                    <span class="icons">
-                                           {{{imageteacher}}}
-                                    </span>
-                                    <h3 class="post-title"><a href="{{{link}}}" title="{{fullname}}">{{#shortentext}}80, {{{fullnameurl}}}{{/shortentext}}</a></h3>
-                                    <p class="post-teachername">{{#shortentext}}30, {{fullnamet}}{{/shortentext}}</p>
-                                    
-                                    <p class="post-description">{{#shortentext}}90, {{summary}}{{/shortentext}}</p>
-
-                                    <p class="post-enrolmethod">
-                                        {{#enrolmethod}}{{{enrolmethod}}}{{/enrolmethod}}
-                                        {{#progress}}
-                                            <div class="progress">
-                                                <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}"
-                                              aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%">
-                                                    {{progress}}%
-                                                </div>
+                                <p class="post-enrolmethod">
+                                    {{#enrolmethod}}{{{enrolmethod}}}{{/enrolmethod}}
+                                    {{#progress}}
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}"
+                                          aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%">
+                                                {{progress}}%
                                             </div>
-                                        {{/progress}}
-                                    </p>
-                                </div>
-                          </div>
-
+                                        </div>
+                                    {{/progress}}
+                                </p>
+                            </div>
+                        </div>
                      {{/newestcourse}}
+                 </div>
 
 
                 </div>
@@ -205,48 +205,49 @@
             </div>
             <div class="course-all">
 
-                  <div class="row">
-
-                             {{#allcourse}}
-                            <div class="col-md-3 col-sm-6 post-slide6">
-                                            
-                                <div class="post-img">
-                                      {{{imageurl}}}
-                                    <div class="post-info">
-                                        <ul class="category">
-                                            <li>Học viên: <a href="#">{{countstudent}}</a></li>
-                                            <li>Giáo viên: <a href="#">{{fullnamet}}</a></li>
-                                           
-                                        </ul>
-                      
-                                    </div>
-                                </div>
-
-                                <div class="post-review">
-                                    <span class="icons">
-                                           {{{imageteacher}}}
-                                    </span>
-                                    <h3 class="post-title"><a href="{{{link}}}" title="{{fullname}}">{{#shortentext}}80, {{{fullnameurl}}}{{/shortentext}}</a></h3>
-                                    <p class="post-teachername">{{#shortentext}}30, {{fullnamet}}{{/shortentext}}</p>
-                                    
-                                    <p class="post-description">{{#shortentext}}90, {{summary}}{{/shortentext}}</p>
-
-                                    <p class="post-enrolmethod">
-                                        {{#enrolmethod}}{{{enrolmethod}}}{{/enrolmethod}}
-                                        {{#progress}}
-                                            <div class="progress">
-                                                <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}"
-                                              aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%">
-                                                    {{progress}}%
-                                                </div>
-                                            </div>
-                                        {{/progress}}
-                                    </p>
+                 <div class="row">
+                    <div id="all-course-slider" class="owl-carousel owl-theme">
+                     {{#allcourse}}
+                       <div class=" post-slide6">
+                                             
+                            <div class="post-img">
+                                {{{imageurl}}}
+                                <div class="post-info">
+                                    <ul class="category">
+                                        <li>Học viên: <a href="#">{{countstudent}}</a></li>
+                                        <li>Giáo viên: <a href="#">{{fullnamet}}</a></li>
+                                       
+                                    </ul>
+                  
                                 </div>
                             </div>
-         
-                            {{/allcourse}}                
-                   </div>
+                            <div class="post-review">
+                                <span class="icons">
+                                       {{{imageteacher}}}
+                                </span>
+                                <h3 class="post-title"><a href="{{{link}}}" title="{{fullname}}">{{#shortentext}}80, {{{fullnameurl}}}{{/shortentext}}</a></h3>
+                                <p class="post-teachername">{{#shortentext}}30, {{fullnamet}}{{/shortentext}}</p>
+                                
+                                <p class="post-description">{{#shortentext}}90, {{summary}}{{/shortentext}}</p>
+
+                                <p class="post-enrolmethod">
+                                    {{#enrolmethod}}{{{enrolmethod}}}{{/enrolmethod}}
+                                    {{#progress}}
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}"
+                                          aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%">
+                                                {{progress}}%
+                                            </div>
+                                        </div>
+                                    {{/progress}}
+                                </p>
+                            </div>
+                        </div>
+                     {{/allcourse}}
+                 </div>
+
+
+                </div>
 
     
                         <div class="view-more" style="text-align: center;" >

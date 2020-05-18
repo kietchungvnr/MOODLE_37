@@ -153,11 +153,11 @@ if ($mform->is_cancelled()) {
     
     if($data->modulename == 'quiz') {
         $params_el = [
-                'NameEntityName' => $fromform->name,
-                'Code' =>  $fromform->code,
+                'TestName' => $fromform->name,
+                'TestCode' =>  $fromform->code,
                 'CourseCode' => $course->code
         ];
-        $quiz_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'UpdateTraineeResult']);
+        $quiz_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecTest']);
         if($quiz_api) {
             $getparams_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $quiz_api->id]);
             $params_hrm = [];

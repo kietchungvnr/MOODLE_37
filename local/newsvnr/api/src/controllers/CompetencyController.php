@@ -9,7 +9,7 @@ use context_system;
 use core_competency\api as api;
 use core_competency\competency_framework;
 use core_competency\competency;
-class CompetencyCreateController extends BaseController {
+class CompetencyController extends BaseController {
 
 	private $table = 'competency';
 

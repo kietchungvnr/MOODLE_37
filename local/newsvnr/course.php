@@ -29,6 +29,7 @@ $searchquery  = optional_param('search', '', PARAM_RAW);
 $showalldata = optional_param('showall','', PARAM_RAW);
 // $id = optional_param('id',0,PARAM_INT);
 // $array_id = array('id' => $id);
+require_login();
 $url = new moodle_url('/local/newsvnr/course.php');
 $searchurl = new moodle_url('/local/newsvnr/course.php?showall=-1&page=1');
 $PAGE->set_url($url);

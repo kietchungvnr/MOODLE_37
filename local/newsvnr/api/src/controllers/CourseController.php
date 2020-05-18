@@ -6,7 +6,7 @@ defined('MOODLE_INTERNAL') || die;
 
 use stdClass;
 
-class CourseCreateController extends BaseController {
+class CourseController extends BaseController {
 
 	private $table = 'course';
 
@@ -59,6 +59,8 @@ class CourseCreateController extends BaseController {
 		    $this->data->enddate = $request->getParam('enddate');
 		    if($request->getParam('startdate') == '') 
 		    	$this->data->startdate = time();
+		    else
+		    	$this->data->startdate = strtotime($request->getParam('startdate'));
 		    if($request->getParam('enddate'))
 		    	$this->data->enddate = strtotime($request->getParam('enddate'));
 		    else 
