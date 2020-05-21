@@ -3,7 +3,7 @@
 
 class block_vnr_course_topgrade extends block_base {
      public function init() {
-        $this->title = '';
+        $this->title = get_string('pluginname', 'block_vnr_course_topgrade');
     }
 // 
     function get_content() {

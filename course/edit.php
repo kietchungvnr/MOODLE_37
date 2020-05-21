@@ -215,12 +215,15 @@ if ($editform->is_cancelled()) {
     // Process data if submitted.
     if (empty($course->id)) {
         // In creating the course.
-        $course = create_course($data, $editoroptions);
+        // $course = create_course($data, $editoroptions);
         
         //Đẩy khoá học khi tạo mới realtime qua HRM
         if($course) {
             $params_hrm['Status'] = "E_CREATE";
-            HTTPPost($url_hrm, $params_hrm);
+            if($data->typeofcourse == 1) {
+                var_dump($url_hrm, $params_hrm);die;
+                HTTPPost($url_hrm, $params_hrm);
+            }
         }
         if($data->courseoforgstructure) {
             foreach ($courseofjobtitle as $jobtitile) {
@@ -328,7 +331,8 @@ if ($editform->is_cancelled()) {
             $params_hrm['ExamCode'] = $strexamcode;
         }
         $params_hrm['Status'] = "E_UPDATE";
-        HTTPPost($url_hrm, $params_hrm);
+        if($data->typeofcourse == 1)
+            HTTPPost($url_hrm, $params_hrm);
 
         // Set the URL to take them too if they choose save and display.
         $courseurl = new moodle_url('/course/view.php', array('id' => $course->id));

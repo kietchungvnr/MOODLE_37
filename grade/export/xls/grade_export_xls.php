@@ -57,6 +57,7 @@ class grade_export_xls extends grade_export {
 
         // Print names of all the fields
         $profilefields = grade_helper::get_user_profile_fields($this->course->id, $this->usercustomfields);
+        
         //Custom by Vũ: Thêm các field usercode, courseid, coursename khi export bảng điểm của khoá học
         $profilefields[2] = (object)[
             'customid' => 0,
@@ -75,23 +76,26 @@ class grade_export_xls extends grade_export {
         ];
 
         foreach ($profilefields as $id => $field) {
-            $myxls->write_string(0, $id, $field->fullname);
+            $myxls->write_string(0, $id, $field->fullname,$workbook->add_format(array('color'=>'white', 'bg_color'=>'#244061','align' => 'center')));
+            $myxls->set_autowidthcolumn(0, $id, true);
         }
         $pos = count($profilefields);
         if (!$this->onlyactive) {
-            $myxls->write_string(0, $pos++, get_string("suspended"));
+            $myxls->write_string(0, $pos++, get_string("suspended"), $workbook->add_format(array('color'=>'white', 'bg_color'=>'#244061','align' => 'center')));
         }
         foreach ($this->columns as $grade_item) {
             foreach ($this->displaytype as $gradedisplayname => $gradedisplayconst) {
-                $myxls->write_string(0, $pos++, $this->format_column_name($grade_item, false, $gradedisplayname));
+                $myxls->write_string(0, $pos++, $this->format_column_name($grade_item, false, $gradedisplayname), $workbook->add_format(array('color'=>'white', 'bg_color'=>'#244061','align' => 'center')));
+                $myxls->set_column(0, $pos, 20);
             }
             // Add a column_feedback column
             if ($this->export_feedback) {
-                $myxls->write_string(0, $pos++, $this->format_column_name($grade_item, true));
+                $myxls->write_string(0, $pos++, $this->format_column_name($grade_item, true), $workbook->add_format(array('color'=>'white', 'bg_color'=>'#244061','align' => 'center')));
+                $myxls->set_column(0, $pos, 20);
             }
         }
         // Last downloaded column header.
-        $myxls->write_string(0, $pos++, get_string('timeexported', 'gradeexport_xls'));
+        //$myxls->write_string(0, $pos++, get_string('timeexported', 'gradeexport_xls'));
 
         // Print all the lines of data.
         $i = 0;
@@ -135,7 +139,7 @@ class grade_export_xls extends grade_export {
                 }
             }
             // Time exported.
-            $myxls->write_string($i, $j++, time());
+            // $myxls->write_string($i, $j++, time());
         }
         $gui->close();
         $geub->close();

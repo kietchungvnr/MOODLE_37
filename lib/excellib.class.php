@@ -356,6 +356,24 @@ class MoodleExcelWorksheet {
         }
     }
 
+    /**
+     * Custom by Vũ: Cho tự điều chỉnh chiều rộng các colunm excel
+     * Sets the width (and other settings) of one column.
+     *
+     * @param integer $firstcol first column on the range
+     * @param integer $lastcol  last column on the range
+     * @param integer $autowidth    Set autowidth colunm on the range
+     */
+    public function set_autowidthcolumn($firstcol, $lastcol, $autowidth = true) {
+        $i = $firstcol;
+        while($i <= $lastcol) {
+            if (isset($autowidth)) {
+                $this->worksheet->getColumnDimensionByColumn($i)->setAutoSize($autowidth);
+            }
+            $i++;
+        }
+    }
+
    /**
     * Set the option to hide grid lines on the printed page.
     */

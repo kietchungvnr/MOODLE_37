@@ -1546,7 +1546,7 @@ function encode_array($args)
 function getToken($url) {
     $data = [
         'grant_type' => 'password',
-        'username' => 'hong.nguyen',
+        'username' => 'phong.nguyen',
         'password' => '123'
     ];
     $params = encode_array($data);
@@ -1569,7 +1569,7 @@ function getToken($url) {
 
 //curl gửi dữ liệu kiểu json
 function HTTPPost($url,$data) {
-    $urltoken = 'http://192.168.1.3:2707/Token';
+    $urltoken = 'http://103.42.56.200:8088/Token';
     $token = getToken($urltoken);
     $auth = 'Authorization: Bearer ' . $token;
     $params = encode_array($data);
@@ -1590,6 +1590,7 @@ function HTTPPost($url,$data) {
     var_dump(json_decode($resp,JSON_UNESCAPED_UNICODE));
     curl_close($curl);
 }
+
 
 
 

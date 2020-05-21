@@ -10,7 +10,7 @@
 </div> }}
 
 <style type="text/css">
-    @media (min-width: 576px) {
+    /*@media (min-width: 576px) {
         .card-deck .card {
             margin-right: 1rem;
             margin-bottom: 0;
@@ -20,23 +20,30 @@
             margin-left: 0px;
             padding: 0 30px 0 30px;
         }
-         #first-column.card .card-body {
+        #first-column.card .card-body {
             padding-left: 10px;
             padding-right: 10px;
         }
             
-    }
-
+    }*/
+     @media (max-width: 1366px) {
+          [data-block="vnr_db_studentuser_learning_rp"].card .card-body {
+            padding: 0.25rem; 
+          }
+      }
 </style>
 <div class="container-fluid p-0">
  
   <div class="card-deck">
     <div class="card" style="background-color: #f3a837" id="first-column">
-      <div class="card-body text-center text-white">
+      <div class="card-body text-center text-white" style="padding-left: 0.1rem;
+    padding-right: 0.1rem;">
         <div class="d-flex justify-content-center">
-          <div class="flex-fill p-1" style="border-right: 1px solid #fff;"><p class="card-text block-text-number">{{#countcourse}}{{countcourse}}{{/countcourse}}{{^countcourse}}0{{/countcourse}}</p>
+          <div class="flex-fill" style="border-right: 1px solid #fff;padding-left: 0.1rem;
+    padding-right: 0.1rem;"><p class="card-text block-text-number">{{#countcourse}}{{countcourse}}{{/countcourse}}{{^countcourse}}0{{/countcourse}}</p>
         <p class="card-text font-weight-bold">Khoá học đang tham gia</p></div>
-          <div class="flex-fill p-1"><p class="card-text block-text-number">{{#completedcourses}}{{completedcourses}}{{/completedcourses}}{{^completedcourses}}0{{/completedcourses}}</p>
+          <div class="flex-fill" style="padding-left: 0.1rem;
+    padding-right: 0.1rem;"><p class="card-text block-text-number">{{#completedcourses}}{{completedcourses}}{{/completedcourses}}{{^completedcourses}}0{{/completedcourses}}</p>
         <p class="card-text font-weight-bold">Khoá học đã hoàn thành</p></div>
          
         </div>

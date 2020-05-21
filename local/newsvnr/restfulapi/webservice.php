@@ -1254,6 +1254,103 @@ if($action == "viewcount_chart") {
 	echo json_encode($response,JSON_UNESCAPED_UNICODE);
 }
 
+//Báo cáo học tập
+if($action == "gradereport_chart") {
+	$courseid = optional_param('courseid', 0, PARAM_INT);
+	$sql = "
+			SELECT 
+				COUNT(*) AS grade_total,
+				(SELECT COUNT(*) 
+					FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
+					WHERE gg.finalgrade is not null 
+							AND gi.itemtype= 'course' 
+							AND (gg.finalgrade >= ccc.gradepass)
+				) AS gradepass_total,
+				(SELECT COUNT(*) 
+					FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
+					WHERE gg.finalgrade is not null 
+							AND gi.itemtype= 'course' 
+							AND (gg.finalgrade < ccc.gradepass)
+				) AS gradefailed_total
+			FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
+			WHERE gi.itemtype= 'course'
+		";
+	// $record = $DB->get_records_sql($sql,[$courseid,$courseid,$courseid]);
+	$record = $DB->get_record_sql($sql);
+	$data = [];
+	$gradepass_obj = new stdClass;
+	$gradepass_obj->name = 'Đậu';
+	$gradepass_obj->y = isset($record->gradepass_total) ? round(($record->gradepass_total/$record->grade_total)*100, 2) : 0;
+	$gradefailed_obj = new stdClass;
+	$gradefailed_obj->name = 'Rớt';
+	$gradefailed_obj->y = isset($record->gradepass_total) ? round(($record->gradefailed_total/$record->grade_total)*100, 2) : 0;
+	$gradeorther_obj = new stdClass;
+	$gradeorther_obj->name = 'Khác';
+	$gradeorther_obj->y = isset($record->gradepass_total) ? round((100 - ($gradepass_obj->y + $gradefailed_obj->y)), 2) : 0;
+	$data[] = $gradepass_obj;
+	$data[] = $gradefailed_obj;
+	$data[] = $gradeorther_obj;
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+}
+
+//Load data chi tiết cho báo cáo học tập
+if($action == "gradereport_detail") {
+	$completed_course_status = optional_param('status', '', PARAM_RAW);
+	$courseid = optional_param('courseid', 0, PARAM_INT);
+	$pagesize = optional_param('pagesize',10, PARAM_INT);
+	$pagetake = optional_param('take',0, PARAM_INT);
+	$pageskip = optional_param('skip',0, PARAM_INT);
+	$q = optional_param('q','', PARAM_RAW);
+	$odersql = "";
+	$wheresql = "";
+	if($q) {
+		$wheresql = "WHERE fullname LIKE N'%$q%'";
+	}
+	if($pagetake == 0) {
+		$ordersql = "RowNum";
+	} else {
+		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
+	}
+	if($completed_course_status == "Đậu") {
+		$where_subsql = "gg.finalgrade IS NOT NULL AND gi.itemtype = 'course' AND gg.finalgrade >= ccc.gradepass";
+	} else if($completed_course_status == "Rớt") {
+		$where_subsql = "gg.finalgrade IS NOT NULL AND gi.itemtype = 'course' AND gg.finalgrade < ccc.gradepass";
+	} else if($completed_course_status == "Khác"){
+		$where_subsql = "gg.finalgrade IS NULL AND gi.itemtype = 'course'";
+	}
+	$sql = "
+			SELECT *, (SELECT COUNT(gg.id)
+			FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
+			WHERE 
+					$where_subsql
+			) AS total
+				FROM (
+				    SELECT CONCAT(u.firstname, ' ', u.lastname) AS fullname, gg.finalgrade, ccc.gradepass, ROW_NUMBER() OVER (ORDER BY u.id) AS RowNum
+						FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
+						WHERE $where_subsql
+				) AS Mydata
+			$wheresql
+			ORDER BY $ordersql";
+	$get_list = $DB->get_records_sql($sql, []);
+	foreach ($get_list as $value) {
+		$object = new stdclass;
+		$buttons = array();
+		$object->fullname = $value->fullname;
+		if($value->finalgrade >= $value->gradepass) {
+			$object->status = 'Đậu';
+		} else if($value->finalgrade < $value->gradepass) {
+			$object->status = 'Rớt';
+		}  
+		if($value->finalgrade == null){
+			$object->status = 'Khác';
+		}
+		$object->finalgrade = round($value->finalgrade, 1);
+		$object->total = $value->total;
+		$data[] = $object;		
+	}
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+}
+
 //Báo cáo điểm
 if($action == "quizoverview_chart_vp") {
 	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";

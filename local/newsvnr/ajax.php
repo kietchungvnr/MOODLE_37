@@ -108,6 +108,55 @@ if(isset($_GET['action']) && $_GET['action'] == "get_orgstruct_position")
 
 	echo $select;
 }
+// Lấy danh sách khoá học dựa vào cây thư mục khoá học
+if(isset($_GET['action']) && $_GET['action'] == "get_list_course") {
+	$categoryid = $_GET['categoryid'];
+
+	$sql = "SELECT * FROM {course} WHERE category = ?";
+
+	$result = $DB->get_records_sql($sql, array($categoryid));
+
+	$select = '';
+	if($result) {
+		$select .= '<option value="0">Chọn khoá học</option>';
+		foreach ($result as $key => $value) {
+			$select .= '<option value='. $value->id .'> '. $value->shortname .'</option>';
+		}	
+	} else {
+		$select .= '<option value="0">Không có khoá học</option>';
+	}
+	
+
+	echo $select;
+}
+//Lấy danh sách điểm xếp theo thứ hạng theo userid
+if(isset($_GET['action']) && $_GET['action'] == "get_list_topgrade") {
+	$courseid = $_GET['courseid'];
+	$get_rank = '';
+	$get_list_topgrade = $DB->get_records_sql("
+							SELECT CONCAT(u.firstname, ' ', u.lastname) AS fullname, CONVERT(DECIMAL(10,2),gg.finalgrade) AS finalgrade,u.id, ROW_NUMBER() OVER (ORDER BY gg.finalgrade DESC) AS rownum
+							FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
+							WHERE gg.finalgrade IS NOT NULL AND gi.itemtype = 'course' AND ccc.course = ?", [$courseid]);
+	if($get_list_topgrade) {
+		foreach($get_list_topgrade as $value) {
+			if($value->id == $USER->id) {
+				$get_rank = $value->rownum;
+				$value->color = 'text-danger';
+			}
+		}
+		$has_list_topgrade = true;
+	} else {
+		$has_list_topgrade = false;
+		
+	}
+	$data = [
+			'listtopgrade' => array_values($get_list_topgrade),
+			'haslisttopgrade' => $has_list_topgrade,
+			'rank' => $get_rank,
+		];
+	echo json_encode($data, JSON_UNESCAPED_UNICODE);
+}
+
 // danh sách khoá theo theo cây thư mục khoá học
 if(isset($_GET['action']) && $_GET['action'] == "get_list_coursesetup")
 {

@@ -614,7 +614,7 @@ if ($ADMIN->fulltree) {
     $name = 'theme_moove/website';
     $title = get_string('website', 'theme_moove');
     $description = get_string('websitedesc', 'theme_moove');
-    $default = 'http://conecti.me';
+    $default = 'http://VnResource.vn';
     $setting = new admin_setting_configtext($name, $title, $description, $default);
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
@@ -623,7 +623,7 @@ if ($ADMIN->fulltree) {
     $name = 'theme_moove/address';
     $title = get_string('address', 'theme_moove');
     $description = get_string('addressdesc', 'theme_moove');
-    $default = 'Contact@VnResource.vn';
+    $default = 'Toà nhà VnResource 41/7 Phạm Ngũ Lão, Phường 3, Quận Gò Vấp, Tp. Hồ Chí Minh';
     $setting = new admin_setting_configtext($name, $title, $description, $default);
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
@@ -641,7 +641,7 @@ if ($ADMIN->fulltree) {
     $name = 'theme_moove/mobile';
     $title = get_string('mobile', 'theme_moove');
     $description = get_string('mobiledesc', 'theme_moove');
-    $default = 'Mobile : +55 (98) 00123-45678';
+    $default = 'Mobile : +84 (28) 730 000 448';
     $setting = new admin_setting_configtext($name, $title, $description, $default);
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
@@ -650,7 +650,7 @@ if ($ADMIN->fulltree) {
     $name = 'theme_moove/mail';
     $title = get_string('mail', 'theme_moove');
     $description = get_string('maildesc', 'theme_moove');
-    $default = 'willianmano@conecti.me';
+    $default = 'Contact@VnResource.vn';
     $setting = new admin_setting_configtext($name, $title, $description, $default);
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);

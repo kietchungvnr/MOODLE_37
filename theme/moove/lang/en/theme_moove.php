@@ -50,6 +50,7 @@ $string['totalcourses'] = 'Total courses';
 $string['onlineusers'] = 'Online users(last 5 minutes)';
 $string['showhideblocks'] = 'Show/hide blocks';
 $string['privacy:metadata'] = 'The Moove theme does not store any personal data about any user.';
+$string['totalactivecourse'] = 'Total Activities / Resources';
 
 // General settings tab.
 $string['generalsettings'] = 'General';

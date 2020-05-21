@@ -253,13 +253,15 @@ $worksheet2->set_column(1, 1, 25);
 
 $worksheet2->write(3, 1, 'Gray row - buggy');
 $worksheet2->set_row(3, null, array('bg_color'=>'silver'));
-$worksheet2->write(2, 6, 'Gray column - buggy');
+$worksheet2->write(2, 6, 'zzz');
 $worksheet2->set_column(6, 6, 20, array('bg_color'=>'silver'));
 
 $worksheet2->hide_gridlines();
 
 $worksheet2->write(5, 0, 'Outline text - not implemented', array('outline'=>1));
 $worksheet2->write(6, 0, 'Shadow text - not implemented', array('outline'=>1));
+$worksheet2->write(6, 1, 'Shadow text - not implemented', array('outline'=>1));
+$worksheet2->write(6, 2, 'Shadow', array('outline'=>1));
 
 $worksheet2->write(8, 0, 'Pattern 1');
 $worksheet2->write_blank(8, 1, array('pattern'=>1));

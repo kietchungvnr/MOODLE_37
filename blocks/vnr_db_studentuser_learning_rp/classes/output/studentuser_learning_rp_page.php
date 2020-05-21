@@ -75,7 +75,7 @@ class studentuser_learning_rp_page implements renderable, templatable {
                                 FROM mdl_course c JOIN mdl_course_completions cc ON c.id = cc.course 
                                 WHERE cc.timecompleted IS NOT NULL AND c.required = 1 AND cc.userid = ?', [$USER->id]
                             );
-        if($completed_requirecourses) {
+        if($completed_requirecourses->completed_requirecourses != '0') {
             $data['completed_percent_requirecourses'] = round(($completed_requirecourses->completed_requirecourses / $completed_requirecourses->total_requirecourses) * 100) ;
             $data['total_requirecourses'] = $completed_requirecourses->total_requirecourses;
             $data['completed_requirecourses'] = $completed_requirecourses->completed_requirecourses;
@@ -85,8 +85,8 @@ class studentuser_learning_rp_page implements renderable, templatable {
                                 FROM mdl_course c JOIN mdl_course_completions cc ON c.id = cc.course JOIN mdl_course_position cp ON c.id = cp.course
                                 WHERE cc.timecompleted IS NOT NULL AND cc.userid = ? AND cp.courseofposition = ?',[$USER->orgpositionid, $USER->id, $USER->orgpositionid]
                             );
-        if($completed_positioncourses) {
-            $data['completed_percent_positioncourses'] = round(($completed_positioncourses->completed_positioncourses / $completed_positioncourses->total_positioncourses) * 100) ;
+        if($completed_positioncourses->total_positioncourses !== '0') {
+            $data['completed_percent_positioncourses'] = isset($completed_positioncourses) ? round(($completed_positioncourses->completed_positioncourses / $completed_positioncourses->total_positioncourses) * 100) : 0;
             $data['total_positioncourses'] = $completed_positioncourses->total_positioncourses;
             $data['completed_positioncourses'] = $completed_positioncourses->completed_positioncourses;
         }
@@ -97,17 +97,18 @@ class studentuser_learning_rp_page implements renderable, templatable {
             //Lấy danh sách khoá học theo lộ trình cá nhân
             $countplan = 0;
             $plans = $theme_settings::user_courses_list($pinned = null, $required = null, $suggest = null, $userplancourse = 1, $planid->id);
-            foreach ($plans as $course) {
-                $completed_plancourses  = $DB->get_record_sql('SELECT id FROM mdl_course_completions WHERE course = ? AND user = ? AND timecompleted IS NOT NULL',[$course->id, $USER->id]);
-                if($completed_plancourses ) {
-                    $countplan++;
+            if($plans) {
+                foreach ($plans as $course) {
+                    $completed_plancourses  = $DB->get_record_sql('SELECT id FROM mdl_course_completions WHERE course = ? AND user = ? AND timecompleted IS NOT NULL',[$course->id, $USER->id]);
+                    if($completed_plancourses ) {
+                        $countplan++;
+                    }
                 }
+                $data['total_plancourses'] = count($plans);
+                $data['completed_percent_plancourses'] = ($countplan / count($plans)) * 100;
+                $data['completed_plancourses'] = $countplan;
             }
-            $data['total_plancourses'] = count($plans);
-            $data['completed_percent_plancourses'] = ($countplan / count($plans)) * 100;
-            $data['completed_plancourses'] = $countplan;
         }
-        
         return $data;
     }
 }
