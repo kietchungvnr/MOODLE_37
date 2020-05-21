@@ -46,7 +46,7 @@ class orgmain_page implements renderable, templatable {
     // var_dump(HTTPPost($url, json_encode($params_el)));die; 
     //HTTP_POST($ch = curl_init(), $params_el, 'http://192.168.1.3:2707/Token');
     $params = encode_array($params_arr2);
-    HTTPPost($url, $params_arr2);
+    // HTTPPost($url, $params_arr2);
     // var_dump($params);die;
     // $ch = curl_init();
 
