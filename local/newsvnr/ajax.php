@@ -120,7 +120,7 @@ if(isset($_GET['action']) && $_GET['action'] == "get_list_course") {
 	if($result) {
 		$select .= '<option value="0">Chọn khoá học</option>';
 		foreach ($result as $key => $value) {
-			$select .= '<option value='. $value->id .'> '. $value->shortname .'</option>';
+			$select .= '<option value='. $value->id .'> '. $value->fullname .'</option>';
 		}	
 	} else {
 		$select .= '<option value="0">Không có khoá học</option>';
