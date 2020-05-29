@@ -1257,6 +1257,8 @@ if($action == "viewcount_chart") {
 //Báo cáo học tập
 if($action == "gradereport_chart") {
 	$courseid = optional_param('courseid', 0, PARAM_INT);
+	$lastcourseid = optional_param('lastcourseid', 0, PARAM_INT);
+	$response = new stdClass;
 	$sql = "
 			SELECT 
 				COUNT(*) AS grade_total,
@@ -1277,15 +1279,24 @@ if($action == "gradereport_chart") {
 			FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
 			WHERE gi.itemtype= 'course' AND gi.courseid = ?
 		";
-	$record = $DB->get_record_sql($sql,[$courseid,$courseid,$courseid]);
-	// $record = $DB->get_record_sql($sql);
+	if($courseid) {
+		$record = $DB->get_record_sql($sql,[$courseid,$courseid,$courseid]);
+		$coursename = $DB->get_field('course', 'fullname', ['id' => $courseid]);	
+	} else {
+		$lastcourseid = $DB->get_record_sql('SELECT TOP 1 courseid from mdl_logstore_standard_log WHERE action = ?  AND target = ? AND userid = ? ORDER BY timecreated DESC', ['viewed', 'course', $USER->id]);
+		$record = $DB->get_record_sql($sql,[$lastcourseid->courseid,$lastcourseid->courseid,$lastcourseid->courseid]);
+		$coursename = $DB->get_field('course', 'fullname', ['id' => $lastcourseid->courseid]);	
+	}
+	
+
+	// $record = $DB->get_record_sql($sql); 
 	$data = [];
 	if($record->grade_total != '0') {
 		$gradepass_obj = new stdClass;
-		$gradepass_obj->name = 'Đậu';
+		$gradepass_obj->name = 'Đạt';
 		$gradepass_obj->y = round(($record->gradepass_total/$record->grade_total)*100, 2);
 		$gradefailed_obj = new stdClass;
-		$gradefailed_obj->name = 'Rớt';
+		$gradefailed_obj->name = 'Không đạt';
 		$gradefailed_obj->y = round(($record->gradefailed_total/$record->grade_total)*100, 2);
 		$gradeorther_obj = new stdClass;
 		$gradeorther_obj->name = 'Khác';
@@ -1295,10 +1306,10 @@ if($action == "gradereport_chart") {
 		$data[] = $gradeorther_obj;
 	} else {
 		$gradepass_obj = new stdClass;
-		$gradepass_obj->name = 'Đậu';
+		$gradepass_obj->name = 'Đạt';
 		$gradepass_obj->y = 0;
 		$gradefailed_obj = new stdClass;
-		$gradefailed_obj->name = 'Rớt';
+		$gradefailed_obj->name = 'Không đạt';
 		$gradefailed_obj->y = 0;
 		$gradeorther_obj = new stdClass;
 		$gradeorther_obj->name = 'Khác';
@@ -1307,14 +1318,17 @@ if($action == "gradereport_chart") {
 		$data[] = $gradefailed_obj;
 		$data[] = $gradeorther_obj;
 	}
+	$response->data = $data;
+	$response->coursename = $coursename;
 	
-	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+	echo json_encode($response,JSON_UNESCAPED_UNICODE);
 }
 
 //Load data chi tiết cho báo cáo học tập
 if($action == "gradereport_detail") {
 	$completed_course_status = optional_param('status', '', PARAM_RAW);
 	$courseid = optional_param('courseid', 0, PARAM_INT);
+	$lastcourseid = optional_param('courseid', 0, PARAM_INT);
 	$pagesize = optional_param('pagesize',10, PARAM_INT);
 	$pagetake = optional_param('take',0, PARAM_INT);
 	$pageskip = optional_param('skip',0, PARAM_INT);
@@ -1329,40 +1343,46 @@ if($action == "gradereport_detail") {
 	} else {
 		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
 	}
-	if($completed_course_status == "Đậu") {
-		$where_subsql = "gg.finalgrade IS NOT NULL AND ccc.gradepass IS NOT NULL AND gi.itemtype = 'course' AND gg.finalgrade >= ccc.gradepass";
-	} else if($completed_course_status == "Rớt") {
-		$where_subsql = "gg.finalgrade IS NOT NULL AND ccc.gradepass IS NOT NULL AND gi.itemtype = 'course' AND gg.finalgrade < ccc.gradepass";
+	if($completed_course_status == "Đạt") {
+		$where_subsql = "gg.finalgrade IS NOT NULL AND ccc.gradepass IS NOT NULL AND gi.itemtype = 'course' AND gg.finalgrade >= ccc.gradepass AND gi.courseid = ?";
+	} else if($completed_course_status == "Không đạt") {
+		$where_subsql = "gg.finalgrade IS NOT NULL AND ccc.gradepass IS NOT NULL AND gi.itemtype = 'course' AND gg.finalgrade < ccc.gradepass AND gi.courseid = ?";
 	} else if($completed_course_status == "Khác"){
-		$where_subsql = "(gg.finalgrade IS NULL OR ccc.gradepass IS NULL) AND gi.itemtype = 'course'";
+		$where_subsql = "(gg.finalgrade IS NULL OR ccc.gradepass IS NULL) AND gi.itemtype = 'course' AND gi.courseid = ?";
 	}
 	$sql = "
-			SELECT *, (SELECT COUNT(gg.id)
+			SELECT *, (SELECT COUNT(DISTINCT gg.id)
 			FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
 			WHERE 
-					$where_subsql AND gi.courseid = $courseid
+					$where_subsql
 			) AS total
 				FROM (
-				    SELECT CONCAT(u.firstname, ' ', u.lastname) AS fullname, gg.finalgrade, ccc.gradepass, ROW_NUMBER() OVER (ORDER BY u.id) AS RowNum
+				    SELECT DISTINCT CONCAT(u.firstname, ' ', u.lastname) AS fullname, gg.finalgrade, ccc.gradepass, ROW_NUMBER() OVER (ORDER BY u.id) AS RowNum
 						FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
-						WHERE $where_subsql AND gi.courseid = $courseid
+						WHERE $where_subsql
 				) AS Mydata
 			$wheresql
 			ORDER BY $ordersql";
-	$get_list = $DB->get_records_sql($sql, []);
+	if($lastcourseid == 0) {
+		$lastcourseid = $DB->get_record_sql('SELECT TOP 1 courseid from mdl_logstore_standard_log WHERE action = ?  AND target = ? AND userid = ? ORDER BY timecreated DESC', ['viewed', 'course', $USER->id]);
+		$get_list = $DB->get_records_sql($sql, [$lastcourseid->courseid, $lastcourseid->courseid]);
+	} else {
+		$get_list = $DB->get_records_sql($sql, [$courseid, $courseid]);
+	}
+	
 	foreach ($get_list as $value) {
 		$object = new stdclass;
 		$buttons = array();
 		$object->fullname = $value->fullname;
 		if($value->finalgrade >= $value->gradepass) {
-			$object->status = 'Đậu';
+			$object->status = 'Đạt';
 		} else if($value->finalgrade < $value->gradepass) {
-			$object->status = 'Rớt';
+			$object->status = 'Không đạt';
 		}
 		if($value->finalgrade == null or $value->gradepass == null){
 			$object->status = 'Khác';
 		}
-		
+
 		$object->finalgrade = round($value->finalgrade, 1);
 		$object->total = $value->total;
 		$data[] = $object;		

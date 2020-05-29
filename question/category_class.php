@@ -307,13 +307,24 @@ class question_category_object {
 
         foreach ($this->editlists as $context => $list){
             $listhtml = $list->to_html(0, array('str'=>$this->str));
+            echo '<div id="accordion">';
             if ($listhtml){
-                echo $OUTPUT->box_start('boxwidthwide boxaligncenter generalbox questioncategories contextlevel' . $list->context->contextlevel);
+                //Custom by Vũ: Thêm collapse cho danh mục câu hỏi
+                echo '<div class="card">';
+                echo $OUTPUT->box_start('pb-0 boxwidthwide boxaligncenter generalbox questioncategories contextlevel' . $list->context->contextlevel, null, ['style' => 'padding-top:0!important']);
                 $fullcontext = context::instance_by_id($context);
-                echo $OUTPUT->heading(get_string('questioncatsfor', 'question', $fullcontext->get_context_name()), 3);
+                echo '<div class="card-header icon-toggle" id="'.$list->context->contextlevel.'" data-toggle="collapse" data-target="#collapse'.$list->context->contextlevel.'" aria-expanded="true" aria-controls="collapse'.$list->context->contextlevel.'">';
+                echo $OUTPUT->heading(get_string('questioncatsfor', 'question', $fullcontext->get_context_name()), 5);
+                echo '</div>';
+                echo '<div class="collapse p-3" id="collapse'.$list->context->contextlevel.'"';
+                echo '<div class="card-body" id="questioncategories_desc">';
                 echo $listhtml;
+                echo '</div>';
                 echo $OUTPUT->box_end();
+                echo '</div>';
+                
             }
+            echo '</div>';
         }
         echo $list->display_page_numbers();
      }

@@ -1,6 +1,7 @@
 <?php
 
 $string['pluginname'] = 'Báo cáo học tập';
+$string['pluginname_help'] = 'Khối block Báo cáo học tập hiện thị dữ liệu tình trạng của 1 kỳ thi/lớp học dựa theo tiêu chí: Đậu, Rớt, Khác. Mặc định sẽ hiện thị kỳ thi/lớp học truy cập gần đây nhất. Muốn hiện thị chi tiết danh sách học viên vui lòng nhấn vào Đậu, Rớt, Khác trên biểu đồ';
 $string['fullname'] = 'Học viên';
 $string['status'] = 'Trạng thái';
 $string['score'] = 'Điểm';

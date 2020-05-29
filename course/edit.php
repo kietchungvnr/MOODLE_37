@@ -215,13 +215,12 @@ if ($editform->is_cancelled()) {
     // Process data if submitted.
     if (empty($course->id)) {
         // In creating the course.
-        // $course = create_course($data, $editoroptions);
+        $course = create_course($data, $editoroptions);
         
         //Đẩy khoá học khi tạo mới realtime qua HRM
         if($course) {
             $params_hrm['Status'] = "E_CREATE";
             if($data->typeofcourse == 1) {
-                var_dump($url_hrm, $params_hrm);die;
                 HTTPPost($url_hrm, $params_hrm);
             }
         }

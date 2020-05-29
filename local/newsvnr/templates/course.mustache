@@ -20,7 +20,6 @@
     }
 
     .disabled {cursor:not-allowed;color: #bccfd8;}
-    .current {background: #1177d1; color: #fff;}
 
     .question {font-weight:bold;}
     .answer{padding-top: 10px;}
@@ -105,14 +104,17 @@
                                 <p class="post-description">{{#shortentext}}90, {{summary}}{{/shortentext}}</p>
 
                                 <p class="post-enrolmethod">
-                                    {{#enrolmethod}}{{{enrolmethod}}}{{/enrolmethod}}
+                                    
                                     {{#progress}}
                                         <div class="progress">
                                             <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}"
                                           aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%">
-                                                {{progress}}%
+                                                {{{progress}}}%
                                             </div>
                                         </div>
+                                    {{/progress}}
+                                    {{^progress}}
+                                      {{#enrolmethod}}{{{enrolmethod}}}{{/enrolmethod}}
                                     {{/progress}}
                                 </p>
                             </div>

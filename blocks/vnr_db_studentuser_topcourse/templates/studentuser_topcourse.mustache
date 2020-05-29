@@ -1,3 +1,8 @@
+<style type="text/css">
+    [data-region="gradelist"] .table-responsive-md:hover {
+        overflow-y: auto;
+    }
+</style>
 <div class="container-fluid">
     <div class="row">
 
@@ -12,7 +17,6 @@
                                     <div class="d-flex w-100">
                                         <div class="form-group">
                                           <select class="form-control" id="list_topgrade">
-                                            <option value="0">Chọn khoá học</option>
                                             {{#list_course}}
                                                 <option value="{{id}}">{{{fullname}}}</option>
                                             {{/list_course}}
@@ -35,25 +39,10 @@
 
 {{#js}}
 
-require.config({
-    packages: [{
-        name: 'highcharts',
-        main: 'highcharts'
-    }],
-    paths: {
-        // Change this to your server if you do not wish to use our CDN.
-        highcharts: 'https://code.highcharts.com',
-        jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr"
-    }
-});
-
 // Load the depedencies and create your chart
 require(
 
     [
-        'highcharts',
-        'highcharts/modules/exporting',
-        'highcharts/modules/accessibility',
         'jquery',
         'core/config',
         'core/notification',
@@ -62,12 +51,10 @@ require(
     ],
 
     // This function runs when the above files have been loaded.
-    function (Highcharts, ExportingModule, AccessibilityModule, $ ,Config, notification, Str, templates) {
+    function ($ ,Config, notification, Str, templates) {
         
-        // Lấy danh sách khoá học theo thư mục khoá học
-        $('#list_topgrade').change(function() {
-            
-            var courseid = $(this).val();
+        //Load data 
+        var loaddata = (courseid) => {
             var table = $('#gradelist');
             var settings = {
                 type: 'GET',
@@ -82,9 +69,7 @@ require(
             $.ajax(script, settings)
             .then(function(response) {
                 var data = JSON.parse(response);
-                
                 if(data.listtopgrade.length != 0) {
-                console.log('222');
                     templates.render('block_vnr_db_studentuser_topcourse/studentuser_topcourse_data', data).done(function(html, js) {
                         table.replaceWith(html);
                         templates.runTemplateJS(js);
@@ -94,6 +79,15 @@ require(
                     table.html('<div class="d-flex w-100 justify-content-center alert alert-info alert-block fade in ">Khoá học chưa có điểm thi</div>');
                 }
             }).fail(notification.exception);
+        }
+        var courseid = $('#list_topgrade').val();
+        loaddata(courseid);
+        // Lấy danh sách khoá học theo thư mục khoá học
+        $('#list_topgrade').change(function() {
+            
+            var courseid = $(this).val();
+            loaddata(courseid);
+            
         });     
 
 });

@@ -18,6 +18,12 @@
 body {
     font-size: 14px;
 }
+a {
+    outline: 0;
+}
+/*a {
+    color: #245a82;
+}*/
 #sidepreopen-control{
     z-index: 1;
 }
@@ -308,7 +314,7 @@ body {
     padding: 0;
     background-color: #fff;
     margin-right: 10px;
-    height: 300px;
+    height: auto;
 }
 
 .post-slide6 .post-img {
@@ -384,7 +390,7 @@ body {
 }
 
 .post-slide6 .post-review {
-    padding: 20px;
+    padding: 20px 20px 10px 20px;
     position: relative;
 }
 
@@ -489,7 +495,7 @@ body {
 .row .title{
     position: relative;
     font-weight: bold;
-    font-size: 25px;
+    font-size: 20px;
 }
 
 
@@ -1398,47 +1404,14 @@ nav.navbar .navbar-brand .logo img {
     text-align: center;
 }
 
-@media only screen and (max-width: 600px) {
-  .nav-draw {
-        list-style: none;
-        display: block;
-        position: absolute;
-        width: 100%;
-        height: 100vh;
-        top: 52px;
-        left: 0px;
-        background-color: rebeccapurple;
-       /* margin-left: auto!important;
-        flex-direction: row;
-        padding-left: 0;
-        margin-bottom: 0;
-        flex-wrap: wrap;*/
-  
- 
-    }
-    #nav-draw ul.nav-draw li>a {
-     color: white;
-    }
-    .nav-draw li {
-        border-bottom: 1px solid;
-    }
-    .nav-draw li:hover {
-        background-color: blue;
-    }
-    .navbar-expand .navbar-toggler {
-        display: block;
-    }
-    #nav-course {
-        display: none;
-    }
-}
+
 @media only screen and (min-width: 600px) {
     button.menubtn {
         display: none;
     }
-    .moodle-has-zindex ul.nav.navbar-nav.ml-auto {
+   /* .moodle-has-zindex ul.nav.navbar-nav.ml-auto {
         margin-left: 0!important;
-    }
+    }*/
 }
 
 [data-region="drawer"] {
@@ -1778,17 +1751,17 @@ nav.navcourse {
     background-color: #3c8dbc;
     width: 100%;
     height: 52px;
-    margin-top: 52px;
 }
 .nav-course-padding {
     padding: 15px;
     color: #fff;
 }
 nav.navbar ul.navbar-nav .lang-menu .dropdown-menu {
-    top: 60px;
+    top: 69px;
 }
 #page-site-index nav.navbar ul.navbar-nav .lang-menu .dropdown-menu {
-    top: -20px;
+    top: -10px;
+    left: 0;
 }
 nav.navbar ul.navbar-nav .usermenu {
     line-height: 85px;
@@ -1805,6 +1778,7 @@ nav.navbar .moove-search-input .search-input-form .form-control {
 }
 nav.navbar ul.navbar-nav .popover-region .popover-region-toggle .count-container {
     top: 19px;
+    right: -6px;
 }
 .message-app.drawer {
     top: 52px;
@@ -1841,13 +1815,265 @@ nav.navbar ul.navbar-nav .popover-region .popover-region-toggle .count-container
     overflow-y: scroll;
 }
 #page-mod-quiz-view h2 {
-    font-size: 18px;
+    font-size: 20px;
 }
 #page-my-index .small-box h3, #page-my-index .small-box p {
     color: #373a3c;
 }
 #page-my-index .small-box {
     margin-bottom: 10px;
+}
+.owl-theme .owl-nav.disabled + .owl-dots {
+    margin-top: 0;
+}
+legend {
+    font-size: 20px;
+}
+[role="main"] h2 {
+    font-size: 20px;
+}
+.btn-help {
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    font-size: .9375rem;
+    cursor: pointer;
+    line-height: 1.5;
+    border-radius: 0;
+    -webkit-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    -o-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+nav.navbar ul.navbar-nav .popover-region .popover-region-toggle {
+    outline: 0;
+    padding: 0.5rem 0.1rem;
+}
+
+.text-gray {
+    color: gray;
+}
+/* MENU */
+ #header {
+     background-color: #fff;
+     width: 100%;
+     top: 0;
+}
+ #header .menu {
+     width: 90%;
+     max-width: 1000px;
+     margin: auto;
+     display: flex;
+     flex-direction: row;
+     justify-content: space-between;
+     align-items: center;
+}
+ #header .menu .logo {
+     display: inline-block;
+     margin: 10px 0 10px 10px;
+}
+ #header .menu .logo .btn-menu {
+     display: none;
+     color: #fff;
+     text-decoration: none;
+     font-size: 1em;
+     align-self: center;
+     margin-right: 10px;
+}
+ #header .menu .logo img {
+     vertical-align: top;
+     width: 70px;
+}
+ .menu .enlaces {
+     display: inline-block;
+     text-align: right;
+     letter-spacing: 0.1em;
+}
+ .menu .enlaces a {
+     color: #413434;
+     text-decoration: none;
+     display: inline-block;
+     font-size: 14px;
+     text-align: center;
+     padding: 0.5em;
+}
+ .menu .enlaces a:hover {
+     color: #696969;
+}
+ 
+ @media all and (max-width: 1380px) {
+     #header .menu {
+         flex-direction: column;
+    }
+     #header .menu .logo {
+         display: flex;
+         flex-direction: row;
+         justify-content: space-between;
+         width: 100%;
+         align-items: flex-start;
+    }
+     #header .menu .logo img {
+         width: 50px;
+    }
+     #header .menu .logo .btn-menu {
+         display: inline-block;
+    }
+     #header .menu .enlaces {
+         display: flex;
+         flex-direction: column;
+         width: 100%;
+    }
+     #header .menu .enlaces a {
+         border-bottom: 1px solid #f3eaea;
+         font-weight: 600;
+    }
+    #header .menu .enlaces a:last-child {
+         border-bottom: 0;
+    }
+     #header .menu .enlaces a:hover {
+         background-color: #6689e4;
+         color: #fff;
+    }
+}
+ @media all and (max-width: 1380px) {
+    .nav-draw {
+        display: none;
+    }
+ }
+  @media all and (min-width: 1380px) {
+    #btn-menu {
+        display: none;
+    }
+ }
+ @media all and (max-width: 1000px) {
+    #nav-course {
+        display: none;
+    }
+ }
+.questionbank-navigation .nav-tabs .nav-link.active, 
+.questionbank-navigation .nav-tabs .nav-item.show .nav-link { 
+    border-bottom: 2px solid #0075ff;
+}
+.questionbank-navigation .nav-tabs .nav-link {
+    border: 0;
+}
+.questionbank-navigation .nav-tabs .nav-link:hover {
+    border-bottom: 2px solid #0075ff;
+}
+.ftoggler {
+    margin-bottom: 0;
+    padding: 10px;
+    background: #f5f5f5;
+}
+.ftoggler .fheader {
+    margin-left: 0!important;
+}
+.fcontainer {
+    padding: 15px;
+    border: 4px solid #f5f5f5;
+}
+.mform fieldset {
+    border-bottom: none;
+    margin-left: 0!important;
+}
+/*a .icon {
+    color: #76838f;
+}*/
+#categoryquestions th.modifiername .sorters, 
+#categoryquestions th.creatorname .sorters {
+    font-size: 14px;
+}
+#categoryquestions td, #categoryquestions th {
+    padding: 5px;
+}
+#categoryquestions .checkbox {
+    padding-left: 5px;
+    padding-top: 5px;
+}
+.text-langmenu {
+    position: relative;
+    bottom: 2px;
+    margin-left: 2px!important;
+}
+.icon-langmenu {
+    font-size: 16px;
+}
+.usertext {
+    margin-right: 5px;
+    margin-left: 10px;
+}
+img.userpicture {
+    margin: 0;
+}
+.nav .caret {
+    margin: 0;
+}
+a.icon-no-margin:hover {
+    text-decoration: none;
+}
+#categoryquestions td.modifiername span.date, 
+#categoryquestions td.creatorname span.date {
+    color: gray;
+}
+#categoryquestions td.modifiername, 
+#categoryquestions td.creatorname {
+    color: #3f7dec;
+    font-weight: bold;
+}
+.categoryquestionscontainer .title {
+    font-size: 16px;
+}
+#categoryquestions .header {
+    padding: 10px 5px;
+}
+#categoryquestions .header.qtype {
+    position: relative;
+    top: 22px;
+}
+.categoryquestionscontainer {
+    margin: 1rem 0;
+}
+#displayoptions {
+    border: 1px solid rgba(0,0,0,.1);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+.icon-toggle {
+    background: url(/theme/image.php/moove/core/1590573409/t/expanded) 0 center no-repeat;
+    padding: 0.75rem 1.5rem;
+    margin-left: 10px;
+}
+.text_to_html{
+    font-size: 13px;
+    font-style: italic;
+}
+#page-mod-quiz-summary h3 {
+    font-size: 20px;
+}
+#page-mod-quiz-view h3 {
+    font-size: 20px;
+}
+#page-mod-quiz-view .generalbox#feedback {
+    width: 100%;
+}
+nav.navbar ul.navbar-nav .popover-region .popover-region-toggle i.fa {
+    font-size: 19px;
+}
+nav.navbar .moove-search-input {
+    margin: 0;
+}
+#page-calendar-view h3 {
+    font-size: 20px
+}
+.path-calendar .maincalendar .calendar_event_course {
+    border: 0;
+}
+.calendar_event_course {
+    background-color: #d1eeff;
 }
 </style>
 

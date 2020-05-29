@@ -60,15 +60,15 @@
                 1000:{
                     items:4, 
                 },
-                1400:{
-                    items:5, 
-                }
+                // 1400:{
+                //     items:5, 
+                // }
             }
 
         });
         owlcourse.owlCarousel({
             loop:false,
-            margin:20,
+            margin:10,
             lazyLoad:true,
             // autoplay:true,
             autoplayTimeout:5000,
@@ -81,7 +81,10 @@
                     items:2,
                 },
                 1000:{
-                    items:5, 
+                    items:4, 
+                },
+                1300: {
+                    items:5,
                 },
                 1400:{
                     items:6, 
@@ -91,7 +94,7 @@
         });
         owlnewestcourse.owlCarousel({
             loop:false,
-            margin:20,
+            margin:10,
             lazyLoad:true,
             // autoplay:true,
             autoplayTimeout:5000,
@@ -104,7 +107,10 @@
                     items:2,
                 },
                 1000:{
-                    items:5, 
+                    items:4, 
+                },
+                1300: {
+                    items:5,
                 },
                 1400:{
                     items:6, 
@@ -114,7 +120,7 @@
         });
         owlallcourse.owlCarousel({
             loop:false,
-            margin:20,
+            margin:10,
             lazyLoad:true,
             // autoplay:true,
             autoplayTimeout:5000,
@@ -127,7 +133,10 @@
                     items:2,
                 },
                 1000:{
-                    items:5, 
+                    items:4, 
+                },
+                1300: {
+                    items:5,
                 },
                 1400:{
                     items:6, 
@@ -137,7 +146,7 @@
         });
         owlnews.owlCarousel({
             loop:true,
-            margin:20,
+            margin:10,
             nav:true,
             lazyLoad:true,
             navText: [$('.am-next'),$('.am-prev')],
@@ -159,7 +168,7 @@
         });
         owlrequiredcourse.owlCarousel({
             loop:false,
-            margin:20,
+            margin:10,
             lazyLoad:true,
             // autoplay:true,
             autoplayTimeout:5000,
@@ -172,7 +181,10 @@
                     items:2,
                 },
                 1000:{
-                    items:5, 
+                    items:4, 
+                },
+                1300: {
+                    items:5,
                 },
                 1400:{
                     items:6, 
@@ -182,7 +194,7 @@
         });
         owlsuggestcourse.owlCarousel({
             loop:false,
-            margin:20,
+            margin:10,
             lazyLoad:true,
             // autoplay:true,
             autoplayTimeout:5000,
@@ -195,7 +207,10 @@
                     items:2,
                 },
                 1000:{
-                    items:5, 
+                    items:4, 
+                },
+                1300: {
+                    items:5,
                 },
                 1400:{
                     items:6, 
@@ -205,7 +220,7 @@
         });
         owlrequiredpositioncourse.owlCarousel({
             loop:false,
-            margin:20,
+            margin:10,
             lazyLoad:true,
             // autoplay:true,
             autoplayTimeout:5000,
@@ -218,7 +233,10 @@
                     items:2,
                 },
                 1000:{
-                    items:5, 
+                    items:4, 
+                },
+                1300: {
+                    items:5,
                 },
                 1400:{
                     items:6, 
@@ -228,7 +246,7 @@
         });
         owluserplancourse.owlCarousel({
             loop:false,
-            margin:20,
+            margin:10,
             lazyLoad:true,
             // autoplay:true,
             autoplayTimeout:5000,
@@ -241,7 +259,10 @@
                     items:2,
                 },
                 1000:{
-                    items:5, 
+                    items:4, 
+                },
+                1300: {
+                    items:5,
                 },
                 1400:{
                     items:6, 

@@ -1,6 +1,7 @@
 <div class="align-items-center" id="gradelist">
 {{#haslisttopgrade}}
 <div class="d-flex w-100 justify-content-center fade in"><p>Thứ hạng hiện tại trong khoá:  <span class="text-danger font-weight-bold">{{#rank}}{{{rank}}}{{/rank}}{{^rank}}Chưa có{{/rank}}</p></div>
+<div class="table-responsive-md" style="max-height: 400px;overflow-y: hidden;">
 <table class="table table-striped">
 	<thead>
 	  <tr>
@@ -13,12 +14,13 @@
 	{{#listtopgrade}}
 	    <tr class="{{#color}}{{{color}}}{{/color}}">
 	        <td>{{{fullname}}}</td>
-	        <td>{{{finalgrade}}}</td>
-	        <td>{{{rownum}}}</td>
+	        <td>{{{gradefinal}}}</td>
+	        <td>{{{rank}}}</td>
 	    </tr>
 	{{/listtopgrade}}
 	</tbody>
 </table>
+</div>
 {{/haslisttopgrade}}
 
 </div>

@@ -24,17 +24,17 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                     var columns =  [{
                                 field: "fullname",
                                 title: s[0],
-                                width: "500px"
+                                width: "300px"
                             },
                             {
                                 field: "status",
                                 title: s[1],
-                                width: "200px"
+                                width: "150px"
                             },
                             {
                                 field: "finalgrade",
                                 title: s[2],
-                                width: "200px"
+                                width: "150px"
                             },
                             
                         ];

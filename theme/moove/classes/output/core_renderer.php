@@ -292,7 +292,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
             <a class="nav-active" href="'.$news .'"><li>Tin tức</li></a>
             <a class="nav-active" href="'.$forum .'"><li>Diễn đàn</li></a>
             <a class="nav-active" href="'.$calendar .'"><li>Lịch</li></a>
-            <a class="nav-active" href="'.$files .'"><li>Tài liệu cá nhân</li></a>';
+            <a class="nav-active" href="'.$files .'"><li>Tài liệu cá nhân</li></a>
+            ';
         return $output;
     }
 
@@ -668,7 +669,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
 
         $returnstr .= html_writer::span(
-            html_writer::span($usertextcontents, 'usertext') .
+            html_writer::span($USER->firstname .' '. $USER->lastname, 'usertext') .
             html_writer::span($avatarcontents, $avatarclasses),
             'userbutton'
         );
@@ -1044,12 +1045,12 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $searchurl = new moodle_url('/course/search.php');
 
         $output = html_writer::start_tag('form', array('id' => $formid, 'action' => $searchurl, 'method' => 'get','class' => 'form-inline'));
-        $output .= html_writer::start_tag('fieldset', array('class' => 'coursesearchbox invisiblefieldset automargin', 'style' => 'border: 0.01rem solid #93b4c7; border-right: unset;'));
+        $output .= html_writer::start_tag('fieldset', array('class' => 'coursesearchbox invisiblefieldset automargin', 'style' => 'border-right: unset;'));
 
         $output .= html_writer::empty_tag('input', array('type' => 'text', 'id' => $inputid, 'placeholder' => 'Tìm kiếm khoá bạn muốn học',
-            'size' => $inputsize, 'name' => 'search', 'value' => s($value),'class' => 'form-control' ,'style' => 'border: 0px'));
+            'size' => $inputsize, 'name' => 'search', 'value' => s($value),'class' => 'form-control' ,'style' => 'border: 0px;padding: .4rem .75rem;'));
         $output .= html_writer::start_tag('button', array('type' => 'submit',
-          'class' => 'btn', 'style' => 'background-color: #fff; border: 0.01rem solid #93b4c7 !important; border-left: unset !important;'));
+          'class' => 'btn', 'style' => 'background-color: #fff; border-left: unset !important;border: 0px;padding: .4rem .75rem;'));
         $output .= '<i class="fa fa-search" aria-hidden="true"></i>';
         $output .= html_writer::end_tag('button');
         $output .= html_writer::end_tag('fieldset');

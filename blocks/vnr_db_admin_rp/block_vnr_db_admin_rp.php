@@ -3,7 +3,7 @@
 
 class block_vnr_db_admin_rp extends block_base {
      public function init() {
-        $this->title = get_string('pluginname', 'block_vnr_db_admin_rp');
+        $this->title = get_string('pluginname', 'block_vnr_db_admin_rp') . '<i class="fa fa-question-circle btn-help ml-1" aria-hidden="true" data-toggle="modal" data-target="#myModal"></i>';
     }
 
     function get_content() {

@@ -67,11 +67,11 @@ if ($delete === md5($course->timemodified)) {
     core_php_time_limit::raise();
     /* -- Custom by Vũ -- */
     //Đẩy thông tin khoá học khi xoá realtime qua HRM
-    $detete_course_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'UpdateTraineeResult']);
+    $detete_course_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecCourse']);
     if($detete_course_api) {
         $params_el = [
-                'NameEntityName' => $course->fullname,
-                'Code' =>  $course->code,
+                'CourseName' => $course->fullname,
+                'CourseCode' =>  $course->code,
                 'Status' => 'E_DELETE'
         ];
         $getparams = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $detete_course_api->id]);
@@ -84,11 +84,9 @@ if ($delete === md5($course->timemodified)) {
             }
             
         }
-        if(isset($params_hrm['Status']) == '') {
-            $params_hrm['Status'] = 'E_DELETE';
-        }
         $url_hrm = $detete_course_api->url;
-        HTTPPost($url_hrm, $params_hrm);
+        if($course->typeofcourse == 1)
+            HTTPPost($url_hrm, $params_hrm);
     }
     /* -- Kết thúc custom -- */
     // We do this here because it spits out feedback as it goes.

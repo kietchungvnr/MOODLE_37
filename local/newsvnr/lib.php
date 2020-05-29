@@ -1316,10 +1316,11 @@ function get_course_by_orgpositioncode($orgpositioncode,$orgjobtitlecode,$orgstr
     global $DB;
     $query = "
             SELECT c.id,c.fullname 
-            FROM {course} c 
+            FROM {course_position} c 
                 JOIN {orgstructure_position} op ON c.courseofposition = op.id 
                 JOIN {orgstructure_jobtitle} oj ON c.courseofjobtitle = oj.id 
-                JOIN {orgstructure} o ON c.courseoforgstructure = o.id 
+                JOIN {orgstructure} o ON c.courseoforgstructure = o.id
+                JOIN {course} c ON cp.course = c.id
             WHERE op.id = ? AND oj.id = ? AND o.id = ? AND c.typeofcourse = ?";
     $data = $DB->get_record_sql($query,[$orgpositioncode,$orgjobtitlecode,$orgstructurecode,$typeofcourse]);
     return $data;
