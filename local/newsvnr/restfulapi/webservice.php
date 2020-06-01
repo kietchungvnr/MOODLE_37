@@ -1261,7 +1261,7 @@ if($action == "gradereport_chart") {
 	$response = new stdClass;
 	$sql = "
 			SELECT 
-				COUNT(*) AS grade_total,
+				COUNT(DISTINCT gg.userid) AS grade_total,
 				(SELECT COUNT(*) 
 					FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
 					WHERE gg.finalgrade is not null 
@@ -1348,18 +1348,24 @@ if($action == "gradereport_detail") {
 	} else if($completed_course_status == "Không đạt") {
 		$where_subsql = "gg.finalgrade IS NOT NULL AND ccc.gradepass IS NOT NULL AND gi.itemtype = 'course' AND gg.finalgrade < ccc.gradepass AND gi.courseid = ?";
 	} else if($completed_course_status == "Khác"){
-		$where_subsql = "(gg.finalgrade IS NULL OR ccc.gradepass IS NULL) AND gi.itemtype = 'course' AND gi.courseid = ?";
+		$where_subsql = "gg.finalgrade IS NULL AND gi.itemtype = 'course' AND gi.courseid = ?";
 	}
 	$sql = "
-			SELECT *, (SELECT COUNT(DISTINCT gg.id)
-			FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
-			WHERE 
-					$where_subsql
+			SELECT *, (SELECT COUNT (gg.userid)
+						FROM mdl_grade_grades gg 
+							LEFT JOIN mdl_grade_items gi ON gi.id=gg.itemid 
+							LEFT JOIN mdl_user u ON gg.userid = u.id 
+							LEFT JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid AND ccc.gradepass IS NOT NULL
+						WHERE 
+						$where_subsql
 			) AS total
-				FROM (
-				    SELECT DISTINCT CONCAT(u.firstname, ' ', u.lastname) AS fullname, gg.finalgrade, ccc.gradepass, ROW_NUMBER() OVER (ORDER BY u.id) AS RowNum
-						FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
-						WHERE $where_subsql
+			FROM (
+			    SELECT CONCAT(u.firstname, ' ', u.lastname) AS fullname, gg.finalgrade, ccc.gradepass, ROW_NUMBER() OVER (ORDER BY u.id) AS RowNum
+					FROM mdl_grade_grades gg 
+						LEFT JOIN mdl_grade_items gi ON gi.id=gg.itemid 
+						LEFT JOIN mdl_user u ON gg.userid = u.id 
+						LEFT JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid AND ccc.gradepass IS NOT NULL
+					WHERE $where_subsql
 				) AS Mydata
 			$wheresql
 			ORDER BY $ordersql";
@@ -1369,10 +1375,8 @@ if($action == "gradereport_detail") {
 	} else {
 		$get_list = $DB->get_records_sql($sql, [$courseid, $courseid]);
 	}
-	
-	foreach ($get_list as $value) {
+ 	foreach ($get_list as $value) {
 		$object = new stdclass;
-		$buttons = array();
 		$object->fullname = $value->fullname;
 		if($value->finalgrade >= $value->gradepass) {
 			$object->status = 'Đạt';
@@ -1383,7 +1387,7 @@ if($action == "gradereport_detail") {
 			$object->status = 'Khác';
 		}
 
-		$object->finalgrade = round($value->finalgrade, 1);
+		$object->finalgrade = round($value->finalgrade,1);
 		$object->total = $value->total;
 		$data[] = $object;		
 	}

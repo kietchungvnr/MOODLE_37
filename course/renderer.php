@@ -1672,10 +1672,14 @@ class core_course_renderer extends plugin_renderer_base {
             $catdisplayoptions['viewmoreurl'] = new moodle_url($baseurl, array('browse' => 'categories', 'page' => 1));
         }
         $chelper->set_courses_display_options($coursedisplayoptions)->set_categories_display_options($catdisplayoptions);
+        // Add course search form.
+        $output .= $this->course_search_form();
 
-         // Add action buttons
-        $courserqurl = new moodle_url('/course/listcourserq.php', array());
-        // $output .= $this->container_start('buttons');
+        // Display course category tree.
+        $output .= $this->coursecat_tree($chelper, $coursecat);
+
+        // Add action buttons
+        $output .= $this->container_start('buttons');
         if ($coursecat->is_uservisible()) {
             $context = get_category_or_system_context($coursecat->id);
             if (has_capability('moodle/course:create', $context)) {
@@ -1687,25 +1691,13 @@ class core_course_renderer extends plugin_renderer_base {
                         array('category' => $CFG->defaultrequestcategory, 'returnto' => 'topcat'));
                 }
                 $output .= $this->single_button($url, get_string('addnewcourse'), 'get');
-
-            }
-            if(!is_siteadmin()) {
-                     $output .= $this->single_button($courserqurl, get_string('listcourserqtitle', 'local_newsvnr'), 'get');
             }
             ob_start();
             print_course_request_buttons($context);
             $output .= ob_get_contents();
             ob_end_clean();
         }
-        // $output .= $this->container_end();
-
-        // Add course search form.
-        $output .= $this->course_search_form();
-
-        // Display course category tree.
-        $output .= $this->coursecat_tree($chelper, $coursecat);
-
-       
+        $output .= $this->container_end();
 
         return $output;
     }

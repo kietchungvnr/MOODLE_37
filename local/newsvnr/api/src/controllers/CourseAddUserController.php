@@ -13,7 +13,6 @@ class CourseAddUserController extends BaseController {
 
 	private $student = 'student';
 	private $teacher = 'editingteacher';
-	public $check_code;
 	public $data;
 	public $resp;
 
@@ -54,7 +53,7 @@ class CourseAddUserController extends BaseController {
             'fullname' => $this->v::notEmpty()->notBlank(),
             'email' => $this->v::notEmpty()->notBlank(),
             'orgpositioncode' => $this->v::notEmpty()->notBlank(),
-            'password' => $this->v::notEmpty()->notBlank()->noWhitespace()
+            // 'password' => $this->v::notEmpty()->notBlank()->noWhitespace()
             // 'orgstructurecode' => $this->v::notEmpty()->notBlank(),
         ]);
       	if ($this->validate->isValid()) {
@@ -107,68 +106,88 @@ class CourseAddUserController extends BaseController {
 				$userlogin = $this->data->userlogin;	
 			}
 		}
-		$check_orgpositioncode = find_id_orgpostion_by_code($this->data->orgpositioncode);
-		if(!$check_orgpositioncode) {
-			$this->resp->error = true;
-			$this->resp->data['orgpositioncode'] = "orgpositioncode(Mã chức vụ) không tồn tại chức vụ ".$this->data->orgpositioncode;
+		switch (true) {
+			case isset($this->data->code):
+				$courseid = $DB->get_field('course', 'id', ['code' => $this->data->code]);
+				if(!$courseid) {
+					$this->resp->error = true;
+					$this->resp->data['coursecode'] = "coursecode(Mã khoá học) không tồn tại khoá học";
+				}
+				break;
+			case !isset($this->data->orgpositioncode, $this->data->orgjobtitlecode, $this->data->orgstructurecode):
+				$this->resp->error = true;
+				$this->resp->data['missingparameter'] = "Thiếu phòng ban, chức danh hoặc chức vụ (Phải có cả 3 params PB - CD - CV)";
+				break;
+			case isset($this->data->orgpositioncode, $this->data->orgjobtitlecode, $this->data->orgstructurecode):
+				$orgpositioncode = find_id_orgpostion_by_code($this->data->orgpositioncode);
+				$orgstructurecode = find_id_orgstructure_by_code($this->data->orgstructurecode);
+				$orgjobtitlecode = find_id_orgjobtitle_by_code($this->data->orgjobtitlecode);
+				if(!$orgpositioncode) {
+					$this->resp->data['orgpositioncode'] = "orgpositioncode(Mã chức vụ) không tồn tại chức vụ";
+				}
+				if(!$orgstructurecode) {
+					$this->resp->data['orgstructurecode'] = "orgstructurecode(Mã phòng ban) không tồn tại phòng ban";
+				}
+				if(!$orgjobtitlecode) {
+					$this->resp->data['orgjobtitlecode'] = "orgjobtitlecode(Mã chức danh) không tồn tại chức danh";
+				}
+				if(empty($this->resp->data)) {
+					$courseid = $DB->get_field('course_position', 'course', ['courseofposition' => $orgjobtitlecode, 'courseofjobtitle' => $orgjobtitlecode, 'courseoforgstructure' => $orgstructurecode]);
+					if(!$courseid) {
+						$this->resp->error = true;
+						$this->resp->data['notfound'] = "Không tìm thấy mã khoá học theo phòng ban, chức danh, chức vụ";
+					}
+				} else {
+					$this->resp->error = true;
+				}
+				break;
+				
+			default:
+				$this->resp->error = true;
+				$this->resp->data['missingparameter'] = 'Phải 1 trong 2 mã là mã khoá học hoặc mã phòng ban, chức danh, chức vụ. Lưu ý: Nếu lấy khoá học theo phòng ban, chức danh, chức vụ thì phải đầy đủ cả 3 PB - CD - CV';
+				break;
 		}
-		if(empty($this->data->code)) {
-			
-			$check_orgstructurecode = find_id_orgstructure_by_code($this->data->orgstructurecode);
-			$check_orgjobtitlecode = find_id_orgjobtitle_by_code($this->data->orgjobtitlecode);
-			
-			if(!$check_orgstructurecode) {
-				$this->resp->error = true;
-				$this->resp->data['orgstructurecode'] = "orgstructurecode(Mã phòng ban) không tồn tại phòng ban ".$this->orgstructurecode;
-			}
-			if(!$check_orgjobtitlecode) {
-				$this->resp->error = true;
-				$this->resp->data['orgjobtitlecode'] = "orgjobtitlecode(Mã chức vụ) không tồn tại chức danh ".$this->orgjobtitlecode;
-			}
-		} else {
-			$courseid = $DB->get_field('course', 'id', ['code' => $this->data->code]);
-			if(!$courseid) {
-				$this->resp->error = true;
-				$this->resp->data['code'] = "coursecode(Mã khoá học) không tồn tại khoá học";
-			}
+		$check_usercode = find_usercode_by_code($this->data->usercode);
+		$get_orgpositionid = get_orgpositionid_by_code($this->data->orgpositioncode);
+		if(!$get_orgpositionid) {
+			$this->resp->error = true;
+			$this->resp->data['orgpositioncode'] = "orgpositioncode(Mã chức vụ) không tồn tại";
 		}
-		
-		$email = $this->data->email;
-		if (!validate_email($email)) {
-			$this->resp->error = true;
-			$this->resp->data['email'] = "email '$email' không đúng định dạng";
-		} else if (empty($CFG->allowaccountssameemail) and $DB->record_exists('user', array('email' => $email))) {
-			$this->resp->error = true;
-			$this->resp->data['email'] = "email '$email' đã được sử dụng vui lòng chọn email khác";
+		if(!$check_usercode) {
+			$email = $this->data->email;
+			if (!validate_email($email)) {
+				$this->resp->error = true;
+				$this->resp->data['email'] = "email '$email' không đúng định dạng";
+			} else if (empty($CFG->allowaccountssameemail) and $DB->record_exists('user', array('email' => $email))) {
+				$this->resp->error = true;
+				$this->resp->data['email'] = "email '$email' đã tồn tại";
+			}
+			if($DB->record_exists('user', ['usercode' => $this->data->usercode])) {
+				$this->resp->error = true;
+				$this->resp->data['usercode'] = "usercode(Mã nhân viên) đã tồn tại";
+			}
 		}
 
 		if(empty($this->resp->data)) {
-			$check_usercode = find_usercode_by_code($this->data->usercode);
 		   	if(!$check_usercode) {	
 				$usernew = new stdClass();
+				$usernew->course = 1;
 				$usernew->username = strtolower($userlogin);
 				$usernew->usercode = $this->data->usercode;
-				$usernew->orgpositionid = $check_orgpositioncode->id;
+				$usernew->orgpositionid = $get_orgpositionid;
+				$usernew->auth = 'manual';
+				$usernew->suspended = '0';
+				$usernew->password = hash_internal_user_password($this->data->password);
+				$usernew->preference_auth_forcepasswordchange = 0;
 				$usernew->mnethostid = $CFG->mnet_localhost_id;
 				$usernew->confirmed= 1;
-				$usernew->password = hash_internal_user_password($this->data->password);
 				$usernew->firstname = $firstname;
 				$usernew->lastname = $lastname;
 				$usernew->email = $this->data->email;
-				// $usernew->identitycard = $this->data->identitycard;
-				// $usernew->phone1 = $this->data->phone1;
-				// $usernew->phone2 = $this->data->phone2;
+				$usernew->maildisplay = 2;
 				$usernew->country = 'VN';
 				$usernew->lang = 'vi';
-				if($this->data->code) {
-					$data = $DB->get_record('course',['code' => $this->data->code]);
-					if($data)
-						$courseid = $data->id;
-				} else {
-					$data = get_course_by_orgpositioncode($this->data->check_orgpositioncode->id,$this->data->check_orgjobtitlecode->id,$this->data->check_orgstructurecode->id,1);
-					if($data)
-						$courseid = $data->id;
-				}
+				
 				if($courseid) {
 					$userlogin_teacher = find_username($this->data->teacherloginname);
 					if($userlogin_teacher) {
@@ -193,16 +212,27 @@ class CourseAddUserController extends BaseController {
 					\core\event\user_created::create_from_userid($usernew->id)->trigger();
 					
 				} else {
-					$orgjobtitlecode = $this->data->orgjobtitlecode;
-					$orgjobtitlecode = $this->data->orgjobtitlecode;
-					$orgstructurecode = $this->data->orgstructurecode;
-					$coursecode = $this->data->code;
 					$this->resp->error = true;
-					$this->resp->error['course'] = "Không tìm thấy khóa học phù hợp với 'vị trí - $orgpositioncode , chức danh - $orgjobtitlecode , phòng ban - $orgstructurecode' và mã khoá học '$coursecode'";
+					$this->resp->data['coursecode'] = "Không tìm thấy khóa học với mã khoá học hoặc phòng ban, chức danh, chức vụ";
 				}
 			} else {
-				$this->resp->error = true;
-				$this->resp->data['usercode'] = "usercode(Mã ứng viên) '".$this->data->usercode."' đã tồn tại";
+				if($courseid) {
+	
+				    $user_in_course = check_user_in_course($courseid,$check_usercode);
+
+				    if(!$user_in_course) {
+				    	$this->enrol_user($check_usercode, $courseid, 'student');
+				    	$this->resp->error = false;
+						$this->resp->message['info'] = "Thêm thành công thêm user vào khóa học";
+						$this->resp->data[] = $usernew;
+				    } else {
+				    	$this->resp->error = false;
+				    	$this->resp->message['info'] = "User '$userlogin' đã tham gia vào khóa";
+				    }
+				} else {
+					$this->resp->error = true;
+					$this->resp->data['coursecode'] = "Không tìm thấy khóa học với mã khoá học hoặc phòng ban, chức danh, chức vụ";
+				}
 			}
 		} else {
 			$this->resp->error = true;
@@ -213,7 +243,7 @@ class CourseAddUserController extends BaseController {
 	/**
 	 * API thêm user vào khóa học (Phân hệ đào tạo) - Pharse 1
 	*/
-	public function enrol_user_training($request, $response, $args) {
+	public function enroll_user_training($request, $response, $args) {
 		global $DB, $CFG;
 		require_once("$CFG->dirroot/user/lib.php");
 
@@ -221,16 +251,19 @@ class CourseAddUserController extends BaseController {
             'usercode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
             'fullname' => $this->v::notEmpty()->notBlank(),
             'email' => $this->v::notEmpty()->notBlank(),
-            'coursecode' => $this->v::notEmpty()->notBlank(),
-            'password' => $this->v::notEmpty()->notBlank()->noWhitespace(),
-            // 'orgpositioncode' => $this->v::notEmpty()->notBlank(),
+            // 'coursecode' => $this->v::notEmpty()->notBlank(),
+            // 'password' => $this->v::notEmpty()->notBlank()->noWhitespace(),
+            'orgpositioncode' => $this->v::notEmpty()->notBlank(),
         ]);
       	if ($this->validate->isValid()) {
 	    	$this->data->usercode = $request->getParam('usercode');
 	    	$this->data->fullname = $request->getParam('fullname');
 		    $this->data->email = $request->getParam('email');
+		    $this->data->userlogin = $request->getParam('userlogin');
 		    $this->data->code = $request->getParam('coursecode');
 		    $this->data->orgpositioncode = $request->getParam('orgpositioncode');
+		    $this->data->orgjobtitlecode = $request->getParam('orgjobtitlecode');
+		    $this->data->orgstructurecode = $request->getParam('orgstructurecode');
 		    $this->data->password = $request->getParam('password');
 	    } else {
         	$errors = $this->validate->getErrors();
@@ -252,30 +285,85 @@ class CourseAddUserController extends BaseController {
 		$fullname_user = preg_replace('/\s+/', '', $this->data->fullname);
 		$fullname_tolower = mb_strtolower($fullname_user, 'UTF-8');
 		$fullname_without_tone = convert_name($fullname_tolower);
-		if(empty($userlogin)) {
+		if(empty($this->data->userlogin)) {
 			$userlogin = $fullname_without_tone;
 			$userlognin_user = find_username($fullname_without_tone);
 			if($userlognin_user) {
 				$time = time();
 				$userlogin = $fullname_without_tone . $time;
 			}
+		} else {
+			if($DB->record_exists('user', ['username' => $this->data->userlogin])) {
+				$this->resp->error = true;
+				$this->resp->data['userlogin'] = "userlogin đã tồn tại!";
+			} else {
+				$userlogin = $this->data->userlogin;	
+			}
+		}
+		
+		switch (true) {
+			case isset($this->data->code):
+				$courseid = $DB->get_field('course', 'id', ['code' => $this->data->code]);
+				if(!$courseid) {
+					$this->resp->error = true;
+					$this->resp->data['coursecode'] = "coursecode(Mã khoá học) không tồn tại khoá học";
+				}
+				break;
+			case !isset($this->data->orgpositioncode, $this->data->orgjobtitlecode, $this->data->orgstructurecode):
+				$this->resp->error = true;
+				$this->resp->data['missingparameter'] = "Thiếu phòng ban, chức danh hoặc chức vụ (Phải có cả 3 params PB - CD - CV)";
+				break;
+			case isset($this->data->orgpositioncode, $this->data->orgjobtitlecode, $this->data->orgstructurecode):
+				$orgpositioncode = find_id_orgpostion_by_code($this->data->orgpositioncode);
+				$orgstructurecode = find_id_orgstructure_by_code($this->data->orgstructurecode);
+				$orgjobtitlecode = find_id_orgjobtitle_by_code($this->data->orgjobtitlecode);
+				if(!$orgpositioncode) {
+					$this->resp->data['orgpositioncode'] = "orgpositioncode(Mã chức vụ) không tồn tại chức vụ";
+				}
+				if(!$orgstructurecode) {
+					$this->resp->data['orgstructurecode'] = "orgstructurecode(Mã phòng ban) không tồn tại phòng ban";
+				}
+				if(!$orgjobtitlecode) {
+					$this->resp->data['orgjobtitlecode'] = "orgjobtitlecode(Mã chức danh) không tồn tại chức danh";
+				}
+				if(empty($this->resp->data)) {
+					$courseid = $DB->get_field('course_position', 'course', ['courseofposition' => $orgjobtitlecode, 'courseofjobtitle' => $orgjobtitlecode, 'courseoforgstructure' => $orgstructurecode]);
+					if(!$courseid) {
+						$this->resp->error = true;
+						$this->resp->data['notfound'] = "Không tìm thấy mã khoá học theo phòng ban, chức danh, chức vụ";
+					}
+				} else {
+					$this->resp->error = true;
+				}
+				break;
+				
+			default:
+				$this->resp->error = true;
+				$this->resp->data['missingparameter'] = 'Phải 1 trong 2 mã là mã khoá học hoặc mã phòng ban, chức danh, chức vụ. Lưu ý: Nếu lấy khoá học theo phòng ban, chức danh, chức vụ thì phải đầy đủ cả 3 PB - CD - CV';
+				break;
 		}
 		$check_usercode = find_usercode_by_code($this->data->usercode);
 		$get_orgpositionid = get_orgpositionid_by_code($this->data->orgpositioncode);
-		$get_course = get_course_by_idnumber($this->data->code); 
-		if($get_course)
-			$courseid = $get_course->id;
+		if(!$get_orgpositionid) {
+			$this->resp->error = true;
+			$this->resp->data['orgpositioncode'] = "orgpositioncode(Mã chức vụ) không tồn tại";
+		}
 		if(!$check_usercode) {
 			$email = $this->data->email;
 			if (!validate_email($email)) {
+				$this->resp->error = true;
 				$this->resp->data['email'] = "email '$email' không đúng định dạng";
 			} else if (empty($CFG->allowaccountssameemail) and $DB->record_exists('user', array('email' => $email))) {
-				$this->resp->data['email'] = "email '$email' đã được sử dụng vui lòng chọn email khác";
+				$this->resp->error = true;
+				$this->resp->data['email'] = "email '$email' đã tồn tại";
+			}
+			if($DB->record_exists('user', ['usercode' => $this->data->usercode])) {
+				$this->resp->error = true;
+				$this->resp->data['usercode'] = "usercode(Mã nhân viên) đã tồn tại";
 			}
 		}
+		
 		if(empty($this->resp->data)) {
-			$coursecode = $this->data->code;
-			$fullname = $this->data->fullname;
 			$usernew = new stdClass();
 			$usernew->course = 1;
 			$usernew->username = strtolower($userlogin);
@@ -295,19 +383,18 @@ class CourseAddUserController extends BaseController {
 			$usernew->lang = 'vi';
 			// $createpassword = true;
 			if(!$check_usercode) {	
-				if($get_course) {
-					
+				if($courseid) {
 				    $usernew->id = user_create_user($usernew,false,false);
 				    $usernew = $DB->get_record('user', array('id' => $usernew->id));
 				    $user_in_course = check_user_in_course($courseid,$usernew->id);
 				    if(!$user_in_course) {
-				    	enrol_user($usernew->id, $courseid, 'student');
+				    	$this->enrol_user($usernew->id, $courseid, 'student');
 				    	$this->resp->error = false;
-						$this->resp->message['info'] = "Thêm thành công và tạo mới user '$usernew'";
+						$this->resp->message['info'] = "Thêm thành công và tạo mới user '$userlogin'";
 						$this->resp->data[] = $usernew;
 				    }
 
-				    $usercontext = context_user::instance($usernew->id);
+				    // $usercontext = context_user::instance($usernew->id);
 				    
 				    // if ($createpassword) {
 				    // 	setnew_password_and_mail($usernew);
@@ -318,29 +405,30 @@ class CourseAddUserController extends BaseController {
 
 				} else {
 					$this->resp->error = true;
-					$this->resp->data['code'] = "Không tìm thấy khóa học với mã '$coursecode'";
+					$this->resp->data['coursecode'] = "Không tìm thấy khóa học với mã khoá học hoặc phòng ban, chức danh, chức vụ";
 				}
 				
 			} else {
-				if($get_course) {
+				if($courseid) {
 	
-				    $user_in_course = check_user_in_course($courseid,$check_usercode->id);
+				    $user_in_course = check_user_in_course($courseid,$check_usercode);
 
 				    if(!$user_in_course) {
-
-				    	enrol_user($check_usercode->id, $courseid, 'student');
+				    	$this->enrol_user($check_usercode, $courseid, 'student');
 				    	$this->resp->error = false;
-						$this->resp->message['info'] = "Thêm thành công thêm user vào khóa học '$get_course->fullname'";
+						$this->resp->message['info'] = "Thêm thành công thêm user vào khóa học";
 						$this->resp->data[] = $usernew;
 				    } else {
 				    	$this->resp->error = false;
-				    	$this->resp->message['info'] = "User đã tham gia vào khóa '$get_course->fullname'";
+				    	$this->resp->message['info'] = "User '$userlognin' đã tham gia vào khóa";
 				    }
 				} else {
 					$this->resp->error = true;
-					$this->resp->data['code'] = "Không tìm thấy khóa học với mã '$coursecode'";
+					$this->resp->data['coursecode'] = "Không tìm thấy khóa học với mã khoá học hoặc phòng ban, chức danh, chức vụ";
 				}
 			}
+		} else {
+			$this->resp->error = true;
 		}
 		return $response->withStatus(200)->withJson($this->resp);	
 		

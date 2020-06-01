@@ -1257,7 +1257,7 @@ function find_id_orgpostion_by_code($code) {
             SELECT id 
             FROM {orgstructure_position} 
             WHERE code = ?";
-    $data = $DB->get_record_sql($query,[$code]);
+    $data = $DB->get_field_sql($query,[$code]);
     return $data;
 }
 
@@ -1267,7 +1267,7 @@ function find_id_orgstructure_by_code($code) {
             SELECT id 
             FROM {orgstructure}
             WHERE code = ?";
-    $data = $DB->get_record_sql($query,[$code]);
+    $data = $DB->get_field_sql($query,[$code]);
     return $data;
 }
 
@@ -1277,7 +1277,7 @@ function find_id_orgjobtitle_by_code($code) {
             SELECT id 
             FROM {orgstructure_jobtitle}
             WHERE code = ?";
-    $data = $DB->get_record_sql($query,[$code]);
+    $data = $DB->get_field_sql($query,[$code]);
     return $data;
 }
 
@@ -1288,7 +1288,7 @@ function find_usercode_by_code($code)
             SELECT id 
             FROM {user} 
             WHERE usercode = ?";
-    $data = $DB->get_record_sql($sql, array($code));
+    $data = $DB->get_field_sql($sql, [$code]);
     return $data;
 }
 function find_ueid_by_enrolid($enrolid,$userid)
@@ -1393,6 +1393,16 @@ function get_course_by_idnumber($idnumber) {
             FROM mdl_course 
             WHERE idnumber = ?";
     $data = $DB->get_record_sql($query,[$idnumber]);
+    return $data;
+}
+
+function get_course_by_code($code) {
+    global $DB;
+    $query = "
+            SELECT id,fullname
+            FROM mdl_course 
+            WHERE code = ?";
+    $data = $DB->get_record_sql($query,[$code]);
     return $data;
 }
 

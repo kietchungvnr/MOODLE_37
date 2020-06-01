@@ -21,6 +21,14 @@
             }
         }
     });
+    //Auto hieght cho textarea
+     $('textarea').each(function () {
+        this.setAttribute('style', 'height:42px;overflow-y:hidden;');
+    }).on('input', function () {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+    //Auto scroll lên top
          $(window).scroll(function() {
         if ($(this).scrollTop() >= 50) {        // If page is scrolled more than 50px
             $('#return-to-top').fadeIn(200);    // Fade in the arrow
@@ -33,7 +41,7 @@
                 scrollTop : 0                       // Scroll to top of body
             }, 500);
         });
-
+    //Hiệu ứng slider cho owlcourse
         var owlfrontpage = $('#frontpage-course-slider');
         var owlcourse = $('#news-slider6');
         var owlnewestcourse = $('#newest-course-slider');
