@@ -454,44 +454,68 @@ class course_renderer extends \core_course_renderer {
 
         $course_count_student = theme_settings::role_courses_teacher($course->id);
 
-        $content = extras::get_course_summary_image($course, $courselink);
-
+        $courseimage = extras::get_course_summary_image($course, $courselink);
         // Course instructors.
         if ($course->has_course_contacts()) {
-            $content .= html_writer::start_tag('div', array('class' => 'course-contacts'));
+        //     $content .= html_writer::start_tag('div', array('class' => 'course-contacts'));
 
             $instructors = $course->get_course_contacts();
             foreach ($instructors as $key => $instructor) {
                 $name = $instructor['username'];
                 $url = $CFG->wwwroot.'/user/profile.php?id='.$key;
                 $picture = extras::get_user_picture($DB->get_record('user', array('id' => $key)));
-
-                $content .= "<a href='{$url}' class='contact' data-toggle='tooltip' title='{$name}'>";
-                $content .= "<img src='{$picture}' class='rounded-circle' alt='{$name}'/>";
-                $content .= "</a>";
+                $teacherimage = '';
+                $teacherimage .= "<a href='{$url}' class='contact' data-toggle='tooltip' title='{$name}'>";
+                $teacherimage .= "<img src='{$picture}' class='rounded-circle' alt='{$name}'/>";
+                $teacherimage .= "</a>";
             }
 
-            $content .= html_writer::end_tag('div'); // Ends course-contacts.
+        //     $content .= html_writer::end_tag('div'); // Ends course-contacts.
         }
-    
-        $content .= html_writer::start_tag('div', array('class' => 'card-body'));
-        $content .= "<h6 class='card-title'>". $coursenamelink."</h6>";
-
-        // Display course summary.
-        if ($course->has_summary()) {
-            $content .= html_writer::start_tag('p', array('class' => 'card-text'));
-
-            $content .= $chelper->get_course_formatted_summary($course,
-                array('overflowdiv' => true, 'noclean' => true, 'para' => false));
-
-            $content .= html_writer::end_tag('p'); // End summary.
+        if(!$teacherimage) {
+            $imgurl = $CFG->wwwroot."/theme/moove/pix/f2.png";
+            $teacherimage = \html_writer::empty_tag('img',array('src' => $imgurl,'class'=>'userpicture defaultuserpic','width' => '50px','height'=>'50px','alt' => 'Default picture','title'=>'Default picture'));
         }
-        $content .= html_writer::end_tag('div');
+        $content .= "
+                    <div class='post-slide6'>
+                        <div class='post-img'>
+                            $courseimage
+                            <div class='post-info'>
+                                <ul class='category'>
+                                    <li>Học viên <a href='#'>{{countstudent}}</a></li>
+                                    <li>Giáo viên <a href='#'>{{fullnamet}}</a></li>
+                               
+                                </ul>
+                            </div>
+                        </div>
+                        <div class='post-review'>
+                            <span class='icons'>$teacherimage</span><h3 class='post-title'><a href='{{{link}}}' title='{{fullname}}'>{{#shortentext}}80, {{fullname}}{{/shortentext}}</a></h3>
+                                <p class='post-teachername'>{{#shortentext}}30, {{fullnamet}}{{/shortentext}}</p>
+                            
+                                <p class='post-description'>{{#shortentext}}90, {{summary}}{{/shortentext}}</p>
+
+                                <p class='post-enrolmethod'>
+                                    {{#enrolmethod}}{{{enrolmethod}}}{{/enrolmethod}}
+                                </p>
+                        </div>
+                    </div>";
+        // $content .= html_writer::start_tag('div', array('class' => 'card-body'));
+        // $content .= "<h6 class='card-title'>". $coursenamelink."</h6>";
+
+        // // Display course summary.
+        // if ($course->has_summary()) {
+        //     $content .= html_writer::start_tag('span', array('class' => 'card-text'));
+
+        //     $content .= $chelper->get_course_formatted_summary($course,
+        //         array('overflowdiv' => true, 'noclean' => true, 'para' => false));
+
+        //     $content .= html_writer::end_tag('span'); // End summary.
+        // }
+        // $content .= html_writer::end_tag('div');
 
 
 
-
-        $content .= html_writer::start_tag('div', array('class' => 'card-footer'));
+        // $content .= html_writer::start_tag('div', array('class' => 'card-footer'));
         // Print enrolmenticons.
         if ($icons = enrol_get_course_info_icons($course)) {
             foreach ($icons as $pixicon) {
@@ -507,7 +531,7 @@ class course_renderer extends \core_course_renderer {
             get_string('access', 'theme_moove'), array('class' => 'card-link btn btn-primary ', 'style' => 'border-radius:10px;'));
         $content .= html_writer::end_tag('div'); // End pull-right.
 
-        $content .= html_writer::end_tag('div'); // End card-block.
+        // $content .= html_writer::end_tag('div'); // End card-block.
 
         // Display course category if necessary (for example in search results).
         if ($chelper->get_show_courses() == self::COURSECAT_SHOW_COURSES_EXPANDED_WITH_CAT) {

@@ -41,7 +41,7 @@
 
 .new-detail-reply-body{
     width: 80%;
-    float: right;
+    /*float: right;*/
 }
 
 .new-detail-comment-title, .new-detail-reply-title {
