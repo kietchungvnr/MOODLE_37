@@ -5,7 +5,7 @@ class PerPage {
 	
 	function __construct() {
 
-		$this->perpageCourseNews = 4;
+		$this->perpageCourseNews = 8;
 		$this->perpageCourse = 12;
 
 	}

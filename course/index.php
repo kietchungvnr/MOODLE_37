@@ -68,21 +68,6 @@ $content = $courserenderer->course_category($categoryid);
 echo $OUTPUT->header();
 echo $OUTPUT->skip_link_target();
 
-// Sửa ở đây
-
-echo '<style type="text/css">';
-echo '.card-title > a {    padding-top: 5px; overflow: hidden;text-overflow: ellipsis; -webkit-line-clamp: 3; height: 38px; display: -webkit-box; -webkit-box-orient: vertical;}';
-echo '.no-overflow{padding-top: 5px; overflow: hidden;text-overflow: ellipsis; -webkit-line-clamp: 3;height: 70px;display: -webkit-box; -webkit-box-orient: vertical;}';
-echo '.buttons {float:left;}';
-echo '.courses .card-body{padding: 0 10px;}';
-echo '.courses .card-title{margin-top: 20px}';
-echo '.courses .grid-stud{ height: 50px; background-color: #00000063; margin-top: -50px;}';
-echo '.courses .grid-stud p { padding: 15px; display: block; color: #fff;}';
-echo '.courses .grid-stud p > span { padding-left: 5px;}';
-echo '.courses .card-img-top{ height: 175px;}';
-echo '.courses .course-contacts{ margin: -15px 6px -20px 6px; }';
-echo '</style>';
-
 echo $content;
 
 // Trigger event, course category viewed.

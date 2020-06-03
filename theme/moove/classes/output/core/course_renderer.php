@@ -441,8 +441,8 @@ class course_renderer extends \core_course_renderer {
      * @throws \moodle_exception
      */
     protected function coursecat_coursebox_content(coursecat_helper $chelper, $course) {
-            global $CFG, $DB;
-
+        global $CFG, $DB;
+        require_once($CFG->dirroot . '/local/newsvnr/lib.php');
         if ($course instanceof stdClass) {
             $course = new core_course_list_element($course);
         }
@@ -452,9 +452,28 @@ class course_renderer extends \core_course_renderer {
         $courselink = new moodle_url('/course/view.php', array('id' => $course->id));
         $coursenamelink = html_writer::link($courselink, $coursename, array('class' => $course->visible ? '' : 'dimmed', 'title' => $coursename));
 
-        $course_count_student = theme_settings::role_courses_teacher($course->id);
+        $courseinfo = theme_settings::role_courses_teacher($course->id);
 
         $courseimage = extras::get_course_summary_image($course, $courselink);
+        //Course progress
+        $enrolnamemethod = get_enrol_method($course->id);
+        $progress = \core_completion\progress::get_course_progress_percentage($course,$USER->id);
+
+        if(isset($progress)) {
+            $progress = round($progress);
+            if($progress == 0)
+                $progress = 1;
+            $enrolmethod = "<div class='progress'>
+                                            <div class='progress-bar' role='progressbar' aria-valuenow='$progress'
+                                          aria-valuemin='0' aria-valuemax='100' style='width:$progress%'>
+                                                $progress%
+                                            </div>
+                                        </div>";
+        } else {
+            $hiddencourse = $course->visible ? '' : 'dimmed';
+            $enrolmethod = "<p class='post-enrolmethod $hiddencourse'>$enrolnamemethod</p>";
+        }
+
         // Course instructors.
         if ($course->has_course_contacts()) {
         //     $content .= html_writer::start_tag('div', array('class' => 'course-contacts'));
@@ -476,60 +495,55 @@ class course_renderer extends \core_course_renderer {
             $imgurl = $CFG->wwwroot."/theme/moove/pix/f2.png";
             $teacherimage = \html_writer::empty_tag('img',array('src' => $imgurl,'class'=>'userpicture defaultuserpic','width' => '50px','height'=>'50px','alt' => 'Default picture','title'=>'Default picture'));
         }
+        if ($course->has_summary()) {
+
+            $summary = $DB->get_record('course', ['id' => $course->id], 'summary');
+            $description = strip_tags($summary->summary);
+        }
         $content .= "
-                    <div class='post-slide6'>
+                    <div class='post-slide6 m-0'>
                         <div class='post-img'>
                             $courseimage
                             <div class='post-info'>
                                 <ul class='category'>
-                                    <li>Học viên <a href='#'>{{countstudent}}</a></li>
-                                    <li>Giáo viên <a href='#'>{{fullnamet}}</a></li>
-                               
+                                    <li>Học viên <a href='#'>$courseinfo->studentnumber</a></li>
+                                    <li>Giáo viên <a href='#'>$courseinfo->fullnamet</a></li>
                                 </ul>
                             </div>
                         </div>
                         <div class='post-review'>
-                            <span class='icons'>$teacherimage</span><h3 class='post-title'><a href='{{{link}}}' title='{{fullname}}'>{{#shortentext}}80, {{fullname}}{{/shortentext}}</a></h3>
-                                <p class='post-teachername'>{{#shortentext}}30, {{fullnamet}}{{/shortentext}}</p>
-                            
-                                <p class='post-description'>{{#shortentext}}90, {{summary}}{{/shortentext}}</p>
-
-                                <p class='post-enrolmethod'>
-                                    {{#enrolmethod}}{{{enrolmethod}}}{{/enrolmethod}}
-                                </p>
+                            <span class='icons'>$teacherimage</span><h3 class='post-title'>$coursenamelink</h3>
+                                <p class='post-teachername'>$courseinfo->fullnamet</p>
+                                <p class='post-description'>$description</p>
+                                $enrolmethod
                         </div>
                     </div>";
         // $content .= html_writer::start_tag('div', array('class' => 'card-body'));
         // $content .= "<h6 class='card-title'>". $coursenamelink."</h6>";
 
         // // Display course summary.
-        // if ($course->has_summary()) {
-        //     $content .= html_writer::start_tag('span', array('class' => 'card-text'));
-
-        //     $content .= $chelper->get_course_formatted_summary($course,
-        //         array('overflowdiv' => true, 'noclean' => true, 'para' => false));
-
-        //     $content .= html_writer::end_tag('span'); // End summary.
-        // }
+        
         // $content .= html_writer::end_tag('div');
-
+          // <p class='post-enrolmethod'>
+          //                           {{#enrolmethod}}{{{enrolmethod}}}{{/enrolmethod}}
+          //                       </p>
 
 
         // $content .= html_writer::start_tag('div', array('class' => 'card-footer'));
         // Print enrolmenticons.
-        if ($icons = enrol_get_course_info_icons($course)) {
-            foreach ($icons as $pixicon) {
+        // if ($icons = enrol_get_course_info_icons($course)) {
+        //     foreach ($icons as $pixicon) {
 
 
-                $content .= $this->render($pixicon);
-            }
-        }
+        //         $content .= $this->render($pixicon);
+        //     }
+        // }
 
 
-        $content .= html_writer::start_tag('div', array('class' => 'pull-right'));
-        $content .= html_writer::link(new moodle_url('/course/view.php', array('id' => $course->id)),
-            get_string('access', 'theme_moove'), array('class' => 'card-link btn btn-primary ', 'style' => 'border-radius:10px;'));
-        $content .= html_writer::end_tag('div'); // End pull-right.
+        // $content .= html_writer::start_tag('div', array('class' => 'pull-right'));
+        // $content .= html_writer::link(new moodle_url('/course/view.php', array('id' => $course->id)),
+        //     get_string('access', 'theme_moove'), array('class' => 'card-link btn btn-primary ', 'style' => 'border-radius:10px;'));
+        // $content .= html_writer::end_tag('div'); // End pull-right.
 
         // $content .= html_writer::end_tag('div'); // End card-block.
 
