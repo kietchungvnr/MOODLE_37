@@ -13,7 +13,12 @@ class block_vnr_db_studentuser_topcourse extends block_base {
         $renderable = new \block_vnr_db_studentuser_topcourse\output\studentuser_topcourse_page();
         $renderer = $this->page->get_renderer('block_vnr_db_studentuser_topcourse');
         $this->content = new stdClass();
-        $this->content->text = $renderer->render($renderable);
+        $listcourse = get_list_course_by_student($USER->id);
+        if($listcourse) {
+            $this->content->text = $renderer->render($renderable);
+        } else {
+            $this->content->text = '<div class="d-flex w-100 justify-content-center alert alert-info alert-block fade in ">Chưa tham gia khóa học nào</div>';
+        }
         $this->content->footer = '';
         return $this->content;
        
