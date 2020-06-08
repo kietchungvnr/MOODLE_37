@@ -39,16 +39,17 @@ if(isset($_POST['post_reply']))
                 <div class="chat-content">
                     <div class="chat-body">
                         <h3 class="name">'. $fullname .'</h3>
+                        <label class="date-feedback">'. convertunixtime(' d-m-Y H:i A', $createdAt, 'Asia/Ho_Chi_Minh') .'</label>
 
-                        <p>'. $content_reply .'</p>
+                        
                     </div>
-
+                    <p>'. $content_reply .'</p>
                     <div class="chat-footer">
                         <label class="like">Like</label>
                         <label class="delete_reply" 
                         onclick="DeleteReply('. $id_reply .')" id="'. $id_reply .'">Xóa</label>    
                         <input type="hidden" id="delete_reply'. $id_reply .'" name="" value="delete" />
-                        <label class="date-feedback">'. convertunixtime(' d-m-Y H:i A', $createdAt, 'Asia/Ho_Chi_Minh') .'</label>
+                        
                     </div>
                 </div>
             </div>

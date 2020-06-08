@@ -148,7 +148,7 @@ function get_comment_from_disccusion($id_discus) {
             WHERE lnc.discussionid = ?
             ORDER BY lnc.id DESC
             OFFSET 0 ROWS
-            FETCH next 3 ROWS only;";
+            FETCH next 5 ROWS only;";
     $data = $DB->get_records_sql($sql, array($id_discus));
     $forumarr = array();
     $i = 1;

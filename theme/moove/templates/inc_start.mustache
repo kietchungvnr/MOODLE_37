@@ -2191,7 +2191,188 @@ progress.progress {
 .btn-new-latest {
     padding-top: 15px;
 }
+/*////question/edit///*/
+.questionname{
+    width: 60%;
+}
+.custom-select {
+    width: 100%;
+}
+.categoryquestionscontainer {
+    overflow-x: auto;
+}
+.creatorname,.modifiername {
+    width: 15%;
+    min-width: 150px;
 
+}
+.collapsibleregion {
+    margin-top: 20px;
+}
+.choosecategory {
+    display: inline-flex;
+}
+.choosecategory label {
+    width: 150px;
+}
+.no-overflow {
+    text-align: center;
+}
+@media(max-width: 900px){
+    #categoryquestions {
+        width: auto !important;
+    }
+    .choosecategory {
+    display: block;
+    }
+    .no-overflow {
+    text-align:left;
+    }
+}
+
+/*reply-comment*/
+.new-detail-comment .new-detail-comment-body {
+    padding: 0;
+    background-color: white;
+    border-radius: 0;
+}
+.new-detail-comment-content {
+    border-radius: 0;
+    padding: 10px;
+    height: 70px !important;
+}
+.new-detail-chat .chat-panel {
+    border-top: 1px solid #8080808c;
+    padding-top: 5px;
+}
+.chat-panel .chat-content .chat-body {
+    background: white;
+    display: inline-flex;
+}
+.chat-panel .chat-content .chat-body .name{
+    color: black;
+}
+.new-detail-comment-content, .new-detail-reply-content {
+    border-radius: 0;
+    padding: 5px
+}
+.chat-panel .chat-image > img {
+    padding: 5px;
+}
+.new-detail-see-more-title {
+    width: 100% !important;
+    background-color: #f6f7f8 !important;
+}
+.new-detail-comment-control > .btn {
+    background-color: #4d68a4;
+}
+.new-detail-comment-control > .btn, .new-detail-reply-control > .btn {
+    background-color: #4d68a4;
+}
+.chat-panel .chat-content .chat-footer .form-reply {
+    width: 100% !important;
+    margin-bottom: 10px;
+}
+textarea {
+    resize: none !important;
+}
+.chat-panel .fa {
+    display: block !important;
+}
+.highcharts-title tspan {
+    font-family: "arial" ;
+}
+div.submissionstatustable {
+    background: white;
+    padding: 10px;
+}
+
+/*newsvnr/index*/
+.new-latest-box {
+    border: 1px solid #8080803b;
+    overflow: hidden;
+}
+.new-latest-box:hover {
+    webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+/*.new-latest-box:hover img {
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    transform: scale(1.2);
+}
+*/
+.new-latest-box img {
+    transition: 0.5s
+}
+.new-latest-title,.new-latest-box .row,.new-latest-box small {
+    padding: 0px 10px;
+}
+
+@media(min-width: 1300px){
+    .cl-5 {
+        max-width: 20%;
+    }
+    .container.bonus {
+        max-width: 1300px !important;
+    }
+}
+.new-latest-body {
+    padding-top: 0px;
+}
+
+
+/*course/request*/
+
+label {
+    margin-bottom: 0;
+}
+/*my-dashnoard*/
+.timeline:before {
+    background: #1177d1;
+}
+/*menu-mobile*/
+#header .menu {
+    display: none
+}
+@media(max-width: 1300px){
+    #header .menu {
+        display:block;
+    }
+}
+/*mod/forum/discuss*/
+.pull-right {
+    float:none !important;
+}
+
+/*menu*/
+
+.custom-menu-wrapper {
+    position: absolute;
+    top:104px;
+    bottom: 0;
+    padding-left: 20px;
+    z-index: 1035;
+    width: 100%;
+
+}
+.menu-cap1,.menu-cap2,.menu-cap3 {
+    background-color: #306b8e;
+    border-right: 2px solid white;
+}
+.list-group-item {
+   background-color: transparent;
+   border: 0;
+   color: white;
+   font-weight: bold;
+   display: flex;
+   align-items: center;
+}
+.navbar-expand-right {
+    position: absolute;
+    right: 0px;
+}
 </style>
 
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.common.min.css"/>
@@ -2211,6 +2392,7 @@ progress.progress {
 {{{output.get_js_moove}}}
 </head>
 <body {{{ bodyattributes }}}>
+
     <a href="javascript:" id="return-to-top"><i class="fa fa-arrow-up"></i></a>
     <div class="modal123"></div>  
     {{>theme_moove/header}}
@@ -2218,3 +2400,4 @@ progress.progress {
     <div id="page-wrapper">
 
       {{{ output.standard_top_of_body_html }}}
+

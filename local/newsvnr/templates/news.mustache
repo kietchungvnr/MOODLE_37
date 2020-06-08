@@ -3,7 +3,7 @@
 
 {{#news}}
 
-<div class="container-new container">
+<div class="container-new container bonus">
 
 	<div class="new-head">
 		<div class="row">
@@ -121,17 +121,17 @@
 	</div>
 	</div>
 
-	<div class="container">
+	<div class="container bonus">
 		<div class="btn-new-latest">
 			<h3 class="title">Tin mới nhất</h3>
 		</div>
 		<div class="row new-latest-body">
 			{{#forumnewestdata}}
 
-			<div class="col-md-3 col-lg-3 ">
+			<div class="col-lg-3 cl-5 col-sm-4 col-xs-12">
 				<div class="new-latest-box">
 					<a href="{{newsurl}}"><img class="new-latest-image" src="{{image}}"></a>
-					<a href="{{newsurl}}"><label class="new-latest-title mt-1" title="{{title}}">{{title}}</label></a>
+					<a href="{{newsurl}}"><label class="new-latest-title" title="{{title}}">{{title}}</label></a>
 					
 					<small class="new-latest-time text-date">{{time}}</small>
 					
@@ -164,11 +164,10 @@
 
 				
 					{{#forumcoursenewsndata}}
-					<div class="col-md-3 col-lg-3 ">
+					<div class="col-lg-3 cl-5 col-sm-4 col-xs-12">
 						<div class="new-latest-box">
 							<a href="{{newsurl}}"><img class="new-latest-image" src="{{image}}"></a>
-							<a href="{{newsurl}}"><label class="new-latest-title mt-1" title="{{title}}">{{title}}</label></a>
-							<br />
+							<a href="{{newsurl}}"><label class="new-latest-title" title="{{title}}">{{title}}</label></a>
 							<small class="new-latest-time text-date">{{time}}</small>
 							<div class="row">
 								<div class="col-lg-12">
@@ -201,7 +200,7 @@
 
 {{#showall}}
 
-	<div class="container">
+	<div class="container bonus">
 		<div class="btn-new-latest">
 			<h3 class="title">Tất cả tin tức theo khóa học</h3>
 		</div>
@@ -253,11 +252,10 @@
 		<div class="row new-latest-body">
 			{{#courseendable}}
 			{{#forumsearchdata}}
-				<div class="col-lg-3 mb-3 ">
+				<div class="col-lg-3 mb-3">
 				<div class="new-latest-box">
 					<a href="{{newsurl}}"><img class="new-latest-image" src="{{imageurl}}"></a>
-					<a href="{{newsurl}}"><label class="new-latest-title mt-1" title="{{subject}}">{{subject}}</label></a>
-					<br />
+					<a href="{{newsurl}}"><label class="new-latest-title" title="{{subject}}">{{subject}}</label></a>
 					<small class="new-latest-time text-date">{{time}}</small>
 					<br />
 					<div class="row">

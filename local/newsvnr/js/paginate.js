@@ -29,7 +29,7 @@
                   page++;
             $.ajax({
                 url: "./ajax/pagination_comment.php", 
-                method: "GET",
+                method: "POST",
                 data: {
                     page: page,
                    discussionid: discussionID

@@ -46,10 +46,11 @@ if(isset($_POST['post_comment']))
                         <div class="chat-content">
                             <div class="chat-body">
                                 <h3 class="name">'. $fullname .'</h3>
+                                <label class="date-feedback">'. convertunixtime(' d-m-Y H:i A', $createdAt, 'Asia/Ho_Chi_Minh') .'</label>
 
-                                <p>' . $content .'</p>
+                                
                             </div>   
-
+                            <p>' . $content .'</p>
 
                             <div class="chat-footer">
 
@@ -63,7 +64,7 @@ if(isset($_POST['post_comment']))
 
                                           <label class="feedback" onclick="FeedBack('. $id_comment .')" id="'. $id_comment .'">Phản hồi</label>
 
-                                        <label class="date-feedback">'. convertunixtime(' d-m-Y H:i A', $createdAt, 'Asia/Ho_Chi_Minh') .'</label>
+                      
                                      </div>
 
 
@@ -138,10 +139,11 @@ if(isset($_GET['action']) && $_GET['action'] == "delete")
                         <div class="chat-content">
                             <div class="chat-body">
                                 <h3 class="name">'. $get_append_comment->fullname .'</h3>
+                                <label class="date-feedback">'. convertunixtime(' d-m-Y H:i A', $get_append_comment->createdat, 'Asia/Ho_Chi_Minh') .'</label>
 
-                                <p>' . $get_append_comment->content .'</p>
+                                
                             </div>   
-
+                            <p>' . $get_append_comment->content .'</p>
 
                             <div class="chat-footer">
 
@@ -151,17 +153,17 @@ if(isset($_GET['action']) && $_GET['action'] == "delete")
                                         <label class="delete" onclick="DeleteComment('. $get_append_comment->id .')"  id="'. $get_append_comment->id .'" >Xóa</label>
                                          <input type="hidden" id="delete_comment'. $get_append_comment->id .'"  value="delete">
                                         <label class="feedback"  id="'. $get_append_comment->id .'">Phản hồi</label>
-                                        <label class="date-feedback">'. convertunixtime(' d-m-Y H:i A', $get_append_comment->createdat, 'Asia/Ho_Chi_Minh') .'</label>
+     
                                      </div>
 
 
                                     <!-- ACTION SHOW AND HIDE REPLIES -->
-                                          <p class="chat-show-reply" id="show-reply'. $get_append_comment->id .'" 
-                                    onclick="ShowReplies('. $get_append_comment->id .')" ><i class="fa fa-chevron-down"> Xem phản hồi</i></p>
+                         
 
                                     <p style="display: none;" class="chat-hidden-reply" id="hidden-reply'. $get_append_comment->id .'"
                                      onclick="HiddenReplies('. $get_append_comment->id .')"><i class="fa fa-chevron-up"> Ẩn phản hồi</i></p>
-
+                                    <p class="chat-show-reply" id="show-reply'. $get_append_comment->id .'" 
+                                    onclick="ShowReplies('. $get_append_comment->id .')" ><i class="fa fa-chevron-down" style="display:block"> Xem phản hồi</i></p>
                                     <!-- ACTION END SHOW AND HIDE REPLIES --> 
                             </div>
                                         

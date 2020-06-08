@@ -244,3 +244,4 @@ $string['address'] = 'Address';
 $string['addressdesc'] = 'Company Address';
 $string['slogan'] = 'Slogan';
 $string['slogandesc'] = 'Company Slogan';
+$string['test'] = 'Tôi test';

@@ -12,15 +12,14 @@ $discussionid = $_GET['discussionid'];
 	
 $currentPage = optional_param('page', 0 ,PARAM_INT);
 
-$itemInPage = 3;
+$itemInPage = 5;
 
 
-if($currentPage == 1)
-{
-	$from = 3;
+if($currentPage == 1) {
+	$from  = $currentPage * $itemInPage; 
 }
-else{
-	$from  = $currentPage * $itemInPage;
+else { 
+	$from  = $currentPage * $itemInPage; 
 }
 
 $get_comment = pagination_comment($discussionid, $from ,$itemInPage);
@@ -52,16 +51,16 @@ if(!empty($get_comment))
 	                                    <div class="chat-content">
 	                                        <div class="chat-body">
 	                                            <h3 class="name">'. $reply->fullname .'</h3>
-
-	                                            <p>'. $reply->content .'</p>
+	                                             <div style="margin-left:30px;color: grey"><label class="date-feedback">'. convertunixtime(' d-m-Y H:i A', $reply->createdat, 'Asia/Ho_Chi_Minh') .'</label></div>
+	                                            
 	                                        </div>
-
+	                                        <p>'. $reply->content .'</p>
 	                                        <div class="chat-footer">
 	                                            <label class="like">Like</label>
 	                                            <label class="delete_reply" 
 	                                                            onclick="DeleteReply('. $reply->id .')" id="'. $reply->id .'">Xóa</label>  
 	                                             <input type="hidden" id="delete_reply'. $reply->id .'" name="" value="delete" />
-	                                            <label class="date-feedback">'. convertunixtime(' d-m-Y H:i A', $reply->createdat, 'Asia/Ho_Chi_Minh') .'</label>
+	                                           
 	                                        </div>
 	                                    </div>
 	                                </div>
@@ -85,10 +84,10 @@ if(!empty($get_comment))
 			                    <div class="chat-content">
 			                        <div class="chat-body">
 			                            <h3 class="name">'. $comment->fullname .'</h3>
-
-			                            <p>'. $comment->content .'</p>
+			                            <div style="margin-left:30px;color: grey"><label class="date-feedback">'. convertunixtime(' d-m-Y H:i A', $reply->createdat, 'Asia/Ho_Chi_Minh') .'</label></div>
+			                            
 			                        </div>
-
+			                        	<p>'. $comment->content .'</p>
 			                          <div class="chat-footer">
 			                             <div class="chat-footer">
 			                                <label class="like" id="'. $comment->id .'">Like</label>
@@ -97,7 +96,7 @@ if(!empty($get_comment))
 			                                <input type="hidden" id="delete_comment'. $comment->id .'"  value="delete">
 
 			                                <label class="feedback" id="'. $comment->id .'" onclick="FeedBack('. $comment->id .')">Phản hồi</label>
-			                                <label class="date-feedback">'. convertunixtime(' d-m-Y H:i A', $comment->createdat, 'Asia/Ho_Chi_Minh') .'</label>
+			      
 			                            </div>
 
 			                            <!-- ACTION SHOW AND HIDE REPLIES -->

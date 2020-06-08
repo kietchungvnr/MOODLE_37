@@ -616,12 +616,13 @@ class view {
             }
         }
         echo \html_writer::input_hidden_params($this->baseurl, $excludes);
-        echo \html_writer::start_div('col-md-7');
+        
+        echo \html_writer::start_div('col-xl-7');
         foreach ($this->searchconditions as $searchcondition) {
             echo $searchcondition->display_options($this);
         }
         echo \html_writer::end_div();
-        echo \html_writer::start_div('col-md-5');
+        echo \html_writer::start_div('col-xl-5',['style' => 'padding-top:10px']);
         
         if ($showtextoption) {
             $this->display_showtext_checkbox($showquestiontext);

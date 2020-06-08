@@ -102,7 +102,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
     public function showMenuLi($menus, $id_parent = 0, &$output = '',$stt = 0, $dequy = 0) {
         global $DB, $CFG;
         $courselink = $CFG->wwwroot . '/course/view.php?id=';
-        // $theme_settings = new theme_settings();
+        $theme_settings = new theme_settings();
         $menu_tmp = array();
         foreach ($menus as $key => $item) {
             if ((int) $item->parent == (int) $id_parent) {
@@ -161,10 +161,10 @@ class core_renderer extends \theme_boost\output\core_renderer {
                                     
                                     $output .= '<ul class="dropdown-menu">';
                                     foreach($courses as $childcourse) {
-                                        // $courseobj = new \core_course_list_element($course);
-                                        // $courselink = $CFG->wwwroot."/course/view.php?id=".$course->id;
-                                        // $courseimage = $theme_settings::get_course_images_nav($courseobj, $courselink);
-                                        // $output .= '<li class="dropdown-item"><div class="d-flex"><div style="width:150px;height:100px">'.$courseimage.'</div><div><a tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a><div></div></li>';
+                                        $courseobj = new \core_course_list_element($childcourse);
+                                        $courselink = $CFG->wwwroot."/course/view.php?id=".$childcourse->id;
+                                        $courseimage = $theme_settings::get_course_images_nav($courseobj, $courselink);
+                                        $output .= '<li class="dropdown-item"><div class="d-flex"><div style="width:150px;height:100px">'.$courseimage.'</div><div><a tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a><div></div></li>';
                                         $output .= '<li><a class="dropdown-item" tabindex="-1" href="'.$courselink . $childcourse->id.'">' . $childcourse->fullname . '</a></li>';
                                     }
                                     $output .= '</ul>';
