@@ -441,7 +441,7 @@ class course_renderer extends \core_course_renderer {
      * @throws \moodle_exception
      */
     protected function coursecat_coursebox_content(coursecat_helper $chelper, $course) {
-        global $CFG, $DB;
+        global $CFG, $DB,$USER;
         require_once($CFG->dirroot . '/local/newsvnr/lib.php');
         if ($course instanceof stdClass) {
             $course = new core_course_list_element($course);
@@ -458,7 +458,9 @@ class course_renderer extends \core_course_renderer {
         //Course progress
         $enrolnamemethod = get_enrol_method($course->id);
         $progress = \core_completion\progress::get_course_progress_percentage($course,$USER->id);
-
+        $content = '';
+        $description = '';
+        $teacherimage = '';
         if(isset($progress)) {
             $progress = round($progress);
             if($progress == 0)

@@ -11,9 +11,9 @@
 
         // Send the message and redirect.
         $eventdata = new \core\message\message();
-        $eventdata->courseid         = SITEID;
-        $eventdata->component        = 'moodle';
-        $eventdata->name             = 'errors';
+        $eventdata->courseid          = SITEID;
+        $eventdata->component         = 'moodle';
+        $eventdata->name              = 'errors';
         $eventdata->userfrom          = $USER;
         $eventdata->userto            = core_user::get_support_user();
         $eventdata->subject           = 'Error: '. $form->referer .' -> '. $form->requested;
