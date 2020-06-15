@@ -161,10 +161,10 @@ class core_renderer extends \theme_boost\output\core_renderer {
                                     
                                     $output .= '<ul class="dropdown-menu">';
                                     foreach($courses as $childcourse) {
-                                        $courseobj = new \core_course_list_element($childcourse);
-                                        $courselink = $CFG->wwwroot."/course/view.php?id=".$childcourse->id;
-                                        $courseimage = $theme_settings::get_course_images_nav($courseobj, $courselink);
-                                        $output .= '<li class="dropdown-item"><div class="d-flex"><div style="width:150px;height:100px">'.$courseimage.'</div><div><a tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a><div></div></li>';
+                                        // $courseobj = new \core_course_list_element($childcourse);
+                                        // $courselink = $CFG->wwwroot."/course/view.php?id=".$childcourse->id;
+                                        // $courseimage = $theme_settings::get_course_images_nav($courseobj, $courselink);
+                                        // $output .= '<li class="dropdown-item"><div class="d-flex"><div style="width:150px;height:100px">'.$courseimage.'</div><div><a tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a><div></div></li>';
                                         $output .= '<li><a class="dropdown-item" tabindex="-1" href="'.$courselink . $childcourse->id.'">' . $childcourse->fullname . '</a></li>';
                                     }
                                     $output .= '</ul>';
@@ -191,7 +191,43 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
         return $output;
     }
-
+    public function showCategories($categories, $parent_id = 0, &$output = '',$stt = 0)
+    {
+        global $DB, $CFG;
+        $courselink = $CFG->wwwroot . '/course/view.php?id=';
+        $theme_settings = new theme_settings();
+        $cate_child = array();
+        foreach ($categories as $key => $item)
+        {
+            if ($item->parent == $parent_id)
+            {
+                $cate_child[] = $item;
+                unset($categories[$key]);
+            }
+        }
+        if ($cate_child)
+        {
+            if($stt == 0){
+                $output .= '<ul class="dropdown-menu" role="menu" id="drop-course-category">';
+            }
+            else {
+                $output .= '<ul class="dropdown-menu muc">';
+            }
+            foreach ($cate_child as $key => $value) {
+                        $courses = $DB->get_records('course',['category' => $value->id]);                    
+                        $output .= '<li class="dropdown-submenu dropdown-submenu_'.$value->id.'" stt="'.$stt.'" data="'.$value->id.'"><a  class="dropdown-item" tabindex="-1" href="#">'.$value->name.'</a>';
+                        $output .= '<ul class="dropdown-menu khoa" data="'.$value->id.'">';
+                        foreach($courses as $course) {
+                            $output .= '<li class="dropdown-item"><a tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a></li>';
+                        }
+                        $output .= '</ul>';
+                        $this->showCategories($categories,$value->id,$output,++$stt);
+                        $output .= '</li>';
+            }
+            $output .= '</ul>';
+        }
+        return $output;
+    }
     public function nav_course_categories() {
         global $DB;
 
@@ -218,7 +254,6 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $listcourse = get_list_course_by_student($USER->id);
         if ($listcourse) 
         {
-
             foreach ($listcourse as $item) 
             {   
                 $output .= '<li class="dropdown-item">';

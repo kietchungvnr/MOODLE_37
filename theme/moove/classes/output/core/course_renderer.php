@@ -206,8 +206,9 @@ class course_renderer extends \core_course_renderer {
         }
 
         // End coursebox.
+        //Custom : Thang
         $content = html_writer::start_tag('div', array(
-            'class' => 'col-md-5-cols mt-3'
+            'class' => 'col-xl-2 col-md-4 col-sm-6 mt-3'
            
         ));
         $content .= html_writer::start_tag('div', array(
@@ -336,12 +337,18 @@ class course_renderer extends \core_course_renderer {
             // Print the category selector
             $categorieslist = core_course_category::make_categories_list();
             if (count($categorieslist) > 1) {
-                $output .= html_writer::start_tag('div', array('class' => 'categorypicker'));
+                //Custom :Thang//
+                $output .= '<div class="row">';
+                $output .= html_writer::start_tag('div', array('class' => 'categorypicker col-xl-6 col-md-12'));
                 $select = new single_select(new moodle_url('/course/index.php'), 'categoryid',
                         core_course_category::make_categories_list(), $coursecat->id, null, 'switchcategory');
                 $select->set_label(get_string('categories').':');
                 $output .= $this->render($select);
                 $output .= html_writer::end_tag('div'); // .categorypicker
+                $output .= '<div class="col-xl-6 col-md-12">';
+                $output .= $this->course_search_form();
+                $output .= '</div>';
+                $output .='</div>';
             }
         }
 
@@ -416,7 +423,7 @@ class course_renderer extends \core_course_renderer {
         // $output .= $this->container_end();
 
         // Add course search form.
-        $output .= $this->course_search_form();
+       
 
         // Display course category tree.
         $output .= $this->coursecat_tree($chelper, $coursecat);
@@ -464,13 +471,15 @@ class course_renderer extends \core_course_renderer {
         if(isset($progress)) {
             $progress = round($progress);
             if($progress == 0)
-                $progress = 1;
-            $enrolmethod = "<div class='progress'>
+                $progress =0;
+            $enrolmethod = "   <div class='pv-progress'><p>$progress% </p>
+                                    <div class='progress'>
+
                                             <div class='progress-bar' role='progressbar' aria-valuenow='$progress'
                                           aria-valuemin='0' aria-valuemax='100' style='width:$progress%'>
-                                                $progress%
+                                       
                                             </div>
-                                        </div>";
+                                </div></div>";
         } else {
             $hiddencourse = $course->visible ? '' : 'dimmed';
             $enrolmethod = "<p class='post-enrolmethod $hiddencourse'>$enrolnamemethod</p>";

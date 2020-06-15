@@ -1,4 +1,27 @@
+{{#js}}
 
+{{!     var id = $('li.dropdown-submenu').attr('data'); }}
+{{!     $('li.dropdown-submenu').find('ul.khoa').children('li').appendTo('ul.muc'); }}
+{{! $('li.dropdown-submenu').hover(function(){
+    
+    var id = $('li.dropdown-submenu').attr('data');
+
+    $('li.dropdown-submenu_36').find('ul.muc').children('li').appendTo('ul.khoa:first'); 
+    $('li.dropdown-submenu_36').find('ul.muc').remove();
+
+
+}) }}
+{{! var newUl = $('ul');    
+$('ul.muc').each(function() { 
+       $(this).find('li').each(function() { 
+            newUl.append($(this))
+       });
+       $(this).remove();
+    });
+$('ul.khoa').append(newUl); }}
+{{/js}}
+
+ 
 {{#active}}
     <nav class="navcourse" id="nav-course">
         <div class="row pr-2 pl-2 w-100">
@@ -6,14 +29,13 @@
                 <i class="fa fa-list-ul"></i><span class="sr-only">{{#str}}sidepanel, core{{/str}}</span>
             </div>
             <div class="dropdown">
-            <div class="col-auto font-weight-bold cl-cursor nav-course-padding">
+            <div class="col-auto font-weight-bold cl-cursor nav-course-padding  menu-menu">
 
                 <span data-toggle="dropdown">Danh mục khoá học</span>
-                {{! <ul class="dropdown-menu " role="menu" id="drop-course-category"> }}
-                  {{#nav_course_categories}}{{{nav_course_categories}}}{{/nav_course_categories}}
-                {{! </ul> }}
+                {{#nav_course_categories}}{{{nav_course_categories}}}{{/nav_course_categories}}
             </div>
             </div>
+
          <div class="dropdown">
             <div class="col-auto font-weight-bold cl-cursor nav-course-padding">
 

@@ -2338,11 +2338,14 @@ label {
         display:block;
     }
 }
-/*mod/forum/discuss*/
+/*/question/preview*/
+#techinfo_inner .notifytiny {
+    font-size:15px !important;
+}
 
 
 /*menu*/
-/*
+
 .custom-menu-wrapper {
     position: absolute;
     top:104px;
@@ -2355,19 +2358,28 @@ label {
 .menu-cap1,.menu-cap2,.menu-cap3 {
     background-color: #306b8e;
     border-right: 2px solid white;
+    display: none;
 }
-.list-group-item {
+.menu-cap1.active,.menu-cap2.active,.menu-cap3.active {
+    display: block;
+}
+.menu-item {
    background-color: transparent;
    border: 0;
    color: white;
    font-weight: bold;
    display: flex;
    align-items: center;
+   padding: 7px;
 }
 .navbar-expand-right {
     position: absolute;
     right: 0px;
-}*/
+}
+.navbar-expand-right:hover {
+    transform: rotate(180deg);
+    transition: 0.5s;
+}
 /*enrol/index*/
 body#page-enrol-index #region-main .generalbox {
     width: 100%;
@@ -2375,6 +2387,28 @@ body#page-enrol-index #region-main .generalbox {
 .list-group-item {
     font-weight: 100;
 }
+.singleselect .form-inline {
+    flex-flow: unset;
+}
+.singleselect .form-inline label {
+    white-space: nowrap;
+}
+.pv-progress {
+    margin-left: 34px;
+    display: flex;
+}
+.pv-progress .progress {
+    width: 100%;
+    margin-left: 10px;
+}
+/*course/category*/
+#page-course-index-category .categorypicker {
+    text-align: left;
+}
+/*/question/preview*/
+ #techinfo_inner .notifytiny {
+      font-size:15px !important;
+ }
 </style>
 
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.common.min.css"/>
