@@ -106,7 +106,7 @@ class course_edit_form extends moodleform {
 
         $toclist = array(
             '1' => 'Tuyển dụng',
-            '2' => 'Đào tạo',
+            '2' => 'Đào tạo'
         );
 
         $orgjobtitle_options = array(

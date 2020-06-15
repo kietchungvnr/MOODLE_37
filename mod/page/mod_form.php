@@ -31,7 +31,7 @@ require_once($CFG->libdir.'/filelib.php');
 
 class mod_page_mod_form extends moodleform_mod {
     function definition() {
-        global $CFG, $DB;
+        global $CFG, $DB, $COURSE;
 
         $mform = $this->_form;
 
@@ -47,6 +47,14 @@ class mod_page_mod_form extends moodleform_mod {
         }
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+        //Custom by Vũ: Thêm field mã vào page mod để tích hợp EBM
+        if($COURSE->typeofcourse == '3') {
+            $mform->addElement('text', 'code', get_string('code', 'local_newsvnr'), array('size'=>'48'));
+            $mform->addRule('code', null, 'required', null, 'client');
+            $mform->addRule('code', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+            $mform->setType('code', PARAM_TEXT);
+        }
+        
         $this->standard_intro_elements();
 
         //-------------------------------------------------------

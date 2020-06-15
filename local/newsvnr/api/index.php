@@ -13,5 +13,9 @@ require __DIR__ . '../src/middleware.php';
  
 require __DIR__ . '../src/routes.php';
 
+require __DIR__ . '../src/hrm/routes.php';
+
+require __DIR__ . '../src/ebm/routes.php';
+
 
 $app->run();

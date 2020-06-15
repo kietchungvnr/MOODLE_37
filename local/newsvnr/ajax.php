@@ -294,6 +294,7 @@ if(isset($_POST['action']) && $_POST['action'] == "add")
 			$comp_course_data = $DB->get_records_sql($sql_course_comp, array($value->competencyid));
 			
 			$list_course = '';
+			$strbtn = '';
 		    if($comp_course_data) {
 
 				foreach ($comp_course_data as $key => $comp_course) {

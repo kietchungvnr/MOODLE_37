@@ -133,6 +133,14 @@ if ($ADMIN->fulltree) {
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
+    // Pick nav course color
+    $name = 'theme_moove/navcoursecolor';
+    $title = get_string('navcoursecolor', 'theme_moove');
+    $description = get_string('navcoursecolor_desc', 'theme_moove');
+    $setting = new admin_setting_configcolourpicker($name, $title, $description, '#3c8dbc');
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
     // Course format option.
     $name = 'theme_moove/coursepresentation';
     $title = get_string('coursepresentation', 'theme_moove');

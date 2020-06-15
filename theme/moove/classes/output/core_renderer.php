@@ -197,17 +197,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
 
         $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent FROM mdl_course_categories cc JOIN mdl_course c ON cc.id = c.category WHERE cc.visible = 1');
         // $categories = $DB->get_records_sql('SELECT * FROM mdl_course_categories');
-        ini_set("xdebug.var_display_max_children", -1);
-        ini_set("xdebug.var_display_max_data", -1);
-        ini_set("xdebug.var_display_max_depth", -1);
-        // var_dump($this->showMenuLi($categories));die;
+       
         return $this->showMenuLi($categories);
-        // foreach($categories as $category) {
-        //     $courses = $DB->get_records('course', ['category' => $category->id]);
-        //     foreach($courses as $course) {
-
-        //     }
-        // }
+        
     }
 
 
@@ -441,6 +433,11 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
 
         return false;
+    }
+
+    public function get_navcourse_color() {
+        $theme = theme_config::load('moove');
+        return $theme->setting_file_url('logo', 'logo');
     }
 
     /**

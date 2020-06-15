@@ -1,14 +1,16 @@
 <?php 
 
-namespace local_newsvnr\api\controllers;
-
-defined('MOODLE_INTERNAL') || die;
+namespace local_newsvnr\api\controllers\hrm;
 
 use stdClass;
 use context_system;
+use local_newsvnr\api\controllers\BaseController as BaseController;
 use core_competency\api as api;
 use core_competency\competency_framework;
 use core_competency\competency;
+
+defined('MOODLE_INTERNAL') || die;
+
 class CompetencyFrameWorkController extends BaseController {
 
 	private $table = 'competency_framework';

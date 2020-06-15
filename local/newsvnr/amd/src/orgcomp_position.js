@@ -124,7 +124,7 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                 if (!comp_id) {
                     alert("Dữ liệu trống!");
                 } else {
-                    var getURL = location.origin + '/local/newsvnr/ajax.php';
+                    var getURL = Config.wwwroot + '/local/newsvnr/ajax.php';
                     $.ajax({
                         url: getURL,
                         method: 'POST',
@@ -162,7 +162,7 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                 var org_struct = $(this).val();
 
                 if (org_struct != '') {
-                    var getURL = location.origin + '/local/newsvnr/ajax.php';
+                    var getURL = Config.wwwroot + '/local/newsvnr/ajax.php';
 
                     $.ajax({
                         url: getURL,
@@ -186,7 +186,7 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
             $('#orgstructure_position').change(function() {
 
                 var org_struct_position = $(this).val();
-                var getURL = location.origin + '/local/newsvnr/ajax.php';
+                var getURL = Config.wwwroot + '/local/newsvnr/ajax.php';
                 if (org_struct_position != null) {
                     $('#add_competency').prop('disabled', false);
 

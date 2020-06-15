@@ -1,13 +1,14 @@
 <?php 
 
-namespace local_newsvnr\api\controllers;
-
-defined('MOODLE_INTERNAL') || die;
+namespace local_newsvnr\api\controllers\hrm;
 
 use stdClass;
 use context_system;
+use local_newsvnr\api\controllers\BaseController as BaseController;
 use core_competency\api as api;
 use core_competency\competency;
+
+defined('MOODLE_INTERNAL') || die;
 
 class CourseAddUserController extends BaseController {
 
@@ -366,7 +367,7 @@ class CourseAddUserController extends BaseController {
 		if(empty($this->resp->data)) {
 			$usernew = new stdClass();
 			$usernew->course = 1;
-			$usernew->username = strtolower($userlogin);
+			$usernew->username = trim(strtolower($userlogin));
 			$usernew->usercode = $this->data->usercode;
 			$usernew->orgpositionid = $get_orgpositionid;
 			$usernew->auth = 'manual';
@@ -500,10 +501,10 @@ class CourseAddUserController extends BaseController {
 			if($userid) {
 				$courseid = $DB->get_field('course', 'id', ['shortname' => $coursecode]);
 				if($courseid) {
-					$user_in_course = check_user_in_course($courseid,$userid->id);
+					$user_in_course = check_user_in_course($courseid,$userid);
 
 					if(!$user_in_course) {
-						enrol_user($userid->id, $courseid, $roleidorshortname);
+						enrol_user($userid, $courseid, $roleidorshortname);
 						$this->resp->error = false;
 						if($roleidorshortname == 'student')
 							$this->resp->message['info'] = "Thêm thành công mã nhân viên'$usercode' vào mã lớp '$coursecode'";
@@ -607,10 +608,10 @@ class CourseAddUserController extends BaseController {
 			if(!$course) {
 				$this->resp->message['info'] = "Ứng viên với mã '$usercode' chưa tham gia khóa học";
 			} else {
-				$get_userid = find_usercode_by_code($usercode);
-				if($get_userid) {
+				$userid = find_usercode_by_code($usercode);
+				if($userid) {
 					$instance = $DB->get_record('enrol', array('courseid'=>$course->id, 'enrol'=>'manual'), '*', MUST_EXIST);
-					$get_ueid = find_ueid_by_enrolid($instance->id,$get_userid->id);
+					$get_ueid = find_ueid_by_enrolid($instance->id,$userid);
 					$plugin = enrol_get_plugin($instance->enrol);
 					$plugin->unenrol_user($instance, $get_ueid->userid);
 					$this->resp->message['info'] = "Rút ứng viên với mã '$usercode' từ khóa '$course->fullname' thành công";
@@ -689,10 +690,10 @@ class CourseAddUserController extends BaseController {
 			if(!$course) {
 				$this->resp->message['info'] = "Ứng viên với mã '$usercode' chưa tham gia khóa học";
 			} else {
-				$get_userid = find_usercode_by_code($usercode);
-				if($get_userid) {
+				$userid = find_usercode_by_code($usercode);
+				if($userid) {
 					$instance = $DB->get_record('enrol', array('courseid'=>$course->id, 'enrol'=>'manual'), '*', MUST_EXIST);
-					$get_ueid = find_ueid_by_enrolid($instance->id,$get_userid->id);
+					$get_ueid = find_ueid_by_enrolid($instance->id,$userid);
 					$plugin = enrol_get_plugin($instance->enrol);
 					$plugin->unenrol_user($instance, $get_ueid->userid);
 					$this->resp->message['info'] = "Rút ứng viên với mã '$usercode' từ khóa '$course->fullname' thành công";

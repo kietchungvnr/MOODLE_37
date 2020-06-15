@@ -937,3 +937,12 @@
 [2020-05-12T17:07:19.871548+07:00] api-app.DEBUG: Using token from request header [] {"uid":"f992599"}
 [2020-05-12T17:07:29.875234+07:00] api-app.DEBUG: Using token from request header [] {"uid":"d971c20"}
 [2020-05-25T14:37:03.998042+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"be8a3b1"}
+[2020-06-08T09:11:43.074430+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"f2b766e"}
+[2020-06-08T09:26:06.735874+07:00] api-app.WARNING: Token not found [] {"uid":"c60a4f6"}
+[2020-06-08T09:27:05.757855+07:00] api-app.DEBUG: Using token from request header [] {"uid":"8aa0c62"}
+[2020-06-08T09:27:58.279938+07:00] api-app.DEBUG: Using token from request header [] {"uid":"607f5e1"}
+[2020-06-08T09:28:06.907847+07:00] api-app.DEBUG: Using token from request header [] {"uid":"7188e0e"}
+[2020-06-10T08:50:01.518729+07:00] api-app.WARNING: Token not found [] {"uid":"6e462ef"}
+[2020-06-10T08:50:40.352969+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"af3b4b2"}
+[2020-06-11T14:55:32.517559+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"72417ab"}
+[2020-06-13T09:20:45.779291+07:00] api-app.INFO: Xác thực thành công! [] {"uid":"ad7824e"}
