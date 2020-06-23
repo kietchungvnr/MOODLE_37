@@ -27,7 +27,6 @@ class QuizController extends BaseController {
             $adminuser = get_complete_user_data('id', 2);
             $user = complete_user_login($adminuser);
         }
-        var_dump($user);die;
    		$this->data = new stdClass;
    		$this->resp = new stdClass;
    	}

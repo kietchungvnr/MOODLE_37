@@ -1597,7 +1597,6 @@ function HTTPPost($url,$data) {
     ),
     CURLOPT_POSTFIELDS => $params));
     $resp = curl_exec($curl);
-    var_dump(json_decode($resp,JSON_UNESCAPED_UNICODE));
     curl_close($curl);
 }
 

@@ -33,8 +33,8 @@ class CourseController extends BaseController {
         $this->validate = $this->validator->validate($this->request, [
             'fullname' => $this->v::notEmpty()->notBlank(),
             'shortname' => $this->v::notEmpty()->notBlank(),
-            // 'startdate' => $this->v::notEmpty()->notBlank(),
-            // 'enddate' => $this->v::notEmpty()->notBlank(),
+            'startdate' => $this->v::notEmpty()->notBlank(),
+            'enddate' => $this->v::notEmpty()->notBlank(),
             'categoryname' => $this->v::notEmpty()->notBlank(),
             'categorycode' => $this->v::notEmpty()->notBlank(),
             'teachercode' => $this->v::notEmpty()->notBlank(),
@@ -44,14 +44,6 @@ class CourseController extends BaseController {
             'usercode' => $this->v::notEmpty()->notBlank(),
         ]);
     }
-
-   	public function read() {
-
-	}
-
-	public function read_single() {
-
-	}
 
 	public function create_and_update($request, $response, $args) {
 		global $DB, $CFG;
@@ -328,10 +320,6 @@ class CourseController extends BaseController {
 				
 		}
 		return $response->withStatus(200)->withJson($this->resp);
-	}
-
-	public function update($request, $response, $args) {
-		
 	}
 
 	public function delete($request, $response, $args) {

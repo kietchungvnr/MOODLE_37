@@ -10,5 +10,7 @@ $app->post('/ebm/users/create', local_newsvnr\api\controllers\ebm\UserController
 $app->post('/ebm/users/delete', local_newsvnr\api\controllers\ebm\UserController::class . ':delete');
 //Tích hợp kì thi đầu vào
 $app->post('/ebm/quizes/testregister-create', local_newsvnr\api\controllers\ebm\QuizController::class . ':create_and_update_testregister');
-//Thích hợp kì thi trong lớp
+//Tích hợp kì thi trong lớp
 $app->post('/ebm/quizes/exam-create', local_newsvnr\api\controllers\ebm\QuizController::class . ':create_and_update_exam');
+//Xóa kì thi trong hoặc kì thi đầu vào
+$app->post('/ebm/quizes/delete', local_newsvnr\api\controllers\ebm\QuizController::class . ':delete()');
