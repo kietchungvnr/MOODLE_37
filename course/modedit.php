@@ -152,12 +152,12 @@ if ($mform->is_cancelled()) {
     //Custom by Vũ: Đẩy danh sách quiz qua hrm via api
     
     if($data->modulename == 'quiz') {
+        $quiz_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecTest']);
         $params_el = [
                 'TestName' => $fromform->name,
                 'TestCode' =>  $fromform->code,
                 'CourseCode' => $course->code
         ];
-        $quiz_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecTest']);
         if($quiz_api) {
             $getparams_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $quiz_api->id]);
             $params_hrm = [];
@@ -172,13 +172,13 @@ if ($mform->is_cancelled()) {
         }
     }
     if (!empty($fromform->update)) {
-        if($data->modulename == 'quiz') {
+        if($data->modulename == 'quiz' && isset($params_hrm)) {
             $params_hrm['Status'] = "E_UPDATE";
             HTTPPost($url_hrm, $params_hrm);
         }
         list($cm, $fromform) = update_moduleinfo($cm, $fromform, $course, $mform);
     } else if (!empty($fromform->add)) {
-        if($data->modulename == 'quiz') {
+        if($data->modulename == 'quiz' && isset($params_hrm)) {
             $params_hrm['Status'] = "E_CREATE";
             HTTPPost($url_hrm, $params_hrm);
         }

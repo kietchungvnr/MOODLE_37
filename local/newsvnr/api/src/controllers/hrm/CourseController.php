@@ -1,10 +1,11 @@
 <?php 
 
-namespace local_newsvnr\api\controllers;
-
-defined('MOODLE_INTERNAL') || die;
+namespace local_newsvnr\api\controllers\hrm;
 
 use stdClass;
+use local_newsvnr\api\controllers\BaseController as BaseController;
+
+defined('MOODLE_INTERNAL') || die;
 
 class CourseController extends BaseController {
 
@@ -111,7 +112,7 @@ class CourseController extends BaseController {
 				$this->data->showgrades = 1;
 				$this->data->numsections = 4;
 				$this->data->newsitems = 10;
-				$this->data->visible = 0;
+				$this->data->visible = 1;
 				$this->data->showreports = 1;
 				$this->data->summary = '';
 				$this->data->summaryformat = FORMAT_HTML;

@@ -4,7 +4,6 @@ namespace local_newsvnr\api\controllers;
 
 defined('MOODLE_INTERNAL') || die;
 
-
 class UsersController extends BaseController {
 
    	public function __construct($container) {

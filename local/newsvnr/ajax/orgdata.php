@@ -399,49 +399,50 @@ switch ($section) {
 
 			
 
-				//lấy danh danh sách khóa học theo năng lực
+				//lấy danh danh sách khóa học theo năng lực dựa vào bảng lập kế hoạch
 				if($value->competencyid) {
 					$list_comp = $DB->get_record('competency_coursepositioncomp',['competencyid' => $value->competencyid, 'orgpositionid' => $userstd->orgpositionid]);
 				}
-
 				$list_comp_name = [];
 				$progress = '';
+				//Thêm tiến trình vào khóa học nếu user tham gia khóa học
 				if(!empty($list_comp)){
 					$list_courses = $DB->get_records_sql('SELECT * FROM {course} WHERE id = ?',[$list_comp->courseid]);
-					foreach ($list_courses as $value) {
+					foreach ($list_courses as $course) {
 						//kiểm tra user đã tham gia khóa học chưa từ danh khóa học theo năng lực
-						$check_enrolled = is_enrolled(context_course::instance($value->id),$userstd->userid);
+						$check_enrolled = is_enrolled(context_course::instance($course->id),$userstd->userid);
 						if ($check_enrolled == true) {
-							$progress = \core_completion\progress::get_course_progress_percentage($value,$userstd->userid);
-							$value->progress = floor($progress);
-							$value->link = $CFG->wwwroot."/course/view.php?id=".$value->id;
-							$list_comp_name[] = $value;
+							$progress = \core_completion\progress::get_course_progress_percentage($course,$userstd->userid);
+							$course->progress = floor($progress);
+							$course->link = $CFG->wwwroot."/course/view.php?id=".$course->id;
+							$list_comp_name[] = $course;
 						}else {
-							$value->progress = -1;
-							$value->link = $CFG->wwwroot."/course/view.php?id=".$value->id;
-							$list_comp_name[] = $value;
+							$course->progress = -1;
+							$course->link = $CFG->wwwroot."/course/view.php?id=".$course->id;
+							$list_comp_name[] = $course;
 						}
 							
 					}
 				}
 			
 				$strhtml = '';
-		
-				foreach ($list_comp_name as $value) {
-					$prog = $value->progress;
+				//Xuất thông tin cho grid gồm: Tên comp, khóa học liên kết, chứng chỉ, ngày hoàn thành, kết thúc
+				foreach ($list_comp_name as $comp) {
+					//UI tiến trình học
+					$prog = $comp->progress;
 					switch (true) {
 						case $prog == 100:	
 							$completecourse_prog = true;
 							if($completecourse_evid == false) {
 								$tcnlht += 1;
 							}
-							$timecompleted = convertunixtime('l, d m Y',$value->startdate);
+							$timecompleted = convertunixtime('l, d m Y',$comp->startdate);
 							$strhtml = '<div class="row align-items-center">
 			                  <div class="col-auto pr-0">
 			                    	 <div class="progress-circle progress-sm" data-progress="'.$prog.'"></div>
 			                  </div>
 			                  <div class="col">
-			                    <a href="'.$value->link.'" class="d-block mb-0" target="_blank">'.$value->fullname.'</a>
+			                    <a href="'.$comp->link.'" class="d-block mb-0" target="_blank">'.$comp->fullname.'</a>
 			                   
 			                  </div>
 			                </div>';		
@@ -452,7 +453,7 @@ switch ($section) {
 			                    	 <div class="progress-circle progress-sm" data-progress="'.$prog.'"></div>
 			                  </div>
 			                  <div class="col">
-			                    <a href="'.$value->link.'" class="d-block mb-0" target="_blank">'.$value->fullname.'</a>
+			                    <a href="'.$comp->link.'" class="d-block mb-0" target="_blank">'.$comp->fullname.'</a>
 			                   
 			                  </div>
 			                </div>';
@@ -463,7 +464,7 @@ switch ($section) {
 			                    	
 			                  </div>
 			                  <div class="col">
-			                    <a href="'.$value->link.'" class="d-block mb-0" target="_blank">'.$value->fullname.'</a>
+			                    <a href="'.$comp->link.'" class="d-block mb-0" target="_blank">'.$comp->fullname.'</a>
 			                   
 			                  </div>
 			                </div>';
@@ -516,7 +517,7 @@ switch ($section) {
 				
 				$data[] = $griddata;	
 			}
-			
+
 			echo json_encode($data,JSON_UNESCAPED_UNICODE);
 
 			

@@ -99,7 +99,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
     }
     
-    public function showMenuLi($menus, $id_parent = 0, &$output = '',$stt = 0, $dequy = 0) {
+    public function menucoursecategory($menus, $id_parent = 0, &$output = '', $stt = 0) {
         global $DB, $CFG;
         $courselink = $CFG->wwwroot . '/course/view.php?id=';
         $theme_settings = new theme_settings();
@@ -107,78 +107,44 @@ class core_renderer extends \theme_boost\output\core_renderer {
         foreach ($menus as $key => $item) {
             if ((int) $item->parent == (int) $id_parent) {
                 $menu_tmp[] = $item;
-            
                 unset($menus[$key]);
             }
         }
-
-        if ($menu_tmp) 
-        {   
+        if ($menu_tmp) {   
             if($stt == 0)
                 $output .= '<ul class="dropdown-menu" role="menu" id="drop-course-category">';
             else {
                 if($id_parent == 0)
-                    $output .= '<ul class="dropdown-menu">';
+                    $output .= '<ul class="dropdown-menu 0">';
             }
-            foreach ($menu_tmp as $item) 
-            {   
-
-                if(!$DB->record_exists('course_categories', ['parent' => $item->id])) {
-                    $output .= '<li class="dropdown-submenu">';
-                    $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $item->name . ' </a>';
-                    $courses = $DB->get_records('course',['category' => $item->id]);
-                    $output .= '<ul class="dropdown-menu">';
-                    foreach($courses as $course) {
-                        // $courseobj = new \core_course_list_element($course);
-                        // $courselink = $CFG->wwwroot."/course/view.php?id=".$course->id;
-                        // $courseimage = $theme_settings::get_course_images_nav($courseobj, $courselink);
-                        // $output .= '<li class="dropdown-item"><div class="d-flex"><div style="width:150px;height:100px">'.$courseimage.'</div><div><a tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a><div></div></li>';
-                        $output .= '<li class="dropdown-item"><a tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a></li>';
-                    }
-                    $output .= '</ul>';
-                    $this->showMenuLi($menus, $item->id, $output, ++$stt);
-                    $output .= '</li>';
-                } else {
-                    $output .= '<li class="dropdown-submenu">';
-                    $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $item->name . ' </a>';
-                    
-                    //if($item->parent == 0) {
-                        $courses = $DB->get_records('course',['category' => $item->id, 'visible' => 1]);
-                        $output .= '<ul class="dropdown-menu">';
-                        foreach($courses as $course) {
-                            // $courseobj = new \core_course_list_element($course);
-                            // $courselink = $CFG->wwwroot."/course/view.php?id=".$course->id;
-                            // $courseimage = $theme_settings::get_course_images_nav($courseobj, $courselink);
-                            // $output .= '<li class="dropdown-item"><div class="d-flex"><div style="width:150px;height:100px">'.$courseimage.'</div><div><a tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a><div></div></li>';
-                            $output .= '<li><a class="dropdown-item" tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a></li>';
-                        }
-                        foreach($menus as $childkey => $childitem) {
-                            if($childitem->parent == $item->id) {
-                                $courses = $DB->get_records('course',['category' => $childitem->id, 'visible' => 1]);
-                                if($courses) {
-                                    $output .= '<li class="dropdown-submenu">';
-                                    $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $childitem->name . ' </a>';
-                                    
-                                    $output .= '<ul class="dropdown-menu">';
-                                    foreach($courses as $childcourse) {
-                                        // $courseobj = new \core_course_list_element($childcourse);
-                                        // $courselink = $CFG->wwwroot."/course/view.php?id=".$childcourse->id;
-                                        // $courseimage = $theme_settings::get_course_images_nav($courseobj, $courselink);
-                                        // $output .= '<li class="dropdown-item"><div class="d-flex"><div style="width:150px;height:100px">'.$courseimage.'</div><div><a tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a><div></div></li>';
-                                        $output .= '<li><a class="dropdown-item" tabindex="-1" href="'.$courselink . $childcourse->id.'">' . $childcourse->fullname . '</a></li>';
-                                    }
-                                    $output .= '</ul>';
-                                }
-                                unset($menus[$childkey]);
-                            }
-                            
-                        }
-                        $output .= '</ul>';
-                        
-                    //}
-                    $this->showMenuLi($menus, $item->id, $output, ++$stt);
-                    $output .= '</li>';
+            foreach ($menu_tmp as $item) {
+                $output .= '<li class="dropdown-submenu">';
+                $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $item->name . ' </a>';
+                $courses = $DB->get_records('course',['category' => $item->id, 'visible' => 1]); 
+                $output .= '<ul class="dropdown-menu">';
+                foreach($courses as $course) {
+                    $output .= '<li><a class="dropdown-item" tabindex="-1" href="">' . $course->fullname . '</a></li>';
                 }
+                foreach($menus as $childkey => $childitem) {
+                    // Kiểm tra phần tử có con hay không?
+                    if($childitem->parent == $item->id) {
+                        $output .= '<li class="dropdown-submenu">';
+                        $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $childitem->name . ' </a>';
+                        $childcourses = $DB->get_records('course',['category' => $childitem->id, 'visible' => 1]);
+                        $output .= '<ul class="dropdown-menu">';
+
+                        foreach($childcourses as $childcourse) {
+                            $output .= '<li><a class="dropdown-item" tabindex="-1" href="">' . $childcourse->fullname . '</a></li>';
+                        }
+                        unset($menus[$childkey]);
+                        $this->menucoursecategory($menus, $childitem->id, $output, ++$stt);
+                        $output .= '</li>';
+                        $output .= '</ul>';
+                        $output .= '</li>';
+                    } 
+                }
+                $output .= '</ul>';
+                $output .= '</li>';
             }
             $output .= '</ul';
             if($stt == 0)
@@ -187,7 +153,6 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 if($id_parent == 0)
                     $output .= '</ul>';
             }
-            
         }
         return $output;
     }
@@ -230,20 +195,11 @@ class core_renderer extends \theme_boost\output\core_renderer {
     }
     public function nav_course_categories() {
         global $DB;
-
-        $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent FROM mdl_course_categories cc JOIN mdl_course c ON cc.id = c.category WHERE cc.visible = 1');
+        $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent FROM mdl_course_categories cc JOIN mdl_course c ON cc.id = c.category 
+        WHERE cc.visible = 1');
         // $categories = $DB->get_records_sql('SELECT * FROM mdl_course_categories');
-        ini_set("xdebug.var_display_max_children", -1);
-        ini_set("xdebug.var_display_max_data", -1);
-        ini_set("xdebug.var_display_max_depth", -1);
-        // var_dump($this->showMenuLi($categories));die;
-        return $this->showMenuLi($categories);
-        // foreach($categories as $category) {
-        //     $courses = $DB->get_records('course', ['category' => $category->id]);
-        //     foreach($courses as $course) {
-
-        //     }
-        // }
+        return $this->menucoursecategory($categories);
+        
     }
 
 
@@ -476,6 +432,11 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
 
         return false;
+    }
+
+    public function get_navcourse_color() {
+        $theme = theme_config::load('moove');
+        return $theme->setting_file_url('logo', 'logo');
     }
 
     /**

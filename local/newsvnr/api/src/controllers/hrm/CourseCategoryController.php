@@ -1,10 +1,12 @@
 <?php 
 
-namespace local_newsvnr\api\controllers;
+namespace local_newsvnr\api\controllers\hrm;
 
-defined('MOODLE_INTERNAL') || die;
 use stdClass;
 use core_course_category;
+use local_newsvnr\api\controllers\BaseController as BaseController;
+
+defined('MOODLE_INTERNAL') || die;
 
 class CourseCategoryController extends BaseController {
 

@@ -106,7 +106,7 @@ class course_edit_form extends moodleform {
 
         $toclist = array(
             '1' => 'Tuyển dụng',
-            '2' => 'Đào tạo',
+            '2' => 'Đào tạo'
         );
 
         $orgjobtitle_options = array(
@@ -167,7 +167,7 @@ class course_edit_form extends moodleform {
         $mform->addElement('text', 'courseoforgstructure', get_string('courseoforgstructure', 'local_newsvnr'), 'maxlength="200" size="50" class="mb-0"');
         // $mform->addRule('courseoforgstructure', get_string('required'), 'required', null, 'client');
         $mform->setType('courseoforgstructure', PARAM_TEXT);
-        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3"></div><div class="col-md-3 pr-0 ml-3 form-inline felement" id="treeview-orgstructure-course" style="background-color: #e9ecef"></div></div>');
+        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-2"></div><div class="col-md-3 pr-0 ml-3 form-inline felement" id="treeview-orgstructure-course" style="background-color: #e9ecef"></div></div>');
         
 
         $mform->addElement('autocomplete', 'courseofjobtitle', get_string('courseofjobtitle','local_newsvnr'), $orgjobtitlenames, $orgjobtitle_options);

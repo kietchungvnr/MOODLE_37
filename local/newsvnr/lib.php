@@ -1370,8 +1370,7 @@ function enrol_user($userid, $courseid, $roleidorshortname = null, $enrol = 'man
     return true;
 }
 
-function check_teacher_in_course($courseid,$userid)
-{
+function check_teacher_in_course($courseid,$userid) {
     global $DB,$CFG;
     $sql = "
             SELECT ue.userid FROM mdl_role_assignments AS ra
@@ -1381,7 +1380,7 @@ function check_teacher_in_course($courseid,$userid)
                 JOIN mdl_course AS c ON c.id=e.courseid
                 JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
                 JOIN mdl_role AS r ON r.id= ra.roleid
-            WHERE c.id= ? AND ra.roleid= 4 AND ue.userid = ?";
+            WHERE c.id= ? AND ra.roleid= 3 AND ue.userid = ?";
     $data = $DB->get_record_sql($sql,array($courseid,$userid));
     return $data;
 }
@@ -1598,7 +1597,6 @@ function HTTPPost($url,$data) {
     ),
     CURLOPT_POSTFIELDS => $params));
     $resp = curl_exec($curl);
-    var_dump(json_decode($resp,JSON_UNESCAPED_UNICODE));
     curl_close($curl);
 }
 

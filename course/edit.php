@@ -156,8 +156,12 @@ if(!empty($course->id)) {
         if(in_array($value->courseofposition, $courseofposition) == false)
             $courseofposition[] = $value->courseofposition;
     }
-    $course->courseoforgstructure = $DB->get_field_sql('SELECT TOP(1) courseoforgstructure FROM {course_position} WHERE course = ?', [$course->id]);
-    $course->courseoforgstructure = $DB->get_field('orgstructure', 'name', ['id' => $course->courseoforgstructure]);
+    $course->courseoforgstructure = $DB->get_records_sql('SELECT TOP(1) courseoforgstructure FROM {course_position} WHERE course = ?', [$course->id]);
+    if($course->courseoforgstructure) {
+        $course->courseoforgstructure = $DB->get_field('orgstructure', 'name', ['id' => $course->courseoforgstructure]);    
+    } else {
+        $course->courseoforgstructure = '';
+    }
     $course->courseofjobtitle = $courseofjobtitle;
     $course->courseofposition = $courseofposition;
     $coursesetup = $DB->get_record_sql('SELECT TOP 1 cs.* FROM {course} c JOIN {course_setup} cs ON c.category = cs.category WHERE c.id = ?', [$course->id]);
@@ -181,10 +185,10 @@ if ($editform->is_cancelled()) {
                 'CourseName' => $data->fullname,
                 'CourseCode' =>  $data->code,
             ];
+    $params_hrm = [];
     $course_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecCourse']);
     if($course_api) {
         $getparams_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $course_api->id]);
-        $params_hrm = [];
         foreach ($getparams_hrm as $key => $value) {
             if(array_key_exists($value->client_params, $params_el)) {
                 $params_hrm[$value->client_params] = $params_el[$value->client_params];
@@ -219,9 +223,11 @@ if ($editform->is_cancelled()) {
         
         //Đẩy khoá học khi tạo mới realtime qua HRM
         if($course) {
-            $params_hrm['Status'] = "E_CREATE";
-            if($data->typeofcourse == 1) {
-                HTTPPost($url_hrm, $params_hrm);
+            if($params_hrm) {
+                $params_hrm['Status'] = "E_CREATE";
+                if($data->typeofcourse == 1) {
+                    // HTTPPost($url_hrm, $params_hrm);
+                }
             }
         }
         if($data->courseoforgstructure) {
@@ -239,13 +245,9 @@ if ($editform->is_cancelled()) {
                 }
             }
         }
-        if($course->id) {
+        if($course->id & $courseposition) {
             $courseposition = $DB->insert_records('course_position',$courseposition);
-        } else {
-            throw new coding_exception("Không tồn tại bảng course_position");
-            
-        }
-        
+        } 
 
         // Get the context of the newly created course.
         $context = context_course::instance($course->id, MUST_EXIST);
@@ -320,18 +322,21 @@ if ($editform->is_cancelled()) {
         // Save any changes to the files used in the editor.
         update_course($data, $editoroptions);
         // Cutstom by Vũ: Đẩy khoá học khi cập nhật realtime qua HRM
-        $quizzes = $DB->get_records_sql('SELECT * FROM {quiz} WHERE course = :course',['course' => $data->id]);
-        if($quizzes) {
-            $examcode = [];
-            foreach($quizzes as $quiz) {
-                $examcode[] = $quiz->code;
+        if($params_hrm) {
+            $quizzes = $DB->get_records_sql('SELECT * FROM {quiz} WHERE course = :course',['course' => $data->id]);
+            if($quizzes) {
+                $examcode = [];
+                foreach($quizzes as $quiz) {
+                    $examcode[] = $quiz->code;
+                }
+                $strexamcode = implode(",", $examcode);
+                $params_hrm['ExamCode'] = $strexamcode;
             }
-            $strexamcode = implode(",", $examcode);
-            $params_hrm['ExamCode'] = $strexamcode;
+            $params_hrm['Status'] = "E_UPDATE";
+            if($data->typeofcourse == 1)
+                HTTPPost($url_hrm, $params_hrm);    
         }
-        $params_hrm['Status'] = "E_UPDATE";
-        if($data->typeofcourse == 1)
-            HTTPPost($url_hrm, $params_hrm);
+        
 
         // Set the URL to take them too if they choose save and display.
         $courseurl = new moodle_url('/course/view.php', array('id' => $course->id));

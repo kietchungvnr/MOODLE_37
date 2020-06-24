@@ -1,9 +1,11 @@
 <?php 
 
-namespace local_newsvnr\api\controllers;
+namespace local_newsvnr\api\controllers\hrm;
+
+use stdClass;
+use local_newsvnr\api\controllers\BaseController as BaseController;
 
 defined('MOODLE_INTERNAL') || die;
-use stdClass;
 
 class ListModuleController extends BaseController {
 
