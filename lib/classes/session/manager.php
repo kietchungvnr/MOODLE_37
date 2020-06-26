@@ -57,6 +57,27 @@ class manager {
     /** @var string $logintokenkey Key used to get and store request protection for login form. */
     protected static $logintokenkey = 'core_auth_login';
 
+    /** @var array Stores the the SESSION before a request is performed, used to check incorrect read-only modes */
+    private static $priorsession = [];
+
+    /**
+     * If the current session is not writeable, abort it, and re-open it
+     * requesting (and blocking) until a write lock is acquired.
+     * If current session was already opened with an intentional write lock,
+     * this call will not do anything.
+     * NOTE: Even when using a session handler that does not support non-locking sessions,
+     * if the original session was not opened with the explicit intention of being locked,
+     * this will still restart your session so that code behaviour matches as closely
+     * as practical across environments.
+     */
+    public static function restart_with_write_lock() {
+        if (self::$sessionactive && !self::$handler->requires_write_lock()) {
+            @self::$handler->abort();
+            self::$sessionactive = false;
+            self::start_session(true);
+        }
+    }
+
     /**
      * Start user session.
      *
@@ -82,8 +103,26 @@ class manager {
             return;
         }
 
+        if (defined('READ_ONLY_SESSION') && !empty($CFG->enable_read_only_sessions)) {
+            $requireslock = !READ_ONLY_SESSION;
+        } else {
+            $requireslock = true; // For backwards compatibility, we default to assuming that a lock is needed.
+        }
+        self::start_session($requireslock);
+    }
+
+    /**
+     * Handles starting a session.
+     *
+     * @param bool $requireslock If this is false then no write lock will be acquired,
+     *                           and the session will be read-only.
+     */
+    private static function start_session(bool $requireslock) {
+        global $PERF;
+
         try {
             self::$handler->init();
+            self::$handler->set_requires_write_lock($requireslock);
             self::prepare_cookies();
             $isnewsession = empty($_COOKIE[session_name()]);
 
@@ -98,6 +137,10 @@ class manager {
             self::initialise_user_session($isnewsession);
             self::$sessionactive = true; // Set here, so the session can be cleared if the security check fails.
             self::check_security();
+
+            if (!$requireslock) {
+                self::$priorsession = (array) $_SESSION['SESSION'];
+            }
 
             // Link global $USER and $SESSION,
             // this is tricky because PHP does not allow references to references
@@ -292,7 +335,27 @@ class manager {
 
         // Set configuration.
         session_name($sessionname);
-        session_set_cookie_params(0, $CFG->sessioncookiepath, $CFG->sessioncookiedomain, $cookiesecure, $CFG->cookiehttponly);
+
+        if (version_compare(PHP_VERSION, '7.3.0', '>=')) {
+            $sessionoptions = [
+                'lifetime' => 0,
+                'path' => $CFG->sessioncookiepath,
+                'domain' => $CFG->sessioncookiedomain,
+                'secure' => $cookiesecure,
+                'httponly' => $CFG->cookiehttponly,
+            ];
+
+            if (self::should_use_samesite_none()) {
+                // If $samesite is empty, we don't want there to be any SameSite attribute.
+                $sessionoptions['samesite'] = 'None';
+            }
+
+            session_set_cookie_params($sessionoptions);
+        } else {
+            // Once PHP 7.3 becomes our minimum, drop this in favour of the alternative call to session_set_cookie_params above,
+            // as that does not require a hack to work with same site settings on cookies.
+            session_set_cookie_params(0, $CFG->sessioncookiepath, $CFG->sessioncookiedomain, $cookiesecure, $CFG->cookiehttponly);
+        }
         ini_set('session.use_trans_sid', '0');
         ini_set('session.use_only_cookies', '1');
         ini_set('session.hash_function', '0');        // For now MD5 - we do not have room for sha-1 in sessions table.
@@ -364,6 +427,9 @@ class manager {
             }
 
             if ($timeout) {
+                if (defined('NO_SESSION_UPDATE') && NO_SESSION_UPDATE) {
+                    return;
+                }
                 session_regenerate_id(true);
                 $_SESSION = array();
                 $DB->delete_records('sessions', array('id'=>$record->id));
@@ -398,7 +464,7 @@ class manager {
                     $updated = true;
                 }
 
-                if ($updated) {
+                if ($updated && (!defined('NO_SESSION_UPDATE') || !NO_SESSION_UPDATE)) {
                     $update->id = $record->id;
                     $DB->update_record('sessions', $update);
                 }
@@ -425,7 +491,7 @@ class manager {
 
         $user = null;
 
-        if (!empty($CFG->opentogoogle)) {
+        if (!empty($CFG->opentowebcrawlers)) {
             if (\core_useragent::is_web_crawler()) {
                 $user = guest_user();
             }
@@ -452,6 +518,8 @@ class manager {
         if ($timedout) {
             $_SESSION['SESSION']->has_timed_out = true;
         }
+
+        self::append_samesite_cookie_attribute();
     }
 
     /**
@@ -519,6 +587,61 @@ class manager {
 
         // Setup $USER object.
         self::set_user($user);
+        self::append_samesite_cookie_attribute();
+    }
+
+    /**
+     * Returns a valid setting for the SameSite cookie attribute.
+     *
+     * @return string The desired setting for the SameSite attribute on the cookie. Empty string indicates the SameSite attribute
+     * should not be set at all.
+     */
+    private static function should_use_samesite_none(): bool {
+        // We only want None or no attribute at this point. When we have cookie handling compatible with Lax,
+        // we can look at checking a setting.
+
+        // Browser support for none is not consistent yet. There are known issues with Safari, and IE11.
+        // Things are stablising, however as they're not stable yet we will deal specifically with the version of chrome
+        // that introduces a default of lax, setting it to none for the current version of chrome (2 releases before the change).
+        // We also check you are using secure cookies and HTTPS because if you are not running over HTTPS
+        // then setting SameSite=None will cause your session cookie to be rejected.
+        if (\core_useragent::is_chrome() && \core_useragent::check_chrome_version('78') && is_moodle_cookie_secure()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Conditionally append the SameSite attribute to the session cookie if necessary.
+     *
+     * Contains a hack for versions of PHP lower than 7.3 as there is no API built into PHP cookie API
+     * for adding the SameSite setting.
+     *
+     * This won't change the Set-Cookie headers if:
+     *  - PHP 7.3 or higher is being used. That already adds the SameSite attribute without any hacks.
+     *  - If the samesite setting is empty.
+     *  - If the samesite setting is None but the browser is not compatible with that setting.
+     */
+    private static function append_samesite_cookie_attribute() {
+        if (version_compare(PHP_VERSION, '7.3.0', '>=')) {
+            // This hack is only necessary if we weren't able to set the samesite flag via the session_set_cookie_params API.
+            return;
+        }
+
+        if (!self::should_use_samesite_none()) {
+            return;
+        }
+
+        $cookies = headers_list();
+        header_remove('Set-Cookie');
+        $setcookiesession = 'Set-Cookie: ' . session_name() . '=';
+
+        foreach ($cookies as $cookie) {
+            if (strpos($cookie, $setcookiesession) === 0) {
+                $cookie .= '; SameSite=None';
+            }
+            header($cookie, false);
+        }
     }
 
     /**
@@ -553,8 +676,8 @@ class manager {
         $DB->delete_records('sessions', array('sid'=>$sid));
         self::init_empty_session();
         self::add_session_record($_SESSION['USER']->id); // Do not use $USER here because it may not be set up yet.
-        session_write_close();
-        self::$sessionactive = false;
+        self::write_close();
+        self::append_samesite_cookie_attribute();
     }
 
     /**
@@ -573,27 +696,46 @@ class manager {
             $PERF->sessionlock['url'] = me();
             self::update_recent_session_locks($PERF->sessionlock);
             self::sessionlock_debugging();
+
+            if (!self::$handler->requires_write_lock()) {
+                // Compare the array of the earlier session data with the array now, if
+                // there is a difference then a lock is required.
+                $arraydiff = self::array_session_diff(
+                    self::$priorsession,
+                    (array) $_SESSION['SESSION']
+                );
+
+                if ($arraydiff) {
+                    if (isset($arraydiff['cachestore_session'])) {
+                        throw new \moodle_exception('The session store can not be in the session when '
+                            . 'enable_read_only_sessions is enabled');
+                    }
+
+                    error_log('This session was started as a read-only session but writes have been detected.');
+                    error_log('The following SESSION params were either added, or were updated.');
+                    foreach ($arraydiff as $key => $value) {
+                        error_log('SESSION key: ' . $key);
+                    }
+                }
+            }
         }
 
-        if (version_compare(PHP_VERSION, '5.6.0', '>=')) {
-            // More control over whether session data
-            // is persisted or not.
-            if (self::$sessionactive && session_id()) {
-                // Write session and release lock only if
-                // indication session start was clean.
-                session_write_close();
-            } else {
-                // Otherwise, if possibile lock exists want
-                // to clear it, but do not write session.
-                @session_abort();
-            }
+        // More control over whether session data
+        // is persisted or not.
+        if (self::$sessionactive && session_id()) {
+            // Write session and release lock only if
+            // indication session start was clean.
+            self::$handler->write_close();
         } else {
-            // Any indication session was started, attempt
-            // to close it.
-            if (self::$sessionactive || session_id()) {
-                session_write_close();
+            // Otherwise, if possible lock exists want
+            // to clear it, but do not write session.
+            // If the $handler has not been set then
+            // there is no session to abort.
+            if (isset(self::$handler)) {
+                @self::$handler->abort();
             }
         }
+
         self::$sessionactive = false;
     }
 
@@ -630,6 +772,31 @@ class manager {
         // There is no need the existence of handler storage in public API.
         self::load_handler();
         return self::$handler->session_exists($sid);
+    }
+
+    /**
+     * Return the number of seconds remaining in the current session.
+     * @param string $sid
+     */
+    public static function time_remaining($sid) {
+        global $DB, $CFG;
+
+        if (empty($CFG->version)) {
+            // Not installed yet, do not try to access database.
+            return ['userid' => 0, 'timeremaining' => $CFG->sessiontimeout];
+        }
+
+        // Note: add sessions->state checking here if it gets implemented.
+        if (!$record = $DB->get_record('sessions', array('sid' => $sid), 'id, userid, timemodified')) {
+            return ['userid' => 0, 'timeremaining' => $CFG->sessiontimeout];
+        }
+
+        if (empty($record->userid) or isguestuser($record->userid)) {
+            // Ignore guest and not-logged-in timeouts, there is very little risk here.
+            return ['userid' => 0, 'timeremaining' => $CFG->sessiontimeout];
+        } else {
+            return ['userid' => $record->userid, 'timeremaining' => $CFG->sessiontimeout - (time() - $record->timemodified)];
+        }
     }
 
     /**
@@ -955,9 +1122,10 @@ class manager {
      * @param string $identifier The string identifier for the message to show on failure.
      * @param string $component The string component for the message to show on failure.
      * @param int $frequency The update frequency in seconds.
+     * @param int $timeout The timeout of each request in seconds.
      * @throws coding_exception IF the frequency is longer than the session lifetime.
      */
-    public static function keepalive($identifier = 'sessionerroruser', $component = 'error', $frequency = null) {
+    public static function keepalive($identifier = 'sessionerroruser', $component = 'error', $frequency = null, $timeout = 0) {
         global $CFG, $PAGE;
 
         if ($frequency) {
@@ -966,19 +1134,15 @@ class manager {
                 throw new \coding_exception('Keepalive frequency is longer than the session lifespan.');
             }
         } else {
-            // A frequency of sessiontimeout / 3 allows for one missed request whilst still preserving the session.
-            $frequency = $CFG->sessiontimeout / 3;
+            // A frequency of sessiontimeout / 10 matches the timeouts in core/network amd module.
+            $frequency = $CFG->sessiontimeout / 10;
         }
 
-        // Add the session keepalive script to the list of page output requirements.
-        $sessionkeepaliveurl = new \moodle_url('/lib/sessionkeepalive_ajax.php');
-        $PAGE->requires->string_for_js($identifier, $component);
-        $PAGE->requires->yui_module('moodle-core-checknet', 'M.core.checknet.init', array(array(
-            // The JS config takes this is milliseconds rather than seconds.
-            'frequency' => $frequency * 1000,
-            'message' => array($identifier, $component),
-            'uri' => $sessionkeepaliveurl->out(),
-        )));
+        $PAGE->requires->js_call_amd('core/network', 'keepalive', array(
+                $frequency,
+                $timeout,
+                get_string($identifier, $component)
+            ));
     }
 
     /**
@@ -1212,5 +1376,28 @@ class manager {
                 debugging($output, DEBUG_DEVELOPER);
             }
         }
+    }
+
+    /**
+     * Compares two arrays outputs the difference.
+     *
+     * Note this does not use array_diff_assoc due to
+     * the use of stdClasses in Moodle sessions.
+     *
+     * @param array $array1
+     * @param array $array2
+     * @return array
+     */
+    private static function array_session_diff(array $array1, array $array2) : array {
+        $difference = [];
+        foreach ($array1 as $key => $value) {
+            if (!isset($array2[$key])) {
+                $difference[$key] = $value;
+            } else if ($array2[$key] !== $value) {
+                $difference[$key] = $value;
+            }
+        }
+
+        return $difference;
     }
 }

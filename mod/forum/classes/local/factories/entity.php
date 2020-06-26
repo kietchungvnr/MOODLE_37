@@ -86,6 +86,8 @@ class entity {
             $record->assesstimestart,
             $record->assesstimefinish,
             $record->scale,
+            $record->grade_forum,
+            $record->grade_forum_notify,
             $record->maxbytes,
             $record->maxattachments,
             $record->forcesubscribe,
@@ -155,7 +157,9 @@ class entity {
             $record->totalscore,
             $record->mailnow,
             $record->deleted,
-            $record->privatereplyto
+            $record->privatereplyto,
+            $record->wordcount,
+            $record->charcount
         );
     }
 
@@ -173,6 +177,7 @@ class entity {
             $record->lastname,
             fullname($record),
             $record->email,
+            $record->deleted,
             $record->middlename,
             $record->firstnamephonetic,
             $record->lastnamephonetic,

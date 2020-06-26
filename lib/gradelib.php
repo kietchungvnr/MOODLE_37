@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+global $CFG;
+
 /** Include essential files */
 require_once($CFG->libdir . '/grade/constants.php');
 
@@ -953,14 +955,11 @@ function grade_get_letters($context=null) {
         return array('93'=>'A', '90'=>'A-', '87'=>'B+', '83'=>'B', '80'=>'B-', '77'=>'C+', '73'=>'C', '70'=>'C-', '67'=>'D+', '60'=>'D', '0'=>'F');
     }
 
-    static $cache = array();
+    $cache = cache::make('core', 'grade_letters');
+    $data = $cache->get($context->id);
 
-    if (array_key_exists($context->id, $cache)) {
-        return $cache[$context->id];
-    }
-
-    if (count($cache) > 100) {
-        $cache = array(); // cache size limit
+    if (!empty($data)) {
+        return $data;
     }
 
     $letters = array();
@@ -976,13 +975,15 @@ function grade_get_letters($context=null) {
         }
 
         if (!empty($letters)) {
-            $cache[$context->id] = $letters;
+            // Cache the grade letters for this context.
+            $cache->set($context->id, $letters);
             return $letters;
         }
     }
 
     $letters = grade_get_letters(null);
-    $cache[$context->id] = $letters;
+    // Cache the grade letters for this context.
+    $cache->set($context->id, $letters);
     return $letters;
 }
 
@@ -1428,6 +1429,9 @@ function remove_grade_letters($context, $showfeedback) {
     if ($showfeedback) {
         echo $OUTPUT->notification($strdeleted.' - '.get_string('letters', 'grades'), 'notifysuccess');
     }
+
+    $cache = cache::make('core', 'grade_letters');
+    $cache->delete($context->id);
 }
 
 /**
@@ -1618,4 +1622,23 @@ function grade_floats_different($f1, $f2) {
  */
 function grade_floats_equal($f1, $f2) {
     return (grade_floatval($f1) === grade_floatval($f2));
+}
+
+/**
+ * Get the most appropriate grade date for a grade item given the user that the grade relates to.
+ *
+ * @param \stdClass $grade
+ * @param \stdClass $user
+ * @return int|null
+ */
+function grade_get_date_for_user_grade(\stdClass $grade, \stdClass $user): ?int {
+    // The `datesubmitted` is the time that the grade was created.
+    // The `dategraded` is the time that it was modified or overwritten.
+    // If the grade was last modified by the user themselves use the date graded.
+    // Otherwise use date submitted.
+    if ($grade->usermodified == $user->id || empty($grade->datesubmitted)) {
+        return $grade->dategraded;
+    } else {
+        return $grade->datesubmitted;
+    }
 }

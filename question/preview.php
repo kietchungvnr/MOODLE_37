@@ -113,7 +113,7 @@ if ($previewid) {
     }
 
     $slot = $quba->get_first_question_number();
-    $usedquestion = $quba->get_question($slot);
+    $usedquestion = $quba->get_question($slot, false);
     if ($usedquestion->id != $question->id) {
         print_error('questionidmismatch', 'question');
     }

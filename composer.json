@@ -13,23 +13,8 @@
     "require-dev": {
         "phpunit/phpunit": "7.5.*",
         "phpunit/dbunit": "4.0.*",
-        "moodlehq/behat-extension": "3.37.2",
+        "moodlehq/behat-extension": "3.39.3",
         "mikey179/vfsstream": "^1.6",
         "instaclick/php-webdriver": "dev-local as 1.x-dev"
-    },
-    "require": {
-        "slim/slim": "^3.0",
-        "davidepastore/slim-validation": "^0.5.1",
-        "awurth/slim-validation": "^3.3",
-        "tuupola/slim-jwt-auth": "^3.4",
-        "ramsey/uuid": "^4.0",
-        "moontoast/math": "^1.2",
-        "monolog/monolog": "^2.0",
-        "phpoffice/phpspreadsheet": "^1.12"
-    },
-    "autoload": {
-        "psr-4": {
-            "local_newsvnr\\api\\": "local/newsvnr/api/src/"
-        }
     }
 }

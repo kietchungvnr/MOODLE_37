@@ -304,7 +304,14 @@ class grade_item extends grade_object {
         $this->aggregationcoef = grade_floatval($this->aggregationcoef);
         $this->aggregationcoef2 = grade_floatval($this->aggregationcoef2);
 
-        return parent::update($source);
+        $result = parent::update($source);
+
+        if ($result) {
+            $event = \core\event\grade_item_updated::create_from_grade_item($this);
+            $event->trigger();
+        }
+
+        return $result;
     }
 
     /**
@@ -400,8 +407,13 @@ class grade_item extends grade_object {
      * @return bool success
      */
     public function delete($source=null) {
+        global $DB;
+
+        $transaction = $DB->start_delegated_transaction();
         $this->delete_all_grades($source);
-        return parent::delete($source);
+        $success = parent::delete($source);
+        $transaction->allow_commit();
+        return $success;
     }
 
     /**
@@ -411,6 +423,10 @@ class grade_item extends grade_object {
      * @return bool
      */
     public function delete_all_grades($source=null) {
+        global $DB;
+
+        $transaction = $DB->start_delegated_transaction();
+
         if (!$this->is_course_item()) {
             $this->force_regrading();
         }
@@ -428,7 +444,44 @@ class grade_item extends grade_object {
             $fs->delete_area_files($this->get_context()->id, GRADE_FILE_COMPONENT, GRADE_HISTORY_FEEDBACK_FILEAREA);
         }
 
+        $transaction->allow_commit();
+
         return true;
+    }
+
+    /**
+     * Duplicate grade item.
+     *
+     * @return grade_item The duplicate grade item
+     */
+    public function duplicate() {
+        // Convert current object to array.
+        $copy = (array) $this;
+
+        if (empty($copy["id"])) {
+            throw new moodle_exception('invalidgradeitemid');
+        }
+
+        // Remove fields that will be either unique or automatically filled.
+        $removekeys = array();
+        $removekeys[] = 'id';
+        $removekeys[] = 'idnumber';
+        $removekeys[] = 'timecreated';
+        $removekeys[] = 'sortorder';
+        foreach ($removekeys as $key) {
+            unset($copy[$key]);
+        }
+
+        // Addendum to name.
+        $copy["itemname"] = get_string('duplicatedgradeitem', 'grades', $copy["itemname"]);
+
+        // Create new grade item.
+        $gradeitem = new grade_item($copy);
+
+        // Insert grade item into database.
+        $gradeitem->insert();
+
+        return $gradeitem;
     }
 
     /**
@@ -479,6 +532,10 @@ class grade_item extends grade_object {
         if (parent::insert($source)) {
             // force regrading of items if needed
             $this->force_regrading();
+
+            $event = \core\event\grade_item_created::create_from_grade_item($this);
+            $event->trigger();
+
             return $this->id;
 
         } else {
@@ -1721,9 +1778,13 @@ class grade_item extends grade_object {
      * @param string $feedback Optional teacher feedback
      * @param int $feedbackformat A format like FORMAT_PLAIN or FORMAT_HTML
      * @param int $usermodified The ID of the user making the modification
+     * @param int $timemodified Optional parameter to set the time modified, if not present current time.
      * @return bool success
      */
-    public function update_final_grade($userid, $finalgrade=false, $source=NULL, $feedback=false, $feedbackformat=FORMAT_MOODLE, $usermodified=null) {
+    public function update_final_grade($userid, $finalgrade = false,
+                                       $source = null, $feedback = false,
+                                       $feedbackformat = FORMAT_MOODLE,
+                                       $usermodified = null, $timemodified = null) {
         global $USER, $CFG;
 
         $result = true;
@@ -1789,8 +1850,8 @@ class grade_item extends grade_object {
 
         $gradechanged = false;
         if (empty($grade->id)) {
-            $grade->timecreated  = null;   // hack alert - date submitted - no submission yet
-            $grade->timemodified = time(); // hack alert - date graded
+            $grade->timecreated = null;   // Hack alert - date submitted - no submission yet.
+            $grade->timemodified = $timemodified ?? time(); // Hack alert - date graded.
             $result = (bool)$grade->insert($source);
 
             // If the grade insert was successful and the final grade was not null then trigger a user_graded event.
@@ -1814,7 +1875,7 @@ class grade_item extends grade_object {
                 return $result;
             }
 
-            $grade->timemodified = time(); // hack alert - date graded
+            $grade->timemodified = $timemodified ?? time(); // Hack alert - date graded.
             $result = $grade->update($source);
 
             // If the grade update was successful and the actual grade has changed then trigger a user_graded event.
