@@ -151,7 +151,8 @@ function theme_moove_get_pre_scss($theme) {
         'brandcolor' => ['brand-primary'],
         'navbarheadercolor' => 'navbar-header-color',
         'navbarbg' => 'navbar-bg',
-        'navbarbghover' => 'navbar-bg-hover'
+        'navbarbghover' => 'navbar-bg-hover',
+        'navbar' => 'navbar-background'
     ];
 
     // Prepend variables first.

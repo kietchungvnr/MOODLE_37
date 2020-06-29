@@ -66,12 +66,12 @@ $fields = array(
 );
 
 // Remove hidden fields if the user has no access
-if (!has_capability('moodle/course:viewhiddenuserfields', $context)) {
-    $hiddenfields = array_flip(explode(',', $CFG->hiddenuserfields));
-    if (isset($hiddenfields['lastaccess'])) {
-        unset($fields['lastaccess']);
-    }
-}
+// if (!has_capability('moodle/course:viewhiddenuserfields', $context)) {
+//     $hiddenfields = array_flip(explode(',', $CFG->hiddenuserfields));
+//     if (isset($hiddenfields['lastaccess'])) {
+//         unset($fields['lastaccess']);
+//     }
+// }
 
 $table->set_fields($fields, $OUTPUT);
 

@@ -207,9 +207,10 @@ $manager = new course_enrolment_manager($PAGE, $course);
 $enrolbuttons = $manager->get_manual_enrol_buttons();
 $enrolrenderer = $PAGE->get_renderer('core_enrol');
 $enrolbuttonsout = '';
-foreach ($enrolbuttons as $enrolbutton) {
-    $enrolbuttonsout .= $enrolrenderer->render($enrolbutton);
-}
+//Custom by Thang Tắt bớt 1 button enrol dư
+// foreach ($enrolbuttons as $enrolbutton) {
+//     $enrolbuttonsout .= $enrolrenderer->render($enrolbutton);
+// }
 echo html_writer::div($enrolbuttonsout, 'float-right');
 
 // Should use this variable so that we don't break stuff every time a variable is added or changed.

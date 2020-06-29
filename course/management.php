@@ -485,6 +485,8 @@ if (count($notificationsfail) > 0) {
 }
 
 // Start the management form.
+echo $renderer->course_search_form($search);
+
 echo $renderer->management_form_start();
 
 echo $renderer->accessible_skipto_links($displaycategorylisting, $displaycourselisting, $displaycoursedetail);
@@ -516,6 +518,5 @@ echo $renderer->grid_end();
 
 // End of the management form.
 echo $renderer->management_form_end();
-echo $renderer->course_search_form($search);
 
 echo $renderer->footer();

@@ -156,7 +156,7 @@ echo $OUTPUT->header();
 if ($type == BADGE_TYPE_SITE) {
     echo $OUTPUT->heading_with_help($PAGE->heading, 'sitebadges', 'badges');
 } else {
-    echo $OUTPUT->heading($PAGE->heading);
+    // echo $OUTPUT->heading($PAGE->heading);
 }
 echo $OUTPUT->box('', 'notifyproblem hide', 'check_connection');
 

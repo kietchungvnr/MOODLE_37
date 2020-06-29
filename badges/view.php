@@ -1,3 +1,4 @@
+
 <?php
 // This file is part of Moodle - http://moodle.org/
 //
@@ -73,7 +74,8 @@ if ($type == BADGE_TYPE_SITE) {
     $title = $coursename . ': ' . get_string('coursebadges', 'badges');
     $PAGE->set_context(context_course::instance($course->id));
     $PAGE->set_pagelayout('incourse');
-    $PAGE->set_heading($coursename);
+    //Custom by Thang : đưa tiêu đề lên trên header
+    $PAGE->set_heading($title);
     $eventotherparams = array('badgetype' => BADGE_TYPE_COURSE, 'courseid' => $course->id);
 }
 
@@ -83,7 +85,7 @@ $PAGE->set_title($title);
 $output = $PAGE->get_renderer('core', 'badges');
 
 echo $output->header();
-echo $OUTPUT->heading($title);
+// echo $OUTPUT->heading($title);
 
 $totalcount = count(badges_get_badges($type, $courseid, '', '', 0, 0, $USER->id));
 $records = badges_get_badges($type, $courseid, $sortby, $sorthow, $page, BADGE_PERPAGE, $USER->id);

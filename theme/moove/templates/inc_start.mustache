@@ -1750,7 +1750,7 @@ nav.navbar {
     max-height: 52px
 }
 nav.navcourse {
-    background-color: #3c8dbc;
+    background: #3c8dbc;
     width: 100%;
     height: 52px;
 }
@@ -2157,13 +2157,12 @@ nav.navbar .moove-search-input {
 }
 .no-overflow{
     padding-top: 5px; 
-    overflow: hidden;
     text-overflow: ellipsis; 
     -webkit-line-clamp: 2;
     /*height: 52px;*/
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    margin-left: 34px;
+/*    margin-left: 34px;*/
 }
 .courses p {margin-bottom: 0!important}
 .post-enrolmethod a {
@@ -2179,7 +2178,7 @@ progress.progress {
     margin-left: 0!important;
 }
 [data-region="coursecompetencystatistics"] {
-    padding: 0 5px;
+    padding: 10px;
 }
 .list-inline-item {
     display: list-item;
@@ -2448,7 +2447,116 @@ img.userpicture {
     margin-right: 10px !important;
 
 }
+/*user/file*/
+#fitem_id_files_filemanager .col-md-2 {
+    display: none;
+}
+#fitem_id_emailaddress .col-md-2 {
+    display: none;
+}
+#fitem_id_files_filemanager .col-md-10 {
+    flex:auto;
+    max-width: 100%;
+}
+#fitem_id_emailaddress .col-md-10 {
+    flex:auto;
+    max-width: 100%;
+}
+.participationselectform  .custom-select {
+    width: 100%;
+    margin: 10px 0px !important;
+    display: block;
+}
+/*calendar*/
+#page-calendar-view .modal-title {
+    color: #455a64;
+}
+.calendar_event_course h3.name {
+    color: white;
+}
+#region-main {
+    overflow: hidden !important;
+}
+#region-main #participationreport {
+    overflow-x: auto;
+}
+/*.dataformatselector .custom-select {
+    width: 100%;
+}*/
+/*//badges/view*/
+body.format-multitopic .page-header-headings {
+    display: block !important;
+}
+.card-body h4 {
+    font-size: 18px;
+}
+.card-body h2,.card-body h3 {
+    font-size: 18px;
+}
+a.fheader {
+    font-size: 18px;
+}
+.quizattemptcounts {
+    margin-left: 0 !important;
+}
+/*course/management.php*/
+.detail-pair .pair-key span {
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+.mg-5 {
+    margin: 5px 0px;
+}
+.card-search {
+    display: flex;
+    flex-direction: column;
+}
+#course-category-listings .listitem .float-right {
+    width: 155px;
+    text-align: unset !important;
+}
+#fitem_id_tags .d-inline-block.position-relative {
+    width: 100%;
+}
+.path-admin-tag .addstandardtags {
+    float: unset;
 
+}
+.tag-management-form.generalbox {
+    display: flex;
+    margin-bottom: 15px;
+}
+.card-body .singlebutton {
+    margin-bottom: 30px;
+}
+.path-admin #assignrole {
+    width: 100%;
+}
+.userselector {
+    overflow: hidden;
+}
+.popover.popover-bottom {
+    right: 0;
+    padding: 10px;
+    left: 79% !important;
+}
+.userenrolment td {
+    padding: 10px 0px;
+}
+div.coursesearchbox.invisiblefieldset {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.page-header-headings h2 {
+    font-size: 18px;
+}
+td[data-field="listbtn"] {
+    display: flex;
+}
+#id_tagfilter {
+    width: auto;
+}
 </style>
 
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.common.min.css"/>

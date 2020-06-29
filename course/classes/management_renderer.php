@@ -275,9 +275,9 @@ class core_course_management_renderer extends plugin_renderer_base {
         }
         $html .= html_writer::link($viewcaturl, $text, $textattributes);
         $html .= html_writer::start_div('float-right d-flex');
-        if ($category->idnumber) {
-            $html .= html_writer::tag('span', s($category->idnumber), array('class' => 'dimmed idnumber'));
-        }
+        // if ($category->idnumber) {
+        //     $html .= html_writer::tag('span', s($category->idnumber), array('class' => 'dimmed idnumber'));
+        // }
         if ($hasactions) {
             $html .= $this->category_listitem_actions($category, $actions);
         }
@@ -454,8 +454,8 @@ class core_course_management_renderer extends plugin_renderer_base {
             $form .= html_writer::end_div();
 
             $html .= html_writer::start_div('detail-pair row yui3-g my-1');
-            $html .= html_writer::div(html_writer::span(get_string('sorting')), 'pair-key col-md-3 yui3-u-1-4');
-            $html .= html_writer::div($form, 'pair-value col-md-9 yui3-u-3-4');
+            $html .= html_writer::div(html_writer::span(get_string('sorting')), 'pair-key col-md-12 yui3-u-1-4');
+            $html .= html_writer::div($form, 'pair-value col-md-12 yui3-u-3-4');
             $html .= html_writer::end_div();
         }
         if (core_course_category::can_change_parent_any()) {
@@ -472,7 +472,7 @@ class core_course_management_renderer extends plugin_renderer_base {
                 array('aria-labelledby' => 'moveselectedcategoriesto', 'class' => 'mr-1')
             );
             $submit = array('type' => 'submit', 'name' => 'bulkmovecategories', 'value' => get_string('move'),
-                'class' => 'btn btn-secondary');
+                'class' => 'btn btn-secondary mg-5');
             $html .= $this->detail_pair(
                 html_writer::span(get_string('moveselectedcategoriesto'), '', array('id' => 'moveselectedcategoriesto')),
                 $select . html_writer::empty_tag('input', $submit)
@@ -637,9 +637,9 @@ class core_course_management_renderer extends plugin_renderer_base {
         $html .= html_writer::end_div();
         $html .= html_writer::link($viewcourseurl, $text, array('class' => 'float-left coursename'));
         $html .= html_writer::start_div('float-right');
-        if ($course->idnumber) {
-            $html .= html_writer::tag('span', s($course->idnumber), array('class' => 'dimmed idnumber'));
-        }
+        // if ($course->idnumber) {
+        //     $html .= html_writer::tag('span', s($course->idnumber), array('class' => 'dimmed idnumber'));
+        // }
         $html .= $this->course_listitem_actions($category, $course);
         $html .= html_writer::end_div();
         $html .= html_writer::end_div();
@@ -666,7 +666,7 @@ class core_course_management_renderer extends plugin_renderer_base {
         if ($category->can_request_course()) {
             // Request a new course.
             $url = new moodle_url('/course/request.php', array('return' => 'management'));
-            $actions[] = html_writer::link($url, get_string('requestcourse'));
+            $actions[] = html_writer::link($url, get_string('requestcourse'),array('class' => 'btn btn-secondary'));
         }
         if ($category->can_resort_courses()) {
             $params = $this->page->url->params();
@@ -768,7 +768,7 @@ class core_course_management_renderer extends plugin_renderer_base {
                 array('aria-labelledby' => 'moveselectedcoursesto', 'class' => 'mr-1')
             );
             $submit = array('type' => 'submit', 'name' => 'bulkmovecourses', 'value' => get_string('move'),
-                'class' => 'btn btn-secondary');
+                'class' => 'btn btn-secondary mg-5');
             $html .= $this->detail_pair(
                 html_writer::span(get_string('moveselectedcoursesto'), '', array('id' => 'moveselectedcoursesto')),
                 $select . html_writer::empty_tag('input', $submit)
@@ -839,8 +839,8 @@ class core_course_management_renderer extends plugin_renderer_base {
      */
     protected function detail_pair($key, $value, $class ='') {
         $html = html_writer::start_div('detail-pair row yui3-g '.preg_replace('#[^a-zA-Z0-9_\-]#', '-', $class));
-        $html .= html_writer::div(html_writer::span($key), 'pair-key col-xl-3 col-md-12 col-sm-12  yui3-u-1-4 font-weight-bold');
-        $html .= html_writer::div(html_writer::span($value), 'pair-value col-md-8 yui3-u-3-4');
+        $html .= html_writer::div(html_writer::span($key), 'pair-key col-xl-12 col-md-12 col-sm-12  yui3-u-1-4 font-weight-bold');
+        $html .= html_writer::div(html_writer::span($value), 'pair-value col-md-12 yui3-u-3-4');
         $html .= html_writer::end_div();
         return $html;
     }
@@ -1302,13 +1302,13 @@ class core_course_management_renderer extends plugin_renderer_base {
 
         $output = html_writer::start_div('row');
         $output .= html_writer::start_div('col-md-12');
-        $output .= html_writer::start_tag('form', array('class' => 'card', 'id' => $formid,
+        $output .= html_writer::start_tag('form', array('class' => 'card-search',
                 'action' => $searchurl, 'method' => 'get'));
-        $output .= html_writer::start_tag('fieldset', array('class' => 'coursesearchbox invisiblefieldset'));
+        $output .= html_writer::start_tag('div', array('class' => 'coursesearchbox invisiblefieldset'));
         $output .= html_writer::tag('div', $this->output->heading($strsearchcourses.': ', 2, 'm-0'),
-                array('class' => 'card-header'));
-        $output .= html_writer::start_div('card-body');
-        $output .= html_writer::start_div('input-group col-sm-6 col-lg-4 m-auto');
+                array('class' => ''));
+        $output .= html_writer::start_div('card-body-search');
+        $output .= html_writer::start_div('input-group');
         $output .= html_writer::empty_tag('input', array('class' => 'form-control', 'type' => 'text', 'id' => $inputid,
                 'size' => $inputsize, 'name' => 'search', 'value' => s($value)));
         $output .= html_writer::start_tag('span', array('class' => 'input-group-btn'));
@@ -1316,7 +1316,7 @@ class core_course_management_renderer extends plugin_renderer_base {
         $output .= html_writer::end_tag('span');
         $output .= html_writer::end_div();
         $output .= html_writer::end_div();
-        $output .= html_writer::end_tag('fieldset');
+        $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('form');
         $output .= html_writer::end_div();
         $output .= html_writer::end_div();
