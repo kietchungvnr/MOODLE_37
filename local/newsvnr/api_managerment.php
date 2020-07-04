@@ -38,7 +38,7 @@ require_capability('moodle/site:uploadusers', context_system::instance());
 // $title = get_string('api_title','local_newsvnr');
 // $navbarcourse = get_string('navbarcourse','local_newsvnr');
 // $search = get_string('search','local_newsvnr');
-// $PAGE->set_context(context_system::instance());
+$PAGE->set_context(context_system::instance());
 
 
 // $PAGE->set_title($title);

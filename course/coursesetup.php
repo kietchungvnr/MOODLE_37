@@ -29,7 +29,8 @@ require_once('coursesetup_form.php');
 $id = optional_param('id', 0, PARAM_INT); // Course id.
 $categoryid = optional_param('category', 0, PARAM_INT); // Course category - can be changed in edit form.
 $returnto = optional_param('returnto', 0, PARAM_ALPHANUM); // Generic navigation return page switch.
-$returnurl = optional_param('returnurl', '', PARAM_LOCALURL); // A return URL. returnto must also be set to 'url'.
+// $returnurl = optional_param('returnurl', '', PARAM_LOCALURL); // A return URL. returnto must also be set to 'url'.
+$returnurl = "/course/coursesetup_management.php";
 $strinsert = get_string('insert','local_newsvnr');
 $strdelete = get_string('delete', 'local_newsvnr');
 $strupdate = get_string('edit', 'local_newsvnr');
@@ -127,7 +128,7 @@ navigation_node::override_active_url($searchurl, true);
 if($id) {
     $strtitle = get_string('editcoursesetup', 'local_newsvnr');
 } else {
-    $strtitle = get_string('editcoursesetup', 'local_newsvnr');
+    $strtitle = get_string('addcoursesetup', 'local_newsvnr');
 }
 
 $title = "$site->shortname: $strtitle";
