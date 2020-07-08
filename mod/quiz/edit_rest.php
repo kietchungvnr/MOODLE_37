@@ -48,6 +48,13 @@ $newheading = optional_param('newheading', '', PARAM_TEXT);
 $shuffle    = optional_param('newshuffle', 0, PARAM_INT);
 $page       = optional_param('page', '', PARAM_INT);
 $ids        = optional_param('ids', '', PARAM_SEQUENCE);
+// Custom by Vũ: Chức năng sửa tất cả điểm question với select.
+$listid     = optional_param('listid', '', PARAM_RAW);
+$cmid       = optional_param('cmid', '', PARAM_INT); 
+if($quizid == 0) {
+    $quizid = $DB->get_field('course_modules', 'instance', ['id' => $cmid]);    
+}
+
 $PAGE->set_url('/mod/quiz/edit-rest.php',
         array('quizid' => $quizid, 'class' => $class));
 
@@ -137,7 +144,25 @@ switch($requestmethod) {
                         $result = array('instancemaxmark' => quiz_format_question_grade($quiz, $maxmark),
                                 'newsummarks' => quiz_format_grade($quiz, $quiz->sumgrades));
                         break;
-
+                    // Custom by Vũ: Chức năng sửa tất cả điểm question với select.
+                    case 'updateallmaxmark':
+                        require_capability('mod/quiz:manage', $modcontext);
+                        $listid = explode(",",$listid);
+                        foreach ($listid as $value) {
+                            $slot = $structure->get_slot_by_id($value);
+                            if ($structure->update_slot_maxmark($slot, $maxmark)) {
+                                // Grade has really changed.
+                                quiz_delete_previews($quiz);
+                                quiz_update_sumgrades($quiz);
+                                quiz_update_all_attempt_sumgrades($quiz);
+                                quiz_update_all_final_grades($quiz);
+                                quiz_update_grades($quiz, 0, true);
+                            }
+                            $result = array('instancemaxmark' => quiz_format_question_grade($quiz, $maxmark),
+                                    'newsummarks' => quiz_format_grade($quiz, $quiz->sumgrades));
+                        }
+                        
+                        break;
                     case 'updatepagebreak':
                         require_capability('mod/quiz:manage', $modcontext);
                         $slots = $structure->update_page_break($id, $value);
