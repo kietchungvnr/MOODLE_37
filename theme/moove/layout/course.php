@@ -54,6 +54,16 @@ if ($coursepresentation == 2) {
     $extraclasses[] = 'coursepresentation-cover';
 }
 
+$http_referer = $_SERVER['HTTP_REFERER'];
+$parse_http_referer = parse_url($http_referer);
+$host = explode('/', $parse_http_referer['host']);
+if($_SERVER['HTTP_HOST'] != $host[0]) {
+     $hasportal = true;
+} else {
+    $hasportal = false;
+}
+
+
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [
@@ -66,8 +76,11 @@ $templatecontext = [
     'navdraweropen' => $navdraweropen,
     'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
-    'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu)
+    'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
+    'hasportal' => $hasportal
 ];
+
+// var_dump($templatecontext['hasportal']);die;
 
 // Improve boost navigation.
 theme_moove_extend_flat_navigation($PAGE->flatnav, 'course');
