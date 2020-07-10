@@ -53,16 +53,11 @@ $coursepresentation = theme_moove_get_setting('coursepresentation');
 if ($coursepresentation == 2) {
     $extraclasses[] = 'coursepresentation-cover';
 }
-
-$http_referer = $_SERVER['HTTP_REFERER'];
-$parse_http_referer = parse_url($http_referer);
-$host = explode('/', $parse_http_referer['host']);
-if($_SERVER['HTTP_HOST'] != $host[0]) {
-     $hasportal = true;
+if(isset($_SERVER['HTTP_REFERER'])) {
+    $hasportal = true;
 } else {
     $hasportal = false;
 }
-
 
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();

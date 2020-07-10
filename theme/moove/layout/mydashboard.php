@@ -49,6 +49,12 @@ if ($draweropenright && $hasblocks) {
     $extraclasses[] = 'drawer-open-right';
 }
 
+if(isset($_SERVER['HTTP_REFERER'])) {
+    $hasportal = true;
+} else {
+    $hasportal = false;
+}
+
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [
@@ -62,7 +68,8 @@ $templatecontext = [
     'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
-    'is_siteadmin' => is_siteadmin()
+    'is_siteadmin' => is_siteadmin(),
+    'hasportal' => $hasportal
 ];
 
 $themesettings = new \theme_moove\util\theme_settings();

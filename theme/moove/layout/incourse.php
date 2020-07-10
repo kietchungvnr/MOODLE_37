@@ -57,11 +57,8 @@ if (isset($PAGE->cm->modname) && in_array($PAGE->cm->modname, $moduleswithnavinb
     $extraclasses = [];
 }
 
-$http_referer = $_SERVER['HTTP_REFERER'];
-$parse_http_referer = parse_url($http_referer);
-$host = explode('/', $parse_http_referer['host']);
-if($_SERVER['HTTP_HOST'] != $host[0]) {
-     $hasportal = true;
+if(isset($_SERVER['HTTP_REFERER'])) {
+    $hasportal = true;
 } else {
     $hasportal = false;
 }
