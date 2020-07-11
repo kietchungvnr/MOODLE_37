@@ -139,23 +139,25 @@
 <div class="new-Related-body">
    <div class="row">
       {{#courselqdata}} 
-      <div class="col-md-3">
+      <div class="col-lg-3 col-sm-4 col-xs-6">
+      <div class="new-related-block">
          <div class="new-Related-img">
             <a href="{{newsurl}}"><img src="{{image}}"></a>
          </div>
-         <a href="{{newsurl}}">
-            <h6 class="new-Related-title">{{title}}</h6>
-         </a>
-         <small class="text-date">{{time}}</small>
-         <br />
-         <small class="text-date">Người đăng: </small> <small class="new-Related-user">{{{discussionart}}}</small>
-         <p class="p-courselq">
-            {{content}}
-         </p>
-         <label class="new-Related-comment-info">
-         <i class="fa fa-eye" aria-hidden="true"> {{countviews}} &nbsp;</i>
-         <i class="fa fa-comment-o" aria-hidden="true"> {{countcomments}} &nbsp;</i>
-         </label>
+         <div class="description">
+            <a href="{{newsurl}}">
+               <h6 class="new-Related-title">{{title}}</h6>
+            </a>
+            <small class="text-date">{{time}}</small>
+            <p class="p-courselq">
+               {{content}}
+            </p>
+            <label class="new-Related-comment-info">
+            <i class="fa fa-eye" aria-hidden="true"> {{countviews}} &nbsp;</i>
+            <i class="fa fa-comment-o" aria-hidden="true"> {{countcomments}} &nbsp;</i>
+            </label>
+         </div>
+      </div>
       </div>
       {{/courselqdata}} 
    </div>

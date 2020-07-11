@@ -1617,6 +1617,58 @@ if($action == 'api_managerment') {
 	echo json_encode($data,JSON_UNESCAPED_UNICODE);
 }
 
+
+if($action == 'coursesetup_management') {
+	$pagesize = optional_param('pagesize',10, PARAM_INT);
+	$pagetake = optional_param('take',0, PARAM_INT);
+	$pageskip = optional_param('skip',0, PARAM_INT);
+	$q = optional_param('q','', PARAM_RAW);
+	$odersql = "";
+	$wheresql = "";
+	if($q) {
+		$wheresql = "WHERE fullname LIKE N'%$q%'";
+	}
+	if($pagetake == 0) {
+		$ordersql = "RowNum";
+	} else {
+		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
+	}
+	$sql = "
+			SELECT *, (SELECT COUNT(id) FROM {course_setup}) AS total
+			FROM (
+			    SELECT *, ROW_NUMBER() OVER (ORDER BY id) AS RowNum
+			    FROM {course_setup}
+			) AS Mydata
+			$wheresql
+			ORDER BY $ordersql";
+	$get_list = $DB->get_records_sql($sql);
+	$data = [];
+
+	foreach ($get_list as $value) {
+		$sql_category = 'SELECT * FROM {course_categories} 
+					WHERE id = ? '; 
+		$get_category = $DB->get_records_sql($sql_category, [$value->category]);
+		$object = new stdclass;
+		$buttons = array();
+		$buttons[] = html_writer::link(new moodle_url('/course/coursesetup.php',array('id' => $value->id)),
+		$OUTPUT->pix_icon('t/edit', get_string('edit')),
+		array('title' => get_string('edit')));
+		$buttons[] = html_writer::link('javascript:void(0)',
+		$OUTPUT->pix_icon('t/delete', get_string('delete')),
+		array('title' => get_string('delete'),'id' => $value->id, 'class' => 'delete-item','id' => $value->id,'onclick' => 'coursesetup_delete('.$value->id.')'));
+		$showbuttons = implode(' ', $buttons);
+		$object->listbtn = $showbuttons;
+		$object->fullname = $value->fullname;		
+		$object->shortname = $value->shortname;
+		foreach ($get_category as $value2) {
+			$object->category = $value2->name;
+		}
+		$object->total = $value->total;
+		$object->description = $value->description;
+		$data[] = $object;		
+	}
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+}
 die();
 
 
