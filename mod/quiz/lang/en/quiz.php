@@ -996,3 +996,8 @@ $string['youneedtoenrol'] = 'You need to enrol in this course before you can att
 $string['yourfinalgradeis'] = 'Your final grade for this quiz is {$a}.';
 $string['codeexists'] = 'Existing \'{$a}\' quiz code';
 $string['code'] = 'Code';
+// Custom by Vũ: Chức năng sửa tất cả điểm question với select.
+$string['gradepass'] = 'Grade Pass';
+$string['questiontotal'] = 'Question Total';
+$string['changeallmark'] = 'Change';
+$string['selectallquestion'] = 'Select All';

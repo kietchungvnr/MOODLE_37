@@ -10,7 +10,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta name="referrer" content="no-referrer">
     
 
 <style type="text/css">
@@ -316,7 +315,6 @@ a {
     background-color: #fff;
     margin-right: 10px;
     height: auto;
-    border:1px solid #c5c5c5;
 }
 
 .post-slide6 .post-img {
@@ -443,6 +441,7 @@ a {
 .post-slide6 .post-description {
     color: #6f6f6f;
     font-size: 14px;
+    margin-left: 34px;
     /*height: 52px;*/
     margin-bottom: 5px!important;
     margin-top: 5px!important;
@@ -462,12 +461,14 @@ a {
 .post-slide6 .post-enrolmethod {
     color: #6f6f6f;
     font-size: 13px;
+    margin-left: 34px;
     margin-bottom: 0px;
 }
 
 .post-slide6 .progress {
     height: 10px;
     margin-bottom: 0px; 
+    margin-left: 34px;
     margin-top: 8px;
 }
 
@@ -2159,8 +2160,8 @@ nav.navbar .moove-search-input {
     text-overflow: ellipsis; 
     -webkit-line-clamp: 2;
     /*height: 52px;*/
-/*    display: -webkit-box;*/
-/*    -webkit-box-orient: vertical;*/
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
 /*    margin-left: 34px;*/
 }
 .courses p {margin-bottom: 0!important}
@@ -2392,10 +2393,12 @@ body#page-enrol-index #region-main .generalbox {
     white-space: nowrap;
 }
 .pv-progress {
+    margin-left: 34px;
     display: flex;
 }
 .pv-progress .progress {
     width: 100%;
+    margin-left: 10px;
 }
 /*course/category*/
 #page-course-index-category .categorypicker {
@@ -2554,136 +2557,6 @@ td[data-field="listbtn"] {
 #id_tagfilter {
     width: auto;
 }
-
-/*menu khóa học*/
-.nav-tabs.course {
-    background-color: #d1eeff;
-   display: flex;
-   border-bottom: 0;
-}
-.nav-tabs.course .nav-item {
-   margin-bottom: 0px;
-   color: black;
-}
-.nav-tabs.course .nav-item:hover a {
-   font-weight: bold;
-   background-color: white;
-   border: 0;
-}
-.nav-tabs.course .nav-item a {
-   color: black;
-   border: 0;
-}
-.nav-tabs.course .nav-item.active {
-   font-weight: bold;
-   background-color: white;
-}
-.pagelayout-course .nav-tabs.course .nav-link {
-   border: 0;
-}
-/*menu theme*/
-.pagelayout-course .nav.nav-tabs .nav-link.active {
-   font-weight: bold;
-   border-bottom: 3px solid #5a74fb;
-   color: #5a74fb !important;
-}
-.pagelayout-course .nav.nav-tabs .nav-link:hover  {
-   font-weight: bold;
-   color: #5a74fb !important;
-   border-bottom: 3px solid #5a74fb;
-}
-.pagelayout-course .nav.nav-tabs .nav-link {
-    border: 0;
-    background-color: transparent;
-    color: black;
-    border-bottom:1px solid #cbd1d4;
-}
-.pagelayout-course .nav.nav-tabs .nav-item:hover a.nav-link {
-   color: white;
-}
-.pagelayout-course .nav.nav-tabs {
-    display: flex;
-    border-bottom:0;
-}
-[data-region="drawer"] {
-    width: 100%;
-}
-.pagelayout-course .card-body {
-    padding: 0;
-}
-.pagelayout-course .sections {
-    padding:0 1.25rem;
-}
-#course-header .progress-circle{
-    height: 3rem;
-    width: 3rem;
-} 
-#course-header .progress-circle:before {
-    font-size: 12px;
-    font-weight: bold;
-    left: 0.4rem;
-    right: 0.4rem;
-    top: 0.4rem;
-    bottom: 0.4rem;
-}
-/*forum/discuss*/
-.movediscussionoption .form-inline {
-    flex-flow: unset;
-}
-.discussion-settings-menu {
-    margin-bottom: 0;
-}
-.forum-general-btn {
-    font-size: 18px;
-    color: #455a64;
-}
-/*search*/
-.coursecat{
-    display: none;
-}
-.course-content .single-section {
-    margin-top: 0;
-}
-#completionprogressid {
-    display: none;
-}
-#page-user-files .form-control-static {
-    display: none;
-}
-#page-user-files #fgroup_id_buttonar .col-md-2 {
-    display: none;
-}
-#fitem_id_files_filemanager.form-group {
-    margin-bottom: 0px;
-}
-.new-related-block {
-    border:1px solid #c5c5c5;
-    margin-bottom: 15px;
-}
-.new-related-block .description {
-    padding: 10px;
-}
-.new-Related-title {
-    overflow: hidden;
-    height: 20px;
-}
-.icon.fa.fa-chevron-right.fa-fw, .icon.fa.fa-chevron-left.fa-fw {
-    display: none;
-}
-a:hover {
-    text-decoration: none;  
-}
-/*Course competencies*/
-div[data-region='coursecompetencies'] .list-inline-item {
-    margin-left: 0;
-}
-div[data-region='coursecompetencies'] p {
-    margin-bottom: 0;
-}
-div[data-region='coursecompetencies'] .custom-select {
-    margin-top: 12px;
-}
-
 </style>
 
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.common.min.css"/>
@@ -2706,8 +2579,7 @@ div[data-region='coursecompetencies'] .custom-select {
 
     <a href="javascript:" id="return-to-top"><i class="fa fa-arrow-up"></i></a>
     <div class="modal123"></div>  
-    {{>theme_moove/header}}
-
     <div id="page-wrapper">
 
       {{{ output.standard_top_of_body_html }}}
+
