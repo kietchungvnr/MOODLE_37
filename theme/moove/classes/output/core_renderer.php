@@ -72,7 +72,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         return $content;
     }
     public function full_header() {
-        global $PAGE,$COURSE;
+        global $PAGE, $COURSE;
         $urlpara = $_SERVER['REQUEST_URI'];
         if($urlpara === "/" or $urlpara === "/?redirect=0" or $urlpara === "/index.php" or $urlpara ==="/index.php?redirect=0" or $urlpara === "/?")
         {
@@ -86,7 +86,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $header->courseheader = $this->course_header();
             return $this->render_from_template('theme_moove/fp_header', $header);
         }
-        else{
+        else {
             $header = new stdClass();
             $header->active = true;
             $header->settingsmenu = $this->context_header_settings_menu();
