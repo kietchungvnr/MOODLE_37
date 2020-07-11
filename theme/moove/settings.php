@@ -198,6 +198,38 @@ if ($ADMIN->fulltree) {
     */
     $page = new admin_settingpage('theme_moove_frontpage', get_string('frontpagesettings', 'theme_moove'));
 
+    // Hiện thị or ẩn section tin tức
+    $name = 'theme_moove/displaynews';
+    $title = get_string('displaynews', 'theme_moove');
+    $description = get_string('displaynewsdesc', 'theme_moove');
+    $default = 0;
+    $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $page->add($setting);
+
+    // Hiện thị or ẩn section khóa học phổ biến
+    $name = 'theme_moove/displaycoursespopular';
+    $title = get_string('displaycoursespopular', 'theme_moove');
+    $description = get_string('displaycoursespopulardesc', 'theme_moove');
+    $default = 0;
+    $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $page->add($setting);
+
+    // Hiện thị or ẩn section khóa học của tôi
+    $name = 'theme_moove/displaymycourses';
+    $title = get_string('displaymycourses', 'theme_moove');
+    $description = get_string('displaymycoursesdesc', 'theme_moove');
+    $default = 0;
+    $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $page->add($setting);
+
+    // Hiện thị or ẩn section diễn đàn
+    $name = 'theme_moove/displayforums';
+    $title = get_string('displayforums', 'theme_moove');
+    $description = get_string('displayforumsdesc', 'theme_moove');
+    $default = 0;
+    $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $page->add($setting);
+
     // Disable bottom footer.
     $name = 'theme_moove/disablefrontpageloginbox';
     $title = get_string('disablefrontpageloginbox', 'theme_moove');

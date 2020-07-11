@@ -56,8 +56,9 @@
         {{>theme_moove/inc_start}}
     {{/hasportal}}
     <div id="page" class="container-fluid">
-        {{{ output.full_header }}}
-
+        {{^hasportal}}
+            {{{ output.full_header }}}
+        {{/hasportal}}
         <div id="page-content" class="row">
             <div id="region-main-box" class="col-12">
                 {{#hasregionmainsettingsmenu}}

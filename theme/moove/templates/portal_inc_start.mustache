@@ -2557,6 +2557,84 @@ td[data-field="listbtn"] {
 #id_tagfilter {
     width: auto;
 }
+#btn-forward {
+    position: fixed;
+    bottom: 10px;
+    left: 75px;
+    cursor: pointer;
+    background-color: #1177d1;
+    border-radius: 35px;
+    width: 35px;
+    height: 35px;
+    z-index: 99;
+    -webkit-transition: all 0.3s linear;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+#btn-forward i {
+    color: #fff;
+    margin: 0;
+    position: relative;
+    left: 10px;
+    top: 8px;
+    font-size: 19px;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+#btn-forward:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+#btn-forward:hover i {
+    color: #fff;
+    top: 7px;
+}
+#btn-backward {
+    position: fixed;
+    bottom: 10px;
+    left: 30px;
+    cursor: pointer;
+    background-color: #1177d1;
+    border-radius: 35px;
+    width: 35px;
+    height: 35px;
+    z-index: 99;
+    -webkit-transition: all 0.3s linear;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+#btn-backward i {
+    color: #fff;
+    margin: 0;
+    position: relative;
+    left: 10px;
+    top: 8px;
+    font-size: 19px;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+#btn-backward:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+#btn-backward:hover i {
+    color: #fff;
+    top: 7px;
+}
 </style>
 
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.common.min.css"/>
@@ -2577,8 +2655,11 @@ td[data-field="listbtn"] {
 </head>
 <body {{{ bodyattributes }}}>
 
-    <a href="javascript:" id="return-to-top"><i class="fa fa-arrow-up"></i></a>
+    <a id="return-to-top" title="{{#str}}gotop, theme_moove{{/str}}"><i class="fa fa-arrow-up"></i></a>
+    <a id="btn-backward" title="{{#str}}gobackward, theme_moove{{/str}}"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+    <a id="btn-forward" title="{{#str}}goforward, theme_moove{{/str}}"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
     <div class="modal123"></div>  
+
     <div id="page-wrapper">
 
       {{{ output.standard_top_of_body_html }}}

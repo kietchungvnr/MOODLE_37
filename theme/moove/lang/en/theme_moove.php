@@ -248,4 +248,15 @@ $string['address'] = 'Address';
 $string['addressdesc'] = 'Company Address';
 $string['slogan'] = 'Slogan';
 $string['slogandesc'] = 'Company Slogan';
-$string['test'] = 'Tôi test';
+
+$string['gobackward'] = 'Click to go back, hold to see history';
+$string['goforward'] = 'Click to go forward, hold to see history';
+$string['gotop'] = 'Go top';
+$string['displaynews'] = 'Show news section';
+$string['displaynewsdesc'] = 'Enable a news section in frontpage';
+$string['displaycoursespopular'] = 'Show coursespopular section';
+$string['displaycoursespopulardesc'] = 'Enable a coursespopular section in frontpage';
+$string['displaymycourses'] = 'Show mycourses section';
+$string['displaymycoursesdesc'] = 'Enable a mycourses section in frontpage';
+$string['displayfourms'] = 'Show fourms section';
+$string['displayfourmsdesc'] = 'Enable a fourms section in frontpage';

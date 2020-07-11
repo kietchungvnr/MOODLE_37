@@ -52,6 +52,24 @@ defined('MOODLE_INTERNAL') || die();
 class theme_settings {
 
     /**
+     * Get config theme news, forums, courses, my courses
+     *
+     * @return array
+     */
+    public function sectionenable() {
+        global $OUTPUT;
+
+        $theme = theme_config::load('moove');
+
+        $templatecontext['displaynews'] = $theme->settings->displaynews;
+        $templatecontext['displaycoursespopular'] = $theme->settings->displaycoursespopular;
+        $templatecontext['displaymycourses'] = $theme->settings->displaymycourses;
+        $templatecontext['displayforums'] = $theme->settings->displayforums;
+
+        return $templatecontext;
+    }
+
+    /**
      * Get config theme footer itens
      *
      * @return array

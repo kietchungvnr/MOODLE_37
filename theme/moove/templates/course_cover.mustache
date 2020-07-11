@@ -70,7 +70,9 @@
                 {{/hasregionmainsettingsmenu}}
                 <section id="region-main">
 
-                    {{{ output.full_header }}}
+                    {{^hasportal}}
+                        {{{ output.full_header }}}
+                    {{/hasportal}}
 
                     <div class="card">
                         <div class="card-body">

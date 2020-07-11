@@ -84,7 +84,7 @@ if (isloggedin()) {
    
     $templatecontext['flatnavigation'] = $PAGE->flatnav;
 
-    $templatecontext = array_merge($templatecontext, $themesettings->footer_items(), $themesettings->slideshow(),$themesettings->get_news_data(),$themesettings->get_courses_data(),$themesettings->get_discussions_data(),$themesettings->get_btn_add_news());
+    $templatecontext = array_merge($templatecontext, $themesettings->footer_items(), $themesettings->slideshow(),$themesettings->get_news_data(),$themesettings->get_courses_data(),$themesettings->get_discussions_data(),$themesettings->get_btn_add_news(), $themesettings->sectionenable());
 
     //mycourse 
     $usercourses = \theme_moove\util\extras::user_courses_with_progress($user);
