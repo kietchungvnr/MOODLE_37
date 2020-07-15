@@ -26,3 +26,23 @@ Moodle is written in PHP and JavaScript and uses an SQL database for storing
 the data.
 
 See <https://docs.moodle.org> for details of Moodle's many features.
+
+
+=== 3.7 ===
+- [version] = version của source hiện tại
+- Files sql script chứa ở thư mục: 'moodledata_dev/scripts/..
+- Files ngôn ngữ chứa ở thư mục: 'moodledata_dev/languages/..
+
+** Lưu ý **
+[SQL SCRIPT]
+- Trường hợp clone từ git khi cài đặt xong phải chạy script chứa ở thư mục: 'moodledata_dev/scripts/modifed_moodle_script_[version].sql' ở MSSQL
+- Trường hợp upbuild kiểm tra version(trước khi upbuild) so với version(sau khi upbuild) của sql script. 
+  + Nếu khác thì phải chạy PHẦN script theo version(sau khi upbuild) đã được đánh dấu trong script
+  + Nếu trùng thì cần chạy mới script
+[LANGUAGE]
+- Trường hợp clone từ git khi cài đặt xong phải lấy file ngôn ngữ chứa ở thư mục: 'moodledata_dev/scripts/lang_[version].rar' giải nén và bỏ vào 'moodledata'
+- Trường hợp upbuild kiểm tra version(trước khi upbuild) so với version(sau khi upbuild) của file ngôn ngữ. 
+  + Nếu khác thì phải thêm file ngôn ngữ mới vào moodledata
+  + Nếu trùng thì cần
+
+*** Version: 2019052002.12
