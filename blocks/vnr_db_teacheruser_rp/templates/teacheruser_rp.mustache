@@ -11,7 +11,7 @@
                             <div class="card-body">
                                 <div class="row align-items-start mb-3 pb-1" style="border-bottom: 1px solid wheat;">
                                     <div class="col">
-                                        <span style="font-weight: 700; color: grey">LƯỢT XEM KHÓA HỌC</span>
+                                        <span style="font-weight: 700; color: grey">{{#str}}viewscourseup, block_vnr_db_teacheruser_rp{{/str}}</span>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fa fa-window-minimize m-0 cl-cursor cl-position" aria-hidden="true" data-toggle="collapse" data-target="#lgtkh"></i>
@@ -46,14 +46,14 @@
                             <div class="card-body">
                                 <div class="row align-items-start mb-3 pb-1" style="border-bottom: 1px solid wheat;">
                                     <div class="col">
-                                        <span style="font-weight: 700; color: grey">XU HƯỚNG GHI DANH KHÓA HỌC</span>
+                                        <span style="font-weight: 700; color: grey">{{#str}}trendenrollcourse, block_vnr_db_teacheruser_rp{{/str}}</span>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fa fa-window-minimize mr-0 cl-position cl-cursor" aria-hidden="true" data-toggle="collapse" data-target="#xhtgkh"></i>
                                         <i class="icon fa fa-th-large fa-fw m-0"></i>
                                         <i class="icon fa fa-ellipsis-v fa-fw m-0 dropdown cl-cursor" data-toggle="dropdown">
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#" id="date-fillter">Ẩn/hiện bộ lộc</a>
+                                                <a class="dropdown-item" href="#" id="date-fillter">{{#str}}showhidefilter, block_vnr_db_teacheruser_rp{{/str}}Ẩn/hiện bộ lộc</a>
                                             </div>
                                         </i>
                                     </div>
@@ -66,7 +66,7 @@
                                             
                                            <div class="resetDate">
                                                 <input type="text" placeholder="Chọn ngày.." data-input class="form-control cl-input d-inline">
-                                                <button class="input-button cl-button d-inline" title="clear" data-clear>RESET</button>
+                                                <button class="input-button cl-button d-inline" title="clear" data-clear>{{#str}}reset, block_vnr_db_teacheruser_rp{{/str}}</button>
                                             </div>
                                         </div>
                                     </div>
@@ -142,84 +142,94 @@ require(
         $.ajax(script,settings)
         .then(function(response) {
 
-          if (response.error) {
-              Notification.addNotification({
-                  message: response.error,
-                  type: "error"
-              });
-          } else {
-              var strings = [{
-                  key: 'nodatatable',
-                  component: 'local_newsvnr'
-              }, ];
-              Str.get_strings(strings).then(function(s) {
-                    var list_coursename = response.list_coursename;
-                    var list_viewcount = response.list_viewcount;
+            if (response.error) {
+                Notification.addNotification({
+                    message: response.error,
+                    type: "error"
+                });
+            } else {
+                var strings = [{
+                        key: 'nodatatable',
+                        component: 'local_newsvnr'
+                    }, {
+                        key: 'views',
+                        component: 'block_vnr_db_teacheruser_rp'
+                    }, {
+                        key: 'viewscourselow',
+                        component: 'block_vnr_db_teacheruser_rp'
+                    }];
+            Str.get_strings(strings).then(function(s) {
+                var list_coursename = response.list_coursename;
+                var list_viewcount = response.list_viewcount;
                     // Create a chart.
-                    Highcharts.chart('viewcount_chart', {
-                        chart: {
-                                type: 'line'
-                            },
+                Highcharts.chart('viewcount_chart', {
+                    chart: {
+                            type: 'line'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        subtitle: {
+                            text: ''
+                        }, 
+                        xAxis: {
+                            categories: list_coursename
+                        },
+                        yAxis: {
                             title: {
-                                text: ''
-                            },
-                            subtitle: {
-                                text: ''
-                            }, 
-                            xAxis: {
-                                categories: list_coursename
-                            },
-                            yAxis: {
-                                title: {
-                                    text: 'Số lượt ghé thăm'
-                                }
-                            },
-                            credits: {
-                                enabled: false
-                            },
-                            plotOptions: {
-                                line: {
-                                    dataLabels: {
-                                        enabled: true
-                                    },
-                                    enableMouseTracking: true
-                                }
-                            },
-                            series: [{
-                                name: 'Số lượt xem khóa học',
-                                data: list_viewcount,
-                                color: '#1120f3'
-
-                            }]
+                                text: s[1]
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            line: {
+                                dataLabels: {
+                                    enabled: true
+                                },
+                                enableMouseTracking: true
+                            }
+                        },
+                        series: [{
+                            name: s[2],
+                            data: list_viewcount,
+                            color: '#1120f3'
+                    }]
                 });
                         
             });
 
-          }
-          return;
+            }
+            return;
         }).fail(Notification.exception);
         var joincourse_settings = {
-                type: 'GET',
-                data: {
-                    "action":"joincourse_chart"
-                },
-                processData: true,
-                contentType: "application/json"
+            type: 'GET',
+            data: {
+                "action":"joincourse_chart"
+            },
+            processData: true,
+            contentType: "application/json"
         };
         $.ajax(script,joincourse_settings)
         .then(function(response) {
-
-          if (response.error) {
-              Notification.addNotification({
-                  message: response.error,
-                  type: "error"
-              });
-          } else {
-              var strings = [{
-                  key: 'nodatatable',
-                  component: 'local_newsvnr'
-              }, ];
-              Str.get_strings(strings).then(function(s) {
+            if (response.error) {
+                Notification.addNotification({
+                    message: response.error,
+                    type: "error"
+                });
+            } else {
+                var strings = [{
+                    key: 'nodatatable',
+                    component: 'local_newsvnr'
+                }, {
+                    key: 'numberstudent',
+                    component: 'block_vnr_db_teacheruser_rp'
+                }, {
+                    key: 'newenrollstudent',
+                    component: 'block_vnr_db_teacheruser_rp'
+                }];
+                Str.get_strings(strings).then(function(s) {
                     var list_coursename = response.list_coursename;
                     var list_joincourse = response.list_joincourse;
 
@@ -239,7 +249,7 @@ require(
                         },
                         yAxis: {
                             title: {
-                                text: 'Số lượng học viên'
+                                text: s[1]
                             }
                         },
                         credits: {
@@ -254,16 +264,16 @@ require(
                             }
                         },
                         series: [{
-                            name: 'Học viên mới tham gia lớp học',
+                            name: s[2],
                             data: list_joincourse,
                             color: '#ef4914'
                         }]
                     });
                         
-            });
+                });
 
-          }
-          return;
+            }
+            return;
         }).fail(Notification.exception);
         $(".resetDate").flatpickr({
             wrap: true,
@@ -286,19 +296,25 @@ require(
                 $.ajax(script,settings)
                 .then(function(response) {
 
-                  if (response.error) {
-                      Notification.addNotification({
-                          message: response.error,
-                          type: "error"
+                    if (response.error) {
+                        Notification.addNotification({
+                            message: response.error,
+                            type: "error"
                       });
-                  } else {
-                      var strings = [{
-                          key: 'nodatatable',
-                          component: 'local_newsvnr'
-                      }, ];
-                      Str.get_strings(strings).then(function(s) {
-                        var list_coursename = response.list_coursename;
-                        var list_joincourse = response.list_joincourse;
+                    } else {
+                        var strings = [{
+                             key: 'nodatatable',
+                            component: 'local_newsvnr'
+                        }, {
+                            key: 'numberstudent',
+                            component: 'block_vnr_db_teacheruser_rp'
+                        }, {
+                            key: 'newenrollstudent',
+                            component: 'block_vnr_db_teacheruser_rp'
+                        }];
+                        Str.get_strings(strings).then(function(s) {
+                            var list_coursename = response.list_coursename;
+                            var list_joincourse = response.list_joincourse;
                         if(list_coursename != "" && list_joincourse != "") {
                             // Create a chart.
                             Highcharts.chart('joincourse_chart', {
@@ -316,11 +332,11 @@ require(
                                 },
                                 yAxis: {
                                     title: {
-                                        text: 'Số lượng học viên'
+                                        text: s[1]
                                     }
                                 },
                                 lang: {
-                                    noData: "Không có dữ liệu!"
+                                    noData: s[0]
                                 },
                                 credits: {
                                     enabled: false
@@ -334,24 +350,22 @@ require(
                                     }
                                 },
                                 series: [{
-                                    name: 'Học viên mới tham gia lớp học',
+                                    name: s[2],
                                     data: list_joincourse,
                                     color: '#ef4914'
                                 }]
                             });
                         } else {
-                           $('#joincourse_chart').html('<div class="alert alert-info" role="alert"><strong>!Empty Data</strong> Không có dữ liệu</div>');
+                            var html = '<div class="alert alert-info" role="alert"><strong>!Empty Data</strong>' + s[0] + '</div>';
+                            $('#joincourse_chart').html(html);
                         }
                     });
 
-                  }
-                  return;
+                }
+                return;
                 }).fail(Notification.exception);
             }
-
         });
-        
-
 });
 
 

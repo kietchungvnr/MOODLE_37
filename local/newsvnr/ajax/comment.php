@@ -56,13 +56,13 @@ if(isset($_POST['post_comment']))
 
                            
                                    <div class="chat-footer">
-                                         <label class="like">Like</label>
+                                         <label class="like">'. get_string('like', 'local_newsvnr') .'</label>
 
-                                             <label class="delete" onclick="DeleteComment('. $id_comment .')"  id="'. $id_comment .'" >Xóa</label>
+                                             <label class="delete" onclick="DeleteComment('. $id_comment .')"  id="'. $id_comment .'" >'. get_string('delete') .'</label>
 
                                          <input type="hidden" id="delete_comment'. $id_comment .'"  value="delete">
 
-                                          <label class="feedback" onclick="FeedBack('. $id_comment .')" id="'. $id_comment .'">Phản hồi</label>
+                                          <label class="feedback" onclick="FeedBack('. $id_comment .')" id="'. $id_comment .'">'. get_string('feedback', 'local_newsvnr') .'</label>
 
                       
                                      </div>
@@ -70,10 +70,10 @@ if(isset($_POST['post_comment']))
 
 		                            <!-- ACTION SHOW AND HIDE REPLIES -->
 		                                  <p class="chat-show-reply" id="show-reply'. $id_comment .'" 
-                                    onclick="ShowReplies('. $id_comment .')" ><i class="fa fa-chevron-down"> Xem phản hồi</i></p>
+                                    onclick="ShowReplies('. $id_comment .')" ><i class="fa fa-chevron-down"> '. get_string('showfeedback', 'local_newsvnr') .'</i></p>
 
                                     <p style="display: none;" class="chat-hidden-reply" id="hidden-reply'. $id_comment .'"
-                                     onclick="HiddenReplies('. $id_comment .')"><i class="fa fa-chevron-up"> Ẩn phản hồi</i>
+                                     onclick="HiddenReplies('. $id_comment .')"><i class="fa fa-chevron-up"> '. get_string('hidefeedback', 'local_newsvnr') .'</i>
                                      </p>                 
 
 		                            <!-- ACTION END SHOW AND HIDE REPLIES --> 
@@ -81,18 +81,18 @@ if(isset($_POST['post_comment']))
                                     <div class="new-detail-reply-body form-reply" style="width: 80%; display:none;" >
 
                                         <form >
-                                            <label class="new-detail-reply-title">Bình luận</label>
+                                            <label class="new-detail-reply-title">'. get_string('comment', 'local_newsvnr') .'</label>
 
-                                            <textarea class="new-detail-reply-content" name="content_reply" id="content_reply" placeholder="Ý kiến của bạn"></textarea>
+                                            <textarea class="new-detail-reply-content" name="content_reply" id="content_reply" placeholder="'. get_string('yourcomment', 'local_newsvnr') .'"></textarea>
 
                                             <input type="hidden" id="commentid" name="" value="'. $id_comment .'"> 
                                             <input type="hidden" id="userid" name="userid" value="'. $userid .'"> 
                                             <input type="hidden" id="fullname" value="'. $fullname .'" name="">
 
                                             <div class="new-detail-reply-control" >
-                                                <button type="button" class="btn btn-cancel" >Hủy</button>
+                                                <button type="button" class="btn btn-cancel" >'. get_string('cancel') .'</button>
 
-                                                <button type="button" id="post_reply" name="post_reply" class="btn btn-submit ">Gửi bình luận</button>
+                                                <button type="button" id="post_reply" name="post_reply" class="btn btn-submit ">'. get_string('sendcomment', 'local_newsvnr') .'</button>
 
                                             </div>
                                         </form>
@@ -149,8 +149,8 @@ if(isset($_GET['action']) && $_GET['action'] == "delete")
 
                            
                                    <div class="chat-footer">
-                                         <label class="like">Like</label>
-                                        <label class="delete" onclick="DeleteComment('. $get_append_comment->id .')"  id="'. $get_append_comment->id .'" >Xóa</label>
+                                         <label class="like">'. get_string('like', 'local_newsvnr') .'</label>
+                                        <label class="delete" onclick="DeleteComment('. $get_append_comment->id .')"  id="'. $get_append_comment->id .'" >'. get_string('delete') .'</label>
                                          <input type="hidden" id="delete_comment'. $get_append_comment->id .'"  value="delete">
                                         <label class="feedback"  id="'. $get_append_comment->id .'">Phản hồi</label>
      
@@ -161,9 +161,9 @@ if(isset($_GET['action']) && $_GET['action'] == "delete")
                          
 
                                     <p style="display: none;" class="chat-hidden-reply" id="hidden-reply'. $get_append_comment->id .'"
-                                     onclick="HiddenReplies('. $get_append_comment->id .')"><i class="fa fa-chevron-up"> Ẩn phản hồi</i></p>
+                                     onclick="HiddenReplies('. $get_append_comment->id .')"><i class="fa fa-chevron-up"> '. get_string('hidefeedback', 'local_newsvnr') .'</i></p>
                                     <p class="chat-show-reply" id="show-reply'. $get_append_comment->id .'" 
-                                    onclick="ShowReplies('. $get_append_comment->id .')" ><i class="fa fa-chevron-down" style="display:block"> Xem phản hồi</i></p>
+                                    onclick="ShowReplies('. $get_append_comment->id .')" ><i class="fa fa-chevron-down" style="display:block"> '. get_string('showfeedback', 'local_newsvnr') .'</i></p>
                                     <!-- ACTION END SHOW AND HIDE REPLIES --> 
                             </div>
                                         

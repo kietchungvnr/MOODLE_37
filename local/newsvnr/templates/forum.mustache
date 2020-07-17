@@ -4,7 +4,7 @@
                 <div class="forum-general-header">
                     <div class="row">
                         <div class="col-6 col-md-6 forum-general-btn pt-0">
-                            Bài viết mới
+                            {{#str}}newpost, local_newsvnr{{/str}}
                         </div>
                         
                     </div>
@@ -12,10 +12,10 @@
                 <table class="forum-general-table w-100">
                     <thead>
                         <tr class="row m-0">
-                            <th class="col-6 col-md-5">Bài viết</th>
+                            <th class="col-6 col-md-5">{{#str}}post, local_newsvnr{{/str}}</th>
                             <th class="col-6 col-md-1"></th>
-                            <th class="d-none d-sm-block col-md-2">Tác giả</th>
-                            <th class="d-none d-sm-block col-md-4">Chủ đề</th>
+                            <th class="d-none d-sm-block col-md-2">{{#str}}arthor, local_newsvnr{{/str}}</th>
+                            <th class="d-none d-sm-block col-md-4">{{#str}}topic, local_newsvnr{{/str}}</th>
                         </tr>
                     </thead>
                     
@@ -42,7 +42,7 @@
                 <div class="forum-general-header">
                     <div class="row">
                         <div class="col-6 col-md-6 forum-general-btn">
-                            Diễn đàn thông dụng
+                            {{#str}}popularforum, local_newsvnr{{/str}}
                         </div>
                         
                     </div>
@@ -50,11 +50,11 @@
                 <table class="forum-general-table w-100">
                     <thead>
                         <tr class="row m-0">
-                            <th class="col-9 col-md-3">Chủ đề</th>
+                            <th class="col-9 col-md-3">{{#str}}topic, local_newsvnr{{/str}}</th>
                             <th class="col-3 col-md-1"></th>
-                            <th class="d-none d-sm-block col-md-3">Ngày tạo</th>
-                            <th class="d-none d-sm-block col-md-2">Số bài viết</th>
-                            <th class="d-none d-sm-block col-md-3">Bài viết mới</th>
+                            <th class="d-none d-sm-block col-md-3">{{#str}}datecreated, local_newsvnr{{/str}}</th>
+                            <th class="d-none d-sm-block col-md-2">{{#str}}numberpost, local_newsvnr{{/str}}</th>
+                            <th class="d-none d-sm-block col-md-3">{{#str}}newpost, local_newsvnr{{/str}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -68,7 +68,7 @@
                             </td>
                             <td class="d-none d-sm-block col-md-3 border-giua">{{{createtime}}}</td>
                             <td class="d-none d-sm-block col-md-2 border-giua">{{postnumber}}</td>
-                            <td class="d-none d-sm-block col-md-3 botron-phai">{{{disscussurl}}} </br>by:<i class="forum-user">{{{userurl}}}
+                            <td class="d-none d-sm-block col-md-3 botron-phai">{{{disscussurl}}} </br>{{#str}}by, local_newsvnr{{/str}}: <i class="forum-user">{{{userurl}}}
                         </tr>
                         {{/forumgeneraldata}}
                     </tbody>
@@ -79,7 +79,7 @@
                 <div class="forum-general-header">
                     <div class="row">
                         <div class="col-6 col-md-6 forum-general-btn">
-                            Diễn đàn blog
+                            {{#str}}blogforum, local_newsvnr{{/str}}
                         </div>
                         
                     </div>
@@ -87,11 +87,11 @@
                 <table class="forum-general-table w-100">
                     <thead>
                         <tr class="row m-0 border">
-                            <th class="col-9 col-md-3">Chủ đề</th>
+                            <th class="col-9 col-md-3">{{#str}}topic, local_newsvnr{{/str}}</th>
                             <th class="col-3 col-md-1"></th>
-                            <th class="d-none d-sm-block col-md-3">Ngày tạo</th>
-                            <th class="d-none d-sm-block col-md-2">Số bài viết</th>
-                            <th class="d-none d-sm-block col-md-3">Bài viết mới</th>
+                            <th class="d-none d-sm-block col-md-3">{{#str}}datecreated, local_newsvnr{{/str}}</th>
+                            <th class="d-none d-sm-block col-md-2">{{#str}}numberpost, local_newsvnr{{/str}}</th>
+                            <th class="d-none d-sm-block col-md-3">{{#str}}newpost, local_newsvnr{{/str}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -105,7 +105,7 @@
                             </td>
                             <td class="d-none d-sm-block col-md-3 border-giua">{{{createtime}}}</td>
                             <td class="d-none d-sm-block col-md-2 border-giua">{{postnumber}}</td>
-                            <td class="d-none d-sm-block col-md-3 botron-phai">{{{disscussurl}}} </br>by:<i class="forum-user">{{{userurl}}}
+                            <td class="d-none d-sm-block col-md-3 botron-phai">{{{disscussurl}}} </br>{{#str}}by, local_newsvnr{{/str}}: <i class="forum-user">{{{userurl}}}
                         </tr>
                         {{/forumblogdata}}
                     </tbody>
@@ -116,7 +116,7 @@
                 <div class="forum-general-header">
                     <div class="row">
                         <div class="col-6 col-md-6 forum-general-btn">
-                            Diễn đàn đơn
+                            {{#str}}singleforum, local_newsvnr{{/str}}
                         </div>
                        
                     </div>
@@ -124,11 +124,11 @@
                 <table class="forum-general-table w-100">
                     <thead>
                         <tr class="row m-0">
-                            <th class="col-9 col-md-3">Chủ đề</th>
+                            <th class="col-9 col-md-3">{{#str}}topic, local_newsvnr{{/str}}</th>
                             <th class="col-3 col-md-1"></th>
-                            <th class="d-none d-sm-block col-md-3">Ngày tạo</th>
-                            <th class="d-none d-sm-block col-md-2">Số bài viết</th>
-                            <th class="d-none d-sm-block col-md-3">Bài viết mới</th>
+                            <th class="d-none d-sm-block col-md-3">{{#str}}datecreated, local_newsvnr{{/str}}</th>
+                            <th class="d-none d-sm-block col-md-2">{{#str}}numberpost, local_newsvnr{{/str}}</th>
+                            <th class="d-none d-sm-block col-md-3">{{#str}}newpost, local_newsvnr{{/str}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -143,7 +143,7 @@
                             </td>
                             <td class="d-none d-sm-block col-md-3 border-giua">{{{createtime}}}</td>
                             <td class="d-none d-sm-block col-md-2 border-giua">{{postnumber}}</td>
-                            <td class="d-none d-sm-block col-md-3 botron-phai">{{{disscussurl}}} </br>by:<i class="forum-user">{{{userurl}}}
+                            <td class="d-none d-sm-block col-md-3 botron-phai">{{{disscussurl}}} </br>{{#str}}by, local_newsvnr{{/str}}: <i class="forum-user">{{{userurl}}}
                                  </i>
                             </td>
                         </tr>
@@ -156,7 +156,7 @@
                 <div class="forum-general-header">
                     <div class="row">
                         <div class="col-6 col-md-6 forum-general-btn">
-                            Diễn đàn hỏi đáp
+                            {{#str}}questionforum, local_newsvnr{{/str}}
                         </div>
                        
                     </div>
@@ -164,11 +164,11 @@
                 <table class="forum-general-table w-100">
                     <thead>
                         <tr class="row m-0">
-                            <th class="col-9 col-md-3">Chủ đề</th>
+                            <th class="col-9 col-md-3">{{#str}}topic, local_newsvnr{{/str}}</th>
                             <th class="col-3 col-md-1"></th>
-                            <th class="d-none d-sm-block col-md-3">Ngày tạo</th>
-                            <th class="d-none d-sm-block col-md-2">Số bài viết</th>
-                            <th class="d-none d-sm-block col-md-3">Bài viết mới</th>
+                            <th class="d-none d-sm-block col-md-3">{{#str}}datecreated, local_newsvnr{{/str}}</th>
+                            <th class="d-none d-sm-block col-md-2">{{#str}}numberpost, local_newsvnr{{/str}}</th>
+                            <th class="d-none d-sm-block col-md-3">{{#str}}newpost, local_newsvnr{{/str}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -183,7 +183,7 @@
                             </td>
                             <td class="d-none d-sm-block col-md-3 border-giua">{{{createtime}}}</td>
                             <td class="d-none d-sm-block col-md-2 border-giua">{{postnumber}}</td>
-                            <td class="d-none d-sm-block col-md-3 botron-phai">{{{disscussurl}}} </br>by:<i class="forum-user">{{{userurl}}}
+                            <td class="d-none d-sm-block col-md-3 botron-phai">{{{disscussurl}}} </br>{{#str}}by, local_newsvnr{{/str}}: <i class="forum-user">{{{userurl}}}
                                  </i>
                             </td>
                         </tr>
@@ -197,7 +197,7 @@
                 <div class="forum-general-header">
                     <div class="row">
                         <div class="col-6 col-md-6 forum-general-btn">
-                            Diễn đàn mỗi người khởi tạo 1 chủ đề
+                            {{#str}}freedomforum, local_newsvnr{{/str}}
                         </div>
                        
                     </div>
@@ -205,11 +205,11 @@
                 <table class="forum-general-table w-100">
                     <thead>
                         <tr class="row m-0">
-                            <th class="col-9 col-md-3">Chủ đề</th>
+                            <th class="col-9 col-md-3">{{#str}}topic, local_newsvnr{{/str}}</th>
                             <th class="col-3 col-md-1"></th>
-                            <th class="d-none d-sm-block col-md-3">Ngày tạo</th>
-                            <th class="d-none d-sm-block col-md-2">Số bài viết</th>
-                            <th class="d-none d-sm-block col-md-3">Bài viết mới</th>
+                            <th class="d-none d-sm-block col-md-3">{{#str}}datecreated, local_newsvnr{{/str}}</th>
+                            <th class="d-none d-sm-block col-md-2">{{#str}}numberpost, local_newsvnr{{/str}}</th>
+                            <th class="d-none d-sm-block col-md-3">{{#str}}newpost, local_newsvnr{{/str}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -224,7 +224,7 @@
                             </td>
                             <td class="d-none d-sm-block col-md-3 border-giua">{{{createtime}}}</td>
                             <td class="d-none d-sm-block col-md-2 border-giua">{{postnumber}}</td>
-                            <td class="d-none d-sm-block col-md-3 botron-phai">{{{disscussurl}}} </br>by:<i class="forum-user">{{{userurl}}}
+                            <td class="d-none d-sm-block col-md-3 botron-phai">{{{disscussurl}}} </br>{{#str}}by, local_newsvnr{{/str}}: <i class="forum-user">{{{userurl}}}
                                  </i>
                             </td>
                         </tr>

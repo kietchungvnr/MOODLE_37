@@ -15,10 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Privacy Subsystem implementation for block_course_list.
+ * Block hiện thị tiến độ học tập của học viên như:
+ * Khóa học hoàn thành, chưa hoàn thành, bắt buộc, không bắt buộc...
  *
- * @package    block_course_list
- * @copyright  2018 Zig Tan <zig@moodle.com>
+ * @package    block_user(student)
+ * @copyright  2019 Le Thanh Vu
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -26,12 +27,6 @@ namespace block_vnr_db_studentuser_learning_rp\privacy;
 
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * Privacy Subsystem for block_course_list implementing null_provider.
- *
- * @copyright  2018 Zig Tan <zig@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 class provider implements \core_privacy\local\metadata\null_provider {
 
     /**

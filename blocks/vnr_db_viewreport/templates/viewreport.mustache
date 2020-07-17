@@ -21,11 +21,11 @@
                                 <div class="col-auto d-inline">Jump to: </div>
                                 <select name="list_chart" id="list_chart" class="custom-select col rounded d-inline form-control">
                                     <!-- <option selected>Chọn loại biểu đồ</option> -->
-                                    <option value="1" selected>Số lượng học viên hoàn thành khoá học</option>
-                                    <option value="2">Báo cáo điểm</option>
-                                    <option value="3">Lượt xem khoá học</option>
-                                    <option value="4">Xu hướng tham gia hoạt động</option>
-                                    <option value="5">Xu hướng ghi danh khoá học</option>
+                                    <option value="1" selected>{{#str}}numberstudentcompletedcourse, block_vnr_db_viewreport{{/str}}</option>
+                                    <option value="2">{{#str}}reportgrade, block_vnr_db_viewreport{{/str}}</option>
+                                    <option value="3">{{#str}}viewscourse, block_vnr_db_viewreport{{/str}}</option>
+                                    <option value="4">{{#str}}trendjoinactivity, block_vnr_db_viewreport{{/str}}</option>
+                                    <option value="5">{{#str}}trendenrolcourse, block_vnr_db_viewreport{{/str}}</option>
                                 </select>
                                
                             </div>
@@ -223,119 +223,135 @@ function (Highcharts, ExportingModule, AccessibilityModule, $, Config, Notificat
         if(paramJson['action'] == 'viewcount_chart_vp')
             callAjax(script, settings);
     });
-    
-    // Chọn loại biểu đồ
-    $('#list_chart').change(function() {
-        param = $('select[id=list_chart]').val();
-        var chartid = $('select[id=list_chart]').val();
-        paramJson['id'] = chartid;
-        paramJson['action'] = chartname(chartid);
-        var settings = {
-            type: 'GET',
-            data: paramJson,
-            processData: true,
-            contentType: "application/json"
-        };
-        if(paramJson['action'] == 'viewcount_chart_vp')
-            callAjax(script, settings);
-        courseid = $('#list_course').val();
-        $('.showchart').removeClass('d-none');
-        $('.showchart_grid').addClass('d-none');
-        if (param == 1) {
-            url = Config.wwwroot + '/report/completion/index.php?course=' + courseid + ' [role=main]';
-            $body.addClass("loading");
-            $('.showchart').load(url, function(response, status, xhr) {
-                if(status) {
-                    $body.removeClass("loading");
-                }
-                if (status == "error") {
-                    $(".showchart").html('<div class="d-flex justify-content-center alert alert-info alert-block fade in ">Khoá học này chưa cài đặt điều kiện hoàn thành</div>');
-                }
-            });
-        } else if (param == 2) {
-            url = Config.wwwroot + '/grade/report/grader/index.php?id=' + courseid + ' [role=main]';
-            $body.addClass("loading");
-            $('.showchart').load(url, function(response, status, xhr) {
-                if(status) {
-                    $body.removeClass("loading");
-                }
-                if (status == "error") {
-                    $(".showchart").html(msg + xhr.status + " " + xhr.statusText);
-                }
-            });
-        } else if (param == 3) {
-            action = "viewcount_chart_vp"
-        } else if (param == 4) {
-            url = Config.wwwroot + '/report/progress/index.php?course=' + courseid + ' [role=main]';
-            $body.addClass("loading");
-            $('.showchart').load(url, function(response, status, xhr) {
-                if(status) {
-                    $body.removeClass("loading");
-                }
-                if (status == "error") {
-                    $(".showchart").html('<div class="d-flex justify-content-center alert alert-info alert-block fade in ">Khoá học này chưa có hoạt động nào</div>');
-                }
-            });
-        } else if (param == 5) {
-            $('.showchart_grid').removeClass('d-none');
-             vpgrid.viewreport(courseid);
-             $('.showchart').addClass('d-none');
-        }
+    var strings = [{
+                    key: 'nodatatable',
+                    component: 'local_newsvnr'
+                }, {
+                    key: 'nosettingconditioncompletecourse',
+                    component: 'block_vnr_db_viewreport'
+                }, {
+                    key: 'noactivityincourse',
+                    component: 'block_vnr_db_viewreport'
+                }, ];
+    Str.get_strings(strings).then(function(s) {
+        // Chọn loại biểu đồ
+        $('#list_chart').change(function() {
+            
+            param = $('select[id=list_chart]').val();
+            var chartid = $('select[id=list_chart]').val();
+            paramJson['id'] = chartid;
+            paramJson['action'] = chartname(chartid);
+            var settings = {
+                type: 'GET',
+                data: paramJson,
+                processData: true,
+                contentType: "application/json"
+            };
+            if(paramJson['action'] == 'viewcount_chart_vp')
+                callAjax(script, settings);
+            courseid = $('#list_course').val();
+            $('.showchart').removeClass('d-none');
+            $('.showchart_grid').addClass('d-none');
+            if (param == 1) {
+                url = Config.wwwroot + '/report/completion/index.php?course=' + courseid + ' [role=main]';
+                $body.addClass("loading");
+                $('.showchart').load(url, function(response, status, xhr) {
+                    if(status) {
+                        $body.removeClass("loading");
+                    }
+                    if (status == "error") {
+                        var html = '<div class="d-flex justify-content-center alert alert-info alert-block fade in ">' + s[1] + '</div>';
+                        $(".showchart").html(html);
+                    }
+                });
+            } else if (param == 2) {
+                url = Config.wwwroot + '/grade/report/grader/index.php?id=' + courseid + ' [role=main]';
+                $body.addClass("loading");
+                $('.showchart').load(url, function(response, status, xhr) {
+                    if(status) {
+                        $body.removeClass("loading");
+                    }
+                    if (status == "error") {
+                        $(".showchart").html(msg + xhr.status + " " + xhr.statusText);
+                    }
+                });
+            } else if (param == 3) {
+                action = "viewcount_chart_vp"
+            } else if (param == 4) {
+                url = Config.wwwroot + '/report/progress/index.php?course=' + courseid + ' [role=main]';
+                $body.addClass("loading");
+                $('.showchart').load(url, function(response, status, xhr) {
+                    if(status) {
+                        $body.removeClass("loading");
+                    }
+                    if (status == "error") {
+                        var html = '<div class="d-flex justify-content-center alert alert-info alert-block fade in ">' + s[2] + '</div>';
+                        $(".showchart").html(html);
+                    }
+                });
+            } else if (param == 5) {
+                $('.showchart_grid').removeClass('d-none');
+                 vpgrid.viewreport(courseid);
+                 $('.showchart').addClass('d-none');
+            }
+        });
+        $('#list_course').change(function() {
+            courseid = $(this).val();
+            $('.showchart').removeClass('d-none');
+            $('.showchart_grid').addClass('d-none');
+            if (param == 1) {
+                url = Config.wwwroot + '/report/completion/index.php?course=' + courseid + ' [role=main]';
+                $body.addClass("loading");
+                $('.showchart').load(url, function(response, status, xhr) {
+                    if(status) {
+                        $body.removeClass("loading");
+                    }
+                    if (status == "error") {
+                        var html = '<div class="d-flex justify-content-center alert alert-info alert-block fade in ">' + s[1] + '</div>';
+                        $(".showchart").html(html);
+                    }
+                });
+            } else if (param == 2) {
+                url = Config.wwwroot + '/grade/report/grader/index.php?id=' + courseid + ' [role=main]';
+                $body.addClass("loading");
+                $('.showchart').load(url, function(response, status, xhr) {
+                    if(status) {
+                        $body.removeClass("loading");
+                    }
+                    if (status == "error") {
+                        $(".showchart").html(msg + xhr.status + " " + xhr.statusText);
+                    }
+                });
+            } else if (param == 3) {
+                action = "viewcount_chart_vp"
+            } else if (param == 4) {
+                url = Config.wwwroot + '/report/progress/index.php?course=' + courseid + ' [role=main]';
+                $body.addClass("loading");
+                $('.showchart').load(url, function(response, status, xhr) {
+                    if(status) {
+                        $body.removeClass("loading");
+                    }
+                    if (status == "error") {
+                        var html = '<div class="d-flex justify-content-center alert alert-info alert-block fade in ">' + s[2] + '</div>';
+                        $(".showchart").html(html);
+                    }
+                });
+            } else if (param == 5) {
+                $('.showchart_grid').removeClass('d-none');
+                 vpgrid.viewreport(courseid);
+                 $('.showchart').addClass('d-none');
+            }
+            var chart_courseid = $(this).val();
+            if(chart_courseid != 0) {
+                paramJson['courseid'] = chart_courseid;
+                if(paramJson['action'] == 'viewcount_chart_vp')
+                    callAjax(script, settings);
+            } else {
+                deteleParamJson();
+                if(paramJson['action'] == 'viewcount_chart_vp')
+                    callAjax(script, settings);
+            }
+        }).change();
     });
-    $('#list_course').change(function() {
-        courseid = $(this).val();
-        $('.showchart').removeClass('d-none');
-        $('.showchart_grid').addClass('d-none');
-        if (param == 1) {
-            url = Config.wwwroot + '/report/completion/index.php?course=' + courseid + ' [role=main]';
-            $body.addClass("loading");
-            $('.showchart').load(url, function(response, status, xhr) {
-                if(status) {
-                    $body.removeClass("loading");
-                }
-                if (status == "error") {
-                    $(".showchart").html('<div class="d-flex justify-content-center alert alert-info alert-block fade in ">Khoá học này chưa cài đặt điều kiện hoàn thành</div>');
-                }
-            });
-        } else if (param == 2) {
-            url = Config.wwwroot + '/grade/report/grader/index.php?id=' + courseid + ' [role=main]';
-            $body.addClass("loading");
-            $('.showchart').load(url, function(response, status, xhr) {
-                if(status) {
-                    $body.removeClass("loading");
-                }
-                if (status == "error") {
-                    $(".showchart").html(msg + xhr.status + " " + xhr.statusText);
-                }
-            });
-        } else if (param == 3) {
-            action = "viewcount_chart_vp"
-        } else if (param == 4) {
-            url = Config.wwwroot + '/report/progress/index.php?course=' + courseid + ' [role=main]';
-            $body.addClass("loading");
-            $('.showchart').load(url, function(response, status, xhr) {
-                if(status) {
-                    $body.removeClass("loading");
-                }
-                if (status == "error") {
-                    $(".showchart").html('<div class="d-flex justify-content-center alert alert-info alert-block fade in ">Khoá học này chưa có hoạt động nào</div>');
-                }
-            });
-        } else if (param == 5) {
-            $('.showchart_grid').removeClass('d-none');
-             vpgrid.viewreport(courseid);
-             $('.showchart').addClass('d-none');
-        }
-        var chart_courseid = $(this).val();
-        if(chart_courseid != 0) {
-            paramJson['courseid'] = chart_courseid;
-            if(paramJson['action'] == 'viewcount_chart_vp')
-                callAjax(script, settings);
-        } else {
-            deteleParamJson();
-            if(paramJson['action'] == 'viewcount_chart_vp')
-                callAjax(script, settings);
-        }
-    }).change();
 });
 {{/js}}

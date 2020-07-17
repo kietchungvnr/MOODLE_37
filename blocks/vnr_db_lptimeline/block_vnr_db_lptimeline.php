@@ -15,14 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course list block.
+ * Block hiện thị lộ trình đào tạo dựa theo vị trí
  *
- * @package    block_course_list
- * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
+ * @package    block_user(student)
+ * @copyright  2019 Le Thanh Vu
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-// include_once($CFG->dirroot . '/course/lib.php');
 
 class block_vnr_db_lptimeline extends block_base {
     
@@ -31,7 +29,6 @@ class block_vnr_db_lptimeline extends block_base {
     }
 
     function get_content() {
-        
         if($this->content !== NULL) {
             return $this->content;
         }
@@ -45,7 +42,7 @@ class block_vnr_db_lptimeline extends block_base {
 
     }
 
-     public function applicable_formats() {
+    public function applicable_formats() {
         return array('my' => true);
     }
 }

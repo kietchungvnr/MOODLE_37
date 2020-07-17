@@ -1,16 +1,16 @@
  <div data-region="orgmanager-page">
    <div class="row justify-content-md-center">
       <div class="col-md-auto">
-        <button class="btn" type="button" data-toggle="collapse" data-target="#orgcate_tb_wrapper" aria-expanded="false" aria-controls="orgcate_tb_wrapper" id="orgcate_list">Danh sách loại phòng ban</button>
+        <button class="btn" type="button" data-toggle="collapse" data-target="#orgcate_tb_wrapper" aria-expanded="false" aria-controls="orgcate_tb_wrapper" id="orgcate_list">{{#str}}listorgcate, local_newsvnr{{/str}}</button>
       </div>
       <div class="col-md-auto">
-        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgstructure_tb_wrapper" aria-expanded="false" aria-controls="orgstructure_tb_wrapper" id="orgstructure_list">Danh sách phòng ban</button>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgstructure_tb_wrapper" aria-expanded="false" aria-controls="orgstructure_tb_wrapper" id="orgstructure_list">{{#str}}listorgstructure, local_newsvnr{{/str}}</button>
       </div>
       <div class="col-md-auto">
-       <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgjobtitle_tb_wrapper" aria-expanded="false" aria-controls="orgjobtitle_tb_wrapper" id="orgjobtitle_list">Danh sách chức danh</button>
+       <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgjobtitle_tb_wrapper" aria-expanded="false" aria-controls="orgjobtitle_tb_wrapper" id="orgjobtitle_list">{{#str}}listorgjobtitle, local_newsvnr{{/str}}</button>
      </div>
      <div class="col-md-auto">
-      <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgosition_tb_wrapper" aria-expanded="false" aria-controls="orgposition_tb_wrapper" id="orgposition_list">Danh sách chức vụ</button>
+      <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgosition_tb_wrapper" aria-expanded="false" aria-controls="orgposition_tb_wrapper" id="orgposition_list">{{#str}}listorgposition, local_newsvnr{{/str}}</button>
     </div>
   </div>
 </div>
@@ -162,9 +162,14 @@ require(['jquery', 'core/config', 'kendo.all.min'], ($, config, kendo) => {
 
 //Xóa record PB-CD-CV
 const org_delete = (section_id) => {
-    require(['jquery', 'core/config'], ($, config) => {
+    require(['jquery', 'core/config', 'core/str'], ($, config, Str) => {
+        var strings = [{
+                key: 'confirmdeleterecord',
+                component: 'local_newsvnr'
+             }];
+         Str.get_strings(strings).then(function(s) {
           var section = $("[data-section]").attr("data-section");
-          var confm = confirm("Bạn muốn xóa trường này?");
+          var confm = confirm(s[0]);
           var script = config.wwwroot + "/local/newsvnr/ajax/orgdeletedata.php";  
           var settings = {
             type: "GET",
@@ -178,6 +183,7 @@ const org_delete = (section_id) => {
           if(confm) {
             $.ajax(script, settings)
             .then(function(response) {
+
              if(response)
              {
                $("#" + section_id).parents("tr").fadeOut(500, function(){
@@ -186,18 +192,27 @@ const org_delete = (section_id) => {
              }    
            });
           }
-    })
+      });
+    });
 }
 
 
 //Ản hiện record PB-CD-CV
 const org_active = (section_id, visible) => {
-    require(['jquery', 'core/config'], ($, config) => {
+    require(['jquery', 'core/config', 'core/str'], ($, config, Str) => {
+        var strings = [{
+                key: 'showrecord',
+                component: 'local_newsvnr'
+             }, {
+                key: 'hiderecord',
+                component: 'local_newsvnr'
+             }];
+         Str.get_strings(strings).then(function(s) {
           var section = $("[data-active]").attr("data-active");
           if(visible == 0)
-            var confm = confirm("Bạn muốn ẩn trường này?");
+            var confm = confirm(s[1]);
           else 
-            var confm = confirm("Bạn muốn hiện trường này?");
+            var confm = confirm(s[0]);
           var script = config.wwwroot + "/local/newsvnr/ajax/orgactive.php";  
           var settings = {
             type: "GET",
@@ -218,7 +233,8 @@ const org_active = (section_id, visible) => {
              }    
             });
           }
-    })
+    });
+     });
 }
 
 $(window).on('load', function() {

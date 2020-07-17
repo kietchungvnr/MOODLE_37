@@ -11,7 +11,7 @@
                             <div class="card-body">
                                 <div class="row align-items-start mb-3 pb-1" style="border-bottom: 1px solid wheat;">
                                     <div class="col">
-                                        <span style="font-weight: 700; color: grey">TOP ĐẠT HUY HIỆU MỚI NHẤT</span>
+                                        <span style="font-weight: 700; color: grey">{{#str}}topnewestbadge, block_vnr_db_studentuser{{/str}}</span>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fa fa-window-minimize m-0 cl-position cl-cursor" aria-hidden="true" data-toggle="collapse" data-target="#newest-modal"></i>
@@ -37,7 +37,7 @@
                                     {{#list_badges}}
                                     <div class="row align-items-center">
                                         <div class="col-auto">
-                                            <img src="/theme/moove/pix/star.png" alt="Số thứ tự" height="40px" width="40px">
+                                            <img src="/theme/moove/pix/star.png" height="40px" width="40px">
                                             <div class="text-on-img text-white" style="font-weight: 700">{{stt}}</div>
                                         </div>
                                         <div class="col-auto pr-0">
@@ -49,7 +49,7 @@
                                                 {{fullname}}
                                             </div>
                                             <div class="">
-                                                <small class="text-date">Ngày hoàn thành: {{timecomplete}}</small>
+                                                <small class="text-date">{{#str}}finishdate, block_vnr_db_studentuser{{/str}}: {{timecomplete}}</small>
                                             </div>
                                         </div>
                                         <div class="col-4 pr-0">
@@ -76,7 +76,7 @@
                             <div class="card-body">
                                 <div class="row align-items-start mb-3 pb-1" style="border-bottom: 1px solid wheat;">
                                     <div class="col">
-                                        <span style="font-weight: 700; color: grey">TOP HỌC VIÊN ĐẠT NHIỀU HUY HIỆU NHẤT</span>
+                                        <span style="font-weight: 700; color: grey">{{#str}}topbadge, block_vnr_db_studentuser{{/str}}</span>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fa fa-window-minimize m-0 cl-position cl-cursor" aria-hidden="true" data-toggle="collapse" data-target="#most-modal"></i>
@@ -100,7 +100,7 @@
                                     {{#count_list_badges}}
                                     <div class="row">
                                         <div class="col-auto">
-                                            <img src="/theme/moove/pix/star.png" alt="Số thứ tự" height="40" width="40">
+                                            <img src="/theme/moove/pix/star.png" height="40" width="40">
                                             <div class="text-on-img text-white" style="font-weight: 700">{{stt}}</div>
                                         </div>
                                         <div class="col-auto col-md-3 d-flex justify-content-md-end p-0">

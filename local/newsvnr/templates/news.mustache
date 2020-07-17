@@ -1,15 +1,11 @@
-
-
-
 {{#news}}
-
 <div class="container-new container bonus">
 
 	<div class="new-head">
 		<div class="row">
 			<div class="col-md-6 col-lg-8 mb-1">
 				<div class="mb-3">{{#btnaddnews}}{{{btnaddnews}}}{{/btnaddnews}}</div>
-				<h3 class="title">Tin tức nổi bật</h3>
+				<h3 class="title">{{#str}}hotnews, local_newsvnr{{/str}}</h3>
 			</div>
 			<div class="col-md-12 col-lg-4 mb-1">
 				<form class="form-inline" method="get">
@@ -44,7 +40,7 @@
 
 						<a href="{{newsurl}}" class="post-title">{{title}}</a>
 						<div class="post-meta">
-							<a href="#"><img src="../newsvnr/pix/author.png" alt=""> By {{username}}</a>
+							<a href="#"><img src="../newsvnr/pix/author.png" alt=""> {{#str}}by, local_newsvnr{{/str}} {{username}}</a>
 							<a href="#"><img src="../newsvnr/pix/calender.png" alt=""> {{time}}</a>
 							<a href="#"><img src="../newsvnr/pix/chat.png" alt=""> {{countcomments}}</a>
 							{{! <a href="#"><img src="../newsvnr/pix/like.png" alt=""> 12k</a> }}
@@ -70,7 +66,7 @@
 
 						<a href="{{newsurl}}" class="post-title">{{title}}</a>
 						<div class="post-meta">
-							<a href="#"><img src="../newsvnr/pix/author.png" alt=""> By {{username}}</a>
+							<a href="#"><img src="../newsvnr/pix/author.png" alt=""> {{#str}}by, local_newsvnr{{/str}} {{username}}</a>
 							<a href="#"><img src="../newsvnr/pix/calender.png" alt=""> {{time}}</a>
 							<a href="#"><img src="../newsvnr/pix/chat.png" alt=""> {{countcomments}} </a>
 							{{! <a href="#"><img src="../newsvnr/pix/like.png" alt=""> 12k</a> }}
@@ -123,7 +119,7 @@
 
 	<div class="container bonus">
 		<div class="btn-new-latest">
-			<h3 class="title">Tin mới nhất</h3>
+			<h3 class="title">{{#str}}newestnews, local_newsvnr{{/str}}</h3>
 		</div>
 		<div class="row new-latest-body">
 			{{#forumnewestdata}}
@@ -158,7 +154,7 @@
 		</div>
 
 		<div class="btn-new-course">
-			<h3 class="title">Tin tức khóa học</h3>
+			<h3 class="title">{{#str}}newsbycourse, local_newsvnr{{/str}}</h3>
 		</div>
 		<div class="row new-latest-body">
 
@@ -190,19 +186,19 @@
 		
 		</div>
 
-		<label class="d-flex justify-content-center">{{/news}}  <a id="view-more-news" href="{{showallurl}}">Xem thêm</a>
+		<label class="d-flex justify-content-center"> <a id="view-more-news" href="{{showallurl}}">{{#str}}viewmore, local_newsvnr{{/str}}</a>
 		</label>
 
 	</div>
 </div>
 
-
+{{/news}}
 
 {{#showall}}
 
 	<div class="container bonus">
 		<div class="btn-new-latest">
-			<h3 class="title">Tất cả tin tức theo khóa học</h3>
+			<h3 class="title">{{#str}}allnewsbycourse, local_newsvnr{{/str}}</h3>
 		</div>
 
 		<hr>
@@ -210,7 +206,7 @@
 			<div class="col-md-7">
 					<div style="border-bottom: #F0F0F0 1px solid;margin-bottom: 15px;">
 					Danh mục:<br> <select class="pagination-setting" onchange="FilterDicussionByCourseId(this.value);" >
-						<option value="" selected="selected">Xem tất cả</option>
+						<option value="" selected="selected">{{#str}}viewall, local_newsvnr{{/str}}</option>
 						{{#list_news_of_course}}
 							<option value="{{courseid}}">{{fullname}}</option>
 						{{/list_news_of_course}}		
@@ -246,7 +242,7 @@
 
 	<div class="container">
 		<div class="btn-new-latest">
-			<h3 class="title">Tìm thấy {{newsnumber}} tin với từ khóa "{{searchquery}}"</h3>
+			<h3 class="title">{{#str}}found, local_newsvnr{{/str}} {{newsnumber}} {{#str}}foundnewsbykeywords, local_newsvnr{{/str}} "{{searchquery}}"</h3>
 		</div>
 		<hr>
 		<div class="row new-latest-body">

@@ -6,23 +6,21 @@
             <div class="row align-items-center">
                 <div class="col-12">
                     <div class="card-group" style="border-top: 5px solid #1177d1;">
-
                         <div class="card" style="border-bottom-left-radius: .5rem;border-bottom-right-radius: .5rem;">
                             <div class="card-body">
                                     <div class="d-flex justify-content-around">
                                         <div class="form-group">
                                           <select class="form-control" id="list_category">
-                                            <option value="0">Chọn danh mục khoá học</option>
+                                            <option value="0">{{#str}}choosecoursecategory, block_vnr_db_admin_rp{{/str}}</option>
                                             {{#categories}}
                                                 <option value="{{id}}">{{{name}}}</option>
                                             {{/categories}}
-                                            
                                           </select>
                                         </div>
                                         <div class="form-group ml-2">
-                                          <select class="form-control" id="list_course">
-                                            <option value="0">Chọn khoá học</option>
-                                          </select>
+                                            <select class="form-control" id="list_course">
+                                                <option value="0">{{#str}}choosecourse, block_vnr_db_admin_rp{{/str}}</option>
+                                            </select>
                                         </div>
                                     </div>
                                      <div data-region="graderp" id="graderp" class="collapse show">
@@ -30,11 +28,7 @@
                                     <div class="row align-items-center">
                                         <div id="gradereport" class="container-fluid"></div>
                                     </div>
-                                 
-                                 
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
@@ -42,7 +36,6 @@
             </div>
         </div>
          <div class="col-md-8 padding-db">
-
             <div class="row align-items-center">
                 <div class="col-12">
                     <div class="card-group" style="border-top: 5px solid #1177d1;">
@@ -50,13 +43,9 @@
                         <div class="card" style="border-bottom-left-radius: .5rem;border-bottom-right-radius: .5rem;">
                             <div class="card-body">
                                 <div data-region="graderp_detail" id="graderp_detail" class="collapse show">
-
                                     <div class="row align-items-center">
-                                        {{! <div class="">Môn thi</div> }}
                                         <div id="gradereport_detail" class="container-fluid p-0"></div>
                                     </div>
-                                 
-                                 
                                 </div>
                             </div>
 
@@ -67,23 +56,22 @@
         </div>
     </div>
     <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">{{#str}}pluginname, block_vnr_db_admin_rp{{/str}}</h5>
+        <div class="modal-dialog">
+
+             <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{#str}}pluginname, block_vnr_db_admin_rp{{/str}}</h5>
+                </div>
+                <div class="modal-body">
+                    <p>{{#str}}pluginname_help, block_vnr_db_admin_rp{{/str}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{#str}}closebuttontitle{{/str}}</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          <p>{{#str}}pluginname_help, block_vnr_db_admin_rp{{/str}}</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-        </div>
-      </div>
-      
     </div>
-  </div>
 </div>
 
 {{#js}}

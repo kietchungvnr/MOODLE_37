@@ -316,21 +316,21 @@ switch ($section) {
 								<div class="modal-dialog modal-lg mw-100 modal-width">
 									<div class="modal-content fs-14">
 										<div class="modal-header">
-											<h5 class="modal-title">Chi tiết học viên</h5>
+											<h5 class="modal-title">'. get_string('studentdetail', 'local_newsvnr') .'</h5>
 										</div>
 									<div class="modal-body">
 										<div data-region="userdetail-iframe" class="">';
 			$strmodal .= ' <div class="container">
 						    <div class="row mb-3">
-						      <div class="col-md-2"><span class="userdt-span">Tên nhân viên</span></div>
+						      <div class="col-md-2"><span class="userdt-span">'. get_string('username', 'local_newsvnr') .'</span></div>
 						      <div class="col-md-4"><input type="text" class="form-control w-100 fs-14" placeholder="" id="username_inp" name="username_inp" value="'.$userstd->username.'" disabled></div>
-						      <div class="col-md-2"><span class="userdt-span">Mã nhân viên</span></div>
+						      <div class="col-md-2"><span class="userdt-span">'. get_string('usercode', 'local_newsvnr') .'</span></div>
 						      <div class="col-md-4"><input type="text" class="form-control w-100 fs-14" placeholder="" id="usercode_inp" name="usercode_inp" value="'.$userstd->usercode.'" disabled></div>
 						    </div>  
 						     <div class="row mb-3">
-						      <div class="col-md-2"><span class="userdt-span">Phòng ban trực thuộc</span></div>
+						      <div class="col-md-2"><span class="userdt-span">'. get_string('dependentorgstructure', 'local_newsvnr') .'</span></div>
 						      <div class="col-md-4"><input type="text" class="form-control fs-14" placeholder="" id="orgstructure_inp" name="orgstructure_inp" value="'.$userstd->oname.'" disabled></div>
-						      <div class="col-md-2"><span class="userdt-span">Chức danh</span></div>
+						      <div class="col-md-2"><span class="userdt-span">'. get_string('orgposition', 'local_newsvnr') .'</span></div>
 						      <div class="col-md-4"><input type="text" class="form-control fs-14" placeholder="" id="orgposition_inp" name="orgposition_inp" value="'.$userstd->opname.'" disabled></div>
 						    </div>  
   						   </div>';
@@ -339,7 +339,7 @@ switch ($section) {
 										</div>	
 									
 									<div class="modal-footer">
-										<button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+										<button type="button" class="btn btn-danger" data-dismiss="modal">'. get_string('close') .'</button>
 									</div>
 								</div>
 							</div>
@@ -484,7 +484,7 @@ switch ($section) {
 		                    	
 		                  </div>
 		                  <div class="col">
-		                    Không có khóa học phù hợp
+		                    '. get_string('nocoursefit', 'local_newsvnr') .'
 		                   
 		                  </div>
 		                </div>';
@@ -501,15 +501,15 @@ switch ($section) {
 				if(!empty($timecompleted))
 					$griddata->timecompleted = $timecompleted;
 				else {
-					$strtimecompleted = '<span class="badge badge-pill badge-secondary text-black">Chưa hoàn thành</span>';
+					$strtimecompleted = '<span class="badge badge-pill badge-secondary text-black">'. get_string('org_incomplete', 'local_newsvnr') .'</span>';
 					$griddata->timecompleted = $strtimecompleted;
 				}
 				if($completecourse_prog == true || $completecourse_evid == true ) {
-					$strcompleted = '<span class="badge badge-pill badge-success">Hoàn thành</span>';
+					$strcompleted = '<span class="badge badge-pill badge-success">'. get_string('org_completed', 'local_newsvnr') .'</span>';
 					$griddata->completed = $strcompleted;
 				}
 				else {
-					$strcompleted = '<span class="badge badge-pill badge-secondary text-black">Chưa hoàn thành</span>';
+					$strcompleted = '<span class="badge badge-pill badge-secondary text-black">'. get_string('org_incomplete', 'local_newsvnr') .'</span>';
 					$griddata->completed = $strcompleted;
 				}
 				
@@ -643,49 +643,49 @@ switch ($section) {
 	}
 	$objdata->form = '<div class="container mt-3">
 		<div class="form-group row">
-	    <label for="orgname" class="col-sm-2 col-form-label">Tên phòng ban</label>
+	    <label for="orgname" class="col-sm-2 col-form-label">'. get_string('orgname', 'local_newsvnr') .'</label>
 	    <div class="col-sm-10">
 	      <input type="text" class="form-control" id="orgname" value="'.$orgdetail->name.'">
 	    </div>
 	  </div>
 	  <div class="form-group row">
-	    <label for="orgcode" class="col-sm-2 col-form-label">Mã phòng ban</label>
+	    <label for="orgcode" class="col-sm-2 col-form-label">'. get_string('orgcode', 'local_newsvnr') .'</label>
 	    <div class="col-sm-10">
 	      <input type="text" class="form-control" id="orgcode" value="'.$orgdetail->code.'">
 	    </div>
 	  </div>
 	  <div class="form-group row">
-	    <label for="managerid" class="col-sm-2 col-form-label">Trường phòng ban</label>
+	    <label for="managerid" class="col-sm-2 col-form-label">'. get_string('parentorgstructurename', 'local_newsvnr') .'</label>
 	    <div class="col-sm-10">
 	      <input type="text" class="form-control" id="managerid" value="'.$username.'">
 	    </div>
 	  </div>
 	  <div class="form-group row">
-	    <label for="orgstructuretypeid" class="col-sm-2 col-form-label">Loại phòng ban</label>
+	    <label for="orgstructuretypeid" class="col-sm-2 col-form-label">'. get_string('orgstructuretypeid', 'local_newsvnr') .'</label>
 	    <div class="col-sm-10">
 	      <input type="text" class="form-control" id="orgstructuretypeid" value="'.$orgcatename_detail.'">
 	    </div>
 	  </div>
 	  <div class="form-group row">
-	    <label for="parentid" class="col-sm-2 col-form-label">Phòng ban cha</label>
+	    <label for="parentid" class="col-sm-2 col-form-label">'. get_string('parentid', 'local_newsvnr') .'</label>
 	    <div class="col-sm-10">
 	      <input type="text" class="form-control" id="parentid" value="'.$parentname_detail.'">
 	    </div>
 	  </div>
 	  <div class="form-group row">
-	    <label for="numbermargin" class="col-sm-2 col-form-label">Số lượng định biên</label>
+	    <label for="numbermargin" class="col-sm-2 col-form-label">'. get_string('numbermargin', 'local_newsvnr') .'</label>
 	    <div class="col-sm-10">
 	      <input type="text" class="form-control" id="numbermargin" value="'.$orgdetail->numbermargin.'">
 	    </div>
 	  </div>
 	  <div class="form-group row">
-	    <label for="numbercurrent" class="col-sm-2 col-form-label">Số lượng hiện tại</label>
+	    <label for="numbercurrent" class="col-sm-2 col-form-label">'. get_string('numbercurrent', 'local_newsvnr') .'</label>
 	    <div class="col-sm-10">
 	      <input type="text" class="form-control" id="numbercurrent" value="'.$orgdetail->numbercurrent.'">
 	    </div>
 	  </div>
 	  <div class="form-group row">
-	    <label for="org_description" class="col-sm-2 col-form-label">Mô tả</label>
+	    <label for="org_description" class="col-sm-2 col-form-label">'. get_string('description', 'local_newsvnr') .'</label>
 	    <div class="col-sm-10">
 	      <textarea class="form-control" rows="5" id="org_description">'.$orgdetail->description.'</textarea>
 	    </div>

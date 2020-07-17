@@ -15,7 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course list block.
+ * Block hiện thị tiến độ học tập của học viên như:
+ * Khóa học hoàn thành, chưa hoàn thành, bắt buộc, không bắt buộc...
  *
  * @package    block_user(student)
  * @copyright  2019 Le Thanh Vu

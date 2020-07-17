@@ -47,7 +47,7 @@ class forum_page implements renderable, templatable {
         if(empty($forumdata))
         {
             $forumstd = new stdclass();
-            $forumarr[] = $forumstd->empty = "Không có dữ liệu";
+            $forumarr[] = $forumstd->empty = get_string('nodata', 'local_newsvnr');
         }
         foreach ($forumdata as $file) {
 

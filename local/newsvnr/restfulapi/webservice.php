@@ -970,7 +970,7 @@ if($action == "coursecomp_chart_vp") {
     $response->title = (object)['text' => ''];
     $response->subtitle = (object)['text' => ''];
     $response->xAxis = (object)['categories' => $list_coursename,'crosshair' => true];
-    $response->yAxis = (object)['min' => 0, 'title' => (object)['text' => 'Số lượng học viên']];
+    $response->yAxis = (object)['min' => 0, 'title' => (object)['text' => get_string('numberstudent', 'local_newsvnr')]];
     $response->credits = (object)['enabled' => false];
     $response->tooltip = (object)[
     								'headerFormat' => '<span style="font-size:10px">{point.key}</span><table>',
@@ -981,8 +981,8 @@ if($action == "coursecomp_chart_vp") {
     							];
     $response->plotOptions = (object)['column' => (object)['pointPadding' => 0.2, 'borderWidth' => 0]];
     $response->series = [
-    						(object)['name' => 'Tổng số học viên','data' => $list_enroll,'color' => '#223dc4'],
-    						(object)['name' => 'Số học viên hoàn thành khóa học','data' => $list_completion_course,'color' => '#f24012']
+    						(object)['name' => get_string('totalstudent', 'local_newsvnr'),'data' => $list_enroll,'color' => '#223dc4'],
+    						(object)['name' => get_string('numbercompletedcourse', 'local_newsvnr'),'data' => $list_completion_course,'color' => '#f24012']
     					];
 
     echo json_encode($response,JSON_UNESCAPED_UNICODE);
@@ -992,18 +992,18 @@ if($action == "coursecomp_chart") {
 
 	$sql = '
 			SELECT c.id, c.fullname
-		        from mdl_role_assignments as ra
-		        join mdl_user as u on u.id = ra.userid
-		        join mdl_user_enrolments as ue on ue.userid = u.id
-		        join mdl_enrol as e on e.id = ue.enrolid
-		        join mdl_course as c on c.id = e.courseid
-		        join mdl_context as ct on ct.id = ra.contextid and ct.instanceid = c.id
-		        join mdl_role as r on r.id = ra.roleid
-   			WHERE  ra.roleid=3 and u.id = ?';
+		        FROM mdl_role_assignments AS ra
+		        JOIN mdl_user AS u ON u.id = ra.userid
+		        JOIN mdl_user_enrolments AS ue ON ue.userid = u.id
+		        JOIN mdl_enrol AS e ON e.id = ue.enrolid
+		        JOIN mdl_course AS c ON c.id = e.courseid
+		        JOIN mdl_context AS ct ON ct.id = ra.contextid AND ct.instanceid = c.id
+		        JOIN mdl_role AS r ON r.id = ra.roleid
+   			WHERE  ra.roleid=3 AND u.id = ?';
    	$sql_compcourse = '
    			SELECT COUNT(*) AS completed_courses
 			FROM mdl_course_completions
-			WHERE course = ? and timecompleted IS NOT NULL';
+			WHERE course = ? AND timecompleted IS NOT NULL';
    	$record = $DB->get_records_sql($sql,[$USER->id]);
    	$list_coursename = array();
    	$list_enroll = array();
@@ -1062,11 +1062,11 @@ if($action == "coursemodulecomp_chart_vp") {
     $response->subtitle = (object)['text' => ''];
     $response->credits = (object)['enabled' => false];
     $response->xAxis = (object)['categories' => $list_coursename, 'crosshair' => true];
-    $response->yAxis = (object)['min' => 0, 'title' => (object)['text' => 'Số lượng hoàn thành modules']];
+    $response->yAxis = (object)['min' => 0, 'title' => (object)['text' => get_string('numbercompletedmodule', 'local_newsvnr')]];
     $response->tooltip = (object)['headerFormat' => '<span style="font-size:10px">{point.key}</span><table>', 'pointFormat' => '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
                             '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>', 'footerFormat' => '</table>', 'shared' => true, 'useHTML' => true];
     $response->plotOptions = (object)['column' => (object)['pointPadding' => 0.4, 'borderWidth' => 0]];
-    $response->series = [(object)['name' => 'Số lượt đánh dấu hoàn thành khóa học','data' => $list_modules_comp,'color' => '#e87c01']];
+    $response->series = [(object)['name' => get_string('numbertickcompteledcourse', 'local_newsvnr'), 'data' => $list_modules_comp,'color' => '#e87c01']];
 
    	// $response->list_coursename = $list_coursename;
    	// $response->list_modules_comp = $list_modules_comp;
@@ -1085,18 +1085,18 @@ if($action == "coursemodulecomp_chart") {
 	}
 	
 	$sql = "
-			SELECT COUNT(cmc.id) as slht,c.fullname
-		        from mdl_role_assignments as ra
-		        join mdl_user as u on u.id= ra.userid
-		        join mdl_user_enrolments as ue on ue.userid=u.id
-		        join mdl_enrol as e on e.id=ue.enrolid
-		        join mdl_course as c on c.id=e.courseid
-		        join mdl_context as ct on ct.id=ra.contextid and ct.instanceid= c.id
-		        join mdl_role as r on r.id= ra.roleid
-				join mdl_course_modules cm on c.id = cm.course
-				join mdl_course_modules_completion cmc on cm.id = cmc.coursemoduleid
-	        where $wheresql
-			group by c.fullname";
+			SELECT COUNT(cmc.id) AS slht,c.fullname
+		        FROM mdl_role_ASsignments AS ra
+		        JOIN mdl_user AS u ON u.id= ra.userid
+		        JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
+		        JOIN mdl_enrol AS e ON e.id=ue.enrolid
+		        JOIN mdl_course AS c ON c.id=e.courseid
+		        JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
+		        JOIN mdl_role AS r ON r.id= ra.roleid
+				JOIN mdl_course_modules AS cm ON c.id = cm.course
+				JOIN mdl_course_modules_completion AS cmc ON cm.id = cmc.coursemoduleid
+	        WHERE $wheresql
+			GROUP BY c.fullname";
 
    	$record = $DB->get_records_sql($sql,$params);
    	$list_coursename = array();
@@ -1133,10 +1133,10 @@ if($action == "joincourse_chart_vp") {
 	}
 
 	$sql = "
-			SELECT COUNT(e.id) as cid, e.courseid, c.fullname 
+			SELECT COUNT(e.id) AS cid, e.courseid, c.fullname 
 			FROM mdl_enrol e 
-				right join mdl_user_enrolments ue on e.id = ue.enrolid
-				join mdl_course c on c.id = e.courseid 
+				RIGHT JOIN mdl_user_enrolments ue ON e.id = ue.enrolid
+				JOIN mdl_course c ON c.id = e.courseid 
 			WHERE $wheresql
 			GROUP BY e.courseid,c.fullname";
 
@@ -1153,10 +1153,10 @@ if($action == "joincourse_chart_vp") {
     $response->title = (object)['text' => ''];
     $response->subtitle = (object)['text' => ''];
     $response->xAxis = (object)['categories' => $list_coursename];
-    $response->yAxis = (object)['title' => (object)['text' => 'Số lượng học viên']];
+    $response->yAxis = (object)['title' => (object)['text' => get_string('numberstudent', 'local_newsvnr')]];
     $response->credits = (object)['enabled' => false];
     $response->plotOptions = (object)['line' => (object)['dataLabels' => (object)['enabled' => true], 'enableMouseTracking' => true]];
-    $response->series = [(object)['name' => 'Học viên mới tham gia lớp học','data' => $list_joincourse,'color' => '#ef4914']];
+    $response->series = [(object)['name' => get_string('newsenrolcourse', 'local_newsvnr'),'data' => $list_joincourse,'color' => '#ef4914']];
 
 	echo json_encode($response,JSON_UNESCAPED_UNICODE);
 }
@@ -1218,10 +1218,10 @@ if($action == "viewcount_chart_vp") {
     $response->title = (object)['text' => ''];
     $response->subtitle = (object)['text' => ''];
     $response->xAxis = (object)['categories' => $list_coursename];
-    $response->yAxis = (object)['title' => (object)['text' => 'Số lượng học viên']];
+    $response->yAxis = (object)['title' => (object)['text' => get_string('numberstudent', 'local_newsvnr')]];
     $response->credits = (object)['enabled' => false];
     $response->plotOptions = (object)['line' => (object)['dataLabels' => (object)['enabled' => true], 'enableMouseTracking' => true]];
-    $response->series = [(object)['name' => 'Số lượt xem khóa học','data' => $list_viewcount,'color' => '#1120f3']];
+    $response->series = [(object)['name' => get_string('numberviewcourse', 'local_newsvnr'),'data' => $list_viewcount,'color' => '#1120f3']];
    	
 	echo json_encode($response,JSON_UNESCAPED_UNICODE);
 }
@@ -1236,9 +1236,9 @@ if($action == "viewcount_chart") {
 		$srt_courseid = get_list_courseid_by_teacher($USER->id);
 		$wheresql = "courseid IN($srt_courseid) AND c.startdate >= lsl.timecreated";
 	}
-	$sql = "SELECT COUNT(lsl.id) as vc,lsl.courseid, c.fullname
+	$sql = "SELECT COUNT(lsl.id) AS vc,lsl.courseid, c.fullname
 			FROM mdl_logstore_standard_log lsl
-			 	left join mdl_course c on  lsl.courseid = c.id 
+			 	LEFT JOIN mdl_course c ON  lsl.courseid = c.id 
 			WHERE $wheresql
 			GROUP BY lsl.courseid,c.fullname";
 	$record = $DB->get_records_sql($sql,$params);
@@ -1263,20 +1263,20 @@ if($action == "gradereport_chart") {
 			SELECT 
 				COUNT(DISTINCT gg.userid) AS grade_total,
 				(SELECT COUNT(*) 
-					FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
-					WHERE gg.finalgrade is not null 
+					FROM mdl_grade_grades gg JOIN mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
+					WHERE gg.finalgrade IS NOT NULL
 							AND gi.itemtype= 'course' 
 							AND gi.courseid = ?
 							AND (gg.finalgrade >= ccc.gradepass)
 				) AS gradepass_total,
 				(SELECT COUNT(*) 
-					FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
-					WHERE gg.finalgrade is not null 
+					FROM mdl_grade_grades gg JOIN mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
+					WHERE gg.finalgrade IS NOT NULL
 							AND gi.itemtype= 'course'
 							AND gi.courseid = ?
 							AND (gg.finalgrade < ccc.gradepass)
 				) AS gradefailed_total
-			FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
+			FROM mdl_grade_grades gg JOIN mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id JOIN mdl_course_completion_criteria ccc ON ccc.course = gi.courseid
 			WHERE gi.itemtype= 'course' AND gi.courseid = ?
 		";
 	if($courseid) {
@@ -1293,26 +1293,26 @@ if($action == "gradereport_chart") {
 	$data = [];
 	if($record->grade_total != '0') {
 		$gradepass_obj = new stdClass;
-		$gradepass_obj->name = 'Đạt';
+		$gradepass_obj->name = get_string('completed', 'local_newsvnr');
 		$gradepass_obj->y = round(($record->gradepass_total/$record->grade_total)*100, 2);
 		$gradefailed_obj = new stdClass;
-		$gradefailed_obj->name = 'Không đạt';
+		$gradefailed_obj->name = get_string('notcompleted', 'local_newsvnr');
 		$gradefailed_obj->y = round(($record->gradefailed_total/$record->grade_total)*100, 2);
 		$gradeorther_obj = new stdClass;
-		$gradeorther_obj->name = 'Khác';
+		$gradeorther_obj->name = get_string('orthers', 'local_newsvnr');
 		$gradeorther_obj->y = round((100 - ($gradepass_obj->y + $gradefailed_obj->y)), 2);
 		$data[] = $gradepass_obj;
 		$data[] = $gradefailed_obj;
 		$data[] = $gradeorther_obj;
 	} else {
 		$gradepass_obj = new stdClass;
-		$gradepass_obj->name = 'Đạt';
+		$gradepass_obj->name = get_string('completed', 'local_newsvnr');
 		$gradepass_obj->y = 0;
 		$gradefailed_obj = new stdClass;
-		$gradefailed_obj->name = 'Không đạt';
+		$gradefailed_obj->name = get_string('notcompleted', 'local_newsvnr');
 		$gradefailed_obj->y = 0;
 		$gradeorther_obj = new stdClass;
-		$gradeorther_obj->name = 'Khác';
+		$gradeorther_obj->name = get_string('orthers', 'local_newsvnr');
 		$gradeorther_obj->y = 0;
 		$data[] = $gradepass_obj;
 		$data[] = $gradefailed_obj;
@@ -1343,7 +1343,7 @@ if($action == "gradereport_detail") {
 	} else {
 		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
 	}
-	if($completed_course_status == "Đạt") {
+	if($completed_course_status == get_string('completed', 'local_newsvnr')) {
 		$where_subsql = "gg.finalgrade IS NOT NULL AND ccc.gradepass IS NOT NULL AND gi.itemtype = 'course' AND gg.finalgrade >= ccc.gradepass AND gi.courseid = ?";
 	} else if($completed_course_status == "Không đạt") {
 		$where_subsql = "gg.finalgrade IS NOT NULL AND ccc.gradepass IS NOT NULL AND gi.itemtype = 'course' AND gg.finalgrade < ccc.gradepass AND gi.courseid = ?";
@@ -1379,12 +1379,12 @@ if($action == "gradereport_detail") {
 		$object = new stdclass;
 		$object->fullname = $value->fullname;
 		if($value->finalgrade >= $value->gradepass) {
-			$object->status = 'Đạt';
+			$object->status = get_string('completed', 'local_newsvnr');
 		} else if($value->finalgrade < $value->gradepass) {
-			$object->status = 'Không đạt';
+			$object->status = get_string('notcompleted', 'local_newsvnr');
 		}
 		if($value->finalgrade == null or $value->gradepass == null){
-			$object->status = 'Khác';
+			$object->status = get_string('orthers', 'local_newsvnr');
 		}
 
 		$object->finalgrade = round($value->finalgrade,1);
@@ -1435,7 +1435,7 @@ if($action == "quizoverview_chart_vp") {
    	$response->title = (object)['text' => ''];
    	$response->subtitle = (object)['text' => ''];
    	$response->xAxis = (object)['categories' => $list_coursename];
-   	$response->yAxis = (object)['min' => 0, 'title' => (object)['text' => 'Điểm trung bình', 'align' => 'high'], 'labels' => (object)['overflow' => 'justify']];
+   	$response->yAxis = (object)['min' => 0, 'title' => (object)['text' => get_string('avgscore', 'local_newsvnr'), 'align' => 'high'], 'labels' => (object)['overflow' => 'justify']];
    	$response->tooltip = (object)['valueSuffix' => ' Điểm'];
    	$response->plotOptions = (object)['bar' => (object)['dataLabels' => (object)['enabled' => true]]];
    	$response->legend = (object)['borderWidth' => 1, 'backgroundColor' => '#FFFFFF', 'shadow' => true];
@@ -1476,7 +1476,7 @@ if($action == "quizoverview_chart") {
    			}
    		}
    	}
-   	$list_quiz->name = 'Điểm trung bình khoá';
+   	$list_quiz->name = get_string('avgcourse', 'local_newsvnr');
    	$list_quiz->data = $list_quizscore;
    	$list_quizname_parent[] = $list_quiz;
    	
@@ -1513,24 +1513,23 @@ if($action == 'joincourse_grid') {
 		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
 	}
 	$sql = "
-			SELECT *, (SELECT COUNT(ra.id) FROM mdl_role_assignments as ra
-                    JOIN mdl_user as u on u.id= ra.userid
-                    JOIN mdl_user_enrolments as ue on ue.userid=u.id
-                    JOIN mdl_enrol as e on e.id=ue.enrolid
-                    JOIN mdl_course as c on c.id=e.courseid
-                    JOIN mdl_context as ct on ct.id=ra.contextid and ct.instanceid= c.id
-                    JOIN mdl_role as r on r.id= ra.roleid
-                    where c.id=? and ra.roleid=5) AS total FROM (
-			SELECT concat(u.firstname,' ',u.lastname) as fullnamet,u.id, e.enrol, e.timecreated, ROW_NUMBER() OVER (ORDER BY u.id) AS RowNum
-                    FROM mdl_role_assignments as ra
-                    JOIN mdl_user as u on u.id= ra.userid
-                    JOIN mdl_user_enrolments as ue on ue.userid=u.id
-                    JOIN mdl_enrol as e on e.id=ue.enrolid
-                    JOIN mdl_course as c on c.id=e.courseid
-                    JOIN mdl_context as ct on ct.id=ra.contextid and ct.instanceid= c.id
-                    JOIN mdl_role as r on r.id= ra.roleid
-					
-                    where c.id=? and ra.roleid=5
+			SELECT *, (SELECT COUNT(ra.id) FROM mdl_role_assignments AS ra
+                    JOIN mdl_user AS u ON u.id= ra.userid
+                    JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
+                    JOIN mdl_enrol AS e ON e.id=ue.enrolid
+                    JOIN mdl_course AS c ON c.id=e.courseid
+                    JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
+                    JOIN mdl_role AS r ON r.id= ra.roleid
+                    WHERE c.id=? AND ra.roleid=5) AS total FROM (
+			SELECT concat(u.firstname,' ',u.lAStname) AS fullnamet,u.id, e.enrol, e.timecreated, ROW_NUMBER() OVER (ORDER BY u.id) AS RowNum
+                    FROM mdl_role_ASsignments AS ra
+                    JOIN mdl_user AS u ON u.id= ra.userid
+                    JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
+                    JOIN mdl_enrol AS e ON e.id=ue.enrolid
+                    JOIN mdl_course AS c ON c.id=e.courseid
+                    JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
+                    JOIN mdl_role AS r ON r.id= ra.roleid
+                    WHERE c.id=? AND ra.roleid=5
 					GROUP BY u.id, u.firstname, u.lastname, e.enrol, e.timecreated) AS MyData
 			$wheresql
 			ORDER BY $ordersql";

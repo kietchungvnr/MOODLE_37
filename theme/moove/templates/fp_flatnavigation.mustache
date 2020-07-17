@@ -6,17 +6,17 @@
         </div>
         <div class="dropdown">
             <div class="col-auto font-weight-bold cl-cursor nav-course-padding  menu-menu">
-                <span data-toggle="dropdown">Danh mục khoá học</span>
+                <span data-toggle="dropdown">{{#str}}coursecategories, theme_moove{{/str}}</span>
                 {{#nav_course_categories}}{{{nav_course_categories}}}{{/nav_course_categories}}
             </div>
         </div>
     </div>
         <div class="dropdown">
             <div class="col-auto font-weight-bold cl-cursor nav-course-padding">
-                <span data-toggle="dropdown">Khoá học của tôi</span>
+                <span data-toggle="dropdown">{{#str}}mycourses, theme_moove{{/str}}</span>
                 <ul class="dropdown-menu " role="menu" id="drop-course-by-student">
                     {{#nav_coursebystudent}}{{{nav_coursebystudent}}}{{/nav_coursebystudent}}{{^nav_coursebystudent}}
-                    <li class="dropdown-item"><a href="#">Chưa tham gia khoá học</a></li>
+                    <li class="dropdown-item"><a href="#">{{#str}}nojoincourse, theme_moove{{/str}}</a></li>
                     {{/nav_coursebystudent}}
                 </ul>
              </div>
@@ -24,7 +24,7 @@
         {{#nav_coursebyteacher}}
         <div class="dropdown">
             <div class="col-auto font-weight-bold cl-cursor nav-course-padding">
-                <span data-toggle="dropdown">Khoá giảng của tôi</span>
+                <span data-toggle="dropdown">{{#str}}owncourses, theme_moove{{/str}}</span>
                 <ul class="dropdown-menu " role="menu" id="drop-course-by-teacher">
                    {{#nav_coursebyteacher}}{{{nav_coursebyteacher}}}{{/nav_coursebyteacher}}
                 </ul>

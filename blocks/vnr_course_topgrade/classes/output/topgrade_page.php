@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course list block.
+ * Top grade block
  *
  * @package    block_user(student)
  * @copyright  2019 Le Thanh Vu
@@ -55,9 +55,13 @@ class topgrade_page implements renderable, templatable {
 
             $data['course'] = $course;
         }
-       $listuser = $DB->get_records_sql("SELECT TOP 5 gg.userid,gi.courseid,gi.itemmodule, gg.finalgrade, CONCAT(u.lastname,' ',u.firstname) AS fullname FROM
-mdl_grade_grades gg JOIN mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id
-where gg.finalgrade is not null and gi.itemtype= ? AND gi.courseid = ? ORDER BY gg.finalgrade DESC", ['course', $courseid]);
+        $listuser = $DB->get_records_sql("
+                                        SELECT TOP 5 gg.userid,gi.courseid,gi.itemmodule, gg.finalgrade, CONCAT(u.lastname,' ',u.firstname) AS fullname 
+                                        FROM mdl_grade_grades gg 
+                                            JOIN mdl_grade_items gi ON gi.id=gg.itemid 
+                                            JOIN mdl_user u ON gg.userid = u.id
+                                        WHERE gg.finalgrade IS NOT NULL AND gi.itemtype= ? AND gi.courseid = ? 
+                                        ORDER BY gg.finalgrade DESC", ['course', $courseid]);
         if($listuser) {
             $listuser_arr = [];
             $stt = 1;

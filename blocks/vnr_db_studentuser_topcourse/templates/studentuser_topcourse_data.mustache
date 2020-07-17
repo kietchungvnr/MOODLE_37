@@ -1,13 +1,13 @@
 <div class="align-items-center" id="gradelist">
 {{#haslisttopgrade}}
-<div class="d-flex w-100 justify-content-center fade in"><p>Thứ hạng hiện tại trong khoá:  <span class="text-danger font-weight-bold">{{#rank}}{{{rank}}}{{/rank}}{{^rank}}Chưa có{{/rank}}</p></div>
+<div class="d-flex w-100 justify-content-center fade in"><p>{{#str}}rankincourse, block_vnr_db_studentuser_topcourse{{/str}}:  <span class="text-danger font-weight-bold">{{#rank}}{{{rank}}}{{/rank}}{{^rank}}{{#str}}noresult, block_vnr_db_studentuser_topcourse{{/str}}{{/rank}}</p></div>
 <div class="table-responsive-md" style="max-height: 400px;overflow-y: hidden;">
 <table class="table table-striped">
 	<thead>
 	  <tr>
-	    <th>Tên học viên</th>
-	    <th>Điểm</th>
-	    <th>Thứ hạng</th>
+	    <th>{{#str}}student, block_vnr_db_studentuser_topcourse{{/str}}</th>
+	    <th>{{#str}}score, block_vnr_db_studentuser_topcourse{{/str}}</th>
+	    <th>{{#str}}rank, block_vnr_db_studentuser_topcourse{{/str}}</th>
 	  </tr>
 	</thead>
 	<tbody>

@@ -45,9 +45,9 @@ if(isset($_POST['post_reply']))
                     </div>
                     <p>'. $content_reply .'</p>
                     <div class="chat-footer">
-                        <label class="like">Like</label>
+                        <label class="like">'. get_string('like', 'local_newsvnr') .'</label>
                         <label class="delete_reply" 
-                        onclick="DeleteReply('. $id_reply .')" id="'. $id_reply .'">Xóa</label>    
+                        onclick="DeleteReply('. $id_reply .')" id="'. $id_reply .'">'. get_string('delete') .'</label>    
                         <input type="hidden" id="delete_reply'. $id_reply .'" name="" value="delete" />
                         
                     </div>

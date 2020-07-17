@@ -92,35 +92,35 @@ if(!empty($get_comment))
 			                             <div class="chat-footer">
 			                                <label class="like" id="'. $comment->id .'">Like</label>
 
-			                                <label class="delete delete_comment"  onclick="DeleteComment('. $comment->id .')" id="{{{id}}}">Xóa</label>
+			                                <label class="delete delete_comment"  onclick="DeleteComment('. $comment->id .')" id="{{{id}}}">'. get_string('delete') .'</label>
 			                                <input type="hidden" id="delete_comment'. $comment->id .'"  value="delete">
 
-			                                <label class="feedback" id="'. $comment->id .'" onclick="FeedBack('. $comment->id .')">Phản hồi</label>
+			                                <label class="feedback" id="'. $comment->id .'" onclick="FeedBack('. $comment->id .')">'. get_string('feedback', 'local_newsvnr') .'</label>
 			      
 			                            </div>
 
 			                            <!-- ACTION SHOW AND HIDE REPLIES -->
 			                                           <p class="chat-show-reply" id="show-reply'. $comment->id .'" 
-	                                    onclick="ShowReplies('. $comment->id  .')" ><i class="fa fa-chevron-down"> Xem phản hồi</i></p>
+	                                    onclick="ShowReplies('. $comment->id  .')" ><i class="fa fa-chevron-down"> '. get_string('showfeedback', 'local_newsvnr') .'</i></p>
 
 	                                    <p style="display: none;" class="chat-hidden-reply" id="hidden-reply'. $comment->id  .'"
-	                                     onclick="HiddenReplies('. $comment->id  .')"><i class="fa fa-chevron-up"> Ẩn phản hồi</i></p>
+	                                     onclick="HiddenReplies('. $comment->id  .')"><i class="fa fa-chevron-up"> '. get_string('hidefeedback', 'local_newsvnr') .'</i></p>
 
 			                            <!-- ACTION END SHOW AND HIDE REPLIES --> 
 			                            <div class="new-detail-reply-body form-reply" style="width: 80%; display: none;">
 			                            	<form>
-				                                <label class="new-detail-reply-title">Bình luận</label>
+				                                <label class="new-detail-reply-title">'. get_string('comment', 'local_newsvnr') .'</label>
 
-				                                <textarea class="new-detail-reply-content" name="content_reply" id="content_reply" placeholder="Ý kiến của bạn"></textarea>
+				                                <textarea class="new-detail-reply-content" name="content_reply" id="content_reply" placeholder="'. get_string('yourcomment', 'local_newsvnr') .'"></textarea>
 				       
 					                                <input type="hidden" id="commentid" name="" value="'. $comment->id .'"> 
 					                                <input type="hidden" id="userid" name="userid" value="'. $comment->userid .'" /> 
 					                                <input type="hidden" id="fullname" value="'. $comment->fullname .'" name="" />
 				                 
 				                                <div class="new-detail-reply-control">
-				                                    <button type="button" class="btn btn-cancel">Hủy</button>
+				                                    <button type="button" class="btn btn-cancel">'. get_string('cancel') .'</button>
 
-				                                    <button type="button" id="post_reply" name="post_reply" class="btn btn-submit ">Gửi bình luận</button>
+				                                    <button type="button" id="post_reply" name="post_reply" class="btn btn-submit ">'. get_string('sendcomment', 'local_newsvnr') .'</button>
 
 				                                </div>
 				                             </form>

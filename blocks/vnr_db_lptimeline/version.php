@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * Block hiện thị lộ trình đào tạo dựa theo vị trí
  *
- * @package    block_course_list
- * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
+ * @package    block_user(student)
+ * @copyright  2019 Le Thanh Vu
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

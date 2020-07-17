@@ -511,14 +511,16 @@ class course_renderer extends \core_course_renderer {
             $summary = $DB->get_record('course', ['id' => $course->id], 'summary');
             $description = strip_tags($summary->summary);
         }
+        $strstudent = get_string('numberstudent', 'theme_moove');
+        $strteacher = get_string('teachername', 'theme_moove');
         $content .= "
                     <div class='post-slide6 m-0'>
                         <div class='post-img'>
                             $courseimage
                             <div class='post-info'>
                                 <ul class='category'>
-                                    <li>Học viên <a href='#'>$courseinfo->studentnumber</a></li>
-                                    <li>Giáo viên <a href='#'>$courseinfo->fullnamet</a></li>
+                                    <li>$strstudent <a href='#'>$courseinfo->studentnumber</a></li>
+                                    <li>$strteacher <a href='#'>$courseinfo->fullnamet</a></li>
                                 </ul>
                             </div>
                         </div>

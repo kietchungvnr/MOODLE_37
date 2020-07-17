@@ -242,13 +242,13 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $calendar = $CFG->wwwroot . '/calendar/view.php?view=month';
         $files = $CFG->wwwroot . '/user/files.php';
         $output .='
-            <a class="nav-active" href="'.$home .'"><li>Trang chủ</li></a>
-            <a class="nav-active" href="'.$dashboard .'"><li>Dashboard</li></a>
-            <a class="nav-active" href="'.$course .'"><li>Khoá học</li></a>
-            <a class="nav-active" href="'.$news .'"><li>Tin tức</li></a>
-            <a class="nav-active" href="'.$forum .'"><li>Diễn đàn</li></a>
-            <a class="nav-active" href="'.$calendar .'"><li>Lịch</li></a>
-            <a class="nav-active" href="'.$files .'"><li>Tài liệu cá nhân</li></a>
+            <a class="nav-active" href="'.$home .'"><li>'. get_string('home', 'theme_moove') .'</li></a>
+            <a class="nav-active" href="'.$dashboard .'"><li>'. get_string('dashboard', 'theme_moove') .'</li></a>
+            <a class="nav-active" href="'.$course .'"><li>'. get_string('course', 'theme_moove') .'</li></a>
+            <a class="nav-active" href="'.$news .'"><li>'. get_string('news', 'theme_moove') .'</li></a>
+            <a class="nav-active" href="'.$forum .'"><li>'. get_string('forum', 'theme_moove') .'</li></a>
+            <a class="nav-active" href="'.$calendar .'"><li>'. get_string('calendar', 'theme_moove') .'</li></a>
+            <a class="nav-active" href="'.$files .'"><li>'. get_string('privatedata', 'theme_moove') .'</li></a>
             ';
         return $output;
     }
@@ -1008,7 +1008,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output = html_writer::start_tag('form', array('id' => $formid, 'action' => $searchurl, 'method' => 'get','class' => 'form-inline'));
         $output .= html_writer::start_tag('fieldset', array('class' => 'coursesearchbox invisiblefieldset automargin', 'style' => 'border-right: unset;'));
 
-        $output .= html_writer::empty_tag('input', array('type' => 'text', 'id' => $inputid, 'placeholder' => 'Tìm kiếm khoá bạn muốn học',
+        $output .= html_writer::empty_tag('input', array('type' => 'text', 'id' => $inputid, 'placeholder' => get_string('wanttosearchyourcourse', 'theme_moove'),
             'size' => $inputsize, 'name' => 'search', 'value' => s($value),'class' => 'form-control' ,'style' => 'border: 0px;padding: .4rem .75rem;'));
         $output .= html_writer::start_tag('button', array('type' => 'submit',
           'class' => 'btn', 'style' => 'background-color: #fff; border-left: unset !important;border: 0px;padding: .4rem .75rem;'));

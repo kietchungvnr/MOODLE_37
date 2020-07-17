@@ -11,7 +11,7 @@
                             <div class="card-body">
                                 <div class="row align-items-start mb-3 pb-1" style="border-bottom: 1px solid wheat;">
                                     <div class="col">
-                                        <span style="font-weight: 700; color: grey">SỐ LƯỢNG HỌC VIÊN HOÀN THÀNH KHÓA HỌC</span>
+                                        <span style="font-weight: 700; color: grey">{{#str}}numberstudentcompletedcourse, block_vnr_db_teacheruser_xh{{/str}}</span>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fa fa-window-minimize mr-0 cl-position cl-cursor" aria-hidden="true" data-toggle="collapse" data-target="#hvhtk"></i>
@@ -46,7 +46,7 @@
                             <div class="card-body">
                                 <div class="row align-items-start mb-3 pb-1" style="border-bottom: 1px solid wheat;">
                                     <div class="col">
-                                        <span style="font-weight: 700; color: grey">BÁO CÁO ĐIỂM</span>
+                                        <span style="font-weight: 700; color: grey">{{#str}}reportgrade, block_vnr_db_teacheruser_xh{{/str}}</span>
                                     </div>
                                     <div class="col-auto">
                                         <i class="icon fa fa-window-minimize fa-fw m-0 cl-cursor cl-position" aria-hidden="true" data-toggle="collapse" data-target="#bcd"></i>
@@ -99,7 +99,6 @@ require.config({
 
 // Load the depedencies and create your chart
 require(
-
     [
         'highcharts',
         'highcharts/modules/exporting',
@@ -110,7 +109,6 @@ require(
         'core/str',
         'jspicker'
     ],
-
     // This function runs when the above files have been loaded.
     function (Highcharts, ExportingModule, AccessibilityModule,$,Config,Notification,Str,jspicker) {
 
@@ -132,17 +130,26 @@ require(
         $.ajax(script,settings)
         .then(function(response) {
 
-          if (response.error) {
-              Notification.addNotification({
-                  message: response.error,
-                  type: "error"
-              });
-          } else {
-              var strings = [{
-                  key: 'nodatatable',
-                  component: 'local_newsvnr'
-              }, ];
-              Str.get_strings(strings).then(function(s) {
+            if (response.error) {
+                Notification.addNotification({
+                    message: response.error,
+                    type: "error"
+                });
+            } else {
+                var strings = [{
+                    key: 'nodatatable',
+                    component: 'local_newsvnr'
+                }, {
+                    key: 'numberstudent',
+                    component: 'block_vnr_db_teacheruser_xh'
+                }, {
+                    key: 'totalstudent',
+                    component: 'block_vnr_db_teacheruser_xh'
+                }, {
+                    key: 'numbercompletedcourse',
+                    component: 'block_vnr_db_teacheruser_xh'
+                }];
+                Str.get_strings(strings).then(function(s) {
                     var list_coursename = response.list_coursename;
                     var list_enroll = response.list_enroll;
                     var list_completion_course = response.list_completion_course;
@@ -167,7 +174,7 @@ require(
                     yAxis: {
                         min: 0,
                         title: {
-                            text: 'Số lượng học viên'
+                            text: s[1]
                         }
                     },
 
@@ -186,12 +193,12 @@ require(
                         }
                     },
                     series: [{
-                        name: 'Tổng số học viên',
+                        name: s[2],
                         data: list_enroll,
                         color: '#223dc4'
 
                     }, {
-                        name: 'Số học viên hoàn thành khóa học',
+                        name: s[3],
                         data: list_completion_course,
                         color: '#f24012'
 
@@ -199,9 +206,8 @@ require(
                 });
                         
             });
-
-          }
-          return;
+        }
+        return;
         }).fail(Notification.exception);
         var quizoverview_settings = {
                 type: 'GET',
@@ -214,17 +220,23 @@ require(
         $.ajax(script,quizoverview_settings)
         .then(function(response) {
 
-          if (response.error) {
-              Notification.addNotification({
-                  message: response.error,
-                  type: "error"
-              });
-          } else {
-              var strings = [{
-                  key: 'nodatatable',
-                  component: 'local_newsvnr'
-              }, ];
-              Str.get_strings(strings).then(function(s) {
+            if (response.error) {
+                Notification.addNotification({
+                    message: response.error,
+                    type: "error"
+                });
+            } else {
+                var strings = [{
+                    key: 'nodatatable',
+                    component: 'local_newsvnr'
+                }, {
+                    key: 'avgscore',
+                    component: 'block_vnr_db_teacheruser_xh'
+                }, {
+                    key: 'score',
+                    component: 'block_vnr_db_teacheruser_xh'
+                }];
+                Str.get_strings(strings).then(function(s) {
                     var list_coursename = response.list_coursename;
                     var list_quiz_parent = response.list_quizname_parent;
                     // Create a chart.
@@ -247,7 +259,7 @@ require(
                     yAxis: {
                         min: 0,
                         title: {
-                            text: 'Điểm trung bình',
+                            text: s[1]
                             align: 'high'
                         },
                         labels: {
@@ -255,7 +267,7 @@ require(
                         }
                     },
                     tooltip: {
-                        valueSuffix: ' Điểm'
+                        valueSuffix: s[2]
                     },
                     plotOptions: {
                         bar: {
@@ -265,8 +277,6 @@ require(
                         }
                     },
                     legend: {
-                       
-                     
                         borderWidth: 1,
                         backgroundColor:
                             Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',

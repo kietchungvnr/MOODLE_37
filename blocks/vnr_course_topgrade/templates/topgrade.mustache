@@ -1,38 +1,29 @@
 <div class="container-fluid p-0">
-   
    <div id="listuser">
-    {{#haslistuser}}
-       <table class="table">
-  <thead>
-    <tr>
-      <th colspan="2"><b>Bảng xếp hạng</b></th>
-      <th scope="col"><i class="fa fa-trophy" aria-hidden="true" style="font-size: 17px;
-   "></i></th>
-    </tr>
-  </thead>
-
-  <tbody style="vertical-align: center !important">
-     {{#listuser}}
-    <tr>
-      <td class="pr-0"> {{{image}}} </td>
-      <td class="align-middle pl-0"><a href="{{link}}">{{fullname}}</a></td>
-     
-      <td class="align-middle"><span title="Điểm cuối khoá">{{finalgrade}}</span></td>
-    </tr>
-   {{/listuser}}
-    
-  </tbody>
-</table>
-{{/haslistuser}}
-{{^haslistuser}}
-                <div class="d-flex justify-content-center alert alert-info alert-block fade in">{{#str}}nograde, block_vnr_course_topgrade{{/str}}</div>
-    {{/haslistuser}}
-     
-    
+      {{#haslistuser}}
+      <table class="table">
+         <thead>
+            <tr>
+               <th colspan="2"><b>{{#srt}}pluginname, block_vnr_course_topgrade{{/str}}Bảng xếp hạng</b></th>
+               <th scope="col"><i class="fa fa-trophy" aria-hidden="true" style="font-size: 17px;
+                  "></i></th>
+            </tr>
+         </thead>
+         <tbody style="vertical-align: center !important">
+            {{#listuser}}
+            <tr>
+               <td class="pr-0"> {{{image}}} </td>
+               <td class="align-middle pl-0"><a href="{{link}}">{{fullname}}</a></td>
+               <td class="align-middle"><span title="{{#str}}finalresult, block_vnr_course_topgrade{{/str}}">{{finalgrade}}</span></td>
+            </tr>
+            {{/listuser}}
+         </tbody>
+      </table>
+      {{/haslistuser}}
+      {{^haslistuser}}
+      <div class="d-flex justify-content-center alert alert-info alert-block fade in">{{#str}}nograde, block_vnr_course_topgrade{{/str}}</div>
+      {{/haslistuser}}
    </div>
-            
-          
-     
 </div>
 
 {{#js}}

@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Privacy Subsystem implementation for block_course_list.
+ * Block xem chi tiết biểu đồ, báo cáo....
  *
- * @package    block_course_list
- * @copyright  2018 Zig Tan <zig@moodle.com>
+ * @package    block_user(student)
+ * @copyright  2019 Le Thanh Vu
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

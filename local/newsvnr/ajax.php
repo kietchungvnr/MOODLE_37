@@ -101,7 +101,7 @@ if(isset($_GET['action']) && $_GET['action'] == "get_orgstruct_position")
 
 	$result = $DB->get_records_sql($sql, array($org_struct));
 
-	$select = '<option class="active" id disabled="" selected="selected" value="">Chọn chức vụ</option>';
+	$select = '<option class="active" id disabled="" selected="selected" value="">'. get_string('chooseorgposition', 'local_newsvnr') .'</option>';
 	foreach ($result as $key => $value) {
 		$select .= '<option value='. $value->id .'> '. $value->name .'</option>';
 	}
@@ -118,12 +118,12 @@ if(isset($_GET['action']) && $_GET['action'] == "get_list_course") {
 
 	$select = '';
 	if($result) {
-		$select .= '<option value="0">Chọn khoá học</option>';
+		$select .= '<option value="0">'. get_string('choosecourse', 'local_newsvnr') .'</option>';
 		foreach ($result as $key => $value) {
 			$select .= '<option value='. $value->id .'> '. $value->fullname .'</option>';
 		}	
 	} else {
-		$select .= '<option value="0">Không có khoá học</option>';
+		$select .= '<option value="0">'. get_string('nocourse', 'local_newsvnr') .'</option>';
 	}
 	
 
@@ -245,14 +245,14 @@ if(isset($_POST['action']) && $_POST['action'] == "add")
 
 		$id_record = $DB->insert_record('competency_position', $obj);
 
-		$query = "SELECT  cp.id as com_positionid, o.name as orgstruct_name, cp.competencyid,
-				  op.name org_position_name, cmp.shortname as cmp_name, cf.shortname 
-	              as framework_name, op.id as orgpositionid,cp.ordernumber
-	              from mdl_competency cmp 
-	              join mdl_competency_framework cf on cmp.competencyframeworkid = cf.id 
-				  join mdl_competency_position  cp on cp.competencyid = cmp.id
-				  join mdl_orgstructure_position op on op.id = cp.positionid
-				  join mdl_orgstructure o on op.orgstructureid = o.id 
+		$query = "SELECT  cp.id AS com_positionid, o.name AS orgstruct_name, cp.competencyid,
+				  op.name org_position_name, cmp.shortname AS cmp_name, cf.shortname 
+	              AS framework_name, op.id AS orgpositionid,cp.ordernumber
+	              FROM mdl_competency cmp 
+	              JOIN mdl_competency_framework cf on cmp.competencyframeworkid = cf.id 
+				  JOIN mdl_competency_position  cp on cp.competencyid = cmp.id
+				  JOIN mdl_orgstructure_position op on op.id = cp.positionid
+				  JOIN mdl_orgstructure o on op.orgstructureid = o.id 
 				  where cp.id = ?";
 
 		$data = $DB->get_records_sql($query, array($id_record));
@@ -288,7 +288,7 @@ if(isset($_POST['action']) && $_POST['action'] == "add")
     			<td class="center"><i onclick="DeleteCompPosition('. $value->com_positionid .','. $value->orgpositionid.','.$value->competencyid.')" class="fa fa-trash-o delete_comp" id="'. $value->com_positionid .'"></i></td>
     			</tr>';
 
-    	    $sql_course_comp = "SELECT cc.courseid, cc.competencyid, cc.sortorder, c.fullname from mdl_competency_coursecomp cc join mdl_course c on cc.courseid = c.id
+    	    $sql_course_comp = "SELECT cc.courseid, cc.competencyid, cc.sortorder, c.fullname from mdl_competency_coursecomp cc JOIN mdl_course c on cc.courseid = c.id
 			where cc.competencyid = ?";	
 
 			$comp_course_data = $DB->get_records_sql($sql_course_comp, array($value->competencyid));
@@ -302,10 +302,10 @@ if(isset($_POST['action']) && $_POST['action'] == "add")
 
 				}
 		
-				$strbtn = '<button type="submit" class="btn btn-default" onclick="maneger_enrol('.$value->orgpositionid.','.$value->competencyid.')">Ghi danh</button>
+				$strbtn = '<button type="submit" class="btn btn-default" onclick="maneger_enrol('.$value->orgpositionid.','.$value->competencyid.')">'. get_string('enrol', 'local_newsvnr') .'</button>
 					         '; 
 			} else {
-				$list_course .= '<div class="d-flex justify-content-center alert alert-info alert-block fade in ">Năng lực chưa có khóa học liên kết</div>';
+				$list_course .= '<div class="d-flex justify-content-center alert alert-info alert-block fade in ">'. get_string('competencynolinked', 'local_newsvnr') .'</div>';
 			}
 
 		    $result->modal .= 
@@ -315,14 +315,14 @@ if(isset($_POST['action']) && $_POST['action'] == "add")
 							    <div class="modal-dialog modal-lg">
 							      <div class="modal-content">
 							        <div class="modal-header">
-							        	<h5>Danh sách liên kết khóa học</h5>
+							        	<h5>'. get_string('listcourselink', 'local_newsvnr') .'</h5>
 							        </div>
 							        <div class="modal-body" style="display:block;">
 											'. $list_course .'
 							        </div>
 							        <div class="modal-footer">
 										'.$strbtn.'
-										 <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+										 <button type="button" class="btn btn-default" data-dismiss="modal">'. get_string('close', 'local_newsvnr') .'</button>
 							        </div>
 							      </div>
 							    </div>
@@ -361,11 +361,11 @@ if(isset($_GET['action']) && $_GET['action'] == "load_comp_postion")
 				   			 <thead class="thead">
 					      <tr>
 					       	<th>STT</th>
-					        <th>Tiêu chuẩn năng lực</th>
-					        <th>Năng lực cha</th>
-					        <th>Khung năng lực</th>
-					        <th>Liên kết khóa học</th>
-					        <th>Action</th>
+					        <th>'. get_string('standardcompetency', 'local_newsvnr') .'</th>
+					        <th>'. get_string('parentcompetency', 'local_newsvnr') .'</th>
+					        <th>'. get_string('competencyframework', 'local_newsvnr') .'</th>
+					        <th>'. get_string('courselink', 'local_newsvnr') .'</th>
+					        <th>'. get_string('action', 'local_newsvnr') .'Action</th>
 					      </tr>
 					    </thead><tbody>';
  	$result->modal = '';
@@ -414,7 +414,7 @@ if(isset($_GET['action']) && $_GET['action'] == "load_comp_postion")
 		    				'. $value->framework_name .'
 		    			</td>
 		    			<td>
-		    				<a data-toggle="modal" data-target="#myModal'. $value->competencyid .'" href="javascript:void(0)" onClick="rs_radiobtn()" id ="'. $value->competencyid .'">Danh sách khóa học</a>
+		    				<a data-toggle="modal" data-target="#myModal'. $value->competencyid .'" href="javascript:void(0)" onClick="rs_radiobtn()" id ="'. $value->competencyid .'">'. get_string('listcourse', 'local_newsvnr') .'</a>
 		    			</td>
 		    			<td class="center"><i onclick="DeleteCompPosition('. $value->com_positionid .','. $value->orgpositionid.','.$value->competencyid.')" class="fa fa-trash-o delete_comp" id="'. $value->com_positionid .'"></i></td>
 		    		</tr>';
@@ -426,9 +426,9 @@ if(isset($_GET['action']) && $_GET['action'] == "load_comp_postion")
 
 				}
 		
-				$strbtn = '<button type="submit" class="btn btn-default" onclick="maneger_enrol('.$value->orgpositionid.','.$value->competencyid.')">Ghi danh</button>'; 
+				$strbtn = '<button type="submit" class="btn btn-default" onclick="maneger_enrol('.$value->orgpositionid.','.$value->competencyid.')">'. get_string('enrol', 'local_newsvnr') .'</button>'; 
 			} else {
-				$list_course .= '<div class="d-flex justify-content-center alert alert-info alert-block fade in ">Năng lực chưa có khóa học liên kết</div>';
+				$list_course .= '<div class="d-flex justify-content-center alert alert-info alert-block fade in ">'. get_string('competencynolinked', 'local_newsvnr') .'</div>';
 				$strbtn = '';
 			}
 
@@ -439,14 +439,14 @@ if(isset($_GET['action']) && $_GET['action'] == "load_comp_postion")
 							    <div class="modal-dialog modal-lg">
 							      <div class="modal-content">
 							        <div class="modal-header">
-							        	<h5>Danh sách liên kết khóa học</h5>
+							        	<h5>'. get_string('listcourselink', 'local_newsvnr') .'</h5>
 							        </div>
 							        <div class="modal-body" style="display:block;">
 											'. $list_course .'
 							        </div>
 							        <div class="modal-footer">
 										'.$strbtn.'
-										 <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+										 <button type="button" class="btn btn-default" data-dismiss="modal">'. get_string('close', 'local_newsvnr') .'</button>
 							        </div>
 							      </div>
 							    </div>
@@ -461,11 +461,11 @@ if(isset($_GET['action']) && $_GET['action'] == "load_comp_postion")
 				   			 <thead class="thead">
 					      <tr>
 					      	
-					        <th>Tên kế hoạch</th>
-					        <th>Loại kế hoạch</th>
-					        <th>Kế hoạch học tập</th>
-					        <th>Chức vụ</th>
-					        <th>Action</th>
+					        <th>'. get_string('planname', 'local_newsvnr') .'</th>
+					        <th>'. get_string('kindofplan', 'local_newsvnr') .'</th>
+					        <th>'. get_string('studyplan', 'local_newsvnr') .'</th>
+					        <th>'. get_string('position_name', 'local_newsvnr') .'</th>
+					        <th>'. get_string('action', 'local_newsvnr') .'</th>
 					      </tr>
 					    </thead><tbody>';
 
@@ -490,7 +490,7 @@ if(isset($_GET['action']) && $_GET['action'] == "load_comp_postion")
 			    				'. $value->struct_name .'
 			    			</td>
 
-			    			<td class="center"><a href="javascript::void(0)" click="">Edit</a></td>
+			    			<td class="center"><a href="javascript::void(0)" click="">'. get_string('edit', 'local_newsvnr') .'</a></td>
 			    		</tr>';	
 
 	}
@@ -519,11 +519,11 @@ if(isset($_GET['action']) && $_GET['action'] == "orgmanager_enrol") {
 	if($check_orgcomp) {
 		$orgcomp->id = $check_orgcomp->id;
 		$data = $DB->update_record('competency_coursepositioncomp',$orgcomp);
-		$resp->success = 'Update success!';
+		$resp->success = get_string('updatesuccess', 'local_newsvnr');
 	} else {
 		$orgcomp->timecreated = time();
 		$data = $DB->insert_record('competency_coursepositioncomp',$orgcomp);
-		$resp->success = 'Insert success!';
+		$resp->success = get_string('insertsuccess', 'local_newsvnr');
 	}
 	echo json_encode($resp,JSON_UNESCAPED_UNICODE);
 
