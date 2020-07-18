@@ -1,72 +1,11 @@
 <div id="showlistcoursesetup_data"></div>
 
 <div style="margin-bottom: 60px">
-  <input type="submit" value="Add new" id="coursesetup_list" data-action="coursesetupmodal" class="btn btn-primary pull-right mb-3 mt-2" />
+  <a href="coursesetup.php" type="submit" value="Add new" id="coursesetup_list" data-action="coursesetupmodal" class="btn btn-primary pull-right mb-3 mt-2">Add new</a>
 </div>
+
 <script type="text/javascript">
-var clickparent_category = true;
-const category_treeview = () => {
-require(['jquery', 'core/config', 'kendo.all.min'], ($, Config, kendo) => {
-    $('#id_category_cs').on('click',function() {
-             if(clickparent_category == true){
-                var settings = {
-                    type: 'GET',
-                    processData: true,
-                    data:{
-                      coursesetup: 1
-                  },
-                  contentType: "application/json"
-              };
-              var script = Config.wwwroot + '/local/newsvnr/ajax.php';
-              var tvajaxx = $.ajax(script, settings)
-              .then(function(response) {
-                if (response.error) {
-                    Notification.addNotification({
-                        message: response.error,
-                        type: "error"
-                    });
-                } else {
-                        // Reload the page, don't show changed data warnings.
-                        if (typeof window.M.core_formchangechecker !== "undefined") {
-                            window.M.core_formchangechecker.reset_form_dirty_state();
-                        }
-                        // window.location.reload();
-                        var data = JSON.parse(response);
-                        var tv = $("#treeview-category-course").kendoTreeView({
-                            dataSource: data,
-                            
-                        }).data('kendoTreeView');
-                        
-                        $('#treeview-category-course').on('click','.k-item',function(){
-                            var selected = tv.select(),item;
 
-                            if(selected.length >0)
-                              item = tv.dataItem(selected);
-                          if (item) {
-                            document.getElementById('id_category_cs').value = item.text;
-
-                        } else {
-                            $('#log').text('Nothing selected');
-                        }
-                        $('#treeview-category-course').mouseleave(function(){ 
-                            $(this).hide(500);
-                        });
-                    });
-
-                    }
-
-                    clickparent_category = false;
-                    return;
-                }).fail(Notification.exception);
-          } 
-          else {
-             $('#id_category_cs').on('click',function() {
-                 $('#treeview-category-course').show(500);
-             });
-         }
-     });
-    })
-}
 
 const coursesetup_delete = (section_id) => {
     require(['jquery', 'core/config'], ($, config) => {
@@ -95,12 +34,3 @@ const coursesetup_delete = (section_id) => {
 }
 
 </script>
-{{#js}}
-require(["core_course/coursesetup_modal"], function(NewGroup) {
-  NewGroup.init("[data-action=coursesetupmodal]", 1);
-});
-
-require(["local_newsvnr/orgcategory_modal"], function(NewGroup) {
-  NewGroup.init("[data-action=orgcategorypmodal]", 1);
-});
-{{/js}}

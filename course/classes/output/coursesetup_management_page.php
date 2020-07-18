@@ -36,7 +36,6 @@ class coursesetup_management_page implements renderable, templatable
     {
         global $DB,$CFG;
         $data = array();
-        $data['xx'] = 1;
         return $data;
     }
 

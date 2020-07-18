@@ -243,7 +243,7 @@ class mod_quiz_renderer extends plugin_renderer_base {
 
         } else {
             return html_writer::link($url, get_string('finishreview', 'quiz'),
-                    array('class' => 'mod_quiz-next-nav'));
+                    array('class' => 'mod_quiz-next-nav btn btn-primary'));
         }
     }
 

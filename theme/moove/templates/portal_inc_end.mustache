@@ -95,5 +95,40 @@ require(['jquery'], function($) {
     if(quizblock.length > 0)
         $('body').addClass('drawer-open-right')
 
+    
+    ///////////js course menu//////////////
+    var path = window.location.href;
+    $('.nav-tabs.course li a').each(function() {
+        if(this.href === path){
+            $(this).parent().addClass('active');
+        }
+        if(this.href.indexOf('badge') > 0 && path.indexOf('badge') > 0) {
+            $(this).parent().addClass('active');
+        }
+    })
+
+    if(path.indexOf('mod')>0 || path.indexOf('backup')>0) {
+
+        $('.nav-tabs.course li a').css({'display':'none'});
+    }
+
+    if($('.nav-tabs.course li').hasClass('active')){
+
+    }
+
+    else {
+        if($('.nav-tabs.course li:first').hasClass('active')) {
+        }
+        else {
+            $('.nav-tabs.course li:first').addClass('active');
+        }
+    }
+    $('.nav-tabs.course li:first a').html('Tổng quan khóa học')
+    $('.nav-tabs.course li:last').css({'display':'none'});
+    //////////js grader////////////
+    $('.grade-navigation ul:first').removeClass('mb-3');
+    if(path.indexOf('mod/quiz/') > 0) {
+        $('.m-t-2.m-b-1.row').css({'display':'none'});
+    }
 
 {{/js}}

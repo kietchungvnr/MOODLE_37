@@ -2635,12 +2635,14 @@ td[data-field="listbtn"] {
     color: #fff;
     top: 7px;
 }
-
 /*menu khóa học*/
+#page-course-view-social .course-content {
+    padding: 0 10px 10px 10px;
+}
 .nav-tabs.course {
-    background-color: #d1eeff;
    display: flex;
    border-bottom: 0;
+   background-color: #d1eeff;
 }
 .nav-tabs.course .nav-item {
    margin-bottom: 0px;
@@ -2654,6 +2656,7 @@ td[data-field="listbtn"] {
 .nav-tabs.course .nav-item a {
    color: black;
    border: 0;
+    width: max-content;
 }
 .nav-tabs.course .nav-item.active {
    font-weight: bold;
@@ -2661,6 +2664,11 @@ td[data-field="listbtn"] {
 }
 .pagelayout-course .nav-tabs.course .nav-link {
    border: 0;
+}
+@media (max-width: 767px){
+    body #nav-drawer {
+        width: 100%;
+    }
 }
 /*menu theme*/
 .pagelayout-course .nav.nav-tabs .nav-link.active {
@@ -2689,23 +2697,20 @@ td[data-field="listbtn"] {
 [data-region="drawer"] {
     width: 100%;
 }
-.pagelayout-course .card-body {
+#page-course-view-multitopic .card-body.course,#page-course-view-onetopic .card-body.course {
     padding: 0;
 }
-.pagelayout-course .sections {
+#page-course-view-multitopic .sections,#page-course-view-onetopic .sections{
     padding:0 1.25rem;
 }
-#course-header .progress-circle{
-    height: 3rem;
-    width: 3rem;
-} 
-#course-header .progress-circle:before {
-    font-size: 12px;
-    font-weight: bold;
-    left: 0.4rem;
-    right: 0.4rem;
-    top: 0.4rem;
-    bottom: 0.4rem;
+.pagelayout-course .nav.nav-tabs .nav-link[title='Tăng số phân mục'] {
+    width: 40px;
+    text-align: center;
+    border: 0;
+    margin-top: 8px;
+}
+.pagelayout-course .nav.nav-tabs .nav-link[title='Tăng số phân mục'] i {
+    font-size: 20px;
 }
 /*forum/discuss*/
 .movediscussionoption .form-inline {
@@ -2764,8 +2769,133 @@ div[data-region='coursecompetencies'] p {
 div[data-region='coursecompetencies'] .custom-select {
     margin-top: 12px;
 }
-[data-action="tool_usertours/resetpagetour"] {
+/*grader*/
+.grade-navigation .nav-tabs {
+    border-bottom:0;
+}
+.grade-navigation .nav-item .nav-link{
+    border-bottom: 1px solid #dee2e6;
+    color: black;
+}
+.grade-navigation .nav-item .nav-link.active,.grade-navigation .nav-tabs .nav-link:hover {
+    color:#3c8dbc;
+    font-weight: bold;
+    background-color: transparent;
+    border-color: transparent;
+    border-bottom:3px solid #3c8dbc;
+}
+#region-main-settings-menu>div {
+    top: -8px;
+}
+.gradeimport_data_area {
+    width: auto;
+    height: auto;
+}
+#page-report-log-index .custom-select {
+    padding: 8px;
+    margin-bottom: 10px;
+}
+table.quizreviewsummary th.cell {
+    width: 12em !important;
+    background: none;
+    padding: 5px .5em 5px 1em;
+}
+table.quizreviewsummary td.cell {
+    padding: 5px 1em 5px .5em
+}
+.generaltable.quizreviewsummary td,.generaltable.quizreviewsummary th {
+    border-top:0;
+}
+.generaltable.quizreviewsummary {
+    border: 1px solid #ccc5c5a6;
+}
+/*quiz*/
+.que {
+    display: flex;
+}
+.que .info {
+    width: 12em;
+    height: 160px;
+}
+.que .content {
+    margin: 0px 0 0 1.5em;
+    width: 100%;
+}
+.que .formulation   {
+    border:1px solid #bce0ea;
+}
+.que .outcome {
+    border:1px solid #efd1a7;
+}
+.page-my-index section {
+    border:1px solid grey;
+}
+#fitem_id_honestycheckmessage .col-md-2 {
     display: none;
+}
+#fitem_id_honestycheckmessage .form-inline {
+    margin-left: -30px ;
+}
+#fgroup_id_buttonar {
+    padding: 10px 0px !important;
+}
+#fgroup_id_buttonar .col-md-2 {
+    display: none;
+}
+#page-mod-quiz-summary .submitbtns {
+    margin-top: 0;
+}
+.generaltable.quizattemptsummary thead tr{
+    background: #3c8dbc;
+    color: white;
+}
+#page-mod-quiz-view .generalbox#feedback h3 {
+    color: #3c8dbc;
+}
+#page-my-index .card {
+    border: 1px solid #b5b8bb4f !important;
+}
+.course-content ul.topics li.section, .course-content ul.weeks li.section {
+    margin-top: 0;
+    padding-bottom: 0;
+}
+.path-mod-feedback .itemactions {
+    float: none;
+}
+.que h3.no {
+    font-weight: bold;
+}
+#page-mod-quiz-attempt .submitbtns, #page-mod-quiz-review .submitbtns {
+    padding-top: 0;
+}
+#id_reviewoptionshdr .col-md-2 {
+    width: 100%;
+    max-width: 100%;
+}
+/*thanh nav tong hop*/
+.nav-tabs .nav-link.active {
+    border: none;
+    font-weight: bold;
+}
+.nav-tabs .nav-link:hover {
+    color: #495057;
+    background-color: #eef5f9;
+    border: 0;
+    font-weight: bold;
+}
+/*cau hoi*/
+table#categoryquestions {
+    border: 1px solid #c7bebe85;
+}
+table#categoryquestions tr {
+    border-bottom: 1px solid #c7bebe85;
+}
+.calendarwrapper div.header {
+    display: flex;
+    align-items: center;
+}
+.calendarwrapper div.header label {
+    width: 200px;
 }
 </style>
 
