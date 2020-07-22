@@ -130,5 +130,28 @@ require(['jquery'], function($) {
     if(path.indexOf('mod/quiz/') > 0) {
         $('.m-t-2.m-b-1.row').css({'display':'none'});
     }
+    $('.course-content .nav-tabs').append("<ul class='nav-item load-more'><a class='nav-link first'>Thêm<i class='fa fa-caret-down' aria-hidden='true'></i></a><div class='menu-show'></div></ul>");
+    $(window).resize(function() {
+        if($('.load-more').length) {
 
+        }
+        else {
+            $('.course-content .nav-tabs .nav-tabs').append("<ul class='nav-item load-more'><a class='nav-link first'>Thêm<i class='fa fa-caret-down' aria-hidden='true'></i></a><div class='menu-show'></div></ul>");
+        }
+        var width = $(window).width();
+        if (width <= 768){
+            $('.course-content .nav-tabs li:lt(2)').show();
+            $('.menu-show').append($('.course-content .nav-tabs li:gt(1)'));
+        }
+        else {
+            $(".course-content .nav-tabs").load(location.href + " .course-content .nav-tabs");
+        }
+    })
+    if (window.matchMedia('(max-width: 768px)').matches) {
+            $('.course-content .nav-tabs li:lt(2)').show();
+            $('.menu-show').append($('.course-content .nav-tabs li:gt(1)'))
+    }
+    if($('.menu-show li a').hasClass('active')){
+        $('.load-more .first').addClass('active');
+    }
 {{/js}}

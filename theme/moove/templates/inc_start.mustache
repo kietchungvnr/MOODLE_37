@@ -2155,6 +2155,9 @@ nav.navbar .moove-search-input {
       float: left;
   }
 }
+#participantsform .no-overflow {
+    overflow-x: auto;
+}
 .no-overflow{
     padding-top: 5px; 
     text-overflow: ellipsis; 
@@ -2488,6 +2491,9 @@ img.userpicture {
     width: 100%;
 }*/
 /*//badges/view*/
+#page-badges-view div[role="main"] {
+    overflow-x: auto;
+}
 body.format-multitopic .page-header-headings {
     display: block !important;
 }
@@ -2654,6 +2660,7 @@ td[data-field="listbtn"] {
 .nav-tabs.course .nav-item {
    margin-bottom: 0px;
    color: black;
+   background-color: #d1eeff;
 }
 .nav-tabs.course .nav-item:hover a {
    font-weight: bold;
@@ -2672,9 +2679,17 @@ td[data-field="listbtn"] {
 .pagelayout-course .nav-tabs.course .nav-link {
    border: 0;
 }
-@media (max-width: 767px){
+@media (max-width: 768px){
     body #nav-drawer {
         width: 100%;
+    }
+    #region-main-box.col-12 {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    #page-header .col-12.pb-1 {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
     }
 }
 /*menu theme*/
@@ -2685,7 +2700,7 @@ td[data-field="listbtn"] {
 }
 .pagelayout-course .nav.nav-tabs .nav-link:hover  {
    font-weight: bold;
-   color: #5a74fb !important;
+   color: #5a74fb;
    border-bottom: 3px solid #5a74fb;
 }
 .pagelayout-course .nav.nav-tabs .nav-link {
@@ -2694,9 +2709,9 @@ td[data-field="listbtn"] {
     color: black;
     border-bottom:1px solid #cbd1d4;
 }
-.pagelayout-course .nav.nav-tabs .nav-item:hover a.nav-link {
+/*.pagelayout-course .nav.nav-tabs .nav-item:hover a.nav-link {
    color: white;
-}
+}*/
 .pagelayout-course .nav.nav-tabs {
     display: flex;
     border-bottom:0;
@@ -2777,7 +2792,7 @@ div[data-region='coursecompetencies'] .custom-select {
     margin-top: 12px;
 }
 /*grader*/
-.grade-navigation .nav-tabs {
+/*.grade-navigation .nav-tabs {
     border-bottom:0;
 }
 .grade-navigation .nav-item .nav-link{
@@ -2790,7 +2805,7 @@ div[data-region='coursecompetencies'] .custom-select {
     background-color: transparent;
     border-color: transparent;
     border-bottom:3px solid #3c8dbc;
-}
+}*/
 #region-main-settings-menu>div {
     top: -8px;
 }
@@ -2890,6 +2905,9 @@ table.quizreviewsummary td.cell {
     border: 0;
     font-weight: bold;
 }
+.nav-tabs .nav-link {
+    border: 0;
+}
 /*cau hoi*/
 table#categoryquestions {
     border: 1px solid #c7bebe85;
@@ -2904,7 +2922,97 @@ table#categoryquestions tr {
 .calendarwrapper div.header label {
     width: 200px;
 }
+/*course mobile*/
+#page-course-view-buttons .card-body.course {
+    padding: 0;
+}
+.course-content ul.buttons li.section .content {
+    margin: 0;
+}
+.pagelayout-course #region-main {
+    overflow: unset !important; 
+}
+.nav-item.load-more {
+    display: none;
+    position: relative;
+}
+.nav-item.load-more li{
+    display: none;
+    width: 100%;
+    clear: both;
+    font-weight: 400;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+    padding: 0 5px;
+}
+.nav-item.load-more .fa-caret-down {
+    padding-left: 5px;
+}
+.nav-item.load-more li .nav-link {
+    border-bottom: 0 !important;
+    padding: 0;
+}
+.nav-item.load-more:hover li {
+    display: block;
+    border-bottom: 1px solid #cec5c5ba;
+}
+.nav-item.load-more .nav-link:hover {
+    font-weight: 400 !important;
+    color: black !important;
+    border-bottom: 0 !important;
 
+}
+.menu-show {
+    position: absolute;
+    will-change: transform;
+    top: 0px;
+    left: 0px;
+    transform: translate3d(-85px, 35px, 0px);
+    background: white;
+    z-index: 123;
+    border: 1px solid #cec5c5ba;
+    max-height: 400px;
+    overflow-y: auto;
+    width: auto;
+    overflow-x: hidden;
+
+}
+@media(max-width: 768px){
+    .nav-item.load-more {
+        display: block;
+    }
+    #page-admin-tool-lp-coursecompetencies .float-right.card.p-2 {
+        float: none !important;
+    }
+    body {
+        font-size: 13px;
+        overflow-x: hidden;
+    }
+    .course-content .nav-tabs li {
+        display: none;
+    }
+    .pagelayout-incourse div#action-menu-3-menubar {
+        display: none !important;
+    }
+    .card-body h4 {
+    font-size: 16px;
+    }
+    .card-body h2,.card-body h3 {
+        font-size: 16px !important;
+    }
+    a.fheader {
+        font-size: 16px;
+    }
+
+}
+@media(max-width: 600px){
+    #page-badges-view .collection {
+        width: 600px;
+    }
+}
 </style>
 
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.common.min.css"/>
