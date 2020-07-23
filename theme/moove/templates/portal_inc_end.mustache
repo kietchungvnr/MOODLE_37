@@ -84,19 +84,14 @@ require(['jquery'], function($) {
             $(".nav-active:first").addClass("active-nav");
         }
     });
-    $(function() {
-        $('[data-key=addblock]').click(function(e){
-            e.preventDefault();
-        });
-        $('.usertour').addClass('d-none');
-    });
 }); 
     var quizblock = $('#page-mod-quiz-attempt');
     if(quizblock.length > 0)
         $('body').addClass('drawer-open-right')
 
-    
-    ///////////js course menu//////////////
+
+
+    {{! ///////////js course menu////////////// }}
     var path = window.location.href;
     $('.nav-tabs.course li a').each(function() {
         if(this.href === path){
@@ -106,16 +101,11 @@ require(['jquery'], function($) {
             $(this).parent().addClass('active');
         }
     })
-
     if(path.indexOf('mod')>0 || path.indexOf('backup')>0) {
-
         $('.nav-tabs.course li a').css({'display':'none'});
     }
-
     if($('.nav-tabs.course li').hasClass('active')){
-
     }
-
     else {
         if($('.nav-tabs.course li:first').hasClass('active')) {
         }
@@ -130,11 +120,10 @@ require(['jquery'], function($) {
     if(path.indexOf('mod/quiz/') > 0) {
         $('.m-t-2.m-b-1.row').css({'display':'none'});
     }
+    {{!     /////menucourse-mobile///////// }}
     $('.course-content .nav-tabs').append("<ul class='nav-item load-more'><a class='nav-link first'>Thêm<i class='fa fa-caret-down' aria-hidden='true'></i></a><div class='menu-show'></div></ul>");
     $(window).resize(function() {
-        if($('.load-more').length) {
-
-        }
+        if($('.load-more').length) {}
         else {
             $('.course-content .nav-tabs .nav-tabs').append("<ul class='nav-item load-more'><a class='nav-link first'>Thêm<i class='fa fa-caret-down' aria-hidden='true'></i></a><div class='menu-show'></div></ul>");
         }
@@ -154,4 +143,36 @@ require(['jquery'], function($) {
     if($('.menu-show li a').hasClass('active')){
         $('.load-more .first').addClass('active');
     }
+    $("<div class='next'><i class='fa fa-angle-right'style='font-size:20px'></i></div>").insertBefore('.pagelayout-course #nav-drawer');
+    $("<div class='prev'><i class='fa fa-angle-left'style='font-size:20px'></i></div>").insertBefore('.pagelayout-course #nav-drawer');
+
+    {{! /////////////////// }}
+    $('.next').click(function(event) {
+        var pos = $('#nav-drawer').scrollLeft() + 200;
+        $('#nav-drawer').animate({scrollLeft:pos},400);
+    });
+    $('.prev').click(function(event) {
+        var pos = $('#nav-drawer').scrollLeft() - 200;
+        $('#nav-drawer').animate({scrollLeft:pos},400);
+    });
+    $('#nav-drawer').scroll(function(){
+        if( $('#nav-drawer').scrollLeft() <= 0 ){
+            $('.prev').css({'display':'none'});
+        }
+        else {
+            $('.prev').css({'display':'block'});
+        }
+        var $width = $(".nav-tabs.course").outerWidth();
+        var $scrollWidth = $('#nav-drawer').scrollLeft();
+        var $scrollLeft = $('#nav-drawer')[0].scrollWidth;
+        if (parseInt($scrollWidth - $width) === parseInt($scrollLeft)) {
+                    alert('right end');
+        }
+    })
+    if( $('#nav-drawer').scrollLeft() <= 0 ){
+        $('.prev').css({'display':'none'});
+    }
+
+
+
 {{/js}}

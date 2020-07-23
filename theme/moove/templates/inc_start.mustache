@@ -2970,7 +2970,7 @@ table#categoryquestions tr {
     will-change: transform;
     top: 0px;
     left: 0px;
-    transform: translate3d(-85px, 35px, 0px);
+    transform: translate3d(-95px, 35px, 0px);
     background: white;
     z-index: 123;
     border: 1px solid #cec5c5ba;
@@ -3008,11 +3008,63 @@ table#categoryquestions tr {
     }
 
 }
+#nav-drawer::-webkit-scrollbar {
+    display: none;
+}
+.next {
+    position: absolute;
+    right: 0px;
+    z-index: 123;
+    top: 7px;
+    padding:0 5px;
+    background: #d1eeff;
+    display:none;
+}
+.prev {
+    position: absolute;
+    left: 0px;
+    z-index: 123;
+    top: 7px;
+    padding:0 5px;
+    display:none;
+    background-color: #d1eeff;
+}
 @media(max-width: 600px){
     #page-badges-view .collection {
         width: 600px;
     }
+    .mdl-left,.mdl-right {
+        display: none;
+    }
+    .initialbar.firstinitial,.initialbar.lastinitial {
+        display: none !important;
+    }
+    .next, .prev {
+        display: block;
+    }
+    .nav-tabs.course .nav-item.active {
+        background-color: #d1eeff;
+    }
+    .nav-tabs.course .nav-link {
+        padding:.5rem 2rem; 
+    }
+    .nav-tabs.course .nav-item:hover a {
+        background-color: #d1eeff;
+    }
+    ul.nav.nav-tabs.mb-3 {
+        margin-bottom: 0 !important;
+    }
+    .course-content ul.section {
+        margin:0.5rem;
+    }
+    #page-header ol.breadcrumb {
+        display: none;
+    }
+    #setting-context {
+        display: none;
+    }
 }
+
 </style>
 
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.common.min.css"/>
