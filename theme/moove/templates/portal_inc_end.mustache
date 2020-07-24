@@ -91,7 +91,7 @@ require(['jquery'], function($) {
 
 
 
-    {{! ///////////js course menu////////////// }}
+    // {{! ///////////course menu////////////// }}
     var path = window.location.href;
     $('.nav-tabs.course li a').each(function() {
         if(this.href === path){
@@ -102,7 +102,7 @@ require(['jquery'], function($) {
         }
     })
     if(path.indexOf('mod')>0 || path.indexOf('backup')>0) {
-        $('.nav-tabs.course li a').css({'display':'none'});
+        $('#nav-drawer').remove();
     }
     if($('.nav-tabs.course li').hasClass('active')){
     }
@@ -120,39 +120,46 @@ require(['jquery'], function($) {
     if(path.indexOf('mod/quiz/') > 0) {
         $('.m-t-2.m-b-1.row').css({'display':'none'});
     }
-    {{!     /////menucourse-mobile///////// }}
-    $('.course-content .nav-tabs').append("<ul class='nav-item load-more'><a class='nav-link first'>Thêm<i class='fa fa-caret-down' aria-hidden='true'></i></a><div class='menu-show'></div></ul>");
+    // {{!     /////course_menu_theme_mobile///////// }}
+    $('.course-content .nav-tabs').append("<ul class='nav-item load-more'><a class='nav-link first'>General<i class='fa fa-caret-down' aria-hidden='true'></i></a><div class='menu-show'></div></ul>");
+    size_li = $(".course-content .nav-tabs li").length;
     $(window).resize(function() {
         if($('.load-more').length) {}
         else {
-            $('.course-content .nav-tabs .nav-tabs').append("<ul class='nav-item load-more'><a class='nav-link first'>Thêm<i class='fa fa-caret-down' aria-hidden='true'></i></a><div class='menu-show'></div></ul>");
+            $('.course-content .nav-tabs .nav-tabs').append("<ul class='nav-item load-more'><a class='nav-link first'>General<i class='fa fa-caret-down' aria-hidden='true'></i></a><div class='menu-show'></div></ul>");
         }
         var width = $(window).width();
         if (width <= 768){
-            $('.course-content .nav-tabs li:lt(2)').show();
-            $('.menu-show').append($('.course-content .nav-tabs li:gt(1)'));
+            $('.menu-show').append($('.course-content .nav-tabs li:lt('+size_li+')'));
+            var active_mb = $('div.menu-show li a.active').attr('title');
+            $('.first').html("<i class='fa fa-folder' aria-hidden='true'></i>"+ active_mb + "<i class='fa fa-caret-down' aria-hidden='true'></i>");
         }
         else {
             $(".course-content .nav-tabs").load(location.href + " .course-content .nav-tabs");
         }
     })
     if (window.matchMedia('(max-width: 768px)').matches) {
-            $('.course-content .nav-tabs li:lt(2)').show();
-            $('.menu-show').append($('.course-content .nav-tabs li:gt(1)'))
+            $('.menu-show').append($('.course-content .nav-tabs li:lt('+size_li+')'))
+            var active_mb = $('div.menu-show li a.active').attr('title');
+            $('.first').html("<i class='fa fa-folder' aria-hidden='true'></i>"+ active_mb + "<i class='fa fa-caret-down' aria-hidden='true'></i>");
     }
-    if($('.menu-show li a').hasClass('active')){
-        $('.load-more .first').addClass('active');
-    }
-    $("<div class='next'><i class='fa fa-angle-right'style='font-size:20px'></i></div>").insertBefore('.pagelayout-course #nav-drawer');
-    $("<div class='prev'><i class='fa fa-angle-left'style='font-size:20px'></i></div>").insertBefore('.pagelayout-course #nav-drawer');
 
-    {{! /////////////////// }}
+    $("<div class='next'><i class='fa fa-angle-right'style='font-size:23px'></i></div>").insertBefore('#nav-drawer');
+    $("<div class='prev'><i class='fa fa-angle-left'style='font-size:23px'></i></div>").insertBefore('#nav-drawer');
+    
+    $( ".nav-item.load-more" ).click(function() {     
+    if($('.menu-show:visible').length)
+        $('.menu-show').hide();
+    else
+        $('.menu-show').show();        
+    });
+    // {{! ////////course_menu_mobile/////////// }}
     $('.next').click(function(event) {
-        var pos = $('#nav-drawer').scrollLeft() + 200;
+        var pos = $('#nav-drawer').scrollLeft() + 300;
         $('#nav-drawer').animate({scrollLeft:pos},400);
     });
     $('.prev').click(function(event) {
-        var pos = $('#nav-drawer').scrollLeft() - 200;
+        var pos = $('#nav-drawer').scrollLeft() - 300;
         $('#nav-drawer').animate({scrollLeft:pos},400);
     });
     $('#nav-drawer').scroll(function(){
@@ -172,7 +179,4 @@ require(['jquery'], function($) {
     if( $('#nav-drawer').scrollLeft() <= 0 ){
         $('.prev').css({'display':'none'});
     }
-
-
-
 {{/js}}
