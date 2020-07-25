@@ -68,7 +68,7 @@ if ($delete === md5($course->timemodified)) {
     /* -- Custom by Vũ -- */
     //Đẩy thông tin khoá học khi xoá realtime qua HRM
     $detete_course_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecCourse']);
-    if($detete_course_api) {
+    if($detete_course_api && $delete_course_api->visible == 1) {
         $params_el = [
                 'CourseName' => $course->fullname,
                 'CourseCode' =>  $course->code,

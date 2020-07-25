@@ -519,7 +519,8 @@ function page_view($page, $course, $cm, $context) {
 
     // Completion.
     $completion = new completion_info($course);
-    $completion->set_module_viewed($cm);
+    // Custom by Vũ: Đẩy kết quả điểm danh(Tương đương hoàn thành module page) qua EBM
+    $completion->set_module_viewed_within_api($cm, null, $course->typeofcourse, $page->code);
 }
 
 /**

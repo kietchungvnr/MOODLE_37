@@ -277,8 +277,66 @@ if ($userform->is_cancelled()) {
 
     // Trigger update/create event, after all fields are stored.
     if ($usercreated) {
+        // Custom by Vũ: Tích hợp đẩy thông tin học viên và giáo viên khi tạo mới
+        // typeofuser = 1: Users của EBM
+        // typeofuser = 0: Users của EL
+        if($usernew->typeofuser == 1) {
+            require_once($CFG->dirroot . '/local/newsvnr/lib.php');
+            $create_portal_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'APIPORTAL']);
+            if($create_portal_api && $delete_course_api->visible == 1) {
+                $params_el = [
+                        'Code' => $usernew->usercode,
+                        'FirstName' => $usernew->fristname,
+                        'LastName' =>  $usernew->lastname,
+                        'Email' => 'email',
+                        'Phone' => $usernew->phone2,
+                        'Password' => $usernew->password,
+                ];
+                $getparams = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $create_portal_api->id]);
+                $params_hrm = [];
+                foreach ($getparams as $key => $value) {
+                    if(array_key_exists($value->client_params, $params_el)) {
+                        $params_hrm[$value->client_params] = $params_el[$value->client_params];
+                    } else {
+                        $params_hrm[$value->client_params] = $value->default_value;
+                    }
+                    
+                }
+                $url_hrm = $create_portal_api->url;
+                HTTPPost($url_hrm, $params_hrm);
+            }
+        }
         \core\event\user_created::create_from_userid($usernew->id)->trigger();
     } else {
+        // Custom by Vũ: Tích hợp đẩy thông tin học viên và giáo viên khi chỉnh sửa
+        // typeofuser = 1: Users của EBM
+        // typeofuser = 0: Users của EL
+        if($usernew->typeofuser == 1) {
+            require_once($CFG->dirroot . '/local/newsvnr/lib.php');
+            $create_portal_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'APIPORTAL']);
+            if($create_portal_api && $delete_course_api->visible == 1) {
+                $params_el = [
+                        'Code' => $usernew->usercode,
+                        'FirstName' => $usernew->fristname,
+                        'LastName' =>  $usernew->lastname,
+                        'Email' => 'email',
+                        'Phone' => $usernew->phone2,
+                        'Password' => $usernew->password,
+                ];
+                $getparams = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $create_portal_api->id]);
+                $params_hrm = [];
+                foreach ($getparams as $key => $value) {
+                    if(array_key_exists($value->client_params, $params_el)) {
+                        $params_hrm[$value->client_params] = $params_el[$value->client_params];
+                    } else {
+                        $params_hrm[$value->client_params] = $value->default_value;
+                    }
+                    
+                }
+                $url_hrm = $create_portal_api->url;
+                HTTPPost($url_hrm, $params_hrm);
+            }
+        }
         \core\event\user_updated::create_from_userid($usernew->id)->trigger();
     }
 
