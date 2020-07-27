@@ -87,6 +87,7 @@ class UserController extends BaseController {
 		$usernew->preference_auth_forcepasswordchange = 0;
 		$usernew->mnethostid = $CFG->mnet_localhost_id;
 		$usernew->confirmed= 1;
+		$usernew->typeofuser = 1;
 		$usernew->firstname = $firstname;
 		$usernew->lastname = $lastname;
 		$usernew->email = $this->data->email;

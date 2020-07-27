@@ -33,8 +33,8 @@ class CourseController extends BaseController {
         $this->validate = $this->validator->validate($this->request, [
             'fullname' => $this->v::notEmpty()->notBlank(),
             'shortname' => $this->v::notEmpty()->notBlank(),
-            'startdate' => $this->v::notEmpty()->notBlank(),
-            'enddate' => $this->v::notEmpty()->notBlank(),
+            // 'startdate' => $this->v::notEmpty()->notBlank(),
+            // 'enddate' => $this->v::notEmpty()->notBlank(),
             'categoryname' => $this->v::notEmpty()->notBlank(),
             'categorycode' => $this->v::notEmpty()->notBlank(),
             'teachercode' => $this->v::notEmpty()->notBlank(),
@@ -133,11 +133,17 @@ class CourseController extends BaseController {
 				    $modinfo->section = 1;
 				    $modinfo->visible = 1;
 				    $modinfo->display = 5;
-				    $modinfo->introeditor = ['text' => '', 'format' => '1'];
+				    $modinfo->completion = 2;
+        			$modinfo->completionview = 1;
+				    $modinfo->printheading = '1';
+				    $modinfo->printintro = '0';
+				    $modinfo->printlastmodified = '1';
+				    $modinfo->introeditor = ['text' => '', 'format' => '1', 'itemid' => 0];
 					$pageid = $DB->get_field('page', 'id', ['course' => $courseid, 'name' => $this->data->pagename]);
 					if($pageid) {
 						$cm = get_coursemodule_from_instance('page', $pageid);
 						$modinfo->id = $pageid;
+						$modinfo->revision = 0;
 						$modinfo->page = ['text' => $this->data->pageintro,'format' => '1', 'itemid' => 0];
 						$modinfo->coursemodule = $cm->id;
 						$modulepage = update_module($modinfo);
@@ -150,7 +156,6 @@ class CourseController extends BaseController {
 					
 				    $this->resp->error = false;
 					$this->resp->message['info'] = "Chỉnh sửa buổi học thành công";
-					$this->resp->data[] = $modulepage;
 					$enrol_user = check_user_in_course($courseid,$userid);
 					$enrol_teahcer = check_teacher_in_course($courseid,$teacherid);
 
@@ -208,11 +213,6 @@ class CourseController extends BaseController {
 				try {
 					$course = create_course($this->data);
 					if($course) {
-						if($DB->record_exists('page', ['course' => $course->id, 'name' => $this->data->pagename])) {
-							$this->resp->error = false;
-							$this->resp->message['info'] = "Buổi học đã tồn tại trong khóa học";
-						}
-					} else {
 						$modinfo = new stdClass;
 					    $modinfo->name = $this->data->pagename;
 					    $modinfo->code = $this->data->pagecode;
@@ -221,13 +221,20 @@ class CourseController extends BaseController {
 					    $modinfo->section = 1;
 					    $modinfo->visible = 1;
 					    $modinfo->display = 5;
-					    $modinfo->introeditor = ['text' => '', 'format' => '1'];
-					    $modinfo->page = ['text' => $this->data->pageintro,'format' => '1'];
+					    $modinfo->completion = 2;
+        				$modinfo->completionview = 1;
+					    $modinfo->printheading = '1';
+					    $modinfo->printintro = '0';
+					    $modinfo->printlastmodified = '1';
+					    $modinfo->content = $this->data->pageintro;
+					    $modinfo->introeditor = ['text' => '', 'format' => '1', 'itemid' => 0];
+					    $modinfo->contentformat = 1;
+						$modinfo->intoformat = 1;
 					    $modulepage = create_module($modinfo);
 					    $this->resp->error = false;
 						$this->resp->message['info'] = "Tạo mới buổi học thành công";
 						$this->resp->data[] = $modulepage;
-					}
+					} 
 					$enrol_user = check_user_in_course($course->id,$userid);
 					$enrol_teahcer = check_teacher_in_course($course->id,$teacherid);
 
