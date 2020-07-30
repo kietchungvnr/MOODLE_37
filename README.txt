@@ -47,7 +47,7 @@ See <https://docs.moodle.org> for details of Moodle's many features.
 
 *** Version: 2019052002.12
 -- Ngày 30/07
-- Chức năng xem file pdf, xls, docs trực tiếp trên browser(chrome, ..)
+- Chức năng xem file pdf, xls, docs trực tiếp trên browser(chrome, ..) chỉ áp dụng trên multitopic format course
 Cách dùng:
 B1: Add module file vào khóa học sau đó phần giao diện chọn loại (view file on browsers)
 B2: Sau khi add thành công nhân vào file sẽ hiện popup để xem. Có thể download nhấn vào button download trên popup
