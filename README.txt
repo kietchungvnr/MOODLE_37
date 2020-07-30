@@ -43,6 +43,11 @@ See <https://docs.moodle.org> for details of Moodle's many features.
 - Trường hợp clone từ git khi cài đặt xong phải lấy file ngôn ngữ chứa ở thư mục: 'moodledata_dev/scripts/lang_[version].rar' giải nén và bỏ vào 'moodledata'
 - Trường hợp upbuild kiểm tra version(trước khi upbuild) so với version(sau khi upbuild) của file ngôn ngữ. 
   + Nếu khác thì phải thêm file ngôn ngữ mới vào moodledata
-  + Nếu trùng thì cần
+  + Nếu trùng thì không cần
 
 *** Version: 2019052002.12
+-- Ngày 30/07
+- Chức năng xem file pdf, xls, docs trực tiếp trên browser(chrome, ..)
+Cách dùng:
+B1: Add module file vào khóa học sau đó phần giao diện chọn loại (view file on browsers)
+B2: Sau khi add thành công nhân vào file sẽ hiện popup để xem. Có thể download nhấn vào button download trên popup

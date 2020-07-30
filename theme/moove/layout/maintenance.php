@@ -25,13 +25,19 @@
 defined('MOODLE_INTERNAL') || die();
 
 $bodyattributes = $OUTPUT->body_attributes();
+if(isset($_SERVER['HTTP_REFERER'])) {
+    $hasportal = true;
+} else {
+    $hasportal = false;
+}
 
 $templatecontext = [
     // We cannot pass the context to format_string, this layout can be used during
     // installation. At that stage database tables do not exist yet.
     'sitename' => format_string($SITE->shortname, true, ["escape" => false]),
     'bodyattributes' => $bodyattributes,
-    'output' => $OUTPUT
+    'output' => $OUTPUT,
+    'hasportal' => $hasportal
 ];
 
 echo $OUTPUT->render_from_template('theme_moove/maintenance', $templatecontext);
