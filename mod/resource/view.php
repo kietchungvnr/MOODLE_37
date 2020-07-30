@@ -102,6 +102,8 @@ switch ($displaytype) {
     case RESOURCELIB_DISPLAY_FRAME:
         resource_display_frame($resource, $cm, $course, $file);
         break;
+    case  RESOURCELIB_DISPLAY_GOOGLE_DOCS_POPUP:
+        break;
     default:
         resource_print_workaround($resource, $cm, $course, $file);
         break;

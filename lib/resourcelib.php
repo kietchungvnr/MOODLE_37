@@ -41,6 +41,10 @@ define('RESOURCELIB_DISPLAY_OPEN', 5);
 /** Open in "emulated" pop-up without navigation */
 define('RESOURCELIB_DISPLAY_POPUP', 6);
 
+// Custom by Vũ: Thêm loại view file trên browser (RESOURCELIB_DISPLAY_GOOGLE_DOCS_POPUP)
+/** Open in "emulated" pop-up using google docs viewer */
+define('RESOURCELIB_DISPLAY_GOOGLE_DOCS_POPUP', 7);
+
 /** Legacy files not needed or new resource */
 define('RESOURCELIB_LEGACYFILES_NO', 0);
 /** Legacy files conversion marked as completed */
@@ -112,14 +116,16 @@ function resourcelib_get_displayoptions(array $enabled, $current=null) {
     if (is_number($current)) {
         $enabled[] = $current;
     }
-
+    // Custom by Vũ: Thêm loại view file trên browser (RESOURCELIB_DISPLAY_GOOGLE_DOCS_POPUP)
     $options = array(RESOURCELIB_DISPLAY_AUTO     => get_string('resourcedisplayauto'),
                      RESOURCELIB_DISPLAY_EMBED    => get_string('resourcedisplayembed'),
                      RESOURCELIB_DISPLAY_FRAME    => get_string('resourcedisplayframe'),
                      RESOURCELIB_DISPLAY_NEW      => get_string('resourcedisplaynew'),
                      RESOURCELIB_DISPLAY_DOWNLOAD => get_string('resourcedisplaydownload'),
                      RESOURCELIB_DISPLAY_OPEN     => get_string('resourcedisplayopen'),
-                     RESOURCELIB_DISPLAY_POPUP    => get_string('resourcedisplaypopup'));
+                     RESOURCELIB_DISPLAY_POPUP    => get_string('resourcedisplaypopup'),
+                     RESOURCELIB_DISPLAY_GOOGLE_DOCS_POPUP => get_string('viewfileonbrowser', 'format_multitopic')
+                    );
 
     $result = array();
 

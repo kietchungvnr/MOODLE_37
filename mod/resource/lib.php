@@ -102,6 +102,21 @@ function resource_add_instance($data, $mform) {
 
     $data->id = $DB->insert_record('resource', $data);
 
+    // Custom by Vũ: Thêm điều kiện ràng buộc hoàn thành khóa học
+    if($data->completion == 2) {
+        $completionrules = new stdClass;
+        if($data->completiontimespent) {
+            $completionrules->moduleid = $cmid;
+            $completionrules->completiontimespent = $data->completiontimespent;
+            $completionrules->timemodified = time();
+            $completionrules->id = $DB->insert_record('course_modules_completion_rule', $completionrules);    
+        } else {
+            $completionrules->moduleid = $cmid;
+            $completionrules->timemodified = time();
+            $completionrules->id = $DB->insert_record('course_modules_completion_rule', $completionrules);    
+        }
+    }
+
     // we need to use context now, so we need to make sure all needed info is already in db
     $DB->set_field('course_modules', 'instance', $data->id, array('id'=>$cmid));
     resource_set_mainfile($data);
@@ -531,7 +546,8 @@ function resource_view($resource, $course, $cm, $context) {
 
     // Completion.
     $completion = new completion_info($course);
-    $completion->set_module_viewed($cm);
+    // Custom by Vũ: Điều kiện hoàn thành module theo thời gian quy định
+    $completion->set_module_resource_completion_viewed($cm);
 }
 
 /**

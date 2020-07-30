@@ -77,6 +77,8 @@ class mod_resource_mod_form extends moodleform_mod {
 
         //-------------------------------------------------------
         $mform->addElement('header', 'optionssection', get_string('appearance'));
+        // Custom by Vũ: Thêm loại view file trên browser (RESOURCELIB_DISPLAY_GOOGLE_DOCS_POPUP)
+        $config->displayoptions .= ',' . RESOURCELIB_DISPLAY_GOOGLE_DOCS_POPUP; 
 
         if ($this->current->instance) {
             $options = resourcelib_get_displayoptions(explode(',', $config->displayoptions), $this->current->display);
@@ -195,6 +197,37 @@ class mod_resource_mod_form extends moodleform_mod {
         }
 
         parent::definition_after_data();
+    }
+
+    // Custom by Vũ: Thêm điều kiện hoàn thành module với ràng buộc thời gian tối thiểu
+    
+    /**
+     * Display module-specific activity completion rules.
+     * Part of the API defined by moodleform_mod
+     * @return array Array of string IDs of added items, empty array if none
+     */
+    public function add_completion_rules() {
+        $mform = $this->_form;
+
+        $group = array();
+        $group[] =& $mform->createElement('checkbox', 'completiontimespentenabled', '',
+                get_string('completiontimespent', 'lesson'));
+        $group[] =& $mform->createElement('duration', 'completiontimespent', '', array('optional' => false));
+        $mform->addGroup($group, 'completiontimespentgroup', get_string('completiontimespentgroup', 'core_langvnr'), array(' '), false);
+        $mform->disabledIf('completiontimespent[number]', 'completiontimespentenabled', 'notchecked');
+        $mform->disabledIf('completiontimespent[timeunit]', 'completiontimespentenabled', 'notchecked');
+
+        return array('completiontimespentgroup');
+    }
+
+    /**
+     * Called during validation. Indicates whether a module-specific completion rule is selected.
+     *
+     * @param array $data Input data (not yet validated)
+     * @return bool True if one or more rules is enabled, false if none are.
+     */
+    public function completion_rule_enabled($data) {
+        return $data['completiontimespent'] > 0;
     }
 
     function validation($data, $files) {
