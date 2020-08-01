@@ -66,7 +66,7 @@
 </nav>
 <header id="header" style="margin-top: 52px;">
     <nav class="menu">
-      <div class="enlaces" id="enlaces" style="display: none;">
+      <div class="enlaces" id="enlaces">
         {{{output.nav_header}}}
         {{# flatnavigation }}
             {{#showdivider}}
@@ -82,28 +82,27 @@
 
 {{#js}}
     $(function(){
-
-    var header = document.getElementById('header');
     //menu responsive
     //calcular ancho
     var ancho = $(window).width(),
-        enlaces = $('#enlaces'),
+        menu = $('#header .menu'),
         btnMenu = $('#btn-menu'),
         icono = $('#btn-menu .icono');
-
+        overflow = $('.overflow-all');
 
         btnMenu.on('click', function(e){
-            enlaces.slideToggle();
             icono.toggleClass('fa-bars');
             icono.toggleClass('fa-times');
+            menu.toggleClass('width-60');
+            overflow.toggleClass('d-block');
         });
-        if ($(this).width() <= 1380) {
-            icono.addClass('fa-bars');
-            icono.removeClass('fa-times');
 
-        } 
-
-        
+        overflow.click(function(e){
+            menu.removeClass('width-60');   
+            overflow.removeClass('d-block');
+            icono.toggleClass('fa-bars');
+            icono.toggleClass('fa-times');
+        })
     });
     $(function() {
         $('[data-key=addblock]').click(function(e){
