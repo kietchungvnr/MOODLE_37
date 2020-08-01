@@ -653,7 +653,7 @@ class core_course_renderer extends plugin_renderer_base {
         // Custom by Vũ: Thêm loại view file trên browser (RESOURCELIB_DISPLAY_GOOGLE_DOCS_POPUP == 7)
         $resource = $DB->get_record('resource', ['id' => $mod->instance]);
         if($resource && $resource->display == 7) {
-            $itemtype = ['f/spreadsheet-24', 'f/powerpoint-24', 'f/pdf-24'];
+            $itemtype = ['f/spreadsheet-24', 'f/powerpoint-24', 'f/pdf-24', 'f/document-24'];
             if(in_array($mod->icon, $itemtype)) {
                 $onclick = "showmodal($mod->id, $mod->instance)";
                 $linkclasses = 'viewdirect';
