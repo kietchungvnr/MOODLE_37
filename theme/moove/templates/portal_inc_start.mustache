@@ -2687,13 +2687,12 @@ td[data-field="listbtn"] {
 /*menu theme*/
 .pagelayout-course .nav.nav-tabs .nav-link.active {
    font-weight: bold;
-   border-bottom: 3px solid #5a74fb;
-   color: #5a74fb !important;
+   border-bottom: 3px solid #1177d1;
+   color: #1177d1 !important;
 }
 .pagelayout-course .nav.nav-tabs .nav-link:hover  {
    font-weight: bold;
-   color: #5a74fb;
-   border-bottom: 3px solid #5a74fb;
+   color: #1177d1;
 }
 .pagelayout-course .nav.nav-tabs .nav-link {
     border: 0;
@@ -3042,6 +3041,7 @@ table#categoryquestions tr {
 }
 ul.nav.nav-tabs.mb-3 {
     width: 100%;
+    margin-bottom:0!important;
 }
 @media(max-width: 600px) {
     #page-badges-view .collection {
@@ -3159,11 +3159,13 @@ ul.nav.nav-tabs.mb-3 {
 .news-post {
     padding: 0 7px;
 }
-.icon {
-    margin-right: 0.2rem ;
-}
 .usertour {
     display: none;
+}
+@media(max-width: 500px){
+    .progress {
+        width: 150px !important;
+    }
 }
 /*trang chu*/
 .owl-item .column-33 div {
@@ -3266,6 +3268,135 @@ tr.drag-samenode td {
 }
 .course-content ul.section {
     margin: 0;
+}
+.course-content .current::before {
+    display: none;
+}
+.course-box .course-new-latest {
+    padding-top: 0;
+}
+.course-all {
+    margin-top: 0;
+}
+.atto_image_preview_box { 
+    max-height: 370px;
+}
+.atto_image_preview_box img {
+    max-width: 1200px;
+    max-height: 500px;
+}
+.pagelayout-course .progress {
+    margin-bottom: 0;
+    float: right;
+    width: 250px;
+    border-radius: 20px;
+    height: 12px;
+    margin-top: 4px;
+    margin-right:10px;
+    background:lightgray;
+}
+.pagelayout-course #page-header .mr-auto {
+    width: 100%;
+}
+.pagelayout-course #page-header .page-header-headings {
+    float: left;
+}
+.pagelayout-course .progress .progress-bar {
+    border-radius: 20px;
+    background-color: #1177d1;
+    font-size: 11px;
+}
+.clear {
+    clear: both;
+}
+.activity img.activityicon {
+    margin-right: 13px;
+    margin-left: 12px;
+    height: 22px;
+    width: 22px;
+}
+.pagelayout-course .activityinstance a {
+    color: #252627;
+}
+.section .activity .availabilityinfo, .section .activity .contentafterlink {
+        margin-left: 46px;
+}
+.pagelayout-course .badge.badge-info {
+    background-color: red;
+    color: white;
+}
+.icon {
+    margin-right: 10px ;
+}
+#page-navbar .breadcrumb li>*{
+    font-size: 12px;
+}
+#page-navbar .breadcrumb li::after, #page-navbar .breadcrumb li>*::after {
+    border: 14px solid transparent;
+    border-right-width: 0;
+    border-left-width: 10px
+}
+#page-navbar .breadcrumb li>*::after {
+    border-left-color: inherit !important;
+}
+#page-navbar .breadcrumb li::after {
+    border-left-color: #fff !important;
+}
+.format-onetopic .onetopic .nav-link .tab_content {
+    padding: 8px 20px 8px 0px;
+}
+.format-onetopic .onetopic li.nav-item:nth-child(1) .tab_content {
+    padding: 8px 20px 8px 15px;
+}
+.mdl-left,.mdl-right {
+    margin-bottom:10px;
+}
+.mdl-right .rarrow {
+    margin-left: .5em !important;
+    margin-right:11px;
+}
+.mdl-left .larrow {
+    margin-right: .5em !important;
+    margin-left:11px;
+}
+.section-modchooser {
+    margin-right: 15px;
+}
+.pagelayout-course .summary {
+    padding: 8px;
+    margin-left: 10px !important;
+}
+/*block khóa học*/
+.post-slide6 .post-description {
+    display: none;
+}
+.post-slide6 .post-title a{
+    font-size: 14px !important;
+    -webkit-line-clamp:2;
+}
+.col-xl-2.col-lg-3.col-md-4.col-sm-6.mt-3 {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.course_category_tree .category>.content {
+    padding-left: 0;
+}
+.content .courses .row.mt-3 {
+    margin:auto;
+    margin-top: 0 !important;
+}
+.post-slide6 .post-enrolmethod {
+    margin-left: 33px;
+}
+@media(max-width: 1350px) and (min-width: 1200px){
+    .w-2 {
+        width: 20%;
+        max-width:20%;
+        flex: unset;
+    }
+}
+.post-slide6 .post-review {
+    height: 120px;
 }
 </style>
 
