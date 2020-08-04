@@ -262,26 +262,25 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $langs = get_string_manager()->get_list_of_translations();
         $haslangmenu = $this->lang_menu() != '';
         $menu = new custom_menu;
-
-        if ($haslangmenu) {
-            $strlang = get_string('language');
-            $currentlang = current_language();
-            if (isset($langs[$currentlang])) {
-                $currentlang = $langs[$currentlang];
-            } else {
-                $currentlang = $strlang;
-            }
-            $this->language = $menu->add($currentlang, new moodle_url('#'), $strlang, 10000);
-            foreach ($langs as $langtype => $langname) {
-                $this->language->add($langname, new moodle_url($this->page->url, array('lang' => $langtype)), $langname);
-            }
-
-            foreach ($menu->get_children() as $item) {
-                $context = $item->export_for_template($this);
-            }
-
-            if (isset($context)) {
-                return $this->render_from_template('theme_moove/lang_menu', $context);
+        if(!isguestuser()){
+            if ($haslangmenu) {
+                $strlang = get_string('language');
+                $currentlang = current_language();
+                if (isset($langs[$currentlang])) {
+                    $currentlang = $langs[$currentlang];
+                } else {
+                    $currentlang = $strlang;
+                }
+                $this->language = $menu->add($currentlang, new moodle_url('#'), $strlang, 10000);
+                foreach ($langs as $langtype => $langname) {
+                    $this->language->add($langname, new moodle_url($this->page->url, array('lang' => $langtype)), $langname);
+                }
+                foreach ($menu->get_children() as $item) {
+                    $context = $item->export_for_template($this);
+                }
+                if (isset($context)) {
+                    return $this->render_from_template('theme_moove/lang_menu', $context);
+                }
             }
         }
     }
@@ -1019,6 +1018,20 @@ class core_renderer extends \theme_boost\output\core_renderer {
 
         $output .= html_writer::end_tag('form');
 
+        return $output;
+    }
+    public function menu_mobile_bottom() 
+    {
+        global $CFG;
+        $output = '';
+        $output .= '<div class="toolbar">';
+        $output .= '<ul>';
+        $output .= '<li><a href="'.$CFG->wwwroot.'/my"><i class="fa fa-home" aria-hidden="true"></i></a></li>';
+        $output .= '<li><a href="'.$CFG->wwwroot.'/calendar/view.php?view=month"><i class="fa fa-calendar" aria-hidden="true"></i></a></li>';
+        $output .= '<li><a href="'.$CFG->wwwroot.'/local/newsvnr/course.php"><i class="fa fa-graduation-cap" aria-hidden="true"></i></a></li>';
+        $output .= '<li><a href="'.$CFG->wwwroot.'/user/files.php"><i class="fa fa-user" aria-hidden="true"></i></a></li>';
+        $output .= '</ul>';
+        $output  .= '</div>';
         return $output;
     }
     public function get_js_moove()

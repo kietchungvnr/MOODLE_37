@@ -270,12 +270,12 @@ require(['jquery'], function($) {
     });
 }); 
     var quizblock = $('#page-mod-quiz-attempt');
-    if(quizblock.length > 0)
+    if(quizblock.length > 0){
         $('body').addClass('drawer-open-right')
+    }
 
 
-
-    // {{! ///////////course menu////////////// }}
+     //////////course menu//////////////
     var path = window.location.href;
     $('.nav-tabs.course li a').each(function() {
         if(this.href === path){
@@ -285,7 +285,7 @@ require(['jquery'], function($) {
             $(this).parent().addClass('active');
         }
     })
-    if(path.indexOf('mod')>0 || path.indexOf('backup')>0) {
+    if(path.indexOf('mod')>0 || path.indexOf('backup')>0 || path.indexOf('enrol')>0 ) {
         $('#nav-drawer').remove();
     }
     if($('.nav-tabs.course li').hasClass('active')){
@@ -327,47 +327,47 @@ require(['jquery'], function($) {
             var active_mb = $('div.menu-show li a.active').attr('title');
             $('.first').html("<i class='fa fa-folder' aria-hidden='true'></i>"+ active_mb + "<i class='fa fa-caret-down' aria-hidden='true'></i>");
     }
-
-    $("<div class='next'><i class='fa fa-angle-right'style='font-size:23px'></i></div>").insertBefore('#nav-drawer');
-    $("<div class='prev'><i class='fa fa-angle-left'style='font-size:23px'></i></div>").insertBefore('#nav-drawer');
-    
-    $( ".nav-item.load-more" ).click(function() {     
+    $(".nav-item.load-more" ).click(function() {     
     if($('.menu-show:visible').length)
         $('.menu-show').hide();
     else
         $('.menu-show').show();        
     });
     // {{! ////////course_menu_mobile/////////// }}
-    $('.next').click(function(event) {
+    $("<div class='arrow-next'><i class='fa fa-angle-right'style='font-size:23px'></i></div>").insertBefore('#nav-drawer');
+    $("<div class='arrow-prev'><i class='fa fa-angle-left'style='font-size:23px'></i></div>").insertBefore('#nav-drawer');
+    $('.arrow-next').click(function(event) {
         var pos = $('#nav-drawer').scrollLeft() + 300;
         $('#nav-drawer').animate({scrollLeft:pos},400);
     });
-    $('.prev').click(function(event) {
+    $('.arrow-prev').click(function(event) {
         var pos = $('#nav-drawer').scrollLeft() - 300;
         $('#nav-drawer').animate({scrollLeft:pos},400);
     });
-    $('#nav-drawer').scroll(function(){
-        if( $('#nav-drawer').scrollLeft() <= 0 ){
-            $('.prev').css({'display':'none'});
+    $('#nav-drawer').scroll(function () {
+        var $elem=$('#nav-drawer');
+        var newScrollLeft = $elem.scrollLeft(),
+            width=$elem.outerWidth(),
+            scrollWidth=$elem.get(0).scrollWidth;
+        if (scrollWidth-newScrollLeft==Math.round(width)) {
+            $('.arrow-next').css({'display':'none'});
         }
         else {
-            $('.prev').css({'display':'block'});
+            $('.arrow-next').css({'display':'block'});
         }
-        var $width = $(".nav-tabs.course").outerWidth();
-        var $scrollWidth = $('#nav-drawer').scrollLeft();
-        var $scrollLeft = $('#nav-drawer')[0].scrollWidth;
-        if (parseInt($scrollWidth - $width) === parseInt($scrollLeft)) {
-                    alert('right end');
+        if(newScrollLeft > 0){
+            $('.arrow-prev').css({'display':'block'});
         }
-    })
-    if( $('#nav-drawer').scrollLeft() <= 0 ){
-        $('.prev').css({'display':'none'});
-    }
-    ///ajax load menu in couse////
-    // $('.single-section.onetopic li a').click(function(){
-    //     var href = $(this).attr('target','_blank');
-    //     var href = $(this).attr('href');
-    //     $('.topics').load(href+' .topics');
-    //     $(".course-content .nav-tabs").load(location.href + " .course-content .nav-tabs");
-    // })  
+        else {
+            $('.arrow-prev').css({'display':'none'});
+        }
+    });
+
+    ///menu bottom mobile////
+    var path = window.location.href;
+    $('.toolbar ul li a').each(function() {
+        if(this.href === path){
+            $(this).addClass('active');
+        }
+    });
 {{/js}}
