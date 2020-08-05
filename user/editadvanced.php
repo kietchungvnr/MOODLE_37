@@ -31,6 +31,10 @@ require_once($CFG->dirroot.'/user/profile/lib.php');
 require_once($CFG->dirroot.'/user/lib.php');
 require_once($CFG->dirroot.'/webservice/lib.php');
 
+define('EBM_USER', 1);
+define('EBM_TEACHER', 2);
+define('EBM_STUDENT', 3);
+
 $id     = optional_param('id', $USER->id, PARAM_INT);    // User id; -1 if creating new user.
 $course = optional_param('course', SITEID, PARAM_INT);   // Course id (defaults to Site).
 $returnto = optional_param('returnto', null, PARAM_ALPHA);  // Code determining where to return to after save.
@@ -278,50 +282,64 @@ if ($userform->is_cancelled()) {
     // Trigger update/create event, after all fields are stored.
     if ($usercreated) {
         // Custom by Vũ: Tích hợp đẩy thông tin học viên và giáo viên khi tạo mới
+        // typeofuser = 3: Users của EBM Student
+        // typeofuser = 2: Users của EBM Teacher
         // typeofuser = 1: Users của EBM
         // typeofuser = 0: Users của EL
-        if($usernew->typeofuser == 1) {
-            require_once($CFG->dirroot . '/local/newsvnr/lib.php');
-            $create_portal_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'APIPORTAL']);
-            if($create_portal_api && $delete_course_api->visible == 1) {
-                $params_el = [
-                        'Code' => $usernew->usercode,
-                        'FirstName' => $usernew->fristname,
-                        'LastName' =>  $usernew->lastname,
-                        'Email' => 'email',
-                        'Phone' => $usernew->phone2,
-                        'Password' => $usernew->password,
-                ];
-                $getparams = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $create_portal_api->id]);
-                $params_hrm = [];
-                foreach ($getparams as $key => $value) {
-                    if(array_key_exists($value->client_params, $params_el)) {
-                        $params_hrm[$value->client_params] = $params_el[$value->client_params];
-                    } else {
-                        $params_hrm[$value->client_params] = $value->default_value;
-                    }
+        // if($usernew->typeofuser == 1) {
+        //     require_once($CFG->dirroot . '/local/newsvnr/lib.php');
+        //     $create_portal_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'ChangeUserInfo']);
+        //     if($create_portal_api && $delete_course_api->visible == 1) {
+        //         $params_el = [
+        //                 'Userid' => $usernew->usercode,
+        //                 'FirstName' => $usernew->firstname,
+        //                 'LastName' =>  $usernew->lastname,
+        //                 'Email' => $usernew->email,
+        //                 'Phone' => $usernew->phone2,
+        //                 'TypeUser' => '',
+        //                 'ApiKeyCreate' => $usernew->password,
+        //         ];
+        //         $getparams = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $create_portal_api->id]);
+        //         $params_hrm = [];
+        //         foreach ($getparams as $key => $value) {
+        //             if(array_key_exists($value->client_params, $params_el)) {
+        //                 $params_hrm[$value->client_params] = $params_el[$value->client_params];
+        //             } else {
+        //                 $params_hrm[$value->client_params] = $value->default_value;
+        //             }
                     
-                }
-                $url_hrm = $create_portal_api->url;
-                HTTPPost($url_hrm, $params_hrm);
-            }
-        }
+        //         }
+        //         $url_hrm = $create_portal_api->url;
+        //         HTTPPost_EBM($url_hrm, $params_hrm);
+        //     }
+        // }
         \core\event\user_created::create_from_userid($usernew->id)->trigger();
     } else {
         // Custom by Vũ: Tích hợp đẩy thông tin học viên và giáo viên khi chỉnh sửa
+        // typeofuser = 3: Users của EBM Student
+        // typeofuser = 2: Users của EBM Teacher
         // typeofuser = 1: Users của EBM
         // typeofuser = 0: Users của EL
-        if($usernew->typeofuser == 1) {
+        $typeofuserarr = [EBM_USER,EBM_TEACHER,EBM_STUDENT];
+        if(in_array($usernew->typeofuser, $typeofuserarr)) {
             require_once($CFG->dirroot . '/local/newsvnr/lib.php');
-            $create_portal_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'APIPORTAL']);
-            if($create_portal_api && $delete_course_api->visible == 1) {
+            if($usernew->typeofuser == EBM_USER) {
+                $typeofuser = 'USER';
+            } elseif ($usernew->typeofuser == EBM_TEACHER) {
+                $typeofuser = 'TEAHCER';
+            } elseif ($usernew->typeofuser == EBM_STUDENT) {
+                $typeofuser = 'STUDENT';
+            }
+            $create_portal_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'ChangeUserInfo']);
+            if($create_portal_api && $create_portal_api->visible == 1) {
                 $params_el = [
-                        'Code' => $usernew->usercode,
-                        'FirstName' => $usernew->fristname,
+                        'UserId' => $usernew->usercode,
+                        'FirstName' => $usernew->firstname,
                         'LastName' =>  $usernew->lastname,
-                        'Email' => 'email',
-                        'Phone' => $usernew->phone2,
-                        'Password' => $usernew->password,
+                        'Email' => $usernew->email,
+                        'Phone' => $usernew->phone1,
+                        'TypeUser' => $typeofuser,
+                        'ApiKeyCreate' => 'efcb96ee5e80c46157960459a7509d46',
                 ];
                 $getparams = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $create_portal_api->id]);
                 $params_hrm = [];
@@ -334,7 +352,7 @@ if ($userform->is_cancelled()) {
                     
                 }
                 $url_hrm = $create_portal_api->url;
-                HTTPPost($url_hrm, $params_hrm);
+                HTTPPost_EBM($url_hrm, $params_hrm);
             }
         }
         \core\event\user_updated::create_from_userid($usernew->id)->trigger();

@@ -32,6 +32,7 @@ class UserController extends BaseController {
         $this->validate = $this->validator->validate($this->request, [
             'usercode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
             'name' => $this->v::notEmpty()->notBlank(),
+            'typeuser' => $this->v::notEmpty()->notBlank(),
             'email' => $this->v::notEmpty()->notBlank(),
             'username' => $this->v::notEmpty()->notBlank(),
             'password' => $this->v::notEmpty()->notBlank(),
@@ -45,6 +46,7 @@ class UserController extends BaseController {
 		$this->validate();
       	if ($this->validate->isValid()) {
 	    	$this->data->usercode = $request->getParam('usercode');
+	    	$this->data->typeofuser = $request->getParam('typeuser');
 	    	$this->data->fullname = $request->getParam('name');
 		    $this->data->phone = $request->getParam('phone');
 		    $this->data->email = $request->getParam('email');
@@ -87,13 +89,14 @@ class UserController extends BaseController {
 		$usernew->preference_auth_forcepasswordchange = 0;
 		$usernew->mnethostid = $CFG->mnet_localhost_id;
 		$usernew->confirmed= 1;
-		$usernew->typeofuser = 1;
+		$usernew->typeofuser = $this->data->typeofuser;
 		$usernew->firstname = $firstname;
 		$usernew->lastname = $lastname;
 		$usernew->email = $this->data->email;
 		$usernew->maildisplay = 2;
 		$usernew->country = 'VN';
 		$usernew->lang = 'vi';
+		$usernew->phone1 = $this->data->phone;
 		if($userid) {
 			$usernew->id = $userid;
 			$user = $DB->get_record('user', array('id' => $usernew->id));

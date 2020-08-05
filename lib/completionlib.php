@@ -757,15 +757,14 @@ class completion_info {
      * @param int $userid User ID or 0 (default) for current user
      * @return void
      */
-    public function set_module_viewed_within_api($cm, $userid=0, $typeofcourse, $pagecode) {
+    public function set_module_viewed_within_api($cm, $userid=0, $course, $pagecode) {
         global $PAGE, $USER, $CFG, $DB;
         require_once($CFG->dirroot . '/local/newsvnr/lib.php');
         if ($PAGE->headerprinted) {
             debugging('set_module_viewed must be called before header is printed',
                     DEBUG_DEVELOPER);
         }
-        $data = $this->get_data($cm, false, $userid);
-        // Don't do anything if view condition is not turned on
+        
         if ($cm->completionview == COMPLETION_VIEW_NOT_REQUIRED || !$this->is_enabled($cm)) {
             return;
         }
@@ -777,36 +776,42 @@ class completion_info {
         if ($data->viewed == COMPLETION_VIEWED && empty($data->overrideby)) {
             return;
         }
-        
+
+
+
         // OK, change state, save it, and update completion
         $data->viewed = COMPLETION_VIEWED;
         $this->internal_set_data($cm, $data);
         $this->update_state($cm, COMPLETION_COMPLETE, $userid);
-        $api_data = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecCourse']);
-        if($api_data && $api_data->visible == 1 && $data->completionstate == 1 && $typeofcourse == 3) {
-            if($data->completionstate == 1) {
-                $completionstate = 0;
-            } else {
-                $completionstate = 1;
-            }
-            $params_el = [
-                    'ClassCode' => $cm->course,
-                    'LessonId' =>  $pagecode,
-                    'StudentCode' => $USER->code,
-                    'TrackResult' => $completionstate
-            ];
-            $getparams = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $api_data->id]);
-            $params_hrm = [];
-            foreach ($getparams as $key => $value) {
-                if(array_key_exists($value->client_params, $params_el)) {
-                    $params_hrm[$value->client_params] = $params_el[$value->client_params];
+        // Custom by Vũ: Điểm danh khi học viên ấn bào buổi học
+        if($course->typeofcourse == 3) {
+            $api_data = $DB->get_record('local_newsvnr_api',['functionapi' => 'Attendance']);
+            if($api_data && $api_data->visible == 1 && $data->completionstate == 1) {
+                if($data->completionstate == 1) {
+                    $completionstate = 0;
                 } else {
-                    $params_hrm[$value->client_params] = $value->default_value;
+                    $completionstate = 1;
                 }
-                
+                $params_el = [
+                        'ClassCode' => $course->shortname,
+                        'LessonId' =>  $pagecode,
+                        'StudentId' => $USER->usercode,
+                        'Reason' => '',
+                        'IsAbsent' => $completionstate,
+                        'ApiKeyCreate' => 'efcb96ee5e80c46157960459a7509d46',
+                ];
+                $getparams = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $api_data->id]);
+                $params_hrm = [];
+                foreach ($getparams as $key => $value) {
+                    if(array_key_exists($value->client_params, $params_el)) {
+                        $params_hrm[$value->client_params] = $params_el[$value->client_params];
+                    } else {
+                        $params_hrm[$value->client_params] = $value->default_value;
+                    }
+                }
+                $url_hrm = $api_data->url;
+                HTTPPost_EBM($url_hrm, $params_hrm);
             }
-            $url_hrm = $api_data->url;
-            HTTPPost($url_hrm, $params_hrm);
         }
     }
 

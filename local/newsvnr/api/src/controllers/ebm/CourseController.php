@@ -37,11 +37,11 @@ class CourseController extends BaseController {
             // 'enddate' => $this->v::notEmpty()->notBlank(),
             'categoryname' => $this->v::notEmpty()->notBlank(),
             'categorycode' => $this->v::notEmpty()->notBlank(),
-            'teachercode' => $this->v::notEmpty()->notBlank(),
-            'pagename' => $this->v::notEmpty()->notBlank(),
-            'pagecode' => $this->v::notEmpty()->notBlank(),
-            'pageintro' => $this->v::notEmpty()->notBlank(),
-            'usercode' => $this->v::notEmpty()->notBlank(),
+            // 'teachercode' => $this->v::notEmpty()->notBlank(),
+            // 'pagename' => $this->v::notEmpty()->notBlank(),
+            // 'pagecode' => $this->v::notEmpty()->notBlank(),
+            // 'pageintro' => $this->v::notEmpty()->notBlank(),
+            // 'usercode' => $this->v::notEmpty()->notBlank(),
         ]);
     }
 
@@ -66,15 +66,15 @@ class CourseController extends BaseController {
 		    	$this->data->enddate = strtotime($request->getParam('enddate'));
 		    else 
 		    	$this->data->enddate = 0;
-		    $this->data->teachercode = $request->getParam('teachercode');
+		    // $this->data->teachercode = $request->getParam('teachercode');
 		    $this->data->pagename = $request->getParam('pagename');
 		    $this->data->pagecode = $request->getParam('pagecode');
 		    $this->data->pageintro = $request->getParam('pageintro');
-		    $this->data->usercode = $request->getParam('usercode');
+		    // $this->data->usercode = $request->getParam('usercode');
 		    $this->data->idnumber = '';
-			$this->data->format = 'topics';
+			$this->data->format = 'onetopic';
 			$this->data->showgrades = 1;
-			$this->data->numsections = 4;
+			$this->data->numsections = 0;
 			$this->data->newsitems = 10;
 			$this->data->visible = 1;
 			$this->data->showreports = 1;
@@ -92,14 +92,14 @@ class CourseController extends BaseController {
 	    }
 		
 		$courseid = $DB->get_field('course', 'id', ['fullname' => $this->data->fullname, 'shortname' => $this->data->shortname]);
-		$userid = find_usercode_by_code($this->data->usercode);
-		$teacherid = find_usercode_by_code($this->data->teachercode);
-		if(!$userid) {
-			$this->resp->data['usercode'] = "Mã học viên không tồn tại";
-		}
-		if(!$teacherid) {
-			$this->resp->data['teachercode'] = "Mã giáo viên không tồn tại";
-		}
+		// $userid = find_usercode_by_code($this->data->usercode);
+		// $teacherid = find_usercode_by_code($this->data->teachercode);
+		// if(!$userid) {
+		// 	$this->resp->data['usercode'] = "Mã học viên không tồn tại";
+		// }
+		// if(!$teacherid) {
+		// 	$this->resp->data['teachercode'] = "Mã giáo viên không tồn tại";
+		// }
 		if($courseid) {
 			$this->data->id = $courseid;
 			$course = $DB->get_record($this->table, ['id' => $courseid]);
@@ -125,56 +125,60 @@ class CourseController extends BaseController {
 				
 				try {
 					update_course($this->data);
-					$modinfo = new stdClass;
-				    $modinfo->name = $this->data->pagename;
-				    $modinfo->code = $this->data->pagecode;
-				    $modinfo->modulename = 'page';
-				    $modinfo->course = $courseid;
-				    $modinfo->section = 1;
-				    $modinfo->visible = 1;
-				    $modinfo->display = 5;
-				    $modinfo->completion = 2;
-        			$modinfo->completionview = 1;
-				    $modinfo->printheading = '1';
-				    $modinfo->printintro = '0';
-				    $modinfo->printlastmodified = '1';
-				    $modinfo->introeditor = ['text' => '', 'format' => '1', 'itemid' => 0];
-					$pageid = $DB->get_field('page', 'id', ['course' => $courseid, 'name' => $this->data->pagename]);
-					if($pageid) {
-						$cm = get_coursemodule_from_instance('page', $pageid);
-						$modinfo->id = $pageid;
-						$modinfo->revision = 0;
-						$modinfo->page = ['text' => $this->data->pageintro,'format' => '1', 'itemid' => 0];
-						$modinfo->coursemodule = $cm->id;
-						$modulepage = update_module($modinfo);
-					} else {
-						// $modinfo->page = ['text' => $this->data->pageintro,'format' => '1', 'itemid' => 0];
-						$modinfo->content = $this->data->pageintro;
-						$modinfo->intoformat = 1;
-						$modulepage = create_module($modinfo);
+					if($this->data->pagename && $this->data->pagecode) {
+						$modinfo = new stdClass;
+					    $modinfo->name = $this->data->pagename;
+					    $modinfo->code = $this->data->pagecode;
+					    $modinfo->modulename = 'page';
+					    $modinfo->course = $courseid;
+					    $modinfo->section = 0;
+					    $modinfo->visible = 1;
+					    $modinfo->display = 5;
+					    $modinfo->completion = 2;
+	        			$modinfo->completionview = 1;
+					    $modinfo->printheading = '1';
+					    $modinfo->printintro = '0';
+					    $modinfo->printlastmodified = '1';
+					    $modinfo->introeditor = ['text' => '', 'format' => '1', 'itemid' => 0];
+						$pageid = $DB->get_field('page', 'id', ['course' => $courseid, 'name' => $this->data->pagename]);
+						if($pageid) {
+							$cm = get_coursemodule_from_instance('page', $pageid);
+							$modinfo->id = $pageid;
+							$modinfo->revision = 0;
+							$modinfo->page = ['text' => $this->data->pageintro,'format' => '1', 'itemid' => 0];
+							$modinfo->coursemodule = $cm->id;
+							$modulepage = update_module($modinfo);
+						} else {
+							// $modinfo->page = ['text' => $this->data->pageintro,'format' => '1', 'itemid' => 0];
+							$modinfo->content = $this->data->pageintro;
+							$modinfo->intoformat = 1;
+							$modulepage = create_module($modinfo);
+						}
+						$this->data->trackclassid = $modulepage->coursemodule;
+						$this->resp->error = false;
+						$this->resp->message['info'] = "Chỉnh sửa buổi học thành công";
 					}
-					
-				    $this->resp->error = false;
-					$this->resp->message['info'] = "Chỉnh sửa buổi học thành công";
-					$enrol_user = check_user_in_course($courseid,$userid);
-					$enrol_teahcer = check_teacher_in_course($courseid,$teacherid);
 
-				    if(!$enrol_user) {
-				    	enrol_user($userid, $courseid, 'student');
-				    	$this->resp->error = false;
-						$this->resp->message['info'] = "Thêm thành công thêm user vào khóa học";
-				    } else {
-				    	$this->resp->error = false;
-				    	$this->resp->message['info'] = "Học viên đã tham gia vào khóa";
-				    }
-				    if(!$enrol_teahcer) {
-				    	enrol_user($teacherid, $courseid, 'editingteacher');
-				    	$this->resp->error = false;
-						$this->resp->message['info'] = "Thêm thành công thêm user vào khóa học";
-				    } else {
-				    	$this->resp->error = false;
-				    	$this->resp->message['info'] = "Giáo viên đã tham gia vào khóa";
-				    }
+				   
+					// $enrol_user = check_user_in_course($courseid,$userid);
+					// $enrol_teahcer = check_teacher_in_course($courseid,$teacherid);
+
+				 //    if(!$enrol_user) {
+				 //    	enrol_user($userid, $courseid, 'student');
+				 //    	$this->resp->error = false;
+					// 	$this->resp->message['info'] = "Thêm thành công thêm user vào khóa học";
+				 //    } else {
+				 //    	$this->resp->error = false;
+				 //    	$this->resp->message['info'] = "Học viên đã tham gia vào khóa";
+				 //    }
+				 //    if(!$enrol_teahcer) {
+				 //    	enrol_user($teacherid, $courseid, 'editingteacher');
+				 //    	$this->resp->error = false;
+					// 	$this->resp->message['info'] = "Thêm thành công thêm user vào khóa học";
+				 //    } else {
+				 //    	$this->resp->error = false;
+				 //    	$this->resp->message['info'] = "Giáo viên đã tham gia vào khóa";
+				 //    }
 					$this->resp->error = false;
 					$this->resp->message['info'] = "Chỉnh sửa thành công";
 					$this->resp->data[] = $this->data;
@@ -212,13 +216,13 @@ class CourseController extends BaseController {
 				
 				try {
 					$course = create_course($this->data);
-					if($course) {
+					if($course && $this->data->pagename && $this->data->pagecode) {
 						$modinfo = new stdClass;
 					    $modinfo->name = $this->data->pagename;
 					    $modinfo->code = $this->data->pagecode;
 					    $modinfo->modulename = 'page';
 					    $modinfo->course = $course->id;
-					    $modinfo->section = 1;
+					    $modinfo->section = 0;
 					    $modinfo->visible = 1;
 					    $modinfo->display = 5;
 					    $modinfo->completion = 2;
@@ -233,27 +237,28 @@ class CourseController extends BaseController {
 					    $modulepage = create_module($modinfo);
 					    $this->resp->error = false;
 						$this->resp->message['info'] = "Tạo mới buổi học thành công";
+						$this->data->trackclassid = $modulepage->coursemodule;
 						$this->resp->data[] = $modulepage;
 					} 
-					$enrol_user = check_user_in_course($course->id,$userid);
-					$enrol_teahcer = check_teacher_in_course($course->id,$teacherid);
+					// $enrol_user = check_user_in_course($course->id,$userid);
+					// $enrol_teahcer = check_teacher_in_course($course->id,$teacherid);
 
-				    if(!$enrol_user) {
-				    	enrol_user($userid, $course->id, 'student');
-				    	$this->resp->error = false;
-						$this->resp->message['info'] = "Thêm thành công thêm user vào khóa học";
-				    } else {
-				    	$this->resp->error = false;
-				    	$this->resp->message['info'] = "Học viên đã tham gia vào khóa";
-				    }
-				    if(!$enrol_teahcer) {
-				    	enrol_user($teacherid, $course->id, 'editingteacher');
-				    	$this->resp->error = false;
-						$this->resp->message['info'] = "Thêm thành công thêm user vào khóa học";
-				    } else {
-				    	$this->resp->error = false;
-				    	$this->resp->message['info'] = "Giáo viên đã tham gia vào khóa";
-				    }
+				 //    if(!$enrol_user) {
+				 //    	enrol_user($userid, $course->id, 'student');
+				 //    	$this->resp->error = false;
+					// 	$this->resp->message['info'] = "Thêm thành công thêm user vào khóa học";
+				 //    } else {
+				 //    	$this->resp->error = false;
+				 //    	$this->resp->message['info'] = "Học viên đã tham gia vào khóa";
+				 //    }
+				 //    if(!$enrol_teahcer) {
+				 //    	enrol_user($teacherid, $course->id, 'editingteacher');
+				 //    	$this->resp->error = false;
+					// 	$this->resp->message['info'] = "Thêm thành công thêm user vào khóa học";
+				 //    } else {
+				 //    	$this->resp->error = false;
+				 //    	$this->resp->message['info'] = "Giáo viên đã tham gia vào khóa";
+				 //    }
 					$this->resp->error = false;
 					$this->resp->message['info'] = "Tạo mới thành công";
 					$this->resp->data[] = $this->data;
@@ -325,6 +330,75 @@ class CourseController extends BaseController {
 				}
 			}
 				
+		}
+		return $response->withStatus(200)->withJson($this->resp);
+	}
+
+	/**
+	 * API thêm học viên và giáo viên vào lớp học EBM
+	 * @param  [type] $request  [description]
+	 * @param  [type] $response [description]
+	 * @param  [type] $args     [description]
+	 * @return [type]           [description]
+	 */
+	public function enrol_users($request, $response, $args) {
+		global $DB,$CFG;
+		require_once($CFG->dirroot . '/enrol/locallib.php');
+		$this->validate = $this->validator->validate($this->request, [
+            'usercode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
+            'coursecode' => $this->v::notEmpty()->notBlank(),
+            'typeofuser' => $this->v::notEmpty()->notBlank()
+        ]);
+
+		if($this->validate->isValid()) {
+			$this->data->usercode = $request->getParam('usercode');
+			$this->data->shortname = $request->getParam('coursecode');
+			$this->data->typeofuser = $request->getParam('typeofuser');
+		} else {
+			$errors = $this->validate->getErrors();
+        	$this->resp->error = true;
+        	$this->resp->data[] = $errors;
+	        return $response->withStatus(422)->withJson($this->resp);
+		}
+		$courseid = $DB->get_field('course', 'id', ['shortname' => $this->data->shortname]);
+		if(!$courseid) {
+			$this->resp->error = true;
+			$this->resp->data['shortname'] = "shortname(Mã khoá học) không tồn tại khoá học";
+		}
+		
+		if(!$DB->record_exists('user',['usercode' => $this->data->usercode])) {
+			$this->resp->error = true;
+			$this->resp->data['usercode'] = "usercode(Mã học viên) không tồn tại";
+		}
+		if(empty($this->resp->data)) {
+			$usercode = $this->data->usercode;
+			$userid = $DB->get_field('user', 'id', ['usercode' => $usercode]);
+			if(!$courseid) {
+				$this->resp->message['info'] = "Ứng viên với mã '$usercode' chưa tham gia khóa học";
+			} else {
+				if($this->data->typeofuser == 'student') {
+					$enrol_user = check_user_in_course($courseid, $userid);
+					if(!$enrol_user) {
+				    	enrol_user($userid, $courseid, 'student');
+				    	$this->resp->error = false;
+						$this->resp->message['info'] = "Thêm thành công thêm user vào khóa học";
+				    } else {
+				    	$this->resp->error = false;
+				    	$this->resp->message['info'] = "Học viên đã tham gia vào khóa";
+				    }
+				}
+				if($this->data->typeofuser == 'teacher') {
+					$enrol_teahcer = check_teacher_in_course($courseid, $teacherid);
+					if(!$enrol_teahcer) {
+				    	enrol_user($userid, $courseid, 'editingteacher');
+				    	$this->resp->error = false;
+						$this->resp->message['info'] = "Thêm thành công thêm user vào khóa học";
+				    } else {
+				    	$this->resp->error = false;
+				    	$this->resp->message['info'] = "Giáo viên đã tham gia vào khóa";
+				    }
+				}
+			}
 		}
 		return $response->withStatus(200)->withJson($this->resp);
 	}

@@ -187,7 +187,10 @@ if ($quiz->attempts != 1) {
 }
 // Custom by Vũ: Thêm thông tin số điểm qua bài thi và tổng số câu hỏi trong bài thi
 $questionusageid  = $DB->get_records('question_usages', ['contextid' => $context->id], 'id');
-$countquestion = $DB->count_records('question_attempts', ['questionusageid' => array_values($questionusageid)[0]->id]);
+$countquestion = 0;
+if($questionusageid) {
+    $countquestion = $DB->count_records('question_attempts', ['questionusageid' => array_values($questionusageid)[0]->id]);    
+}
 $gradepass = round($grading_info->items[0]->gradepass, 1);
 $strgradepass = get_string('gradepass', 'quiz');
 $strquestiontotal = get_string('questiontotal', 'quiz');

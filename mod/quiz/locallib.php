@@ -849,24 +849,28 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
     $params_portal_exam_el = [
         'ClassCode' => $COURSE->shortname,
         'SubjectName' =>  $quiz->name,
-        'ExamNameCode' => $quiz->name . '_' . $quiz->code,
-        'StudentCode' => $USER->usercode, 
+        'ExamName' => '',
+        'ExamCode' => $quiz->code,
+        'StudentId' => $USER->usercode,
         'ExamScore' => $bestgrade, 
+        'ApiKeyCreate' => 'efcb96ee5e80c46157960459a7509d46'
     ];
     $params_portal_register_test_el = [
-        'ClassCode' => $COURSE->shortname,
+        'GroupCourseName' => $DB->get_field('course_categories', 'name', ['id' => $COURSE->category]),
+        'PlacementTestName' => $COURSE->fullname,
         'SubjectName' =>  $quiz->name,
-        'ExamCode' => $quiz->name . '_' . $quiz->code,
-        'ExamName' => $quiz->name . '_' . $quiz->code,
-        'StartDate' => $convtimeopen->format('Y-m-d'),
-        'EndDate' => $convtimeclose->format('Y-m-d'), 
-        'StudentCode' => $USER->usercode, 
-        'ExamScore' => $bestgrade, 
+        'ExamName' => '',
+        'ExamCode' => $quiz->code,
+        // 'StartDate' => $convtimeopen->format('Y-m-d'),
+        // 'EndDate' => $convtimeclose->format('Y-m-d'), 
+        'StudentId' => $USER->usercode, 
+        'ExamScore' => $bestgrade,
+        'ApiKeyCreate' => 'efcb96ee5e80c46157960459a7509d46'
     ];
     $training_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'UpdateTraineeResult']);
     $interview_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateInterviewResult']);
-    $portal_exam_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'APIPORTAL']);
-    $portal_register_test_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'APIPORTAL']);
+    $portal_exam_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateClassResult']);
+    $portal_register_test_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreatePlacementTestResult']);
     
     $url_el = curPageURL() . '/local/newsvnr/ajax.php';
 
@@ -985,7 +989,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                     $params_portal_ebm = [];
                     foreach ($get_params_portal_ebm as $key => $value) {
                         if(array_key_exists($value->client_params, $params_portal_exam_el)) {
-                            $params_portal_ebm[$value->client_params] = $params_portal_ebm[$value->client_params];
+                            $params_portal_ebm[$value->client_params] = $params_portal_exam_el[$value->client_params];
                         } else {
                             $params_portal_ebm[$value->client_params] = $value->default_value;
                         }
@@ -993,14 +997,14 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                     }
 
                     $url_portal_ebm = $portal_exam_api->url;
-                    HTTPPost($url_portal_ebm, $params_portal_ebm);
+                    HTTPPost_EBM($url_portal_ebm, $params_portal_ebm);
                 }
                 if($portal_register_test_api && $portal_register_test_api->visible == 1) {
                     $get_params_portal_ebm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $portal_register_test_api->id]);
                     $params_portal_ebm = [];
                     foreach ($get_params_portal_ebm as $key => $value) {
-                        if(array_key_exists($value->client_params, $params_portal_exam_el)) {
-                            $params_portal_ebm[$value->client_params] = $params_portal_ebm[$value->client_params];
+                        if(array_key_exists($value->client_params, $params_portal_register_test_el)) {
+                            $params_portal_ebm[$value->client_params] = $params_portal_register_test_el[$value->client_params];
                         } else {
                             $params_portal_ebm[$value->client_params] = $value->default_value;
                         }
@@ -1008,7 +1012,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                     }
 
                     $url_portal_ebm = $portal_register_test_api->url;
-                    HTTPPost($url_portal_ebm, $params_portal_ebm);
+                    HTTPPost_EBM($url_portal_ebm, $params_portal_ebm);
                 }
             }
             HTTP_POST($ch = curl_init(), $params_el, $url_el);
@@ -1128,7 +1132,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                     $params_portal_ebm = [];
                     foreach ($get_params_portal_ebm as $key => $value) {
                         if(array_key_exists($value->client_params, $params_portal_exam_el)) {
-                            $params_portal_ebm[$value->client_params] = $params_portal_ebm[$value->client_params];
+                            $params_portal_ebm[$value->client_params] = $params_portal_exam_el[$value->client_params];
                         } else {
                             $params_portal_ebm[$value->client_params] = $value->default_value;
                         }
@@ -1136,14 +1140,14 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                     }
 
                     $url_portal_ebm = $portal_exam_api->url;
-                    HTTPPost($url_portal_ebm, $params_portal_ebm);
+                    HTTPPost_EBM($url_portal_ebm, $params_portal_ebm);
                 }
                 if($portal_register_test_api && $portal_register_test_api->visible == 1) {
                     $get_params_portal_ebm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $portal_register_test_api->id]);
                     $params_portal_ebm = [];
                     foreach ($get_params_portal_ebm as $key => $value) {
                         if(array_key_exists($value->client_params, $params_portal_exam_el)) {
-                            $params_portal_ebm[$value->client_params] = $params_portal_ebm[$value->client_params];
+                            $params_portal_ebm[$value->client_params] = $params_portal_register_test_el[$value->client_params];
                         } else {
                             $params_portal_ebm[$value->client_params] = $value->default_value;
                         }
@@ -1151,7 +1155,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                     }
 
                     $url_portal_ebm = $portal_register_test_api->url;
-                    HTTPPost($url_portal_ebm, $params_portal_ebm);
+                    HTTPPost_EBM($url_portal_ebm, $params_portal_ebm);
                 }
             }
             HTTP_POST($ch = curl_init(), $params_el, $url_el);
