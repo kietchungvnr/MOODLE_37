@@ -30,8 +30,8 @@ user_preference_allow_ajax_update('sidepre-open', PARAM_ALPHA);
 require_once($CFG->libdir . '/behat/lib.php');
 
 if (isloggedin()) {
-    $navdraweropen = (get_user_preferences('drawer-open-nav', 'true') == 'true');
-    $draweropenright = (get_user_preferences('sidepre-open', 'true') == 'true');
+    $navdraweropen = (get_user_preferences('drawer-open-nav', 'false') == 'false');
+    $draweropenright = (get_user_preferences('sidepre-open', 'false') == 'false');
 } else {
     $navdraweropen = false;
     $draweropenright = false;
@@ -46,7 +46,7 @@ if ($navdraweropen) {
 }
 
 if ($draweropenright && $hasblocks) {
-    $extraclasses[] = 'drawer-open-right';
+    $extraclasses[] = 'drawer-open-left';
 }
 
 $coursepresentation = theme_moove_get_setting('coursepresentation');

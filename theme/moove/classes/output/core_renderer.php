@@ -79,7 +79,12 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $header = new stdClass();
             $header->active = false;
             $header->settingsmenu = $this->context_header_settings_menu();
-            $header->contextheader = $this->context_header(null,2);
+            if($PAGE->pagelayout == "course"){
+                $header->contextheader = $this->header_course();
+            }
+            else {
+                $header->contextheader = $this->context_header(null,2);
+            }
             $header->hasnavbar = empty($PAGE->layout_options['nonavbar']);
             $header->navbar = $this->navbar();
             $header->pageheadingbutton = $this->page_heading_button();
@@ -90,7 +95,12 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $header = new stdClass();
             $header->active = true;
             $header->settingsmenu = $this->context_header_settings_menu();
-            $header->contextheader = $this->context_header(null,2);
+            if($PAGE->pagelayout == "course"){
+                $header->contextheader = $this->header_course();
+            }
+            else {
+                $header->contextheader = $this->context_header(null,2);
+            }
             $header->hasnavbar = empty($PAGE->layout_options['nonavbar']);
             $header->navbar = $this->navbar();
             $header->pageheadingbutton = $this->page_heading_button();
@@ -98,7 +108,21 @@ class core_renderer extends \theme_boost\output\core_renderer {
             return $this->render_from_template('theme_moove/fp_header', $header);
         }
     }
-    
+    public function header_course() {
+        global $COURSE;
+        $process = round(\core_completion\progress::get_course_progress_percentage($COURSE));
+        $output = '';
+        $output .= '<div class="page-header-headings"><h2>'.$COURSE->fullname.'</h2>';
+        $output .= '</div>';
+        if($process > 0 ){
+            $output .= '<div class="progress">';
+            $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
+                        aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%">'.$process.'%</div>';
+            $output .= '</div>';
+        }
+        return $output;
+    }
+
     public function menucoursecategory($menus, $id_parent = 0, &$output = '', $stt = 0) {
         global $DB, $CFG;
         $courselink = $CFG->wwwroot . '/course/view.php?id=';

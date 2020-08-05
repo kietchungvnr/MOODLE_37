@@ -208,7 +208,7 @@ class course_renderer extends \core_course_renderer {
         // End coursebox.
         //Custom : Thang
         $content = html_writer::start_tag('div', array(
-            'class' => 'col-xl-2 col-md-4 col-sm-6 mt-3'
+            'class' => 'w-2 col-6 col-xl-2 col-lg-3 col-md-4 col-sm-6 mt-3'
            
         ));
         $content .= html_writer::start_tag('div', array(
