@@ -415,13 +415,8 @@ require(['jquery'], function($) {
         $('.m-t-2.m-b-1.row').css({'display':'none'});
     }
     // {{!     /////course_menu_theme_mobile///////// }}
-    $('.course-content .nav-tabs').append("<ul class='nav-item load-more'><a class='nav-link first'>General<i class='fa fa-caret-down' aria-hidden='true'></i></a><div class='menu-show'></div></ul>");
     size_li = $(".course-content .nav-tabs li").length;
     $(window).resize(function() {
-        if($('.load-more').length) {}
-        else {
-            $('.course-content .nav-tabs .nav-tabs').append("<ul class='nav-item load-more'><a class='nav-link first'>General<i class='fa fa-caret-down' aria-hidden='true'></i></a><div class='menu-show'></div></ul>");
-        }
         var width = $(window).width();
         if (width <= 768){
             $('.menu-show').append($('.course-content .nav-tabs li:lt('+size_li+')'));
@@ -443,7 +438,7 @@ require(['jquery'], function($) {
     else
         $('.menu-show').show();        
     });
-    // {{! ////////course_menu_mobile/////////// }}
+    {{! ////////course_menu_mobile/////////// }}
     $("<div class='arrow-next'><i class='fa fa-angle-right'style='font-size:23px'></i></div>").insertBefore('#nav-drawer');
     $("<div class='arrow-prev'><i class='fa fa-angle-left'style='font-size:23px'></i></div>").insertBefore('#nav-drawer');
     $('.arrow-next').click(function(event) {
@@ -473,11 +468,19 @@ require(['jquery'], function($) {
         }
     });
 
-    ///menu bottom mobile////
+    {{! ///menu bottom mobile//// }}
     var path = window.location.href;
     $('.toolbar ul li a').each(function() {
         if(this.href === path){
             $(this).addClass('active');
         }
     });
+    {{! ajax load }}
+{{!     $(".course-content .nav-tabs li a").bind('click',function(){
+        var a = $(this).attr('href');
+        $(this).attr('link',a);
+        $(this).attr('href','javascript:void(0)');
+        $('div.card-body.course').load(a+' div.card-body.course');
+    }); }}
+
 {{/js}}
