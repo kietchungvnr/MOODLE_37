@@ -656,8 +656,8 @@ class core_course_renderer extends plugin_renderer_base {
             $itemtype = ['f/spreadsheet-24', 'f/powerpoint-24', 'f/pdf-24', 'f/document-24'];
             if(in_array($mod->icon, $itemtype)) {
                 $onclick = "showmodal($mod->id, $mod->instance)";
-                $linkclasses = 'viewdirect';
-                $url = '#';
+                $linkclasses = "viewdirect cm-" . $mod->id;
+                $url = 'javascript:void(0)';
             }    
         }
 

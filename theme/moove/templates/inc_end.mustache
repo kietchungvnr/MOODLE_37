@@ -26,14 +26,20 @@
 <script type="text/javascript">
     var modalStore = {};
     const showmodal = (cmid, instance) => {
-        require(["jquery", "core/modal_factory", "core/config", "core/templates", "core/notification"], function($, ModalFactory, Config, Templates, Notification) {
+        require(["jquery", "core/modal_factory", "core/modal_events", "core/config", "core/templates", "core/notification"], function($, ModalFactory, ModalEvents,Config, Templates, Notification) {
             "use strict";
+            const SHOW_RESOURCE = 1;
+            const COMPLETION_RESOURCE = 2;
+            const timeNow = Math.floor(Date.now() / 1000);
+
             var script = Config.wwwroot + '/course/format/multitopic/ajax.php';
             var settings = {
                 type: 'GET',
                 data: {
                     "cmid": cmid,
-                    "instance":instance
+                    "instance": instance,
+                    "action" : SHOW_RESOURCE,
+                    "spenttime" : '',
                 },
                 processData: true,
                 contentType: "application/json"
@@ -46,6 +52,7 @@
                 modal: ".modal",
                 modalDialog: ".modal-dialog",
                 modalBody: ".modal-body",
+                modalTitle: ".modal-title",
                 sectionMain: ".section.main",
                 pageContent: "#page-content",
                 regionMain: "#region-main",
@@ -67,6 +74,7 @@
                 launchModuleModal: "launch-tiles-module-modal",
                 launchUrlModal: "launch-tiles-url-modal"
             };
+            var body = $('body');
             var resizeModal = function(modalRoot) {
                 modalRoot.find(Selector.modal).animate({"max-width": modalMinWidth()}, "fast");
 
@@ -125,51 +133,124 @@
             var modalMinWidth = function () {
                 return Math.min(win.width(), 1000);
             };
-
+            // Init resource lên modal
             var launchResourceModal = function(cmid) {
                 $.ajax(script, settings)
                 .then(function(resp) {
-                    console.log(resp);
-                    
+                    body.addClass("loading");
                     ModalFactory.create({
+                        type: ModalFactory.types.DEFAULT,
                         title: resp.reousrucename,
                         body: loadingIconHtml
                     })
                     .done(function(modal) {
                         modalStore[cmid] = modal;
                         modal.setLarge();
-                        modal.show();
-                        var pluginfileurl = resp.url
+                        var pluginfileurl = resp.url;
                         var modalRoot = $(modal.root);
+                        var completionTimeSpent = resp.completiontimespent;
                         modalRoot.attr("data-cmid", cmid);
-                        // Render the modal body and set it to the page.
-                        // First a blank template data object.
-
-                        var modalWidth = Math.round(win.width() * 0.9);
+                        var modalWidth = Math.round(win.width() * 0.9) + 30;
                         var modalHeight = Math.round(win.height() * 0.9);
                         var templateData = {
                             pluginfileurl: pluginfileurl,
                             id: cmid,
                             cmid: cmid,
-                            width: modalWidth - 30,
+                            width: modalWidth,
                             height: modalHeight - 30,
                             showDownload: 1,
                             showNewWindow: 1,
                         };
-                        var modabodycss = {
-                            "display" : "flex",
-                            "align-items" : "center",
-                            "justify-content" : "center"
-                        }
-
+                        var CSS = {
+                            modalBody : {
+                                "display" : "flex",
+                                "align-items" : "center",
+                                "justify-content" : "center"
+                            },
+                            modalTitle : {
+                                "-webkit-line-clamp": "1",
+                                "-webkit-box-orient": "vertical",
+                                "display":"-webkit-box",
+                                "overflow": "hidden",
+                                "text-overflow": "ellipsis",
+                                "font-weight": "600",
+                                "transition": "all 0.30s linear 0s",
+                                "line-height": "22px",
+                                "max-height": "44px",
+                            }
+                        };
                         Templates.render("format_multitopic/viewoffice", templateData).done(function (html) {
-                            modal.setBody(html);
-                            modalRoot.find(Selector.modalBody).css(modabodycss);
-                            modalRoot.find(Selector.modalBody).addClass('p-0');
-                            modalRoot.find(Selector.modalBody).animate({"min-height": modalHeight}, "fast");
-                            modalRoot.find(Selector.modal).animate({"max-width": modalWidth}, "fast");
-                            modalRoot.find(Selector.modalDialog).animate({"max-width": modalWidth}, "fast");
-                            modalRoot.find(Selector.modalBody).animate({"max-width": modalWidth}, "fast");
+                            // Params tính thời gian hoàn thành module
+                            var settings = {
+                                    type: 'GET',
+                                    data: {
+                                        "cmid": cmid,
+                                        "instance": instance,
+                                        "action" : COMPLETION_RESOURCE,
+                                        "spenttime" : 0
+                                    },
+                                    processData: true,
+                                    contentType: "application/json"
+                                }
+                            var countShownModal = 0;
+                            // Load đường dẫn file và view trên modal(popup);
+                            // Reload 2s cho đến khi load thành công lên modal
+                            var timerId = setInterval(function() { 
+                                var iframe = document.getElementById("iFrame");
+                                try {
+                                    console.log(iframe.contentDocument.URL);
+                                    if(iframe.contentDocument.URL === "about:blank") {
+                                        iframe.src = iframe.src;
+                                    }
+                                } catch (e) {
+                                    if(e instanceof TypeError === true) {
+                                        body.removeClass("loading");
+                                        modal.show();
+                                        clearInterval(timerId);
+                                        modal.setBody(html);
+                                        modalRoot.find(Selector.modalBody).css(CSS.modalBody);
+                                        modalRoot.find(Selector.modalBody).addClass('p-0');
+                                        modalRoot.find(Selector.modalTitle).css(CSS.modalTitle);
+                                        modalRoot.find(Selector.modalBody).animate({"min-height": modalHeight}, "fast");
+                                        modalRoot.find(Selector.modal).animate({"max-width": modalWidth}, "fast");
+                                        modalRoot.find(Selector.modalDialog).animate({"max-width": modalWidth}, "fast");
+                                        modalRoot.find(Selector.modalBody).animate({"max-width": modalWidth}, "fast");
+                                        if(completionTimeSpent !== 'completed') {
+                                            var duration;
+                                            var display = document.querySelector('#time');
+                                            var valueDisplay = display.innerText;
+                                            var sc = valueDisplay.split(':'); 
+                                            modal.getRoot().on(ModalEvents.hidden, function() {
+                                                display = document.querySelector('#time');
+                                                valueDisplay = display.innerText;
+                                                sc = valueDisplay.split(':');
+                                                duration = ((+sc[0]) * 60 + (+sc[1])); 
+                                                console.log(sc, duration);
+                                                settings.data.spenttime = completionTimeSpent - duration;
+                                                stopTimer();
+                                                $.ajax(script, settings)
+                                                .then(function(resp) {
+                                                }).fail(Notification.exception);
+                                            });
+                                            modal.getRoot().on(ModalEvents.shown, function() {
+                                                if(countShownModal == 0) {
+                                                    duration = completionTimeSpent;
+                                                    countShownModal++;
+                                                } else {
+                                                    display = document.querySelector('#time');
+                                                    valueDisplay = display.innerText;
+                                                    sc = valueDisplay.split(':');
+                                                    duration = ((+sc[0]) * 60 + (+sc[1]));
+                                                }
+                                                settings.data.spenttime = duration;
+                                                startTimer(duration, display, settings, true);
+
+                                            });
+                                        }
+                                    } 
+                                }
+                            }, 5000);
+                        
                         }).fail(Notification.exception);
                         Templates.render("format_multitopic/embed_module_modal_header_btns", templateData).done(function (html) {
                             modalRoot.find(Selector.modalHeader).append(html);
@@ -179,31 +260,60 @@
                     });
                 });
             }
+            var countDown;
+            // Bắt đầu tính thời gian hoàn thành module
+            var startTimer = function(duration, display, settings, start) {
+                try {
+                    if(!start)
+                        return;
+                    var timer = duration, minutes, seconds;
+                    var settings = settings;
+                    countDown = setInterval(function () {
+                        minutes = parseInt(timer / 60, 10)
+                        seconds = parseInt(timer % 60, 10);
+                        minutes = minutes < 10 ? "0" + minutes : minutes;
+                        seconds = seconds < 10 ? "0" + seconds : seconds;
+                        display.textContent = minutes + ":" + seconds;
+                        
+                        if (--timer < 0) {
+                            clearInterval(countDown);
+                            $.ajax(script, settings)
+                            .then(function(resp) {
+                                var cmid = settings.data.cmid;
+                                var completedicon = $('#module-' + cmid + ' .actions img').attr('src');
+                                var replaceicon = completedicon.replace('auto-n', 'auto-y')
+                                $('#module-' + cmid + ' .actions img').attr('src', replaceicon);
+                            }).fail(Notification.exception);
+                            return true;
+                        }    
+                    }, 1000);
+                } catch (e) {
+                    if(e instanceof TypeError === true) {
+                        return false;
+                    }
+                } 
+            }
+            // Pause thời gian hoàn thành module
+            var stopTimer = function() {
+                clearInterval(countDown);
+            }
             var init = function(cmid) {
                 $(document).ready(function() {
-                    console.log(cmid)
                     var modalSelectors = '[data-cmid="' + cmid + '"]';
 
                     var pageContent = $(Selector.pageContent);
                     if (pageContent.length === 0) {
-                        // Some themes e.g. RemUI do not have a #page-content div, so use #region-main.
                         pageContent = $(Selector.regionMain);
                     }
-                    // pageContent.click(function(e) {
-                    //     e.preventDefault();
-                        // If we already have this modal on the page, launch it.
-                        var existingModal = modalStore[cmid];
-                        console.log(existingModal, modalSelectors, modalStore);
-                        if (typeof existingModal === "object") {
-                            existingModal.show();
-                        } else {
-                            launchResourceModal(cmid)
-                        }
-                    });
-                // });
+                    var existingModal = modalStore[cmid];
+                    if (typeof existingModal === "object") {
+                        existingModal.show();
+                    } else {
+                        launchResourceModal(cmid)
+                    }
+                });
             }
             init(cmid);
-            
         });
     }
     

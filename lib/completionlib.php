@@ -830,7 +830,7 @@ class completion_info {
      * @return void
      */
     public function set_module_resource_completion_viewed($cm, $userid=0) {
-        global $PAGE, $DB;
+        global $PAGE, $DB, $USER;
         if ($PAGE->headerprinted) {
             debugging('set_module_viewed must be called before header is printed',
                     DEBUG_DEVELOPER);
@@ -852,9 +852,10 @@ class completion_info {
 
         $completionrules = $DB->get_record('course_modules_completion_rule', ['moduleid' => $cm->id]);
         if($completionrules->completiontimespent > 0) {
-            $PAGE->requires->js_call_amd('mod_resource/init', 'init');
+            $completiontimer = $DB->get_record('course_modules_completion_timer', ['completionruleid' => $completionrules->id, 'userid' => $USER->id]);
             $completiontimespent = $completionrules->completiontimespent;
-            if($completiontimespent > 60) {
+            $duration = $completiontimer->lastseentime - $completiontimer->starttime;
+            if($duration >= $completiontimespent) {
                 // OK, change state, save it, and update completion
                 $data->viewed = COMPLETION_VIEWED;
                 $this->internal_set_data($cm, $data);

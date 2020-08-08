@@ -137,7 +137,16 @@ if (file_exists($modmoodleform)) {
 } else {
     print_error('noformdesc');
 }
-
+// Custom by Vũ: completion rule thời gian yêu cầu hoàn thành modole (resource)
+if($data->modulename == 'resource') {
+    $completiontimespent = $DB->get_field('course_modules_completion_rule', 'completiontimespent', ['moduleid' => $data->coursemodule]);
+    if($completiontimespent) {
+        $data->completiontimespent = (string)$completiontimespent;
+        $data->completiontimespentenabled = 'checked';
+        // $data->completiontimespent['timeunit'] = '1';
+        // $data->completiontimespent['number'] = '1';
+    }
+}
 $mformclassname = 'mod_'.$module->name.'_mod_form';
 $mform = new $mformclassname($data, $cw->section, $cm, $course);
 $mform->set_data($data);
@@ -149,8 +158,7 @@ if ($mform->is_cancelled()) {
         redirect(course_get_url($course, $cw->section, array('sr' => $sectionreturn)));
     }
 } else if ($fromform = $mform->get_data()) {
-    //Custom by Vũ: Đẩy danh sách quiz qua hrm via api
-    
+    // Custom by Vũ: Đẩy danh sách quiz qua hrm via api
     if($data->modulename == 'quiz') {
         $quiz_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecTest']);
         $params_el = [

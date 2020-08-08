@@ -142,6 +142,29 @@ function resource_update_instance($data, $mform) {
 
     resource_set_display_options($data);
 
+    // Custom by Vũ: Thêm điều kiện ràng buộc hoàn thành khóa học
+    if($data->completion == 2) {
+        $completionrules = new stdClass;
+        if($DB->record_exists('course_modules_completion_rule', ['moduleid' => $data->update])) {
+            $completionrules->id = $DB->get_field('course_modules_completion_rule', 'id', ['moduleid' => $data->update]);
+            $completionrules->completiontimespent = $data->completiontimespent;
+            $completionrules->timemodified = time();
+            $DB->update_record('course_modules_completion_rule', $completionrules); 
+            $DB->delete_records('course_modules_completion_timer', ['completionruleid' => $completionrules->id]);       
+        } else {
+            if($data->completiontimespent) {
+                $completionrules->moduleid = $data->update;
+                $completionrules->completiontimespent = $data->completiontimespent;
+                $completionrules->timemodified = time();
+                $completionrules->id = $DB->insert_record('course_modules_completion_rule', $completionrules);    
+            } else {
+                $completionrules->moduleid = $data->update;
+                $completionrules->timemodified = time();
+                $completionrules->id = $DB->insert_record('course_modules_completion_rule', $completionrules);    
+            }
+        }
+    }
+
     $DB->update_record('resource', $data);
     resource_set_mainfile($data);
 

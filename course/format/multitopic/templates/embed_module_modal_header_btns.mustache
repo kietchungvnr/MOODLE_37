@@ -45,11 +45,13 @@
         "completionInUseForCm": 1
     }
 }}
-<div class="embed-module-buttons pull-right">
+<div class="embed-module-buttons pull-right d-flex">
         <a href="https://docs.google.com/viewerng/viewer?url={{pluginfileurl}}" class="embed_file_button button_expand" id="expandbutton_{{id}}" data-command="expand" target="_blank">
             <i class="icon fa fa-clone fa-fw " title="{{#str}}showseparatewin, format_multitopic{{/str}}" aria-label="{{#str}}showseparatewin, format_multitopic{{/str}}"></i>
         </a>
         <a href="{{pluginfileurl}}?forcedownload=1" class="embed_file_button button_download" id="downloadbutton_{{id}}" data-command="download">
             <i class="icon fa fa-cloud-download fa-fw " title="{{#str}}download, format_multitopic{{/str}}" aria-label="{{#str}}download, format_multitopic{{/str}}"></i>
         </a>
+        <form method="post" class="d-none">
+        </form>
 </div>
