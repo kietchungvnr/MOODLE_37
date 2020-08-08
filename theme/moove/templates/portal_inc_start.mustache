@@ -2982,7 +2982,7 @@ table#categoryquestions tr {
     background-color: #d1eeff;
 }
 @media(max-width: 768px){
-    .nav-item.load-more {
+    .pagelayout-course .nav-item.load-more {
         display: block;
         width: 100%;
         box-shadow: 0 1px 7px rgba(0,0,0,.2);
@@ -3034,12 +3034,18 @@ table#categoryquestions tr {
     .arrow-next {
         display: block;
     }
+    form#coursesearch {
+        display: none;
+    }
+    .parentbox1z .row .col-1 {
+        display: none;
+    }
 
 }
 #nav-drawer::-webkit-scrollbar {
     display: none;
 }
-ul.nav.nav-tabs.mb-3 {
+.pagelayout-course ul.nav.nav-tabs.mb-3 {
     width: 100%;
     margin-bottom:0!important;
 }
@@ -3137,7 +3143,7 @@ ul.nav.nav-tabs.mb-3 {
         min-height: 0;
         height: 45px;
     }
-    .d-flex.flex-wrap.pt-1.pb-1 {
+    #page-header .d-flex.flex-wrap {
         display: none !important;
     }
     .pagelayout-course #sidepreopen-control {
@@ -3153,6 +3159,16 @@ ul.nav.nav-tabs.mb-3 {
         padding: 0 0.25rem;
     }
 }
+@media(max-width: 500px){
+    .pagelayout-course .progress {
+        width: 30px !important;
+    }
+    .pagelayout-course .progress .progress-bar {
+        width: 100% !important;
+        background-color: white !important;
+        color: black;
+    }
+}
 .calendarwrapper div.header select#menucourse {
     padding: 0.53rem 1.75rem .39rem .75rem;
 }
@@ -3161,11 +3177,6 @@ ul.nav.nav-tabs.mb-3 {
 }
 .usertour {
     display: none;
-}
-@media(max-width: 500px){
-    .progress {
-        width: 150px !important;
-    }
 }
 /*trang chu*/
 .owl-item .column-33 div {
@@ -3304,7 +3315,9 @@ tr.drag-samenode td {
 .pagelayout-course .progress .progress-bar {
     border-radius: 20px;
     background-color: #1177d1;
-    font-size: 11px;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 15%;
 }
 .clear {
     clear: both;
@@ -3341,12 +3354,6 @@ tr.drag-samenode td {
 }
 #page-navbar .breadcrumb li::after {
     border-left-color: #fff !important;
-}
-.format-onetopic .onetopic .nav-link .tab_content {
-    padding: 8px 20px 8px 0px;
-}
-.format-onetopic .onetopic li.nav-item:nth-child(1) .tab_content {
-    padding: 8px 20px 8px 15px;
 }
 .mdl-left,.mdl-right {
     margin-bottom:10px;
@@ -3398,8 +3405,54 @@ tr.drag-samenode td {
 .post-slide6 .post-review {
     height: 130px;
 }
-.owl-dots {
-    margin-top: 5px;
+.col-md-3.col-sm-6.col-6.courseimage {
+    height: 142px;
+}
+#mypublic-tab .courseimage img {
+    height: -webkit-fill-available;
+    border-radius:0;
+}
+.media-body h5.mt-0.text-tt {
+    color: #191818;
+}
+.text-news-tt p.text-tt {
+    color: #191818;
+}
+.md-block {
+    margin-top: 30px;
+}
+.section-navigation.mdl-bottom {
+    display: none;
+}
+div#mydiscussion {
+    border: 1px solid #d9d2d2;
+}
+.parentbox2.p-2 {
+    background: transparent !important;
+}
+.parentbox1z .row .col-1 {
+    font-size: 30px;
+    color: #191818;
+    border-right: 1px solid #d9d2d2;
+    background: #dcdcdc78;
+}
+.parentbox1z .row .col-1 .fa-comments-o {
+    margin-top: 10px;
+}
+.parentbox1z .col-11.p-2 a {
+    color: #191818;
+}
+.parentbox2 a{
+    color: #191818;
+}
+.owl-stage-outer .owl-item.active{
+    margin-bottom: 8px;
+}
+#news-slider .owl-stage-outer .owl-item.active {
+    margin-bottom: 0;
+}
+.que .qtext {
+    max-width: 1000px;
 }
 </style>
 

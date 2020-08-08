@@ -38,7 +38,7 @@ if (isloggedin()) {
     $navdraweropen = (get_user_preferences('drawer-open-nav', 'true') == 'true');
     $draweropenright = (get_user_preferences('sidepre-open', 'true') == 'true');
 }
-
+global $COURSE;
 $blockshtml = $OUTPUT->blocks('side-pre');
 $hasblocks = strpos($blockshtml, 'data-block=') !== false;
 
@@ -56,7 +56,13 @@ if(isset($_SERVER['HTTP_REFERER'])) {
 } else {
     $hasportal = false;
 }
-
+if($COURSE->id > 1 ){
+    $hascourse = true;
+}
+else {
+    $hascourse = false;
+}
+// var_dump($COURSE);die();
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [
@@ -70,7 +76,8 @@ $templatecontext = [
     'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
-    'hasportal' => $hasportal
+    'hasportal' => $hasportal,
+    'hascourse' => $hascourse
 ];
 
 // Improve boost navigation.

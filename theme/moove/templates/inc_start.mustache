@@ -3053,7 +3053,7 @@ table#categoryquestions tr {
 #nav-drawer::-webkit-scrollbar {
     display: none;
 }
-ul.nav.nav-tabs.mb-3 {
+.pagelayout-course ul.nav.nav-tabs.mb-3 {
     width: 100%;
     margin-bottom:0!important;
 }
@@ -3063,9 +3063,6 @@ ul.nav.nav-tabs.mb-3 {
     }
     .mdl-left,.mdl-right {
         display: none;
-    }
-    .initialbar.firstinitial,.initialbar.lastinitial {
-        display: none !important;
     }
     .next, .prev {
         display: block;
@@ -3325,6 +3322,7 @@ tr.drag-samenode td {
     background-color: #1177d1;
     font-size: 12px;
     font-weight: bold;
+    min-width: 15%;
 }
 .clear {
     clear: both;
@@ -3452,8 +3450,39 @@ div#mydiscussion {
 .parentbox2 a{
     color: #191818;
 }
-#frontpage-course-slider .owl-item.active,#all-course-slider .owl-item.active{
+.owl-stage-outer .owl-item.active{
     margin-bottom: 8px;
+}
+#news-slider .owl-stage-outer .owl-item.active {
+    margin-bottom: 0;
+}
+.que .qtext {
+    max-width: 1000px;
+}
+.pagelayout-incourse .initialbar.firstinitial,.pagelayout-incourse .initialbar.lastinitial {
+    display: none !important;
+}
+@media (min-width: 1300px) {
+    body.drawer-open-left .dashboard-card-deck:not(.fixed-width-cards) .dashboard-card {
+        width: calc(20% - .5rem)!important;
+    }
+    .dashboard-card-deck.fixed-width-cards .dashboard-card {
+        width: calc(20% - .5rem)!important;
+    }
+}
+@media (min-width: 1122px) {
+    body.drawer-open-left .dashboard-card-deck:not(.fixed-width-cards) .dashboard-card {
+        width: calc(25% - .5rem);
+    }
+    .dashboard-card-deck.fixed-width-cards .dashboard-card {
+        width: calc(25% - .5rem);
+    }
+}
+.fixed-top.navbar {
+    padding: .5rem 2rem;
+}
+.dashboard-card-deck .dashboard-card .dashboard-card-img {
+    background-size: 100% 100%;
 }
 </style>
 
