@@ -385,7 +385,7 @@ require(['jquery'], function($) {
     }
 
 
-     //////////course menu//////////////
+    {{! //////////course menu////////////// }}
     var path = window.location.href;
     $('.nav-tabs.course li a').each(function() {
         if(this.href === path){
@@ -407,14 +407,14 @@ require(['jquery'], function($) {
             $('.nav-tabs.course li:first').addClass('active');
         }
     }
-    $('.nav-tabs.course li:first a').html('Tổng quan khóa học')
-    $('.nav-tabs.course li:last').css({'display':'none'});
+     $('.nav-tabs.course li:first a').html('Tổng quan khóa học')
+    $('.nav-tabs.course li[data-key="sitesettings"]').css({'display':'none'});
     //////////js grader////////////
     $('.grade-navigation ul:first').removeClass('mb-3');
     if(path.indexOf('mod/quiz/') > 0) {
         $('.m-t-2.m-b-1.row').css({'display':'none'});
     }
-    // {{!     /////course_menu_theme_mobile///////// }}
+    {{!     /////course_menu_theme_mobile///////// }}
     size_li = $(".course-content .nav-tabs li").length;
     $(window).resize(function() {
         var width = $(window).width();
@@ -468,7 +468,7 @@ require(['jquery'], function($) {
         }
     });
 
-    {{! ///menu bottom mobile//// }}
+     {{! ///menu bottom mobile//// }}
     var path = window.location.href;
     $('.toolbar ul li a').each(function() {
         if(this.href === path){
@@ -476,11 +476,13 @@ require(['jquery'], function($) {
         }
     });
     {{! ajax load }}
-{{!     $(".course-content .nav-tabs li a").bind('click',function(){
-        var a = $(this).attr('href');
-        $(this).attr('link',a);
-        $(this).attr('href','javascript:void(0)');
-        $('div.card-body.course').load(a+' div.card-body.course');
-    }); }}
+{{!      $(".course-content .nav-tabs li a").each(function(){
+        $(this).on('click',function(){
+            var a = $(this).attr('href');
+            $(this).attr('link',a);
+            $(this).attr('href','javascript:void(0)');
+            $('div.card-body.course').load(a+' div.card-body.course');
+        })
+    });  }}
 
 {{/js}}
