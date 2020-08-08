@@ -849,8 +849,8 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
     $params_portal_exam_el = [
         'ClassCode' => $COURSE->shortname,
         'SubjectName' =>  $quiz->name,
-        'ExamName' => '',
-        'ExamCode' => $quiz->code,
+        'ExamName' => $quiz->code,
+        'ExamCode' => '',
         'StudentId' => $USER->usercode,
         'ExamScore' => $bestgrade, 
         'ApiKeyCreate' => 'efcb96ee5e80c46157960459a7509d46'
@@ -859,8 +859,8 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
         'GroupCourseName' => $DB->get_field('course_categories', 'name', ['id' => $COURSE->category]),
         'PlacementTestName' => $COURSE->fullname,
         'SubjectName' =>  $quiz->name,
-        'ExamName' => '',
-        'ExamCode' => $quiz->code,
+        'ExamName' => $quiz->code,
+        'ExamCode' => '',
         // 'StartDate' => $convtimeopen->format('Y-m-d'),
         // 'EndDate' => $convtimeclose->format('Y-m-d'), 
         'StudentId' => $USER->usercode, 

@@ -36,12 +36,12 @@ class QuizController extends BaseController {
         $this->validate = $this->validator->validate($this->request, [
             'examname' => $this->v::notEmpty()->notBlank(),
             'examcode' => $this->v::notEmpty()->notBlank(),
-            'teachercode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
+            // 'teachercode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
             'quizname' => $this->v::notEmpty()->notBlank(),
             'quizcode' => $this->v::notEmpty()->notBlank(),
             // 'startdate' => $this->v::notEmpty()->notBlank()->DateTime(),
             // 'enddate' => $this->v::notEmpty()->notBlank()->DateTime(),
-            'studentcode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
+            // 'studentcode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
             'kindofcourse' => $this->v::notEmpty()->notBlank()
         ]);
     }
@@ -50,12 +50,12 @@ class QuizController extends BaseController {
         //Khai báo  rules cho validation
         $this->validate = $this->validator->validate($this->request, [
             'coursecode' => $this->v::notEmpty()->notBlank(),
-            'teachercode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
+            // 'teachercode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
             'quizname' => $this->v::notEmpty()->notBlank(),
             'quizcode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
             // 'startdate' => $this->v::notEmpty()->notBlank()->DateTime(),
             // 'enddate' => $this->v::notEmpty()->notBlank()->DateTime(),
-            'studentcode' => $this->v::notEmpty()->notBlank()->noWhitespace()
+            // 'studentcode' => $this->v::notEmpty()->notBlank()->noWhitespace()
         ]);
     }
 	
@@ -85,24 +85,27 @@ class QuizController extends BaseController {
         	$this->resp->error = true;
         	$this->resp->data[] = $errors;
 	        return $response->withStatus(422)->withJson($this->resp);
-	    }
-	    $userid = find_usercode_by_code($this->data->studentcode);
-		$teacherid = find_usercode_by_code($this->data->teachercode);
+	    } 
 		$courseid = $DB->get_field('course', 'id', ['shortname' => $this->data->examcode]);
-		if(!$userid) {
-			$this->resp->data['studentcode'] = "Mã học viên không tồn tại";
-		}
-		if(!$teacherid) {
-			$this->resp->data['usercode'] = "Mã giáo viên không tồn tại";
-		}
+	    if($this->data->studentcode && $this->data->teachercode) {
+	    	$userid = find_usercode_by_code($this->data->studentcode);
+			$teacherid = find_usercode_by_code($this->data->teachercode);
+			if(!$userid) {
+				$this->resp->data['studentcode'] = "Mã học viên không tồn tại";
+			}
+			if(!$teacherid) {
+				$this->resp->data['usercode'] = "Mã giáo viên không tồn tại";
+			}
+	    }
+	    
 		$courses = new stdClass;
 		$courses->fullname = $this->data->examname;
 	    $courses->shortname = $this->data->examcode;
 	    // $courses->coursesetup = $request->getParam('setupcode');
 		$courses->idnumber = '';
-		$courses->format = 'topics';
+		$courses->format = 'onetopic';
 		$courses->showgrades = 1;
-		$courses->numsections = 4;
+		$courses->numsections = 0;
 		$courses->newsitems = 10;
 		$courses->visible = 1;
 		$courses->showreports = 1;
@@ -175,20 +178,23 @@ class QuizController extends BaseController {
 						}
 			    	}
 			    	if($modulequiz) {
-			    		$enrol_user = check_user_in_course($course->id,$userid);
-						$enrol_teahcer = check_teacher_in_course($course->id,$teacherid);
-						if(!$enrol_user) {
-							enrol_user($userid, $course->id, 'student');
-							$message .= "Thêm thành công thêm user học viên vào khóa học, ";
-						} else {
-							$message .= "Học viên đã tham gia vào khóa, ";
-						}
-						if(!$enrol_teahcer) {
-							enrol_user($teacherid, $course->id, 'editingteacher');
-							$message .= "Thêm thành công thêm user giáo viên khóa học";
-						} else {
-							$message .= "Giáo viên đã tham gia vào khóa";
-						}
+			    		if($this->data->studentcode && $this->data->teachercode) {
+			    			$enrol_user = check_user_in_course($course->id,$userid);
+							$enrol_teahcer = check_teacher_in_course($course->id,$teacherid);
+							if(!$enrol_user) {
+								enrol_user($userid, $course->id, 'student');
+								$message .= "Thêm thành công thêm user học viên vào khóa học, ";
+							} else {
+								$message .= "Học viên đã tham gia vào khóa, ";
+							}
+							if(!$enrol_teahcer) {
+								enrol_user($teacherid, $course->id, 'editingteacher');
+								$message .= "Thêm thành công thêm user giáo viên khóa học";
+							} else {
+								$message .= "Giáo viên đã tham gia vào khóa";
+							}
+			    		}
+			    		
 						$this->resp->error = false;
 						$this->resp->message['info'] = $message;
 						$this->resp->data[] = $modulequiz;
@@ -220,7 +226,7 @@ class QuizController extends BaseController {
 			}
 			if(empty($this->resp->data)) {
 				try {
-					$course->id = create_course($courses);
+					$course = create_course($courses);
 					$message .= 'Tạo khóa học thành công, ';
 			    	$modinfo = new stdClass;
 				    $modinfo->name = $this->data->quizname;
@@ -260,20 +266,22 @@ class QuizController extends BaseController {
 						}
 			    	}
 			    	if($modulequiz) {
-			    		$enrol_user = check_user_in_course($course->id,$userid);
-						$enrol_teahcer = check_teacher_in_course($course->id,$teacherid);
-						if(!$enrol_user) {
-							enrol_user($userid, $course->id, 'student');
-							$message .= "Thêm thành công thêm user học viên vào khóa học, ";
-						} else {
-							$message .= "Học viên đã tham gia vào khóa, ";
-						}
-						if(!$enrol_teahcer) {
-							enrol_user($teacherid, $course->id, 'editingteacher');
-							$message .= "Thêm thành công thêm user giáo viên khóa học";
-						} else {
-							$message .= "Giáo viên đã tham gia vào khóa";
-						}
+			    		if($this->data->studentcode && $this->data->teachercode) {
+			    			$enrol_user = check_user_in_course($course->id,$userid);
+							$enrol_teahcer = check_teacher_in_course($course->id,$teacherid);
+							if(!$enrol_user) {
+								enrol_user($userid, $course->id, 'student');
+								$message .= "Thêm thành công thêm user học viên vào khóa học, ";
+							} else {
+								$message .= "Học viên đã tham gia vào khóa, ";
+							}
+							if(!$enrol_teahcer) {
+								enrol_user($teacherid, $course->id, 'editingteacher');
+								$message .= "Thêm thành công thêm user giáo viên khóa học";
+							} else {
+								$message .= "Giáo viên đã tham gia vào khóa";
+							}
+			    		}
 						$this->resp->error = false;
 						$this->resp->message['info'] = $message;
 						$this->resp->data[] = $modulequiz;
@@ -303,6 +311,10 @@ class QuizController extends BaseController {
 	    	$this->data->quizname = $request->getParam('quizname');
 	    	$this->data->quizcode = $request->getParam('quizcode');
 	    	$this->data->studentcode = $request->getParam('studentcode');
+	    	$this->data->categoryname = $request->getParam('categoryname');
+	    	$this->data->categorycode = $request->getParam('categorycode');
+	    	$this->data->fullname = $request->getParam('fullname');
+	    	$this->data->shortname = $request->getParam('shortname');
 	    	if($request->getParam('startdate') == '') 
 		    	$this->data->startdate = time();
 		    else
@@ -318,13 +330,24 @@ class QuizController extends BaseController {
         	$this->resp->data[] = $errors;
 	        return $response->withStatus(422)->withJson($this->resp);
 	    }
-	    $userid = find_usercode_by_code($this->data->studentcode);
-		$teacherid = find_usercode_by_code($this->data->teachercode);
-		if(!$userid) {
-			$this->resp->data['studentcode'] = "Mã học viên không tồn tại";
-		}
-		if(!$teacherid) {
-			$this->resp->data['usercode'] = "Mã giáo viên không tồn tại";
+	    if($this->data->studentcode && $this->data->teachercode) {
+	    	$userid = find_usercode_by_code($this->data->studentcode);
+			$teacherid = find_usercode_by_code($this->data->teachercode);
+			if(!$userid) {
+				$this->resp->data['studentcode'] = "Mã học viên không tồn tại";
+			}
+			if(!$teacherid) {
+				$this->resp->data['usercode'] = "Mã giáo viên không tồn tại";
+			}
+	    }
+	    if($this->data->categoryname and $this->data->categorycode) {
+			$existing = $DB->get_field('course_categories','id',['name' => $this->data->categoryname, 'idnumber' => $this->data->categorycode]);
+			if($existing) {
+				$this->data->category = $existing;
+			} else {
+				$categoryname = $this->data->categoryname;
+				$this->resp->data['categoryname'] = "Không tìm thấy tên '$categoryname' trong danh mục khoá học ";
+			}
 		}
 		if(empty($this->resp->data)) {
 			$course = $DB->get_record('course', ['shortname' => $this->data->coursecode]);
@@ -367,25 +390,48 @@ class QuizController extends BaseController {
 					}
 		    	}
 		    	if($modulequiz) {
-		    		$enrol_user = check_user_in_course($course->id,$userid);
-					$enrol_teahcer = check_teacher_in_course($course->id,$teacherid);
-					// var_dump($enrol_teahcer, $enrol_user);die;
-					if(!$enrol_user) {
-						enrol_user($userid, $course->id, 'student');
-						$message .= "Thêm thành công thêm user học viên vào khóa học, ";
-					} else {
-						$message .= "Học viên đã tham gia vào khóa, ";
-					}
-					if(!$enrol_teahcer) {
-						enrol_user($teacherid, $course->id, 'editingteacher');
-						$message .= "Thêm thành công thêm user giáo viên khóa học";
-					} else {
-						$message .= "Giáo viên đã tham gia vào khóa";
-					}
+		    		if($this->data->studentcode && $this->data->teachercode) {
+		    			$enrol_user = check_user_in_course($course->id,$userid);
+						$enrol_teahcer = check_teacher_in_course($course->id,$teacherid);
+						// var_dump($enrol_teahcer, $enrol_user);die;
+						if(!$enrol_user) {
+							enrol_user($userid, $course->id, 'student');
+							$message .= "Thêm thành công thêm user học viên vào khóa học, ";
+						} else {
+							$message .= "Học viên đã tham gia vào khóa, ";
+						}
+						if(!$enrol_teahcer) {
+							enrol_user($teacherid, $course->id, 'editingteacher');
+							$message .= "Thêm thành công thêm user giáo viên khóa học";
+						} else {
+							$message .= "Giáo viên đã tham gia vào khóa";
+						}
+		    		}
 					$this->resp->error = false;
 					$this->resp->message['info'] = $message;
 					$this->resp->data[] = $this->data;
 		    	}
+		    } else {
+		    	$course = new stdClass;
+				$course->fullname = $this->data->fullname;
+			    $course->shortname = $this->data->shortname;
+			    // $course->courseetup = $request->getParam('setupcode');
+				$course->idnumber = '';
+				$course->format = 'onetopic';
+				$course->showgrades = 1;
+				$course->numsections = 0;
+				$course->newsitems = 10;
+				$course->visible = 1;
+				$course->showreports = 1;
+				$course->summary = '';
+				$course->summaryformat = FORMAT_HTML;
+				$course->lang = 'vi';
+				$course->typeofcourse = 3;
+				$course->enablecompletion = 1;	
+				$data = create_course($course);
+				$this->resp->error = false;
+				$this->resp->message['info'] = 'Tạo thành công khóa online';
+				$this->resp->data[] = $data;
 		    }
 		} else {
 			$this->resp->error = true;
