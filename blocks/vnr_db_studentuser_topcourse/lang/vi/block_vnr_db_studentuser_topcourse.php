@@ -31,4 +31,5 @@ $string['rankincourse'] = 'Thứ hạng hiện tại trong khóa';
 $string['joincourse'] = 'Chưa tham gia khóa học nào';
 $string['vnr_db_studentuser_topcourse:addinstance'] = 'Thêm mới block thứ hạng kì thi';
 $string['vnr_db_studentuser_topcourse:myaddinstance'] = 'Thêm mới block thứ hạng kì thi ở nhà của tôi';
+$string['vnr_db_studentuser_topcourse:editblocks'] = 'Chỉnh sửa block thứ hạng kì thi ở nhà của tôi';
 $string['privacy:metadata'] = 'Block thứ hạng kì thi chỉ hiển thị dữ liệu được lưu trữ ở các vị trí khác';

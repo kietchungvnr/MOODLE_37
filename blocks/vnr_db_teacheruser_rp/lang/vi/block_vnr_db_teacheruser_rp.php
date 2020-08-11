@@ -33,4 +33,5 @@ $string['numberstudent'] = 'Số lượng học viên';
 $string['newenrollstudent'] = 'Học viên mới tham gia lớp học';
 $string['vnr_db_teacheruser_rp:addinstance'] = 'Thêm mới block xu hướng top khóa học';
 $string['vnr_db_teacheruser_rp:myaddinstance'] = 'Thêm mới block xu hướng top khóa học ở nhà của tôi';
+$string['vnr_db_teacheruser_rp:editblocks'] = 'Chỉnh sửa block xu hướng top khóa học ở nhà của tôi';
 $string['privacy:metadata'] = 'Block xu hướng top khóa học chỉ hiển thị dữ liệu được lưu trữ ở các vị trí khác';

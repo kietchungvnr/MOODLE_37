@@ -33,4 +33,5 @@ $string['choosecoursecategory'] = 'Chọn danh mục khóa học';
 $string['choosecourse'] = 'Chọn khóa học';
 $string['vnr_db_admin_rp:addinstance'] = 'Thêm mới khối báo cáo học tập';
 $string['vnr_db_admin_rp:myaddinstance'] = 'Thêm mới khối báo cáo học tập đến trang cá nhân';
+$string['vnr_db_admin_rp:editblocks'] = 'Chỉnh sửa khối báo cáo học tập đến trang cá nhân';
 $string['privacy:metadata'] = 'Block báo cáo học tập chỉ hiển thị dữ liệu được lưu trữ ở các vị trí khác';

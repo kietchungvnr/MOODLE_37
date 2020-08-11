@@ -32,4 +32,5 @@ $string['liststudent'] = 'DANH SÁCH HỌC VIÊN';
 $string['vnr_db_teacheruser_rm:addinstance'] = 'Thêm mới block nhắc nhở giáo viên';
 $string['vnr_db_teacheruser_rm:viewblocks'] = 'Xem block nhắc nhở giáo viên';
 $string['vnr_db_teacheruser_rm:myaddinstance'] = 'Thêm mới block nhắc nhở giáo viên ở nhà của tôi';
+$string['vnr_db_teacheruser_rm:editblocks'] = 'Chỉnh sửa block nhắc nhở giáo viên ở nhà của tôi';
 $string['privacy:metadata'] = 'Block nhắc nhở giáo viên chỉ hiển thị dữ liệu được lưu trữ ở các vị trí khác';

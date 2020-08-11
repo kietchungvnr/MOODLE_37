@@ -38,4 +38,6 @@ $string['nosettingconditioncompletecourse'] = 'Khoá học này chưa cài đặ
 $string['noactivityincourse'] = 'Khoá học này chưa có hoạt động nào';
 $string['vnr_db_viewreport:addinstance'] = 'Thêm mới block xem chi tiết biểu đồ, báo cáo....';
 $string['vnr_db_viewreport:myaddinstance'] = 'Thêm mới block xem chi tiết biểu đồ, báo cáo.... ở nhà của tôi';
+$string['vnr_db_viewreport:myaddinstance'] = 'Thêm mới block xem chi tiết biểu đồ, báo cáo.... ở nhà của tôi';
+$string['vnr_db_viewreport:editblocks'] = 'Chỉnh sửa block xem chi tiết biểu đồ, báo cáo.... ở nhà của tôi';
 $string['privacy:metadata'] = 'Block Xem chi tiết biểu đồ, báo cáo.... chỉ hiển thị dữ liệu được lưu trữ ở các vị trí khác';

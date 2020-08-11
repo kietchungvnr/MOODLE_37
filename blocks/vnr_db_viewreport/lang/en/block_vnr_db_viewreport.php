@@ -38,4 +38,5 @@ $string['nosettingconditioncompletecourse'] = 'No setting condition completed co
 $string['noactivityincourse'] = 'No activity';
 $string['vnr_db_viewreport:addinstance'] = 'Add a new viewreport block';
 $string['vnr_db_viewreport:myaddinstance'] = 'Add a new viewreport block to Dashboard';
+$string['vnr_db_viewreport:editblocks'] = 'Edit a new viewreport block to Dashboard';
 $string['privacy:metadata'] = 'The viewreport block only shows data stored in other locations.';

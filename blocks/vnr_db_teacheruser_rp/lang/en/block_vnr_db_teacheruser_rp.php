@@ -33,4 +33,5 @@ $string['numberstudent'] = 'Number student';
 $string['newenrollstudent'] = 'New enroll student';
 $string['vnr_db_teacheruser_rp:addinstance'] = 'Add a new teacheruser_rp block';
 $string['vnr_db_teacheruser_rp:myaddinstance'] = 'Add a new teacheruser_rp block to Dashboard';
+$string['vnr_db_teacheruser_rp:editblocks'] = 'Edit a new teacheruser_rp block to Dashboard';
 $string['privacy:metadata'] = 'The teacheruser_rp block only shows data stored in other locations.';

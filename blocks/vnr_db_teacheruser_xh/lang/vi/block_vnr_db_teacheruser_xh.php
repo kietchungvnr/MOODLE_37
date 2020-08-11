@@ -32,4 +32,5 @@ $string['avgscore'] = 'Điểm trung bình';
 $string['score'] = 'Điểm';
 $string['vnr_db_teacheruser_xh:addinstance'] = 'Thêm mới block báo cáo kết quả học tập';
 $string['vnr_db_teacheruser_xh:myaddinstance'] = 'Thêm mới block báo cáo kết quả học tập ở nhà của tôi';
+$string['vnr_db_teacheruser_xh:editblocks'] = 'Chỉnh sửa block báo cáo kết quả học tập ở nhà của tôi';
 $string['privacy:metadata'] = 'Block báo cáo kết quả học tập chỉ hiển thị dữ liệu được lưu trữ ở các vị trí khác';

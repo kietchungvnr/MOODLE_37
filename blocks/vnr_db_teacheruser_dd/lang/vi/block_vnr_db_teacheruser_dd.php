@@ -34,4 +34,5 @@ $string['numbercompletedmodules'] = 'Số lượng hoàn thành modules';
 $string['numbertickcompletedcourse'] = 'Số lượt đánh dấu hoàn thành khóa học';
 $string['vnr_db_teacheruser_dd:addinstance'] = 'Thêm mới block xu hướng tham gia hoạt động';
 $string['vnr_db_teacheruser_dd:myaddinstance'] = 'Thêm mới block xu hướng tham gia hoạt động ở nhà của tôi';
+$string['vnr_db_teacheruser_dd:editblocks'] = 'Chỉnh sửa block xu hướng tham gia hoạt động ở nhà của tôi';
 $string['privacy:metadata'] = 'Block xu hướng tham gia hoạt động chỉ hiển thị dữ liệu được lưu trữ ở các vị trí khác';

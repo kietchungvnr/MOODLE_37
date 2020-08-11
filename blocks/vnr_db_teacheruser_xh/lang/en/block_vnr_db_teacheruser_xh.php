@@ -32,4 +32,5 @@ $string['avgscore'] = 'AVG score';
 $string['score'] = 'Score';
 $string['vnr_db_teacheruser_xh:addinstance'] = 'Add a new teacheruser_xh block';
 $string['vnr_db_teacheruser_xh:myaddinstance'] = 'Add a new teacheruser_xh block to Dashboard';
+$string['vnr_db_teacheruser_xh:editblocks'] = 'Edit a new teacheruser_xh block to Dashboard';
 $string['privacy:metadata'] = 'The teacheruser_xh block only shows data stored in other locations.';

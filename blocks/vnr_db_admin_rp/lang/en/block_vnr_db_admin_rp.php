@@ -32,4 +32,5 @@ $string['choosecoursecategory'] = 'Choose course category';
 $string['choosecourse'] = 'Choose course';
 $string['vnr_db_admin_rp:addinstance'] = 'Add a new admin_rp block';
 $string['vnr_db_admin_rp:myaddinstance'] = 'Add a new admin_rp block to Dashboard';
+$string['vnr_db_admin_rp:editblocks'] = 'Edit a new admin_rp block to Dashboard';
 $string['privacy:metadata'] = 'The admin_rp block only shows data stored in other locations.';
