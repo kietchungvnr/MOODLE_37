@@ -816,7 +816,7 @@ class completion_info {
     }
 
     /**
-     * Custom by Vũ: Điều kiện ràng buộc theo thời gian để hoàn thành modules
+     * Custom by Vũ: Điều kiện ràng buộc theo thời gian để hoàn thành resourece modules
      *
      * Should be called whenever a module is 'viewed' (it is up to the module how to
      * determine that). Has no effect if viewing is not set as a completion condition.
@@ -863,6 +863,67 @@ class completion_info {
             } else {
                 return;
             }
+        } else {
+            // OK, change state, save it, and update completion
+            $data->viewed = COMPLETION_VIEWED;
+            $this->internal_set_data($cm, $data);
+            $this->update_state($cm, COMPLETION_COMPLETE, $userid);
+        }
+
+       
+    }
+
+    /**
+     * Custom by Vũ: Điều kiện ràng buộc theo thời gian để hoàn thành book modules
+     *
+     * Should be called whenever a module is 'viewed' (it is up to the module how to
+     * determine that). Has no effect if viewing is not set as a completion condition.
+     *
+     * Note that this function must be called before you print the page header because
+     * it is possible that the navigation block may depend on it. If you call it after
+     * printing the header, it shows a developer debug warning.
+     *
+     * @param stdClass|cm_info $cm Activity
+     * @param int $userid User ID or 0 (default) for current user
+     * @return void
+     */
+    public function set_module_book_completion_viewed($cm, $userid=0) {
+        global $PAGE, $DB, $USER;
+        if ($PAGE->headerprinted) {
+            debugging('set_module_viewed must be called before header is printed',
+                    DEBUG_DEVELOPER);
+        }
+
+        // Don't do anything if view condition is not turned on
+        if ($cm->completionview == COMPLETION_VIEW_NOT_REQUIRED || !$this->is_enabled($cm)) {
+            return;
+        }
+
+        // Get current completion state
+        $data = $this->get_data($cm, false, $userid);
+
+        // If we already viewed it, don't do anything unless the completion status is overridden.
+        // If the completion status is overridden, then we need to allow this 'view' to trigger automatic completion again.
+        if ($data->viewed == COMPLETION_VIEWED && empty($data->overrideby)) {
+            return;
+        }
+
+        $completionrules = $DB->get_record('course_modules_completion_rule', ['moduleid' => $cm->id]);
+        if($completionrules->completiontimespent > 0) {
+            $completiontimer = $DB->get_record('course_modules_completion_timer', ['completionruleid' => $completionrules->id, 'userid' => $USER->id]);
+            if($completiontimer) {
+                $completiontimespent = $completionrules->completiontimespent;
+                $duration = $completiontimer->lastseentime - $completiontimer->starttime;
+                if($duration >= $completiontimespent) {
+                    // OK, change state, save it, and update completion
+                    $data->viewed = COMPLETION_VIEWED;
+                    $this->internal_set_data($cm, $data);
+                    $this->update_state($cm, COMPLETION_COMPLETE, $userid);    
+                } else {
+                    return;
+                }    
+            }
+            
         } else {
             // OK, change state, save it, and update completion
             $data->viewed = COMPLETION_VIEWED;

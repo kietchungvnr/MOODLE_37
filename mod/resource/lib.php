@@ -102,6 +102,10 @@ function resource_add_instance($data, $mform) {
 
     $data->id = $DB->insert_record('resource', $data);
 
+    // we need to use context now, so we need to make sure all needed info is already in db
+    $DB->set_field('course_modules', 'instance', $data->id, array('id'=>$cmid));
+    resource_set_mainfile($data);
+
     // Custom by Vũ: Thêm điều kiện ràng buộc hoàn thành khóa học
     if($data->completion == 2) {
         $completionrules = new stdClass;
@@ -116,10 +120,6 @@ function resource_add_instance($data, $mform) {
             $completionrules->id = $DB->insert_record('course_modules_completion_rule', $completionrules);    
         }
     }
-
-    // we need to use context now, so we need to make sure all needed info is already in db
-    $DB->set_field('course_modules', 'instance', $data->id, array('id'=>$cmid));
-    resource_set_mainfile($data);
 
     $completiontimeexpected = !empty($data->completionexpected) ? $data->completionexpected : null;
     \core_completion\api::update_completion_date_event($cmid, 'resource', $data->id, $completiontimeexpected);
@@ -141,6 +141,9 @@ function resource_update_instance($data, $mform) {
     $data->revision++;
 
     resource_set_display_options($data);
+
+    $DB->update_record('resource', $data);
+    resource_set_mainfile($data);
 
     // Custom by Vũ: Thêm điều kiện ràng buộc hoàn thành khóa học
     if($data->completion == 2) {
@@ -164,9 +167,6 @@ function resource_update_instance($data, $mform) {
             }
         }
     }
-
-    $DB->update_record('resource', $data);
-    resource_set_mainfile($data);
 
     $completiontimeexpected = !empty($data->completionexpected) ? $data->completionexpected : null;
     \core_completion\api::update_completion_date_event($data->coursemodule, 'resource', $data->id, $completiontimeexpected);

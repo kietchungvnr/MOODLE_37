@@ -138,7 +138,7 @@ if (file_exists($modmoodleform)) {
     print_error('noformdesc');
 }
 // Custom by Vũ: completion rule thời gian yêu cầu hoàn thành modole (resource)
-if($data->modulename == 'resource') {
+if($data->modulename == 'resource' || $data->modulename == 'book') {
     $completiontimespent = $DB->get_field('course_modules_completion_rule', 'completiontimespent', ['moduleid' => $data->coursemodule]);
     if($completiontimespent) {
         $data->completiontimespent = (string)$completiontimespent;

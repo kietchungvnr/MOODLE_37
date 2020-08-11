@@ -201,4 +201,28 @@ ALTER TABLE mdl_forum_discussions ADD countviews BIGINT NOT NULL DEFAULT 0
 ALTER TABLE mdl_local_newsvnr_api ADD visible SMALLINT NOT NULL DEFAULT 0
 --- *** Kết thúc script cho bản build version '2019052002.12' ***--
 
+--- *** Script cho bản build version '2019052002.13' *** ---
+-- Bảng cấu hình thời tối thiểu để hoàn thành module
+CREATE TABLE mdl_course_modules_completion_rule
+(
+	[id] BIGINT NOT NULL IDENTITY(1, 1),
+	moduleid BIGINT NOT NULL DEFAULT 0,
+	completiontimespent BIGINT NOT NULL DEFAULT 0,
+	timemodified BIGINT NOT NULL DEFAULT 0,
+)
+
+-- Bảng lưu thông tin thời gian học viên đã xem được bao nhiêu thời gian trong module
+CREATE TABLE mdl_course_modules_completion_timer
+(
+	[id] BIGINT NOT NULL IDENTITY(1, 1),
+	completionruleid BIGINT NOT NULL DEFAULT 0,
+	userid BIGINT NOT NULL DEFAULT 0,
+	starttime BIGINT NOT NULL DEFAULT 0,
+	lastseentime BIGINT NOT NULL DEFAULT 0,
+	completed BIGINT  DEFAULT 0,
+	timemodifiedoffline BIGINT DEFAULT 0,
+)
+--- *** Kết thúc script cho bản build version '2019052002.13' ***--
+
+
 

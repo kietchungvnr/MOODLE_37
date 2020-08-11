@@ -225,7 +225,6 @@
                                                 valueDisplay = display.innerText;
                                                 sc = valueDisplay.split(':');
                                                 duration = ((+sc[0]) * 60 + (+sc[1])); 
-                                                console.log(sc, duration);
                                                 settings.data.spenttime = completionTimeSpent - duration;
                                                 stopTimer();
                                                 $.ajax(script, settings)
