@@ -98,7 +98,7 @@ $output = '';
             $message = strip_tags($value->message); 
 
 				$output .= '
-						<div class="col-lg-3 cl-5 col-sm-4 col-xs-12 ">
+						<div class="col-lg-3 cl-5 col-sm-4 col-xs-6">
 							<div class="new-latest-box">
 								<a href="'. $link .'"><img class="new-latest-image" src="'. $imageurl .'"></a>
 								<label class="new-latest-title mt-1"><a href="'. $link .'" title="'. $value->subject .'">'. $value->subject .'</a></label>

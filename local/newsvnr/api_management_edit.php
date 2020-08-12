@@ -121,9 +121,6 @@ if ($mform_edit->is_cancelled()){
         $apititleupdate = (object)array('id' => $data->$id , 'client_params' => $data->$client_params, 'server_params' => $data->$server_params,'default_value' => $data->$default_value );
         $DB->update_record('local_newsvnr_api_detail',$apititleupdate);
       }
-      // echo('<pre>');
-      // print_r($data);
-      // print_r($apititleupdate);die();
       if (isset($data->submitbutton) ) {
           $message = $strupdate;
       }
@@ -136,10 +133,6 @@ if ($mform_edit->is_cancelled()){
 // echo('<pre>');
 // print_r($arr_apidetail);die();
 echo $OUTPUT->header();
-if(empty($id)){
-  $currenttab = 'orgcate';
-  require('tabs.php');
-}
 
 
 

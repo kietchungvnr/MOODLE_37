@@ -2187,7 +2187,7 @@ nav.navbar .moove-search-input {
     padding-bottom: 0;
 }
 .btn-new-latest {
-    padding-top: 15px;
+    padding-top: 0px;
 }
 /*////question/edit///*/
 .questionname{
@@ -3121,7 +3121,11 @@ table#categoryquestions tr {
 
     }
     #nav-drawer ul {
-        padding-left: 15px;
+        padding-left: 2px;
+    }
+    .fixed-top.navbar {
+        padding: .5rem 1rem !important;
+        padding-left: 7px !important;
     }
     .footer-big {
         display: none;
@@ -3163,6 +3167,14 @@ table#categoryquestions tr {
     #page-course-view-multitopic .sections, #page-course-view-onetopic .sections {
         padding: 0 0.25rem;
     }
+    .userbutton .avatar.current img{
+        width: 30px;
+        height: 30px;
+        margin-right: 0 !important;
+    }
+    .initialbar.firstinitial,.initialbar.lastinitial {
+        display: none !important;
+    }
 }
 @media(max-width: 500px){
     .pagelayout-course .progress {
@@ -3173,7 +3185,7 @@ table#categoryquestions tr {
         background-color: white !important;
         color: black;
     }
-}
+}   
 .calendarwrapper div.header select#menucourse {
     padding: 0.53rem 1.75rem .39rem .75rem;
 }
@@ -3410,7 +3422,7 @@ tr.drag-samenode td {
 .post-slide6 .post-review {
     height: 130px;
 }
-.col-md-3.col-sm-6.col-6.courseimage {
+.col-md-3.col-sm-6.courseimage {
     height: 142px;
 }
 #mypublic-tab .courseimage img {
@@ -3459,15 +3471,15 @@ div#mydiscussion {
 .que .qtext {
     max-width: 1000px;
 }
-.pagelayout-incourse .initialbar.firstinitial,.pagelayout-incourse .initialbar.lastinitial {
-    display: none !important;
-}
 @media (min-width: 1300px) {
     body.drawer-open-left .dashboard-card-deck:not(.fixed-width-cards) .dashboard-card {
         width: calc(20% - .5rem)!important;
     }
     .dashboard-card-deck.fixed-width-cards .dashboard-card {
         width: calc(20% - .5rem)!important;
+    }
+    .course-content ul.topics,.course-content ul.weeks {
+        padding: 0 10px;
     }
 }
 @media (min-width: 1122px) {
@@ -3483,6 +3495,58 @@ div#mydiscussion {
 }
 .dashboard-card-deck .dashboard-card .dashboard-card-img {
     background-size: 100% 100%;
+}
+.#badge-details {
+    width: 100%;
+}
+/*dashboard*/
+div::-webkit-scrollbar {
+    height: 10px;
+}
+#page-local-newsvnr-index .card-body {
+    display: block!important;
+}
+.new-latest-body .col-lg-3.cl-5.col-sm-4.col-xs-6 {
+    padding: 0 7px;
+}
+#page-mod-book-view i.icon.fa.fa-angle-left.fa-fw,#page-mod-book-view .m-t-2.m-b-1.row{
+    display: none;
+}
+.navtop.clearfix.navimages {
+    display: none;
+}
+.pagelayout-course .section li.activity:hover {
+    border:1px dotted grey;
+}
+.pagelayout-incourse i.icon.fa.fa-chevron-right.fa-fw,.pagelayout-incourse i.icon.fa.fa-chevron-left.fa-fw {
+    display: none;
+}
+nav.navbar .navbar-brand .logo img {
+    max-width: 135px;
+}
+#page-admin-tool-lp-coursecompetencies li.list-inline-item a {
+    color: black;
+}
+.new-latest-content {
+    -webkit-line-clamp:2;
+    height: 60px;
+}
+.new-latest-box .new-latest-title a,.new-latest-box .new-latest-title{
+    color:#455a64;
+    font-size: 14px;
+}
+.new-latest-comment-info {
+    color:#455a64;
+}
+.single-welcome-post .welcome-post-content {
+    left: 25px;
+    bottom: 25px;
+}
+.new-related-block .description {
+    height: 150px;
+}
+h4.responsehistoryheader {
+    padding: 10px 0 0 10px;
 }
 </style>
 
