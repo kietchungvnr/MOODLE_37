@@ -301,3 +301,4 @@ $string['nocoursefit'] = 'Không có khóa học phù hợp';
 $string['org_completed'] = 'Hoàn thành';
 $string['org_incomplete'] = 'Chưa hoàn thành';
 $string['parentorgstructurename'] = 'Trưởng phòng ban';
+$string['headoffice'] = 'Công ty mẹ';

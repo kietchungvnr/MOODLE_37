@@ -270,7 +270,7 @@ switch ($section) {
 		if($value->parentid > 0){
 			$parentname = get_name_parentid($value->parentid);
 		} else {
-			$parentname = 'Công ty mẹ';
+			$parentname = get_string('headoffice', 'local_newsvnr');
 		}
 		if($value->managerid == 0 ) {
 			$username = "";

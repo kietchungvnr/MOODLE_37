@@ -48,7 +48,9 @@ class UserController extends BaseController {
 	    	$this->data->usercode = $request->getParam('usercode');
 	    	$this->data->typeofuser = $request->getParam('typeuser');
 	    	$this->data->fullname = $request->getParam('name');
-		    $this->data->phone = $request->getParam('phone');
+	    	if($request->getParam('phone')) {
+		    	$this->data->phone = $request->getParam('phone');
+	    	}
 		    $this->data->email = $request->getParam('email');
 		    $this->data->username = $request->getParam('username');
 		    $this->data->password = $request->getParam('password');
@@ -68,7 +70,6 @@ class UserController extends BaseController {
 			$firstname = $fullname;
 			$lastname = " ";
 		}
-		
 		// $email = $this->data->email;
 		// if (!validate_email($email)) {
 		// 	$this->resp->error = true;
@@ -96,7 +97,8 @@ class UserController extends BaseController {
 		$usernew->maildisplay = 2;
 		$usernew->country = 'VN';
 		$usernew->lang = 'vi';
-		$usernew->phone1 = $this->data->phone;
+		if(isset($this->data->phone))
+			$usernew->phone1 = $this->data->phone;
 		if($userid) {
 			$usernew->id = $userid;
 			$user = $DB->get_record('user', array('id' => $usernew->id));

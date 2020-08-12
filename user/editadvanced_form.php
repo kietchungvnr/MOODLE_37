@@ -101,14 +101,13 @@ class user_editadvanced_form extends moodleform {
         $mform->addElement('text', 'username', get_string('username'), 'size="20"' . $purpose);
         $mform->addHelpButton('username', 'username', 'auth');
         $mform->setType('username', PARAM_RAW);
-
         /* -- Custom by Vũ -- */
-        if($userid > 2) {
-            $mform->addElement('text', 'usercode', get_string('usercode','local_newsvnr'), 'maxlength="200" size="20"');
-            $mform->addRule('usercode', get_string('required'), 'required', null, 'client');
-            $mform->addHelpButton('usercode', 'usercode', 'local_newsvnr');
-            $mform->setType('usercode', PARAM_RAW);
-            if($user->typeofuser == 0) {
+        if($userid == -1) {
+            if($DB->count_records('user') > 1) {
+                $mform->addElement('text', 'usercode', get_string('usercode','local_newsvnr'), 'maxlength="200" size="20"');
+                $mform->addRule('usercode', get_string('required'), 'required', null, 'client');
+                $mform->addHelpButton('usercode', 'usercode', 'local_newsvnr');
+                $mform->setType('usercode', PARAM_RAW);
                 //lấy danh sách chức vụ
                 $orgpositionlist = $DB->get_records('orgstructure_position');
                 $orgpositionnames = array();
@@ -123,8 +122,28 @@ class user_editadvanced_form extends moodleform {
 
                 $mform->addElement('autocomplete', 'orgpositionid', get_string('orgpositionid', 'local_newsvnr'), $orgpositionnames, $options);
                 $mform->addRule('orgpositionid', get_string('required'), 'required', null, 'client');
-                $mform->setType('orgpositionid', PARAM_INT);
+                $mform->setType('orgpositionid', PARAM_INT);    
             }
+        } elseif($userid > 2 && $userid->typeofuser == 0) {
+            $mform->addElement('text', 'usercode', get_string('usercode','local_newsvnr'), 'maxlength="200" size="20"');
+            $mform->addRule('usercode', get_string('required'), 'required', null, 'client');
+            $mform->addHelpButton('usercode', 'usercode', 'local_newsvnr');
+            $mform->setType('usercode', PARAM_RAW);
+            //lấy danh sách chức vụ
+            $orgpositionlist = $DB->get_records('orgstructure_position');
+            $orgpositionnames = array();
+            
+            foreach ($orgpositionlist as $key => $value) {    
+                $orgpositionnames[$key] = $value->name;                     
+            }
+
+            $options = array(
+                'placeholder' => get_string('search', 'local_newsvnr'),
+            );
+
+            $mform->addElement('autocomplete', 'orgpositionid', get_string('orgpositionid', 'local_newsvnr'), $orgpositionnames, $options);
+            $mform->addRule('orgpositionid', get_string('required'), 'required', null, 'client');
+            $mform->setType('orgpositionid', PARAM_INT);
         }
         /* --- ** --- */
         

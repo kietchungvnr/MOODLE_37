@@ -301,3 +301,4 @@ $string['nocoursefit'] = 'There are no suitable courses';
 $string['org_completed'] = 'Completed';
 $string['org_incomplete'] = 'Incompleted';
 $string['parentorgstructurename'] = 'Parent orgstructure';
+$string['headoffice'] = 'HeadOffice';
