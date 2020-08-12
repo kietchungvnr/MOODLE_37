@@ -55,19 +55,21 @@ switch (true) {
 		$resource = $DB->get_record('resource', array('id' => $instance), '*', MUST_EXIST);
 		$user = new stdClass;
 		// Kiểm tra xem module này đã được học viên xem chưa?
-		if(!$completion) {
-			$user->userid = $USER->id;
-			$user->completionruleid = $module->id;
-			$user->starttime = time();
-			$user->lastseentime = time();
-			$DB->insert_record('course_modules_completion_timer', $user);
-			$data->completiontimespent = $module->completiontimespent - $completiontimespent;
-		} else {
-			$completiontimespent =  $completion->lastseentime - $completion->starttime;
-			if($completiontimespent >= $module->completiontimespent) {
-				$data->completiontimespent = 'completed';
-			} else {
+		if($module) {
+			if(!$completion) {
+				$user->userid = $USER->id;
+				$user->completionruleid = $module->id;
+				$user->starttime = time();
+				$user->lastseentime = time();
+				$DB->insert_record('course_modules_completion_timer', $user);
 				$data->completiontimespent = $module->completiontimespent - $completiontimespent;
+			} else {
+				$completiontimespent =  $completion->lastseentime - $completion->starttime;
+				if($completiontimespent >= $module->completiontimespent) {
+					$data->completiontimespent = 'completed';
+				} else {
+					$data->completiontimespent = $module->completiontimespent - $completiontimespent;
+				}
 			}
 		}
 	
