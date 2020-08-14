@@ -25,10 +25,14 @@
  */
 
 defined('MOODLE_INTERNAL') || die;
-
+use theme_moove\util\theme_settings;
 use core_course\external\course_summary_exporter;
-
+use coursecat_helper;
+use core_course_category;
+use core_course_list_element;
+use stdClass;
 require_once("$CFG->libdir/externallib.php");
+require_once($CFG->dirroot . '/local/newsvnr/lib.php');
 require_once("lib.php");
 
 /**
@@ -3823,7 +3827,7 @@ class core_course_external extends external_api {
         int $offset = 0,
         string $sort = null
     ) {
-        global $CFG, $PAGE, $USER;
+        global $CFG, $PAGE, $USER, $OUTPUT, $DB;
         require_once($CFG->dirroot . '/course/lib.php');
 
         $params = self::validate_parameters(self::get_enrolled_courses_by_timeline_classification_parameters(),
@@ -3909,7 +3913,32 @@ class core_course_external extends external_api {
             $exporter = new course_summary_exporter($course, ['context' => $context, 'isfavourite' => $isfavourite]);
             return $exporter->export($renderer);
         }, $filteredcourses);
+        $theme_settings = new theme_settings();
+        foreach ($formattedcourses as $key => $value) {
+            $courseid = $value->id;
+            $arr = $theme_settings::role_courses_teacher_slider_block_course_recent($courseid);
+            $value->fullnamet = $arr->fullnamet;
+            $value->countstudent = $arr->studentnumber;
+            $value->enrolmethod = get_enrol_method($courseid);
+            if($value->progress > 0 ){
+              $value->hasprogress = true;
+            }
+            else {
+              $value->hasprogress = false;
+            }
+            if (isset($arr->id)) {
+              $stduser = new stdClass();
+              $userid = $DB->get_records('user',array('id' => $arr->id));
+              foreach ($userid as $userdata)
+                 $stduser = (object)$userdata;
 
+               $value->imageteacher = $OUTPUT->user_picture($stduser, array('size'=>72));
+            }
+            else
+            {
+              $value->imageteacher = $arr->imgdefault;
+            }
+        } 
         return [
             'courses' => $formattedcourses,
             'nextoffset' => $offset + $processedcount
@@ -3922,9 +3951,37 @@ class core_course_external extends external_api {
      * @return external_description
      */
     public static function get_enrolled_courses_by_timeline_classification_returns() {
+        // Custom by Thang
         return new external_single_structure(
             array(
-                'courses' => new external_multiple_structure(course_summary_exporter::get_read_structure(), 'Course'),
+                'courses' => new external_multiple_structure(
+                    new external_single_structure(
+                        array(
+                            'id' => new external_value(PARAM_INT, 'id'),
+                            'fullname' => new external_value(PARAM_RAW, 'fullname course'),
+                            'shortname' => new external_value(PARAM_RAW, 'shortname course'),
+                            'idnumber' => new external_value(PARAM_RAW, 'course id nubmer'),
+                            'summary' => new external_value(PARAM_RAW, 'summary'),
+                            'summaryformat' => new external_value(PARAM_INT, 'summaryformat'),
+                            'startdate' => new external_value(PARAM_INT, 'startdate course'),
+                            'enddate' => new external_value(PARAM_INT, 'enddate course'),
+                            'visible' => new external_value(PARAM_BOOL, 'course visible'),
+                            'fullnamedisplay' => new external_value(PARAM_RAW, 'course fullname'),
+                            'viewurl' => new external_value(PARAM_URL, 'courses url'),
+                            'courseimage' => new external_value(PARAM_RAW, 'course image'),
+                            'progress' => new external_value(PARAM_INT, 'course progress'),
+                            'hasprogress' => new external_value(PARAM_BOOL, 'course has progress or not'),
+                            'isfavourite' => new external_value(PARAM_BOOL, 'favourite course'),
+                            'hidden' => new external_value(PARAM_BOOL, 'hidden'),
+                            'showshortname' => new external_value(PARAM_BOOL, 'shortname course'),
+                            'coursecategory' => new external_value(PARAM_RAW, 'courses category'),
+                            'fullnamet' => new external_value(PARAM_RAW, 'teacher name'),
+                            'imageteacher' => new external_value(PARAM_RAW, 'teacher image'),
+                            'countstudent' => new external_value(PARAM_INT, 'count number of student'),
+                            'enrolmethod' => new external_value(PARAM_RAW, 'method enrol')
+                        )
+                    )
+                ),
                 'nextoffset' => new external_value(PARAM_INT, 'Offset for the next request')
             )
         );
@@ -4071,7 +4128,7 @@ class core_course_external extends external_api {
      * @throws  invalid_parameter_exception
      */
     public static function get_recent_courses(int $userid = 0, int $limit = 0, int $offset = 0, string $sort = null) {
-        global $USER, $PAGE;
+        global $USER, $PAGE, $OUTPUT,$DB;
 
         if (empty($userid)) {
             $userid = $USER->id;
@@ -4100,9 +4157,9 @@ class core_course_external extends external_api {
         }
 
         $courses = course_get_recent_courses($userid, $limit, $offset, $sort);
+        $theme_settings = new theme_settings();
 
         $renderer = $PAGE->get_renderer('core');
-
         $recentcourses = array_map(function($course) use ($renderer) {
             context_helper::preload_from_record($course);
             $context = context_course::instance($course->id);
@@ -4110,7 +4167,31 @@ class core_course_external extends external_api {
             $exporter = new course_summary_exporter($course, ['context' => $context, 'isfavourite' => $isfavourite]);
             return $exporter->export($renderer);
         }, $courses);
+        foreach ($recentcourses as $key => $value) {
+            $courseid = $value->id;
+            $arr = $theme_settings::role_courses_teacher_slider_block_course_recent($courseid);
+            $value->fullnamet = $arr->fullnamet;
+            $value->countstudent = $arr->studentnumber;
+            if($value->progress > 0 ){
+              $value->hasprogress = true;
+            }
+            else {
+              $value->hasprogress = false;
+            }
+            $value->enrolmethod = get_enrol_method($courseid);
+            if (isset($arr->id)) {
+              $stduser = new stdClass();
+              $userid = $DB->get_records('user',array('id' => $arr->id));
+              foreach ($userid as $userdata)
+                 $stduser = (object)$userdata;
 
+               $value->imageteacher = $OUTPUT->user_picture($stduser, array('size'=>72));
+            }
+            else
+            {
+              $value->imageteacher = $arr->imgdefault;
+            }
+        } 
         return $recentcourses;
     }
 
@@ -4121,6 +4202,36 @@ class core_course_external extends external_api {
      * @since Moodle 3.6
      */
     public static function get_recent_courses_returns() {
-        return new external_multiple_structure(course_summary_exporter::get_read_structure(), 'Courses');
+        // Custom by Thang
+        return new external_multiple_structure(
+            new external_single_structure(
+                array(
+                    'id' => new external_value(PARAM_INT, 'id'),
+                    'fullname' => new external_value(PARAM_RAW, 'fullname course'),
+                    'shortname' => new external_value(PARAM_RAW, 'shortname course'),
+                    'idnumber' => new external_value(PARAM_RAW, 'course id nubmer'),
+                    'summary' => new external_value(PARAM_RAW, 'summary'),
+                    'summaryformat' => new external_value(PARAM_INT, 'summaryformat'),
+                    'startdate' => new external_value(PARAM_INT, 'startdate course'),
+                    'enddate' => new external_value(PARAM_INT, 'enddate course'),
+                    'visible' => new external_value(PARAM_BOOL, 'course visible'),
+                    'fullnamedisplay' => new external_value(PARAM_RAW, 'course fullname'),
+                    'viewurl' => new external_value(PARAM_URL, 'courses url'),
+                    'courseimage' => new external_value(PARAM_RAW, 'course image'),
+                    'progress' => new external_value(PARAM_INT, 'course progress'),
+                    'hasprogress' => new external_value(PARAM_BOOL, 'course has progress or not'),
+                    'isfavourite' => new external_value(PARAM_BOOL, 'favourite course'),
+                    'hidden' => new external_value(PARAM_BOOL, 'hidden'),
+                    'timeaccess' => new external_value(PARAM_INT, 'timce access'),
+                    'showshortname' => new external_value(PARAM_BOOL, 'shortname course'),
+                    'coursecategory' => new external_value(PARAM_RAW, 'courses category'),
+                    'fullnamet' => new external_value(PARAM_RAW, 'teacher name'),
+                    'imageteacher' => new external_value(PARAM_RAW, 'teacher image'),
+                    'countstudent' => new external_value(PARAM_INT, 'count number of student'),
+                    'enrolmethod' => new external_value(PARAM_RAW, 'method enrol')
+                )
+            )
+        );
+        // return new external_multiple_structure(course_summary_exporter::get_read_structure(), 'Courses');
     }
 }

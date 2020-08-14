@@ -309,6 +309,49 @@ class theme_settings {
         // var_dump($rolecourse);die();
 
     }
+    public static function role_courses_teacher_slider_block_course_recent($courseid)
+    {
+        global $DB,$CFG;
+        $arrc = array();
+        $imgurl = $CFG->wwwroot."/theme/moove/pix/f2.png";
+        $imgdefault = \html_writer::empty_tag('img',array('src' => $imgurl,'class'=>'userpicture defaultuserpic owl-lazy','width' => '50px','height'=>'50px','alt' => 'Default picture','title'=>'Default picture'));
+        $sql = "SELECT concat(u.firstname,' ',u.lastname) as fullnamet,(select COUNT(*) as sts
+        FROM {user_enrolments} ue
+        JOIN {enrol} e ON ue.enrolid = e.id
+        JOIN {course} c ON e.courseid = c.id
+        JOIN {role_assignments} ra ON ra.userid = ue.userid
+        JOIN {context} as ct on ra.contextid= ct.id AND ct.instanceid = c.id
+        where ra.roleid=5 and c.id=?) as studentnumber,u.id
+        from {role_assignments} as ra
+        join {user} as u on u.id= ra.userid
+        join {user_enrolments} as ue on ue.userid=u.id
+        join {enrol} as e on e.id=ue.enrolid
+        join {course} as c on c.id=e.courseid
+        join {context} as ct on ct.id=ra.contextid and ct.instanceid= c.id
+        join {role} as r on r.id= ra.roleid
+        where c.id=? and ra.roleid=3";
+        $rolecourse = $DB->get_records_sql($sql,array($courseid,$courseid));
+        
+        if (!empty($rolecourse)) 
+        {
+             foreach ($rolecourse as $value) 
+             {
+                $infoteacher = new stdclass();
+                $infoteacher = $value;
+             } 
+         }
+          else
+          {
+                    $infoteacher = new stdClass();
+                    $infoteacher->fullnamet = 'No Teacher';
+                    $infoteacher->studentnumber = 0;
+                    $infoteacher->imgdefault = $imgdefault;
+          }
+           return $infoteacher;
+
+        // var_dump($rolecourse);die();
+
+    }
 
     public static function role_courses_teacher($courseid)
     {
