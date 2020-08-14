@@ -379,59 +379,59 @@ function useredit_shared_definition(&$mform, $editoroptions, $filemanageroptions
             $mform->setType($allname, PARAM_NOTAGS);
         }
     }
+    // Custom by Vũ: Ẩn các tab không cần thiết khi tạo mới user - IVC
+    // if (core_tag_tag::is_enabled('core', 'user') and empty($USER->newadminuser)) {
+    //     $mform->addElement('header', 'moodle_interests', get_string('interests'));
+    //     $mform->addElement('tags', 'interests', get_string('interestslist'),
+    //         array('itemtype' => 'user', 'component' => 'core'));
+    //     $mform->addHelpButton('interests', 'interestslist');
+    // }
 
-    if (core_tag_tag::is_enabled('core', 'user') and empty($USER->newadminuser)) {
-        $mform->addElement('header', 'moodle_interests', get_string('interests'));
-        $mform->addElement('tags', 'interests', get_string('interestslist'),
-            array('itemtype' => 'user', 'component' => 'core'));
-        $mform->addHelpButton('interests', 'interestslist');
-    }
+    // // Moodle optional fields.
+    // $mform->addElement('header', 'moodle_optional', get_string('optional', 'form'));
 
-    // Moodle optional fields.
-    $mform->addElement('header', 'moodle_optional', get_string('optional', 'form'));
+    // $mform->addElement('text', 'url', get_string('webpage'), 'maxlength="255" size="50"');
+    // $mform->setType('url', core_user::get_property_type('url'));
 
-    $mform->addElement('text', 'url', get_string('webpage'), 'maxlength="255" size="50"');
-    $mform->setType('url', core_user::get_property_type('url'));
+    // $mform->addElement('text', 'icq', get_string('icqnumber'), 'maxlength="15" size="25"');
+    // $mform->setType('icq', core_user::get_property_type('icq'));
+    // $mform->setForceLtr('icq');
 
-    $mform->addElement('text', 'icq', get_string('icqnumber'), 'maxlength="15" size="25"');
-    $mform->setType('icq', core_user::get_property_type('icq'));
-    $mform->setForceLtr('icq');
+    // $mform->addElement('text', 'skype', get_string('skypeid'), 'maxlength="50" size="25"');
+    // $mform->setType('skype', core_user::get_property_type('skype'));
+    // $mform->setForceLtr('skype');
 
-    $mform->addElement('text', 'skype', get_string('skypeid'), 'maxlength="50" size="25"');
-    $mform->setType('skype', core_user::get_property_type('skype'));
-    $mform->setForceLtr('skype');
+    // $mform->addElement('text', 'aim', get_string('aimid'), 'maxlength="50" size="25"');
+    // $mform->setType('aim', core_user::get_property_type('aim'));
+    // $mform->setForceLtr('aim');
 
-    $mform->addElement('text', 'aim', get_string('aimid'), 'maxlength="50" size="25"');
-    $mform->setType('aim', core_user::get_property_type('aim'));
-    $mform->setForceLtr('aim');
+    // $mform->addElement('text', 'yahoo', get_string('yahooid'), 'maxlength="50" size="25"');
+    // $mform->setType('yahoo', core_user::get_property_type('yahoo'));
+    // $mform->setForceLtr('yahoo');
 
-    $mform->addElement('text', 'yahoo', get_string('yahooid'), 'maxlength="50" size="25"');
-    $mform->setType('yahoo', core_user::get_property_type('yahoo'));
-    $mform->setForceLtr('yahoo');
+    // $mform->addElement('text', 'msn', get_string('msnid'), 'maxlength="50" size="25"');
+    // $mform->setType('msn', core_user::get_property_type('msn'));
+    // $mform->setForceLtr('msn');
 
-    $mform->addElement('text', 'msn', get_string('msnid'), 'maxlength="50" size="25"');
-    $mform->setType('msn', core_user::get_property_type('msn'));
-    $mform->setForceLtr('msn');
+    // $mform->addElement('text', 'idnumber', get_string('idnumber'), 'maxlength="255" size="25"');
+    // $mform->setType('idnumber', core_user::get_property_type('idnumber'));
 
-    $mform->addElement('text', 'idnumber', get_string('idnumber'), 'maxlength="255" size="25"');
-    $mform->setType('idnumber', core_user::get_property_type('idnumber'));
+    // $mform->addElement('text', 'institution', get_string('institution'), 'maxlength="255" size="25"');
+    // $mform->setType('institution', core_user::get_property_type('institution'));
 
-    $mform->addElement('text', 'institution', get_string('institution'), 'maxlength="255" size="25"');
-    $mform->setType('institution', core_user::get_property_type('institution'));
+    // $mform->addElement('text', 'department', get_string('department'), 'maxlength="255" size="25"');
+    // $mform->setType('department', core_user::get_property_type('department'));
 
-    $mform->addElement('text', 'department', get_string('department'), 'maxlength="255" size="25"');
-    $mform->setType('department', core_user::get_property_type('department'));
+    // $mform->addElement('text', 'phone1', get_string('phone1'), 'maxlength="20" size="25"');
+    // $mform->setType('phone1', core_user::get_property_type('phone1'));
+    // $mform->setForceLtr('phone1');
 
-    $mform->addElement('text', 'phone1', get_string('phone1'), 'maxlength="20" size="25"');
-    $mform->setType('phone1', core_user::get_property_type('phone1'));
-    $mform->setForceLtr('phone1');
+    // $mform->addElement('text', 'phone2', get_string('phone2'), 'maxlength="20" size="25"');
+    // $mform->setType('phone2', core_user::get_property_type('phone2'));
+    // $mform->setForceLtr('phone2');
 
-    $mform->addElement('text', 'phone2', get_string('phone2'), 'maxlength="20" size="25"');
-    $mform->setType('phone2', core_user::get_property_type('phone2'));
-    $mform->setForceLtr('phone2');
-
-    $mform->addElement('text', 'address', get_string('address'), 'maxlength="255" size="25"');
-    $mform->setType('address', core_user::get_property_type('address'));
+    // $mform->addElement('text', 'address', get_string('address'), 'maxlength="255" size="25"');
+    // $mform->setType('address', core_user::get_property_type('address'));
 }
 
 /**
