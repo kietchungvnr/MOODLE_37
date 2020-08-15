@@ -405,14 +405,13 @@ class course_edit_form extends moodleform {
                 }
             }
         }
-        // Custom by Vũ: Ẩn tab tag không cần thiết - IVC
-        // if (core_tag_tag::is_enabled('core', 'course') &&
-        //         ((empty($course->id) && guess_if_creator_will_have_course_capability('moodle/course:tag', $categorycontext))
-        //         || (!empty($course->id) && has_capability('moodle/course:tag', $coursecontext)))) {
-        //     $mform->addElement('header', 'tagshdr', get_string('tags', 'tag'));
-        //     $mform->addElement('tags', 'tags', get_string('tags'),
-        //             array('itemtype' => 'course', 'component' => 'core'));
-        // }
+        if (core_tag_tag::is_enabled('core', 'course') &&
+                ((empty($course->id) && guess_if_creator_will_have_course_capability('moodle/course:tag', $categorycontext))
+                || (!empty($course->id) && has_capability('moodle/course:tag', $coursecontext)))) {
+            $mform->addElement('header', 'tagshdr', get_string('tags', 'tag'));
+            $mform->addElement('tags', 'tags', get_string('tags'),
+                    array('itemtype' => 'course', 'component' => 'core'));
+        }
 
         // Add custom fields to the form.
         $handler = core_course\customfield\course_handler::create();

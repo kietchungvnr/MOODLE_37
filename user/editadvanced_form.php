@@ -93,8 +93,7 @@ class user_editadvanced_form extends moodleform {
             if (is_enabled_auth($auth)) {
                 $authoptions[$enabled][$auth] = get_string('pluginname', "auth_{$auth}");
             } else {
-                // Custom by Vũ: Ẩn các plugin enrol khi bị vô hiệu hóa - IVC
-                // $authoptions[$disabled][$auth] = get_string('pluginname', "auth_{$auth}");
+                $authoptions[$disabled][$auth] = get_string('pluginname', "auth_{$auth}");
             }
         }
 
