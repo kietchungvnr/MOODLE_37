@@ -466,11 +466,17 @@ require(['jquery'], function($) {
         }
     });
 
-{{!     ///menu bottom mobile//// }}
+    {{!///menu bottom mobile//// }}
     var path = window.location.href;
     $('.toolbar ul li a').each(function() {
         if(this.href === path){
             $(this).addClass('active');
         }
     });
+    {{! check summary }}
+    if($('.pagelayout-course .summary').find('.no-overflow') > 0){
+    }
+    else {
+        $('.pagelayout-course .summary').css('display','none');
+    }
 {{/js}}

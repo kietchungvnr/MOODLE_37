@@ -27,8 +27,14 @@ require_once($CFG->libdir . '/externallib.php');
 
 require_once($CFG->dirroot . '/course/lib.php');
 require_once($CFG->dirroot . '/course/externallib.php');
-
+use theme_moove\util\theme_settings;
 use \core_course\external\course_summary_exporter;
+use coursecat_helper;
+use core_course_category;
+use core_course_list_element;
+use stdClass;
+require_once($CFG->dirroot . '/local/newsvnr/lib.php');
+
 
 /**
  * Starred courses block external functions.
@@ -60,7 +66,7 @@ class block_starredcourses_external extends core_course_external {
      * @return  array list of courses and warnings
      */
     public static function get_starred_courses($limit, $offset) {
-        global $USER, $PAGE;
+        global $USER, $PAGE, $OUTPUT,$DB;
 
         $params = self::validate_parameters(self::get_starred_courses_parameters(), [
             'limit' => $limit,
@@ -100,7 +106,34 @@ class block_starredcourses_external extends core_course_external {
                 $formattedcourses[] = $formattedcourse;
             }
         }
+        // Custom by Thang
+        $theme_settings = new theme_settings();
+        foreach ($formattedcourses as $key => $value) {
+            $courseid = $value->id;
+            $arr = $theme_settings::role_courses_teacher_slider_block_course_recent($courseid);
+            $value->fullnamet = $arr->fullnamet;
+            $value->countstudent = $arr->studentnumber;
+            $value->enrolmethod = get_enrol_method($courseid);
+            if($value->progress > 0 ){
+              $value->hasprogress = true;
+            }
+            else {
+              $value->hasprogress = false;
+            }
+            if (isset($arr->id)) {
+              $stduser = new stdClass();
+              $userid = $DB->get_records('user',array('id' => $arr->id));
+              foreach ($userid as $userdata)
+                 $stduser = (object)$userdata;
 
+               $value->imageteacher = $OUTPUT->user_picture($stduser, array('size'=>72));
+            }
+            else
+            {
+              $value->imageteacher = $arr->imgdefault;
+            }
+        } 
+        // print_r($formattedcourses);die();
         return $formattedcourses;
     }
 
@@ -111,6 +144,35 @@ class block_starredcourses_external extends core_course_external {
      * @since Moodle 3.6
      */
     public static function get_starred_courses_returns() {
-        return new external_multiple_structure(course_summary_exporter::get_read_structure());
+        // return new external_multiple_structure(course_summary_exporter::get_read_structure());
+      // Custom by Thang
+        return new external_multiple_structure(
+            new external_single_structure(
+                array(
+                    'id' => new external_value(PARAM_INT, 'id'),
+                    'fullname' => new external_value(PARAM_RAW, 'fullname course'),
+                    'shortname' => new external_value(PARAM_RAW, 'shortname course'),
+                    'idnumber' => new external_value(PARAM_RAW, 'course id nubmer'),
+                    'summary' => new external_value(PARAM_RAW, 'summary'),
+                    'summaryformat' => new external_value(PARAM_INT, 'summaryformat'),
+                    'startdate' => new external_value(PARAM_INT, 'startdate course'),
+                    'enddate' => new external_value(PARAM_INT, 'enddate course'),
+                    'visible' => new external_value(PARAM_BOOL, 'course visible'),
+                    'fullnamedisplay' => new external_value(PARAM_RAW, 'course fullname'),
+                    'viewurl' => new external_value(PARAM_URL, 'courses url'),
+                    'courseimage' => new external_value(PARAM_RAW, 'course image'),
+                    'progress' => new external_value(PARAM_INT, 'course progress'),
+                    'hasprogress' => new external_value(PARAM_BOOL, 'course has progress or not'),
+                    'isfavourite' => new external_value(PARAM_BOOL, 'favourite course'),
+                    'hidden' => new external_value(PARAM_BOOL, 'hidden'),
+                    'showshortname' => new external_value(PARAM_BOOL, 'shortname course'),
+                    'coursecategory' => new external_value(PARAM_RAW, 'courses category'),
+                    'fullnamet' => new external_value(PARAM_RAW, 'teacher name'),
+                    'imageteacher' => new external_value(PARAM_RAW, 'teacher image'),
+                    'countstudent' => new external_value(PARAM_INT, 'count number of student'),
+                    'enrolmethod' => new external_value(PARAM_RAW, 'method enrol')
+                )
+            )
+        );
     }
 }

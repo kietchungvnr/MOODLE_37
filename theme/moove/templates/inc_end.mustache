@@ -474,6 +474,14 @@ require(['jquery'], function($) {
             $(this).addClass('active');
         }
     });
+    {{! check summary }}
+    if($('.pagelayout-course .summary').find('.no-overflow') > 0){
+    }
+    else {
+        $('.pagelayout-course .summary').css('display','none');
+    }
+
+    {{! grade menu }}
     {{! ajax load }}
 {{!      $(".course-content .nav-tabs li a").each(function(){
         $(this).on('click',function(){

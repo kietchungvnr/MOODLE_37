@@ -34,44 +34,46 @@
         ]
     }
 }}
-<div class="card dashboard-card" role="listitem"
+<div class="w-2 col-12 col-xl-2 col-lg-3 col-md-4 col-sm-6" role="listitem"
     data-region="course-content"
     data-course-id="{{{id}}}">
-    <a href="{{viewurl}}" tabindex="-1">
-        <div class="card-img dashboard-card-img" style='background-image: url("{{{courseimage}}}");'>
-            <span class="sr-only">{{#str}}aria:courseimage, core_course{{/str}}</span>
-        </div>
-    </a>
-    <div class="card-body pr-1 course-info-container" id="course-info-container-{{id}}-{{uniqid}}">
         <div class="d-flex align-items-start">
             <div class="w-100 text-truncate">
-                <div class="text-muted muted d-flex mb-1 flex-wrap">
-                    {{$coursecategory}}{{/coursecategory}}
-                    {{#showshortname}}
-                    {{$divider}}{{/divider}}
-                    <span class="sr-only">
-                        {{#str}}aria:courseshortname, core_course{{/str}}
-                    </span>
-                    <div>
-                        {{{shortname}}}
+                <div class="post-slide6">
+                    <div class="post-img">
+                        <a href="{{viewurl}}">
+                            <img src="{{{courseimage}}}">
+                        </a>
+                        <div class="post-info">
+                            <ul class="category" style="{{$style}}{{/style}}">
+                                <li>{{#str}}countstudent, block_vnr_db_coursesuggest_position{{/str}} <a href="#">{{countstudent}}</a></li>
+                                <li>{{#str}}teachername, block_vnr_db_coursesuggest_position{{/str}} <a href="#">{{fullnamet}}</a></li>
+                            </ul>
+                        </div>
                     </div>
-                    {{/showshortname}}
-                </div>
-                <a href="{{viewurl}}" class="coursename mr-2">
-                    {{> core_course/favouriteicon }}
-                    <span class="sr-only">
-                            {{#str}}aria:coursename, core_course{{/str}}
+                    <div class="post-review">
+                        <span class="icons">
+                               {{{imageteacher}}}
                         </span>
-                    {{$coursename}}{{/coursename}}
-                </a>
-                {{^visible}}
-                    <div class="d-flex flex-wrap">
-                        <span class="tag tag-info">{{#str}} hiddenfromstudents {{/str}}</span>
+                        <h3 class="post-title"><a href="{{viewurl}}" title="{{fullname}}">{{fullname}}</a></h3>
+            
+                                <p class="post-teachername">{{#shortentext}}30, {{fullnamet}}{{/shortentext}}</p>
+                                <p class="post-description">{{#shortentext}}90, {{summary}}{{/shortentext}}</p>
+                            {{#hasprogress}}
+                                    <div class="progress">
+                                      <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}"
+                                      aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%">
+                                        {{progress}}%
+                                      </div>
+                                    </div>
+                            {{/hasprogress}}
+                            {{^hasprogress}}
+                                <p class="post-enrolmethod">
+                                    {{{enrolmethod}}}
+                                </p>
+                            {{/hasprogress}}
                     </div>
-                {{/visible}}
+                </div>
             </div>
-            {{$menu}}{{/menu}}
         </div>
-    </div>
-    {{$progress}}{{/progress}}
 </div>
