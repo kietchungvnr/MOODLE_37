@@ -184,7 +184,7 @@ ALTER TABLE mdl_course ADD [typeclass] SMALLINT NOT NULL DEFAULT 0
 ALTER TABLE mdl_course ADD [required] SMALLINT NOT NULL DEFAULT 0
 -- Thêm field vào bảng course (01/03/2020) - Tích hớp HRM
 ALTER TABLE mdl_course ADD code NVARCHAR(100) NOT NULL DEFAULT (N'')
--- Thêm filed vào bảng quiz (01/03/2020) - Tích hớp HRM
+-- Thêm filed vào bảng quiz (01/03/2020) - Tích hớp HRM/EBM
 ALTER TABLE mdl_quiz ADD code NVARCHAR(100) NOT NULL DEFAULT(N'')
 -- Thêm field vào bảng mod page (05/06/2020) - Tích hợp EBM
 ALTER TABLE mdl_page ADD code NVARCHAR(100) NOT NULL DEFAULT(N'')
@@ -194,13 +194,14 @@ ALTER TABLE mdl_user ADD typeofuser SMALLINT NOT NULL DEFAULT 0
 --Thêm filed vào bảng User
 ALTER TABLE mdl_user ADD usercode NVARCHAR(100) NOT NULL DEFAULT (N'')
 ALTER TABLE mdl_user ADD orgpositionid BIGINT NOT NULL DEFAULT 0
+-- Vinasoy: Thêm field vào bảng user (15/08/2020), dùng cho source tách - Vũ
+ALTER TABLE mdl_user ADD orgstructureid BIGINT DEFAULT 0
 ---------------- *********** --------------
 -- Thêm filed vào bảng disscustion
 ALTER TABLE mdl_forum_discussions ADD countviews BIGINT NOT NULL DEFAULT 0
 -- Thêm field vào bảng local_newsvnr_api (26/06/2020) - Thắng
 ALTER TABLE mdl_local_newsvnr_api ADD visible SMALLINT NOT NULL DEFAULT 0
 --- *** Kết thúc script cho bản build version '2019052002.12' ***--
-
 --- *** Script cho bản build version '2019052002.13' *** ---
 -- Bảng cấu hình thời tối thiểu để hoàn thành module
 CREATE TABLE mdl_course_modules_completion_rule
@@ -223,6 +224,4 @@ CREATE TABLE mdl_course_modules_completion_timer
 	timemodifiedoffline BIGINT DEFAULT 0,
 )
 --- *** Kết thúc script cho bản build version '2019052002.13' ***--
-
-
 
