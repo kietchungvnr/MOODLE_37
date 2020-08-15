@@ -101,6 +101,7 @@ $STD_FIELDS = array('id', 'username', 'email',
         'interests',
         'orgpositionname', // Custom by Vũ: Thêm filed
         'usercode', // Custom by Vũ: Thêm filed
+        'orgstructurename', // Custom by Vũ: Thêm filed
     );
 // Include all name fields.
 $STD_FIELDS = array_merge($STD_FIELDS, get_all_user_name_fields());
@@ -277,6 +278,11 @@ if ($formdata = $mform2->is_cancelled()) {
 
             if(!$DB->record_exists('orgstructure_position',['name' => $user->orgpositionname])) {
                 $upt->track('orgpositionname', get_string('invalidorgposition','local_newsvnr'),'error');
+                $error = true;
+            }
+
+            if(!$DB->record_exists('orgstructure',['name' => $user->orgstructurename])) {
+                $upt->track('orgstructurename', get_string('invalidorgstructure','local_newsvnr'),'error');
                 $error = true;
             }
 
@@ -631,6 +637,8 @@ if ($formdata = $mform2->is_cancelled()) {
 
                         $existinguser->orgpositionname = $DB->get_field('orgstructure_position', 'name', ['id' => $existinguser->orgpositionid]);
 
+                        $existinguser->orgstructurename = $DB->get_field('orgstructure', 'name', ['id' => $existinguser->orgstructureid]);
+
                         if (in_array($column, $upt->columns)) {
                             $upt->track($column, s($existinguser->$column).'-->'.s($user->$column), 'info', false);
                         }
@@ -712,6 +720,9 @@ if ($formdata = $mform2->is_cancelled()) {
                  
                 if($existinguser->orgpositionid)
                     $existinguser->orgpositionid = $DB->get_field('orgstructure_position', 'id', ['name' => $user->orgpositionname]);
+
+                if($existinguser->orgstructureid)
+                    $existinguser->orgstructureid = $DB->get_field('orgstructure', 'id', ['name' => $user->orgstructurename]);
                 user_update_user($existinguser, false, false);
 
                 $upt->track('status', $struserupdated);
@@ -848,6 +859,10 @@ if ($formdata = $mform2->is_cancelled()) {
 
             if($user->orgpositionname) {
                 $user->orgpositionid = $DB->get_field('orgstructure_position', 'id', ['name' => $user->orgpositionname]);
+            }
+
+            if($user->orgstructurename) {
+                $user->orgstructureid = $DB->get_field('orgstructure', 'id', ['name' => $user->orgstructurename]);
             }
 
             $user->id = user_create_user($user, false, false);
@@ -1263,6 +1278,12 @@ while ($linenum <= $previewrows and $fields = $cir->next()) {
     if(isset($rowcols['orgpositionname'])) {
         if(!$DB->record_exists('orgstructure_position',['name' => $rowcols['orgpositionname']])) {
             $rowcols['status'][] = get_string('invalidorgposition','local_newsvnr');
+        }
+    }
+
+    if(isset($rowcols['orgstructurename'])) {
+        if(!$DB->record_exists('orgstructure',['name' => $rowcols['orgstructurename']])) {
+            $rowcols['status'][] = get_string('invalidorgstructure','local_newsvnr');
         }
     }
 

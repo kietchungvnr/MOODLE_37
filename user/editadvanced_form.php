@@ -123,6 +123,10 @@ class user_editadvanced_form extends moodleform {
                 $mform->addElement('autocomplete', 'orgpositionid', get_string('orgpositionid', 'local_newsvnr'), $orgpositionnames, $options);
                 $mform->addRule('orgpositionid', get_string('required'), 'required', null, 'client');
                 $mform->setType('orgpositionid', PARAM_INT);    
+                $mform->addElement('text', 'orgstructureid', get_string('orgstructureid', 'local_newsvnr'), 'maxlength="200" size="50" class="mb-0"');
+                // $mform->addRule('orgstructureid', get_string('required'), 'required', null, 'client');
+                $mform->setType('orgstructureid', PARAM_TEXT);
+                $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-2"></div><div class="col-md-9 pr-0 ml-3 form-inline felement" id="treeview-orgstructure-user" style="background-color: #e9ecef"></div></div>');
             }
         } elseif($userid > 2 && $userid->typeofuser == 0) {
             $mform->addElement('text', 'usercode', get_string('usercode','local_newsvnr'), 'maxlength="200" size="20"');
@@ -144,6 +148,10 @@ class user_editadvanced_form extends moodleform {
             $mform->addElement('autocomplete', 'orgpositionid', get_string('orgpositionid', 'local_newsvnr'), $orgpositionnames, $options);
             $mform->addRule('orgpositionid', get_string('required'), 'required', null, 'client');
             $mform->setType('orgpositionid', PARAM_INT);
+            $mform->addElement('text', 'orgstructureid', get_string('orgstructureid', 'local_newsvnr'), 'maxlength="200" size="50" class="mb-0"');
+            // $mform->addRule('orgstructureid', get_string('required'), 'required', null, 'client');
+            $mform->setType('orgstructureid', PARAM_TEXT);
+            $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-2"></div><div class="col-md-9 pr-0 ml-3 form-inline felement" id="treeview-orgstructure-user" style="background-color: #e9ecef"></div></div>');
         }
         /* --- ** --- */
         

@@ -174,7 +174,9 @@ if ($userform->is_cancelled()) {
     redirect($returnurl);
 } else if ($usernew = $userform->get_data()) {
     $usercreated = false;
-
+    if($usernew->orgstructureid) {
+        $usernew->orgstructureid = $DB->get_field('orgstructure', 'id', ['name' => $usernew->orgstructureid]);
+    }
     if (empty($usernew->auth)) {
         // User editing self.
         $authplugin = get_auth_plugin($user->auth);
@@ -390,7 +392,8 @@ if ($userform->is_cancelled()) {
     }
     // Never reached..
 }
-
+// Custom by Vũ: Add treeview cho user form
+$PAGE->requires->js_call_amd('core_user/orgtreeview','orgtreeview');
 
 // Display page header.
 if ($user->id == -1 or ($user->id != $USER->id)) {
