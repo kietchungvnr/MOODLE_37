@@ -24,7 +24,7 @@
 
 $string['pluginname'] = 'Lộ trình đào tạo';
 $string['vnr_db_lptimeline:addinstance'] = 'Thêm mới block lộ trình đào tạo';
-$string['vnr_db_lptimeline:myaddinstance'] = 'Thêm mới block lộ trình đàot vào ở nhà của tôi';
+$string['vnr_db_lptimeline:myaddinstance'] = 'Thêm mới block lộ trình đào tạo vào ở nhà của tôi';
 $string['privacy:metadata'] = 'Block lộ trình đào tạo chỉ hiển thị dữ liệu được lưu trữ ở các vị trí khác';
 
 //dashboard

@@ -75,7 +75,7 @@ class orgstructure_edit_form extends moodleform {
         $mform->addElement('text', 'parentid', get_string('parentid', 'local_newsvnr'), 'maxlength="200" size="50" class="mb-0"');
         $mform->addRule('parentid', get_string('required'), 'required', null, 'client');
         $mform->setType('parentid', PARAM_TEXT);
-        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3"></div><div class="col-md-3 pr-0 ml-3 form-inline felement" id="treeview-orgstructure" style="background-color: #e9ecef"></div></div>');
+        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-2"></div><div class="col-md-9 pr-0 ml-3 form-inline felement" id="treeview-orgstructure" style="background-color: #e9ecef"></div></div>');
         $mform->addElement('text', 'numbermargin', get_string('numbermargin', 'local_newsvnr'), 'maxlength="200" size="50"');
         // $mform->addRule('numbermargin', get_string('required'), 'required', null, 'client');
         $mform->setType('numbermargin', PARAM_INT);
