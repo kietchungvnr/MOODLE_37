@@ -1146,7 +1146,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                     $get_params_portal_ebm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $portal_register_test_api->id]);
                     $params_portal_ebm = [];
                     foreach ($get_params_portal_ebm as $key => $value) {
-                        if(array_key_exists($value->client_params, $params_portal_exam_el)) {
+                        if(array_key_exists($value->client_params, $params_portal_register_test_el)) {
                             $params_portal_ebm[$value->client_params] = $params_portal_register_test_el[$value->client_params];
                         } else {
                             $params_portal_ebm[$value->client_params] = $value->default_value;

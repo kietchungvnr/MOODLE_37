@@ -87,16 +87,16 @@ class QuizController extends BaseController {
 	        return $response->withStatus(422)->withJson($this->resp);
 	    } 
 		$courseid = $DB->get_field('course', 'id', ['shortname' => $this->data->examcode]);
-	    if($this->data->studentcode && $this->data->teachercode) {
-	    	$userid = find_usercode_by_code($this->data->studentcode);
-			$teacherid = find_usercode_by_code($this->data->teachercode);
-			if(!$userid) {
-				$this->resp->data['studentcode'] = "Mã học viên không tồn tại";
-			}
-			if(!$teacherid) {
-				$this->resp->data['usercode'] = "Mã giáo viên không tồn tại";
-			}
-	    }
+	  //   if($this->data->studentcode && $this->data->teachercode) {
+	  //   	$userid = find_usercode_by_code($this->data->studentcode);
+			// $teacherid = find_usercode_by_code($this->data->teachercode);
+			// if(!$userid) {
+			// 	$this->resp->data['studentcode'] = "Mã học viên không tồn tại";
+			// }
+			// if(!$teacherid) {
+			// 	$this->resp->data['usercode'] = "Mã giáo viên không tồn tại";
+			// }
+	  //   }
 	    
 		$courses = new stdClass;
 		$courses->fullname = $this->data->examname;
@@ -179,22 +179,23 @@ class QuizController extends BaseController {
 			    	}
 			    	if($modulequiz) {
 			    		if($this->data->studentcode && $this->data->teachercode) {
-			    			$enrol_user = check_user_in_course($course->id,$userid);
-							$enrol_teahcer = check_teacher_in_course($course->id,$teacherid);
-							if(!$enrol_user) {
-								enrol_user($userid, $course->id, 'student');
-								$message .= "Thêm thành công thêm user học viên vào khóa học, ";
-							} else {
-								$message .= "Học viên đã tham gia vào khóa, ";
-							}
-							if(!$enrol_teahcer) {
-								enrol_user($teacherid, $course->id, 'editingteacher');
-								$message .= "Thêm thành công thêm user giáo viên khóa học";
-							} else {
-								$message .= "Giáo viên đã tham gia vào khóa";
-							}
+			    			$studentarr = explode(',', $this->data->studentcode);
+			    			$teacherarr = explode(',', $this->data->teachercode);
+			    			foreach ($studentarr as $student) {
+			    				$userid = find_usercode_by_code($student);
+								$enrol_user = check_user_in_course($course->id,$userid);
+								if(!$enrol_user) {
+									enrol_user($userid, $course->id, 'student');
+								}
+			    			}
+			    			foreach ($teacherarr as $teacher) {
+								$teacherid = find_usercode_by_code($teacher);
+								$enrol_user = check_user_in_course($course->id,$teacherid);
+								if(!$enrol_user) {
+									enrol_user($teacherid, $course->id, 'editingteacher');
+								}
+			    			}
 			    		}
-			    		
 						$this->resp->error = false;
 						$this->resp->message['info'] = $message;
 						$this->resp->data[] = $modulequiz;
@@ -267,20 +268,22 @@ class QuizController extends BaseController {
 			    	}
 			    	if($modulequiz) {
 			    		if($this->data->studentcode && $this->data->teachercode) {
-			    			$enrol_user = check_user_in_course($course->id,$userid);
-							$enrol_teahcer = check_teacher_in_course($course->id,$teacherid);
-							if(!$enrol_user) {
-								enrol_user($userid, $course->id, 'student');
-								$message .= "Thêm thành công thêm user học viên vào khóa học, ";
-							} else {
-								$message .= "Học viên đã tham gia vào khóa, ";
-							}
-							if(!$enrol_teahcer) {
-								enrol_user($teacherid, $course->id, 'editingteacher');
-								$message .= "Thêm thành công thêm user giáo viên khóa học";
-							} else {
-								$message .= "Giáo viên đã tham gia vào khóa";
-							}
+			    			$studentarr = explode(',', $this->data->studentcode);
+			    			$teacherarr = explode(',', $this->data->teachercode);
+			    			foreach ($studentarr as $student) {
+			    				$userid = find_usercode_by_code($student);
+								$enrol_user = check_user_in_course($course->id,$userid);
+								if(!$enrol_user) {
+									enrol_user($userid, $course->id, 'student');
+								}
+			    			}
+			    			foreach ($teacherarr as $teacher) {
+								$teacherid = find_usercode_by_code($teacher);
+								$enrol_user = check_user_in_course($course->id,$teacherid);
+								if(!$enrol_user) {
+									enrol_user($teacherid, $course->id, 'editingteacher');
+								}
+			    			}
 			    		}
 						$this->resp->error = false;
 						$this->resp->message['info'] = $message;

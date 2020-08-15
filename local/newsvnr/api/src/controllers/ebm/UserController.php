@@ -47,7 +47,7 @@ class UserController extends BaseController {
       	if ($this->validate->isValid()) {
 	    	$this->data->usercode = $request->getParam('usercode');
 	    	$this->data->typeofuser = $request->getParam('typeuser');
-	    	$this->data->fullname = $request->getParam('name');
+	    	$this->data->fullname = trim($request->getParam('name'));
 	    	if($request->getParam('phone')) {
 		    	$this->data->phone = $request->getParam('phone');
 	    	}

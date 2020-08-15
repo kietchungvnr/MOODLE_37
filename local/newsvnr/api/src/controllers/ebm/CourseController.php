@@ -127,34 +127,39 @@ class CourseController extends BaseController {
 					update_course($this->data);
 					if($this->data->pagename && $this->data->pagecode) {
 						$modinfo = new stdClass;
-					    $modinfo->name = $this->data->pagename;
-					    $modinfo->code = $this->data->pagecode;
-					    $modinfo->modulename = 'page';
-					    $modinfo->course = $courseid;
-					    $modinfo->section = 0;
-					    $modinfo->visible = 1;
-					    $modinfo->display = 5;
-					    $modinfo->completion = 2;
-	        			$modinfo->completionview = 1;
-					    $modinfo->printheading = '1';
-					    $modinfo->printintro = '0';
-					    $modinfo->printlastmodified = '1';
-					    $modinfo->introeditor = ['text' => '', 'format' => '1', 'itemid' => 0];
-						$pageid = $DB->get_field('page', 'id', ['course' => $courseid, 'name' => $this->data->pagename]);
-						if($pageid) {
-							$cm = get_coursemodule_from_instance('page', $pageid);
-							$modinfo->id = $pageid;
-							$modinfo->revision = 0;
-							$modinfo->page = ['text' => $this->data->pageintro,'format' => '1', 'itemid' => 0];
-							$modinfo->coursemodule = $cm->id;
-							$modulepage = update_module($modinfo);
-						} else {
-							// $modinfo->page = ['text' => $this->data->pageintro,'format' => '1', 'itemid' => 0];
-							$modinfo->content = $this->data->pageintro;
-							$modinfo->intoformat = 1;
-							$modulepage = create_module($modinfo);
+						$pagenamearr = explode(',', $this->data->pagename);
+						$pagecodearr = explode(',', $this->data->pagecode);
+						foreach($pagenamearr as $key => $pagename) {
+							$modinfo->name = $this->data->pagename;
+						    $modinfo->code = $pagecodearr[$key];
+						    $modinfo->modulename = 'page';
+						    $modinfo->course = $courseid;
+						    $modinfo->section = 0;
+						    $modinfo->visible = 1;
+						    $modinfo->display = 5;
+						    $modinfo->completion = 2;
+		        			$modinfo->completionview = 1;
+						    $modinfo->printheading = '1';
+						    $modinfo->printintro = '0';
+						    $modinfo->printlastmodified = '1';
+						    $modinfo->introeditor = ['text' => '', 'format' => '1', 'itemid' => 0];
+							$pageid = $DB->get_field('page', 'id', ['course' => $courseid, 'name' => $this->data->pagename]);
+							if($pageid) {
+								$cm = get_coursemodule_from_instance('page', $pageid);
+								$modinfo->id = $pageid;
+								$modinfo->revision = 0;
+								$modinfo->page = ['text' => $this->data->pageintro,'format' => '1', 'itemid' => 0];
+								$modinfo->coursemodule = $cm->id;
+								$modulepage = update_module($modinfo);
+							} else {
+								// $modinfo->page = ['text' => $this->data->pageintro,'format' => '1', 'itemid' => 0];
+								$modinfo->content = $this->data->pageintro;
+								$modinfo->intoformat = 1;
+								$modulepage = create_module($modinfo);
+							}
+							$this->data->trackclassid = $modulepage->coursemodule;
 						}
-						$this->data->trackclassid = $modulepage->coursemodule;
+					    
 						$this->resp->error = false;
 						$this->resp->message['info'] = "Chỉnh sửa buổi học thành công";
 					}
@@ -218,27 +223,32 @@ class CourseController extends BaseController {
 					$course = create_course($this->data);
 					if($course && $this->data->pagename && $this->data->pagecode) {
 						$modinfo = new stdClass;
-					    $modinfo->name = $this->data->pagename;
-					    $modinfo->code = $this->data->pagecode;
-					    $modinfo->modulename = 'page';
-					    $modinfo->course = $course->id;
-					    $modinfo->section = 0;
-					    $modinfo->visible = 1;
-					    $modinfo->display = 5;
-					    $modinfo->completion = 2;
-        				$modinfo->completionview = 1;
-					    $modinfo->printheading = '1';
-					    $modinfo->printintro = '0';
-					    $modinfo->printlastmodified = '1';
-					    $modinfo->content = $this->data->pageintro;
-					    $modinfo->introeditor = ['text' => '', 'format' => '1', 'itemid' => 0];
-					    $modinfo->contentformat = 1;
-						$modinfo->intoformat = 1;
-					    $modulepage = create_module($modinfo);
+						$pagenamearr = explode(',', $this->data->pagename);
+						$pagecodearr = explode(',', $this->data->pagecode);
+						foreach($pagenamearr as $key => $pagename) {
+							$modinfo->name = $this->data->pagename;
+						    $modinfo->code = $pagecodearr[$key];
+						    $modinfo->modulename = 'page';
+						    $modinfo->course = $course->id;
+						    $modinfo->section = 0;
+						    $modinfo->visible = 1;
+						    $modinfo->display = 5;
+						    $modinfo->completion = 2;
+	        				$modinfo->completionview = 1;
+						    $modinfo->printheading = '1';
+						    $modinfo->printintro = '0';
+						    $modinfo->printlastmodified = '1';
+						    $modinfo->content = $this->data->pageintro;
+						    $modinfo->introeditor = ['text' => '', 'format' => '1', 'itemid' => 0];
+						    $modinfo->contentformat = 1;
+							$modinfo->intoformat = 1;
+						    $modulepage = create_module($modinfo);
+						    $this->data->trackclassid = $modulepage->coursemodule;
+							$this->resp->data[] = $modulepage;
+						}
 					    $this->resp->error = false;
 						$this->resp->message['info'] = "Tạo mới buổi học thành công";
-						$this->data->trackclassid = $modulepage->coursemodule;
-						$this->resp->data[] = $modulepage;
+						
 					} 
 					// $enrol_user = check_user_in_course($course->id,$userid);
 					// $enrol_teahcer = check_teacher_in_course($course->id,$teacherid);

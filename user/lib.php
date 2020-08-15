@@ -115,7 +115,7 @@ function user_create_user($user, $updatepassword = true, $triggerevent = true) {
 
     // Insert competency_template table
 
-    if($newuserid and $newuserid->typeofuser == 0)
+    if($newuserid and !isset($newuserid->typeofuser))
     {   
         $orgpositionid = '';
         $orgpositionid = $user->orgpositionid;
