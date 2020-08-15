@@ -1293,26 +1293,26 @@ if($action == "gradereport_chart") {
 	$data = [];
 	if($record->grade_total != '0') {
 		$gradepass_obj = new stdClass;
-		$gradepass_obj->name = get_string('completed', 'local_newsvnr');
+		$gradepass_obj->name = get_string('rp_completed', 'local_newsvnr');
 		$gradepass_obj->y = round(($record->gradepass_total/$record->grade_total)*100, 2);
 		$gradefailed_obj = new stdClass;
-		$gradefailed_obj->name = get_string('notcompleted', 'local_newsvnr');
+		$gradefailed_obj->name = get_string('rp_notcompleted', 'local_newsvnr');
 		$gradefailed_obj->y = round(($record->gradefailed_total/$record->grade_total)*100, 2);
 		$gradeorther_obj = new stdClass;
-		$gradeorther_obj->name = get_string('orthers', 'local_newsvnr');
+		$gradeorther_obj->name = get_string('rp_orthers', 'local_newsvnr');
 		$gradeorther_obj->y = round((100 - ($gradepass_obj->y + $gradefailed_obj->y)), 2);
 		$data[] = $gradepass_obj;
 		$data[] = $gradefailed_obj;
 		$data[] = $gradeorther_obj;
 	} else {
 		$gradepass_obj = new stdClass;
-		$gradepass_obj->name = get_string('completed', 'local_newsvnr');
+		$gradepass_obj->name = get_string('rp_completed', 'local_newsvnr');
 		$gradepass_obj->y = 0;
 		$gradefailed_obj = new stdClass;
-		$gradefailed_obj->name = get_string('notcompleted', 'local_newsvnr');
+		$gradefailed_obj->name = get_string('rp_notcompleted', 'local_newsvnr');
 		$gradefailed_obj->y = 0;
 		$gradeorther_obj = new stdClass;
-		$gradeorther_obj->name = get_string('orthers', 'local_newsvnr');
+		$gradeorther_obj->name = get_string('rp_orthers', 'local_newsvnr');
 		$gradeorther_obj->y = 0;
 		$data[] = $gradepass_obj;
 		$data[] = $gradefailed_obj;
@@ -1343,11 +1343,13 @@ if($action == "gradereport_detail") {
 	} else {
 		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
 	}
-	if($completed_course_status == get_string('completed', 'local_newsvnr')) {
+	if($completed_course_status == get_string('rp_completed', 'local_newsvnr')) {
 		$where_subsql = "gg.finalgrade IS NOT NULL AND ccc.gradepass IS NOT NULL AND gi.itemtype = 'course' AND gg.finalgrade >= ccc.gradepass AND gi.courseid = ?";
-	} else if($completed_course_status == "Không đạt") {
+	} else if($completed_course_status == get_string('rp_notcompleted', 'local_newsvnr')) {
 		$where_subsql = "gg.finalgrade IS NOT NULL AND ccc.gradepass IS NOT NULL AND gi.itemtype = 'course' AND gg.finalgrade < ccc.gradepass AND gi.courseid = ?";
-	} else if($completed_course_status == "Khác"){
+	} else if($completed_course_status == get_string('rp_orthers', 'local_newsvnr')){
+		$where_subsql = "gg.finalgrade IS NULL AND gi.itemtype = 'course' AND gi.courseid = ?";
+	} else {
 		$where_subsql = "gg.finalgrade IS NULL AND gi.itemtype = 'course' AND gi.courseid = ?";
 	}
 	$sql = "
@@ -1379,12 +1381,12 @@ if($action == "gradereport_detail") {
 		$object = new stdclass;
 		$object->fullname = $value->fullname;
 		if($value->finalgrade >= $value->gradepass) {
-			$object->status = get_string('completed', 'local_newsvnr');
+			$object->status = get_string('rp_completed', 'local_newsvnr');
 		} else if($value->finalgrade < $value->gradepass) {
-			$object->status = get_string('notcompleted', 'local_newsvnr');
+			$object->status = get_string('rp_notcompleted', 'local_newsvnr');
 		}
 		if($value->finalgrade == null or $value->gradepass == null){
-			$object->status = get_string('orthers', 'local_newsvnr');
+			$object->status = get_string('rp_orthers', 'local_newsvnr');
 		}
 
 		$object->finalgrade = round($value->finalgrade,1);
