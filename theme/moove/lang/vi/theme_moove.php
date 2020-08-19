@@ -280,3 +280,4 @@ $string['newsupper'] = 'TIN TỨC';
 $string['welcomeupper'] = 'CHÀO MỪNG ĐẾN ELEARNING';
 $string['mycoursesupper'] = 'KHÓA HỌC CỦA TÔI';
 $string['wanttosearchyourcourse'] = 'Tìm kiếm khoá bạn muốn học';
+$string['administrationtab'] = 'Danh sách tab ở quản trị hệ thống';
