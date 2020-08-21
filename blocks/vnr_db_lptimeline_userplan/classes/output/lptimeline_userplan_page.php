@@ -47,11 +47,14 @@ class lptimeline_userplan_page implements renderable, templatable {
         $data['listuserplan'] = $listuserplan;
         $theme_settings = new theme_settings();
         $planid = end($listuserplan);
-        //Lấy danh sách khoá học theo lộ trình cá nhân
-        $data['listusercoursecomp'] = $theme_settings->get_courses_data($pinned = null, $required = null, $suggest = null, $userplancourse = 1, $planid->id);
-        if(!$data['listusercoursecomp']) {
-             $data['nohascusercoursecomp'] = true;
+        if($planid) {
+            //Lấy danh sách khoá học theo lộ trình cá nhân
+            $data['listusercoursecomp'] = $theme_settings->get_courses_data($pinned = null, $required = null, $suggest = null, $userplancourse = 1, $planid->id);
+            if(!$data['listusercoursecomp']) {
+                 $data['nohascusercoursecomp'] = true;
+            }    
         }
+        
         return $data;
     }
 }

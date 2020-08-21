@@ -8374,7 +8374,57 @@ function admin_get_root($reload=false, $requirefulltree=true) {
             require($file);
         }
         require($CFG->dirroot.'/'.$CFG->admin.'/settings/plugins.php');
+        
+        $ADMIN->loaded = true;
+    }
 
+    return $ADMIN;
+}
+
+/**
+ * Custom by Vũ: Chức năng ẩn tab trong site administration
+ * Returns the reference to admin tree root
+ *
+ * @return object admin_root object
+ */
+function admin_get_root_siteadmin($reload=false, $requirefulltree=true) {
+    global $CFG, $DB, $OUTPUT, $ADMIN;
+
+    if (is_null($ADMIN)) {
+    // create the admin tree!
+        $ADMIN = new admin_root($requirefulltree);
+    }
+
+    if ($reload or ($requirefulltree and !$ADMIN->fulltree)) {
+        $ADMIN->purge_children($requirefulltree);
+    }
+
+    if (!$ADMIN->loaded) {
+    // we process this file first to create categories first and in correct order
+        require($CFG->dirroot.'/'.$CFG->admin.'/settings/top.php');
+
+        // now we process all other files in admin/settings to build the admin tree
+        foreach (glob($CFG->dirroot.'/'.$CFG->admin.'/settings/*.php') as $file) {
+            if ($file == $CFG->dirroot.'/'.$CFG->admin.'/settings/top.php') {
+                continue;
+            }
+            if ($file == $CFG->dirroot.'/'.$CFG->admin.'/settings/plugins.php') {
+            // plugins are loaded last - they may insert pages anywhere
+                continue;
+            }
+            require($file);
+        }
+        require($CFG->dirroot.'/'.$CFG->admin.'/settings/plugins.php');
+        $theme = theme_config::load('moove');
+        if(isset($theme->settings->administrationtab) && !empty($theme->settings->administrationtab)) {
+            $administrationtab = explode(',', $theme->settings->administrationtab);
+            foreach($ADMIN->children as $node) {
+                if(in_array($node->name, $administrationtab)) {
+                    $node->hidden = true;
+                }
+            }
+        }
+        
         $ADMIN->loaded = true;
     }
 
