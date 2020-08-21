@@ -24,8 +24,8 @@
  */
 
 $string['pluginname'] = 'Thống kê học tập';
-$string['coursecompleted'] = 'Khóa học đã hoàn thành';
-$string['coursenotcompleted'] = 'Khóa học chưa hoàn thành';
+$string['coursecompleted'] = 'Khóa học đã tham gia';
+$string['coursenotcompleted'] = 'Khóa học đã hoàn thành';
 $string['requiredcoursecompletedrate'] = 'Tỉ lệ hoàn thành khoá học đào tạo bắt buộc';
 $string['coursecompletedbyuserplanrate'] = 'Tỉ lệ hoàn thành khoá học đào tạo theo vị trí';
 $string['userplancompletedrate'] = 'Tỉ lệ hoàn thành lộ trình cá nhân';

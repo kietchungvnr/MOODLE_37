@@ -228,6 +228,14 @@ if ($ADMIN->fulltree) {
     * -----------------------
     */
     $page = new admin_settingpage('theme_moove_frontpage', get_string('frontpagesettings', 'theme_moove'));
+    // Hiện thị or ẩn nút home menu
+    $name = 'theme_moove/displayhome';
+    $title = get_string('displayhome', 'theme_moove');
+    $description = get_string('displayhomedesc', 'theme_moove');
+    $default = 1;
+    $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $page->add($setting);
+    // var_dump($page);die();
 
     // Hiện thị or ẩn section tin tức
     $name = 'theme_moove/displaynews';
