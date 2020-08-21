@@ -257,6 +257,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
 
     public function nav_header() {
         global $CFG;
+        $theme = theme_config::load('moove');
         $output = '';
         $home = $CFG->wwwroot;
         $dashboard = $CFG->wwwroot . '/my/';
@@ -265,8 +266,10 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $forum = $CFG->wwwroot . '/local/newsvnr/forum.php';
         $calendar = $CFG->wwwroot . '/calendar/view.php?view=month';
         $files = $CFG->wwwroot . '/user/files.php';
+        if($theme->settings->displayhome == 1){
+            $output .= '<a class="nav-active" href="'.$home .'"><li>'. get_string('home', 'theme_moove') .'</li></a>';
+        }
         $output .='
-            <a class="nav-active" href="'.$home .'"><li>'. get_string('home', 'theme_moove') .'</li></a>
             <a class="nav-active" href="'.$dashboard .'"><li>'. get_string('dashboard', 'theme_moove') .'</li></a>
             <a class="nav-active" href="'.$course .'"><li>'. get_string('course', 'theme_moove') .'</li></a>
             <a class="nav-active" href="'.$news .'"><li>'. get_string('news', 'theme_moove') .'</li></a>

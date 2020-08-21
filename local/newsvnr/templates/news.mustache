@@ -5,7 +5,7 @@
 		<div class="row">
 			<div class="col-md-6 col-lg-8 mb-1">
 				<div class="mb-3">{{#btnaddnews}}{{{btnaddnews}}}{{/btnaddnews}}</div>
-				<h3 class="title" style="margin-left: 12px">{{#str}}hotnews, local_newsvnr{{/str}}</h3>
+				<h3 class="title" style="margin-left: 5px">{{#str}}hotnews, local_newsvnr{{/str}}</h3>
 			</div>
 			<div class="col-md-12 col-lg-4 mb-1">
 				<form class="form-inline" method="get">
@@ -129,16 +129,17 @@
 					<a href="{{newsurl}}"><img class="new-latest-image" src="{{image}}"></a>
 					<a href="{{newsurl}}"><label class="new-latest-title" title="{{title}}">{{title}}</label></a>
 					
-					<small class="new-latest-time text-date">{{time}}</small>
+	
 					
 					<div class="row">
 						<div class="col-lg-12">
-							<p class="new-latest-content">
+							<div class="new-latest-content">
 								{{content}}
-							</p>
+							</div>
 						</div>
 						<div class="col-lg-12">
-							<div class="new-latest-comment-info">
+							<small class="text-date float-left">{{time}}</small>
+							<div class="new-latest-comment-info float-right">
 								<i class="fa fa-eye" aria-hidden="true"> {{countviews}} &nbsp&nbsp</i>
 								<i class="fa fa-comment-o" aria-hidden="true"> {{countcomments}} &nbsp&nbsp</i>
 							</div>
@@ -157,25 +158,22 @@
 			<h3 class="title">{{#str}}newsbycourse, local_newsvnr{{/str}}</h3>
 		</div>
 		<div class="row new-latest-body">
-
-				
 					{{#forumcoursenewsndata}}
 					<div class="col-lg-3 cl-5 col-sm-4 col-xs-6 news-post">
 						<div class="new-latest-box">
 							<a href="{{newsurl}}"><img class="new-latest-image" src="{{image}}"></a>
 							<a href="{{newsurl}}"><label class="new-latest-title" title="{{title}}">{{title}}</label></a>
-							<small class="new-latest-time text-date">{{time}}</small>
 							<div class="row">
 								<div class="col-lg-12">
-									<p class="new-latest-content">
+									<div class="new-latest-content">
 										{{content}}
-									</p>
+									</div>
 								</div>
 								<div class="col-lg-12">
-									<div class="new-latest-comment-info">
+									<small class="text-date float-left">{{time}}</small>
+									<div class="new-latest-comment-info float-right">
 										<i class="fa fa-eye" aria-hidden="true"> {{countviews}} &nbsp&nbsp</i>
 										<i class="fa fa-comment-o" aria-hidden="true"> {{countcomments}} &nbsp&nbsp</i>
-					
 									</div>
 								</div>
 							</div>
@@ -252,21 +250,20 @@
 				<div class="new-latest-box">
 					<a href="{{newsurl}}"><img class="new-latest-image" src="{{imageurl}}"></a>
 					<a href="{{newsurl}}"><label class="new-latest-title" title="{{subject}}">{{subject}}</label></a>
-					<small class="new-latest-time text-date">{{time}}</small>
 					<br />
 					<div class="row">
 						<div class="col-lg-12">
-							<p class="new-latest-content">
+							<div class="new-latest-content">
 								{{message}}
-							</p>
+							</div>
 						</div>
 						<div class="col-lg-12">
-							<div class="new-latest-comment-info">
+							<small class="text-date float-left">{{time}}</small>
+							<div class="new-latest-comment-info float-right">
 								<i class="fa fa-eye" aria-hidden="true"> {{countviews}} &nbsp&nbsp</i>
 								<i class="fa fa-comment-o" aria-hidden="true"> {{countcomments}} &nbsp&nbsp</i>
 							</div>
 						</div>
-					</div>
 
 				</div>
 
