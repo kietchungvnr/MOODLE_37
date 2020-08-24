@@ -266,7 +266,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $forum = $CFG->wwwroot . '/local/newsvnr/forum.php';
         $calendar = $CFG->wwwroot . '/calendar/view.php?view=month';
         $files = $CFG->wwwroot . '/user/files.php';
-        if($theme->settings->displayhome == 1){
+        if(isset($theme->settings->displayhome) && $theme->settings->displayhome == 1){
             $output .= '<a class="nav-active" href="'.$home .'"><li>'. get_string('home', 'theme_moove') .'</li></a>';
         }
         $output .='

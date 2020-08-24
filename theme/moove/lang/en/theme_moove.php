@@ -285,3 +285,4 @@ $string['welcomeupper'] = 'WELCOME TO ELEARNING';
 $string['mycoursesupper'] = 'MY COURSE';
 $string['wanttosearchyourcourse'] = 'Search for the course you want';
 $string['administrationtab'] = 'List tab in site administraion';
+$string['administrationtabdesc'] = 'Show/Hidden tab in site administration';

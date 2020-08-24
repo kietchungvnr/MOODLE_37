@@ -195,7 +195,7 @@ if ($ADMIN->fulltree) {
             'optionalsubsystems' => get_string('advancedfeatures', 'admin'),
     ];
     $setting = new admin_setting_configmultiselect('theme_moove/administrationtab', get_string('administrationtab', 'theme_moove'),
-        '', [], $listtab);
+        get_string('administrationtabdesc', 'theme_moove'), [], $listtab);
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
@@ -235,7 +235,6 @@ if ($ADMIN->fulltree) {
     $default = 1;
     $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
     $page->add($setting);
-    // var_dump($page);die();
 
     // Hiện thị or ẩn section tin tức
     $name = 'theme_moove/displaynews';
