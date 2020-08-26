@@ -34,12 +34,14 @@ class block_vnr_db_coursesuggest_position extends block_base {
 
         $renderable = new \block_vnr_db_coursesuggest_position\output\coursesuggest_position_page();
         $renderer = $this->page->get_renderer('block_vnr_db_coursesuggest_position');
-        
-        $this->content = new stdClass();
-        $this->content->text = $renderer->render($renderable);
-        $this->content->footer = '';
+        if($renderer->render($renderable) !== '') {
+            $this->content = new stdClass();
+            $this->content->text = $renderer->render($renderable);
+            $this->content->footer = '';    
+        } else {
+            $this->content;    
+        }
         return $this->content;
-
     }
 
     public function applicable_formats() {

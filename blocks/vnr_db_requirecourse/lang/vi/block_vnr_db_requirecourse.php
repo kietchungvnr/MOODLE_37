@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Khóa học bất buộc chung';
+$string['pluginname'] = 'Khóa học bắt buộc chung';
 $string['countstudent'] = 'Học viên';
 $string['teachername'] = 'Giáo viên';
 $string['vnr_db_requirecourse:addinstance'] = 'Thêm mới block khóa học bắt buộc chung';

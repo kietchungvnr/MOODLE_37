@@ -37,7 +37,7 @@ class CourseController extends BaseController {
             // 'enddate' => $this->v::notEmpty()->notBlank(),
             'categoryname' => $this->v::notEmpty()->notBlank(),
             'categorycode' => $this->v::notEmpty()->notBlank(),
-            'sectionname' => $this->v::notEmpty()->notBlank(),
+            // 'sectionname' => $this->v::notEmpty()->notBlank(),
             // 'teachercode' => $this->v::notEmpty()->notBlank(),
             // 'pagename' => $this->v::notEmpty()->notBlank(),
             // 'pagecode' => $this->v::notEmpty()->notBlank(),
@@ -128,7 +128,19 @@ class CourseController extends BaseController {
 				
 				try {
 					update_course($this->data);
+
 					if($this->data->pagename && $this->data->pagecode) {
+						if($this->data->sectionname) {
+							$allmodinfo = get_fast_modinfo($course)->get_section_info_all();
+							$allsectionname = [];
+							if(!in_array($this->data->sectionname, $allsectionname)) {
+								$section = count($allmodinfo);
+							} else {
+								$section = array_search($this->data->sectionname, $allsectionname);
+							}
+							course_create_sections_if_missing($courseid, $section, $this->data->sectionname);
+						}
+
 						$modinfo = new stdClass;
 						$pagenamearr = explode(',', $this->data->pagename);
 						$pagecodearr = explode(',', $this->data->pagecode);
@@ -154,11 +166,14 @@ class CourseController extends BaseController {
 						    foreach ($allmodinfo as $value) {
 								$allsectionname[] = $value->name; 
 							}
-							if(!in_array($this->data->sectionname, $allsectionname)) {
-								$modinfo->section = count($allmodinfo);
-							} else {
-								$modinfo->section = array_search($this->data->sectionname, $allsectionname);
+							if($this->data->sectionname) {
+								if(!in_array($this->data->sectionname, $allsectionname)) {
+									$modinfo->section = count($allmodinfo);
+								} else {
+									$modinfo->section = array_search($this->data->sectionname, $allsectionname);
+								}	
 							}
+							
 							if($pageid) {
 								$cm = get_coursemodule_from_instance('page', $pageid);
 								$modinfo->id = $pageid;
@@ -179,7 +194,6 @@ class CourseController extends BaseController {
 						$this->resp->message['info'] = "Chỉnh sửa buổi học thành công";
 					}
 
-				   
 					// $enrol_user = check_user_in_course($courseid,$userid);
 					// $enrol_teahcer = check_teacher_in_course($courseid,$teacherid);
 
@@ -237,6 +251,16 @@ class CourseController extends BaseController {
 				try {
 					$course = create_course($this->data);
 					if($course && $this->data->pagename && $this->data->pagecode) {
+						if($this->data->sectionname) {
+							$allmodinfo = get_fast_modinfo($course)->get_section_info_all();
+							$allsectionname = [];
+							if(!in_array($this->data->sectionname, $allsectionname)) {
+								$section = count($allmodinfo);
+							} else {
+								$section = array_search($this->data->sectionname, $allsectionname);
+							}
+							course_create_sections_if_missing($course, $section, $this->data->sectionname);
+						}
 						$modinfo = new stdClass;
 						$pagenamearr = explode(',', $this->data->pagename);
 						$pagecodearr = explode(',', $this->data->pagecode);

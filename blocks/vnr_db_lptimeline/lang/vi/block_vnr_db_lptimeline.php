@@ -36,7 +36,6 @@ $string['coursedescription'] = 'Giới thiệu khóa học';
 $string['teachername'] = 'Giáo viên';
 $string['reviewer'] = 'Người đánh giá';
 $string['reviewdate'] = 'Ngày đánh giá';
-$string['status'] = 'Trạng thái';
 $string['nocomp'] = 'Chức vụ của bạn chưa có lộ trình đào tạo';
 $string['timereview'] = 'Ngày review';
 $string['userreview'] = 'Người review';
