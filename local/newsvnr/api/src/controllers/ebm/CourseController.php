@@ -128,19 +128,20 @@ class CourseController extends BaseController {
 				
 				try {
 					update_course($this->data);
-
-					if($this->data->pagename && $this->data->pagecode) {
-						if($this->data->sectionname) {
-							$allmodinfo = get_fast_modinfo($course)->get_section_info_all();
-							$allsectionname = [];
-							if(!in_array($this->data->sectionname, $allsectionname)) {
-								$section = count($allmodinfo);
-							} else {
-								$section = array_search($this->data->sectionname, $allsectionname);
+					if($this->data->sectionname) {
+						$allmodinfo = get_fast_modinfo($course)->get_section_info_all();
+						$allsectionname = [];
+						foreach ($allmodinfo as $value) {
+								$allsectionname[] = $value->name; 
 							}
-							course_create_sections_if_missing($courseid, $section, $this->data->sectionname);
+						if(!in_array($this->data->sectionname, $allsectionname)) {
+							$section = count($allmodinfo);
+						} else {
+							$section = array_search($this->data->sectionname, $allsectionname);
 						}
-
+						course_create_sections_if_missing($courseid, $section, $this->data->sectionname);
+					}
+					if($this->data->pagename && $this->data->pagecode) {
 						$modinfo = new stdClass;
 						$pagenamearr = explode(',', $this->data->pagename);
 						$pagecodearr = explode(',', $this->data->pagecode);
@@ -149,7 +150,7 @@ class CourseController extends BaseController {
 						    $modinfo->code = $pagecodearr[$key];
 						    $modinfo->modulename = 'page';
 						    $modinfo->course = $courseid;
-						    $modinfo->section = 0;
+						    $modinfo->section = $section;
 						    $modinfo->visible = 1;
 						    $modinfo->display = 5;
 						    $modinfo->completion = 2;
@@ -161,18 +162,18 @@ class CourseController extends BaseController {
 						    $modinfo->introeditor = ['text' => '', 'format' => '1', 'itemid' => 0];
 							$pageid = $DB->get_field('page', 'id', ['course' => $courseid, 'name' => $this->data->pagename]);
 
-							$allmodinfo = get_fast_modinfo($courseid)->get_section_info_all();
-							$allsectionname = [];
-						    foreach ($allmodinfo as $value) {
-								$allsectionname[] = $value->name; 
-							}
-							if($this->data->sectionname) {
-								if(!in_array($this->data->sectionname, $allsectionname)) {
-									$modinfo->section = count($allmodinfo);
-								} else {
-									$modinfo->section = array_search($this->data->sectionname, $allsectionname);
-								}	
-							}
+							// $allmodinfo = get_fast_modinfo($courseid)->get_section_info_all();
+							// $allsectionname = [];
+						    // foreach ($allmodinfo as $value) {
+							// 	$allsectionname[] = $value->name; 
+							// }
+							// if($this->data->sectionname) {
+							// 	if(!in_array($this->data->sectionname, $allsectionname)) {
+							// 		$modinfo->section = count($allmodinfo);
+							// 	} else {
+							// 		$modinfo->section = array_search($this->data->sectionname, $allsectionname);
+							// 	}	
+							// }
 							
 							if($pageid) {
 								$cm = get_coursemodule_from_instance('page', $pageid);
@@ -250,17 +251,20 @@ class CourseController extends BaseController {
 				
 				try {
 					$course = create_course($this->data);
-					if($course && $this->data->pagename && $this->data->pagecode) {
-						if($this->data->sectionname) {
-							$allmodinfo = get_fast_modinfo($course)->get_section_info_all();
-							$allsectionname = [];
-							if(!in_array($this->data->sectionname, $allsectionname)) {
-								$section = count($allmodinfo);
-							} else {
-								$section = array_search($this->data->sectionname, $allsectionname);
-							}
-							course_create_sections_if_missing($course, $section, $this->data->sectionname);
+					if($this->data->sectionname) {
+						$allmodinfo = get_fast_modinfo($course)->get_section_info_all();
+						$allsectionname = [];
+						foreach ($allmodinfo as $value) {
+							$allsectionname[] = $value->name; 
 						}
+						if(!in_array($this->data->sectionname, $allsectionname)) {
+							$section = count($allmodinfo);
+						} else {
+							$section = array_search($this->data->sectionname, $allsectionname);
+						}
+						course_create_sections_if_missing($course, $section, $this->data->sectionname);
+					}
+					if($course && $this->data->pagename && $this->data->pagecode) {
 						$modinfo = new stdClass;
 						$pagenamearr = explode(',', $this->data->pagename);
 						$pagecodearr = explode(',', $this->data->pagecode);
@@ -269,7 +273,7 @@ class CourseController extends BaseController {
 						    $modinfo->code = $pagecodearr[$key];
 						    $modinfo->modulename = 'page';
 						    $modinfo->course = $course->id;
-						    $modinfo->section = 0;
+						    $modinfo->section = $section;
 						    $modinfo->visible = 1;
 						    $modinfo->display = 5;
 						    $modinfo->completion = 2;
@@ -283,16 +287,16 @@ class CourseController extends BaseController {
 						    $modinfo->contentformat = 1;
 							$modinfo->intoformat = 1;
 
-							$allmodinfo = get_fast_modinfo($course)->get_section_info_all();
-							$allsectionname = [];
-						    foreach ($allmodinfo as $value) {
-								$allsectionname[] = $value->name; 
-							}
-							if(!in_array($this->data->sectionname, $allsectionname)) {
-								$modinfo->section = count($allmodinfo);
-							} else {
-								$modinfo->section = array_search($this->data->sectionname, $allsectionname);
-							}
+							// $allmodinfo = get_fast_modinfo($course)->get_section_info_all();
+							// $allsectionname = [];
+						    // foreach ($allmodinfo as $value) {
+							// 	$allsectionname[] = $value->name; 
+							// }
+							// if(!in_array($this->data->sectionname, $allsectionname)) {
+							// 	$modinfo->section = count($allmodinfo);
+							// } else {
+							// 	$modinfo->section = array_search($this->data->sectionname, $allsectionname);
+							// }
 
 						    $modulepage = create_module($modinfo);
 						    $this->data->trackclassid = $modulepage->coursemodule;
