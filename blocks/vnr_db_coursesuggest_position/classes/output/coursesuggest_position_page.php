@@ -48,7 +48,11 @@ class coursesuggest_position_page implements renderable, templatable {
         $suggest = 1;
         //Lấy danh sách khoá học bắt buộc với required = 1
         $data['suggestpositioncourse'] = $theme_settings->get_courses_data($pinned, $required, $suggest);
-
+        if(isset($data['suggestpositioncourse']['newscourse'])) {
+            $data['hascourse'] = true;
+        } else {
+            $data['hascourse'] = false;
+        }
         return $data;
     }
 }

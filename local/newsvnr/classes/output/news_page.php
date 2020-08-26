@@ -103,7 +103,7 @@ class news_page implements renderable, templatable {
                 '/'. $file->contextid. '/'. $file->component. '/'.
                 $file->filearea. $file->filepath.$file->itemid.'/'. $file->filename, !$isimage);
             $link = $CFG->wwwroot."/local/newsvnr/news.php?id=".$file->disid;;
-            $time = convertunixtime('l, d m Y, H:i A',$file->timemodified,'Asia/Ho_Chi_Minh');
+            $time = convertunixtime('l, d m Y',$file->timemodified,'Asia/Ho_Chi_Minh');
             $forumstd->discussionid = $file->disid;
             $forumstd->newsurl = $link;
             $forumstd->title = $file->subject;
@@ -175,7 +175,7 @@ class news_page implements renderable, templatable {
 
             $forumstd->image = $imageurl;
 
-            $time = convertunixtime('l, d m Y, H:i A',$file->modified,'Asia/Ho_Chi_Minh');
+            $time = convertunixtime('l, d m Y',$file->modified,'Asia/Ho_Chi_Minh');
 
             $link = $CFG->wwwroot."/local/newsvnr/news.php?id=".$file->discussionid;
 
@@ -228,7 +228,7 @@ class news_page implements renderable, templatable {
             $imageurl = file_encode_url("$CFG->wwwroot/pluginfile.php",
                 '/'. $data[$j]->contextid.'/'. $data[$j]->component. '/'.
                 $data[$j]->filearea. $data[$j]->filepath.$data[$j]->itemid.'/'. $data[$j]->filename, !$isimage);
-            $time = self::convertunixtime('l, d m Y, H:i A',$data[$j]->modified,'Asia/Ho_Chi_Minh');
+            $time = self::convertunixtime('l, d m Y',$data[$j]->modified,'Asia/Ho_Chi_Minh');
 
             $link = $CFG->wwwroot."/local/newsvnr/news.php?id=".$data[$j]->discussionid;
 

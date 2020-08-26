@@ -48,7 +48,11 @@ class requirecourse_position_page implements renderable, templatable {
         $required = 1;
         //Lấy danh sách khoá học bắt buộc với required = 1
         $data['requiredpositioncourse'] = $theme_settings->get_courses_data(null, $required);
-
+        if(isset($data['requiredpositioncourse']['newscourse'])) {
+            $data['hascourse'] = true;
+        } else {
+            $data['hascourse'] = false;
+        }
         return $data;
     }
 }

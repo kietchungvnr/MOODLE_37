@@ -299,7 +299,8 @@ function forum_get_discussion_subscription_icon_newsvnr($forum, $discussionid, $
         'returnurl' => $returnurl,
     ));
     if ($subscriptionstatus) {
-        $output = html_writer::start_tag('i', array('class' => 'fa fa-rss-square','style' => 'color:#ff6a00','aria-hidden' => 'true','aria-label' => get_string('clicktounsubscribe', 'forum'),'aria-title' => get_string('clicktounsubscribe', 'forum')));
+        // Custom by Thắng : đổi icon subcribe diễn đàn
+        $output = html_writer::start_tag('i', array('class' => 'fa fa-bell','style' => 'color:#ff6a00','aria-hidden' => 'true','aria-label' => get_string('clicktounsubscribe', 'forum'),'aria-title' => get_string('clicktounsubscribe', 'forum')));
         $output.= html_writer::end_tag('i');
         return html_writer::link($subscriptionlink, $output, array(
                 'title' => get_string('clicktounsubscribe', 'forum'),
@@ -310,7 +311,7 @@ function forum_get_discussion_subscription_icon_newsvnr($forum, $discussionid, $
             ));
 
     } else {
-        $output = html_writer::start_tag('i', array('class' => 'fa fa-rss-square','style' => 'color:black','aria-hidden' => 'true','aria-label' => get_string('clicktosubscribe', 'forum'),'aria-title' => get_string('clicktosubscribe', 'forum')));
+        $output = html_writer::start_tag('i', array('class' => 'fa fa-bell-slash','style' => 'color:black','aria-hidden' => 'true','aria-label' => get_string('clicktosubscribe', 'forum'),'aria-title' => get_string('clicktosubscribe', 'forum')));
         $output.= html_writer::end_tag('i');
        
         return html_writer::link($subscriptionlink, $output, array(

@@ -35,10 +35,14 @@ class block_vnr_db_requirecourse_position extends block_base {
 
         $renderable = new \block_vnr_db_requirecourse_position\output\requirecourse_position_page();
         $renderer = $this->page->get_renderer('block_vnr_db_requirecourse_position');
+        if($renderer->render($renderable) !== '') {
+            $this->content = new stdClass();
+            $this->content->text = $renderer->render($renderable);
+            $this->content->footer = '';    
+        } else {
+            $this->content;    
+        }
         
-        $this->content = new stdClass();
-        $this->content->text = $renderer->render($renderable);
-        $this->content->footer = '';
         return $this->content;
 
     }

@@ -50,7 +50,11 @@
                     </div>
                 </div>
                 {{/newscourse}}
+
             </div>
+            {{^newscourse}}
+                 <div class="d-flex justify-content-center alert alert-info alert-block fade in w-100 ">{{#str}}nocourse, block_vnr_db_lptimeline_userplan{{/str}}</div>
+                {{/newscourse}}
             {{/listusercoursecomp}}
             {{#nohascusercoursecomp}}
                 <div class="d-flex justify-content-center alert alert-info alert-block fade in w-100 ">{{#str}}nocourse, block_vnr_db_lptimeline_userplan{{/str}}</div>

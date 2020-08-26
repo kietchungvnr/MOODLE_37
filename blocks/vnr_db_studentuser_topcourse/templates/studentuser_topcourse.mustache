@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <div class="row">
 
-        <div class="col-md-6 padding-db">
+        <div class="col-md-12 padding-db">
 
             <div class="row align-items-center">
                 <div class="col-12">
@@ -24,8 +24,13 @@
                                         </div>
                                     </div>
                                 <div data-region="gradelist" class="">
-                                    <div class="align-items-center" id="gradelist">
-                                    </div>
+                                    {{#haslisttopgrade}}
+                                        <div class="align-items-center" id="gradelist"></div>
+                                    {{/haslisttopgrade}}
+                                    {{^haslisttopgrade}}
+                                        <div class="d-flex w-100 justify-content-center alert alert-info alert-block fade in ">{{#str}}noresult, block_vnr_db_studentuser_topcourse{{/str}}</div>
+                                    {{/haslisttopgrade}}
+                                    
                                 </div>
                             </div>
                         </div>

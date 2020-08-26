@@ -28,16 +28,24 @@ class block_vnr_db_lptimeline_userplan extends block_base {
     }
     
     function get_content() {
+        global $USER;
         if($this->content !== NULL) {
             return $this->content;
         }
 
-        $renderable = new \block_vnr_db_lptimeline_userplan\output\lptimeline_userplan_page();
-        $renderer = $this->page->get_renderer('block_vnr_db_lptimeline_userplan');
+        $competency_api = new \core_competency\api();
+        $plans = array_values($competency_api::list_user_plans($USER->id));
         
-        $this->content = new stdClass();
-        $this->content->text = $renderer->render($renderable);
-        $this->content->footer = '';
+        if(isset($plans)) {
+            $renderable = new \block_vnr_db_lptimeline_userplan\output\lptimeline_userplan_page();
+            $renderer = $this->page->get_renderer('block_vnr_db_lptimeline_userplan');
+            $this->content = new stdClass();
+            $this->content->text = $renderer->render($renderable);
+            $this->content->footer = '';
+        } else {
+            $this->content;    
+        }
+       
         return $this->content;
 
     }

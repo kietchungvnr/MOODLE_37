@@ -24,7 +24,7 @@
 
 $string['pluginname'] = 'Lộ trình đào tạo';
 $string['vnr_db_lptimeline:addinstance'] = 'Thêm mới block lộ trình đào tạo';
-$string['vnr_db_lptimeline:myaddinstance'] = 'Thêm mới block lộ trình đàot vào ở nhà của tôi';
+$string['vnr_db_lptimeline:myaddinstance'] = 'Thêm mới block lộ trình đào tạo vào ở nhà của tôi';
 $string['privacy:metadata'] = 'Block lộ trình đào tạo chỉ hiển thị dữ liệu được lưu trữ ở các vị trí khác';
 
 //dashboard
@@ -36,7 +36,6 @@ $string['coursedescription'] = 'Giới thiệu khóa học';
 $string['teachername'] = 'Giáo viên';
 $string['reviewer'] = 'Người đánh giá';
 $string['reviewdate'] = 'Ngày đánh giá';
-$string['status'] = 'Trạng thái';
 $string['nocomp'] = 'Chức vụ của bạn chưa có lộ trình đào tạo';
 $string['timereview'] = 'Ngày review';
 $string['userreview'] = 'Người review';

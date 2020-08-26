@@ -167,6 +167,37 @@ if ($ADMIN->fulltree) {
     * ----------------------
     */
     $page = new admin_settingpage('theme_moove_advanced', get_string('advancedsettings', 'theme_moove'));
+    // Show/Hidden tab in site administration
+    $listtab = [
+            'users' => get_string('users', 'admin'),
+            'courses' => get_string('courses','admin'),
+            'grades' => get_string('grades'),
+            'analytics' => get_string('analytics', 'analytics'),
+            'competencies' => get_string('competencies', 'core_competency'),
+            'badges' => get_string('badges'),
+            'location' => get_string('location', 'admin'),
+            'language' => get_string('language'),
+            'messaging' => get_string('messagingcategory', 'admin'),
+            'modules' => get_string('plugins', 'admin'),
+            'security' => get_string('security', 'admin'),
+            'appearance' => get_string('appearance', 'admin'),
+            'frontpage' => get_string('frontpage', 'admin'),
+            'server' => get_string('server', 'admin'),
+            'mnet' => get_string('net','mnet'),
+            'reports' => get_string('reports'),
+            'development' => get_string('development', 'admin'),
+            'newsvnr' => get_string('sitetabadmin', 'local_newsvnr'),
+            'mobileapp' => get_string('mobileapp', 'tool_mobile'),
+            'adminnotifications' => get_string('notifications', 'moodle'),
+            'registrationmoodleorg' => get_string('registration', 'admin'),
+            'upgradesettings' => get_string('upgradesettings', 'admin'),
+            'moodleservices' => get_string('moodleservices', 'admin'),
+            'optionalsubsystems' => get_string('advancedfeatures', 'admin'),
+    ];
+    $setting = new admin_setting_configmultiselect('theme_moove/administrationtab', get_string('administrationtab', 'theme_moove'),
+        get_string('administrationtabdesc', 'theme_moove'), [], $listtab);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
 
     // Raw SCSS to include before the content.
     $setting = new admin_setting_scsscode('theme_moove/scsspre',
@@ -197,6 +228,13 @@ if ($ADMIN->fulltree) {
     * -----------------------
     */
     $page = new admin_settingpage('theme_moove_frontpage', get_string('frontpagesettings', 'theme_moove'));
+    // Hiện thị or ẩn nút home menu
+    $name = 'theme_moove/displayhome';
+    $title = get_string('displayhome', 'theme_moove');
+    $description = get_string('displayhomedesc', 'theme_moove');
+    $default = 1;
+    $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $page->add($setting);
 
     // Hiện thị or ẩn section tin tức
     $name = 'theme_moove/displaynews';

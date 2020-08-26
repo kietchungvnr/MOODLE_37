@@ -43,7 +43,28 @@ class studentuser_topcourse_page implements renderable, templatable {
     	global $DB, $USER;
         $data = array();
         $list_course = get_list_course_by_student($USER->id);
-        $data['list_course'] = $list_course; 
+        $data['list_course'] = $list_course;
+        $get_list_topgrade = $DB->get_records_sql("
+                            SELECT CONCAT(u.firstname, ' ', u.lastname) AS fullname, cccc.userid, CONVERT(DECIMAL(10,2),cccc.gradefinal) AS gradefinal, RANK() OVER (ORDER BY cccc.gradefinal DESC) AS rank  
+                            FROM mdl_course_completion_criteria ccc JOIN mdl_course_completion_crit_compl cccc ON ccc.id = cccc.criteriaid AND ccc.course = cccc.course JOIN mdl_user u ON cccc.userid = u.id  
+                            WHERE ccc.criteriatype = 6 AND cccc.course = ?
+                            ORDER BY cccc.gradefinal DESC", [$list_course[0]->id]);
+        if($get_list_topgrade) {
+            foreach($get_list_topgrade as $value) {
+                if($value->userid == $USER->id) {
+                    $get_rank = $value->rank;
+                    $value->color = 'text-danger';
+                }
+            }
+            $has_list_topgrade = true;
+        } else {
+            $has_list_topgrade = false;
+            
+        }
+        $data = [
+            'haslisttopgrade' => $has_list_topgrade,
+            'list_course' => $list_course,
+        ];
         return $data;
     }
 }

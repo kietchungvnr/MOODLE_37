@@ -13,18 +13,14 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Block hiện thị khóa học bắt buộc chung
+ * Strings for the Recently accessed courses block.
  *
- * @package    block_user(student)
- * @copyright  2019 Le Thanh Vu
+ * @package    block_recentlyaccessedcourses
+ * @copyright  2018 Victor Deniz <victor@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Khóa học bắt buộc chung';
-$string['countstudent'] = 'Học viên';
-$string['teachername'] = 'Giáo viên';
-$string['vnr_db_requirecourse:addinstance'] = 'Thêm mới block khóa học bắt buộc chung';
-$string['vnr_db_requirecourse:myaddinstance'] = 'Thêm mới block khóa học bắt buộc chung ở nhà của tôi';
-$string['privacy:metadata'] = 'Block thêm mới block khóa học bắt buộc chung chỉ hiển thị dữ liệu được lưu trữ ở các vị trí khác';
+$string['pluginname'] = 'Các khóa học truy cập gần đây';
+$string['privacy:metadata'] = 'Các khóa học đã truy cập gần đây không lưu trữ bất kỳ dữ liệu cá nhân nào.';
+$string['recentlyaccessedcourses:myaddinstance'] = 'Thêm các khóa học được truy cập gần đây vào Dashboard';
+$string['nocourses'] = 'Không có khóa học gần đây';

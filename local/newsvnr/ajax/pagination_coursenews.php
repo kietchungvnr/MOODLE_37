@@ -89,7 +89,7 @@ $output = '';
                 '/'. $value->contextid. '/'. $value->component. '/'.
                 $value->filearea. $value->filepath.$value->itemid.'/'. $value->filename, !$isimage);
 
-            $time = convertunixtime('l, d m Y, H:i A',$value->modified,'Asia/Ho_Chi_Minh');
+            $time = convertunixtime('l, d m Y',$value->modified,'Asia/Ho_Chi_Minh');
 
             $link = $CFG->wwwroot."/local/newsvnr/news.php?id=".$value->discussionid;
 
@@ -102,15 +102,13 @@ $output = '';
 							<div class="new-latest-box">
 								<a href="'. $link .'"><img class="new-latest-image" src="'. $imageurl .'"></a>
 								<label class="new-latest-title mt-1"><a href="'. $link .'" title="'. $value->subject .'">'. $value->subject .'</a></label>
-								<br />
-								<small class="new-latest-time text-date">'. $time .'</small>
-								<br />
 								<div class="row">
 									<div class="col-lg-12">
 										<span class="new-latest-content" id="new-latest-content">'. $message .'</span>
 									</div>
 									<div class="col-lg-12">
-										<div class="new-latest-comment-info">
+										<small class="float-left text-date">'. $time .'</small>
+										<div class="new-latest-comment-info float-right">
 											<i class="fa fa-eye" aria-hidden="true"> '. $value->countviews .'&nbsp&nbsp</i>
 											<i class="fa fa-comment-o" aria-hidden="true"> '. $get_count_comment .' &nbsp&nbsp</i>
 										</div>

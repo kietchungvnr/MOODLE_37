@@ -60,12 +60,14 @@ class theme_settings {
         global $OUTPUT;
 
         $theme = theme_config::load('moove');
-
-        $templatecontext['displaynews'] = $theme->settings->displaynews;
-        $templatecontext['displaycoursespopular'] = $theme->settings->displaycoursespopular;
-        $templatecontext['displaymycourses'] = $theme->settings->displaymycourses;
-        $templatecontext['displayforums'] = $theme->settings->displayforums;
-
+        $sectionsettings = [
+          'displayhome', 'displaynews', 'displaycoursespopular', 'displaymycourses', 'displayforums'
+        ];
+        foreach ($sectionsettings as $setting) {
+          if (!empty($theme->settings->$setting)) {
+            $templatecontext[$setting] = $theme->settings->$setting;
+          }
+        }
         return $templatecontext;
     }
 

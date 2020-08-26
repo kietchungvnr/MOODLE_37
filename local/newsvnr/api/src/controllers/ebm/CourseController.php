@@ -37,6 +37,7 @@ class CourseController extends BaseController {
             // 'enddate' => $this->v::notEmpty()->notBlank(),
             'categoryname' => $this->v::notEmpty()->notBlank(),
             'categorycode' => $this->v::notEmpty()->notBlank(),
+            // 'sectionname' => $this->v::notEmpty()->notBlank(),
             // 'teachercode' => $this->v::notEmpty()->notBlank(),
             // 'pagename' => $this->v::notEmpty()->notBlank(),
             // 'pagecode' => $this->v::notEmpty()->notBlank(),
@@ -58,6 +59,7 @@ class CourseController extends BaseController {
 		    $this->data->categorycode = $request->getParam('categorycode');
 		    $this->data->startdate = $request->getParam('startdate');
 		    $this->data->enddate = $request->getParam('enddate');
+
 		    if($request->getParam('startdate') == '') 
 		    	$this->data->startdate = time();
 		    else
@@ -66,13 +68,14 @@ class CourseController extends BaseController {
 		    	$this->data->enddate = strtotime($request->getParam('enddate'));
 		    else 
 		    	$this->data->enddate = 0;
-		    // $this->data->teachercode = $request->getParam('teachercode');
+		    $this->data->teachercode = $request->getParam('teachercode');
 		    $this->data->pagename = $request->getParam('pagename');
 		    $this->data->pagecode = $request->getParam('pagecode');
 		    $this->data->pageintro = $request->getParam('pageintro');
-		    // $this->data->usercode = $request->getParam('usercode');
+		    $this->data->sectionname = $request->getParam('sectionname');
+		    $this->data->usercode = $request->getParam('usercode');
 		    $this->data->idnumber = '';
-			$this->data->format = 'onetopic';
+			$this->data->format = 'topics';
 			$this->data->showgrades = 1;
 			$this->data->numsections = 0;
 			$this->data->newsitems = 10;
@@ -82,7 +85,7 @@ class CourseController extends BaseController {
 			$this->data->summaryformat = FORMAT_HTML;
 			$this->data->lang = 'vi';
 			$this->data->typeofcourse = 3;
-			$this->data->enablecompletion = 1;	
+			$this->data->enablecompletion = 1;
 
 	    } else {
         	$errors = $this->validate->getErrors();
@@ -125,6 +128,19 @@ class CourseController extends BaseController {
 				
 				try {
 					update_course($this->data);
+					if($this->data->sectionname) {
+						$allmodinfo = get_fast_modinfo($course)->get_section_info_all();
+						$allsectionname = [];
+						foreach ($allmodinfo as $value) {
+								$allsectionname[] = $value->name; 
+							}
+						if(!in_array($this->data->sectionname, $allsectionname)) {
+							$section = count($allmodinfo);
+						} else {
+							$section = array_search($this->data->sectionname, $allsectionname);
+						}
+						course_create_sections_if_missing($courseid, $section, $this->data->sectionname);
+					}
 					if($this->data->pagename && $this->data->pagecode) {
 						$modinfo = new stdClass;
 						$pagenamearr = explode(',', $this->data->pagename);
@@ -134,16 +150,31 @@ class CourseController extends BaseController {
 						    $modinfo->code = $pagecodearr[$key];
 						    $modinfo->modulename = 'page';
 						    $modinfo->course = $courseid;
-						    $modinfo->section = 0;
+						    $modinfo->section = $section;
 						    $modinfo->visible = 1;
 						    $modinfo->display = 5;
 						    $modinfo->completion = 2;
 		        			$modinfo->completionview = 1;
 						    $modinfo->printheading = '1';
 						    $modinfo->printintro = '0';
+						    $modinfo->sectionname = $this->data->sectionname;
 						    $modinfo->printlastmodified = '1';
 						    $modinfo->introeditor = ['text' => '', 'format' => '1', 'itemid' => 0];
 							$pageid = $DB->get_field('page', 'id', ['course' => $courseid, 'name' => $this->data->pagename]);
+
+							// $allmodinfo = get_fast_modinfo($courseid)->get_section_info_all();
+							// $allsectionname = [];
+						    // foreach ($allmodinfo as $value) {
+							// 	$allsectionname[] = $value->name; 
+							// }
+							// if($this->data->sectionname) {
+							// 	if(!in_array($this->data->sectionname, $allsectionname)) {
+							// 		$modinfo->section = count($allmodinfo);
+							// 	} else {
+							// 		$modinfo->section = array_search($this->data->sectionname, $allsectionname);
+							// 	}	
+							// }
+							
 							if($pageid) {
 								$cm = get_coursemodule_from_instance('page', $pageid);
 								$modinfo->id = $pageid;
@@ -164,7 +195,6 @@ class CourseController extends BaseController {
 						$this->resp->message['info'] = "Chỉnh sửa buổi học thành công";
 					}
 
-				   
 					// $enrol_user = check_user_in_course($courseid,$userid);
 					// $enrol_teahcer = check_teacher_in_course($courseid,$teacherid);
 
@@ -221,6 +251,19 @@ class CourseController extends BaseController {
 				
 				try {
 					$course = create_course($this->data);
+					if($this->data->sectionname) {
+						$allmodinfo = get_fast_modinfo($course)->get_section_info_all();
+						$allsectionname = [];
+						foreach ($allmodinfo as $value) {
+							$allsectionname[] = $value->name; 
+						}
+						if(!in_array($this->data->sectionname, $allsectionname)) {
+							$section = count($allmodinfo);
+						} else {
+							$section = array_search($this->data->sectionname, $allsectionname);
+						}
+						course_create_sections_if_missing($course, $section, $this->data->sectionname);
+					}
 					if($course && $this->data->pagename && $this->data->pagecode) {
 						$modinfo = new stdClass;
 						$pagenamearr = explode(',', $this->data->pagename);
@@ -230,18 +273,31 @@ class CourseController extends BaseController {
 						    $modinfo->code = $pagecodearr[$key];
 						    $modinfo->modulename = 'page';
 						    $modinfo->course = $course->id;
-						    $modinfo->section = 0;
+						    $modinfo->section = $section;
 						    $modinfo->visible = 1;
 						    $modinfo->display = 5;
 						    $modinfo->completion = 2;
 	        				$modinfo->completionview = 1;
 						    $modinfo->printheading = '1';
-						    $modinfo->printintro = '0';
+							$modinfo->printintro = '0';
+							$modinfo->sectionname = $this->data->sectionname;
 						    $modinfo->printlastmodified = '1';
 						    $modinfo->content = $this->data->pageintro;
 						    $modinfo->introeditor = ['text' => '', 'format' => '1', 'itemid' => 0];
 						    $modinfo->contentformat = 1;
 							$modinfo->intoformat = 1;
+
+							// $allmodinfo = get_fast_modinfo($course)->get_section_info_all();
+							// $allsectionname = [];
+						    // foreach ($allmodinfo as $value) {
+							// 	$allsectionname[] = $value->name; 
+							// }
+							// if(!in_array($this->data->sectionname, $allsectionname)) {
+							// 	$modinfo->section = count($allmodinfo);
+							// } else {
+							// 	$modinfo->section = array_search($this->data->sectionname, $allsectionname);
+							// }
+
 						    $modulepage = create_module($modinfo);
 						    $this->data->trackclassid = $modulepage->coursemodule;
 							$this->resp->data[] = $modulepage;
