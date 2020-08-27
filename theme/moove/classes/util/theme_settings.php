@@ -60,6 +60,7 @@ class theme_settings {
         global $OUTPUT;
 
         $theme = theme_config::load('moove');
+
         $sectionsettings = [
           'displayhome', 'displaynews', 'displaycoursespopular', 'displaymycourses', 'displayforums'
         ];
@@ -68,6 +69,7 @@ class theme_settings {
             $templatecontext[$setting] = $theme->settings->$setting;
           }
         }
+
         return $templatecontext;
     }
 

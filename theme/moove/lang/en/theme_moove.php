@@ -23,7 +23,6 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
 $string['pluginname'] = 'Moove';
 $string['configtitle'] = 'Moove';
 $string['choosereadme'] = 'Moove is a modern highly-customisable theme. This theme is intended to be used directly, or as a parent theme when creating new themes utilising Bootstrap 4.';
@@ -285,4 +284,8 @@ $string['welcomeupper'] = 'WELCOME TO ELEARNING';
 $string['mycoursesupper'] = 'MY COURSE';
 $string['wanttosearchyourcourse'] = 'Search for the course you want';
 $string['administrationtab'] = 'List tab in site administraion';
+$string['nextmodule'] = 'Next' ;
+$string['prevmodule'] = 'Previous' ;
+$string['coursedata'] = 'Course Data';
+$string['focusmod'] = 'Focus Mode';
 $string['administrationtabdesc'] = 'Show/Hidden tab in site administration';
