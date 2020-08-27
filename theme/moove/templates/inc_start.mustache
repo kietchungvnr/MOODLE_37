@@ -267,12 +267,12 @@ a {
 
 #return-to-top {
     position: fixed;
-    bottom: 10px;
+    bottom: 55px;
     right: 30px;
     background: rgb(0, 0, 0);
-    background: rgba(0, 0, 0, 0.7);
-    width: 35px;
-    height: 35px;
+    background: #2871b5d4;
+    width: 40px;
+    height: 40px;
     display: block;
     text-decoration: none;
     -webkit-border-radius: 35px;
@@ -291,8 +291,8 @@ a {
     color: #fff;
     margin: 0;
     position: relative;
-    left: 9px;
-    top: 9px;
+    left: 12px;
+    top:11px;
     font-size: 19px;
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
@@ -302,7 +302,7 @@ a {
 }
 
 #return-to-top:hover {
-    background: rgba(0, 0, 0, 0.9);
+    background: #137cdfd4;
 }
 
 #return-to-top:hover i {
@@ -1787,7 +1787,7 @@ nav.navbar ul.navbar-nav .popover-region .popover-region-toggle .count-container
     top: 52px;
 }
 [data-region="blocks-column"] {
-    top: 52px;
+    top: 49px;
 }
 #action-menu-2-menu.dropdown-menu {
     left: 6px !important;
@@ -3313,11 +3313,10 @@ tr.drag-samenode td {
     max-width: 1200px;
     max-height: 500px;
 }
-.pagelayout-course .progress {
+.progress.course {
     margin-bottom: 0;
     float: right;
     width: 250px;
-    border-radius: 20px;
     height: 12px;
     margin-top: 4px;
     margin-right:10px;
@@ -3329,8 +3328,7 @@ tr.drag-samenode td {
 .pagelayout-course #page-header .page-header-headings {
     float: left;
 }
-.pagelayout-course .progress .progress-bar {
-    border-radius: 20px;
+.progress.course .progress-bar {
     background-color: #1177d1;
     font-size: 12px;
     font-weight: bold;
@@ -3374,6 +3372,15 @@ tr.drag-samenode td {
 }
 .mdl-left,.mdl-right {
     margin-bottom:10px;
+}
+.mdl-left a,.mdl-right a {
+    color: #363535;
+}
+.mdl-left {
+    padding-right: 10px;
+}
+.mdl-right {
+    padding-left: 10px;
 }
 .mdl-right .rarrow {
     margin-left: .5em !important;
@@ -3695,8 +3702,158 @@ img.userpicture {
 .userlist table#participants th {
     white-space: nowrap;
 }
-</style>
+#focus-mod i {
+    color: #fff;
+    margin: 0;
+    position: relative;
+    left: 12px;
+    top: 10px;
+    font-size: 19px;
+}
+.pagelayout-incourse #focus-mod,
+.pagelayout-course #focus-mod {
+    position: fixed;
+    bottom: 10px;
+    right: 30px;
+    width: 40px;
+    height: 40px;
+    display: block;
+    z-index: 1000;
+    background:#2871b5d4;
+    border-radius: 35px;
+}
+#focus-mod {
+    display: none;
+}
+@media(max-width: 950px) {
+    #focus-mod {
+        display: none !important;
+    }
+}
+/*focus-mod*/
+.dashboard-card-deck.one-row {
+    overflow-x: auto;
+}
+.card-body.course {
+    min-height: 70vh;
+}
+.navbar.focus-mod .progress {
+    float: none;
+}
+.dropdown-content-2.active {
+    display: block;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    top: 61px;
+    right: 99px;
+    background-clip: padding-box;
+    border: 1px solid #d0d6d8;
+    border-radius: .21428571rem;
+    width: 350px;
+    max-height: 450px;
+    overflow-y: auto;
+}
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+.menu-left {
+    align-items: center;
+}
+.menu-right .card-header {
+    padding: 0;
+    background-color: transparent;
+}
+.menu-right .nav-item.mid {
+    width: 300px;
+    text-align: center;
+}
+.nav-link.focusmod {
+    height: 60px;
+    padding: 1.3rem 1rem;
+    color: #363535 !IMPORTANT;
+    font-weight: bold;
+}
+.nav-link.focusmod.disable {
+    color: #d4d4d4!important;
+    background-color: #f9f9f9;
+}
+li.nav-item.border-left {
+    width: 115px;
+    text-align: center;
+}
+.card-header.level2 {
+    padding-left: 15px;
+    display: flex;
+    align-items:center;
+}
+::-webkit-scrollbar {
+    width: 5px;
+    background:#b8b9bf;
+}
+.dropdown-content .card-header .rotate-icon.active {
+    transform: rotate(180deg);
+    transition: 0.5s;
+}
+.card-header a.active {
+    font-weight: bold;
+}
+.menu-left .page-header-headings a {
+    font-size: 16px;
+    font-weight: 600;
+    color: #363535 ;
+}
+.navbar.focusmod {
+    display: none;
+    padding:0; 
+    min-height: 60px;
+}
+body.focusmod .navbar.focusmod {
+    display: flex;
+}
+body.focusmod ul.course {
+    display: none;
+}
+body.focusmod #page-content {
+    margin-top:62px;
+}
+.home-focus {
+    padding:10px 20px;
+    margin-right: 10px;
+    height: 60px;
+}
 
+{{#hasfocusmod}}
+    ul.nav-tabs.course,
+    .all-header,
+    #page-header,
+    .dropdown-content-2,
+    footer {
+        display: none;
+    }
+    .navbar.focusmod {
+        display: flex;
+        padding:0; 
+        min-height: 60px;
+    }
+    div#page-content {
+        margin-top: 62px;
+    }
+    #focus-mod {
+        background: #c23530c9;
+    }
+{{/hasfocusmod}}
+
+</style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.common.min.css"/>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.rtl.min.css"/>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.silver.min.css"/>
@@ -3715,10 +3872,15 @@ img.userpicture {
 </head>
 <body {{{ bodyattributes }}}>
 
-    <a id="return-to-top" title="{{#str}}gotop, theme_moove{{/str}}"><i class="fa fa-arrow-up"></i></a>
+    <a id="return-to-top" title="{{#str}}gotop, theme_moove{{/str}}" data-placement="left"><i class="fa fa-arrow-up"></i></a>
+    <a id="focus-mod" title="{{#str}}focusmod, theme_moove{{/str}}" data-placement="left"><i class="fa fa-expand"></i></a>
     {{{output.menu_mobile_bottom}}}
+    {{{output.test}}}
     <div class="modal123"></div>  
-    {{>theme_moove/header}}
+    <div class="all-header">
+        {{>theme_moove/header}}
+    </div>
+    {{{output.menu_focus}}}
     <div class="overflow-all"></div>
     <div id="page-wrapper">
       {{{ output.standard_top_of_body_html }}}

@@ -61,7 +61,7 @@ class theme_settings {
 
         $theme = theme_config::load('moove');
 
-        $templatecontext['displayhome'] = $theme->settings->home;
+        // $templatecontext['displayhome'] = $theme->settings->home;
         $templatecontext['displaynews'] = $theme->settings->displaynews;
         $templatecontext['displaycoursespopular'] = $theme->settings->displaycoursespopular;
         $templatecontext['displaymycourses'] = $theme->settings->displaymycourses;

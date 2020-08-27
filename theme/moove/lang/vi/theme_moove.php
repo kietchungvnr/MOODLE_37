@@ -23,7 +23,6 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
 $string['pluginname'] = 'Moove';
 $string['configtitle'] = 'Moove';
 $string['choosereadme'] = 'Moove là một chủ đề hiện đại tùy biến cao. Chủ đề này dự định sẽ được sử dụng trực tiếp hoặc làm chủ đề chính khi tạo chủ đề mới sử dụng Bootstrap 4.';
@@ -284,3 +283,7 @@ $string['welcomeupper'] = 'CHÀO MỪNG ĐẾN ELEARNING';
 $string['mycoursesupper'] = 'KHÓA HỌC CỦA TÔI';
 $string['wanttosearchyourcourse'] = 'Tìm kiếm khoá bạn muốn học';
 $string['administrationtab'] = 'Danh sách tab ở quản trị hệ thống';
+$string['focusmod'] = 'Focus Mode';
+$string['nextmodule'] = 'Bài tiếp' ;
+$string['prevmodule'] = 'Bài trước' ;
+$string['coursedata'] = 'Nội dung khóa học';

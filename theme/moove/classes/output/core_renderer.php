@@ -44,6 +44,8 @@ use theme_moove\output\core\course_renderer;
 use theme_moove\util\theme_settings;
 defined('MOODLE_INTERNAL') || die;
 
+define('RESOURCE_DISPLAY_GOOGLE_DOCS_POPUP', 7);
+
 /**
  * Renderers to align Moodle's HTML with that expected by Bootstrap
  *
@@ -108,18 +110,78 @@ class core_renderer extends \theme_boost\output\core_renderer {
             return $this->render_from_template('theme_moove/fp_header', $header);
         }
     }
+    public function menu_focus(){
+        global $COURSE, $CFG, $OUTPUT, $DB;
+        $allmodinfo = get_fast_modinfo($COURSE)->get_section_info_all();
+        $process = round(\core_completion\progress::get_course_progress_percentage($COURSE));
+        $linkcourse = $CFG->wwwroot.'/course/view.php?id='.$COURSE->id;
+        $output = '';
+        $output .= '<nav class="fixed-top navbar moodle-has-zindex focusmod">';
+        $output .= '<div class="d-flex menu-left">';
+        $output .= '<div class="home-focus border-right"><a href="'.$CFG->wwwroot.'/my"><i class="fa fa-3x fa-home" aria-hidden="true"></i></a></div>';
+        $output .= '<div><div class="page-header-headings"><a href="'.$linkcourse.'">'.$COURSE->fullname.'</a></div>';
+        $output .= '<div class="d-flex"><div class="progress course">';
+        $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
+                    aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div>'.$process.'%</div>';
+        $output .= '</div></div></div>';
+        $output .= '<div class="menu-right"><ul class="d-flex">
+                <li class="nav-item border-left"><a class="nav-link focusmod prev"><i class="fa fa-angle-left mr-2"></i>'.get_string('prevmodule','theme_moove').'</a></li>
+                <li class="nav-item border-left mid"><a class="nav-link focusmod">'.get_string('coursedata','theme_moove').'<i class="fa fa-angle-down rotate-icon ml-2"></i></a></li>
+                <li class="nav-item border-left"><a class="nav-link focusmod next">'.get_string('nextmodule','theme_moove').'<i class="fa fa-angle-right ml-2"></i></a></li>';
+        $output .= '<div class="dropdown-content">';
+        foreach ($allmodinfo as $modinfo) {
+            if($modinfo->name != '') {
+            $sectioninfo = $DB->get_record_sql('SELECT * FROM {course_sections} WHERE id = :section', ['section' => $modinfo->id]);
+                if($sectioninfo->sequence == '') {
+                    continue;
+                }
+                $output .= '<div class="card-header" id="'.$modinfo->id.'">';
+                $output .= '<a>'.$modinfo->name.'';
+                $output .= '<i class="fa fa-angle-up rotate-icon float-right"></i>';
+                $output .= '</a>';
+                $output .= '</div>';
+                $output .= '<div class="dropdown-content-2 '.$modinfo->id.'">';
+                foreach($modinfo->modinfo->cms as $cms) {
+                    if($cms->section == $modinfo->id && $cms->visible == 1) {
+                        $url = $CFG->wwwroot . '/mod/' . $cms->modname . '/view.php?id=' . $cms->id;
+                        $modname = $cms->name;
+                        $output .= '<div class="card-header level2">';
+                        if($cms->modname == 'resource') {
+                            $img = $OUTPUT->image_url($cms->icon);
+                            $displayresource = $DB->get_field('resource', 'display', ['id' => $cms->instance]);
+                            if($displayresource == RESOURCE_DISPLAY_GOOGLE_DOCS_POPUP) {
+                                $cm = $DB->get_field('course_modules', 'id', ['instance' => $cms->instance]);
+                                $output .= '<img  src="'.$img.'"><a onclick="showmodal('.$cm.', '.$cms->instance.')" href="javascript:;">'.$modname.'</a>';
+                            } else {
+                                $output .= '<img  src="'.$img.'"><a href="'.$url.'">'.$modname.'</a>';
+                            }
+                        } else {
+                            $img = $OUTPUT->image_url('icon', $cms->modname);
+                            $output .= '<img  src="'.$img.'"><a href="'.$url.'">'.$modname.'</a>';
+                        }
+                        $output .= '</div>';    
+                    }
+                }
+                $output .='</div>';
+            }
+        }
+        $output .= '</div>';
+        $output .= '</ul></div>';
+        $output .= '</nav>';
+        return $output;
+    }
     public function header_course() {
-        global $COURSE;
+        global $COURSE, $CFG, $OUTPUT, $PAGE;
         $process = round(\core_completion\progress::get_course_progress_percentage($COURSE));
         $output = '';
-        $output .= '<div class="page-header-headings"><h2>'.$COURSE->fullname.'</h2>';
-        $output .= '</div>';
+        $output .= '<div class="header-progress"><div class="page-header-headings"><h2>'.$COURSE->fullname.'</h2></div>';
         if($process > 0 ){
-            $output .= '<div class="progress">';
+            $output .= '<div class="progress course">';
             $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
                         aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%">'.$process.'%</div>';
             $output .= '</div>';
         }
+        $output .= '</div>';
         return $output;
     }
 
