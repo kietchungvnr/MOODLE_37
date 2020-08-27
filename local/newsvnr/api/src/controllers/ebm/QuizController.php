@@ -142,6 +142,17 @@ class QuizController extends BaseController {
 			if(empty($this->resp->data)) {
 				try {
 					update_course($courses);
+					$allmodinfo = get_fast_modinfo($course)->get_section_info_all();
+					$allsectionname = [];
+					foreach ($allmodinfo as $value) {
+							$allsectionname[] = $value->name; 
+						}
+					if(!in_array($this->data->examname, $allsectionname)) {
+						$section = count($allmodinfo);
+					} else {
+						$section = array_search($this->data->examname, $allsectionname);
+					}
+					course_create_sections_if_missing($courseid, $section, $this->data->examname);
 					$message .= 'Chỉnh sửa khóa học thành công, ';
 					$quiznamearr = explode(',', $this->data->quizname);
 					// $quizcodearr = explode(',', $this->data->quizcode);
@@ -153,7 +164,7 @@ class QuizController extends BaseController {
 					    $modinfo->course = $course->id;
 					    $modinfo->grade = 10;
 					    $modinfo->sectionname = $quizname;
-					    $modinfo->section = 0;
+					    $modinfo->section = $section;
 					    $modinfo->visible = 1;
 					    $modinfo->quizpassword  = '';
 					    $modinfo->introeditor = ['text' => '', 'format' => '1','itemid' => '0'];
@@ -168,18 +179,21 @@ class QuizController extends BaseController {
 					    $modinfo->questiondecimalpoints  = -1;
 					    $modinfo->preferredbehaviour = 'deferredfeedback';
 					    $modinfo->overduehandling = 'autosubmit';
+					    $modinfo->completion = 2;
+				        $modinfo->completionusegrade = 1;
+				        $modinfo->attempts = 1;
 					    $message = '';
 
-						$allmodinfo = get_fast_modinfo($courses)->get_section_info_all();
-						$allsectionname = [];
-					    foreach ($allmodinfo as $value) {
-							$allsectionname[] = $value->name; 
-						}
-						if(!in_array($quizname, $allsectionname)) {
-							$modinfo->section = count($allmodinfo);
-						} else {
-							$modinfo->section = array_search($quizname, $allsectionname);
-						}
+						// $allmodinfo = get_fast_modinfo($courses)->get_section_info_all();
+						// $allsectionname = [];
+					 //    foreach ($allmodinfo as $value) {
+						// 	$allsectionname[] = $value->name; 
+						// }
+						// if(!in_array($quizname, $allsectionname)) {
+						// 	$modinfo->section = count($allmodinfo);
+						// } else {
+						// 	$modinfo->section = array_search($quizname, $allsectionname);
+						// }
 
 				    	if($DB->record_exists('quiz', ['code' => $this->data->quizcode, 'name' => $quizname])) {
 				    		$quizid = $DB->get_field('quiz', 'id', ['course' => $course->id, 'name' => $modinfo->name]);
@@ -248,9 +262,20 @@ class QuizController extends BaseController {
 			if(empty($this->resp->data)) {
 				try {
 					$course = create_course($courses);
+					$allmodinfo = get_fast_modinfo($course)->get_section_info_all();
+					$allsectionname = [];
+					foreach ($allmodinfo as $value) {
+						$allsectionname[] = $value->name; 
+					}
+					if(!in_array($this->data->examname, $allsectionname)) {
+						$section = count($allmodinfo);
+					} else {
+						$section = array_search($this->data->examname, $allsectionname);
+					}
+					course_create_sections_if_missing($course, $section, $this->data->examname);
 					$message .= 'Tạo khóa học thành công, ';
 			    	$modinfo = new stdClass;
-			    	$quiznamearr = explode(',', $this->data->quizname);
+					$quiznamearr = explode(',', $this->data->quizname);
 					// $quizcodearr = explode(',', $this->data->quizcode);
 					foreach($quiznamearr as $key => $quizname) {
 					    $modinfo->name = $quizname;
@@ -258,7 +283,7 @@ class QuizController extends BaseController {
 					    $modinfo->modulename = 'quiz';
 					    $modinfo->course = $course->id;
 					    $modinfo->grade = 10;
-					    $modinfo->section = 0;
+					    $modinfo->section = $section;
 					    $modinfo->visible = 1;
 					    $modinfo->quizpassword  = '';
 					    $modinfo->introeditor = ['text' => '', 'format' => '1','itemid' => '0'];
@@ -274,18 +299,21 @@ class QuizController extends BaseController {
 					    $modinfo->questiondecimalpoints  = -1;
 					    $modinfo->preferredbehaviour = 'deferredfeedback';
 					    $modinfo->overduehandling = 'autosubmit';
+					    $modinfo->completion = 2;
+				        $modinfo->completionusegrade = 1;
+				        $modinfo->attempts = 1;
 						$message = '';
 						
-						$allmodinfo = get_fast_modinfo($courses)->get_section_info_all();
-						$allsectionname = [];
-					    foreach ($allmodinfo as $value) {
-							$allsectionname[] = $value->name; 
-						}
-						if(!in_array($quizname, $allsectionname)) {
-							$modinfo->section = count($allmodinfo);
-						} else {
-							$modinfo->section = array_search($quizname, $allsectionname);
-						}
+						// $allmodinfo = get_fast_modinfo($courses)->get_section_info_all();
+						// $allsectionname = [];
+					 //    foreach ($allmodinfo as $value) {
+						// 	$allsectionname[] = $value->name; 
+						// }
+						// if(!in_array($quizname, $allsectionname)) {
+						// 	$modinfo->section = count($allmodinfo);
+						// } else {
+						// 	$modinfo->section = array_search($quizname, $allsectionname);
+						// }
 
 				    	if($DB->record_exists('quiz', ['code' => $this->data->quizcode, 'name' => $quizname])) {
 				    		$quizid = $DB->get_field('quiz', 'id', ['course' => $course->id, 'name' => $modinfo->name]);
@@ -355,7 +383,7 @@ class QuizController extends BaseController {
 	    	$this->data->categorycode = $request->getParam('categorycode');
 	    	$this->data->fullname = $request->getParam('fullname');
 	    	$this->data->shortname = $request->getParam('shortname');
-	    	$this->data->sectionname = $request->getParam('sectionname');
+	    	// $this->data->sectionname = $request->getParam('sectionname');
 	    	if($request->getParam('startdate') == '') 
 		    	$this->data->startdate = time();
 		    else
@@ -393,14 +421,26 @@ class QuizController extends BaseController {
 		if(empty($this->resp->data)) {
 			$course = $DB->get_record('course', ['shortname' => $this->data->coursecode]);
 		    if($course) {
+		    	$allmodinfo = get_fast_modinfo($course)->get_section_info_all();
+				$allsectionname = [];
+				$quizcode = explode('_', $this->data->quizcode);
+				foreach ($allmodinfo as $value) {
+					$allsectionname[] = $value->name; 
+				}
+				if(!in_array($quizcode[1], $allsectionname)) {
+					$section = count($allmodinfo);
+				} else {
+					$section = array_search($quizcode[1], $allsectionname);
+				}
+				course_create_sections_if_missing($course, $section, $quizcode[1]);
 		    	$modinfo = new stdClass;
 			    $modinfo->name = $this->data->quizname;
 			    $modinfo->code = $this->data->quizcode;
-			    $modinfo->sectionname = $this->data->sectionname;
+			    $modinfo->sectionname = $quizcode[1];
 			    $modinfo->modulename = 'quiz';
 			    $modinfo->course = $course->id;
 			    $modinfo->grade = 10;
-			    $modinfo->section = 0;
+			    $modinfo->section = $section;
 			    $modinfo->visible = 1;
 			    $modinfo->quizpassword  = '';
 			    $modinfo->introeditor = ['text' => '', 'format' => '1','itemid' => '0'];
@@ -415,18 +455,21 @@ class QuizController extends BaseController {
 			    $modinfo->questiondecimalpoints  = -1;
 			    $modinfo->preferredbehaviour = 'deferredfeedback';
 			    $modinfo->overduehandling = 'autosubmit';
+			    $modinfo->completion = 2;
+		        $modinfo->completionusegrade = 1;
+		        $modinfo->attempts = 1;
 			    $message = '';
 
-			    $allmodinfo = get_fast_modinfo($course)->get_section_info_all();
-				$allsectionname = [];
-			    foreach ($allmodinfo as $value) {
-					$allsectionname[] = $value->name; 
-				}
-				if(!in_array($this->data->sectionname, $allsectionname)) {
-					$modinfo->section = count($allmodinfo) + 1;
-				} else {
-					$modinfo->section = array_search($this->data->sectionname, $allsectionname);
-				}
+			    // $allmodinfo = get_fast_modinfo($course)->get_section_info_all();
+				// $allsectionname = [];
+			 //    foreach ($allmodinfo as $value) {
+				// 	$allsectionname[] = $value->name; 
+				// }
+				// if(!in_array($this->data->sectionname, $allsectionname)) {
+				// 	$modinfo->section = count($allmodinfo) + 1;
+				// } else {
+				// 	$modinfo->section = array_search($this->data->sectionname, $allsectionname);
+				// }
 
 		    	if($DB->record_exists('quiz', ['code' => $this->data->quizcode, 'name' => $this->data->quizname])) {
 		    		$quizid = $DB->get_field('quiz', 'id', ['course' => $course->id, 'name' => $modinfo->name]);

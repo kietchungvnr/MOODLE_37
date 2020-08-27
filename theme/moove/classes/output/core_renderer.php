@@ -232,9 +232,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 $output .= '</ul>';
                 $output .= '</li>';
             }
-            $output .= '</ul';
+            $output .= '</ul>';
             if($stt == 0)
-                $output .= '</ul';
+                $output .= '</ul>';
             else {
                 if($id_parent == 0)
                     $output .= '</ul>';

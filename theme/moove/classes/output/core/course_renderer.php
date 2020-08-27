@@ -423,7 +423,7 @@ class course_renderer extends \core_course_renderer {
         // $output .= $this->container_end();
 
         // Add course search form.
-       
+       $output .= $this->course_search_form();
 
         // Display course category tree.
         $output .= $this->coursecat_tree($chelper, $coursecat);

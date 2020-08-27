@@ -371,12 +371,13 @@ require(['jquery'], function($) {
                 var url = $(this).attr("href");
                 var str = match.input;
                 var i = 0;
-                if(str.match(url) != null) {
+                if(str.indexOf(url) == 0) {
                     $(this).addClass("active-nav");
                     i++;
                 }
                 if(i > 0) {
                     $(".nav-active:first").removeClass("active-nav");
+                    $("#enlaces .nav-active:first").removeClass("active-nav");
                 }
             });
         }

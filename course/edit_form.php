@@ -154,8 +154,8 @@ class course_edit_form extends moodleform {
         }
 
         //custom by Vũ - add cousesetup
-        $mform->addElement('autocomplete', 'coursesetup', get_string('coursesetup','local_newsvnr'), $coursesetupnames, $coursesetup_options);
-        $mform->setType('coursesetup', PARAM_TEXT);
+        // $mform->addElement('autocomplete', 'coursesetup', get_string('coursesetup','local_newsvnr'), $coursesetupnames, $coursesetup_options);
+        // $mform->setType('coursesetup', PARAM_TEXT);
 
         $mform->addElement('select', 'typeofcourse', get_string('typeofcourse','local_newsvnr'), $toclist);
         $mform->addRule('typeofcourse', get_string('missingtypeofcourse','local_newsvnr'), 'required', null, 'client');
