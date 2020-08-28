@@ -140,13 +140,14 @@
                     body.addClass("loading");
                     ModalFactory.create({
                         type: ModalFactory.types.DEFAULT,
-                        title: resp.reousrucename,
+                        title: resp.resourcename,
                         body: loadingIconHtml
                     })
                     .done(function(modal) {
                         modalStore[cmid] = modal;
                         modal.setLarge();
                         var pluginfileurl = resp.url;
+                        var hasCompleteion = resp.hascompletion;
                         var modalRoot = $(modal.root);
                         var completionTimeSpent = resp.completiontimespent;
                         modalRoot.attr("data-cmid", cmid);
@@ -215,40 +216,43 @@
                                         modalRoot.find(Selector.modal).animate({"max-width": modalWidth}, "fast");
                                         modalRoot.find(Selector.modalDialog).animate({"max-width": modalWidth}, "fast");
                                         modalRoot.find(Selector.modalBody).animate({"max-width": modalWidth}, "fast");
-                                        if(completionTimeSpent !== 'completed') {
-                                            var duration;
-                                            var display = document.querySelector('#time');
-                                            var valueDisplay = display.innerText;
-                                            var sc = valueDisplay.split(':'); 
-                                            modal.getRoot().on(ModalEvents.hidden, function() {
-                                                display = document.querySelector('#time');
-                                                valueDisplay = display.innerText;
-                                                sc = valueDisplay.split(':');
-                                                duration = ((+sc[0]) * 60 + (+sc[1])); 
-                                                settings.data.spenttime = completionTimeSpent - duration;
-                                                stopTimer();
-                                                $.ajax(script, settings)
-                                                .then(function(resp) {
-                                                }).fail(Notification.exception);
-                                            });
-                                            modal.getRoot().on(ModalEvents.shown, function() {
-                                                if(countShownModal == 0) {
-                                                    duration = completionTimeSpent;
-                                                    countShownModal++;
-                                                } else {
+                                        if(hasCompleteion == true) {
+                                            if(completionTimeSpent !== 'completed') {
+                                                var duration;
+                                                var display = document.querySelector('#time');
+                                                var valueDisplay = display.innerText;
+                                                var sc = valueDisplay.split(':'); 
+                                                modal.getRoot().on(ModalEvents.hidden, function() {
                                                     display = document.querySelector('#time');
                                                     valueDisplay = display.innerText;
                                                     sc = valueDisplay.split(':');
-                                                    duration = ((+sc[0]) * 60 + (+sc[1]));
-                                                }
-                                                settings.data.spenttime = duration;
-                                                startTimer(duration, display, settings, true);
+                                                    duration = ((+sc[0]) * 60 + (+sc[1])); 
+                                                    settings.data.spenttime = completionTimeSpent - duration;
+                                                    stopTimer();
+                                                    $.ajax(script, settings)
+                                                    .then(function(resp) {
+                                                    }).fail(Notification.exception);
+                                                });
+                                                modal.getRoot().on(ModalEvents.shown, function() {
+                                                    if(countShownModal == 0) {
+                                                        duration = completionTimeSpent;
+                                                        countShownModal++;
+                                                    } else {
+                                                        display = document.querySelector('#time');
+                                                        valueDisplay = display.innerText;
+                                                        sc = valueDisplay.split(':');
+                                                        duration = ((+sc[0]) * 60 + (+sc[1]));
+                                                    }
+                                                    settings.data.spenttime = duration;
+                                                    startTimer(duration, display, settings, true);
 
-                                            });
+                                                });
+                                            }
                                         }
+                                        
                                     } 
                                 }
-                            }, 5000);
+                            }, 3000);
                         
                         }).fail(Notification.exception);
                         Templates.render("format_multitopic/embed_module_modal_header_btns", templateData).done(function (html) {
@@ -337,7 +341,7 @@ require(['theme_moove/metismenu', 'jquery'], function(metisMenu, $) {
 });
 
 
-require(['jquery'], function($) {
+require(['jquery', 'core/config'], function($, Config) {
     var iconsearch = document.querySelector('.moove-search-input .slicon-magnifier');
     var btnclosesearch = document.querySelector('.search-input-form .close-search');
     var searchinputform = document.querySelector('.moove-search-input');
@@ -377,12 +381,24 @@ require(['jquery'], function($) {
                 }
                 if(i > 0) {
                     $(".nav-active:first").removeClass("active-nav");
+                }
+            });
+            $("#enlaces .nav-active").each(function() {
+                var url = $(this).attr("href");
+                var str = match.input;
+                var i = 0;
+                if(str.indexOf(url) == 0) {
+                    $(this).addClass("active-nav");
+                    i++;
+                }
+                if(i > 0) {
                     $("#enlaces .nav-active:first").removeClass("active-nav");
                 }
             });
         }
         else {
             $(".nav-active:first").addClass("active-nav");
+            $("#enlaces .nav-active:first").addClass("active-nav");
         }
     });
 }); 

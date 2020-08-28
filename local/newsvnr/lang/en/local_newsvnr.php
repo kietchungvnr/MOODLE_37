@@ -302,3 +302,4 @@ $string['org_completed'] = 'Completed';
 $string['org_incomplete'] = 'Incompleted';
 $string['parentorgstructurename'] = 'Parent orgstructure';
 $string['headoffice'] = 'HeadOffice';
+$string['viewfileonbrowser'] = 'View files on browser';

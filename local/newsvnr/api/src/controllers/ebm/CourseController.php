@@ -146,7 +146,7 @@ class CourseController extends BaseController {
 						$pagenamearr = explode(',', $this->data->pagename);
 						$pagecodearr = explode(',', $this->data->pagecode);
 						foreach($pagenamearr as $key => $pagename) {
-							$modinfo->name = $this->data->pagename;
+							$modinfo->name = $pagename;
 						    $modinfo->code = $pagecodearr[$key];
 						    $modinfo->modulename = 'page';
 						    $modinfo->course = $courseid;
@@ -160,11 +160,11 @@ class CourseController extends BaseController {
 						    $modinfo->sectionname = $this->data->sectionname;
 						    $modinfo->printlastmodified = '1';
 						    $modinfo->introeditor = ['text' => '', 'format' => '1', 'itemid' => 0];
-							$pageid = $DB->get_field('page', 'id', ['course' => $courseid, 'name' => $this->data->pagename]);
+							$pageid = $DB->get_field('page', 'id', ['course' => $courseid, 'name' => $pagename]);
 
 							// $allmodinfo = get_fast_modinfo($courseid)->get_section_info_all();
 							// $allsectionname = [];
-						    // foreach ($allmodinfo as $value) {
+						 //    foreach ($allmodinfo as $value) {
 							// 	$allsectionname[] = $value->name; 
 							// }
 							// if($this->data->sectionname) {
@@ -194,6 +194,24 @@ class CourseController extends BaseController {
 						$this->resp->error = false;
 						$this->resp->message['info'] = "Chỉnh sửa buổi học thành công";
 					}
+			    	if($this->data->usercode && $this->data->teachercode) {
+		    			$studentarr = explode(',', $this->data->usercode);
+		    			$teacherarr = explode(',', $this->data->teachercode);
+		    			foreach ($studentarr as $student) {
+		    				$userid = find_usercode_by_code($student);
+							$enrol_user = check_user_in_course($courseid,$userid);
+							if(!$enrol_user) {
+								enrol_user($userid, $courseid, 'student');
+							}
+		    			}
+		    			foreach ($teacherarr as $teacher) {
+							$teacherid = find_usercode_by_code($teacher);
+							$enrol_user = check_user_in_course($courseid,$teacherid);
+							if(!$enrol_user) {
+								enrol_user($teacherid, $courseid, 'editingteacher');
+							}
+		    			}
+		    		}
 
 					// $enrol_user = check_user_in_course($courseid,$userid);
 					// $enrol_teahcer = check_teacher_in_course($courseid,$teacherid);
@@ -269,7 +287,7 @@ class CourseController extends BaseController {
 						$pagenamearr = explode(',', $this->data->pagename);
 						$pagecodearr = explode(',', $this->data->pagecode);
 						foreach($pagenamearr as $key => $pagename) {
-							$modinfo->name = $this->data->pagename;
+							$modinfo->name = $pagename;
 						    $modinfo->code = $pagecodearr[$key];
 						    $modinfo->modulename = 'page';
 						    $modinfo->course = $course->id;
@@ -299,13 +317,34 @@ class CourseController extends BaseController {
 							// }
 
 						    $modulepage = create_module($modinfo);
+						    
 						    $this->data->trackclassid = $modulepage->coursemodule;
 							$this->resp->data[] = $modulepage;
 						}
+				    	
 					    $this->resp->error = false;
 						$this->resp->message['info'] = "Tạo mới buổi học thành công";
 						
 					} 
+
+			    	if($this->data->usercode && $this->data->teachercode) {
+		    			$studentarr = explode(',', $this->data->usercode);
+		    			$teacherarr = explode(',', $this->data->teachercode);
+		    			foreach ($studentarr as $student) {
+		    				$userid = find_usercode_by_code($student);
+							$enrol_user = check_user_in_course($course->id,$userid);
+							if(!$enrol_user) {
+								enrol_user($userid, $course->id, 'student');
+							}
+		    			}
+		    			foreach ($teacherarr as $teacher) {
+							$teacherid = find_usercode_by_code($teacher);
+							$enrol_user = check_user_in_course($course->id,$teacherid);
+							if(!$enrol_user) {
+								enrol_user($teacherid, $course->id, 'editingteacher');
+							}
+		    			}
+		    		}
 					// $enrol_user = check_user_in_course($course->id,$userid);
 					// $enrol_teahcer = check_teacher_in_course($course->id,$teacherid);
 
