@@ -100,7 +100,8 @@ if (!$edit) {
 
     $stredit = get_string('editgradeletters', 'grades');
     $editlink = html_writer::nonempty_tag('div', html_writer::link($returnurl.$editparam, $stredit), array('class'=>'mdl-align'));
-    echo $editlink;
+    // Custom by Thắng : ẩn bớt nút chỉnh sửa
+    // echo $editlink;
 
     $table = new html_table();
     $table->id = 'grade-letters-view';
@@ -112,7 +113,7 @@ if (!$edit) {
     $table->tablealign  = 'center';
     echo html_writer::table($table);
 
-    echo $editlink;
+    // echo $editlink;
 } else { //else we're editing
     require_once('edit_form.php');
 

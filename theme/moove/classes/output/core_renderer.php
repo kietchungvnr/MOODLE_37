@@ -130,19 +130,29 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 <li class="nav-item border-left"><a class="nav-link focusmod next">'.get_string('nextmodule','theme_moove').'<i class="fa fa-angle-right ml-2"></i></a></li>';
         $output .= '<div class="dropdown-content">';
         foreach ($allmodinfo as $modinfo) {
-            if($modinfo->name != '') {
             $sectioninfo = $DB->get_record_sql('SELECT * FROM {course_sections} WHERE id = :section', ['section' => $modinfo->id]);
                 if($sectioninfo->sequence == '') {
                     continue;
                 }
-                $output .= '<div class="card-header" id="'.$modinfo->id.'">';
-                $output .= '<a>'.$modinfo->name.'';
+                $output .= '<div class="card-header level1" id="'.$modinfo->id.'">';
+                if($modinfo->name == '' && $modinfo->section != 0) {
+                    $output .= '<a>'.get_string('topic', 'theme_moove').' '.$modinfo->section.'';
+                } else {
+                    $output .= '<a>'.$modinfo->name.'';
+                }
                 $output .= '<i class="fa fa-angle-up rotate-icon float-right"></i>';
                 $output .= '</a>';
                 $output .= '</div>';
                 $output .= '<div class="dropdown-content-2 '.$modinfo->id.'">';
                 foreach($modinfo->modinfo->cms as $cms) {
                     if($cms->section == $modinfo->id && $cms->visible == 1) {
+                        $getmodules = $DB->get_records_sql('SELECT cm.id, cm.deletioninprogress FROM {course_modules} cm JOIN {course_sections} cs ON cm.section = cs.id WHERE cm.instance = :section AND cm.course = :courseid',['section' => $cms->instance,'courseid' => $COURSE->id]);
+                        foreach($getmodules as $getmodule) {
+                            if($getmodule->deletioninprogress != 0) {
+                                continue;
+                            }    
+                        }
+                        
                         $url = $CFG->wwwroot . '/mod/' . $cms->modname . '/view.php?id=' . $cms->id;
                         $modname = $cms->name;
                         $output .= '<div class="card-header level2">';
@@ -163,7 +173,6 @@ class core_renderer extends \theme_boost\output\core_renderer {
                     }
                 }
                 $output .='</div>';
-            }
         }
         $output .= '</div>';
         $output .= '</ul></div>';
@@ -175,12 +184,12 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $process = round(\core_completion\progress::get_course_progress_percentage($COURSE));
         $output = '';
         $output .= '<div class="header-progress"><div class="page-header-headings"><h2>'.$COURSE->fullname.'</h2></div>';
-        if($process > 0 ){
-            $output .= '<div class="progress course">';
-            $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
-                        aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%">'.$process.'%</div>';
-            $output .= '</div>';
-        }
+
+        $output .= '<div class="d-flex float-right"><div class="progress course">';
+        $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
+                    aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div>'.$process.'%</div>';
+        $output .= '</div>';
+        
         $output .= '</div>';
         return $output;
     }
@@ -232,7 +241,6 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 $output .= '</ul>';
                 $output .= '</li>';
             }
-            $output .= '</ul>';
             if($stt == 0)
                 $output .= '</ul>';
             else {
@@ -241,6 +249,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             }
         }
         return $output;
+
     }
    
     public function nav_course_categories() {

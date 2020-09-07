@@ -288,3 +288,5 @@ $string['nextmodule'] = 'Bài tiếp' ;
 $string['prevmodule'] = 'Bài trước' ;
 $string['coursedata'] = 'Nội dung khóa học';
 $string['administrationtabdesc'] = 'Ẩn hoặc hiện chức năng trong phần quản trị hệ thống, Ẩn/Hiện theo các tab';
+$string['general'] = 'Chung' ;
+$string['topic'] = 'Chủ đề' ;

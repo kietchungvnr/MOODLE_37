@@ -289,3 +289,5 @@ $string['prevmodule'] = 'Previous' ;
 $string['coursedata'] = 'Course Data';
 $string['focusmod'] = 'Focus Mode';
 $string['administrationtabdesc'] = 'Show/Hidden tab in site administration';
+$string['general'] = 'General' ;
+$string['topic'] = 'Topic' ;
