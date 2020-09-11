@@ -1419,7 +1419,7 @@ nav.navbar .navbar-brand .logo img {
     position: unset !important;
 }
 #nav-course .dropdown:not(:first-child):hover {
-    background-color: #306b8e;
+    background-color: #306b8e;ư
 }
 #nav-draw li:hover {
     background-color: #306b8e;
@@ -1438,8 +1438,8 @@ nav.navbar .navbar-brand .logo img {
 #nav-course #drop-course-by-teacher,
 #nav-course #drop-course-by-student {
     background-color: #306b8e;
-    left: -16px !important;
-    top: 16px !important;
+    left: -1px !important;
+    top: -2px !important;
 }
 @media only screen and (min-width: 600px) and (max-width: 1366px) {
     #nav-course input#coursesearchbox.form-control {
@@ -2084,7 +2084,7 @@ nav.navbar .moove-search-input {
     background-color: #3c8dbc;
 }
 #page-calendar-view .modal-title {
-    color:#fff;
+    color:#fff !important;
 }
 @media screen and (max-width: 1380px) {
     .usertext {
@@ -3068,10 +3068,7 @@ table#categoryquestions tr {
         display: block;
     }
     .nav-tabs.course .nav-item.active {
-        background-color: #d1eeff;
-    }
-    .nav-link {
-        padding:5px 0.5rem; 
+        background-color: #fff;
     }
     .format-onetopic .onetopic .tab_content {
         padding: 5px 12px;
@@ -3508,9 +3505,6 @@ div::-webkit-scrollbar {
 .navtop.clearfix.navimages {
     display: none;
 }
-.pagelayout-course .section li.activity:hover {
-    border:1px dotted grey;
-}
 .pagelayout-incourse i.icon.fa.fa-chevron-right.fa-fw,.pagelayout-incourse i.icon.fa.fa-chevron-left.fa-fw {
     display: none;
 }
@@ -3771,6 +3765,8 @@ h1, .h1, h2, .h2, .path-calendar .maincalendar .calendar-controls .current, h3, 
 }
 .menu-left {
     align-items: center;
+    width: 50%;
+    max-width: 40%;
 }
 .menu-right .card-header {
     padding: 0;
@@ -3876,7 +3872,8 @@ body.focusmod #page-content {
     margin: 10px 0;
 }
 .coursesearchbox .btn{
-     border-radius: 0;
+     border-top-left-radius: 0;
+     border-bottom-left-radius: 0;
 }
 #sidepre-blocks section.card {
     margin-bottom: 0;
@@ -3982,6 +3979,54 @@ li.list-category  .list-category {
     display: none;
     padding: .75rem 1.25rem;
 }
+.form-control {
+    border-radius: .25rem
+}
+#nav-course input#coursesearchbox.form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.controls span.arrow, .controls span.arrow_text {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.25;
+    display: inline-block;
+    padding: .3rem 1rem;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    color: #fff;
+    border: 1px solid transparent;
+    border-color: #3c8dbc;
+    border-radius: .215rem;
+    background-color: #3c8dbc;
+}
+.custom-select {
+    border-radius: .25rem;
+}
+.controls .calendar-controls .current {
+    font-size: 1.2rem!important;
+    top: 5px;
+    position: relative;
+    min-height: 1px;
+    margin: 0!important;
+}
+.section li.activity:hover {
+    -webkit-transition: all .3s cubic-bezier(.25,.8,.25,1);
+    -o-transition: all .3s cubic-bezier(.25,.8,.25,1);
+    transition: all .3s cubic-bezier(.25,.8,.25,1);
+    background-color: #e7f1f7;
+}
+.page-header-headings {
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    display: -webkit-box;
+}
+
+
 </style>
 
 

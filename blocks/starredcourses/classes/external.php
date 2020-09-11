@@ -27,13 +27,13 @@ require_once($CFG->libdir . '/externallib.php');
 
 require_once($CFG->dirroot . '/course/lib.php');
 require_once($CFG->dirroot . '/course/externallib.php');
-use theme_moove\util\theme_settings;
-use \core_course\external\course_summary_exporter;
-use coursecat_helper;
-use core_course_category;
-use core_course_list_element;
-use stdClass;
 require_once($CFG->dirroot . '/local/newsvnr/lib.php');
+use \theme_moove\util\theme_settings;
+use \core_course\external\course_summary_exporter;
+use \core_course\coursecat_helper;
+use \core_course_category;
+use \core_course_list_element;
+use \stdClass;
 
 
 /**

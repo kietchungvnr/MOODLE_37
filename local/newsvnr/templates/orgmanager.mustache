@@ -1,263 +1,245 @@
- <div data-region="orgmanager-page">
-   <div class="row justify-content-md-center">
-      <div class="col-md-auto">
-        <button class="btn" type="button" data-toggle="collapse" data-target="#orgcate_tb_wrapper" aria-expanded="false" aria-controls="orgcate_tb_wrapper" id="orgcate_list">{{#str}}listorgcate, local_newsvnr{{/str}}</button>
-      </div>
-      <div class="col-md-auto">
-        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgstructure_tb_wrapper" aria-expanded="false" aria-controls="orgstructure_tb_wrapper" id="orgstructure_list">{{#str}}listorgstructure, local_newsvnr{{/str}}</button>
-      </div>
-      <div class="col-md-auto">
-       <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgjobtitle_tb_wrapper" aria-expanded="false" aria-controls="orgjobtitle_tb_wrapper" id="orgjobtitle_list">{{#str}}listorgjobtitle, local_newsvnr{{/str}}</button>
-     </div>
-     <div class="col-md-auto">
-      <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgosition_tb_wrapper" aria-expanded="false" aria-controls="orgposition_tb_wrapper" id="orgposition_list">{{#str}}listorgposition, local_newsvnr{{/str}}</button>
+<div data-region="orgmanager-page">
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
+            <button class="btn" type="button" data-toggle="collapse" data-target="#orgcate_tb_wrapper" aria-expanded="false" aria-controls="orgcate_tb_wrapper" id="orgcate_list">{{#str}}listorgcate, local_newsvnr{{/str}}</button>
+        </div>
+        <div class="col-md-auto">
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgstructure_tb_wrapper" aria-expanded="false" aria-controls="orgstructure_tb_wrapper" id="orgstructure_list">
+                {{#str}}listorgstructure, local_newsvnr{{/str}}
+            </button>
+        </div>
+        <div class="col-md-auto">
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgjobtitle_tb_wrapper" aria-expanded="false" aria-controls="orgjobtitle_tb_wrapper" id="orgjobtitle_list">
+                {{#str}}listorgjobtitle, local_newsvnr{{/str}}
+            </button>
+        </div>
+        <div class="col-md-auto">
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgosition_tb_wrapper" aria-expanded="false" aria-controls="orgposition_tb_wrapper" id="orgposition_list">
+                {{#str}}listorgposition, local_newsvnr{{/str}}
+            </button>
+        </div>
     </div>
-  </div>
 </div>
-<div style="margin-bottom: 60px">
-  
+<div style="margin-bottom: 60px;">
     <input type="submit" name="act_orgcategory" id="orgcatemodalid" data-action="orgcategorypmodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
- 
-  
+
     <input type="submit" name="act_orgcategory" id="orgjobtitlemodalid" data-action="orgjobtitlemodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
- 
 
     <input type="submit" name="act_orgcategory" id="orgpositionmodalid" data-action="orgpositionmodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
- 
 
     <input type="submit" name="act_orgcategory" id="orgstructuremodalid" data-action="orgstructuremodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
- 
 </div>
 <div id="showtable_data"></div>
 
 <script type="text/javascript">
+    var orgstructure_clickparent = true;
+    const org_treeview = () => {
+        require(["jquery", "core/config", "kendo.all.min"], ($, config, kendo) => {
+            if (orgstructure_clickparent == true) {
+                var settings = {
+                    type: "GET",
+                    processData: true,
+                    data: {
+                        org_struct: 1,
+                    },
+                    // cache:false,
+                    contentType: "application/json",
+                };
+                var script = config.wwwroot + "/local/newsvnr/ajax.php";
+                var tvajaxx = $.ajax(script, settings).then(function (response) {
+                    if (response.error) {
+                    } else {
+                        // Reload the page, don't show changed data warnings.
+                        if (typeof window.M.core_formchangechecker !== "undefined") {
+                            window.M.core_formchangechecker.reset_form_dirty_state();
+                        }
 
-var orgstructure_clickparent = true;
-const org_treeview = () => {
-require(['jquery', 'core/config', 'kendo.all.min'], ($, config, kendo) => {
-    if(orgstructure_clickparent == true){
-  
-      var settings = {
-          type: 'GET',
-          processData: true,
-          data:{
-            org_struct: 1
-          },
-          // cache:false,
-          contentType: "application/json"
-      };
-      var script = config.wwwroot + '/local/newsvnr/ajax.php';
-      var tvajaxx = $.ajax(script, settings)
-      .then(function(response) {
-          if (response.error) {
-            
-              
-          } else {
-              // Reload the page, don't show changed data warnings.
-              if (typeof window.M.core_formchangechecker !== "undefined") {
-                  window.M.core_formchangechecker.reset_form_dirty_state();
-              }
-             
-              // window.location.reload();
-              var data = JSON.parse(response);
-              var tv = $("#treeview-orgstructure").kendoTreeView({
-                  dataSource: data,
-                  
-              }).data('kendoTreeView');
-              
-              $('#treeview-orgstructure').on('click','.k-item',function(){
+                        // window.location.reload();
+                        var data = JSON.parse(response);
+                        var tv = $("#treeview-orgstructure")
+                            .kendoTreeView({
+                                dataSource: data,
+                            })
+                            .data("kendoTreeView");
 
-                  var selected = tv.select(),item;
-                 
-                  if(selected.length >0)
-                    item = tv.dataItem(selected);
-                  if (item) {
-                      document.getElementById('id_parentid').value = item.text;
-                     
-                  } else {
-                      $('#log').text('Nothing selected');
-                  }
-                   $('#treeview-orgstructure').mouseleave(function(){ 
-                      $(this).hide(500);
-                   });
-              });
-             
-          }
+                        $("#treeview-orgstructure").on("click", ".k-item", function () {
+                            var selected = tv.select(),
+                                item;
 
-          orgstructure_clickparent = false;
-          return;
-      })
-  } else {
-       $('#id_parentid').click(function() {
-           $('#treeview-orgstructure').show(500);
-       });
-  }
-    })
-}
+                            if (selected.length > 0) item = tv.dataItem(selected);
+                            if (item) {
+                                document.getElementById("id_parentid").value = item.text;
+                            } else {
+                                $("#log").text("Nothing selected");
+                            }
+                        });
+                        $("#treeview-orgstructure").mouseleave(function () {
+                            $(this).hide(500);
+                        });
+                    }
 
-var orgposition_clickparent = true
-const orgposition_treeview = () => {
-require(['jquery', 'core/config', 'kendo.all.min'], ($, config, kendo) => {
-            if(orgposition_clickparent == true){
-              
-              var settings = {
-                  type: 'GET',
-                  processData: true,
-                  data:{
-                    org_struct: 1
-                  },
-                  // cache:false,
-                  contentType: "application/json"
-              };
-              var script = config.wwwroot + '/local/newsvnr/ajax.php';
-              var tvajaxx = $.ajax(script, settings)
-              .then(function(response) {
-                  if (response.error) {
-                    
-                      
-                  } else {
-                      // Reload the page, don't show changed data warnings.
-                      if (typeof window.M.core_formchangechecker !== "undefined") {
-                          window.M.core_formchangechecker.reset_form_dirty_state();
-                      }
-                     
-                      // window.location.reload();
-                      var data = JSON.parse(response);
-                      var tv = $("#treeview-orgposition").kendoTreeView({
-                          dataSource: data,
-                          
-                      }).data('kendoTreeView');
-                      
-                      $('#treeview-orgposition').on('click','.k-item',function(){
+                    orgstructure_clickparent = false;
+                    return;
+                });
+            } else {
+                $("#id_parentid").click(function () {
+                    $("#treeview-orgstructure").show(500);
+                });
+            }
+        });
+    };
 
-                          var selected = tv.select(),item;
-                         
-                          if(selected.length >0)
-                            item = tv.dataItem(selected);
-                          if (item) {
-                              // document.getElementById('id_orgstructurename').value = item.id;
-                              document.getElementById('id_orgstructureid').value = item.text;
-                             
-                          } else {
-                              $('#log').text('Nothing selected');
-                          }
-                           $('#treeview-orgposition').mouseleave(function(){ 
-                              $(this).hide(500);
-                           });
-                      });
-                     
-                  }
+    var orgposition_clickparent = true;
+    const orgposition_treeview = () => {
+        require(["jquery", "core/config", "kendo.all.min"], ($, config, kendo) => {
+            if (orgposition_clickparent == true) {
+                var settings = {
+                    type: "GET",
+                    processData: true,
+                    data: {
+                        org_struct: 1,
+                    },
+                    // cache:false,
+                    contentType: "application/json",
+                };
+                var script = config.wwwroot + "/local/newsvnr/ajax.php";
+                var tvajaxx = $.ajax(script, settings).then(function (response) {
+                    if (response.error) {
+                    } else {
+                        // Reload the page, don't show changed data warnings.
+                        if (typeof window.M.core_formchangechecker !== "undefined") {
+                            window.M.core_formchangechecker.reset_form_dirty_state();
+                        }
 
-                  orgposition_clickparent = false;
-                  return;
-              })
-          } else {
-               $('#id_orgstructureid').click(function() {
-                   $('#treeview-orgposition').show(500);
-               });
-          }
-    })
-}
+                        // window.location.reload();
+                        var data = JSON.parse(response);
+                        var tv = $("#treeview-orgposition")
+                            .kendoTreeView({
+                                dataSource: data,
+                            })
+                            .data("kendoTreeView");
 
+                        $("#treeview-orgposition").on("click", ".k-item", function () {
+                            var selected = tv.select(),
+                                item;
 
-//Xóa record PB-CD-CV
-const org_delete = (section_id) => {
-    require(['jquery', 'core/config', 'core/str'], ($, config, Str) => {
-        var strings = [{
-                key: 'confirmdeleterecord',
-                component: 'local_newsvnr'
-             }];
-         Str.get_strings(strings).then(function(s) {
-          var section = $("[data-section]").attr("data-section");
-          var confm = confirm(s[0]);
-          var script = config.wwwroot + "/local/newsvnr/ajax/orgdeletedata.php";  
-          var settings = {
-            type: "GET",
-            processData: true,
-            data:{
-              section: section,
-              id: section_id
-            },
-            contentType: "application/json"
-          }; 
-          if(confm) {
-            $.ajax(script, settings)
-            .then(function(response) {
+                            if (selected.length > 0) item = tv.dataItem(selected);
+                            if (item) {
+                                // document.getElementById('id_orgstructurename').value = item.id;
+                                document.getElementById("id_orgstructureid").value = item.text;
+                            } else {
+                                $("#log").text("Nothing selected");
+                            }
+                        });
+                        $("#treeview-orgposition").mouseleave(function () {
+                            $(this).hide(500);
+                        });
+                    }
 
-             if(response)
-             {
-               $("#" + section_id).parents("tr").fadeOut(500, function(){
-                $("#" + section_id).remove();
-              });
-             }    
-           });
-          }
-      });
-    });
-}
+                    orgposition_clickparent = false;
+                    return;
+                });
+            } else {
+                $("#id_orgstructureid").click(function () {
+                    $("#treeview-orgposition").show(500);
+                });
+            }
+        });
+    };
 
-
-//Ản hiện record PB-CD-CV
-const org_active = (section_id, visible) => {
-    require(['jquery', 'core/config', 'core/str'], ($, config, Str) => {
-        var strings = [{
-                key: 'showrecord',
-                component: 'local_newsvnr'
-             }, {
-                key: 'hiderecord',
-                component: 'local_newsvnr'
-             }];
-         Str.get_strings(strings).then(function(s) {
-          var section = $("[data-active]").attr("data-active");
-          if(visible == 0)
-            var confm = confirm(s[1]);
-          else 
-            var confm = confirm(s[0]);
-          var script = config.wwwroot + "/local/newsvnr/ajax/orgactive.php";  
-          var settings = {
-            type: "GET",
-            processData: true,
-            data:{
-              section: section,
-              id: section_id,
-              visible: visible
-            },
-            contentType: "application/json"
-          }; 
-          if(confm) {
-            $.ajax(script, settings)
-            .then(function(response) {
-             if(response)
-             {
-                document.getElementById(section).click();
-             }    
+    //Xóa record PB-CD-CV
+    const org_delete = (section_id) => {
+        require(["jquery", "core/config", "core/str"], ($, config, Str) => {
+            var strings = [
+                {
+                    key: "confirmdeleterecord",
+                    component: "local_newsvnr",
+                },
+            ];
+            Str.get_strings(strings).then(function (s) {
+                var section = $("[data-section]").attr("data-section");
+                var confm = confirm(s[0]);
+                var script = config.wwwroot + "/local/newsvnr/ajax/orgdeletedata.php";
+                var settings = {
+                    type: "GET",
+                    processData: true,
+                    data: {
+                        section: section,
+                        id: section_id,
+                    },
+                    contentType: "application/json",
+                };
+                if (confm) {
+                    $.ajax(script, settings).then(function (response) {
+                        if (response) {
+                            $("#" + section_id)
+                                .parents("tr")
+                                .fadeOut(500, function () {
+                                    $("#" + section_id).remove();
+                                });
+                        }
+                    });
+                }
             });
-          }
+        });
+    };
+
+    //Ản hiện record PB-CD-CV
+    const org_active = (section_id, visible) => {
+        require(["jquery", "core/config", "core/str"], ($, config, Str) => {
+            var strings = [
+                {
+                    key: "showrecord",
+                    component: "local_newsvnr",
+                },
+                {
+                    key: "hiderecord",
+                    component: "local_newsvnr",
+                },
+            ];
+            Str.get_strings(strings).then(function (s) {
+                var section = $("[data-active]").attr("data-active");
+                if (visible == 0) var confm = confirm(s[1]);
+                else var confm = confirm(s[0]);
+                var script = config.wwwroot + "/local/newsvnr/ajax/orgactive.php";
+                var settings = {
+                    type: "GET",
+                    processData: true,
+                    data: {
+                        section: section,
+                        id: section_id,
+                        visible: visible,
+                    },
+                    contentType: "application/json",
+                };
+                if (confm) {
+                    $.ajax(script, settings).then(function (response) {
+                        if (response) {
+                            document.getElementById(section).click();
+                        }
+                    });
+                }
+            });
+        });
+    };
+
+    $(window).on("load", function () {
+        setTimeout(function () {
+            $("#orgcate_list").trigger("click");
+        }, 500);
     });
-     });
-}
 
-$(window).on('load', function() {
-  setTimeout(function(){ 
-    $("#orgcate_list").trigger('click');
-   }, 500);
-
-});
-
-
-$(document).ready(function(){
-  $('#orgstructuremodalid').click(function(){
-      orgstructure_clickparent = true;
-  })
-  $('#orgpositionmodalid').click(function(){
-      orgposition_clickparent = true;
-  })
-  $(document).ajaxStop(function() {
-    $('tr td a.show-item').closest("tr").addClass('dimmed_text');
-  });
-
-});
-
+    $(document).ready(function () {
+        $("#orgstructuremodalid").click(function () {
+            orgstructure_clickparent = true;
+        });
+        $("#orgpositionmodalid").click(function () {
+            orgposition_clickparent = true;
+        });
+        $(document).ajaxStop(function () {
+            $("tr td a.show-item").closest("tr").addClass("dimmed_text");
+        });
+    });
 </script>
 
 

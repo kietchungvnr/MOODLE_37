@@ -546,9 +546,9 @@ require(['jquery', 'core/config'], function($, Config) {
         var width = $(window).width();
         if (width <= 950){
             if(fm == "focusmod") {
-                document.cookie = 'cookie=; max-Age=-1;path=/';
-                location.reload();
-            }
+                {{! document.cookie = 'cookie=; max-Age=-1;path=/'; }}
+                $('#focus-mod').click();
+            } 
         }
     })
     $(".dropdown-content .card-header" ).click(function() { 

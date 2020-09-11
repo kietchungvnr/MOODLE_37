@@ -51,3 +51,6 @@ See <https://docs.moodle.org> for details of Moodle's many features.
 Cách dùng:
 B1: Add module file vào khóa học sau đó phần giao diện chọn loại (view file on browsers)
 B2: Sau khi add thành công nhân vào file sẽ hiện popup để xem. Có thể download nhấn vào button download trên popup
+- Chức năng focus mode trong khóa học icon bên dưới cùng bên phải:
+ + Thay đổi chức năng xem khóa học trên giao diện trang khóa học, chỉ xuất hiện những nội dung cho người dùng học
+ + Có menu chuyển bài học nhanh, bài trước, bài sau,..etc..

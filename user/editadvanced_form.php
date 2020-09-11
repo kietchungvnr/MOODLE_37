@@ -124,7 +124,7 @@ class user_editadvanced_form extends moodleform {
                 $mform->addRule('orgpositionid', get_string('required'), 'required', null, 'client');
                 $mform->setType('orgpositionid', PARAM_INT);    
             }
-        } elseif($userid > 2 && $userid->typeofuser == 0) {
+        } elseif($userid > 2 && $user->typeofuser == 0) {
             $mform->addElement('text', 'usercode', get_string('usercode','local_newsvnr'), 'maxlength="200" size="20"');
             $mform->addRule('usercode', get_string('required'), 'required', null, 'client');
             $mform->addHelpButton('usercode', 'usercode', 'local_newsvnr');

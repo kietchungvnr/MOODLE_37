@@ -119,7 +119,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output .= '<nav class="fixed-top navbar moodle-has-zindex focusmod">';
         $output .= '<div class="d-flex menu-left">';
         $output .= '<div class="home-focus border-right"><a href="'.$CFG->wwwroot.'/my"><i class="fa fa-3x fa-home" aria-hidden="true"></i></a></div>';
-        $output .= '<div><div class="page-header-headings"><a href="'.$linkcourse.'">'.$COURSE->fullname.'</a></div>';
+        $output .= '<div class="course-info-focus"><div class="page-header-headings"><a href="'.$linkcourse.'">'.$COURSE->fullname.'</a></div>';
         $output .= '<div class="d-flex"><div class="progress course">';
         $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
                     aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div>'.$process.'%</div>';
@@ -187,7 +187,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
 
         $output .= '<div class="d-flex float-right"><div class="progress course">';
         $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
-                    aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div>'.$process.'%</div>';
+                    aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div class="pr-2">'.$process.'%</div>';
         $output .= '</div>';
         
         $output .= '</div>';
@@ -210,26 +210,26 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 $output .= '<ul class="dropdown-menu" role="menu" id="drop-course-category">';
             else {
                 if($id_parent == 0)
-                    $output .= '<ul class="dropdown-menu 0">';
+                    $output .= '<ul class="dropdown-menu">';
             }
             foreach ($menu_tmp as $item) {
                 $output .= '<li class="dropdown-submenu">';
-                $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $item->name . ' </a>';
+                $output .= '<a  class="dropdown-item" href="javascript:;">' . $item->name . ' </a>';
                 $courses = $DB->get_records('course',['category' => $item->id, 'visible' => 1]); 
                 $output .= '<ul class="dropdown-menu">';
                 foreach($courses as $course) {
-                    $output .= '<li><a class="dropdown-item" tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a></li>';
+                    $output .= '<li><a class="dropdown-item" href="'.$courselink . $course->id.'">' . $course->fullname . '</a></li>';
                 }
                 foreach($menus as $childkey => $childitem) {
                     // Kiểm tra phần tử có con hay không?
                     if($childitem->parent == $item->id) {
                         $output .= '<li class="dropdown-submenu">';
-                        $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $childitem->name . ' </a>';
+                        $output .= '<a  class="dropdown-item" href="javascript:;">' . $childitem->name . ' </a>';
                         $childcourses = $DB->get_records('course',['category' => $childitem->id, 'visible' => 1]);
                         $output .= '<ul class="dropdown-menu">';
 
                         foreach($childcourses as $childcourse) {
-                            $output .= '<li><a class="dropdown-item" tabindex="-1" href="'.$courselink . $childcourse->id.'">' . $childcourse->fullname . '</a></li>';
+                            $output .= '<li><a class="dropdown-item" href="'.$courselink . $childcourse->id.'">' . $childcourse->fullname . '</a></li>';
                         }
                         unset($menus[$childkey]);
                         $this->menucoursecategory($menus, $childitem->id, $output, ++$stt);
@@ -272,7 +272,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             foreach ($listcourse as $item) 
             {   
                 $output .= '<li class="dropdown-item">';
-                $output .= '<a tabindex="-1" href="'.$courselink . $item->id.'">' . $item->fullname . ' </a>';
+                $output .= '<a href="'.$courselink . $item->id.'">' . $item->fullname . ' </a>';
                 $output .= '</li>';
             }
 
@@ -292,7 +292,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             {   
                 $output .= '<li class="dropdown-item">';
 
-                $output .= '<a tabindex="-1" href="'.$courselink . $item->id.'">' . $item->fullname . ' </a>';
+                $output .= '<a href="'.$courselink . $item->id.'">' . $item->fullname . ' </a>';
                 
                 $output .= '</li>';
             }

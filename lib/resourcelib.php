@@ -124,7 +124,7 @@ function resourcelib_get_displayoptions(array $enabled, $current=null) {
                      RESOURCELIB_DISPLAY_DOWNLOAD => get_string('resourcedisplaydownload'),
                      RESOURCELIB_DISPLAY_OPEN     => get_string('resourcedisplayopen'),
                      RESOURCELIB_DISPLAY_POPUP    => get_string('resourcedisplaypopup'),
-                     RESOURCELIB_DISPLAY_GOOGLE_DOCS_POPUP => get_string('viewfileonbrowser', 'local_newsnvr')
+                     RESOURCELIB_DISPLAY_GOOGLE_DOCS_POPUP => get_string('viewfileonbrowser', 'local_newsvnr')
                     );
 
     $result = array();
