@@ -91,7 +91,7 @@ if ($id < 1 && $keyword == '' && $teacher == '' && $category == '') {
     }
     $getcourse   = $DB->get_records_sql($sql . 'ORDER BY id DESC OFFSET ' . $start . ' ROWS FETCH NEXT 12 ROWS only', []);
     $countcourse = $DB->get_records_sql($sql, []);
-    echo '<div class="mt-3 result-course">'.string('resultsearch','local_newsvnr').' : '. count($countcourse).'</div>';
+    echo '<div class="mt-3 result-course">'.get_string('resultsearch','local_newsvnr').' '. count($countcourse).'</div>';
 } else {
     $getcourse   = $DB->get_records_sql('SELECT * FROM {course} WHERE category = :id ORDER BY id DESC OFFSET ' . $start . ' ROWS FETCH NEXT 12 ROWS only ', ['id' => $id]);
     $countcourse = $DB->get_records_sql('SELECT * FROM {course} WHERE category = :id', ['id' => $id]);
