@@ -304,7 +304,7 @@ class course_renderer extends \core_course_renderer {
      * @param int|stdClass|core_course_category $category
      */
     public function course_category($category) {
-        global $CFG;
+        global $CFG,$DB;
         $usertop = core_course_category::user_top();
         if (empty($category)) {
             $coursecat = $usertop;
@@ -423,14 +423,101 @@ class course_renderer extends \core_course_renderer {
         // $output .= $this->container_end();
 
         // Add course search form.
-       $output .= $this->course_search_form();
+       // $output .= $this->course_search_form();
 
         // Display course category tree.
-        $output .= $this->coursecat_tree($chelper, $coursecat);
-
+        $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent FROM mdl_course_categories cc JOIN mdl_course c ON cc.id = c.category OR cc.parent = c.category WHERE cc.visible = 1');
+        $output .= '<div class="row"><div class="col-xl-3 col-lg-4 col-md-4 menu-tree-course"><div class="border">';
+        $output .= $this->menucoursecategory($categories);
+        $output .= '</div></div>';
+        $output .= '<div class="col-xl-9 col-lg-8 col-md-8 ">';
+        $output .= $this->course_teacher_search_form();
+        $output .= '<div id="load-course">';
+        $output .= '</div></div></div>';
        
 
         return $output;
+    }
+    public function course_teacher_search_form() {
+        $output = '';
+        $output .= '<div id="courses_search_form" class="">';
+        $output .= '<div class="row">';
+        $output .= '<div class="col-xl-3 col-6 pt-1">';
+        $output .= '<input style="width:100%" name="category" type="text" class="courses_search_input" id="category" placeholder="'.get_string('coursecatogories','local_newsvnr').'" value="">';
+        $output .= '</div>';
+        $output .= '<div class="col-xl-3 col-6 pt-1">';
+        $output .= '<input style="width:100%" name="keyword" type="text" class="courses_search_input" id="keyword" placeholder="'.get_string('coursename','local_newsvnr').'" value="">';
+        $output .= '</div>';
+        $output .= '<div class="col-xl-3 col-6 pt-1">';
+        $output .= '<input style="width:100%" name="teacher" type="text" class="courses_search_input" id="teacher" placeholder="'.get_string('teachernames','local_newsvnr').'" value="">';
+        $output .= '</div>';
+        $output .= '<div class="col-xl-3 col-6 pt-1">';
+        $output .= '<button id="courses_search_button" class="ml-auto w-100"><i class="fa fa-search mr-1"></i>'.get_string('search','local_newsvnr').'</button>';
+        $output .= '</div>';
+        $output .= '</div>';
+        $output .= '</div>';
+        return $output;
+    }
+    public function menucoursecategory($menus, $id_parent = 0, &$output = '', $stt = 0) {
+        global $DB, $CFG;
+        $menu_tmp = array();
+        foreach ($menus as $key => $item) {
+            if ((int) $item->parent == (int) $id_parent) {
+                $menu_tmp[] = $item;
+                unset($menus[$key]);
+            }
+        }
+        if ($menu_tmp) {   
+            if($stt == 0)
+                $output .= '<li class="list-category title"><a class="ajax-load" href="javascript:void(0)">'.get_string('coursecatogories','local_newsvnr').'</a></li>
+                            <ul class="" role="menu" id="drop-course-category">';
+            else {
+                if($id_parent == 0)
+                    $output .= '<ul class=" 0">';
+            }
+            foreach ($menu_tmp as $item) {
+                $output .= '<li class="list-category" data="'.$item->id.'">';
+                $output .= '<a  class="ajax-load" tabindex="-1" href="javascript:void(0)" id="'.$item->id.'"">' . $item->name . '</a>';
+                $getcategory = $DB->get_records_sql('SELECT * FROM {course_categories} WHERE parent = :id and coursecount > 0',[ 'id' => $item->id] );
+                if(empty($getcategory)){
+                    $output .= '</li>';
+                    continue;
+                }
+                $output .= '<i class="fa fa-angle-right rotate-icon float-right"></i>';
+                $output .= '</li>';
+                $output .= '<ul class="dropdown-menu-tree '.$item->id.'" >';
+                foreach($menus as $childkey => $childitem) {
+                    // Kiểm tra phần tử có con hay không?
+                    if($childitem->parent == $item->id) {
+                        $output .= '<li class="list-subcategory" id="'.$childitem->id.'"">';
+                        $output .= '<a  class="ajax-load" tabindex="-1" href="javascript:void(0)" id="'.$childitem->id.'">' . $childitem->name . ' </a>';
+                        $getcategory_child = $DB->get_records_sql('SELECT * FROM {course_categories} WHERE parent = :id and coursecount > 0',[ 'id' => $childitem->id] );
+                        if(empty($getcategory_child)){
+                            $output .= '</li>';
+                            continue;
+                        }
+                        $output .= '<i data="'.$item->id.'" class="fa fa-angle-right rotate-icon float-right"></i>';
+                        $output .= '</li>';
+                        $output .= '<ul class="dropdown-menu-tree '.$childitem->id.'">';
+
+                        unset($menus[$childkey]);
+                        $this->menucoursecategory($menus, $childitem->id, $output,++$stt);
+
+                        $output .= '</ul>';
+                    } 
+                }
+                $output .= '</ul>';
+    
+            }
+            if($stt == 0)
+                $output .= '</ul>';
+            else {
+                if($id_parent == 0)
+                    $output .= '</ul>';
+            }
+        }
+        return $output;
+
     }
 
     /**

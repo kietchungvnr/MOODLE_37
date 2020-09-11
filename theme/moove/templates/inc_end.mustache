@@ -297,6 +297,7 @@
                 } 
             }
             // Pause thời gian hoàn thành module
+
             var stopTimer = function() {
                 clearInterval(countDown);
             }
@@ -339,7 +340,6 @@ require(['theme_moove/metismenu', 'jquery'], function(metisMenu, $) {
     $(".metismenu").metisMenu();
 
 });
-
 
 require(['jquery', 'core/config'], function($, Config) {
     var iconsearch = document.querySelector('.moove-search-input .slicon-magnifier');
@@ -433,6 +433,28 @@ require(['jquery', 'core/config'], function($, Config) {
      $('.nav-tabs.course li:first a').html('{{#str}} courseoverview, theme_moove {{/str}}');
     $('.nav-tabs.course li[data-key="sitesettings"]').css({'display':'none'});
     $('.nav-tabs.course li[data-key="addblock"]').css({'display':'none'});
+    // function cookie
+    function setCookie(cname, cvalue, exdays) {
+      var d = new Date();
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      var expires = "expires="+ d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+    function getCookie(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(';');
+      for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
     //////////js grader////////////
     $('.grade-navigation ul:first').removeClass('mb-3');
     if(path.indexOf('mod/quiz/') > 0) {
@@ -511,7 +533,6 @@ require(['jquery', 'core/config'], function($, Config) {
         if(path.indexOf('course/view/') > 0) {
             $('#sidepreopen-control').click();
         }
-
     })
     $('#focus-mod').bind('click',function(){
         var fm = getCookie('cookie');
@@ -554,10 +575,15 @@ require(['jquery', 'core/config'], function($, Config) {
     $(".dropdown-content .card-header" ).click(function() { 
         var id = $(this).attr("id");
         $(".card-header#"+id+" .rotate-icon").toggleClass('active');
-        $(".dropdown-content-2."+id).slideToggle();
+        $(".dropdown-content-2."+id).slideToggle('fast','swing');
     }) 
-    $(".nav-item.mid").click(function() {     
-        $('.dropdown-content').slideToggle();       
+    $(".nav-item.mid").click(function() {    
+        if($('.dropdown-content').children() == '' ) {
+            alert('Không có nội dung');
+        }
+        else {
+            $('.dropdown-content').slideToggle('fast','linear'); 
+        }
     });
 
     $('.card-header.level2 a').each(function() {
@@ -576,6 +602,9 @@ require(['jquery', 'core/config'], function($, Config) {
         $href = $temp.children('a').attr('href');
         $(this).attr('href',$href);
     })
+    if($('div.card-header.level1:first-child() a').text() == '') {
+        $('div.card-header.level1:first-child() a').append('{{#str}} general, theme_moove {{/str}}');
+    }
     if($('.card-header.level2 a').hasClass('active')) {
         if($('.card-header.level2 a.active').parents('div.level2').is(':first-child')) {
             $('.nav-link.prev').addClass('disable');
@@ -587,26 +616,64 @@ require(['jquery', 'core/config'], function($, Config) {
     else {
         $('.nav-link.next,.nav-link.prev').addClass('disable');
     }
-    // function cookie
-    function setCookie(cname, cvalue, exdays) {
-      var d = new Date();
-      d.setTime(d.getTime() + (exdays*24*60*60*1000));
-      var expires = "expires="+ d.toUTCString();
-      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
-    function getCookie(cname) {
-      var name = cname + "=";
-      var decodedCookie = decodeURIComponent(document.cookie);
-      var ca = decodedCookie.split(';');
-      for(var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-          c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-          return c.substring(name.length, c.length);
-        }
-      }
-      return "";
-    }
+
+    //load course index//
+    $('.ajax-load').click(function() {
+            $('li').removeClass('active');
+            $(this).parents('li').addClass('active');
+            var script = "/course/load_course.php";
+            var category = $(this).attr('id');
+            var settings = {
+                type:"GET",
+                processData:true,
+                data:{
+                    id:category
+                },
+                contenttype:"application/json",
+            }
+            $.ajax(script,settings)
+            .then(function(response){
+                $('#load-course').hide().html(response).fadeIn('fast');
+            })
+    });
+    $('#courses_search_button').click(function() {
+        var keyword = $('.courses_search_input[name="keyword"]').val().trim().split(' ').join('+');
+        var teacher = $('.courses_search_input[name="teacher"]').val().trim().split(' ').join('+');
+        var category = $('.courses_search_input[name="category"]').val().trim().split(' ').join('+');
+        $('#load-course').load('/course/load_course.php?keyword='+keyword+'&teacher='+teacher+'&category='+category);
+    })
+    $('#load-course').load('/course/load_course.php');
+    $('.list-category').click(function(){
+        var idlist = $(this).attr('data');
+        $('.list-category[data='+idlist+'] i').toggleClass('active');
+        $('.dropdown-menu-tree.'+idlist).slideToggle();
+    })
+    $('.list-subcategory').click(function(){
+        var idlist = $(this).attr('id');
+        $('.list-category#'+idlist).toggleClass('active');
+        $('.dropdown-menu-tree.'+idlist).slideToggle();
+    })
+
+
 {{/js}}
+<script>
+    ////phân trang khóa học///
+    const getCourse = (url) => {
+        require(['jquery', 'core/config'], ($, config) => {
+            var id = $('.pagination').attr('category');
+            var settings = {
+                type:"GET",
+                processData:true,
+                data:{
+                    id:id
+                },
+                contenttype:"application/json",
+            };
+            $.ajax(url,settings)
+            .then(function(response) {
+                $('#load-course').hide().html(response).fadeIn('fast');
+            })
+        });
+    }
+
+</script>
