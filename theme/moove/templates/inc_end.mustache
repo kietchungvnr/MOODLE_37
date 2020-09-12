@@ -578,7 +578,7 @@ require(['jquery', 'core/config'], function($, Config) {
         $(".dropdown-content-2."+id).slideToggle('fast','swing');
     }) 
     $(".nav-item.mid").click(function() {    
-        if($('.dropdown-content').children() == '' ) {
+        if($('.dropdown-content').is(':empty') ) {
             alert('Không có nội dung');
         }
         else {
@@ -605,6 +605,13 @@ require(['jquery', 'core/config'], function($, Config) {
     if($('div.card-header.level1:first-child() a').text() == '') {
         $('div.card-header.level1:first-child() a').append('{{#str}} general, theme_moove {{/str}}');
     }
+    $('div.card-header.level1').each(function(){
+            var idheader = $(this).attr('id');
+            if($('.dropdown-content-2.'+idheader).is(':empty')) {
+                $(this).hide();
+            }
+    })
+
     if($('.card-header.level2 a').hasClass('active')) {
         if($('.card-header.level2 a.active').parents('div.level2').is(':first-child')) {
             $('.nav-link.prev').addClass('disable');
@@ -616,6 +623,17 @@ require(['jquery', 'core/config'], function($, Config) {
     else {
         $('.nav-link.next,.nav-link.prev').addClass('disable');
     }
+
+
+     $('.card-header.level2 a').each(function(){
+        if($(this).attr('href').indexOf('/mod/url/') > 0 ) {
+            $(this).attr('target','_blank');
+        }
+
+     })
+
+
+
 
     //load course index//
     $('.ajax-load').click(function() {

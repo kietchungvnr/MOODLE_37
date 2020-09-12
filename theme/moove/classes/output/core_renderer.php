@@ -149,7 +149,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                         $getmodules = $DB->get_records_sql('SELECT cm.id, cm.deletioninprogress FROM {course_modules} cm JOIN {course_sections} cs ON cm.section = cs.id WHERE cm.instance = :section AND cm.course = :courseid',['section' => $cms->instance,'courseid' => $COURSE->id]);
                         foreach($getmodules as $getmodule) {
                             if($getmodule->deletioninprogress != 0) {
-                                continue;
+                                continue 2;
                             }    
                         }
                         
