@@ -320,6 +320,24 @@
             init(cmid);
         });
     }
+    ////phân trang khóa học///
+    const getCourse = (url) => {
+        require(['jquery', 'core/config'], ($, config) => {
+            var id = $('.pagination').attr('category');
+            var settings = {
+                type:"GET",
+                processData:true,
+                data:{
+                    id:id
+                },
+                contenttype:"application/json",
+            };
+            $.ajax(url,settings)
+            .then(function(response) {
+                $('#load-course').hide().html(response).fadeIn('fast');
+            })
+        });
+    }
     
 </script>
 {{#js}}
@@ -375,25 +393,25 @@ require(['jquery', 'core/config'], function($, Config) {
                 var url = $(this).attr("href");
                 var str = match.input;
                 var i = 0;
-                if(str.indexOf(url) == 0) {
+                if(str == url) {
                     $(this).addClass("active-nav");
                     i++;
                 }
-                if(i > 0) {
-                    $(".nav-active:first").removeClass("active-nav");
-                }
+                // if(i > 0) {
+                //     $(".nav-active:first").removeClass("active-nav");
+                // }
             });
             $("#enlaces .nav-active").each(function() {
                 var url = $(this).attr("href");
                 var str = match.input;
                 var i = 0;
-                if(str.indexOf(url) == 0) {
+                if(str == url) {
                     $(this).addClass("active-nav");
                     i++;
                 }
-                if(i > 0) {
-                    $("#enlaces .nav-active:first").removeClass("active-nav");
-                }
+                // if(i > 0) {
+                //     $("#enlaces .nav-active:first").removeClass("active-nav");
+                // }
             });
         }
         else {
@@ -402,11 +420,10 @@ require(['jquery', 'core/config'], function($, Config) {
         }
     });
 }); 
-    var quizblock = $('#page-mod-quiz-attempt');
-    if(quizblock.length > 0){
+    var showblocks = $('#page-mod-quiz-attempt, #page-mod-book-view');
+    if(showblocks.length > 0){
         $('body').addClass('drawer-open-right')
     }
-
 
     {{! //////////course menu////////////// }}
     var path = window.location.href;
@@ -674,24 +691,3 @@ require(['jquery', 'core/config'], function($, Config) {
 
 
 {{/js}}
-<script>
-    ////phân trang khóa học///
-    const getCourse = (url) => {
-        require(['jquery', 'core/config'], ($, config) => {
-            var id = $('.pagination').attr('category');
-            var settings = {
-                type:"GET",
-                processData:true,
-                data:{
-                    id:id
-                },
-                contenttype:"application/json",
-            };
-            $.ajax(url,settings)
-            .then(function(response) {
-                $('#load-course').hide().html(response).fadeIn('fast');
-            })
-        });
-    }
-
-</script>

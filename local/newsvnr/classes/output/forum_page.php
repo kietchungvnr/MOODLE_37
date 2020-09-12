@@ -41,7 +41,7 @@ class forum_page implements renderable, templatable {
         join mdl_forum_posts fp on fd.id = fp.discussion 
         join mdl_user u on fd.userid = u.id 
         join mdl_course_modules cm on fd.forum = cm.instance
-        where (ff.type IN('general','single','blog')) and fp.parent = 0  order by fp.created DESC";
+        where (ff.type IN('general','single','blog')) and fp.parent = 0 AND cm.module = 9 order by fp.created DESC";
         $forumdata = $DB->get_recordset_sql($sql);
         $forumarr = array();
         if(empty($forumdata))
@@ -92,14 +92,13 @@ class forum_page implements renderable, templatable {
        
         if(is_siteadmin())
         {
-            $query_admin = "SELECT f.id as forumid, c.id as courseid, cm.id as viewid, f.name as forumname, f.timemodified as ngaytao, f.type
+            $query_admin = "SELECT cm.id as viewid, f.id as forumid, c.id as courseid, f.name as forumname, f.timemodified as ngaytao, f.type
             from mdl_course as c 
             join mdl_forum as f on f.course = c.id
             JOIN mdl_forum_discussions AS fd ON fd.forum = f.id
             join mdl_course_modules cm on cm.instance = f.id
-            where  f.type = ? 
-            group by f.id, c.id, c.fullname, cm.id, f.type, f.name,f.timemodified";
-
+            where  f.type = ? AND cm.module = 9
+            group by cm.id, f.id, c.id, c.fullname, f.type, f.name,f.timemodified";
             $forumdata = $DB->get_records_sql($query_admin,array($typeforum));
 
         }
@@ -111,7 +110,7 @@ class forum_page implements renderable, templatable {
                   join mdl_course_modules cm on cm.instance = f.id
                   join mdl_enrol e on e.courseid = c.id
                   join mdl_user_enrolments ue on ue.enrolid = e.id                        
-                  where f.type = ? and ue.userid = ?
+                  where f.type = ? and ue.userid = ? AND cm.module = 9
                   GROUP BY f.id, c.id, cm.id, f.name, f.timemodified, f.type, e.courseid,c.fullname,e.status";
 
                 $forum_of_user = $DB->get_records_sql($query_user, array($typeforum,$USER->id));
@@ -206,7 +205,7 @@ class forum_page implements renderable, templatable {
             join mdl_forum as f on f.course = c.id
             join mdl_forum_discussions as fd on f.id = fd.forum
             JOIN mdl_course_modules cm on cm.instance = f.id
-            where e.enrol='guest'and e.status= 0 and f.type = ?
+            where e.enrol='guest'and e.status= 0 and f.type = ? AND cm.module = 9
             group by f.id, c.id, f.name, f.timemodified, f.type, e.status, c.fullname, cm.id";
         $data = $DB->get_records_sql($sql,array($typeforum));
 
@@ -222,7 +221,7 @@ class forum_page implements renderable, templatable {
                 from mdl_forum_discussions fd 
                 JOIN mdl_course_modules cm on fd.forum = cm.instance
                 join mdl_user u on u.id = fd.userid
-                where fd.forum = ?
+                where fd.forum = ? AND cm.module = 9
                 group by fd.firstpost, cm.id, fd.forum, u.firstname,u.lastname
                 order by fd.firstpost DESC";
         $data = $DB->get_record_sql($sql, array($forumid));
