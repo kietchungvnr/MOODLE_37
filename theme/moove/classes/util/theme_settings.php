@@ -60,7 +60,7 @@ class theme_settings {
         global $OUTPUT;
 
         $theme = theme_config::load('moove');
-
+        $templatecontext = [];
         $sectionsettings = [
           'displayhome', 'displaynews', 'displaycoursespopular', 'displaymycourses', 'displayforums'
         ];
@@ -69,7 +69,6 @@ class theme_settings {
             $templatecontext[$setting] = $theme->settings->$setting;
           }
         }
-
         return $templatecontext;
     }
 
@@ -693,10 +692,10 @@ class theme_settings {
         global $OUTPUT,$DB,$CFG,$USER;
 
         $arr = array();
-        $sql = "SELECT p.subject, LEFT(p.message, 500) as message, d.name,d.id,d.forum,d.course,p.id as postid FROM {forum} as f
+        $sql = "SELECT p.id as postid, p.subject, LEFT(p.message, 500) as message, d.name,d.id,d.forum,d.course FROM {forum} as f
         LEFT JOIN  {forum_discussions} as d on f.id  = d.forum 
         INNER JOIN {forum_posts} as p on d.id = p.discussion
-        where f.type = ? and d.pinned= ? 
+        where f.type = ? and d.pinned= ?
         ";  
         $data = $DB->get_records_sql($sql,array('news',1));
         $templatecontext['sliderenabled'] = "1";
