@@ -308,3 +308,4 @@ $string['nocourseload'] = 'Không tìm thấy khóa học';
 $string['coursename'] = 'Tên khóa học';
 $string['teachernames'] = 'Tên giáo viên';
 $string['resultsearch'] = 'Kết quả tìm kiếm:';
+$string['progress'] = 'Tiến trình học';

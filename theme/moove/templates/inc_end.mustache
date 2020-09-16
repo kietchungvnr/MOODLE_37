@@ -320,24 +320,6 @@
             init(cmid);
         });
     }
-    ////phân trang khóa học///
-    const getCourse = (url) => {
-        require(['jquery', 'core/config'], ($, config) => {
-            var id = $('.pagination').attr('category');
-            var settings = {
-                type:"GET",
-                processData:true,
-                data:{
-                    id:id
-                },
-                contenttype:"application/json",
-            };
-            $.ajax(url,settings)
-            .then(function(response) {
-                $('#load-course').hide().html(response).fadeIn('fast');
-            })
-        });
-    }
     
 </script>
 {{#js}}
@@ -393,25 +375,25 @@ require(['jquery', 'core/config'], function($, Config) {
                 var url = $(this).attr("href");
                 var str = match.input;
                 var i = 0;
-                if(str == url) {
+                if(str.indexOf(url) == 0) {
                     $(this).addClass("active-nav");
                     i++;
                 }
-                // if(i > 0) {
-                //     $(".nav-active:first").removeClass("active-nav");
-                // }
+                if(i > 0) {
+                    $(".nav-active:first").removeClass("active-nav");
+                }
             });
             $("#enlaces .nav-active").each(function() {
                 var url = $(this).attr("href");
                 var str = match.input;
                 var i = 0;
-                if(str == url) {
+                if(str.indexOf(url) == 0) {
                     $(this).addClass("active-nav");
                     i++;
                 }
-                // if(i > 0) {
-                //     $("#enlaces .nav-active:first").removeClass("active-nav");
-                // }
+                if(i > 0) {
+                    $("#enlaces .nav-active:first").removeClass("active-nav");
+                }
             });
         }
         else {
@@ -420,10 +402,11 @@ require(['jquery', 'core/config'], function($, Config) {
         }
     });
 }); 
-    var showblocks = $('#page-mod-quiz-attempt, #page-mod-book-view');
-    if(showblocks.length > 0){
+    var quizblock = $('#page-mod-quiz-attempt');
+    if(quizblock.length > 0){
         $('body').addClass('drawer-open-right')
     }
+
 
     {{! //////////course menu////////////// }}
     var path = window.location.href;
@@ -584,9 +567,9 @@ require(['jquery', 'core/config'], function($, Config) {
         var width = $(window).width();
         if (width <= 950){
             if(fm == "focusmod") {
-                {{! document.cookie = 'cookie=; max-Age=-1;path=/'; }}
-                $('#focus-mod').click();
-            } 
+                document.cookie = 'cookie=; max-Age=-1;path=/';
+                location.reload();
+            }
         }
     })
     $(".dropdown-content .card-header" ).click(function() { 
@@ -641,22 +624,18 @@ require(['jquery', 'core/config'], function($, Config) {
         $('.nav-link.next,.nav-link.prev').addClass('disable');
     }
 
-
      $('.card-header.level2 a').each(function(){
         if($(this).attr('href').indexOf('/mod/url/') > 0 ) {
             $(this).attr('target','_blank');
         }
 
      })
-
-
-
-
     //load course index//
     $('.ajax-load').click(function() {
+            $('.loading-page').addClass('active');
             $('li').removeClass('active');
             $(this).parents('li').addClass('active');
-            var script = "/course/load_course.php";
+            var script = "/course/load_course.php"; 
             var category = $(this).attr('id');
             var settings = {
                 type:"GET",
@@ -669,13 +648,18 @@ require(['jquery', 'core/config'], function($, Config) {
             $.ajax(script,settings)
             .then(function(response){
                 $('#load-course').hide().html(response).fadeIn('fast');
+                $('.loading-page').removeClass('active')
             })
+            ;
     });
     $('#courses_search_button').click(function() {
+        $('.loading-page').addClass('active');
         var keyword = $('.courses_search_input[name="keyword"]').val().trim().split(' ').join('+');
         var teacher = $('.courses_search_input[name="teacher"]').val().trim().split(' ').join('+');
         var category = $('.courses_search_input[name="category"]').val().trim().split(' ').join('+');
-        $('#load-course').load('/course/load_course.php?keyword='+keyword+'&teacher='+teacher+'&category='+category);
+        $('#load-course').load('/course/load_course.php?keyword='+keyword+'&teacher='+teacher+'&category='+category,function(){
+            $('.loading-page').removeClass('active');
+        });
     })
     $('#load-course').load('/course/load_course.php');
     $('.list-category').click(function(){
@@ -688,6 +672,31 @@ require(['jquery', 'core/config'], function($, Config) {
         $('.list-category#'+idlist).toggleClass('active');
         $('.dropdown-menu-tree.'+idlist).slideToggle();
     })
-
+    $('.checkall').click(function () {    
+        $('input.usercheckbox').prop('checked', this.checked);    
+    });
 
 {{/js}}
+<script>
+    ////phân trang khóa học///
+    const getCourse = (url) => {
+        require(['jquery', 'core/config'], ($, config) => {
+            $('.loading-page').addClass('active');
+            var id = $('.pagination').attr('category');
+            var settings = {
+                type:"GET",
+                processData:true,
+                data:{
+                    id:id
+                },
+                contenttype:"application/json",
+            };
+            $.ajax(url,settings)
+            .then(function(response) {
+                $('#load-course').hide().html(response).fadeIn('fast');
+                $('.loading-page').removeClass('active');
+            })
+        });
+    }
+
+</script>

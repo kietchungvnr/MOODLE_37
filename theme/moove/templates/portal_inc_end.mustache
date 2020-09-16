@@ -481,4 +481,8 @@ require(['jquery'], function($) {
     else {
         $('.pagelayout-course .summary').css('display','none');
     }
+    {{! chon tất cả table ghi danh học viên }}
+    $('.checkall').click(function () {    
+        $('input.usercheckbox').prop('checked', this.checked);    
+    });
 {{/js}}

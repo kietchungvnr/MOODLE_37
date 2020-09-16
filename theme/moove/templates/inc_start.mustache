@@ -722,8 +722,8 @@ td.dthighlight {
     left:       0;
     height:     100%;
     width:      100%;
-    background: rgba( 255, 255, 255, .8 ) 
-                url('/theme/moove/pix/FhHRx.gif')
+    background: rgba( 255, 255, 255, .3 ) 
+                url('/theme/moove/pix/Ripple.gif')
                 50% 50% 
                 no-repeat;
 }
@@ -3617,16 +3617,13 @@ h4.responsehistoryheader {
     white-space: nowrap;
     border: 1px solid #373a3c;
 }
-#page-mod-quiz-report br {
-    display: none;
-}
 /*tr th.header a {
     color: #373a3c;
 }*/
 .chartjs-render-monitor {
     max-height: 550px;
 }
-#page-my-index .block .minicalendar {
+/*#page-my-index .block .minicalendar {
     max-width: 1000px;
     border: 1px solid #b4a5a5b0;
     font-size: larger;
@@ -3638,7 +3635,7 @@ h4.responsehistoryheader {
     border-bottom:1px solid #cbc1c1;
     background: #3c8dbc;
     color: white;
-}
+}*/
 #page-local-newsvnr-forum tbody tr:nth-child(even) {
   background-color: #dddddd73;
 }
@@ -3914,6 +3911,41 @@ table#participants .fa-sort-asc ,
 .forumpost .body-content-container {
     background: white;
 }
+#sidepre-blocks section.card {
+    margin-bottom: 0;
+    box-shadow: unset;
+}
+table thead th {
+    background-color: #3c8dbc;
+    color: white;
+}
+table thead th a {
+    color: white;
+}
+.badge-success {
+    border-radius: 20px;
+    padding: .3em .5em;
+}
+table tbody .icon {
+    color: #3c8dbc;
+}
+table tbody a {
+    color: #373a3c;
+}
+table#participants .fa-sort-asc ,
+.fp-viewbar.disabled {
+    display: none;
+}
+.pagination .page-item.active .page-link {
+    background: #3c8dbc;
+    border: none;
+}
+.forumpost {
+    background: #f8f9fa;
+}
+.forumpost .body-content-container {
+    background: white;
+}
 {{#hasfocusmod}}
     ul.nav-tabs.course,
     .all-header,
@@ -3989,6 +4021,7 @@ li.list-category {
     background-color: #fff;
     border-top: 1px dashed rgba(0,0,0,.125);
     background: #f2f4f5;
+    cursor: pointer;
 }
 li.list-category a , li.list-subcategory a{
     color: #191818;
@@ -4000,6 +4033,7 @@ li.list-category a , li.list-subcategory a{
 .dropdown-menu-tree li{
     padding:0.75rem 1.25rem 0.75rem 25px ;
     border-top: 1px dashed rgba(0,0,0,.125);
+    cursor: pointer;
 }
 .list-category i.fa-angle-right {
     padding:5px 0px 5px 5px;
@@ -4116,6 +4150,7 @@ li.list-category a , li.list-subcategory a{
 .nav-active {
     cursor: pointer;
 }
+<<<<<<< HEAD
 /**** customize view quiz ****/
 .moodle-dialogue-base .moodle-dialogue-wrap .moodle-dialogue-hd.yui3-widget-hd {
     min-height: 0rem;
@@ -4135,6 +4170,49 @@ li.list-category a , li.list-subcategory a{
 #page-mod-quiz-view .quizattempt {
     padding: .5rem 0 !important;
 }
+=======
+.course-content .single-section .section-navigation {
+    display: none;
+}
+.participants-collum {
+    max-width: 220px;
+}
+table#participants thead th:nth-child(1) {
+    padding: 10px;
+}
+table#participants thead th:nth-child(1) .commands {
+    display: none;
+}
+table#participants tbody td:nth-child(1) {
+    padding: 10px;
+}
+select#formactionid {
+    margin-left: 0;
+}
+#page-mod-quiz-report table#attempts {
+    width: 100%;
+}
+.loading-page {
+    display:    none;
+    position:   absolute;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .3 ) 
+                url('/theme/moove/pix/Ripple.gif')
+                50% 50% 
+                no-repeat;
+}
+
+.loading-page.active {
+    overflow: hidden;   
+    display: block;
+}
+
+
+>>>>>>> 35be3c20ab... Sửa table ghi danh học viên
 </style>
 
 

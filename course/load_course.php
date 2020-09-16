@@ -54,11 +54,11 @@ if ($page < 1) {
     $page = 1;
 }
 $start = ($page - 1) * $perPage->perpageCourseNews;
-if ($start < 12) {
+if ($start < 15) {
     $start = 0;
 }
 if ($id < 1 && $keyword == '' && $teacher == '' && $category == '') {
-    $getcourse   = $DB->get_records_sql('SELECT * FROM {course} ORDER BY id DESC OFFSET ' . $start . ' ROWS FETCH NEXT 12 ROWS only');
+    $getcourse   = $DB->get_records_sql('SELECT * FROM {course} ORDER BY id DESC OFFSET ' . $start . ' ROWS FETCH NEXT 15 ROWS only');
     $countcourse = $DB->get_records_sql('SELECT * FROM {course}');
 } else if ($keyword != '' || $teacher != '' || $category != '') {
     $sql = '';
@@ -89,11 +89,11 @@ if ($id < 1 && $keyword == '' && $teacher == '' && $category == '') {
 	    JOIN {course_categories} cc ON cc.id = c.category
 	    where ra.roleid=3 AND fullname LIKE $strsearch AND CONCAT(u.firstname,' ', u.lastname) LIKE $strteacher AND cc.name LIKE $strcategory";
     }
-    $getcourse   = $DB->get_records_sql($sql . 'ORDER BY id DESC OFFSET ' . $start . ' ROWS FETCH NEXT 12 ROWS only', []);
+    $getcourse   = $DB->get_records_sql($sql . 'ORDER BY id DESC OFFSET ' . $start . ' ROWS FETCH NEXT 15 ROWS only', []);
     $countcourse = $DB->get_records_sql($sql, []);
     echo '<div class="mt-3 result-course">'.get_string('resultsearch','local_newsvnr').' '. count($countcourse).'</div>';
 } else {
-    $getcourse   = $DB->get_records_sql('SELECT * FROM {course} WHERE category = :id ORDER BY id DESC OFFSET ' . $start . ' ROWS FETCH NEXT 12 ROWS only ', ['id' => $id]);
+    $getcourse   = $DB->get_records_sql('SELECT * FROM {course} WHERE category = :id ORDER BY id DESC OFFSET ' . $start . ' ROWS FETCH NEXT 15 ROWS only ', ['id' => $id]);
     $countcourse = $DB->get_records_sql('SELECT * FROM {course} WHERE category = :id', ['id' => $id]);
 }
 $perpageresult = $perPage->getAllCourseNewsPageLinks(count($countcourse), $paginationlink);
@@ -165,3 +165,5 @@ echo '</div>';
 if (!empty($perpageresult)) {
     echo '<div class="col-md-12"> <div id="pagination" teacher="' . $teacher . '" keyword="' . $keyword . '" category="' . $id . '">' . $perpageresult . '</div> </div>';
 }
+
+die();

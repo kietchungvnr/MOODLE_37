@@ -207,10 +207,9 @@ $manager = new course_enrolment_manager($PAGE, $course);
 $enrolbuttons = $manager->get_manual_enrol_buttons();
 $enrolrenderer = $PAGE->get_renderer('core_enrol');
 $enrolbuttonsout = '';
-//Custom by Thang Tắt bớt 1 button enrol dư
-// foreach ($enrolbuttons as $enrolbutton) {
-//     $enrolbuttonsout .= $enrolrenderer->render($enrolbutton);
-// }
+foreach ($enrolbuttons as $enrolbutton) {
+    $enrolbuttonsout .= $enrolrenderer->render($enrolbutton);
+}
 echo html_writer::div($enrolbuttonsout, 'float-right');
 
 // Should use this variable so that we don't break stuff every time a variable is added or changed.
@@ -275,23 +274,23 @@ if ($bulkoperations) {
         $showalllink = false;
     }
 
-    echo html_writer::start_tag('div', array('class' => 'btn-group'));
-    if ($participanttable->get_page_size() < $participanttable->totalrows) {
-        // Select all users, refresh page showing all users and mark them all selected.
-        $label = get_string('selectalluserswithcount', 'moodle', $participanttable->totalrows);
-        echo html_writer::tag('input', "", array('type' => 'button', 'id' => 'checkall', 'class' => 'btn btn-secondary',
-                'value' => $label, 'data-showallink' => $showalllink));
-        // Select all users, mark all users on page as selected.
-        echo html_writer::tag('input', "", array('type' => 'button', 'id' => 'checkallonpage', 'class' => 'btn btn-secondary',
-        'value' => get_string('selectallusersonpage')));
-    } else {
-        echo html_writer::tag('input', "", array('type' => 'button', 'id' => 'checkallonpage', 'class' => 'btn btn-secondary',
-        'value' => get_string('selectall')));
-    }
+    // echo html_writer::start_tag('div', array('class' => 'btn-group'));
+    // if ($participanttable->get_page_size() < $participanttable->totalrows) {
+    //     // Select all users, refresh page showing all users and mark them all selected.
+    //     $label = get_string('selectalluserswithcount', 'moodle', $participanttable->totalrows);
+    //     echo html_writer::tag('input', "", array('type' => 'button', 'id' => 'checkall', 'class' => 'btn btn-secondary',
+    //             'value' => $label, 'data-showallink' => $showalllink));
+    //     // Select all users, mark all users on page as selected.
+    //     echo html_writer::tag('input', "", array('type' => 'button', 'id' => 'checkallonpage', 'class' => 'btn btn-secondary',
+    //     'value' => get_string('selectallusersonpage')));
+    // } else {
+    //     echo html_writer::tag('input', "", array('type' => 'button', 'id' => 'checkallonpage', 'class' => 'btn btn-secondary',
+    //     'value' => get_string('selectall')));
+    // }
 
-    echo html_writer::tag('input', "", array('type' => 'button', 'id' => 'checknone', 'class' => 'btn btn-secondary',
-        'value' => get_string('deselectall')));
-    echo html_writer::end_tag('div');
+    // echo html_writer::tag('input', "", array('type' => 'button', 'id' => 'checknone', 'class' => 'btn btn-secondary',
+    //     'value' => get_string('deselectall')));
+    // echo html_writer::end_tag('div');
     $displaylist = array();
     if (!empty($CFG->messaging)) {
         $displaylist['#messageselect'] = get_string('messageselectadd');
@@ -343,7 +342,7 @@ if ($bulkoperations) {
     echo html_writer::tag('div', html_writer::tag('label', get_string("withselectedusers"),
         array('for' => 'formactionid', 'class' => 'col-form-label d-inline')) .
         html_writer::select($displaylist, 'formaction', '', array('' => 'choosedots'), array('id' => 'formactionid')),
-        array('class' => 'ml-2'));
+        array('class' => ''));
 
     echo '<input type="hidden" name="id" value="'.$course->id.'" />';
     echo '<noscript style="display:inline">';
@@ -363,9 +362,10 @@ echo '</div>';  // Userlist.
 
 $enrolrenderer = $PAGE->get_renderer('core_enrol');
 echo '<div class="float-right">';
-foreach ($enrolbuttons as $enrolbutton) {
-    echo $enrolrenderer->render($enrolbutton);
-}
+//Custom by Thang Tắt bớt 1 button enrol dư
+// foreach ($enrolbuttons as $enrolbutton) {
+//     echo $enrolrenderer->render($enrolbutton);
+// }
 echo '</div>';
 
 if ($newcourse == 1) {

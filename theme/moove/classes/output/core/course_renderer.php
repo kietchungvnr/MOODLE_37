@@ -316,41 +316,41 @@ class course_renderer extends \core_course_renderer {
         $site = get_site();
         $output = '';
 
-        if ($coursecat->can_create_course() || $coursecat->has_manage_capability()) {
-            // Add 'Manage' button if user has permissions to edit this category.
-            $managebutton = $this->single_button(new moodle_url('/course/management.php',
-                array('categoryid' => $coursecat->id)), get_string('managecourses'), 'get');
-            $this->page->set_button($managebutton);
-        }
+        // if ($coursecat->can_create_course() || $coursecat->has_manage_capability()) {
+        //     // Add 'Manage' button if user has permissions to edit this category.
+        //     $managebutton = $this->single_button(new moodle_url('/course/management.php',
+        //         array('categoryid' => $coursecat->id)), get_string('managecourses'), 'get');
+        //     $this->page->set_button($managebutton);
+        // }
 
-        if (core_course_category::is_simple_site()) {
-            // There is only one category in the system, do not display link to it.
-            $strfulllistofcourses = get_string('fulllistofcourses');
-            $this->page->set_title("$site->shortname: $strfulllistofcourses");
-        } else if (!$coursecat->id || !$coursecat->is_uservisible()) {
-            $strcategories = get_string('categories');
-            $this->page->set_title("$site->shortname: $strcategories");
-        } else {
-            $strfulllistofcourses = get_string('fulllistofcourses');
-            $this->page->set_title("$site->shortname: $strfulllistofcourses");
+        // if (core_course_category::is_simple_site()) {
+        //     // There is only one category in the system, do not display link to it.
+        //     $strfulllistofcourses = get_string('fulllistofcourses');
+        //     $this->page->set_title("$site->shortname: $strfulllistofcourses");
+        // } else if (!$coursecat->id || !$coursecat->is_uservisible()) {
+        //     $strcategories = get_string('categories');
+        //     $this->page->set_title("$site->shortname: $strcategories");
+        // } else {
+        //     $strfulllistofcourses = get_string('fulllistofcourses');
+        //     $this->page->set_title("$site->shortname: $strfulllistofcourses");
 
-            // Print the category selector
-            $categorieslist = core_course_category::make_categories_list();
-            if (count($categorieslist) > 1) {
-                //Custom :Thang//
-                $output .= '<div class="row">';
-                $output .= html_writer::start_tag('div', array('class' => 'categorypicker col-xl-6 col-md-12'));
-                $select = new single_select(new moodle_url('/course/index.php'), 'categoryid',
-                        core_course_category::make_categories_list(), $coursecat->id, null, 'switchcategory');
-                $select->set_label(get_string('categories').':');
-                $output .= $this->render($select);
-                $output .= html_writer::end_tag('div'); // .categorypicker
-                $output .= '<div class="col-xl-6 col-md-12">';
-                $output .= $this->course_search_form();
-                $output .= '</div>';
-                $output .='</div>';
-            }
-        }
+        //     // Print the category selector
+        //     $categorieslist = core_course_category::make_categories_list();
+        //     if (count($categorieslist) > 1) {
+        //         //Custom :Thang//
+        //         $output .= '<div class="row">';
+        //         $output .= html_writer::start_tag('div', array('class' => 'categorypicker col-xl-6 col-md-12'));
+        //         $select = new single_select(new moodle_url('/course/index.php'), 'categoryid',
+        //                 core_course_category::make_categories_list(), $coursecat->id, null, 'switchcategory');
+        //         $select->set_label(get_string('categories').':');
+        //         $output .= $this->render($select);
+        //         $output .= html_writer::end_tag('div'); // .categorypicker
+        //         $output .= '<div class="col-xl-6 col-md-12">';
+        //         $output .= $this->course_search_form();
+        //         $output .= '</div>';
+        //         $output .='</div>';
+        //     }
+        // }
 
         // Print current category description
         $chelper = new coursecat_helper();
@@ -422,36 +422,36 @@ class course_renderer extends \core_course_renderer {
         }
         // $output .= $this->container_end();
 
-        // Add course search form.
-       // $output .= $this->course_search_form();
-
-        // Display course category tree.
+        // // Add course search form.
+        // $output .= $this->course_search_form();
+        // // Display course category tree.
+        // $output .= $this->coursecat_tree($chelper, $coursecat);
+       
         $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent FROM mdl_course_categories cc JOIN mdl_course c ON cc.id = c.category OR cc.parent = c.category WHERE cc.visible = 1');
         $output .= '<div class="row"><div class="col-xl-3 col-lg-4 col-md-4 menu-tree-course"><div class="border">';
         $output .= $this->menucoursecategory($categories);
         $output .= '</div></div>';
-        $output .= '<div class="col-xl-9 col-lg-8 col-md-8 ">';
+        $output .= '<div class="col-xl-9 col-lg-8 col-md-8 position-relative">';
+        $output .= '<div class="loading-page"></div>';
         $output .= $this->course_teacher_search_form();
         $output .= '<div id="load-course">';
         $output .= '</div></div></div>';
-       
-
         return $output;
     }
     public function course_teacher_search_form() {
         $output = '';
         $output .= '<div id="courses_search_form" class="">';
         $output .= '<div class="row">';
-        $output .= '<div class="col-xl-3 col-6 pt-1">';
+        $output .= '<div class="col-xl-3 col-6 pt-1 pl-1">';
         $output .= '<input style="width:100%" name="category" type="text" class="courses_search_input" id="category" placeholder="'.get_string('coursecatogories','local_newsvnr').'" value="">';
         $output .= '</div>';
-        $output .= '<div class="col-xl-3 col-6 pt-1">';
+        $output .= '<div class="col-xl-3 col-6 pt-1 pl-1">';
         $output .= '<input style="width:100%" name="keyword" type="text" class="courses_search_input" id="keyword" placeholder="'.get_string('coursename','local_newsvnr').'" value="">';
         $output .= '</div>';
-        $output .= '<div class="col-xl-3 col-6 pt-1">';
+        $output .= '<div class="col-xl-3 col-6 pt-1 pl-1">';
         $output .= '<input style="width:100%" name="teacher" type="text" class="courses_search_input" id="teacher" placeholder="'.get_string('teachernames','local_newsvnr').'" value="">';
         $output .= '</div>';
-        $output .= '<div class="col-xl-3 col-6 pt-1">';
+        $output .= '<div class="col-xl-3 col-6 pt-1 pl-1">';
         $output .= '<button id="courses_search_button" class="ml-auto w-100"><i class="fa fa-search mr-1"></i>'.get_string('search','local_newsvnr').'</button>';
         $output .= '</div>';
         $output .= '</div>';

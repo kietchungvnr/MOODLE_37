@@ -3705,6 +3705,42 @@ img.userpicture {
 #page-mod-quiz-view .quizattempt {
     padding: .5rem 0 !important;
 }
+.participants-collum {
+    max-width: 220px;
+}
+table#participants thead th:nth-child(1) {
+    padding: 10px;
+}
+table#participants thead th:nth-child(1) .commands {
+    display: none;
+}
+table#participants tbody td:nth-child(1) {
+    padding: 10px;
+}
+select#formactionid {
+    margin-left: 0;
+}
+#page-mod-quiz-report table#attempts {
+    width: 100%;
+}
+.loading-page {
+    display:    none;
+    position:   absolute;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .3 ) 
+                url('/theme/moove/pix/Ripple.gif')
+                50% 50% 
+                no-repeat;
+}
+
+.loading-page.active {
+    overflow: hidden;   
+    display: block;
+}
 </style>
 
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.2.514/styles/kendo.common.min.css"/>

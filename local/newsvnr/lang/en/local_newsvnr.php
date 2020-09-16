@@ -308,3 +308,4 @@ $string['nocourseload'] = 'No course';
 $string['coursename'] = 'Course name';
 $string['teachernames'] = 'Teacher name';
 $string['resultsearch'] = 'Search results:';
+$string['progress'] = 'Progress learning';
