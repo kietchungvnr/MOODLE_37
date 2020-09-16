@@ -998,5 +998,6 @@ $string['code'] = 'Code';
 // Custom by Vũ: Chức năng sửa tất cả điểm question với select.
 $string['gradepass'] = 'Điểm đậu';
 $string['questiontotal'] = 'Tổng số câu hỏi';
-$string['changeallmark'] = 'Thay đổi';
+$string['changeallmark'] = 'Đổi điểm';
 $string['selectallquestion'] = 'Chọn tất cả';
+$string['changeallmarksuccess'] = 'Đổi điểm tất cả câu hỏi được chọn thành công!';

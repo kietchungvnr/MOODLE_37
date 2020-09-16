@@ -25,13 +25,15 @@ define([
     'jquery',
     'core/notification',
     'core/templates',
-    'core/config'
+    'core/config',
+    'core/str'
 ],
 function(
     $,
     Notification,
     Templates,
-    Config
+    Config,
+    Str
 ) {
 	var editquestion = function () {
 		$(document).ready(function(){
@@ -80,8 +82,14 @@ function(
 			                type: "error"
 		            	});
           			} else {
-          				$('.instancemaxmark.decimalplaces_2').text(response.instancemaxmark);
+          				selected.forEach(questioid => 
+          					$('#slot-' + questioid + ' .instancemaxmark.decimalplaces_2').text(response.instancemaxmark)
+          				);
           				$('.mod_quiz_summarks').text(response.newsummarks);
+          				Str.get_string('changeallmarksuccess', 'mod_quiz')
+                           .then(function(s) {
+			                alert(s);
+			            }).fail(Notification.exception)
           			}
           			return;
 			    }).fail(Notification.exception);
