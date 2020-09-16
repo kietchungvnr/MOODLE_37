@@ -781,9 +781,27 @@ class mod_quiz_renderer extends plugin_renderer_base {
      */
     public function view_page($course, $quiz, $cm, $context, $viewobj) {
         $output = '';
-        $output .= $this->view_information($quiz, $cm, $context, $viewobj->infomessages);
-        $output .= $this->view_table($quiz, $context, $viewobj);
-        $output .= $this->view_result_info($quiz, $context, $cm, $viewobj);
+        // $output .= '<div class="container">';
+        
+        if($viewobj->attempts) {
+            $output .= '<div class="row m-0 w-100">';
+            $output .= '<div class="col-md-4">';
+            $output .= $this->view_information_table($quiz, $cm, $context, $viewobj->infomessages);
+            $output .= '</div>';
+            $output .= '<div class="col-md-8">';
+            $output .= $this->view_table($quiz, $context, $viewobj);
+            $output .= $this->view_result_info_table($quiz, $context, $cm, $viewobj);
+            $output .= '</div>';
+        }  else {
+            $output .= '<div class="row m-0 w-100 d-flex justify-content-center">';
+            $output .= '<div class="col-md-4">';
+            $output .= $this->view_information_table($quiz, $cm, $context, $viewobj->infomessages);
+            $output .= '</div>';
+        }
+        
+        $output .= '</div>';
+        // $output .= '</div>';
+        
         $output .= $this->box($this->view_page_buttons($viewobj), 'quizattempt');
         return $output;
     }
@@ -958,6 +976,61 @@ class mod_quiz_renderer extends plugin_renderer_base {
     }
 
     /**
+     * Custom by Vũ: Display overview quiz dưới dạng table
+     * Output the page information using Bootstrap 4
+     *
+     * @param object $quiz the quiz settings.
+     * @param object $cm the course_module object.
+     * @param object $context the quiz context.
+     * @param array $messages any access messages that should be described.
+     * @return string HTML to output.
+     */
+    public function view_information_table($quiz, $cm, $context, $messages) {
+        global $CFG;
+        require_once($CFG->dirroot . '/mod/quiz/report/reportlib.php');
+
+        // Print quiz name and description.
+        $output = '';
+        $strintro = $this->quiz_intro($quiz, $cm);
+        $strhead = format_string($quiz->name);
+        // Output any access messages.
+        $strbody = '';
+        foreach ($messages as $message) {
+            $expmessage = explode(':', $message);
+            $strbody .= '<tr class="quiz-table-padding">';
+            $strbody .= '<td class="text-right font-weight-bold">'.trim($expmessage[0]).'</td>';
+            $strbody .= '<td>'.trim($expmessage[1]).'</td>';
+            $strbody .= '</tr>';
+        }
+        $output .= '<table class="table" id="quiz-table">
+            <thead>
+              <tr>
+                <th colspan="2">'.$strhead.'</th>
+              </tr>
+            </thead>
+            <tbody>
+              '.$strbody.'
+            ';
+        // Show number of attempts summary to those who can view reports.
+        if (has_capability('mod/quiz:viewreports', $context)) {
+            $strattemptnum = quiz_num_attempt_summary($quiz, $cm);
+            if($strattemptnum) {
+                $strattempturl = new moodle_url('/mod/quiz/report.php', array(
+                'id' => $cm->id, 'mode' => quiz_report_default_report($context)));
+                $expstrattemptnum = explode(':', $strattemptnum);
+                $strattemptcount = '';
+                $strattemptcount .=  '<tr class="quiz-table-padding">';
+                $strattemptcount .=  '<td class="text-right font-weight-bold">'.trim($expstrattemptnum[0]).'</td>';
+                $strattemptcount .=  '<td><a href='.$strattempturl.' class="text-primary">'.trim($expstrattemptnum[1]).'</a></td>';
+                $strattemptcount .=  '</tr>';
+                $output .= $strattemptcount;
+            }
+        }
+        $output .= '</tbody></table>';
+        return $output;
+    }
+
+    /**
      * Output the quiz intro.
      * @param object $quiz the quiz settings.
      * @param object $cm the course_module object.
@@ -992,7 +1065,7 @@ class mod_quiz_renderer extends plugin_renderer_base {
 
         // Prepare table header.
         $table = new html_table();
-        $table->attributes['class'] = 'generaltable quizattemptsummary';
+        $table->attributes['class'] = 'generaltable quizattemptsummary mb-0';
         $table->head = array();
         $table->align = array();
         $table->size = array();
@@ -1095,7 +1168,6 @@ class mod_quiz_renderer extends plugin_renderer_base {
         } // End of loop over attempts.
 
         $output = '';
-        $output .= $this->view_table_heading();
         $output .= html_writer::table($table);
         return $output;
     }
@@ -1173,6 +1245,60 @@ class mod_quiz_renderer extends plugin_renderer_base {
             $resultinfo .= html_writer::div(
                     quiz_feedback_for_grade($viewobj->mygrade, $quiz, $context),
                     'quizgradefeedback') . "\n";
+        }
+
+        if ($resultinfo) {
+            $output .= $this->box($resultinfo, 'generalbox', 'feedback');
+        }
+        return $output;
+    }
+
+    /**
+     * Custom by Vũ: Chỉnh sửa lại quiz overview
+     * Generates data pertaining to quiz results
+     *
+     * @param array $quiz Array containing quiz data
+     * @param int $context The page context ID
+     * @param int $cm The Course Module Id
+     * @param mod_quiz_view_object $viewobj
+     */
+    public function view_result_info_table($quiz, $context, $cm, $viewobj) {
+        $output = '';
+        if (!$viewobj->numattempts && !$viewobj->gradecolumn && is_null($viewobj->mygrade)) {
+            return $output;
+        }
+        $resultinfo = '';
+
+        if ($viewobj->overallstats) {
+            if ($viewobj->moreattempts) {
+                $a = new stdClass();
+                $a->method = quiz_get_grading_option_name($quiz->grademethod);
+                $a->mygrade = quiz_format_grade($quiz, $viewobj->mygrade);
+                $a->quizgrade = quiz_format_grade($quiz, $quiz->grade);
+                $resultinfo .= $this->heading(get_string('gradesofar', 'quiz', $a), 3);
+            } else {
+                $a = new stdClass();
+                $a->grade = quiz_format_grade($quiz, $viewobj->mygrade);
+                $a->maxgrade = quiz_format_grade($quiz, $quiz->grade);
+                $a = get_string('outofshort', 'quiz', $a);
+                $resultinfo .= $this->heading(get_string('yourfinalgradeis', 'quiz', $a), 3);
+            }
+        }
+
+        if ($viewobj->mygradeoverridden) {
+
+            $resultinfo .= html_writer::tag('p', get_string('overriddennotice', 'grades'),
+                    array('class' => 'overriddennotice'))."\n";
+        }
+        if ($viewobj->gradebookfeedback) {
+            $resultinfo .= $this->heading(get_string('comment', 'quiz'), 3);
+            $resultinfo .= html_writer::div($viewobj->gradebookfeedback, 'quizteacherfeedback') . "\n";
+        }
+        if ($viewobj->feedbackcolumn) {
+            $resultinfo .= '<h3>' .get_string('overallfeedback', 'quiz') . ' : ' .'<span class="text-dark font-italic">'.strip_tags(quiz_feedback_for_grade($viewobj->mygrade, $quiz, $context)) . '</span>' . '</h3>';
+            // $resultinfo .= html_writer::span(
+            //         quiz_feedback_for_grade($viewobj->mygrade, $quiz, $context),
+            //         'quizgradefeedback') . "\n";
         }
 
         if ($resultinfo) {

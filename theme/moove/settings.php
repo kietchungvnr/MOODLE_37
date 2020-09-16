@@ -232,7 +232,7 @@ if ($ADMIN->fulltree) {
     $name = 'theme_moove/displayhome';
     $title = get_string('displayhome', 'theme_moove');
     $description = get_string('displayhomedesc', 'theme_moove');
-    $default = 1;
+    $default = 0;
     $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
     $page->add($setting);
 

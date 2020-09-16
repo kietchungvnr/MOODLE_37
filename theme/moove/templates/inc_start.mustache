@@ -2066,6 +2066,8 @@ a.icon-no-margin:hover {
 }
 #page-mod-quiz-view .generalbox#feedback {
     width: 100%;
+    padding: 0 !important;
+    margin-top: 10px;
 }
 nav.navbar ul.navbar-nav .popover-region .popover-region-toggle i.fa {
     font-size: 19px;
@@ -2441,9 +2443,7 @@ table.rolecap td{
 .buttons .form-inline {
     align-items: flex-end;
 }
-.generaltable {
-    margin-top: 10px;
-}
+
 img.userpicture {
     margin-right: 10px !important;
 
@@ -2870,6 +2870,7 @@ table.quizreviewsummary td.cell {
 }
 #page-mod-quiz-view .generalbox#feedback h3 {
     color: #3c8dbc;
+    font-size: 16px !important;
 }
 /*#page-my-index .card {
     border: 1px solid #b5b8bb4f !important;
@@ -4114,6 +4115,25 @@ li.list-category a , li.list-subcategory a{
 }
 .nav-active {
     cursor: pointer;
+}
+/**** customize view quiz ****/
+.moodle-dialogue-base .moodle-dialogue-wrap .moodle-dialogue-hd.yui3-widget-hd {
+    min-height: 0rem;
+    font-size: 1.2rem;
+    padding: 5px 10px;
+}
+.moodle-dialogue-base .moodle-dialogue.mod_quiz_preflight_popup .moodle-dialogue-bd #mod_quiz_preflight_form legend {
+    font-size: 18px;
+}
+.quiz-table-padding td {
+    padding: 5px 1rem !important;
+    border-top: 0;
+}
+#quiz-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+#page-mod-quiz-view .quizattempt {
+    padding: .5rem 0 !important;
 }
 </style>
 
