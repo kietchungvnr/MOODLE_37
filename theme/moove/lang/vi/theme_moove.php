@@ -295,3 +295,4 @@ $string['followus'] = 'THEO DÕI';
 $string['newsfooter'] = 'Tin tức';
 $string['coursefooter'] = 'Khóa học';
 $string['forumfooter'] = 'Diễn đàn';
+$string['noteacher'] = 'Chưa có giáo viên';

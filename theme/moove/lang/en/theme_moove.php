@@ -297,3 +297,4 @@ $string['followus'] = 'FOLLOW US';
 $string['newsfooter'] = 'News';
 $string['coursefooter'] = 'Courses';
 $string['forumfooter'] = 'Forums';
+$string['noteacher'] = 'No teacher';

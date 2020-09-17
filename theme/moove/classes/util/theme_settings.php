@@ -303,7 +303,7 @@ class theme_settings {
           else
           {
                     $infoteacher = new stdClass();
-                    $infoteacher->fullnamet = 'No Teacher';
+                    $infoteacher->fullnamet = get_string('noteacher', 'theme_moove');
                     $infoteacher->studentnumber = 0;
                     $infoteacher->imgdefault = $imgdefault;
           }
@@ -346,7 +346,7 @@ class theme_settings {
           else
           {
                     $infoteacher = new stdClass();
-                    $infoteacher->fullnamet = 'No Teacher';
+                    $infoteacher->fullnamet = get_string('noteacher', 'theme_moove');
                     $infoteacher->studentnumber = 0;
                     $infoteacher->imgdefault = $imgdefault;
           }
@@ -390,7 +390,7 @@ class theme_settings {
           else
           {
                     $infoteacher = new stdClass();
-                    $infoteacher->fullnamet = 'No Teacher';
+                    $infoteacher->fullnamet = get_string('noteacher', 'theme_moove');
                     $infoteacher->studentnumber = 0;
                     $infoteacher->imgdefault = $imgdefault;
           }

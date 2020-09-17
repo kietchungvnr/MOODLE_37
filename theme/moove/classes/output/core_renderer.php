@@ -74,41 +74,25 @@ class core_renderer extends \theme_boost\output\core_renderer {
         return $content;
     }
     public function full_header() {
-        global $PAGE, $COURSE;
-        $urlpara = $_SERVER['REQUEST_URI'];
-        if($urlpara === "/" or $urlpara === "/?redirect=0" or $urlpara === "/index.php" or $urlpara ==="/index.php?redirect=0" or $urlpara === "/?" or $urlpara === "/?lang=vi" or $urlpara === "/?lang=en")
-        {
-            $header = new stdClass();
+        global $PAGE;
+        $header = new stdClass();
+        if($PAGE->pagelayout == 'frontpage') {
             $header->active = false;
-            $header->settingsmenu = $this->context_header_settings_menu();
-            if($PAGE->pagelayout == "course"){
-                $header->contextheader = $this->header_course();
-            }
-            else {
-                $header->contextheader = $this->context_header(null,2);
-            }
-            $header->hasnavbar = empty($PAGE->layout_options['nonavbar']);
-            $header->navbar = $this->navbar();
-            $header->pageheadingbutton = $this->page_heading_button();
-            $header->courseheader = $this->course_header();
-            return $this->render_from_template('theme_moove/fp_header', $header);
+        } else {
+            $header->active = true;
+        }
+        $header->settingsmenu = $this->context_header_settings_menu();
+        if($PAGE->pagelayout == "course"){
+            $header->contextheader = $this->header_course();
         }
         else {
-            $header = new stdClass();
-            $header->active = true;
-            $header->settingsmenu = $this->context_header_settings_menu();
-            if($PAGE->pagelayout == "course"){
-                $header->contextheader = $this->header_course();
-            }
-            else {
-                $header->contextheader = $this->context_header(null,2);
-            }
-            $header->hasnavbar = empty($PAGE->layout_options['nonavbar']);
-            $header->navbar = $this->navbar();
-            $header->pageheadingbutton = $this->page_heading_button();
-            $header->courseheader = $this->course_header();
-            return $this->render_from_template('theme_moove/fp_header', $header);
+            $header->contextheader = $this->context_header(null,2);
         }
+        $header->hasnavbar = empty($PAGE->layout_options['nonavbar']);
+        $header->navbar = $this->navbar();
+        $header->pageheadingbutton = $this->page_heading_button();
+        $header->courseheader = $this->course_header();
+        return $this->render_from_template('theme_moove/fp_header', $header);
     }
     public function menu_focus(){
         global $COURSE, $CFG, $OUTPUT, $DB;
