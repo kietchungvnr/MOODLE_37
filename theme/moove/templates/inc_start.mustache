@@ -2233,39 +2233,102 @@ nav.navbar .moove-search-input {
 .new-detail-comment-content {
     border-radius: 0;
     padding: 10px;
-    height: 70px !important;
+    height: 60px !important;
+}
+.new-detail-comment-content:focus {
+    height: 80px !important;
+}
+.new-detail-chat {
+    padding-top: 10px;
 }
 .new-detail-chat .chat-panel {
-    border-top: 1px solid #8080808c;
+    border-top: 2px solid #e5e5e5;
     padding-top: 5px;
+    padding-left: 0;
+    padding-right: 0;
 }
 .chat-panel .chat-content .chat-body {
     background: white;
     display: inline-flex;
+    padding: 0;
 }
 .chat-panel .chat-content .chat-body .name{
-    color: black;
+    color: #04416D;
+    font-size: 14px !important;
+    margin-bottom: 5px;
 }
 .new-detail-comment-content, .new-detail-reply-content {
-    border-radius: 0;
-    padding: 5px
+    border: 1px solid #bdbdbd;
+    border-radius: 3px;
+    padding: 5px ;
+    margin-top: 10px;
+    transition: all 0.5s ease;
+    height: 42px;
+}
+.new-detail-reply-content:focus {
+    height: 70px !important;
+}
+.chat-panel .chat-content .chat-footer .date-feedback {
+    color: #808080;
+    position: unset;
+}
+.chat-panel .chat-content .chat-footer .feedback {
+    color: #808080;
+}
+.chat-reply {
+    margin-bottom: -10px;
+}
+.chat-reply .chat-panel .chat-footer .delete_reply {
+    width: auto;
+    color: #808080;
+}
+.chat-panel .chat-content .chat-footer .delete {
+    color:#808080;
+    margin-right: 10px
+}
+.chat-panel .chat-image {
+    width: 40px;
 }
 .chat-panel .chat-image > img {
-    padding: 5px;
+    padding: 0;
+    width: 40px;
+    margin-top: 10px;
 }
 .new-detail-see-more-title {
     width: 100% !important;
     background-color: #f6f7f8 !important;
 }
-.new-detail-comment-control > .btn {
-    background-color: #4d68a4;
+.chat-reply .chat-panel .chat-image {
+    margin-top: 0;
+}
+.chat-reply .chat-panel .chat-image img {
+    padding: 0;
 }
 .new-detail-comment-control > .btn, .new-detail-reply-control > .btn {
-    background-color: #4d68a4;
+    background-color: #4285f4;
+    width: 120px;
+    font-weight: bold;
+    height: 40px;
 }
 .chat-panel .chat-content .chat-footer .form-reply {
     width: 100% !important;
-    margin-bottom: 10px;
+}
+.chat-show-reply .fa{
+    color: #076DB6;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 10px;
+}
+.new-detail-see-more .new-detail-see-more-title {
+    background: #f7f7f7;
+    height: 48px;
+    line-height: 48px;
+    padding: 0 20px;
+    color: #076DB6;
+}
+.new-detail-see-more .new-detail-see-more-title:hover {
+    color: white;
+    background: #087CCE !important;
 }
 textarea {
     resize: none !important;
@@ -2446,6 +2509,7 @@ table.rolecap td{
 
 img.userpicture {
     margin-right: 10px !important;
+    margin-top: 10px;
 
 }
 /*user/file*/
@@ -2852,9 +2916,9 @@ table.quizreviewsummary td.cell {
 #fitem_id_honestycheckmessage .col-md-2 {
     display: none;
 }
-#fitem_id_honestycheckmessage .form-inline {
+/*#fitem_id_honestycheckmessage .form-inline {
     margin-left: -30px ;
-}
+}*/
 #fgroup_id_buttonar {
     padding: 10px 0px !important;
 }
@@ -3171,6 +3235,28 @@ table#categoryquestions tr {
     }
     .initialbar.firstinitial,.initialbar.lastinitial {
         display: none !important;
+    }
+    #page-mod-quiz-edit .maxgrade, #page-mod-quiz-edit .totalpoints {
+        position: unset;
+        margin: 0;
+    }
+    .invisiblefieldset {
+        display: contents;
+    }
+    #page-mod-quiz-edit .statusbar {
+        margin: .6em .2em;
+    }
+    #page-mod-quiz-edit .editing_section {
+        display: none;
+    }
+    #page-mod-quiz-edit .section-heading .instanceshufflequestions {
+        float: none;
+    }
+    #page-mod-quiz-edit #changeallmark label {
+        display: none;
+    }
+    #page-mod-quiz-edit #changeallmark {
+        margin-left: 0!important;
     }
 }
 @media(max-width: 500px){
@@ -4150,7 +4236,6 @@ li.list-category a , li.list-subcategory a{
 .nav-active {
     cursor: pointer;
 }
-<<<<<<< HEAD
 /**** customize view quiz ****/
 .moodle-dialogue-base .moodle-dialogue-wrap .moodle-dialogue-hd.yui3-widget-hd {
     min-height: 0rem;
@@ -4170,7 +4255,6 @@ li.list-category a , li.list-subcategory a{
 #page-mod-quiz-view .quizattempt {
     padding: .5rem 0 !important;
 }
-=======
 .course-content .single-section .section-navigation {
     display: none;
 }
@@ -4211,8 +4295,34 @@ select#formactionid {
     display: block;
 }
 
-
->>>>>>> 35be3c20ab... Sửa table ghi danh học viên
+#page-mod-quiz-edit ul.section {
+    padding-right: 0;
+}
+#page-mod-quiz-edit .section-heading {
+    font-size: 18px;
+    margin-left: 0;
+}
+.hero-single-section .single-welcome-post:hover img {
+    transform: scale(1.1);
+    transition: 0.5s;
+} 
+.hero-single-section .single-welcome-post {
+    overflow: hidden;
+}
+.hero-single-section img.position-absolute {
+    height: -webkit-fill-available;
+    width: -webkit-fill-available;
+}
+.hero-single-section {
+    overflow: hidden;
+}
+.chat-content p {
+    margin-bottom: 5px;
+}
+.chat-reply .chat-panel {
+    border-top:0;
+    padding-top: 0;
+}
 </style>
 
 

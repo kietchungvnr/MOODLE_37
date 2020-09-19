@@ -340,7 +340,7 @@ if ($bulkoperations) {
     }
 
     echo html_writer::tag('div', html_writer::tag('label', get_string("withselectedusers"),
-        array('for' => 'formactionid', 'class' => 'col-form-label d-inline')) .
+        array('for' => 'formactionid', 'class' => 'col-form-label d-inline float-left')) .
         html_writer::select($displaylist, 'formaction', '', array('' => 'choosedots'), array('id' => 'formactionid')),
         array('class' => ''));
 

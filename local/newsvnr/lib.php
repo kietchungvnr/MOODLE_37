@@ -140,35 +140,33 @@ function get_froums_coursenews_data_id($discussionid)
 }
 
 function get_comment_from_disccusion($id_discus) {
-    global $DB, $USER;
+    global $DB, $USER,$PAGE,$OUTPUT;
     $sql = "SELECT lnc.id, lnc.userid ,CONCAT(u.firstname, ' ', u.lastname) AS fullname, lnc.content, lnc.createdAt
             FROM mdl_local_newsvnr_comments lnc 
                 JOIN mdl_user u ON   lnc.userid =  u.id 
                 JOIN mdl_forum_discussions fd ON lnc.discussionid =  fd.id
             WHERE lnc.discussionid = ?
-            ORDER BY lnc.id DESC
-            OFFSET 0 ROWS
-            FETCH next 5 ROWS only;";
+            ORDER BY lnc.id DESC 
+            OFFSET 0 ROWS FETCH NEXT 5 ROWS only";
     $data = $DB->get_records_sql($sql, array($id_discus));
     $forumarr = array();
-    $i = 1;
+    $i = 0;
     foreach ($data as $key => $comment) {
+        $datauser = $DB->get_record_sql('SELECT * FROM {user} u WHERE u.id = :commentid ',['commentid' => $comment->userid]);
         $key = 'key_comment'.$i;
         $forumstd = new stdClass();
+        $forumstd->useravatar = $OUTPUT->user_picture($datauser);
         $forumstd->id = $comment->id;
         $forumstd->userid = $comment->userid;
         $forumstd->fullname_comment = $comment->fullname;
         $forumstd->content_comment = $comment->content;
-        $forumstd->createdAt_comment = convertunixtime(' d-m-Y H:i A', $comment->createdat, 'Asia/Ho_Chi_Minh');
+        $forumstd->createdAt_comment = converttime($comment->createdat);
+        $reply_comment_data =  get_replies_from_comment($comment->id);
+        $forumstd->countreply = count($reply_comment_data);
         $userid = $USER->id;
         // check role for deleted comment
-        if(is_siteadmin())
-        {
-             $forumstd->label_delete = '<label class="delete" onclick="DeleteComment('. $comment->id .')" id="'. $comment->id .'">Xóa</label>';
-        }
-        else if($comment->userid  == $userid)
-        {
-             $forumstd->label_delete = '<label class="delete" onclick="DeleteComment('. $comment->id .')" id="'. $comment->id .'">Xóa</label>';
+        if(is_siteadmin() || $comment->userid  == $userid) {
+             $forumstd->label_delete = '<label class="delete" onclick="DeleteComment('. $comment->id .')" id="'. $comment->id .'">'.get_string('delete').'</label>';
         }
         $i++;   
         $id_comment = $comment->id;
@@ -180,13 +178,20 @@ function get_comment_from_disccusion($id_discus) {
                     $forumstd_reply->id_reply = $reply->id;
                     $forumstd_reply->fullname_reply = $reply->fullname;
                     $forumstd_reply->content_reply = $reply->content;
-                    $forumstd_reply->createdAt_reply = convertunixtime(' d-m-Y H:i A', $reply->createdat, 'Asia/Ho_Chi_Minh');
+                    $forumstd_reply->createdAt_reply = converttime($reply->createdat);
+                    $datauserreply = $DB->get_record_sql('SELECT * FROM {local_newsvnr_replies} r JOIN {user} u ON u.id = r.userid WHERE r.id = :id',['id' => $reply->id]);
+                    $forumstd_reply->userid = $datauserreply->userid;
+                    $forumstd_reply->userreplyavatar = $OUTPUT->user_picture($datauserreply);
+                    if(is_siteadmin() || $forumstd_reply->userid  == $userid) {
+                         $forumstd_reply->label_deletereply = '<label class="delete_reply mr-2" onclick="DeleteReply('. $reply->id .')" id="'. $reply->id .'">'.get_string('delete').'</label>';
+                    }
                     if($id_comment == $reply->commentid)
                         $forumstd->reply[] = $forumstd_reply;
+                        $forumstd->isreply = true;
             }
+            $forumarr[] = $forumstd;
         }
-        $forumarr[] = $forumstd;
-    }   
+    }
     return $forumarr;
 }
 
@@ -1624,6 +1629,34 @@ function HTTPPost_EBM($url,$data) {
     curl_close($curl);
 }
 
+function converttime($time) {
+    $currenttime = time();
+    $distance = $currenttime - $time ;
+    switch ($distance) {
+        case ($distance < 60 ):
+            $result = $distance . ' '.get_string('secondago','local_newsvnr').'';
+            break;
+        case ($distance > 60 && $distance < 3600):
+            $result = round($distance/60) .' '.get_string('minuteago','local_newsvnr').'';
+            break;
+        case ($distance > 3600 && $distance < 86400):
+            $result = round($distance/3600) .' '.get_string('hourago','local_newsvnr').'';
+            break;
+        case ($distance > 86400 && $distance < 172800 ):
+            $result = get_string('yesterday','local_newsvnr');
+            break;
+        case ($distance > 172800 & $distance < 2592000):
+            $result = round($distance/86400) .' '.get_string('dayago','local_newsvnr').'';
+            break;
+        case (round($distance/2592000) > 1 && round($distance/2592000) < 12 ):
+            $result = round($distance/2592000) .' '.get_string('monthago','local_newsvnr').'';
+            break;    
+        default:
+            convertunixtime(' d-m-Y',$time,'Asia/Ho_Chi_Minh');
+            break;
+    }
+    return $result;
+}
 
 
 

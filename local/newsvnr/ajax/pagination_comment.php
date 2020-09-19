@@ -1,126 +1,125 @@
 <?php
 
+require_once __DIR__ . '/../../../config.php';
 
-require_once (__DIR__ . '/../../../config.php');
-
-require_once (__DIR__ . '/../lib.php');
+require_once __DIR__ . '/../lib.php';
 
 global $DB;
 
+$PAGE->set_context(context_system::instance());
 
 $discussionid = $_GET['discussionid'];
-	
-$currentPage = optional_param('page', 0 ,PARAM_INT);
+
+$currentPage = optional_param('page', 0, PARAM_INT);
 
 $itemInPage = 5;
 
-
-if($currentPage == 1) {
-	$from  = $currentPage * $itemInPage; 
+if ($currentPage < 1) {
+    $currentPage = 1;
 }
-else { 
-	$from  = $currentPage * $itemInPage; 
+$from = ($currentPage - 1) * $itemInPage;
+
+if ($from < 5) {
+    $from = 0;
 }
 
-$get_comment = pagination_comment($discussionid, $from ,$itemInPage);
+$get_comment = pagination_comment($discussionid, $from, $itemInPage);
+$xhtml       = "";
+if (!empty($get_comment)) {
 
+    foreach ($get_comment as $key => $comment) {
+        // print_r(is_siteadmin());
+        // print_r($comment->userid);print_r($USER->id);die();
+        $datauser   = $DB->get_record_sql('SELECT * FROM {user} u WHERE u.id = :userid ', ['userid' => $comment->userid]);
+        $useravatar = $OUTPUT->user_picture($datauser);
+        $get_reply  = get_replies_from_comment($comment->id);
 
-$xhtml = "";
-if(!empty($get_comment))
-{
+        if (is_siteadmin() || $comment->userid == $USER->id) {
+            $deletecomment = '<label class="delete delete_comment" onclick="DeleteComment(' . $comment->id . ')" id="' . $comment->id . '">' . get_string('delete') . '</label>';
+        } else { $deletecomment = '';}
+        $html_reply = "";
+        foreach ($get_reply as $key => $reply) {
+            $userreply       = $DB->get_record_sql('SELECT * FROM {local_newsvnr_replies} r JOIN {user} u ON u.id = r.userid WHERE r.id = :id', ['id' => $reply->id]);
+            $userreplyavatar = $OUTPUT->user_picture($userreply);
 
+            if (is_siteadmin() || $userreply->userid == $USER->id) {
+                $deletereply = '<label class="delete_reply mr-2" onclick="DeleteReply(' . $reply->id . ')" id="' . $reply->id . '">' . get_string('delete') . '</label>';
+            } else { $deletereply = '';}
 
-	foreach ($get_comment as $key => $comment) {
+            if ($comment->id == $reply->commentid) {
 
-		$get_reply = get_replies_from_comment($comment->id);
+                $html_reply .= '
 
-			$html_reply = "";
-			foreach ($get_reply as $key => $reply) {
-
-				if($comment->id == $reply->commentid)
-				{
-
-					$html_reply .= '           
-
-	                            <div class="chat-reply" id="reply_'. $reply->id .'">
+	                            <div class="chat-reply" id="reply_' . $reply->id . '">
 	                                <!-- Comment 1 -->
 	                                <div class="col chat-panel">
 	                                    <div class="chat-image">
-	                                        <img class="rounded-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6IMTq-efHer8sp1p23DxIw_NsFFUtc6ZI0vAexxMm0MPEsii-" />
+	                                        ' . $userreplyavatar . '
 	                                    </div>
 	                                    <div class="chat-content">
 	                                        <div class="chat-body">
-	                                            <h3 class="name">'. $reply->fullname .'</h3>
-	                                             <div style="margin-left:30px;color: grey"><label class="date-feedback">'. convertunixtime(' d-m-Y H:i A', $reply->createdat, 'Asia/Ho_Chi_Minh') .'</label></div>
-	                                            
+	                                           <p> <span class="name mr-2">' . $reply->fullname . '</span>' . $reply->content . '</p>
 	                                        </div>
-	                                        <p>'. $reply->content .'</p>
-	                                        <div class="chat-footer">
-	                                            <label class="like">Like</label>
-	                                            <label class="delete_reply" 
-	                                                            onclick="DeleteReply('. $reply->id .')" id="'. $reply->id .'">Xóa</label>  
-	                                             <input type="hidden" id="delete_reply'. $reply->id .'" name="" value="delete" />
-	                                           
+
+	                                        <div class="chat-footer d-flex">
+	                      						' . $deletereply . '
+	                                             <input type="hidden" id="delete_reply' . $reply->id . '" name="" value="delete" />
+	                                             <label class="date-feedback">' . converttime($reply->createdat) . '</label>
+
 	                                        </div>
 	                                    </div>
 	                                </div>
 
 	                            </div>';
-				}
-				else{
-					break;
-				}
-					
-			}
+            } else {
+                break;
+            }
 
+        }
 
-			$xhtml .=  '<div class="row">
+        $get_reply = get_replies_from_comment($comment->id);
+        $xhtml .= '<div class="row">
 
-			                <div class="col chat-panel" id="comment_'. $comment->id .'">
+			                <div class="col chat-panel" id="comment_' . $comment->id . '">
 			                    <div class="chat-image">
-			                        <img class="rounded-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6IMTq-efHer8sp1p23DxIw_NsFFUtc6ZI0vAexxMm0MPEsii-" />
+			                        ' . $useravatar . '
 			                    </div>
 
 			                    <div class="chat-content">
 			                        <div class="chat-body">
-			                            <h3 class="name">'. $comment->fullname .'</h3>
-			                            <div style="margin-left:30px;color: grey"><label class="date-feedback">'. convertunixtime(' d-m-Y H:i A', $reply->createdat, 'Asia/Ho_Chi_Minh') .'</label></div>
-			                            
+			                            <p><span class="name mr-2">' . $comment->fullname . '</span>' . $comment->content . '</p>
+
 			                        </div>
-			                        	<p>'. $comment->content .'</p>
+
 			                          <div class="chat-footer">
-			                             <div class="chat-footer">
-			                                <label class="like" id="'. $comment->id .'">Like</label>
+			                             <div class="chat-footer d-flex">
 
-			                                <label class="delete delete_comment"  onclick="DeleteComment('. $comment->id .')" id="{{{id}}}">'. get_string('delete') .'</label>
-			                                <input type="hidden" id="delete_comment'. $comment->id .'"  value="delete">
+			                                ' . $deletecomment . '
+			                                <input type="hidden" id="delete_comment' . $comment->id . '"  value="delete">
 
-			                                <label class="feedback" id="'. $comment->id .'" onclick="FeedBack('. $comment->id .')">'. get_string('feedback', 'local_newsvnr') .'</label>
-			      
+			                                <label class="feedback" id="' . $comment->id . '" onclick="FeedBack(' . $comment->id . ')">' . get_string('feedback', 'local_newsvnr') . '</label>
+			                            	<label class="date-feedback ml-2">' . converttime($comment->createdat) . '</label>
+
 			                            </div>
+			                            ';
+        // <!-- ACTION SHOW AND HIDE REPLIES -->
+        if (!empty($get_reply)) {
+            $xhtml .= '
+			                             <p class="chat-show-reply" id="show-reply' . $comment->id . '"
+	                                    onclick="ShowReplies(' . $comment->id . ')" ><i class="fa fa-mail-forward"> ' . count($get_reply) . ' ' . get_string('answer', 'local_newsvnr') . '</i></p>';
 
-			                            <!-- ACTION SHOW AND HIDE REPLIES -->
-			                                           <p class="chat-show-reply" id="show-reply'. $comment->id .'" 
-	                                    onclick="ShowReplies('. $comment->id  .')" ><i class="fa fa-chevron-down"> '. get_string('showfeedback', 'local_newsvnr') .'</i></p>
-
-	                                    <p style="display: none;" class="chat-hidden-reply" id="hidden-reply'. $comment->id  .'"
-	                                     onclick="HiddenReplies('. $comment->id  .')"><i class="fa fa-chevron-up"> '. get_string('hidefeedback', 'local_newsvnr') .'</i></p>
-
-			                            <!-- ACTION END SHOW AND HIDE REPLIES --> 
+        }
+        $xhtml .= '                        <!-- ACTION END SHOW AND HIDE REPLIES -->
 			                            <div class="new-detail-reply-body form-reply" style="width: 80%; display: none;">
 			                            	<form>
-				                                <label class="new-detail-reply-title">'. get_string('comment', 'local_newsvnr') .'</label>
+				                                <textarea class="new-detail-reply-content" name="content_reply" id="content_reply" placeholder="' . get_string('yourcomment', 'local_newsvnr') . '"></textarea>
 
-				                                <textarea class="new-detail-reply-content" name="content_reply" id="content_reply" placeholder="'. get_string('yourcomment', 'local_newsvnr') .'"></textarea>
-				       
-					                                <input type="hidden" id="commentid" name="" value="'. $comment->id .'"> 
-					                                <input type="hidden" id="userid" name="userid" value="'. $comment->userid .'" /> 
-					                                <input type="hidden" id="fullname" value="'. $comment->fullname .'" name="" />
-				                 
+					                                <input type="hidden" id="commentid" name="" value="' . $comment->id . '">
+					                                <input type="hidden" id="userid" name="userid" value="' . $comment->userid . '" />
+					                                <input type="hidden" id="fullname" value="' . $comment->fullname . '" name="" />
+
 				                                <div class="new-detail-reply-control">
-				                                    <button type="button" class="btn btn-cancel">'. get_string('cancel') .'</button>
-
-				                                    <button type="button" id="post_reply" name="post_reply" class="btn btn-submit ">'. get_string('sendcomment', 'local_newsvnr') .'</button>
+				                                    <button type="button" id="post_reply" name="post_reply" class="btn btn-submit ">' . get_string('sendcomment', 'local_newsvnr') . '</button>
 
 				                                </div>
 				                             </form>
@@ -128,8 +127,8 @@ if(!empty($get_comment))
 
 			                            <div class="clearfix"></div>
 
-			                            <div class="list-reply'. $comment->id .'" id="list_reply'. $comment->id .'" style="display: none; overflow: hidden;" >
-			                             	'. $html_reply .'
+			                            <div class="list-reply' . $comment->id . ' mt-1" id="list_reply' . $comment->id . '" style="display: none; overflow: hidden;" >
+			                             	' . $html_reply . '
 			                            </div>
 			                        </div>
 
@@ -137,16 +136,10 @@ if(!empty($get_comment))
 			                </div>
 
 			            </div>
-					';		
-	}
-	
+					';
+    }
 
-	echo $xhtml;				
+    echo $xhtml;
+} else {
+    echo "";
 }
-else{
-	echo "";
-}
-
-
-
-
