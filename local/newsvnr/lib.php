@@ -1629,6 +1629,30 @@ function HTTPPost_EBM($url,$data) {
     curl_close($curl);
 }
 
+//curl gửi dữ liệu kiểu json có trả về dữ liệu
+function HTTPPost_EBM_return($url,$data) {
+    // $urltoken = 'http://103.42.56.200:8088/Token';
+    // $token = getToken($urltoken);
+    // $auth = 'Authorization: Bearer ' . $token;
+    $params = json_encode($data);
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+    CURLOPT_RETURNTRANSFER => true,
+    // CURLOPT_HEADER => true,
+    CURLOPT_URL => $url,
+    CURLOPT_POST => true,
+    CURLOPT_SSL_VERIFYPEER => false,
+    CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json',
+            // 'Content-Length: ' . strlen($data),
+            // $auth
+    ),
+    CURLOPT_POSTFIELDS => $params));
+    $resp = curl_exec($curl);
+    curl_close($curl);
+    return json_decode($resp);
+}
+
 function converttime($time) {
     $currenttime = time();
     $distance = $currenttime - $time ;

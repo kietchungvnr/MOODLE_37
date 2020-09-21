@@ -1,8 +1,8 @@
 define(["jquery", "core/config", "core/str", "core/notification"], function($, Config, Str, Notification) {
     "use strict";
     var path = window.location.href;
-    var quizblock = $('#page-mod-quiz-attempt');
-    if (quizblock.length > 0) {
+    var showblocks = $('#page-mod-quiz-attempt, #page-mod-book-view');
+    if(showblocks.length > 0){
         $('body').addClass('drawer-open-right')
     }
     $('.grade-navigation ul:first').removeClass('mb-3');

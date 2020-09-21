@@ -375,25 +375,25 @@ require(['jquery', 'core/config'], function($, Config) {
                 var url = $(this).attr("href");
                 var str = match.input;
                 var i = 0;
-                if(str.indexOf(url) == 0) {
+                if(str == url) {
                     $(this).addClass("active-nav");
                     i++;
                 }
-                if(i > 0) {
-                    $(".nav-active:first").removeClass("active-nav");
-                }
+                // if(i > 0) {
+                //     $(".nav-active:first").removeClass("active-nav");
+                // }
             });
             $("#enlaces .nav-active").each(function() {
                 var url = $(this).attr("href");
                 var str = match.input;
                 var i = 0;
-                if(str.indexOf(url) == 0) {
+                if(str == url) {
                     $(this).addClass("active-nav");
                     i++;
                 }
-                if(i > 0) {
-                    $("#enlaces .nav-active:first").removeClass("active-nav");
-                }
+                // if(i > 0) {
+                //     $("#enlaces .nav-active:first").removeClass("active-nav");
+                // }
             });
         }
         else {
@@ -411,8 +411,6 @@ require(['theme_moove/menumobile_theme_course']);
 require(['theme_moove/course_menu']);
 
 require(['theme_moove/menu_mobile']);
-
-    
 
 
 {{/js}}
