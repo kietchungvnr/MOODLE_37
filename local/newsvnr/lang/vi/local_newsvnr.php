@@ -316,5 +316,6 @@ $string['minuteago'] = 'phút trước';
 $string['hourago'] = 'giờ trước';
 $string['yesterday'] = 'Hôm qua';
 $string['dayago'] = 'ngày trước';
-$string['month'] = 'tháng trước';
+$string['monthago'] = 'tháng trước';
 $string['answer'] = 'trả lời';
+$string['nocontent'] = 'Không có nội dung';

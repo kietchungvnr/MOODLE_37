@@ -24,6 +24,8 @@ if ($from < 5) {
 }
 
 $get_comment = pagination_comment($discussionid, $from, $itemInPage);
+$countcomment = count($DB->get_records_sql('SELECT * FROM mdl_local_newsvnr_comments WHERE discussionid = :discussionid ',['discussionid' => $discussionid]));
+$calcomment = $countcomment-$itemInPage*($currentPage-1);
 $xhtml       = "";
 if (!empty($get_comment)) {
 
@@ -138,7 +140,13 @@ if (!empty($get_comment)) {
 			            </div>
 					';
     }
-
+    if($calcomment > 5) {
+    $xhtml .= '<div class="new-detail-see-more">
+				      <div class="new-detail-see-more-title">
+				         <small class="new-detail-btn-see-more" id="see-more" onclick="loadComment('.$discussionid.')">'.get_string('viewmorecomment','local_newsvnr').'</small>
+				      </div>
+				 </div>';
+	}
     echo $xhtml;
 } else {
     echo "";

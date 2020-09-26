@@ -29,7 +29,7 @@
 		{{#forumdata}}
 		{{#key1}}
 		<!-- Single Welcome Post -->
-		<div class="single-welcome-post bg-img item1 wow fadeInUp">
+		<div class="single-welcome-post bg-img item1 wow fadeInUp zoom-image">
 			<!-- Play Button -->
 
 			<!-- Content -->
@@ -58,7 +58,7 @@
 		{{#forumdata}}
 		{{#key2}}
 		<!-- Single Welcome Post -->
-		<div class="single-welcome-post bg-img item2 wow fadeInUp">
+		<div class="single-welcome-post bg-img item2 wow fadeInUp zoom-image">
 			<!-- Content -->
 			<img src="{{image}}" class="position-absolute">
 			<div class="welcome-post-content position-absolute">
@@ -83,7 +83,7 @@
 			{{#forumdata}}
 			{{#key3}}
 			<!-- Single Welcome Post -->
-			<div class="single-welcome-post bg-img item3 wow fadeInUp">
+			<div class="single-welcome-post bg-img item3 wow fadeInUp zoom-image">
 				<!-- Content -->
 				<img src="{{image}}" class="position-absolute position-absolute">
 				<div class="welcome-post-content">
@@ -101,7 +101,7 @@
 			{{#forumdata}}
 			{{#key4}}
 			<!-- Single Welcome Post -->
-			<div class="single-welcome-post bg-img item4 wow fadeInUp" >
+			<div class="single-welcome-post bg-img item4 wow fadeInUp zoom-image" >
 				<!-- Content -->
 				<img src="{{image}}" class="position-absolute">
 				<div class="welcome-post-content position-absolute">
@@ -126,66 +126,22 @@
 			<h3 class="title">{{#str}}newestnews, local_newsvnr{{/str}}</h3>
 		</div>
 		<div class="row new-latest-body">
-			{{#forumnewestdata}}
-
-			<div class="col-lg-3 cl-5 col-sm-4 col-xs-6 news-post">
-				<div class="new-latest-box">
-					<a href="{{newsurl}}"><img class="new-latest-image" src="{{image}}"></a>
-					<a href="{{newsurl}}"><label class="new-latest-title" title="{{title}}">{{title}}</label></a>
-					
-	
-					
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="new-latest-content">
-								{{content}}
-							</div>
-						</div>
-						<div class="col-lg-12">
-							<small class="text-date float-left">{{time}}</small>
-							<div class="new-latest-comment-info float-right">
-								<i class="fa fa-eye" aria-hidden="true"> {{countviews}} &nbsp&nbsp</i>
-								<i class="fa fa-comment-o" aria-hidden="true"> {{countcomments}} &nbsp&nbsp</i>
-							</div>
-						</div>
-					</div>
-
-				</div>
-
+			<div class="owl-carousel owl-theme" id="new-lastest">
+				{{#forumnewestdata}}
+					{{> theme_moove/newscard}}
+				{{/forumnewestdata}}
 			</div>
-			{{/forumnewestdata}}
-
-
 		</div>
 
 		<div class="btn-new-course">
 			<h3 class="title">{{#str}}newsbycourse, local_newsvnr{{/str}}</h3>
 		</div>
 		<div class="row new-latest-body">
-					{{#forumcoursenewsndata}}
-					<div class="col-lg-3 cl-5 col-sm-4 col-xs-6 news-post">
-						<div class="new-latest-box">
-							<a href="{{newsurl}}"><img class="new-latest-image" src="{{image}}"></a>
-							<a href="{{newsurl}}"><label class="new-latest-title" title="{{title}}">{{title}}</label></a>
-							<div class="row">
-								<div class="col-lg-12">
-									<div class="new-latest-content">
-										{{content}}
-									</div>
-								</div>
-								<div class="col-lg-12">
-									<small class="text-date float-left">{{time}}</small>
-									<div class="new-latest-comment-info float-right">
-										<i class="fa fa-eye" aria-hidden="true"> {{countviews}} &nbsp&nbsp</i>
-										<i class="fa fa-comment-o" aria-hidden="true"> {{countcomments}} &nbsp&nbsp</i>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					{{/forumcoursenewsndata}}
-		
+			<div class="owl-carousel owl-theme" id="new-lastest-bycourse">
+				{{#forumcoursenewsndata}}
+					{{> theme_moove/newscard}}
+				{{/forumcoursenewsndata}}
+			</div>
 		</div>
 
 		<label class="d-flex justify-content-center"> <a id="view-more-news" href="{{showallurl}}">{{#str}}viewmore, local_newsvnr{{/str}}</a>
@@ -202,7 +158,6 @@
 		<div class="btn-new-latest">
 			<h3 class="title">{{#str}}allnewsbycourse, local_newsvnr{{/str}}</h3>
 		</div>
-
 		<hr>
 		<div class="row">
 			<div class="col-md-7">
@@ -219,25 +174,12 @@
 						<input type="hidden" name="rowcount" id="rowcount" />
 					</div>
 			</div>
-
-
 		</div>
-
 		<div class="row new-latest-body" id="see-all-news">		
-
 			<!-- Pagination -->
-			
-		</div>
-
-
-				
-
+		</div>	
 	</div>
-
 {{/showall}}
-
-
-
 {{#forumdatasearch}}
 
 <div class="container-new">
@@ -249,27 +191,8 @@
 		<div class="row new-latest-body">
 			{{#courseendable}}
 			{{#forumsearchdata}}
-			<div class="col-lg-3 mb-3">
-				<div class="new-latest-box">
-					<a href="{{newsurl}}"><img class="new-latest-image" src="{{imageurl}}"></a>
-					<a href="{{newsurl}}"><label class="new-latest-title" title="{{subject}}">{{subject}}</label></a>
-					<br />
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="new-latest-content">
-								{{message}}
-							</div>
-						</div>
-						<div class="col-lg-12">
-							<small class="text-date float-left">{{time}}</small>
-							<div class="new-latest-comment-info float-right">
-								<i class="fa fa-eye" aria-hidden="true"> {{countviews}} &nbsp&nbsp</i>
-								<i class="fa fa-comment-o" aria-hidden="true"> {{countcomments}} &nbsp&nbsp</i>
-							</div>
-						</div>
-
-					</div>
-				</div>
+			<div class="col-xl-3 mb-3" style="padding: 0">
+					{{> theme_moove/newscard}}
 			</div>
 			{{/forumsearchdata}}
 			{{/courseendable}}

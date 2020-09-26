@@ -316,5 +316,6 @@ $string['minuteago'] = 'minute ago';
 $string['hourago'] = 'hour ago';
 $string['yesterday'] = 'Yesterday';
 $string['dayago'] = 'day ago';
-$string['month'] = 'month ago';
+$string['monthago'] = 'month ago';
 $string['answer'] = 'answers';
+$string['nocontent'] = 'No content';

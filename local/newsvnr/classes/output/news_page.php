@@ -67,6 +67,7 @@ class news_page implements renderable, templatable {
                 $file->filearea. $file->filepath.$file->itemid.'/'. $file->filename, !$isimage);
             $link = $CFG->wwwroot."/local/newsvnr/news.php?id=".$file->id;;
             $time = self::convertunixtime('m d, Y',$file->timemodified,'Asia/Ho_Chi_Minh');
+            $forumstd->timeago = converttime($file->timemodified);
             $forumstd->newsurl = $link;
             $forumstd->title = $file->name;
             $forumstd->image = $imageurl;
@@ -83,15 +84,18 @@ class news_page implements renderable, templatable {
     public static function get_forums_newest_data(){
         global $DB,$CFG;
         $forumid = $DB->get_field_sql("SELECT TOP 1 id FROM mdl_forum", []);
-        $sql = "SELECT fd.id as disid, fd.countviews, fp.message,fp.subject,fd.timemodified, fn.* from mdl_forum_discussions fd join mdl_forum_posts fp on fd.id = fp.discussion join mdl_files fn on fd.firstpost = fn.itemid 
-        where filesize > 0 and fd.forum = $forumid and fn.filearea='attachment' order by fd.timemodified DESC
+        $sql = "SELECT fd.id as disid, fd.countviews, fp.message,fp.subject,fd.timemodified, fn.*,CONCAT(us.firstname,' ',us.lastname) AS name
+        from mdl_forum f 
+        join mdl_forum_discussions fd on fd.forum = f.id
+        join mdl_forum_posts fp on fd.id = fp.discussion 
+        join mdl_files fn on fd.firstpost = fn.itemid 
+        JOIN mdl_user us ON us.id = fp.userid
+        where filesize > 0 and fd.forum = $forumid and fn.filearea='attachment' and f.type = N'news' order by fd.timemodified DESC
         ";
         $forumnewstdata = $DB->get_recordset_sql($sql);
-        
         $contentimage = '';
         $forumarr = array();
         $i = 1;
-        
         foreach ($forumnewstdata as $file) {
 
             $count_comment = get_count_comment_by_discussionid($file->disid);
@@ -111,7 +115,8 @@ class news_page implements renderable, templatable {
             $forumstd->image = $imageurl;
             $forumstd->time = $time;
             $forumstd->countviews = $file->countviews;
-
+            $forumstd->timeago = converttime($file->timemodified);
+            $forumstd->name = $file->name;
             if(!empty($count_comment))
             {                                 
                 $forumstd->countcomments = $count_comment->countcomments;            
@@ -135,8 +140,8 @@ class news_page implements renderable, templatable {
 
         if($check_show_all == "")
         {
-            $sql = "SELECT p.id as postid, d.countviews, d.id as discussionid, f.course, p.message,p.subject,p.modified,fn.contextid,fn.component,fn.filearea,fn.filepath,fn.itemid,fn.filename 
-            from mdl_forum f join mdl_forum_discussions d on f.id=d.forum and f.course=d.course join mdl_forum_posts p on d.id = p.discussion join mdl_files fn on d.firstpost = fn.itemid 
+            $sql = "SELECT p.id as postid, d.countviews, d.id as discussionid, f.course, p.message,p.subject,p.modified,fn.contextid,fn.component,fn.filearea,fn.filepath,fn.itemid,fn.filename,CONCAT(us.firstname,' ',us.lastname) as name
+            from mdl_forum f join mdl_forum_discussions d on f.id=d.forum and f.course=d.course join mdl_forum_posts p on d.id = p.discussion join mdl_files fn on d.firstpost = fn.itemid join mdl_user us on us.id = p.userid
             where f.type='news' and fn.filesize>0
             and fn.filearea = 'attachment'
             order by p.id desc
@@ -145,8 +150,8 @@ class news_page implements renderable, templatable {
         }
         else{
 
-            $sql = "SELECT p.id as postid, d.countviews, d.id as discussionid, f.course, p.message,p.subject,p.modified,fn.contextid,fn.component,fn.filearea,fn.filepath,fn.itemid,fn.filename 
-            from mdl_forum f join mdl_forum_discussions d on f.id=d.forum and f.course=d.course join mdl_forum_posts p on d.id = p.discussion join mdl_files fn on d.firstpost = fn.itemid 
+            $sql = "SELECT p.id as postid, d.countviews, d.id as discussionid, f.course, p.message,p.subject,p.modified,fn.contextid,fn.component,fn.filearea,fn.filepath,fn.itemid,fn.filename,CONCAT(us.firstname,' ',us.lastname) as name
+            from mdl_forum f join mdl_forum_discussions d on f.id=d.forum and f.course=d.course join mdl_forum_posts p on d.id = p.discussion join mdl_files fn on d.firstpost = fn.itemid join mdl_user us on us.id = p.userid
             where f.type='news' and fn.filesize>0
             and fn.filearea = 'attachment'
             order by p.id desc";
@@ -187,6 +192,9 @@ class news_page implements renderable, templatable {
 
             $forumstd->countviews = $file->countviews;
 
+            $forumstd->timeago = converttime($file->modified);
+
+            $forumstd->name = $file->name;
             if(!empty($count_comment))
             {                                 
                 $forumstd->countcomments = $count_comment->countcomments;            
@@ -208,7 +216,8 @@ class news_page implements renderable, templatable {
    public static function get_forums_search($searchquery)
     {
          global $DB,$CFG;
-        $sql = "SELECT fp.*,fn.*, fd.id as discussionid, fd.countviews from mdl_forum ff join mdl_forum_discussions fd on ff.id = fd.forum join mdl_forum_posts fp on fd.id = fp.discussion join mdl_files fn on fd.firstpost = fn.itemid 
+        $sql = "SELECT fp.*,fn.*, fd.id as discussionid, fd.countviews,CONCAT(us.firstname,' ',us.lastname) as name from mdl_forum ff 
+        join mdl_forum_discussions fd on ff.id = fd.forum join mdl_forum_posts fp on fd.id = fp.discussion join mdl_files fn on fd.firstpost = fn.itemid join mdl_user us on us.id = fp.userid
         where fn.filesize>0 and ff.type='news' 
         and (fn.filearea = 'attachment') 
         and (fp.subject LIKE N'%$searchquery%'
@@ -232,12 +241,13 @@ class news_page implements renderable, templatable {
 
             $link = $CFG->wwwroot."/local/newsvnr/news.php?id=".$data[$j]->discussionid;
 
-            $forumarr['forumsearchdata'][$j]['subject'] = $data[$j]->subject;
-            $forumarr['forumsearchdata'][$j]['message'] = strip_tags($data[$j]->message);
+            $forumarr['forumsearchdata'][$j]['title'] = $data[$j]->subject;
+            $forumarr['forumsearchdata'][$j]['content'] = strip_tags($data[$j]->message);
             $forumarr['forumsearchdata'][$j]['time'] = $time;
-            $forumarr['forumsearchdata'][$j]['imageurl'] = $imageurl;
+            $forumarr['forumsearchdata'][$j]['image'] = $imageurl;
             $forumarr['forumsearchdata'][$j]['countviews'] = $data[$j]->countviews;
-            
+            $forumarr['forumsearchdata'][$j]['name'] = $data[$j]->name;
+            $forumarr['forumsearchdata'][$j]['timeago'] = converttime($data[$j]->modified);
             $forumarr['forumsearchdata'][$j]['newsurl'] = $link;
 
             if(!empty($count_comment))

@@ -412,6 +412,8 @@ require(['theme_moove/course_menu']);
 
 require(['theme_moove/menu_mobile']);
 
+var id = $('.new-detail-chat').attr('data');
+$('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussionid='+id);
 
 {{/js}}
 <script>
@@ -433,6 +435,27 @@ require(['theme_moove/menu_mobile']);
                 $('#load-course').hide().html(response).fadeIn('fast');
                 $('.loading-page').removeClass('active');
             })
+        });
+    };
+
+    const loadComment = (id) => {
+        require(['jquery', 'core/config'], ($, config) => {
+            $('.loading-page').addClass('active');
+            page++;
+            var url = "./ajax/pagination_comment.php";
+            var settings = {
+                type:"GET",
+                processData:true,
+                data:{
+                    discussionid:id,
+                    page: page
+                }
+            };
+            $.ajax(url,settings).then(function(response) {
+                $('.new-detail-see-more').remove();
+                $('#list_comment').append(response);
+                $('.loading-page').removeClass('active');
+            });
         });
     }
 </script>

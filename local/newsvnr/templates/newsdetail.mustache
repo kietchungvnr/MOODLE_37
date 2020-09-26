@@ -31,7 +31,7 @@
       <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v3.3"></script>
       <div class="fb-comments" data-href="http://221.132.17.180:8089/local/newsvnr/news.php?id= {{{discussionid}}} " data-width="100%" data-mobile="true" data-numposts="5"></div>
       -->
-   <div class="new-detail-comment">
+   <div class="new-detail-comment" >
       {{#user}}
       <form>
          <div class="new-detail-comment-body">
@@ -46,88 +46,9 @@
       </form>
       {{/user}}
    </div>
-   <div class="new-detail-chat position-relative" id="list_comment">
+   <div class="new-detail-chat position-relative" data="{{{discussionid}}}" id="list_comment">
       <div class="loading-page"></div>
-      {{#commentdata}}
-      <div class="row">
-         <div class="col chat-panel" id="comment_{{{id}}}">
-            <input type="hidden" name="" id="test{{{id}}}" value="1" />
-            <div class="chat-image">
-               {{{useravatar}}}
-            </div>
-            <div class="chat-content">
-               <div class="chat-body d-flex">
-                  <p><span class="name mr-2">{{{fullname_comment}}}</span>{{{content_comment}}}</p>
-               </div>
-               
-               <div class="chat-footer">
-                  <div class="chat-footer d-flex">
-                      <!-- Action delete comment here 
-                        <label class="delete" onclick="DeleteComment({{{id})" id="{{{id}}}">Xóa</label>
-                        --> 
-                     {{{label_delete}}}
-                     <input type="hidden" id="delete_comment{{{id}}}"  value="delete">
-                     <label class="feedback" onclick="FeedBack({{{id}}})" id="{{{id}}}">{{#str}}feedback, local_newsvnr{{/str}}</label>
-                     <label class="date-feedback ml-2">{{createdAt_comment}}</label>
-                     
-                  </div>
-                  <!-- ACTION SHOW AND HIDE REPLIES -->
-                  {{#isreply}}
-                  <p class="chat-show-reply" id="show-reply{{{id}}}" 
-                     onclick="ShowReplies({{{id}}})" ><i class="fa fa-mail-forward" style="display:block">  {{{countreply}}} {{#str}}answer, local_newsvnr{{/str}}</i></p>
-                  {{/isreply}}
-                  <!-- ACTION END SHOW AND HIDE REPLIES --> 
-                  <div class="new-detail-reply-body form-reply" style="width: 80%; display: none;">
-                     <form>
-                        <textarea class="new-detail-reply-content" name="content_reply" id="content_reply" placeholder="{{#str}}yourcomment, local_newsvnr{{/str}}"></textarea>
-                        <input type="hidden" id="commentid" name="" value="{{{id}}}"> {{#user}}
-                        <input type="hidden" id="userid" name="userid" value="{{{id}}}" /> {{/user}}
-                        <input type="hidden" id="fullname" value="{{{firstname}}} {{{lastname}}}" name="" />
-                        <div class="new-detail-reply-control">
-                           <button type="button" id="post_reply" name="post_reply" class="btn btn-submit ">{{#str}}sendcomment, local_newsvnr{{/str}}</button>
-                        </div>
-                     </form>
-                  </div>
-                  <div class="clearfix"></div>
-                  <div class="list-reply{{{id}}} mt-1" id="list_reply{{{id}}}" style="display: none; overflow: hidden;">
-                     <!-- COMMENT IS HAVING REPLIES -->
-                     {{#reply}}                 
-                     <div class="chat-reply" id="reply_{{{id_reply}}}">
-                        <!-- Comment 1 -->
-                        <div class="col chat-panel">
-                           <div class="chat-image">
-                              {{{userreplyavatar}}}
-                           </div>
-                           <div class="chat-content">
-                              <div class="chat-body">
-                                 <p><span class="name mr-2">{{fullname_reply}}</span> {{content_reply}}</p>
-                              </div>
-                              
-                              <div class="chat-footer d-flex">
-                                 {{{label_deletereply}}}
-                                 <input type="hidden" id="delete_reply{{{id_reply}}}" name="" value="delete" />
-                                 <label class="date-feedback">{{createdAt_reply}}</label>
-                                 {{! <label class="date-feedback">{{createdAt_reply}}</label>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     {{/reply}}
-                     <!-- END COMMENT IS HAVING REPLIES -->
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-      {{/commentdata}}
    </div>
-   <div class="new-detail-see-more">
-      <div class="new-detail-see-more-title">
-         <small class="new-detail-btn-see-more" id="see-more">{{#str}}viewmorecomment, local_newsvnr{{/str}} </small>
-      </div>
-   </div>
-
-    
 <hr>
 {{/coursedata}}
 <div class="btn-new-Related">
@@ -135,28 +56,11 @@
 </div>
 <div class="new-Related-body">
    <div class="row">
+      <div class="owl-carousel owl-theme" id="new-lastest">
       {{#courselqdata}} 
-      <div class="col-lg-3 col-sm-4 col-xs-6">
-      <div class="new-related-block">
-         <div class="new-Related-img">
-            <a href="{{newsurl}}"><img src="{{image}}"></a>
-         </div>
-         <div class="description">
-            <a href="{{newsurl}}">
-               <h6 class="new-Related-title">{{title}}</h6>
-            </a>
-            <small class="text-date">{{time}}</small>
-            <p class="p-courselq">
-               {{content}}
-            </p>
-            <label class="new-Related-comment-info">
-            <i class="fa fa-eye" aria-hidden="true"> {{countviews}} &nbsp;</i>
-            <i class="fa fa-comment-o" aria-hidden="true"> {{countcomments}} &nbsp;</i>
-            </label>
-         </div>
-      </div>
-      </div>
+         {{> theme_moove/newscard}}
       {{/courselqdata}} 
+      </div>
    </div>
 </div>
 

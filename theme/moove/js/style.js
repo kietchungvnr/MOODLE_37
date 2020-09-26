@@ -61,12 +61,14 @@
         var owlrequiredpositioncourse = $('#requiredcourse-position-slider');
         var owlsuggestcourse = $('#suggest-course-slider');
         var owluserplancourse = $('#course-userplan-slider');
+        var owlnewslastest = $('#new-lastest');
+        var owlnewslastestbycourse = $('#new-lastest-bycourse');
         owlfrontpage.owlCarousel({
             loop: false,
             margin: 10,
             lazyLoad: true,
             // autoplay:true,
-            autoplayTimeout: 5000,
+            autoplayTimeout: 10000,
             responsiveClass: true,
             responsive: {
                 0: {
@@ -89,7 +91,7 @@
             margin: 10,
             lazyLoad: true,
             // autoplay:true,
-            autoplayTimeout: 5000,
+            autoplayTimeout: 10000,
             responsiveClass: true,
            responsive: {
                 0: {
@@ -306,6 +308,44 @@
                 1350: {
                     items: 6,
                 }
+            }
+
+        });
+        owlnewslastest.owlCarousel({
+            loop: false,
+            margin: 0,
+            lazyLoad: true,
+            responsiveClass: true,
+            smartSpeed:250,
+            responsive: {
+                0: {
+                    items: 2,
+                },
+                900: {
+                    items: 3,
+                },
+                1200: {
+                    items: 4,
+                },
+            }
+
+        });
+        owlnewslastestbycourse.owlCarousel({
+            loop: false,
+            margin: 0,
+            lazyLoad: true,
+            responsiveClass: true,
+            smartSpeed:250,
+            responsive: {
+                0: {
+                    items: 2,
+                },
+                900: {
+                    items: 3,
+                },
+                1200: {
+                    items: 4,
+                },
             }
 
         });

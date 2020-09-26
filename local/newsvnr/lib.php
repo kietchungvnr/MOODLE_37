@@ -250,7 +250,7 @@ function get_course_id($discussionid) {
 function get_forums_lq_data($course_id, $current_discussion) {
     global $DB,$CFG;
     $sql = "
-            SELECT d.countviews, CONCAT(u.firstname,' ',u.lastname) AS username,p.userid AS userid, d.id AS discussionid , d.timemodified,p.message,p.subject,p.modified,fn.contextid,fn.component,fn.filearea,fn.filepath,fn.itemid,fn.filename 
+            SELECT d.countviews, CONCAT(u.firstname,' ',u.lastname) AS name,p.userid AS userid, d.id AS discussionid , d.timemodified,p.message,p.subject,p.modified,fn.contextid,fn.component,fn.filearea,fn.filepath,fn.itemid,fn.filename 
             FROM mdl_forum f 
                 JOIN mdl_forum_discussions d ON f.id=d.forum JOIN mdl_forum_posts p ON d.id = p.discussion JOIN mdl_files fn ON d.firstpost = fn.itemid 
                 JOIN mdl_user u ON p.userid = u.id
@@ -276,10 +276,12 @@ function get_forums_lq_data($course_id, $current_discussion) {
         $forumstd->discussionid = $file->discussionid;
         $forumstd->title = $file->subject;
         $forumstd->content = strip_tags($file->message);
-        $forumstd->discussionart = \html_writer::link($userlink,$file->username);
+        $forumstd->discussionart = \html_writer::link($userlink,$file->name);
         $forumstd->image = $imageurl;
         $forumstd->countviews = $file->countviews;
         $forumstd->time = $time;
+        $forumstd->timeago = converttime($file->timemodified);
+        $forumstd->name = $file->name;
         if(!empty($count_comment))
             $forumstd->countcomments = $count_comment->countcomments;            
         else
@@ -1669,7 +1671,7 @@ function converttime($time) {
         case ($distance > 86400 && $distance < 172800 ):
             $result = get_string('yesterday','local_newsvnr');
             break;
-        case ($distance > 172800 & $distance < 2592000):
+        case ($distance > 172800 && $distance < 2592000):
             $result = round($distance/86400) .' '.get_string('dayago','local_newsvnr').'';
             break;
         case (round($distance/2592000) > 1 && round($distance/2592000) < 12 ):
