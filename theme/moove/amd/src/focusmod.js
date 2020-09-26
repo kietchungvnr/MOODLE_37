@@ -10,8 +10,10 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             $('#sidepreopen-control').click();
         }
     })
-    $('#focus-mod').bind('click', function() {
+    $('.open-focusmod').bind('click', function() {
         var fm = getCookie('cookie');
+        var action = $(this).attr('action');
+
         if (fm == "focusmod") {
             document.cookie = 'cookie=; max-Age=-1;path=/';
             $('.all-header,footer,#page-header').slideDown();
@@ -19,7 +21,6 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             $('.navbar.focusmod').css('display', 'none');
             $('ul.course').css('display', 'flex');
             $('div#page-content').css('margin-top', '0px');
-            $(this).css('background', '#2871b5d4');
         } else {
             if (!$('#sidepre-blocks').hasClass('closed')) {
                 $('#sidepreopen-control').click();
@@ -29,15 +30,9 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             $('.navbar.focusmod').css('display', 'flex');
             $('ul.course').css('display', 'none');
             $('#page-content').css('margin-top', '62px');
-            $(this).css('background', '#c23530c9');
             setCookie('cookie', 'focusmod');
         }
     })
-    var fm = getCookie('cookie')
-    if (fm == "focusmod") {
-        $('#focus-mod').css('background', '#c23530c9');
-        $('#focus-mod i').addClass('fa-compress');
-    }
     $(window).resize(function() {
         var fm = getCookie('cookie')
         var width = $(window).width();

@@ -41,6 +41,7 @@ $page     = optional_param('page', 0, PARAM_INT);
 $keyword  = optional_param('keyword', "", PARAM_TEXT);
 $teacher  = optional_param('teacher', "", PARAM_TEXT);
 $category = optional_param('category', "", PARAM_TEXT);
+$filter   = optional_param('filter', "", PARAM_TEXT);
 $PAGE->set_context(context_system::instance());
 $theme_settings = new theme_settings();
 
@@ -50,6 +51,9 @@ $paginationlink = $CFG->wwwroot . '/course/load_course.php?page=';
 $strsearch      = "N'" . '%' . $keyword . '%' . "'";
 $strteacher     = "N'" . '%' . $teacher . '%' . "'";
 $strcategory    = "N'" . '%' . $category . '%' . "'";
+$sql            = '';
+$condition      = '';
+$jointable      = '';
 if ($page < 1) {
     $page = 1;
 }
@@ -57,49 +61,54 @@ $start = ($page - 1) * $perPage->perpageCourseNews;
 if ($start < 15) {
     $start = 0;
 }
-if ($id < 1 && $keyword == '' && $teacher == '' && $category == '') {
-    $getcourse   = $DB->get_records_sql('SELECT * FROM {course} ORDER BY id DESC OFFSET ' . $start . ' ROWS FETCH NEXT 15 ROWS only');
-    $countcourse = $DB->get_records_sql('SELECT * FROM {course}');
-} else if ($keyword != '' || $teacher != '' || $category != '') {
-    $sql = '';
-    if (($keyword != '' || $category != '') && $teacher == '') {
-        $sql .= 'SELECT c.id,c.fullname FROM {course_categories} cc
-        join {course} c on c.category = cc.id
-        WHERE c.fullname LIKE ' . $strsearch . ' AND cc.name LIKE ' . $strcategory . '';
-    } else if ($teacher != '' && ($keyword == '' || $category != '')) {
-        $sql .= "SELECT DISTINCT c.id,c.fullname
-	    from {role_assignments} ra
-	    join {user} u on u.id= ra.userid
-	    join {user_enrolments} ue on ue.userid=u.id
-	    join {enrol} e on e.id=ue.enrolid
-	    join {course} c on c.id=e.courseid
-	    join {context} ct on ct.id=ra.contextid and ct.instanceid= c.id
-	    join {role} r on r.id= ra.roleid
-	    JOIN {course_categories} cc ON cc.id = c.category
-	    where ra.roleid=3 AND CONCAT(u.firstname,' ', u.lastname) LIKE $strteacher AND cc.name LIKE $strcategory";
+
+if ($filter == "coursepopular") {
+    $condition .= "AND c.pinned = 1";
+} elseif ($filter == "mycourse" || $filter == "teachercourse") {
+    $jointable .= "JOIN mdl_enrol AS e ON c.id=e.courseid
+                  JOIN mdl_user_enrolments AS ue ON e.id=ue.enrolid
+                  JOIN mdl_user AS u ON ue.userid=u.id
+                  JOIN mdl_role_assignments AS ra ON u.id= ra.userid
+                  JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id";
+    if ($filter == "mycourse") {
+        $condition .= "AND ra.roleid = 5 AND u.id = $USER->id";
     } else {
-        $sql .= "SELECT DISTINCT c.id,c.fullname
-	    from {role_assignments} ra
-	    join {user} u on u.id= ra.userid
-	    join {user_enrolments} ue on ue.userid=u.id
-	    join {enrol} e on e.id=ue.enrolid
-	    join {course} c on c.id=e.courseid
-	    join {context} ct on ct.id=ra.contextid and ct.instanceid= c.id
-	    join {role} r on r.id= ra.roleid
-	    JOIN {course_categories} cc ON cc.id = c.category
-	    where ra.roleid=3 AND fullname LIKE $strsearch AND CONCAT(u.firstname,' ', u.lastname) LIKE $strteacher AND cc.name LIKE $strcategory";
+        $condition .= "AND ra.roleid = 3 AND u.id = $USER->id";
     }
-    $getcourse   = $DB->get_records_sql($sql . 'ORDER BY id DESC OFFSET ' . $start . ' ROWS FETCH NEXT 15 ROWS only', []);
-    $countcourse = $DB->get_records_sql($sql, []);
-    echo '<div class="mt-3 result-course">'.get_string('resultsearch','local_newsvnr').' '. count($countcourse).'</div>';
+}
+
+if ($id < 1 && $keyword == '' && $teacher == '' && $category == '') {
+    $sql = "SELECT c.id,c.fullname,c.timecreated FROM {course} c $jointable WHERE c.id != 0 $condition";
+} else if ($keyword != '' || $teacher != '' || $category != '') {
+    if (($keyword != '' || $category != '') && $teacher == '') {
+        $sql .= 'SELECT c.id,c.fullname,c.timecreated FROM {course_categories} cc
+        join {course} c on c.category = cc.id ' . $jointable . '
+        WHERE c.fullname LIKE ' . $strsearch . ' AND cc.name LIKE ' . $strcategory . ' ' . $condition . '';
+    } else {
+        $sql .= "SELECT c.id,c.fullname,c.timecreated
+        from {role_assignments} ra
+        join {user} u on u.id= ra.userid
+        join {user_enrolments} ue on ue.userid=u.id
+        join {enrol} e on e.id=ue.enrolid
+        join {course} c on c.id=e.courseid
+        join {context} ct on ct.id=ra.contextid and ct.instanceid= c.id
+        JOIN {course_categories} cc ON cc.id = c.category
+        where ra.roleid=3 AND c.fullname LIKE $strsearch AND CONCAT(u.firstname,' ', u.lastname) LIKE $strteacher AND cc.name LIKE $strcategory";
+    }
 } else {
-    $getcourse   = $DB->get_records_sql('SELECT * FROM {course} WHERE category = :id ORDER BY id DESC OFFSET ' . $start . ' ROWS FETCH NEXT 15 ROWS only ', ['id' => $id]);
-    $countcourse = $DB->get_records_sql('SELECT * FROM {course} WHERE category = :id', ['id' => $id]);
+    $sql .= "SELECT c.id,c.fullname,c.timecreated FROM {course} c WHERE c.category =$id $condition";
+}
+
+$getcourse   = $DB->get_records_sql($sql . 'ORDER BY timecreated DESC OFFSET ' . $start . ' ROWS FETCH NEXT 15 ROWS only', []);
+$countcourse = $DB->get_records_sql($sql);
+
+if (($keyword != '' || $teacher != '' || $category != '') && count($getcourse) > 0) {
+    echo '<div class="mt-3 result-course alert alert-success">' . get_string('resultsearch', 'local_newsvnr') . ' ' . count($countcourse) . '</div>';
 }
 $perpageresult = $perPage->getAllCourseNewsPageLinks(count($countcourse), $paginationlink);
 if (empty($getcourse)) {
     echo '<div class="alert alert-warning">
-    		<strong>' . get_string('warning', 'local_newsvnr') . '!</strong>.' . get_string('nocourseload', 'local_newsvnr') . '</div>';
+        <strong>' . get_string('warning', 'local_newsvnr') . '!</strong>.' . get_string('nocourseload', 'local_newsvnr') . '</div>';
     die();
 }
 echo '<div class="row">';
@@ -127,7 +136,7 @@ foreach ($getcourse as $value) {
     }
     echo
     '<div class="col-6 col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 col-15 course-ajax-load">
-		<div class="post-slide6">
+    <div class="post-slide6">
                <div class="post-img">
                   ' . $value->courseimage . '
                   <div class="post-info">

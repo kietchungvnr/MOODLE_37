@@ -434,6 +434,7 @@ class course_renderer extends \core_course_renderer {
         $output .= '<div class="col-xl-9 col-lg-8 col-md-8 position-relative">';
         $output .= '<div class="loading-page"></div>';
         $output .= $this->course_teacher_search_form();
+        $output .= $this->course_filter();
         $output .= '<div id="load-course">';
         $output .= '</div></div></div>';
         return $output;
@@ -442,20 +443,38 @@ class course_renderer extends \core_course_renderer {
         $output = '';
         $output .= '<div id="courses_search_form" class="">';
         $output .= '<div class="row">';
-        $output .= '<div class="col-xl-3 col-6 pt-1 pl-1">';
-        $output .= '<input style="width:100%" name="category" type="text" class="courses_search_input" id="category" placeholder="'.get_string('coursecatogories','local_newsvnr').'" value="">';
+        $output .= '<div class="col-xl-3 col-6 pt-1 pl-1 tree-search">';
+        $output .= '<input name="category" type="text" class="courses_search_input" id="category" placeholder="'.get_string('coursecatogories','local_newsvnr').'" value="">';
         $output .= '</div>';
-        $output .= '<div class="col-xl-3 col-6 pt-1 pl-1">';
-        $output .= '<input style="width:100%" name="keyword" type="text" class="courses_search_input" id="keyword" placeholder="'.get_string('coursename','local_newsvnr').'" value="">';
+        $output .= '<div class="col-xl-3 col-6 pt-1 pl-1 tree-search">';
+        $output .= '<input name="keyword" type="text" class="courses_search_input" id="keyword" placeholder="'.get_string('coursename','local_newsvnr').'" value="">';
         $output .= '</div>';
-        $output .= '<div class="col-xl-3 col-6 pt-1 pl-1">';
-        $output .= '<input style="width:100%" name="teacher" type="text" class="courses_search_input" id="teacher" placeholder="'.get_string('teachernames','local_newsvnr').'" value="">';
+        $output .= '<div class="col-xl-3 col-6 pt-1 pl-1 tree-search">';
+        $output .= '<input name="teacher" type="text" class="courses_search_input" id="teacher" placeholder="'.get_string('teachernames','local_newsvnr').'" value="">';
         $output .= '</div>';
         $output .= '<div class="col-xl-3 col-6 pt-1 pl-1">';
         $output .= '<button id="courses_search_button" class="ml-auto w-100"><i class="fa fa-search mr-1"></i>'.get_string('search','local_newsvnr').'</button>';
         $output .= '</div>';
         $output .= '</div>';
         $output .= '</div>';
+        return $output;
+    }
+    public function course_filter() {
+        global $DB,$USER;
+        $role = $DB->get_record_sql('SELECT * FROM {role_assignments} ra JOIN {user} u ON u.id = ra.userid WHERE u.id =:userid',['userid' => $USER->id]);
+        $output  = '';
+        $output .= '<div class="row pt-2"><div class="col-12 col-md-6 col-lg-6 col-xl-4">';
+        $output .= '<select class="form-control" id="course-filter">';
+        $output .= '<option value="allcourse" selected="selected">'.get_string('filtercourseall','local_newsvnr').'</option>';
+        $output .= '<option value="coursepopular">'.get_string('filtercoursepopular','local_newsvnr').'</option>';
+        if($role->roleid == 5 || is_siteadmin()) {
+            $output .= '<option value="mycourse" >'.get_string('mycourses','theme_moove').'</option>';
+        }
+        if($role->roleid == 3 || is_siteadmin()) {
+            $output .= '<option value="teachercourse" >'.get_string('owncourses','theme_moove').'</option>';
+        }
+        $output .= '</select>';
+        $output .= '</div></div>';
         return $output;
     }
     public function menucoursecategory($menus, $id_parent = 0, &$output = '', $stt = 0) {

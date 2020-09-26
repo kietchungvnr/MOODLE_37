@@ -319,3 +319,7 @@ $string['dayago'] = 'ngày trước';
 $string['monthago'] = 'tháng trước';
 $string['answer'] = 'trả lời';
 $string['nocontent'] = 'Không có nội dung';
+$string['filtercourseall'] = "Tất cả khóa học ( Xếp theo mới nhất )";
+$string['filtercoursepopular'] = "Khóa học phổ biến";
+$string['zoomin'] = "Phóng to";
+$string['zoomout'] = "Thu nhỏ";

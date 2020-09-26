@@ -6,17 +6,15 @@
          {{title}}
       </div>
       <div class="new-detail-time">
+         {{{useravatar}}}
+         <div>
          <small class="text-date">{{time}}</small>
+         <br>
+         <i>{{#str}}poster, local_newsvnr{{/str}}: </i> <i class="new-detail-user">{{{discussionart}}}</i>
+         </div>
       </div>
       <div class="content">
          {{{content}}}
-      </div>
-      <div class="row">
-         <div class="col-md-6">
-         </div>
-         <div class="col-md-6" style="text-align:right">
-            <i>{{#str}}poster, local_newsvnr{{/str}}: </i> <i class="new-detail-user">{{{discussionart}}}</i>
-         </div>
       </div>
       <div class="row">
          <div class="col-md-6">
@@ -51,7 +49,7 @@
    </div>
 <hr>
 {{/coursedata}}
-<div class="btn-new-Related">
+<div class="btn-new-Related pt-1">
    <button type="button" class="btn btn-course-fs">{{#str}}relatednews, local_newsvnr{{/str}}</button>
 </div>
 <div class="new-Related-body">

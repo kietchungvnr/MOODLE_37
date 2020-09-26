@@ -97,7 +97,7 @@ function get_all_image_of_discussion($firstpost_id) {
  */
 function get_froums_coursenews_data_id($discussionid)
 {
-    global $DB,$CFG;
+    global $DB,$CFG,$OUTPUT;
     $sql = "
             SELECT  d.id  AS discussionid, d.countviews, CONCAT(u.firstname,' ',u.lastname) AS username, f.course, p.userid AS userid,d.id,p.message,p.subject,p.modified ,p.id AS postid,d.timemodified, d.firstpost,p.messagetrust,p.messageformat
             FROM mdl_forum f 
@@ -109,6 +109,7 @@ function get_froums_coursenews_data_id($discussionid)
     $forumarr = array();
     $course_id = 0;
     foreach ($forumdata as $key => $value) {
+        $datauser = $DB->get_record_sql('SELECT * FROM {user} u WHERE u.id = :userid ',['userid' => $value->userid]);
         $count_comment = get_count_comment_by_discussionid($value->discussionid);    
         $isimage = true;
         $forumstd = new stdClass();
@@ -119,6 +120,7 @@ function get_froums_coursenews_data_id($discussionid)
         $modcontext = context_module::instance($context_module->context_id);
         $forumstd->time = $time;
         $forumstd->title = $value->subject;
+        $forumstd->useravatar = $OUTPUT->user_picture($datauser);
         $forumstd->discussionid = $value->discussionid;
         $userlink = $CFG->wwwroot."/user/profile.php?id=".$value->userid;
         $forumstd->content2 = file_rewrite_pluginfile_urls($value->message, 'pluginfile.php', $modcontext->id, 'mod_forum', 'post', $value->postid);

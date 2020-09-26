@@ -3,6 +3,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
     $('.ajax-load').click(function() {
         $('.loading-page').addClass('active');
         $('li').removeClass('active');
+        $('.courses_search_input').val('');
         $(this).parents('li').addClass('active');
         var script = "/course/load_course.php";
         var category = $(this).attr('id');
@@ -24,7 +25,10 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         var keyword = $('.courses_search_input[name="keyword"]').val().trim().split(' ').join('+');
         var teacher = $('.courses_search_input[name="teacher"]').val().trim().split(' ').join('+');
         var category = $('.courses_search_input[name="category"]').val().trim().split(' ').join('+');
-        $('#load-course').load('/course/load_course.php?keyword=' + keyword + '&teacher=' + teacher + '&category=' + category, function() {
+        var filter = $("#course-filter :selected").val();
+        $('li').removeClass('active');
+        $('.dropdown-menu-tree').slideUp();
+        $('#load-course').load('/course/load_course.php?keyword=' + keyword + '&teacher=' + teacher + '&category=' + category + '&filter=' + filter, function() {
             $('.loading-page').removeClass('active');
         });
     })
@@ -42,4 +46,25 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
     $('.checkall').click(function() {
         $('input.usercheckbox').prop('checked', this.checked);
     })
+
+    $("#course-filter").bind('change',function() {
+        $('.loading-page').addClass('active');
+        $('.courses_search_input').val('');
+        var filter = $(this).val();
+        var script = "/course/load_course.php";
+        var settings = {
+            type: "GET",
+            processData:true,
+            data: {
+                filter: filter
+            },
+            contenttype: "application/json"
+        }
+        $.ajax(script,settings).then(function(response) {
+            $('li').removeClass('active');
+            $('.dropdown-menu-tree').slideUp();
+            $('#load-course').hide().html(response).fadeIn('fast');
+            $('.loading-page').removeClass('active');
+        })
+    });
 });

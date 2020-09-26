@@ -107,7 +107,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output .= '<div class="d-flex"><div class="progress course">';
         $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
                     aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div>'.$process.'%</div>';
-        $output .= '</div></div></div>';
+        $output .= '</div></div>';
+        $output .= '<div id="focus-mod" class="open-focusmod border-left border-right" data-placement="left"><i class="fa-window-minimize"></i><span class="ml-1 mr-2">'.get_string('zoomout','local_newsvnr').'</span></div>';
+        $output .= '</div>';
         $output .= '<div class="menu-right"><ul class="d-flex">
                 <li class="nav-item border-left"><a class="nav-link focusmod prev"><i class="fa fa-angle-left mr-2"></i>'.get_string('prevmodule','theme_moove').'</a></li>
                 <li class="nav-item border-left mid"><a class="nav-link focusmod">'.get_string('coursedata','theme_moove').'<i class="fa fa-angle-down rotate-icon ml-2"></i></a></li>
@@ -168,12 +170,12 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $process = round(\core_completion\progress::get_course_progress_percentage($COURSE));
         $output = '';
         $output .= '<div class="header-progress"><div class="page-header-headings"><h2>'.$COURSE->fullname.'</h2></div>';
-
-        $output .= '<div class="d-flex float-right"><div class="progress course">';
+        $output .= '<div class="d-flex float-right align-items-center">';
+        $output .= '<div class="progress course">';
         $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
                     aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div class="pr-2">'.$process.'%</div>';
+        $output .= '<div id="focus-mod" class="open-focusmod mr-2" data-placement="left"><i class="fa fa-desktop"></i><span class="ml-2 mr-2">'.get_string('zoomin','local_newsvnr').'</span></div>';
         $output .= '</div>';
-        
         $output .= '</div>';
         return $output;
     }
@@ -316,7 +318,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output = '';
         $home = $CFG->wwwroot;
         $dashboard = $CFG->wwwroot . '/my/';
-        $course = $CFG->wwwroot . '/local/newsvnr/course.php';
+        $course = $CFG->wwwroot . '/course/index.php';
         $news = $CFG->wwwroot . '/local/newsvnr/index.php';
         $forum = $CFG->wwwroot . '/local/newsvnr/forum.php';
         $calendar = $CFG->wwwroot . '/calendar/view.php?view=month';
@@ -1110,7 +1112,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output .= '<ul>';
         $output .= '<li><a href="'.$CFG->wwwroot.'/my"><i class="fa fa-home" aria-hidden="true"></i></a></li>';
         $output .= '<li><a href="'.$CFG->wwwroot.'/calendar/view.php?view=month"><i class="fa fa-calendar" aria-hidden="true"></i></a></li>';
-        $output .= '<li><a href="'.$CFG->wwwroot.'/local/newsvnr/course.php"><i class="fa fa-graduation-cap" aria-hidden="true"></i></a></li>';
+        $output .= '<li><a href="'.$CFG->wwwroot.'/course/index.php"><i class="fa fa-graduation-cap" aria-hidden="true"></i></a></li>';
         $output .= '<li><a href="'.$CFG->wwwroot.'/user/files.php"><i class="fa fa-user" aria-hidden="true"></i></a></li>';
         $output .= '</ul>';
         $output  .= '</div>';

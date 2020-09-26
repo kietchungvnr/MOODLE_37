@@ -319,3 +319,7 @@ $string['dayago'] = 'day ago';
 $string['monthago'] = 'month ago';
 $string['answer'] = 'answers';
 $string['nocontent'] = 'No content';
+$string['filtercourseall'] = "All course ( sort by newest course )";
+$string['filtercoursepopular'] = "Course popular";
+$string['zoomin'] = "Zoom in";
+$string['zoomout'] = "Zoom out";

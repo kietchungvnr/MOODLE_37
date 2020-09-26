@@ -2244,8 +2244,8 @@ nav.navbar .moove-search-input {
 .new-detail-chat .chat-panel {
     border-top: 2px solid #e5e5e5;
     padding-top: 5px;
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 .chat-panel .chat-content .chat-body {
     background: white;
@@ -2263,7 +2263,7 @@ nav.navbar .moove-search-input {
     padding: 5px ;
     margin-top: 10px;
     transition: all 0.5s ease;
-    height: 42px;
+    height: 50px;
 }
 .new-detail-reply-content:focus {
     height: 70px !important;
@@ -2309,6 +2309,9 @@ nav.navbar .moove-search-input {
     width: 120px;
     font-weight: bold;
     height: 40px;
+}
+.new-detail-reply-control {
+    justify-content: flex-end;
 }
 .chat-panel .chat-content .chat-footer .form-reply {
     width: 100% !important;
@@ -2381,7 +2384,9 @@ div.submissionstatustable {
     transition: 0.5s
 }
 .new-detail-title {
-    color: #45626e;
+    color: inherit;
+    font-weight: bold;
+    font-size: 25px;
 }
 .content-new {
     padding: 10px;
@@ -3286,6 +3291,9 @@ table#categoryquestions tr {
     #page-mod-quiz-edit #changeallmark {
         margin-left: 0!important;
     }
+    #load-course .row {
+        margin: auto;
+    }
 }
 @media(max-width: 500px){
     .pagelayout-course .progress {
@@ -3695,8 +3703,8 @@ h4.responsehistoryheader {
     height: 100%;
 }
 .col-12.col-sm-6.col-xl-2.col-lg-4 {
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
     margin-bottom: 10px;
 }
 .flip-cards .card {
@@ -3813,14 +3821,29 @@ h1, .h1, h2, .h2, .path-calendar .maincalendar .calendar-controls .current, h3, 
 }
 
 #focus-mod i {
-    color: #fff;
     margin: 0;
-    position: relative;
-    left: 12px;
-    top: 10px;
     font-size: 19px;
 }
-.pagelayout-incourse #focus-mod,
+#focus-mod {
+    background: #1177d1;
+    cursor: pointer;
+    border-radius: 10px;
+    width: 105px;
+    height: 30px;
+    color: white;
+    padding: 2px 0 0 10px;
+    display: flex;
+    align-items: center;
+}
+.focusmod #focus-mod {
+    margin-left: 10px;
+    height:60px;
+    border-radius: 0;
+/*    background: white;
+    color: #1177d1;*/
+    font-weight: bold;
+}
+/*.pagelayout-incourse #focus-mod,
 .pagelayout-course #focus-mod {
     position: fixed;
     bottom: 10px;
@@ -3835,7 +3858,7 @@ h1, .h1, h2, .h2, .path-calendar .maincalendar .calendar-controls .current, h3, 
 }
 #focus-mod {
     display: none;
-}
+}*/
 @media(max-width: 950px) {
     #focus-mod {
         display: none !important;
@@ -4080,9 +4103,6 @@ table#participants .fa-sort-asc ,
     div#page-content {
         margin-top: 62px;
     }
-    #focus-mod {
-        background: #c23530c9;
-    }
 {{/hasfocusmod}}
 /*cây danh mục*/
 li.list-subcategory a, li.list-subcategory .list-category a {
@@ -4197,7 +4217,7 @@ li.list-category a , li.list-subcategory a{
 #courses_search_form {
     padding: 0.5rem;
     padding-left: 20px;
-    padding-right: 20px;
+/*    padding-right: 20px;*/
     background: #f2f4f5;
     margin: 1rem -10px 0 -10px;
     border-radius: 5px;
@@ -4207,7 +4227,6 @@ li.list-category a , li.list-subcategory a{
     background: white;
 }
 #load-course .alert-warning {
-    margin-left: -10px;
     margin-top: 10px;
 }
 @media(min-width:1550px) {
@@ -4219,6 +4238,7 @@ li.list-category a , li.list-subcategory a{
 .result-course {
     font-weight: bold;
     font-size: 15px;
+    margin-bottom: 10px;
 }
 .form-control {
     border-radius: .25rem
@@ -4360,7 +4380,49 @@ select#formactionid {
     display: flex;
     margin:auto;
 }
-#return-to-top + .tooltip > .tooltip-inner {background-color: #f00;}
+.single-blog-post.style2 .blog-content .post-title {
+    font-size: 15px!important;
+}
+.btn-new-Related .btn {
+    background: transparent !important;
+    color: #363535;
+    border-bottom: 2px solid #0783cd;
+    padding: 0px 20px 0 0;
+    border-radius: 0;
+
+}
+.new-detail-time {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-bottom: 20px;
+}
+.new-detail-time:after {
+    content: "..........................................";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    letter-spacing: 4px;
+    color: var(--main-color);
+    overflow: hidden;
+}
+.tree-search input {
+    width: 100%;
+}
+body {
+    overflow-x: hidden;
+}
+.btn-new-latest,.btn-new-course {
+    padding-top: 5px;
+}
+.btn-new-latest .title,.btn-new-course .title {
+    width: max-content;
+    border-bottom: 2px solid #0783cd;
+    padding: 0px 20px 5px 0;
+    /*color: #0783cd;*/
+}
 </style>
 
 
@@ -4384,7 +4446,6 @@ select#formactionid {
 <body {{{ bodyattributes }}}>
 
     <a id="return-to-top" title="{{#str}}gotop, theme_moove{{/str}}" data-placement="left"><i class="fa fa-arrow-up"></i></a>
-    <a id="focus-mod" title="{{#str}}focusmod, theme_moove{{/str}}" data-placement="left"><i class="fa fa-expand"></i></a>
     {{{output.menu_mobile_bottom}}}
     {{{output.test}}}
     <div class="modal123"></div>  
