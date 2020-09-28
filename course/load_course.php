@@ -85,6 +85,8 @@ $sql .= "SELECT c.id, cc.name category, c.fullname, c.timecreated, CONCAT(u.firs
                 JOIN {role} r ON ra.roleid = r.id
                 JOIN {course_categories} cc ON c.category = cc.id
             WHERE 
+                c.visible = 1 AND 
+                cc.visible = 1 AND
                 cc.name LIKE $strcategory AND
                 c.fullname LIKE $strcourse AND 
                 CONCAT(u.firstname, ' ', u.lastname) LIKE $strteacher";
@@ -92,11 +94,19 @@ $sql .= "SELECT c.id, cc.name category, c.fullname, c.timecreated, CONCAT(u.firs
 $notinarr = ['allcourse', 'coursepopular'];
 if ($id < 1 && $keycourse == '' && $teacher == '' && $category == '' && ($filter == '' || $filter == 'allcourse' || $filter == 'coursepopular')) {
     // Hiện thị tất cả khóa học(mặc định lần đầu load page)
-    $sql = "SELECT c.id, c.fullname, c.timecreated FROM {course} c WHERE c.id != 0 $condition" ;
+    $sql = "SELECT c.id,c.fullname,c.timecreated 
+            FROM {course} c
+                JOIN {course_categories} cc ON c.category = cc.id
+            WHERE 
+                c.visible = 1 AND 
+                cc.visible = 1 AND
+                c.id != 0 $condition" ;
 } elseif ($teacher != '' && ($category != '' || $keycourse != '')) {
     // Hiện thị khóa học khi tìm kiếm cả 3 danh mục
     if(in_array($filter, $notinarr))
-        $condition .= 'AND r.id = 3';
+        $condition .= 'AND r.id = 3 
+                        AND c.visible = 1 
+                        AND cc.visible = 1';
     $sql .= " $condition";
 } elseif($teacher != '') {
     // Hiện thị khóa học khi tìm theo tên giảng viên
@@ -111,6 +121,8 @@ if ($id < 1 && $keycourse == '' && $teacher == '' && $category == '' && ($filter
             FROM {course} c
                 JOIN {course_categories} cc ON c.category = cc.id
             WHERE
+                c.visible = 1 AND 
+                cc.visible = 1 AND
                 cc.name LIKE $strcategory AND
                 c.fullname LIKE $strcourse $condition";
     } else {
@@ -123,20 +135,29 @@ if ($id < 1 && $keycourse == '' && $teacher == '' && $category == '' && ($filter
     } 
     if($id > 1) {
         // Load khóa học khi click vào từng danh mục trên cây danh mục khóa học
-        $sql = "SELECT c.id,c.fullname,c.timecreated FROM {course} c WHERE c.category = $id $condition";
+        $sql = "SELECT c.id,c.fullname,c.timecreated 
+                FROM {course} c
+                    JOIN {course_categories} cc ON c.category = cc.id
+                WHERE 
+                    c.visible = 1 AND 
+                    cc.visible = 1 AND
+                    c.category = $id $condition";
     }
 }
 
 $getcourse   = $DB->get_records_sql($sql . 'ORDER BY timecreated DESC OFFSET ' . $start . ' ROWS FETCH NEXT 15 ROWS only', []);
 $countcourse = $DB->get_records_sql($sql);
 
-echo '<div class="mt-3 result-course alert alert-success">' . get_string('resultsearch', 'local_newsvnr') . ' ' . count($countcourse) . '</div>';
-$perpageresult = $perPage->getAllCourseNewsPageLinks(count($countcourse), $paginationlink);
 if (empty($getcourse)) {
     echo '<div class="alert alert-warning">
         <strong>' . get_string('warning', 'local_newsvnr') . '!</strong>.' . get_string('nocourseload', 'local_newsvnr') . '</div>';
     die();
+} else {
+    echo '<div class="mt-3 result-course alert alert-success">' . get_string('resultsearch', 'local_newsvnr') . ' ' . count($countcourse) . '</div>';
 }
+
+$perpageresult = $perPage->getAllCourseNewsPageLinks(count($countcourse), $paginationlink);
+
 echo '<div class="row">';
 foreach ($getcourse as $value) {
     //Thêm các field còn thiếu trong khóa học
