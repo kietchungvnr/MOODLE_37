@@ -108,12 +108,14 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
                     aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div>'.$process.'%</div>';
         $output .= '</div></div>';
-        $output .= '<div id="focus-mod" class="open-focusmod border-left border-right" data-placement="left"><i class="fa-window-minimize"></i><span class="ml-1 mr-2">'.get_string('zoomout','local_newsvnr').'</span></div>';
+        // $output .= '<div id="focus-mod" class="open-focusmod border-left border-right" data-placement="left"><i class="fa fa-external-link"></i><span class="ml-1 mr-1">'.get_string('zoomout','local_newsvnr').'</span></div>';
         $output .= '</div>';
-        $output .= '<div class="menu-right"><ul class="d-flex">
-                <li class="nav-item border-left"><a class="nav-link focusmod prev"><i class="fa fa-angle-left mr-2"></i>'.get_string('prevmodule','theme_moove').'</a></li>
-                <li class="nav-item border-left mid"><a class="nav-link focusmod">'.get_string('coursedata','theme_moove').'<i class="fa fa-angle-down rotate-icon ml-2"></i></a></li>
-                <li class="nav-item border-left"><a class="nav-link focusmod next">'.get_string('nextmodule','theme_moove').'<i class="fa fa-angle-right ml-2"></i></a></li>';
+
+        $output .= '<div class="menu-right"><ul class="d-flex">';
+        $output .= '<li class="nav-item border-left"><a class="nav-link focusmod prev"><i class="fa fa-angle-left mr-2"></i>'.get_string('prevmodule','theme_moove').'</a></li>
+                    <li class="nav-item border-left mid"><a class="nav-link focusmod">'.get_string('coursedata','theme_moove').'<i class="fa fa-angle-down rotate-icon ml-2"></i></a></li>
+                    <li class="nav-item border-left"><a class="nav-link focusmod next">'.get_string('nextmodule','theme_moove').'<i class="fa fa-angle-right ml-2"></i></a></li>';
+        $output .= '<div id="focus-mod" class="open-focusmod border-left border-right" data-placement="left"><i class="fa fa-external-link"></i><span class="ml-1 mr-1">'.get_string('zoomout','local_newsvnr').'</span></div>';
         $output .= '<div class="dropdown-content">';
         foreach ($allmodinfo as $modinfo) {
             $sectioninfo = $DB->get_record_sql('SELECT * FROM {course_sections} WHERE id = :section', ['section' => $modinfo->id]);
@@ -169,7 +171,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         global $COURSE, $CFG, $OUTPUT, $PAGE;
         $process = round(\core_completion\progress::get_course_progress_percentage($COURSE));
         $output = '';
-        $output .= '<div class="header-progress"><div class="page-header-headings"><h2>'.$COURSE->fullname.'</h2></div>';
+        $output .= '<div class="header-progress d-flex justify-content-between align-items-center"><div class="page-header-headings"><h2>'.$COURSE->fullname.'</h2></div>';
         $output .= '<div class="d-flex float-right align-items-center">';
         $output .= '<div class="progress course">';
         $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"

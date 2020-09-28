@@ -461,17 +461,19 @@ class course_renderer extends \core_course_renderer {
     }
     public function course_filter() {
         global $DB,$USER;
-        $role = $DB->get_record_sql('SELECT * FROM {role_assignments} ra JOIN {user} u ON u.id = ra.userid WHERE u.id =:userid',['userid' => $USER->id]);
+        $role = $DB->get_records_sql('SELECT ra.roleid FROM {role_assignments} ra JOIN {user} u ON u.id = ra.userid WHERE u.id =:userid GROUP BY ra.roleid',['userid' => $USER->id]);
         $output  = '';
         $output .= '<div class="row pt-2"><div class="col-12 col-md-6 col-lg-6 col-xl-4">';
         $output .= '<select class="form-control" id="course-filter">';
-        $output .= '<option value="allcourse" selected="selected">'.get_string('filtercourseall','local_newsvnr').'</option>';
+        $output .= '<option value="allcourse">'.get_string('filtercourseall','local_newsvnr').'</option>';
         $output .= '<option value="coursepopular">'.get_string('filtercoursepopular','local_newsvnr').'</option>';
-        if($role->roleid == 5 || is_siteadmin()) {
-            $output .= '<option value="mycourse" >'.get_string('mycourses','theme_moove').'</option>';
-        }
-        if($role->roleid == 3 || is_siteadmin()) {
-            $output .= '<option value="teachercourse" >'.get_string('owncourses','theme_moove').'</option>';
+        foreach ($role as $value) {
+            if($value->roleid == 5 || is_siteadmin()) {
+                $output .= '<option value="mycourse" >'.get_string('mycourses','theme_moove').'</option>';
+            }
+            if($value->roleid == 3 || is_siteadmin()) {
+                $output .= '<option value="teachercourse" >'.get_string('owncourses','theme_moove').'</option>';
+            }
         }
         $output .= '</select>';
         $output .= '</div></div>';

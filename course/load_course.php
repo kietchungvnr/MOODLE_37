@@ -38,7 +38,7 @@ require_login();
 global $CFG, $PAGE, $USER, $OUTPUT, $DB, $COURSE;
 $id       = optional_param('id', 0, PARAM_INT);
 $page     = optional_param('page', 0, PARAM_INT);
-$keyword  = optional_param('keyword', "", PARAM_TEXT);
+$keycourse  = optional_param('keyword', "", PARAM_TEXT);
 $teacher  = optional_param('teacher', "", PARAM_TEXT);
 $category = optional_param('category', "", PARAM_TEXT);
 $filter   = optional_param('filter', "", PARAM_TEXT);
@@ -48,7 +48,7 @@ $theme_settings = new theme_settings();
 ///xử lý phân trang///
 $perPage        = new PerPage();
 $paginationlink = $CFG->wwwroot . '/course/load_course.php?page=';
-$strsearch      = "N'" . '%' . $keyword . '%' . "'";
+$strcourse      = "N'" . '%' . $keycourse . '%' . "'";
 $strteacher     = "N'" . '%' . $teacher . '%' . "'";
 $strcategory    = "N'" . '%' . $category . '%' . "'";
 $sql            = '';
@@ -63,48 +63,74 @@ if ($start < 15) {
 }
 
 if ($filter == "coursepopular") {
-    $condition .= "AND c.pinned = 1";
+    // Hiện thị khóa học nổi bật, ghim
+    $condition .= "AND c.pinned = 1 ";
 } elseif ($filter == "mycourse" || $filter == "teachercourse") {
-    $jointable .= "JOIN mdl_enrol AS e ON c.id=e.courseid
-                  JOIN mdl_user_enrolments AS ue ON e.id=ue.enrolid
-                  JOIN mdl_user AS u ON ue.userid=u.id
-                  JOIN mdl_role_assignments AS ra ON u.id= ra.userid
-                  JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id";
+    // Hiện thị khóa học khi lọc khóa học của tôi và khóa giảng
     if ($filter == "mycourse") {
-        $condition .= "AND ra.roleid = 5 AND u.id = $USER->id";
+        $condition .= "AND r.id = 5 AND u.id = $USER->id ";
     } else {
-        $condition .= "AND ra.roleid = 3 AND u.id = $USER->id";
+        $condition .= "AND r.id = 3 AND u.id = $USER->id ";
     }
 }
 
-if ($id < 1 && $keyword == '' && $teacher == '' && $category == '') {
-    $sql = "SELECT c.id,c.fullname,c.timecreated FROM {course} c $jointable WHERE c.id != 0 $condition";
-} else if ($keyword != '' || $teacher != '' || $category != '') {
-    if (($keyword != '' || $category != '') && $teacher == '') {
-        $sql .= 'SELECT c.id,c.fullname,c.timecreated FROM {course_categories} cc
-        join {course} c on c.category = cc.id ' . $jointable . '
-        WHERE c.fullname LIKE ' . $strsearch . ' AND cc.name LIKE ' . $strcategory . ' ' . $condition . '';
+// Script lấy danh sách khóa học theo giảng viên, tên khóa và tên danh mục
+$sql .= "SELECT c.id, cc.name category, c.fullname, c.timecreated, CONCAT(u.firstname, ' ', u.lastname) fullnamet, r.shortname
+            FROM {role_assignments} ra
+                JOIN {user} u ON ra.userid = u.id
+                JOIN {user_enrolments} ue ON u.id = ue.userid 
+                JOIN {enrol} enr ON ue.enrolid = enr.id
+                JOIN {course} c ON enr.courseid = c.id
+                JOIN {context} ct ON ct.id = ra.contextid AND ct.instanceid = c.id
+                JOIN {role} r ON ra.roleid = r.id
+                JOIN {course_categories} cc ON c.category = cc.id
+            WHERE 
+                cc.name LIKE $strcategory AND
+                c.fullname LIKE $strcourse AND 
+                CONCAT(u.firstname, ' ', u.lastname) LIKE $strteacher";
+
+$notinarr = ['allcourse', 'coursepopular'];
+if ($id < 1 && $keycourse == '' && $teacher == '' && $category == '' && ($filter == '' || $filter == 'allcourse' || $filter == 'coursepopular')) {
+    // Hiện thị tất cả khóa học(mặc định lần đầu load page)
+    $sql = "SELECT c.id, c.fullname, c.timecreated FROM {course} c WHERE c.id != 0 $condition" ;
+} elseif ($teacher != '' && ($category != '' || $keycourse != '')) {
+    // Hiện thị khóa học khi tìm kiếm cả 3 danh mục
+    if(in_array($filter, $notinarr))
+        $condition .= 'AND r.id = 3';
+    $sql .= " $condition";
+} elseif($teacher != '') {
+    // Hiện thị khóa học khi tìm theo tên giảng viên
+    if(in_array($filter, $notinarr))
+        $condition .= 'AND r.id = 3';
+    $sql .= " $condition";
+
+} elseif ($category !='' || $keycourse !='') {
+    // Hiện thị khóa học khi tìm theo tên khóa học hoặc danh mục
+    if(in_array($filter, $notinarr)) {
+        $sql = "SELECT c.id,c.fullname,c.timecreated
+            FROM {course} c
+                JOIN {course_categories} cc ON c.category = cc.id
+            WHERE
+                cc.name LIKE $strcategory AND
+                c.fullname LIKE $strcourse $condition";
     } else {
-        $sql .= "SELECT c.id,c.fullname,c.timecreated
-        from {role_assignments} ra
-        join {user} u on u.id= ra.userid
-        join {user_enrolments} ue on ue.userid=u.id
-        join {enrol} e on e.id=ue.enrolid
-        join {course} c on c.id=e.courseid
-        join {context} ct on ct.id=ra.contextid and ct.instanceid= c.id
-        JOIN {course_categories} cc ON cc.id = c.category
-        where ra.roleid=3 AND c.fullname LIKE $strsearch AND CONCAT(u.firstname,' ', u.lastname) LIKE $strteacher AND cc.name LIKE $strcategory";
+        // Hiện thị khóa học theo tên giảng viên (trường hợp k thể xảy ra :D)
+        $sql .= " $condition";
     }
 } else {
-    $sql .= "SELECT c.id,c.fullname,c.timecreated FROM {course} c WHERE c.category =$id $condition";
+    if(!in_array($filter, $notinarr)) {
+        $sql .= " $condition";
+    } 
+    if($id > 1) {
+        // Load khóa học khi click vào từng danh mục trên cây danh mục khóa học
+        $sql = "SELECT c.id,c.fullname,c.timecreated FROM {course} c WHERE c.category = $id $condition";
+    }
 }
 
 $getcourse   = $DB->get_records_sql($sql . 'ORDER BY timecreated DESC OFFSET ' . $start . ' ROWS FETCH NEXT 15 ROWS only', []);
 $countcourse = $DB->get_records_sql($sql);
 
-if (($keyword != '' || $teacher != '' || $category != '') && count($getcourse) > 0) {
-    echo '<div class="mt-3 result-course alert alert-success">' . get_string('resultsearch', 'local_newsvnr') . ' ' . count($countcourse) . '</div>';
-}
+echo '<div class="mt-3 result-course alert alert-success">' . get_string('resultsearch', 'local_newsvnr') . ' ' . count($countcourse) . '</div>';
 $perpageresult = $perPage->getAllCourseNewsPageLinks(count($countcourse), $paginationlink);
 if (empty($getcourse)) {
     echo '<div class="alert alert-warning">
@@ -114,7 +140,7 @@ if (empty($getcourse)) {
 echo '<div class="row">';
 foreach ($getcourse as $value) {
     //Thêm các field còn thiếu trong khóa học
-    $value->progress     = round(\core_completion\progress::get_course_progress_percentage($value, $USER->id));
+    $value->progress     = 0;
     $courseid            = $value->id;
     $courseobj           = new \core_course_list_element($value);
     $value->link         = $CFG->wwwroot . "/course/view.php?id=" . $value->id;
@@ -136,35 +162,35 @@ foreach ($getcourse as $value) {
     }
     echo
     '<div class="col-6 col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 col-15 course-ajax-load">
-    <div class="post-slide6">
-               <div class="post-img">
-                  ' . $value->courseimage . '
-                  <div class="post-info">
-                     <ul class="category">
+        <div class="post-slide6">
+            <div class="post-img">
+              ' . $value->courseimage . '
+                <div class="post-info">
+                    <ul class="category">
                         <li>' . get_string('countstudent', 'local_newsvnr') . ': <a href="#">' . $value->countstudent . '</a></li>
                         <li>' . get_string('teachername', 'local_newsvnr') . ': <a href="#">' . $value->fullnamet . '</a></li>
-                     </ul>
-                  </div>
-               </div>
-               <div class="post-review">
-                  <span class="icons">
-                  <a>' . $value->imageteacher . '</a>
-                  </span>
-                  <h3 class="post-title"><a href="' . $value->link . '" title="' . $value->fullname . '">' . $value->fullname . '</a></h3>
-                  <p class="post-teachername">' . $value->fullnamet . '</p>
-                  <p class="post-enrolmethod">';
-    if ($value->progress > 0) {
-        echo '<div class="progress">
-                     <div class="progress-bar" role="progressbar" aria-valuenow="' . $value->progress . '"
-                        aria-valuemin="0" aria-valuemax="100" style="width:' . $value->progress . '%">
-                        ' . $value->progress . '%
-                     </div>
-                  </div>';
-    } else {
-        echo $value->enrolmethod;
-    }
-    echo '</p>
-               </div>
+                    </ul>
+                </div>
+            </div>
+            <div class="post-review">
+                <span class="icons">
+                <a>' . $value->imageteacher . '</a>
+                </span>
+                <h3 class="post-title"><a href="' . $value->link . '" title="' . $value->fullname . '">' . $value->fullname . '</a></h3>
+                <p class="post-teachername">' . $value->fullnamet . '</p>
+                <p class="post-enrolmethod">';
+                if ($value->progress > 0) {
+                    echo '<div class="progress">
+                                 <div class="progress-bar" role="progressbar" aria-valuenow="' . $value->progress . '"
+                                    aria-valuemin="0" aria-valuemax="100" style="width:' . $value->progress . '%">
+                                    ' . $value->progress . '%
+                                 </div>
+                              </div>';
+                } else {
+                    echo $value->enrolmethod;
+                }
+                echo '</p>
+            </div>
         </div>
     </div>';
 
@@ -172,7 +198,7 @@ foreach ($getcourse as $value) {
 echo '</div>';
 
 if (!empty($perpageresult)) {
-    echo '<div class="col-md-12"> <div id="pagination" teacher="' . $teacher . '" keyword="' . $keyword . '" category="' . $id . '">' . $perpageresult . '</div> </div>';
+    echo '<div class="col-md-12"> <div id="pagination" teacher="' . $teacher . '" keyword="' . $keycourse . '" category="' . $id . '">' . $perpageresult . '</div> </div>';
 }
 
 die();

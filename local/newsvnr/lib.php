@@ -1657,9 +1657,11 @@ function HTTPPost_EBM_return($url,$data) {
     return json_decode($resp);
 }
 
+//Đổi unixtime thành chữ
 function converttime($time) {
     $currenttime = time();
-    $distance = $currenttime - $time ;
+    $distance = $currenttime - $time;
+    $result = '';
     switch ($distance) {
         case ($distance < 60 ):
             $result = $distance . ' '.get_string('secondago','local_newsvnr').'';

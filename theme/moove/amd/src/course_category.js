@@ -67,4 +67,11 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             $('.loading-page').removeClass('active');
         })
     });
+    var map = {};
+    $('#course-filter option').each(function () {
+        if (map[this.value]) {
+            $(this).remove()
+        }
+        map[this.value] = true;
+    })
 });
