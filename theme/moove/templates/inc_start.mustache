@@ -3294,6 +3294,15 @@ table#categoryquestions tr {
     #load-course .row {
         margin: auto;
     }
+    #new-lastest .owl-dots {
+        display: block !important;
+    }
+    #new-lastest .owl-prev {
+        display: none !important;
+    }
+    #new-lastest .owl-next {
+        display: none !important;
+    }
 }
 @media(max-width: 500px){
     .pagelayout-course .progress {
@@ -3617,6 +3626,22 @@ div::-webkit-scrollbar {
 }
 #page-local-newsvnr-index .card-body {
     display: block!important;
+}
+#page-local-newsvnr-index .btn-primary {
+    color: #545454;
+    background-color: #ffffff !important;
+    border: 1px solid #ced4da;
+    border-left: 0;
+    border-radius: 0 5px 5px 0;
+}
+#page-local-newsvnr-index .input-group .form-control {
+    border-right: 0;
+    width: 60%;
+    transition: 0.3s;
+    border-radius: 5px 0px 0px 5px;
+}
+#page-local-newsvnr-index .input-group .form-control:focus {
+    width: 100%;
 }
 /*.new-latest-body {
     padding: 0 7px;
@@ -4028,6 +4053,13 @@ table thead th {
 table thead th a {
     color: white;
 }
+#page-mod-quiz-attempt table thead th {
+    background-color: transparent;
+    color: #363535;
+}
+#page-mod-quiz-attempt table thead th a {
+    color: #363535;
+}
 .badge-success {
     border-radius: 20px;
     padding: .3em .5em;
@@ -4055,13 +4087,6 @@ table#participants .fa-sort-asc ,
 #sidepre-blocks section.card {
     margin-bottom: 0;
     box-shadow: unset;
-}
-table thead th {
-    background-color: #3c8dbc;
-    color: white;
-}
-table thead th a {
-    color: white;
 }
 .badge-success {
     border-radius: 20px;
@@ -4421,6 +4446,26 @@ body {
     border-bottom: 2px solid #0783cd;
     padding: 0px 20px 5px 0;
     /*color: #0783cd;*/
+}
+#new-lastest .owl-prev {
+    position: absolute;
+    left: -40px;
+    top: 120px;
+}
+#new-lastest .owl-next {
+    position: absolute;
+    right: -40px;
+    top: 120px;
+
+}
+div[data-region="userdetail-iframe"] .container {
+    max-width: initial;
+}
+table.k-selectable .hyperlink {
+    color: unset;
+}
+#new-lastest .owl-dots {
+    display: none;
 }
 </style>
 

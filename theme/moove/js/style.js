@@ -312,11 +312,14 @@
 
         });
         owlnewslastest.owlCarousel({
-            loop: false,
+            loop: true,
             margin: 0,
             lazyLoad: true,
             responsiveClass: true,
             smartSpeed:250,
+            nav:true,
+            dots:true,
+            navText: ["<a class='left fa fa-chevron-left btn btn-dark btn-owl'></a>", "<a class='right fa fa-chevron-right btn btn-dark btn-owl'></a>"],
             responsive: {
                 0: {
                     items: 2,

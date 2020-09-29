@@ -138,12 +138,13 @@
 		<div class="btn-new-course">
 			<h3 class="title">{{#str}}newsbycourse, local_newsvnr{{/str}}</h3>
 		</div>
+
 		<div class="row new-latest-body">
-			<div class="owl-carousel owl-theme" id="new-lastest-bycourse">
 				{{#forumcoursenewsndata}}
-					{{> theme_moove/newscard}}
+					<div class="col-xl-3 col-md-4 col-sm-6 col-xs-6" style="padding: 0">
+						{{> theme_moove/newscard}}
+					</div>
 				{{/forumcoursenewsndata}}
-			</div>
 		</div>
 
 		<label class="d-flex justify-content-center"> <a id="view-more-news" href="{{showallurl}}">{{#str}}viewmore, local_newsvnr{{/str}}</a>

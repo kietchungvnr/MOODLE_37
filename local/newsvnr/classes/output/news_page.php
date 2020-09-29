@@ -146,7 +146,7 @@ class news_page implements renderable, templatable {
             and fn.filearea = 'attachment'
             order by p.id desc
             OFFSET 0 ROWS
-            FETCH next 5 ROWS only;";
+            FETCH next 8 ROWS only;";
         }
         else{
 
