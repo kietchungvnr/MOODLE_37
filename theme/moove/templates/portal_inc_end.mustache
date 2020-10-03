@@ -485,4 +485,18 @@ require(['jquery'], function($) {
     $('.checkall').click(function () {    
         $('input.usercheckbox').prop('checked', this.checked);    
     });
+
+    $(".nav.tab-click li a").click(function(){
+        var id = $(this).attr('id');
+        $(".nav.tab-click li").removeClass('active');
+        $(this).parent('li').addClass('active');
+        $('.tab-pane').removeClass('active');
+        $('.tab-pane#tab'+id).addClass('active');
+    });
+
+    $(".curriculum-chapter").click(function(){
+        var id = $(this).attr('id');
+        $(".curriculum-chapter#"+id+" i").toggleClass('active');
+        $('.content-'+id).slideToggle();
+    })
 {{/js}}

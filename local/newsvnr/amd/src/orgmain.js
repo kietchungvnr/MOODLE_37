@@ -377,13 +377,14 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                 }
                                 var click_orgdetail = $('[data-region="buttons-iframe"] #orgstructuredetail').click(function() {
                                     $(this).addClass('btn-primary');
-                                    $('[data-region="buttons-iframe"] #list_users').removeClass('')
+                                    $('[data-region="buttons-iframe"] #list_users').removeClass('btn-primary')
                                     $('#show_orgform').removeClass("d-none");
                                     $('#showtable_data').addClass("d-none");
 
                                 });
                                 var click_listusers = $('[data-region="buttons-iframe"] #list_users').click(function() {
                                     $(this).addClass('btn-primary');
+                                    $('[data-region="buttons-iframe"] #orgstructuredetail').removeClass('btn-primary')
                                     $('#showtable_data').removeClass("d-none");
                                     $('#show_orgform').addClass("d-none");
 

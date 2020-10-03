@@ -162,7 +162,7 @@ class participants_table extends \table_sql {
 
         if ($bulkoperations) {
             // Custom by Thắng : Chuyển header về dạng select
-            $headers[] = '<input type="checkbox" class="checkall" name="user' . $data->id . '" ' . $checked . '/>';
+            $headers[] = '<input type="checkbox" class="checkall" name="user"/>';
             $columns[] = 'select';
         } 
 
@@ -324,9 +324,9 @@ class participants_table extends \table_sql {
 
         $process = round(\core_completion\progress::get_course_progress_percentage($this->course,$data->id));
         $roles = isset($this->allroleassignments[$data->id]) ? $this->allroleassignments[$data->id] : [];
+        $output = '';
         foreach ($roles as $value) {
             if($value->shortname == 'student') {
-                $output = '';
                 $output .= '<div class="d-flex participants-collum"><div class="progress course">';
                 $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
                             aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div>'.$process.'%</div>';

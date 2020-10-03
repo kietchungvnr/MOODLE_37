@@ -318,7 +318,7 @@ class theme_settings {
         $arrc = array();
         $imgurl = $CFG->wwwroot."/theme/moove/pix/f2.png";
         $imgdefault = \html_writer::empty_tag('img',array('src' => $imgurl,'class'=>'userpicture defaultuserpic owl-lazy','width' => '50px','height'=>'50px','alt' => 'Default picture','title'=>'Default picture'));
-        $sql = "SELECT concat(u.firstname,' ',u.lastname) as fullnamet,(select COUNT(*) as sts
+        $sql = "SELECT concat(u.firstname,' ',u.lastname) as fullnamet,u.email,(select COUNT(*) as sts
         FROM {user_enrolments} ue
         JOIN {enrol} e ON ue.enrolid = e.id
         JOIN {course} c ON e.courseid = c.id
@@ -397,6 +397,44 @@ class theme_settings {
            return $infoteacher;
 
     }
+
+
+    //Lấy thông tin tát cả giáo viên trong khóa
+    public static function role_courses_all_teacher($courseid)
+    {
+        global $DB,$CFG;
+        $arrc = array();
+        $imgurl = $CFG->wwwroot."/theme/moove/pix/f2.png";
+        $imgdefault = \html_writer::empty_tag('img',array('src' => $imgurl,'class'=>'userpicture defaultuserpic','width' => '50px','height'=>'50px','alt' => 'Default picture','title'=>'Default picture'));
+        $sql = "SELECT concat(u.firstname,' ',u.lastname) as fullnamet,u.email,u.phone1,u.phone2,(SELECT COUNT(*) as sts
+                    FROM {user_enrolments} ue
+                    JOIN {enrol} e ON ue.enrolid = e.id
+                    JOIN {course} c ON e.courseid = c.id
+                    JOIN {role_assignments} ra ON ra.userid = ue.userid
+                    JOIN {context} as ct on ra.contextid= ct.id AND ct.instanceid = c.id
+                    WHERE ra.roleid=5 and c.id=?) as studentnumber,u.id
+                    FROM {role_assignments} as ra
+                    JOIN {user} as u on u.id= ra.userid
+                    JOIN {user_enrolments} as ue on ue.userid=u.id
+                    JOIN {enrol} as e on e.id=ue.enrolid
+                    JOIN {course} as c on c.id=e.courseid
+                    JOIN {context} as ct on ct.id=ra.contextid and ct.instanceid= c.id
+                    JOIN {role} as r on r.id= ra.roleid
+                    where c.id=? and ra.roleid=3";
+        $rolecourse = $DB->get_records_sql($sql,array($courseid,$courseid));
+        
+        if(empty($rolecourse)) {
+          $infoteacher = new stdClass();
+          $infoteacher->fullnamet = get_string('noteacher', 'theme_moove');
+          $infoteacher->studentnumber = 0;
+          $infoteacher->imgdefault = $imgdefault;
+        } else {
+          $infoteacher = array();
+          $infoteacher = $rolecourse;
+        }
+        return $infoteacher;
+    }
+
 
     /**
      * [user_courses_list description]

@@ -1230,12 +1230,12 @@ div.dataTables_wrapper {
     }
 }
 
-@media only screen and (min-width: 768px)  and (max-width: 1200px){
+/*@media only screen and (min-width: 768px)  and (max-width: 1200px){
     body#page-enrol-index #region-main .generalbox.info .col-md-3 {
         flex: 0 0 100%;
         max-width: 100%;
     }    
-}
+}*/
 @media only screen and (max-width: 576px) {
     body#page-enrol-index #region-main .generalbox {
         width: 100%;
@@ -1252,13 +1252,6 @@ div.dataTables_wrapper {
         display: flex;
     }
 }
-@media only screen and (min-width: 1200px) {
-    body#page-enrol-index #region-main .generalbox.info .col-md-3 {
-        flex: 0 0 75%;
-        max-width: 75%;
-    }
-}
-
 .viewmorebtn {
     color: #fff;
     background-color: #17a2b8;
@@ -3741,6 +3734,73 @@ select#formactionid {
 .loading-page.active {
     overflow: hidden;   
     display: block;
+}
+.course-tab {
+    display: none;
+}
+.curriculum-chapter {
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 60px;
+    border-radius: 7px;
+    border: 1px solid #dedfe0;
+    background-color: #fff;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.nav.tab-click {
+    width: 100%;
+    padding: unset;
+    align-items: center;
+    background-color: #3c8dbc;
+    /*justify-content: space-around;*/
+}
+.nav.tab-click a {
+    align-items: center;
+    height: 100%;
+    font-size: 14px;
+    line-height: 1.43;
+    letter-spacing: -.1px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+}
+.nav.tab-click li.active {
+    background: #f4f7f8;
+}
+.nav.tab-click li.active a{
+    color: #363535;
+    font-weight: bold;
+}
+.count-module {
+    border-radius: 7px;
+    padding: 10px 20px 10px 20px;
+    background-color: #f4f7f8;
+    align-items: center;
+}
+.count-module p {
+    margin-bottom:0px;
+}
+.display-none {
+    display: none;
+}
+#tab1 .count-module {
+    min-height: 236px;
+}
+.all-tab-content {
+    padding: 0 !important;
+}
+body#page-enrol-index #region-main .generalbox:last-of-type {
+    width: 100%;
+    padding: 0;
+}
+body#page-enrol-index #region-main .generalbox#notice {
+    text-align: center;
+    color: red;
 }
 </style>
 

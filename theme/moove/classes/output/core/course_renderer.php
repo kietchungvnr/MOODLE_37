@@ -208,7 +208,7 @@ class course_renderer extends \core_course_renderer {
         // End coursebox.
         //Custom : Thang
         $content = html_writer::start_tag('div', array(
-            'class' => 'w-2 col-6 col-xl-2 col-lg-3 col-md-4 col-sm-6 mt-3'
+            'class' => 'col-xl-3 col-md-4 col-12'
            
         ));
         $content .= html_writer::start_tag('div', array(
@@ -725,4 +725,108 @@ class course_renderer extends \core_course_renderer {
 
         return $output;
     }
+    ///Thâm phần mô tả,thông tin khóa học , ở ngoài khóa học
+    function course_description($course) {
+        global $DB,$OUTPUT;
+        $theme_settings = new theme_settings();
+        $teachers = $theme_settings::role_courses_all_teacher($course->id);
+        $modinfo = get_fast_modinfo($course);
+        $startfrom = 1;
+        $end = count($modinfo->sections);
+        $output = '';
+        $output .= '<div class="all-tab-content col-xl-9 col-md-8 col-12">';
+        $output .= '<ul class="nav nav-tabs tab-click">';
+        $output .=  '<li class="nav-item active"><a class="nav-link" id="1">'.get_string('descriptioncourse','local_newsvnr').'</a></li>
+                     <li class="nav-item"><a class="nav-link" id="2">'.get_string('lesson','local_newsvnr').'</a></li>
+                     <li class="nav-item"><a class="nav-link" id="3">'.get_string('teachernames','local_newsvnr').'</a></li>';
+        $output .= '</ul>';
+        $output .= '<div class="tab-content">';
+        $output .= ' <div id="tab1" class="tab-pane in active">
+                        <div class="count-module"><p>'.$course->summary.'</p></div>
+                    </div>';
+        $output .= '<div id="tab2" class="tab-pane">';
+
+        for ($section = $startfrom; $section <= $end; $section++) {
+            $currentsection = $modinfo->get_section_info($section);
+            if($currentsection == null) {
+                continue;
+            }
+            $total = 0;
+            // var_dump($currentsection->id);die();
+            $output .= '<div class="curriculum-chapter mt-2" id="'.$currentsection->id.'">';
+            if($currentsection->name == '' && $currentsection->section != 0) {
+                $output .= '<div>'.get_string('topic', 'theme_moove').' '.$currentsection->section.'</div>';
+            } else {
+                $output .= '<div>'.$currentsection->name.'</div>';
+            }
+            if (empty($modinfo->sections[$currentsection->section])) {
+                $output .= '</div>';
+                continue;
+            }
+            $sectionmods = [];
+            // Đểm số lượng module
+            foreach ($modinfo->sections[$currentsection->section] as $cmid) {
+                $thismod = $modinfo->cms[$cmid];
+                $getmodules = $DB->get_records_sql('SELECT cm.id, cm.deletioninprogress FROM {course_modules} cm JOIN {course_sections} cs ON cm.section = cs.id WHERE cm.instance = :section AND cm.course = :courseid',['section' => $thismod->instance,'courseid' => $course->id]);
+                //Check điều kiện là là label hoặc module đã xóa
+                if ($thismod->modname == 'label') {
+                    continue;
+                }
+                foreach($getmodules as $getmodule) {
+                    if($getmodule->deletioninprogress != 0) {
+                        continue 2;
+                    }    
+                }
+                if (isset($sectionmods[$thismod->modname])) {
+                    $sectionmods[$thismod->modname]['name'] = $thismod->modplural;
+                    $sectionmods[$thismod->modname]['count']++;
+                } else {
+                    $sectionmods[$thismod->modname]['name'] = $thismod->modfullname;
+                    $sectionmods[$thismod->modname]['count'] = 1;
+                    $sectionmods[$thismod->modname]['image'] = $OUTPUT->image_url('icon', $thismod->modname);
+                }
+                $total++;
+            }
+            if($total > 0) {
+                $output .= '<a>'.$total .' '.get_string('countmodule','local_newsvnr').'  <i class="fa fa-angle-up rotate-icon"></i></a>';
+            }
+            $output .= '</div>';
+            $output .= '<div class="content-'.$currentsection->id.' display-none">';
+            foreach($sectionmods as $mod) {
+                $output .= '<div class="count-module"><img class="mr-3" src="'.$mod['image'].'">'.$mod['count'].' '.$mod['name'].'</div>';
+            }
+            $output .= '</div>';
+        }
+        $output .= '</div>'; 
+        $output .= '<div id="tab3" class="tab-pane">';
+        //Láy thông tin giáo viên
+        if(is_array($teachers)) {
+            foreach ($teachers as $teacher) {
+                $userid  = $DB->get_record('user', array('id' => $teacher->id));
+                $output .= '<div class="count-module d-flex">';
+                $output .= $OUTPUT->user_picture($userid, array('size' => 50));
+                $output .= '<div class"teacher-overview">';
+                $output .= '<p> '.get_string('teachernames','local_newsvnr').': '.$teacher->fullnamet.'</p>';
+                $output .= '<p> '.get_string('email','local_newsvnr').': '.$teacher->email.'<p>';
+                if($teacher->phone1 != '') {
+                    $output .= '<div> Phone:'.$teacher->phone1.'';
+                }
+                if($teacher->phone1 != '') {
+                    $output .= 'Phone:'.$teacher->phone2.'</div>';
+                }
+                $output .= '</div></div>';
+            }
+        } else {
+            $output .= '<div class="alert alert-warning" role="alert">
+                            '.get_string('noteacher','local_newsvnr').' !
+                        </div>';
+        }
+        $output .= '</div>'; //end div tab3
+        $output .= '</div>'; //end div tab-content
+        $output .= '</div>'; //end div all-tab-content
+        return $output;
+    }
+
+
 }
+ 
