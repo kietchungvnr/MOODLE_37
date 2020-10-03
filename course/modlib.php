@@ -166,7 +166,7 @@ function add_moduleinfo($moduleinfo, $course, $mform = null) {
         $sectionid = course_add_cm_to_section($course, $moduleinfo->coursemodule, $moduleinfo->section, null, $moduleinfo->sectionname);
 
     } else {
-        $sectionid = course_add_cm_to_section($course, $moduleinfo->coursemodule, $moduleinfo->section, null, $moduleinfo->sectionname);        
+        $sectionid = course_add_cm_to_section($course, $moduleinfo->coursemodule, $moduleinfo->section, null);        
     }
 
     // Trigger event based on the action we did.

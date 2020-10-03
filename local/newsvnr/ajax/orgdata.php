@@ -503,8 +503,8 @@ switch ($section) {
 					$griddata->completed = $strcompleted;
 				}
 				if(!empty($list_comp_name)) {
-					foreach ($list_comp_name as $value) {
-						$griddata->courseprogress = $value->colprogress;
+					foreach ($list_comp_name as $progress) {
+						$griddata->courseprogress = $progress->colprogress;
 					}
 				} else {
 					$griddata->courseprogress = "<span>None</span>";
