@@ -155,7 +155,7 @@ function resource_update_instance($data, $mform) {
             $DB->update_record('course_modules_completion_rule', $completionrules); 
             $DB->delete_records('course_modules_completion_timer', ['completionruleid' => $completionrules->id]);       
         } else {
-            if($data->completiontimespent) {
+            if(isset($data->completiontimespent)) {
                 $completionrules->moduleid = $data->update;
                 $completionrules->completiontimespent = $data->completiontimespent;
                 $completionrules->timemodified = time();

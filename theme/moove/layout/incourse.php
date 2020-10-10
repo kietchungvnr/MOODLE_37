@@ -56,13 +56,16 @@ if (isset($PAGE->cm->modname) && in_array($PAGE->cm->modname, $moduleswithnavinb
 
     $extraclasses = [];
 }
-
 if(isset($_SERVER['HTTP_REFERER'])) {
     $hasportal = true;
 } else {
     $hasportal = false;
 }
-
+if(isset($_COOKIE['cookie']) == 'focusmod' ) {
+    $hasfocusmod = true;
+} else {
+    $hasfocusmod = false;
+}
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [
@@ -76,7 +79,8 @@ $templatecontext = [
     'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
-    'hasportal' => $hasportal
+    'hasportal' => $hasportal,
+    'hasfocusmod' => $hasfocusmod
 ];
 
 // Improve boost navigation.

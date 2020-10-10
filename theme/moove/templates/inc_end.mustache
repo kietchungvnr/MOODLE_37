@@ -140,13 +140,14 @@
                     body.addClass("loading");
                     ModalFactory.create({
                         type: ModalFactory.types.DEFAULT,
-                        title: resp.reousrucename,
+                        title: resp.resourcename,
                         body: loadingIconHtml
                     })
                     .done(function(modal) {
                         modalStore[cmid] = modal;
                         modal.setLarge();
                         var pluginfileurl = resp.url;
+                        var hasCompleteion = resp.hascompletion;
                         var modalRoot = $(modal.root);
                         var completionTimeSpent = resp.completiontimespent;
                         modalRoot.attr("data-cmid", cmid);
@@ -215,40 +216,43 @@
                                         modalRoot.find(Selector.modal).animate({"max-width": modalWidth}, "fast");
                                         modalRoot.find(Selector.modalDialog).animate({"max-width": modalWidth}, "fast");
                                         modalRoot.find(Selector.modalBody).animate({"max-width": modalWidth}, "fast");
-                                        if(completionTimeSpent !== 'completed') {
-                                            var duration;
-                                            var display = document.querySelector('#time');
-                                            var valueDisplay = display.innerText;
-                                            var sc = valueDisplay.split(':'); 
-                                            modal.getRoot().on(ModalEvents.hidden, function() {
-                                                display = document.querySelector('#time');
-                                                valueDisplay = display.innerText;
-                                                sc = valueDisplay.split(':');
-                                                duration = ((+sc[0]) * 60 + (+sc[1])); 
-                                                settings.data.spenttime = completionTimeSpent - duration;
-                                                stopTimer();
-                                                $.ajax(script, settings)
-                                                .then(function(resp) {
-                                                }).fail(Notification.exception);
-                                            });
-                                            modal.getRoot().on(ModalEvents.shown, function() {
-                                                if(countShownModal == 0) {
-                                                    duration = completionTimeSpent;
-                                                    countShownModal++;
-                                                } else {
+                                        if(hasCompleteion == true) {
+                                            if(completionTimeSpent !== 'completed') {
+                                                var duration;
+                                                var display = document.querySelector('#time');
+                                                var valueDisplay = display.innerText;
+                                                var sc = valueDisplay.split(':'); 
+                                                modal.getRoot().on(ModalEvents.hidden, function() {
                                                     display = document.querySelector('#time');
                                                     valueDisplay = display.innerText;
                                                     sc = valueDisplay.split(':');
-                                                    duration = ((+sc[0]) * 60 + (+sc[1]));
-                                                }
-                                                settings.data.spenttime = duration;
-                                                startTimer(duration, display, settings, true);
+                                                    duration = ((+sc[0]) * 60 + (+sc[1])); 
+                                                    settings.data.spenttime = completionTimeSpent - duration;
+                                                    stopTimer();
+                                                    $.ajax(script, settings)
+                                                    .then(function(resp) {
+                                                    }).fail(Notification.exception);
+                                                });
+                                                modal.getRoot().on(ModalEvents.shown, function() {
+                                                    if(countShownModal == 0) {
+                                                        duration = completionTimeSpent;
+                                                        countShownModal++;
+                                                    } else {
+                                                        display = document.querySelector('#time');
+                                                        valueDisplay = display.innerText;
+                                                        sc = valueDisplay.split(':');
+                                                        duration = ((+sc[0]) * 60 + (+sc[1]));
+                                                    }
+                                                    settings.data.spenttime = duration;
+                                                    startTimer(duration, display, settings, true);
 
-                                            });
+                                                });
+                                            }
                                         }
+                                        
                                     } 
                                 }
-                            }, 5000);
+                            }, 3000);
                         
                         }).fail(Notification.exception);
                         Templates.render("format_multitopic/embed_module_modal_header_btns", templateData).done(function (html) {
@@ -293,6 +297,7 @@
                 } 
             }
             // Pause thời gian hoàn thành module
+
             var stopTimer = function() {
                 clearInterval(countDown);
             }
@@ -320,7 +325,7 @@
 {{#js}}
  require.config({
     paths: {
-      "kendo.all.min": "/local/newsvnr/js/kendo.all.min",
+      "kendo.all.min": "//kendo.cdn.telerik.com/2020.3.915/js/kendo.all.min",
       "dttable": "/local/newsvnr/js/datatable.min",
     }
 });
@@ -336,8 +341,7 @@ require(['theme_moove/metismenu', 'jquery'], function(metisMenu, $) {
 
 });
 
-
-require(['jquery'], function($) {
+require(['jquery', 'core/config'], function($, Config) {
     var iconsearch = document.querySelector('.moove-search-input .slicon-magnifier');
     var btnclosesearch = document.querySelector('.search-input-form .close-search');
     var searchinputform = document.querySelector('.moove-search-input');
@@ -363,133 +367,110 @@ require(['jquery'], function($) {
         $('[data-region="drawer"]').addClass('open');
     }
    $(document).ready(function() {
+        $('#focus-mod,#return-to-top').tooltip();   
         const regex = /http:\/\/.*\/(.*)\//g;
         const match = regex.exec(window.location.href);
         if(match) {
             $(".nav-active").each(function() {
                 var url = $(this).attr("href");
-                if(url == match.input) {
+                var str = match.input;
+                var i = 0;
+                if(str == url) {
                     $(this).addClass("active-nav");
+                    i++;
                 }
+                // if(i > 0) {
+                //     $(".nav-active:first").removeClass("active-nav");
+                // }
+            });
+            $("#enlaces .nav-active").each(function() {
+                var url = $(this).attr("href");
+                var str = match.input;
+                var i = 0;
+                if(str == url) {
+                    $(this).addClass("active-nav");
+                    i++;
+                }
+                // if(i > 0) {
+                //     $("#enlaces .nav-active:first").removeClass("active-nav");
+                // }
             });
         }
         else {
             $(".nav-active:first").addClass("active-nav");
+            $("#enlaces .nav-active:first").addClass("active-nav");
         }
     });
 }); 
-    var quizblock = $('#page-mod-quiz-attempt');
-    if(quizblock.length > 0){
-        $('body').addClass('drawer-open-right')
-    }
+require(['theme_moove/focusmod']);
 
+require(['theme_moove/course_category']);
 
-    {{! //////////course menu////////////// }}
-    var path = window.location.href;
-    $('.nav-tabs.course li a').each(function() {
-        if(this.href === path){
-            $(this).parent().addClass('active');
-        }
-        if(this.href.indexOf('badge') > 0 && path.indexOf('badge') > 0) {
-            $(this).parent().addClass('active');
-        }
-    })
-    if(path.indexOf('mod')>0 || path.indexOf('backup')>0 || path.indexOf('enrol')>0 ) {
-        $('#nav-drawer').remove();
-    }
-    if($('.nav-tabs.course li').hasClass('active')){
-    }
-    else {
-        if($('.nav-tabs.course li:first').hasClass('active')) {
-        }
-        else {
-            $('.nav-tabs.course li:first').addClass('active');
-        }
-    }
-     $('.nav-tabs.course li:first a').html('Tổng quan khóa học')
-    $('.nav-tabs.course li[data-key="sitesettings"]').css({'display':'none'});
-    //////////js grader////////////
-    $('.grade-navigation ul:first').removeClass('mb-3');
-    if(path.indexOf('mod/quiz/') > 0) {
-        $('.m-t-2.m-b-1.row').css({'display':'none'});
-    }
-    {{!     /////course_menu_theme_mobile///////// }}
-    size_li = $(".course-content .nav-tabs li").length;
-    $(window).resize(function() {
-        var width = $(window).width();
-        if (width <= 768){
-            $('.menu-show').append($('.course-content .nav-tabs li:lt('+size_li+')'));
-            var active_mb = $('div.menu-show li a.active').attr('title');
-            $('.first').html("<i class='fa fa-folder' aria-hidden='true'></i>"+ active_mb + "<i class='fa fa-caret-down' aria-hidden='true'></i>");
-        }
-        else {
-            $(".course-content .nav-tabs").load(location.href + " .course-content .nav-tabs");
-        }
-    })
-    if (window.matchMedia('(max-width: 768px)').matches) {
-            $('.menu-show').append($('.course-content .nav-tabs li:lt('+size_li+')'))
-            var active_mb = $('div.menu-show li a.active').attr('title');
-            $('.first').html("<i class='fa fa-folder' aria-hidden='true'></i>"+ active_mb + "<i class='fa fa-caret-down' aria-hidden='true'></i>");
-    }
-    $(".nav-item.load-more" ).click(function() {     
-    if($('.menu-show:visible').length)
-        $('.menu-show').hide();
-    else
-        $('.menu-show').show();        
-    });
-    {{! ////////course_menu_mobile/////////// }}
-    $("<div class='arrow-next'><i class='fa fa-angle-right'style='font-size:23px'></i></div>").insertBefore('#nav-drawer');
-    $("<div class='arrow-prev'><i class='fa fa-angle-left'style='font-size:23px'></i></div>").insertBefore('#nav-drawer');
-    $('.arrow-next').click(function(event) {
-        var pos = $('#nav-drawer').scrollLeft() + 300;
-        $('#nav-drawer').animate({scrollLeft:pos},400);
-    });
-    $('.arrow-prev').click(function(event) {
-        var pos = $('#nav-drawer').scrollLeft() - 300;
-        $('#nav-drawer').animate({scrollLeft:pos},400);
-    });
-    $('#nav-drawer').scroll(function () {
-        var $elem=$('#nav-drawer');
-        var newScrollLeft = $elem.scrollLeft(),
-            width=$elem.outerWidth(),
-            scrollWidth=$elem.get(0).scrollWidth;
-        if (scrollWidth-newScrollLeft==Math.round(width)) {
-            $('.arrow-next').css({'display':'none'});
-        }
-        else {
-            $('.arrow-next').css({'display':'block'});
-        }
-        if(newScrollLeft > 0){
-            $('.arrow-prev').css({'display':'block'});
-        }
-        else {
-            $('.arrow-prev').css({'display':'none'});
-        }
-    });
+require(['theme_moove/menumobile_theme_course']);
 
-     {{! ///menu bottom mobile//// }}
-    var path = window.location.href;
-    $('.toolbar ul li a').each(function() {
-        if(this.href === path){
-            $(this).addClass('active');
-        }
-    });
-    {{! check summary }}
-    if($('.pagelayout-course .summary').find('.no-overflow') > 0){
-    }
-    else {
-        $('.pagelayout-course .summary').css('display','none');
-    }
+require(['theme_moove/course_menu']);
 
-    {{! grade menu }}
-    {{! ajax load }}
-{{!      $(".course-content .nav-tabs li a").each(function(){
-        $(this).on('click',function(){
-            var a = $(this).attr('href');
-            $(this).attr('link',a);
-            $(this).attr('href','javascript:void(0)');
-            $('div.card-body.course').load(a+' div.card-body.course');
-        })
-    });  }}
+require(['theme_moove/menu_mobile']);
+
+var id = $('.new-detail-chat').attr('data');
+$('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussionid='+id);
 
 {{/js}}
+<script>
+    ////phân trang khóa học///
+    const getCourse = (url) => {
+        require(['jquery', 'core/config'], ($, config) => {
+            $('.loading-page').addClass('active');
+            var id = $('.pagination').attr('category');
+            var settings = {
+                type:"GET",
+                processData:true,
+                data:{
+                    id:id
+                },
+                contenttype:"application/json",
+            };
+            $.ajax(url,settings)
+            .then(function(response) {
+                $('#load-course').hide().html(response).fadeIn('fast');
+                $('.loading-page').removeClass('active');
+            })
+        });
+    };
+
+    const loadComment = (id) => {
+        require(['jquery', 'core/config'], ($, config) => {
+            $('.loading-page').addClass('active');
+            page++;
+            var url = "./ajax/pagination_comment.php";
+            var settings = {
+                type:"GET",
+                processData:true,
+                data:{
+                    discussionid:id,
+                    page: page
+                }
+            };
+            $.ajax(url,settings).then(function(response) {
+                $('.new-detail-see-more').remove();
+                $('#list_comment').append(response);
+                $('.loading-page').removeClass('active');
+            });
+        });
+    }
+
+
+  $(".nav.tab-click li a").click(function(){
+    var id = $(this).attr('id');
+    $(".nav.tab-click li").removeClass('active');
+    $(this).parent('li').addClass('active');
+    $('.tab-pane').removeClass('active');
+    $('.tab-pane#tab'+id).addClass('active');
+  });
+
+  $(".curriculum-chapter").click(function(){
+    var id = $(this).attr('id');
+    $(".curriculum-chapter#"+id+" i").toggleClass('active');
+    $('.content-'+id).slideToggle();
+  })
+</script>

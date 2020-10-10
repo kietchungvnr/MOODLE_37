@@ -83,14 +83,15 @@ class core_course_renderer extends plugin_renderer_base {
      */
     public function course_info_box(stdClass $course) {
         $content = '';
-        $content .= $this->output->box_start('generalbox info');
         $chelper = new coursecat_helper();
         $chelper->set_show_courses(self::COURSECAT_SHOW_COURSES_EXPANDED);
+        $content .= $this->output->box_start('generalbox info row pt-1');
         $content .= $this->coursecat_coursebox($chelper, $course);
+        $content .= $this->course_description($course);
+
         $content .= $this->output->box_end();
         return $content;
     }
-
     /**
      * Renderers a structured array of courses and categories into a nice XHTML tree structure.
      *

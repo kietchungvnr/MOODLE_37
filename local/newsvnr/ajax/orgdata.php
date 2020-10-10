@@ -377,18 +377,18 @@ switch ($section) {
 					    		$completecourse_evid = true;
 					    		$timecompleted = convertunixtime('l, d m Y',$ue->timemodified);
 					    		$tcnlht += 1;
-					    		$strevidence .= ' (Đã review)';
+					    		$strevidence .= get_string('reviewed','local_newsvnr');
 					    	} 
 					    	else {
 					    		$completecourse_evid = false;
 					    		if ($ue->status == 1) {
-						    		$strevidence .= ' (Đang đợi review)';
+						    		$strevidence .= get_string('waitreview','local_newsvnr');
 						    	} elseif ($ue->status == 2) {
-						    		$strevidence .= ' (Đang trong qua trình review)';
+						    		$strevidence .= get_string('inprogressreview','local_newsvnr');
 						    	} elseif ($ue->status == 0 and $ue->proficiency == 1) {
-						    		$strevidence .= ' (Đã review)';
+						    		$strevidence .= get_string('reviewed','local_newsvnr');
 						    	} else {
-						    		$strevidence .= ' (Chưa yêu cầu review)';
+						    		$strevidence .= get_string('notrequestreview','local_newsvnr');
 						    	}
 					    	}
 					    	
@@ -412,20 +412,20 @@ switch ($section) {
 						//kiểm tra user đã tham gia khóa học chưa từ danh khóa học theo năng lực
 						$check_enrolled = is_enrolled(context_course::instance($course->id),$userstd->userid);
 						if ($check_enrolled == true) {
-							$progress = \core_completion\progress::get_course_progress_percentage($course,$userstd->userid);
+							$progress = round(\core_completion\progress::get_course_progress_percentage($course,$userstd->userid));
 							$course->progress = floor($progress);
 							$course->link = $CFG->wwwroot."/course/view.php?id=".$course->id;
+							$course->colprogress = '<div class="d-flex participants-collum"><div class="progress course"><div class="progress-bar" role="progressbar" aria-valuenow="'.$progress.'" aria-valuemin="0" aria-valuemax="100" style="width:'.$progress.'%"></div></div><div>'.$progress.'%</div></div></div>';
 							$list_comp_name[] = $course;
-						}else {
-							$course->progress = -1;
+		
+						} else {
+							$course->progress = 0;
 							$course->link = $CFG->wwwroot."/course/view.php?id=".$course->id;
+							$course->colprogress = '<span>'.get_string('notenrol','local_newsvnr').'</span>';
 							$list_comp_name[] = $course;
-						}
-							
+						}							
 					}
-				}
-			
-				$strhtml = '';
+				} 
 				//Xuất thông tin cho grid gồm: Tên comp, khóa học liên kết, chứng chỉ, ngày hoàn thành, kết thúc
 				foreach ($list_comp_name as $comp) {
 					//UI tiến trình học
@@ -438,31 +438,24 @@ switch ($section) {
 							}
 							$timecompleted = convertunixtime('l, d m Y',$comp->startdate);
 							$strhtml = '<div class="row align-items-center">
-			                  <div class="col-auto pr-0">
-			                    	 <div class="progress-circle progress-sm" data-progress="'.$prog.'"></div>
-			                  </div>
 			                  <div class="col">
 			                    <a href="'.$comp->link.'" class="d-block mb-0" target="_blank">'.$comp->fullname.'</a>
 			                   
 			                  </div>
 			                </div>';		
 								break;
+							  // <div class="col-auto pr-0	">
+			                  //   	 <div class="progress-circle progress-sm" data-progress="'.$prog.'"></div>
+			                  // </div>
 							case $prog >= 0 and $prog < 100:	
 								$strhtml = '<div class="row align-items-center">
-			                  <div class="col-auto pr-0	">
-			                    	 <div class="progress-circle progress-sm" data-progress="'.$prog.'"></div>
-			                  </div>
 			                  <div class="col">
 			                    <a href="'.$comp->link.'" class="d-block mb-0" target="_blank">'.$comp->fullname.'</a>
-			                   
 			                  </div>
 			                </div>';
 								break;
 							case $prog < 0:	
 								$strhtml .= '<div class="row align-items-center">
-			                  <div class="col-auto pr-5">
-			                    	
-			                  </div>
 			                  <div class="col">
 			                    <a href="'.$comp->link.'" class="d-block mb-0" target="_blank">'.$comp->fullname.'</a>
 			                   
@@ -480,12 +473,9 @@ switch ($section) {
 				}
 				if(empty($list_comp)){
 					$strcourselink = '<div class="row align-items-center">
-		                  <div class="col-auto pr-5">
-		                    	
-		                  </div>
 		                  <div class="col">
 		                    '. get_string('nocoursefit', 'local_newsvnr') .'
-		                   
+	
 		                  </div>
 		                </div>';
 		             $strevidences = '<span class="badge badge-pill badge-cornflowerblue text-black">'.$strevidence.'</span>';
@@ -512,7 +502,13 @@ switch ($section) {
 					$strcompleted = '<span class="badge badge-pill badge-secondary text-black">'. get_string('org_incomplete', 'local_newsvnr') .'</span>';
 					$griddata->completed = $strcompleted;
 				}
-				
+				if(!empty($list_comp_name)) {
+					foreach ($list_comp_name as $progress) {
+						$griddata->courseprogress = $progress->colprogress;
+					}
+				} else {
+					$griddata->courseprogress = "<span>None</span>";
+				}
 				$griddata->competency = $value->shortname;
 				
 				$data[] = $griddata;	

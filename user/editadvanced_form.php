@@ -128,7 +128,7 @@ class user_editadvanced_form extends moodleform {
                 $mform->setType('orgstructureid', PARAM_TEXT);
                 $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-2"></div><div class="col-md-9 pr-0 ml-3 form-inline felement" id="treeview-orgstructure-user" style="background-color: #e9ecef"></div></div>');
             }
-        } elseif($userid > 2 && $userid->typeofuser == 0) {
+        } elseif($userid > 2 && $user->typeofuser == 0) {
             $mform->addElement('text', 'usercode', get_string('usercode','local_newsvnr'), 'maxlength="200" size="20"');
             $mform->addRule('usercode', get_string('required'), 'required', null, 'client');
             $mform->addHelpButton('usercode', 'usercode', 'local_newsvnr');

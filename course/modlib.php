@@ -161,7 +161,13 @@ function add_moduleinfo($moduleinfo, $course, $mform = null) {
 
     // Course_modules and course_sections each contain a reference to each other.
     // So we have to update one of them twice.
-    $sectionid = course_add_cm_to_section($course, $moduleinfo->coursemodule, $moduleinfo->section);
+    // Custom by Vũ: Thêm sectionname khi tạo section qua API - EBM
+    if(isset($modulename->sectionname)) {
+        $sectionid = course_add_cm_to_section($course, $moduleinfo->coursemodule, $moduleinfo->section, null, $moduleinfo->sectionname);
+
+    } else {
+        $sectionid = course_add_cm_to_section($course, $moduleinfo->coursemodule, $moduleinfo->section, null);        
+    }
 
     // Trigger event based on the action we did.
     // Api create_from_cm expects modname and id property, and we don't want to modify $moduleinfo since we are returning it.
@@ -425,7 +431,7 @@ function set_moduleinfo_defaults($moduleinfo) {
  * @return array list containing module, context, course section.
  * @throws moodle_exception if user is not allowed to perform the action or module is not allowed in this course
  */
-function can_add_moduleinfo($course, $modulename, $section) {
+function can_add_moduleinfo($course, $modulename, $section, $sectionname = null) {
     global $DB;
 
     $module = $DB->get_record('modules', array('name'=>$modulename), '*', MUST_EXIST);
@@ -433,7 +439,7 @@ function can_add_moduleinfo($course, $modulename, $section) {
     $context = context_course::instance($course->id);
     require_capability('moodle/course:manageactivities', $context);
 
-    course_create_sections_if_missing($course, $section);
+    course_create_sections_if_missing($course, $section, $sectionname);
     $cw = get_fast_modinfo($course)->get_section_info($section);
 
     if (!course_allowed_module($course, $module->name)) {

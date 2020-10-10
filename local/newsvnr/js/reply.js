@@ -8,18 +8,9 @@ function FeedBack(id_comment)
             var form_reply = $('#' + id_comment).parents('.chat-footer').siblings('.form-reply');
 
 
-            form_reply.show(300);
-
-            var cancel = form_reply.find('.btn-cancel');
-
-
+            form_reply.slideToggle('fast');
+            
             var submit = form_reply.find('#post_reply');
-
-
-            $(cancel).click(function() {
-                form_reply.hide(300);
-
-            });
 
             $(submit).click(function() {
 
@@ -27,7 +18,7 @@ function FeedBack(id_comment)
                 var content_reply = $(form_reply.find('#content_reply')).val();
                 var commentid = $(form_reply.find('#commentid')).val();
                 var userid = $(form_reply.find('#userid')).val();
-                var fullname = $(form_reply.find('#fullname')).val();
+                var fullname = $('#fullname').val();
 
                 var set_content = $(form_reply.find('#content_reply'));
 
@@ -53,11 +44,11 @@ function FeedBack(id_comment)
                         },
 
                         success: function(result) {
-
+                        $('#list_reply'+id_comment).css('display','block');
                           set_content.val('');  
                            list_reply.append(result);
                            submit.prop('disabled', false);    
-       
+        
                         }
                         });
                       }

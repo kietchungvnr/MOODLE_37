@@ -97,7 +97,7 @@ function get_all_image_of_discussion($firstpost_id) {
  */
 function get_froums_coursenews_data_id($discussionid)
 {
-    global $DB,$CFG;
+    global $DB,$CFG,$OUTPUT;
     $sql = "
             SELECT  d.id  AS discussionid, d.countviews, CONCAT(u.firstname,' ',u.lastname) AS username, f.course, p.userid AS userid,d.id,p.message,p.subject,p.modified ,p.id AS postid,d.timemodified, d.firstpost,p.messagetrust,p.messageformat
             FROM mdl_forum f 
@@ -109,6 +109,7 @@ function get_froums_coursenews_data_id($discussionid)
     $forumarr = array();
     $course_id = 0;
     foreach ($forumdata as $key => $value) {
+        $datauser = $DB->get_record_sql('SELECT * FROM {user} u WHERE u.id = :userid ',['userid' => $value->userid]);
         $count_comment = get_count_comment_by_discussionid($value->discussionid);    
         $isimage = true;
         $forumstd = new stdClass();
@@ -119,6 +120,7 @@ function get_froums_coursenews_data_id($discussionid)
         $modcontext = context_module::instance($context_module->context_id);
         $forumstd->time = $time;
         $forumstd->title = $value->subject;
+        $forumstd->useravatar = $OUTPUT->user_picture($datauser);
         $forumstd->discussionid = $value->discussionid;
         $userlink = $CFG->wwwroot."/user/profile.php?id=".$value->userid;
         $forumstd->content2 = file_rewrite_pluginfile_urls($value->message, 'pluginfile.php', $modcontext->id, 'mod_forum', 'post', $value->postid);
@@ -140,35 +142,33 @@ function get_froums_coursenews_data_id($discussionid)
 }
 
 function get_comment_from_disccusion($id_discus) {
-    global $DB, $USER;
+    global $DB, $USER,$PAGE,$OUTPUT;
     $sql = "SELECT lnc.id, lnc.userid ,CONCAT(u.firstname, ' ', u.lastname) AS fullname, lnc.content, lnc.createdAt
             FROM mdl_local_newsvnr_comments lnc 
                 JOIN mdl_user u ON   lnc.userid =  u.id 
                 JOIN mdl_forum_discussions fd ON lnc.discussionid =  fd.id
             WHERE lnc.discussionid = ?
-            ORDER BY lnc.id DESC
-            OFFSET 0 ROWS
-            FETCH next 5 ROWS only;";
+            ORDER BY lnc.id DESC 
+            OFFSET 0 ROWS FETCH NEXT 5 ROWS only";
     $data = $DB->get_records_sql($sql, array($id_discus));
     $forumarr = array();
-    $i = 1;
+    $i = 0;
     foreach ($data as $key => $comment) {
+        $datauser = $DB->get_record_sql('SELECT * FROM {user} u WHERE u.id = :commentid ',['commentid' => $comment->userid]);
         $key = 'key_comment'.$i;
         $forumstd = new stdClass();
+        $forumstd->useravatar = $OUTPUT->user_picture($datauser);
         $forumstd->id = $comment->id;
         $forumstd->userid = $comment->userid;
         $forumstd->fullname_comment = $comment->fullname;
         $forumstd->content_comment = $comment->content;
-        $forumstd->createdAt_comment = convertunixtime(' d-m-Y H:i A', $comment->createdat, 'Asia/Ho_Chi_Minh');
+        $forumstd->createdAt_comment = converttime($comment->createdat);
+        $reply_comment_data =  get_replies_from_comment($comment->id);
+        $forumstd->countreply = count($reply_comment_data);
         $userid = $USER->id;
         // check role for deleted comment
-        if(is_siteadmin())
-        {
-             $forumstd->label_delete = '<label class="delete" onclick="DeleteComment('. $comment->id .')" id="'. $comment->id .'">Xóa</label>';
-        }
-        else if($comment->userid  == $userid)
-        {
-             $forumstd->label_delete = '<label class="delete" onclick="DeleteComment('. $comment->id .')" id="'. $comment->id .'">Xóa</label>';
+        if(is_siteadmin() || $comment->userid  == $userid) {
+             $forumstd->label_delete = '<label class="delete" onclick="DeleteComment('. $comment->id .')" id="'. $comment->id .'">'.get_string('delete').'</label>';
         }
         $i++;   
         $id_comment = $comment->id;
@@ -180,13 +180,20 @@ function get_comment_from_disccusion($id_discus) {
                     $forumstd_reply->id_reply = $reply->id;
                     $forumstd_reply->fullname_reply = $reply->fullname;
                     $forumstd_reply->content_reply = $reply->content;
-                    $forumstd_reply->createdAt_reply = convertunixtime(' d-m-Y H:i A', $reply->createdat, 'Asia/Ho_Chi_Minh');
+                    $forumstd_reply->createdAt_reply = converttime($reply->createdat);
+                    $datauserreply = $DB->get_record_sql('SELECT * FROM {local_newsvnr_replies} r JOIN {user} u ON u.id = r.userid WHERE r.id = :id',['id' => $reply->id]);
+                    $forumstd_reply->userid = $datauserreply->userid;
+                    $forumstd_reply->userreplyavatar = $OUTPUT->user_picture($datauserreply);
+                    if(is_siteadmin() || $forumstd_reply->userid  == $userid) {
+                         $forumstd_reply->label_deletereply = '<label class="delete_reply mr-2" onclick="DeleteReply('. $reply->id .')" id="'. $reply->id .'">'.get_string('delete').'</label>';
+                    }
                     if($id_comment == $reply->commentid)
                         $forumstd->reply[] = $forumstd_reply;
+                        $forumstd->isreply = true;
             }
+            $forumarr[] = $forumstd;
         }
-        $forumarr[] = $forumstd;
-    }   
+    }
     return $forumarr;
 }
 
@@ -245,7 +252,7 @@ function get_course_id($discussionid) {
 function get_forums_lq_data($course_id, $current_discussion) {
     global $DB,$CFG;
     $sql = "
-            SELECT d.countviews, CONCAT(u.firstname,' ',u.lastname) AS username,p.userid AS userid, d.id AS discussionid , d.timemodified,p.message,p.subject,p.modified,fn.contextid,fn.component,fn.filearea,fn.filepath,fn.itemid,fn.filename 
+            SELECT d.countviews, CONCAT(u.firstname,' ',u.lastname) AS name,p.userid AS userid, d.id AS discussionid , d.timemodified,p.message,p.subject,p.modified,fn.contextid,fn.component,fn.filearea,fn.filepath,fn.itemid,fn.filename 
             FROM mdl_forum f 
                 JOIN mdl_forum_discussions d ON f.id=d.forum JOIN mdl_forum_posts p ON d.id = p.discussion JOIN mdl_files fn ON d.firstpost = fn.itemid 
                 JOIN mdl_user u ON p.userid = u.id
@@ -271,10 +278,12 @@ function get_forums_lq_data($course_id, $current_discussion) {
         $forumstd->discussionid = $file->discussionid;
         $forumstd->title = $file->subject;
         $forumstd->content = strip_tags($file->message);
-        $forumstd->discussionart = \html_writer::link($userlink,$file->username);
+        $forumstd->discussionart = \html_writer::link($userlink,$file->name);
         $forumstd->image = $imageurl;
         $forumstd->countviews = $file->countviews;
         $forumstd->time = $time;
+        $forumstd->timeago = converttime($file->timemodified);
+        $forumstd->name = $file->name;
         if(!empty($count_comment))
             $forumstd->countcomments = $count_comment->countcomments;            
         else
@@ -299,7 +308,8 @@ function forum_get_discussion_subscription_icon_newsvnr($forum, $discussionid, $
         'returnurl' => $returnurl,
     ));
     if ($subscriptionstatus) {
-        $output = html_writer::start_tag('i', array('class' => 'fa fa-rss-square','style' => 'color:#ff6a00','aria-hidden' => 'true','aria-label' => get_string('clicktounsubscribe', 'forum'),'aria-title' => get_string('clicktounsubscribe', 'forum')));
+        // Custom by Thắng : đổi icon subcribe diễn đàn
+        $output = html_writer::start_tag('i', array('class' => 'fa fa-bell','style' => 'color:#ff6a00','aria-hidden' => 'true','aria-label' => get_string('clicktounsubscribe', 'forum'),'aria-title' => get_string('clicktounsubscribe', 'forum')));
         $output.= html_writer::end_tag('i');
         return html_writer::link($subscriptionlink, $output, array(
                 'title' => get_string('clicktounsubscribe', 'forum'),
@@ -310,7 +320,7 @@ function forum_get_discussion_subscription_icon_newsvnr($forum, $discussionid, $
             ));
 
     } else {
-        $output = html_writer::start_tag('i', array('class' => 'fa fa-rss-square','style' => 'color:black','aria-hidden' => 'true','aria-label' => get_string('clicktosubscribe', 'forum'),'aria-title' => get_string('clicktosubscribe', 'forum')));
+        $output = html_writer::start_tag('i', array('class' => 'fa fa-bell-slash','style' => 'color:black','aria-hidden' => 'true','aria-label' => get_string('clicktosubscribe', 'forum'),'aria-title' => get_string('clicktosubscribe', 'forum')));
         $output.= html_writer::end_tag('i');
        
         return html_writer::link($subscriptionlink, $output, array(
@@ -1623,6 +1633,60 @@ function HTTPPost_EBM($url,$data) {
     curl_close($curl);
 }
 
+//curl gửi dữ liệu kiểu json có trả về dữ liệu
+function HTTPPost_EBM_return($url,$data) {
+    // $urltoken = 'http://103.42.56.200:8088/Token';
+    // $token = getToken($urltoken);
+    // $auth = 'Authorization: Bearer ' . $token;
+    $params = json_encode($data);
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+    CURLOPT_RETURNTRANSFER => true,
+    // CURLOPT_HEADER => true,
+    CURLOPT_URL => $url,
+    CURLOPT_POST => true,
+    CURLOPT_SSL_VERIFYPEER => false,
+    CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json',
+            // 'Content-Length: ' . strlen($data),
+            // $auth
+    ),
+    CURLOPT_POSTFIELDS => $params));
+    $resp = curl_exec($curl);
+    curl_close($curl);
+    return json_decode($resp);
+}
+
+//Đổi unixtime thành chữ
+function converttime($time) {
+    $currenttime = time();
+    $distance = $currenttime - $time;
+    $result = '';
+    switch ($distance) {
+        case ($distance < 60 ):
+            $result = $distance . ' '.get_string('secondago','local_newsvnr').'';
+            break;
+        case ($distance > 60 && $distance < 3600):
+            $result = round($distance/60) .' '.get_string('minuteago','local_newsvnr').'';
+            break;
+        case ($distance > 3600 && $distance < 86400):
+            $result = round($distance/3600) .' '.get_string('hourago','local_newsvnr').'';
+            break;
+        case ($distance > 86400 && $distance < 172800 ):
+            $result = get_string('yesterday','local_newsvnr');
+            break;
+        case ($distance > 172800 && $distance < 2592000):
+            $result = round($distance/86400) .' '.get_string('dayago','local_newsvnr').'';
+            break;
+        case (round($distance/2592000) > 1 && round($distance/2592000) < 12 ):
+            $result = round($distance/2592000) .' '.get_string('monthago','local_newsvnr').'';
+            break;    
+        default:
+            convertunixtime(' d-m-Y',$time,'Asia/Ho_Chi_Minh');
+            break;
+    }
+    return $result;
+}
 
 
 

@@ -44,6 +44,8 @@ use theme_moove\output\core\course_renderer;
 use theme_moove\util\theme_settings;
 defined('MOODLE_INTERNAL') || die;
 
+define('RESOURCE_DISPLAY_GOOGLE_DOCS_POPUP', 7);
+
 /**
  * Renderers to align Moodle's HTML with that expected by Bootstrap
  *
@@ -72,54 +74,111 @@ class core_renderer extends \theme_boost\output\core_renderer {
         return $content;
     }
     public function full_header() {
-        global $PAGE, $COURSE;
-        $urlpara = $_SERVER['REQUEST_URI'];
-        if($urlpara === "/" or $urlpara === "/?redirect=0" or $urlpara === "/index.php" or $urlpara ==="/index.php?redirect=0" or $urlpara === "/?" or $urlpara === "/?lang=vi" or $urlpara === "/?lang=en")
-        {
-            $header = new stdClass();
+        global $PAGE;
+        $header = new stdClass();
+        if($PAGE->pagelayout == 'frontpage') {
             $header->active = false;
-            $header->settingsmenu = $this->context_header_settings_menu();
-            if($PAGE->pagelayout == "course"){
-                $header->contextheader = $this->header_course();
-            }
-            else {
-                $header->contextheader = $this->context_header(null,2);
-            }
-            $header->hasnavbar = empty($PAGE->layout_options['nonavbar']);
-            $header->navbar = $this->navbar();
-            $header->pageheadingbutton = $this->page_heading_button();
-            $header->courseheader = $this->course_header();
-            return $this->render_from_template('theme_moove/fp_header', $header);
+        } else {
+            $header->active = true;
+        }
+        $header->settingsmenu = $this->context_header_settings_menu();
+        if($PAGE->pagelayout == "course"){
+            $header->contextheader = $this->header_course();
         }
         else {
-            $header = new stdClass();
-            $header->active = true;
-            $header->settingsmenu = $this->context_header_settings_menu();
-            if($PAGE->pagelayout == "course"){
-                $header->contextheader = $this->header_course();
-            }
-            else {
-                $header->contextheader = $this->context_header(null,2);
-            }
-            $header->hasnavbar = empty($PAGE->layout_options['nonavbar']);
-            $header->navbar = $this->navbar();
-            $header->pageheadingbutton = $this->page_heading_button();
-            $header->courseheader = $this->course_header();
-            return $this->render_from_template('theme_moove/fp_header', $header);
+            $header->contextheader = $this->context_header(null,2);
         }
+        $header->hasnavbar = empty($PAGE->layout_options['nonavbar']);
+        $header->navbar = $this->navbar();
+        $header->pageheadingbutton = $this->page_heading_button();
+        $header->courseheader = $this->course_header();
+        return $this->render_from_template('theme_moove/fp_header', $header);
+    }
+    public function menu_focus(){
+        global $COURSE, $CFG, $OUTPUT, $DB;
+        $allmodinfo = get_fast_modinfo($COURSE)->get_section_info_all();
+        $process = round(\core_completion\progress::get_course_progress_percentage($COURSE));
+        $linkcourse = $CFG->wwwroot.'/course/view.php?id='.$COURSE->id;
+        $output = '';
+        $output .= '<nav class="fixed-top navbar moodle-has-zindex focusmod">';
+        $output .= '<div class="d-flex menu-left">';
+        $output .= '<div class="home-focus border-right"><a href="'.$CFG->wwwroot.'/my"><i class="fa fa-3x fa-home" aria-hidden="true"></i></a></div>';
+        $output .= '<div class="course-info-focus"><div class="page-header-headings"><a href="'.$linkcourse.'">'.$COURSE->fullname.'</a></div>';
+        $output .= '<div class="d-flex"><div class="progress course">';
+        $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
+                    aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div>'.$process.'%</div>';
+        $output .= '</div></div>';
+        // $output .= '<div id="focus-mod" class="open-focusmod border-left border-right" data-placement="left"><i class="fa fa-external-link"></i><span class="ml-1 mr-1">'.get_string('zoomout','local_newsvnr').'</span></div>';
+        $output .= '</div>';
+
+        $output .= '<div class="menu-right"><ul class="d-flex">';
+        $output .= '<li class="nav-item border-left"><a class="nav-link focusmod prev"><i class="fa fa-angle-left mr-2"></i>'.get_string('prevmodule','theme_moove').'</a></li>
+                    <li class="nav-item border-left mid"><a class="nav-link focusmod">'.get_string('coursedata','theme_moove').'<i class="fa fa-angle-down rotate-icon ml-2"></i></a></li>
+                    <li class="nav-item border-left"><a class="nav-link focusmod next">'.get_string('nextmodule','theme_moove').'<i class="fa fa-angle-right ml-2"></i></a></li>';
+        $output .= '<div id="focus-mod" class="open-focusmod border-left border-right" data-placement="left"><i class="fa fa-external-link"></i><span class="ml-1 mr-1">'.get_string('zoomout','local_newsvnr').'</span></div>';
+        $output .= '<div class="dropdown-content">';
+        foreach ($allmodinfo as $modinfo) {
+            $sectioninfo = $DB->get_record_sql('SELECT * FROM {course_sections} WHERE id = :section', ['section' => $modinfo->id]);
+                if($sectioninfo->sequence == '') {
+                    continue;
+                }
+                $output .= '<div class="card-header level1" id="'.$modinfo->id.'">';
+                if($modinfo->name == '' && $modinfo->section != 0) {
+                    $output .= '<a>'.get_string('topic', 'theme_moove').' '.$modinfo->section.'';
+                } else {
+                    $output .= '<a>'.$modinfo->name.'';
+                }
+                $output .= '<i class="fa fa-angle-up rotate-icon float-right"></i>';
+                $output .= '</a>';
+                $output .= '</div>';
+                $output .= '<div class="dropdown-content-2 '.$modinfo->id.'">';
+                foreach($modinfo->modinfo->cms as $cms) {
+                    if($cms->section == $modinfo->id && $cms->visible == 1) {
+                        $getmodules = $DB->get_records_sql('SELECT cm.id, cm.deletioninprogress FROM {course_modules} cm JOIN {course_sections} cs ON cm.section = cs.id WHERE cm.instance = :section AND cm.course = :courseid',['section' => $cms->instance,'courseid' => $COURSE->id]);
+                        foreach($getmodules as $getmodule) {
+                            if($getmodule->deletioninprogress != 0) {
+                                continue 2;
+                            }    
+                        }
+                        
+                        $url = $CFG->wwwroot . '/mod/' . $cms->modname . '/view.php?id=' . $cms->id;
+                        $modname = $cms->name;
+                        $output .= '<div class="card-header level2">';
+                        if($cms->modname == 'resource') {
+                            $img = $OUTPUT->image_url($cms->icon);
+                            $displayresource = $DB->get_field('resource', 'display', ['id' => $cms->instance]);
+                            if($displayresource == RESOURCE_DISPLAY_GOOGLE_DOCS_POPUP) {
+                                $cm = $DB->get_field('course_modules', 'id', ['instance' => $cms->instance]);
+                                $output .= '<img  src="'.$img.'"><a onclick="showmodal('.$cm.', '.$cms->instance.')" href="javascript:;">'.$modname.'</a>';
+                            } else {
+                                $output .= '<img  src="'.$img.'"><a href="'.$url.'">'.$modname.'</a>';
+                            }
+                        } else {
+                            $img = $OUTPUT->image_url('icon', $cms->modname);
+                            $output .= '<img  src="'.$img.'"><a href="'.$url.'">'.$modname.'</a>';
+                        }
+                        $output .= '</div>';    
+                    }
+                }
+                $output .='</div>';
+        }
+        $output .= '</div>';
+        $output .= '</ul></div>';
+        $output .= '</nav>';
+        return $output;
     }
     public function header_course() {
-        global $COURSE;
+        global $COURSE, $CFG, $OUTPUT, $PAGE;
         $process = round(\core_completion\progress::get_course_progress_percentage($COURSE));
         $output = '';
-        $output .= '<div class="page-header-headings"><h2>'.$COURSE->fullname.'</h2>';
+        $output .= '<div class="header-progress d-flex justify-content-between align-items-center"><div class="page-header-headings"><h2>'.$COURSE->fullname.'</h2></div>';
+        $output .= '<div class="d-flex float-right align-items-center">';
+        $output .= '<div class="progress course">';
+        $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
+                    aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div class="pr-2">'.$process.'%</div>';
+        $output .= '<div id="focus-mod" class="open-focusmod mr-2" data-placement="left"><i class="fa fa-desktop"></i><span class="ml-2 mr-2">'.get_string('zoomin','local_newsvnr').'</span></div>';
         $output .= '</div>';
-        if($process > 0 ){
-            $output .= '<div class="progress">';
-            $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
-                        aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%">'.$process.'%</div>';
-            $output .= '</div>';
-        }
+        $output .= '</div>';
         return $output;
     }
 
@@ -139,26 +198,26 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 $output .= '<ul class="dropdown-menu" role="menu" id="drop-course-category">';
             else {
                 if($id_parent == 0)
-                    $output .= '<ul class="dropdown-menu 0">';
+                    $output .= '<ul class="dropdown-menu">';
             }
             foreach ($menu_tmp as $item) {
                 $output .= '<li class="dropdown-submenu">';
-                $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $item->name . ' </a>';
+                $output .= '<a  class="dropdown-item" href="javascript:;">' . $item->name . ' </a>';
                 $courses = $DB->get_records('course',['category' => $item->id, 'visible' => 1]); 
                 $output .= '<ul class="dropdown-menu">';
                 foreach($courses as $course) {
-                    $output .= '<li><a class="dropdown-item" tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a></li>';
+                    $output .= '<li><a class="dropdown-item" href="'.$courselink . $course->id.'">' . $course->fullname . '</a></li>';
                 }
                 foreach($menus as $childkey => $childitem) {
                     // Kiểm tra phần tử có con hay không?
                     if($childitem->parent == $item->id) {
                         $output .= '<li class="dropdown-submenu">';
-                        $output .= '<a  class="dropdown-item" tabindex="-1" href="#">' . $childitem->name . ' </a>';
+                        $output .= '<a  class="dropdown-item" href="javascript:;">' . $childitem->name . ' </a>';
                         $childcourses = $DB->get_records('course',['category' => $childitem->id, 'visible' => 1]);
                         $output .= '<ul class="dropdown-menu">';
 
                         foreach($childcourses as $childcourse) {
-                            $output .= '<li><a class="dropdown-item" tabindex="-1" href="'.$courselink . $childcourse->id.'">' . $childcourse->fullname . '</a></li>';
+                            $output .= '<li><a class="dropdown-item" href="'.$courselink . $childcourse->id.'">' . $childcourse->fullname . '</a></li>';
                         }
                         unset($menus[$childkey]);
                         $this->menucoursecategory($menus, $childitem->id, $output, ++$stt);
@@ -170,15 +229,15 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 $output .= '</ul>';
                 $output .= '</li>';
             }
-            $output .= '</ul';
             if($stt == 0)
-                $output .= '</ul';
+                $output .= '</ul>';
             else {
                 if($id_parent == 0)
                     $output .= '</ul>';
             }
         }
         return $output;
+
     }
    
     public function nav_course_categories() {
@@ -201,7 +260,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             foreach ($listcourse as $item) 
             {   
                 $output .= '<li class="dropdown-item">';
-                $output .= '<a tabindex="-1" href="'.$courselink . $item->id.'">' . $item->fullname . ' </a>';
+                $output .= '<a href="'.$courselink . $item->id.'">' . $item->fullname . ' </a>';
                 $output .= '</li>';
             }
 
@@ -221,7 +280,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             {   
                 $output .= '<li class="dropdown-item">';
 
-                $output .= '<a tabindex="-1" href="'.$courselink . $item->id.'">' . $item->fullname . ' </a>';
+                $output .= '<a href="'.$courselink . $item->id.'">' . $item->fullname . ' </a>';
                 
                 $output .= '</li>';
             }
@@ -257,16 +316,19 @@ class core_renderer extends \theme_boost\output\core_renderer {
 
     public function nav_header() {
         global $CFG;
+        $theme = theme_config::load('moove');
         $output = '';
         $home = $CFG->wwwroot;
         $dashboard = $CFG->wwwroot . '/my/';
-        $course = $CFG->wwwroot . '/local/newsvnr/course.php';
+        $course = $CFG->wwwroot . '/course/index.php';
         $news = $CFG->wwwroot . '/local/newsvnr/index.php';
         $forum = $CFG->wwwroot . '/local/newsvnr/forum.php';
         $calendar = $CFG->wwwroot . '/calendar/view.php?view=month';
         $files = $CFG->wwwroot . '/user/files.php';
+        if(isset($theme->settings->displayhome) && $theme->settings->displayhome == 1){
+            $output .= '<a class="nav-active" href="'.$home .'"><li>'. get_string('home', 'theme_moove') .'</li></a>';
+        }
         $output .='
-            <a class="nav-active" href="'.$home .'"><li>'. get_string('home', 'theme_moove') .'</li></a>
             <a class="nav-active" href="'.$dashboard .'"><li>'. get_string('dashboard', 'theme_moove') .'</li></a>
             <a class="nav-active" href="'.$course .'"><li>'. get_string('course', 'theme_moove') .'</li></a>
             <a class="nav-active" href="'.$news .'"><li>'. get_string('news', 'theme_moove') .'</li></a>
@@ -1052,7 +1114,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output .= '<ul>';
         $output .= '<li><a href="'.$CFG->wwwroot.'/my"><i class="fa fa-home" aria-hidden="true"></i></a></li>';
         $output .= '<li><a href="'.$CFG->wwwroot.'/calendar/view.php?view=month"><i class="fa fa-calendar" aria-hidden="true"></i></a></li>';
-        $output .= '<li><a href="'.$CFG->wwwroot.'/local/newsvnr/course.php"><i class="fa fa-graduation-cap" aria-hidden="true"></i></a></li>';
+        $output .= '<li><a href="'.$CFG->wwwroot.'/course/index.php"><i class="fa fa-graduation-cap" aria-hidden="true"></i></a></li>';
         $output .= '<li><a href="'.$CFG->wwwroot.'/user/files.php"><i class="fa fa-user" aria-hidden="true"></i></a></li>';
         $output .= '</ul>';
         $output  .= '</div>';

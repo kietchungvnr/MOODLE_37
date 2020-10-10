@@ -405,7 +405,9 @@ require(['jquery'], function($) {
             $('.nav-tabs.course li:first').addClass('active');
         }
     }
-    $('.nav-tabs.course li:first a').html('Tổng quan khóa học')
+    $('.nav-tabs.course li:first a').html('{{#str}} courseoverview, theme_moove {{/str}}');
+    $('.nav-tabs.course li[data-key="sitesettings"]').css({'display':'none'});
+    $('.nav-tabs.course li[data-key="addblock"]').css({'display':'none'});
     $('.nav-tabs.course li:last').css({'display':'none'});
     //////////js grader////////////
     $('.grade-navigation ul:first').removeClass('mb-3');
@@ -479,4 +481,22 @@ require(['jquery'], function($) {
     else {
         $('.pagelayout-course .summary').css('display','none');
     }
+    {{! chon tất cả table ghi danh học viên }}
+    $('.checkall').click(function () {    
+        $('input.usercheckbox').prop('checked', this.checked);    
+    });
+
+    $(".nav.tab-click li a").click(function(){
+        var id = $(this).attr('id');
+        $(".nav.tab-click li").removeClass('active');
+        $(this).parent('li').addClass('active');
+        $('.tab-pane').removeClass('active');
+        $('.tab-pane#tab'+id).addClass('active');
+    });
+
+    $(".curriculum-chapter").click(function(){
+        var id = $(this).attr('id');
+        $(".curriculum-chapter#"+id+" i").toggleClass('active');
+        $('.content-'+id).slideToggle();
+    })
 {{/js}}

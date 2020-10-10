@@ -997,7 +997,8 @@ $string['yourfinalgradeis'] = 'Your final grade for this quiz is {$a}.';
 $string['codeexists'] = 'Existing \'{$a}\' quiz code';
 $string['code'] = 'Code';
 // Custom by Vũ: Chức năng sửa tất cả điểm question với select.
-$string['gradepass'] = 'Grade Pass';
-$string['questiontotal'] = 'Question Total';
+$string['gradepass'] = 'Grade pass';
+$string['questiontotal'] = 'Question total';
 $string['changeallmark'] = 'Change';
-$string['selectallquestion'] = 'Select All';
+$string['selectallquestion'] = 'Select all';
+$string['changeallmarksuccess'] = 'Change all mark success!';

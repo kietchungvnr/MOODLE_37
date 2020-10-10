@@ -23,11 +23,11 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
 $string['pluginname'] = 'Moove';
 $string['configtitle'] = 'Moove';
 $string['choosereadme'] = 'Moove là một chủ đề hiện đại tùy biến cao. Chủ đề này dự định sẽ được sử dụng trực tiếp hoặc làm chủ đề chính khi tạo chủ đề mới sử dụng Bootstrap 4.';
 $string['currentinparentheses'] = '(hiện tại)';
+$string['courseoverview'] = 'Tổng quan khóa học';
 $string['region-side-pre'] = 'Right';
 $string['login'] = 'Bạn chưa có tài khoản?';
 $string['prev_section'] = 'Phần trước';
@@ -250,6 +250,8 @@ $string['slogandesc'] = 'Slogan của công ty';
 $string['gobackward'] = 'Nhấn để trở về, giữ để xem lịch sử';
 $string['goforward'] = 'Nhấn để về trước, giữ để xem lịch sử';
 $string['gotop'] = 'Lên đầu';
+$string['displayhome'] = 'Hiện nút trang chủ';
+$string['displayhomedesc'] = 'Bật nút trang chủ trên menu';
 $string['displaynews'] = 'Hiện section mới';
 $string['displaynewsdesc'] = 'Bật section mới ở frontpage';
 $string['displaycoursespopular'] = 'Hiển thị các học phần phổ biến';
@@ -280,3 +282,17 @@ $string['newsupper'] = 'TIN TỨC';
 $string['welcomeupper'] = 'CHÀO MỪNG ĐẾN ELEARNING';
 $string['mycoursesupper'] = 'KHÓA HỌC CỦA TÔI';
 $string['wanttosearchyourcourse'] = 'Tìm kiếm khoá bạn muốn học';
+$string['administrationtab'] = 'Danh sách tab ở quản trị hệ thống';
+$string['focusmod'] = 'Focus Mode';
+$string['nextmodule'] = 'Bài tiếp' ;
+$string['prevmodule'] = 'Bài trước' ;
+$string['coursedata'] = 'Nội dung khóa học';
+$string['administrationtabdesc'] = 'Ẩn hoặc hiện chức năng trong phần quản trị hệ thống, Ẩn/Hiện theo các tab';
+$string['general'] = 'Chung';
+$string['aboutus'] = 'LIÊN HỆ';
+$string['links'] = 'LIÊN KẾT';
+$string['followus'] = 'THEO DÕI';
+$string['newsfooter'] = 'Tin tức';
+$string['coursefooter'] = 'Khóa học';
+$string['forumfooter'] = 'Diễn đàn';
+$string['noteacher'] = 'Chưa có giáo viên';

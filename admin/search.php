@@ -23,7 +23,8 @@ if ($hassiteconfig && moodle_needs_upgrading()) {
 
 admin_externalpage_setup('search', '', array('query' => $query)); // now hidden page
 
-$adminroot = admin_get_root(); // need all settings here
+// Custom by Vũ: Chức năng ẩn tab trong site administration
+$adminroot = admin_get_root_siteadmin(); // need all settings here
 $adminroot->search = $query; // So we can reference it in search boxes later in this invocation
 $statusmsg = '';
 $errormsg  = '';

@@ -87,7 +87,12 @@ switch (true) {
 		        . $resource->revision . $file->get_filepath() . rawurlencode($file->get_filename());
 		    
 			$data->url = $fileurl;
-			$data->reousrucename = $DB->get_field('resource', 'name',['id' => $instance]);  
+			$data->resourcename = $DB->get_field('resource', 'name',['id' => $instance]);
+			if($DB->record_exists('course_modules_completion_rule', ['moduleid' => $instance])) {
+				$data->hascompletion = true;
+			} else {
+				$data->hascompletion = false;
+			}
 		}
 		break;
 	case $action == COMPLETION_RESOURCE:

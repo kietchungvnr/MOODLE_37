@@ -42,7 +42,8 @@ class QuizController extends BaseController {
             // 'startdate' => $this->v::notEmpty()->notBlank()->DateTime(),
             // 'enddate' => $this->v::notEmpty()->notBlank()->DateTime(),
             // 'studentcode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
-            'kindofcourse' => $this->v::notEmpty()->notBlank()
+            'kindofcourse' => $this->v::notEmpty()->notBlank(),
+            // 'sectionname' => $this->v::notEmpty()->notBlank(),
         ]);
     }
 
@@ -53,6 +54,7 @@ class QuizController extends BaseController {
             // 'teachercode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
             'quizname' => $this->v::notEmpty()->notBlank(),
             'quizcode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
+            // 'sectionname' => $this->v::notEmpty()->notBlank()
             // 'startdate' => $this->v::notEmpty()->notBlank()->DateTime(),
             // 'enddate' => $this->v::notEmpty()->notBlank()->DateTime(),
             // 'studentcode' => $this->v::notEmpty()->notBlank()->noWhitespace()
@@ -72,6 +74,7 @@ class QuizController extends BaseController {
 	    	$this->data->examcode = $request->getParam('examcode');
 	    	$this->data->studentcode = $request->getParam('studentcode');
 	    	$this->data->kindofcourse = $request->getParam('kindofcourse');
+	    	// $this->data->sectionname = $request->getParam('sectionname');
 	    	if($request->getParam('startdate') == '') 
 		    	$this->data->startdate = time();
 		    else
@@ -103,7 +106,7 @@ class QuizController extends BaseController {
 	    $courses->shortname = $this->data->examcode;
 	    // $courses->coursesetup = $request->getParam('setupcode');
 		$courses->idnumber = '';
-		$courses->format = 'onetopic';
+		$courses->format = 'topics';
 		$courses->showgrades = 1;
 		$courses->numsections = 0;
 		$courses->newsitems = 10;
@@ -139,43 +142,75 @@ class QuizController extends BaseController {
 			if(empty($this->resp->data)) {
 				try {
 					update_course($courses);
+					$allmodinfo = get_fast_modinfo($courseid)->get_section_info_all();
+					$allsectionname = [];
+					$quizcode = explode('_', $this->data->quizcode);
+					foreach ($allmodinfo as $value) {
+						$allsectionname[] = $value->name; 
+					}
+					if(!in_array($quizcode[1], $allsectionname)) {
+						$section = count($allmodinfo);
+					} else {
+						$section = array_search($quizcode[1], $allsectionname);
+					}
+					course_create_sections_if_missing($courseid, $section, $quizcode[1]);
 					$message .= 'Chỉnh sửa khóa học thành công, ';
-			    	$modinfo = new stdClass;
-				    $modinfo->name = $this->data->quizname;
-				    $modinfo->code = $this->data->quizcode;
-				    $modinfo->modulename = 'quiz';
-				    $modinfo->course = $course->id;
-				    $modinfo->grade = 10;
-				    $modinfo->section = 1;
-				    $modinfo->visible = 1;
-				    $modinfo->quizpassword  = '';
-				    $modinfo->introeditor = ['text' => '', 'format' => '1','itemid' => '0'];
-				    $modinfo->timeclose = $this->data->enddate;
-				    $modinfo->timeopen = $this->data->startdate;
-				    $modinfo->shuffleanswers = 1;
-				    $modinfo->decimalpoints  = 2;
-				    $modinfo->grademethod  = 1;
-				    $modinfo->timelimit = 0;
-				    $modinfo->cmidnumber = '';
-				    $modinfo->graceperiod = 0;
-				    $modinfo->questiondecimalpoints  = -1;
-				    $modinfo->preferredbehaviour = 'deferredfeedback';
-				    $modinfo->overduehandling = 'autosubmit';
-				    $message = '';
-			    	if($DB->record_exists('quiz', ['code' => $this->data->quizcode, 'name' => $this->data->quizname])) {
-			    		$quizid = $DB->get_field('quiz', 'id', ['course' => $course->id, 'name' => $modinfo->name]);
-					    $cm = get_coursemodule_from_instance('quiz', $quizid);
-					    $modinfo->coursemodule = $cm->id;
-			    		$modulequiz = update_module($modinfo);
-						if($modulequiz) {
-							$message .= 'Chỉnh sửa kì thi thành công, ';
-						}
-			    	} else {
-			    		$modinfo->cmidnumber = '';
-						$modulequiz = create_module($modinfo);
-						if($modulequiz) {
-							$message .= 'Tạo kì thi thành công';
-						}
+					$quiznamearr = explode(',', $this->data->quizname);
+					// $quizcodearr = explode(',', $this->data->quizcode);
+					foreach($quiznamearr as $key => $quizname) {
+				    	$modinfo = new stdClass;
+					    $modinfo->name = $quizname;
+					    $modinfo->code = $this->data->quizcode;
+					    $modinfo->modulename = 'quiz';
+					    $modinfo->course = $course->id;
+					    $modinfo->grade = 10;
+					    $modinfo->sectionname = $quizcode[1];
+					    $modinfo->section = $section;
+					    $modinfo->visible = 1;
+					    $modinfo->quizpassword  = '';
+					    $modinfo->introeditor = ['text' => '', 'format' => '1','itemid' => '0'];
+					    $modinfo->timeclose = $this->data->enddate;
+					    $modinfo->timeopen = $this->data->startdate;
+					    $modinfo->shuffleanswers = 1;
+					    $modinfo->decimalpoints  = 2;
+					    $modinfo->grademethod  = 1;
+					    $modinfo->timelimit = 0;
+					    $modinfo->cmidnumber = '';
+					    $modinfo->graceperiod = 0;
+					    $modinfo->questiondecimalpoints  = -1;
+					    $modinfo->preferredbehaviour = 'deferredfeedback';
+					    $modinfo->overduehandling = 'autosubmit';
+					    $modinfo->completion = 2;
+				        $modinfo->completionusegrade = 1;
+				        $modinfo->attempts = 1;
+					    $message = '';
+
+						// $allmodinfo = get_fast_modinfo($courses)->get_section_info_all();
+						// $allsectionname = [];
+					 //    foreach ($allmodinfo as $value) {
+						// 	$allsectionname[] = $value->name; 
+						// }
+						// if(!in_array($quizname, $allsectionname)) {
+						// 	$modinfo->section = count($allmodinfo);
+						// } else {
+						// 	$modinfo->section = array_search($quizname, $allsectionname);
+						// }
+
+				    	if($DB->record_exists('quiz', ['code' => $this->data->quizcode, 'name' => $quizname, 'course' => $courses->id])) {
+				    		$quizid = $DB->get_field('quiz', 'id', ['course' => $course->id, 'name' => $modinfo->name]);
+						    $cm = get_coursemodule_from_instance('quiz', $quizid);
+						    $modinfo->coursemodule = $cm->id;
+				    		$modulequiz = update_module($modinfo);
+							if($modulequiz) {
+								$message .= 'Chỉnh sửa kì thi thành công, ';
+							}
+				    	} else {
+				    		$modinfo->cmidnumber = '';
+							$modulequiz = create_module($modinfo);
+							if($modulequiz) {
+								$message .= 'Tạo kì thi thành công';
+							}
+				    	}
 			    	}
 			    	if($modulequiz) {
 			    		if($this->data->studentcode && $this->data->teachercode) {
@@ -228,43 +263,76 @@ class QuizController extends BaseController {
 			if(empty($this->resp->data)) {
 				try {
 					$course = create_course($courses);
+					$allmodinfo = get_fast_modinfo($course)->get_section_info_all();
+					$allsectionname = [];
+					$quizcode = explode('_', $this->data->quizcode);
+					foreach ($allmodinfo as $value) {
+						$allsectionname[] = $value->name; 
+					}
+					if(!in_array($quizcode[1], $allsectionname)) {
+						$section = count($allmodinfo);
+					} else {
+						$section = array_search($quizcode[1], $allsectionname);
+					}
+					course_create_sections_if_missing($course, $section, $quizcode[1]);
 					$message .= 'Tạo khóa học thành công, ';
 			    	$modinfo = new stdClass;
-				    $modinfo->name = $this->data->quizname;
-				    $modinfo->code = $this->data->quizcode;
-				    $modinfo->modulename = 'quiz';
-				    $modinfo->course = $course->id;
-				    $modinfo->grade = 10;
-				    $modinfo->section = 1;
-				    $modinfo->visible = 1;
-				    $modinfo->quizpassword  = '';
-				    $modinfo->introeditor = ['text' => '', 'format' => '1','itemid' => '0'];
-				    $modinfo->timeclose = $this->data->enddate;
-				    $modinfo->timeopen = $this->data->startdate;
-				    $modinfo->shuffleanswers = 1;
-				    $modinfo->decimalpoints  = 2;
-				    $modinfo->grademethod  = 1;
-				    $modinfo->timelimit = 0;
-				    $modinfo->cmidnumber = '';
-				    $modinfo->graceperiod = 0;
-				    $modinfo->questiondecimalpoints  = -1;
-				    $modinfo->preferredbehaviour = 'deferredfeedback';
-				    $modinfo->overduehandling = 'autosubmit';
-				    $message = '';
-			    	if($DB->record_exists('quiz', ['code' => $this->data->quizcode, 'name' => $this->data->quizname])) {
-			    		$quizid = $DB->get_field('quiz', 'id', ['course' => $course->id, 'name' => $modinfo->name]);
-					    $cm = get_coursemodule_from_instance('quiz', $quizid);
-					    $modinfo->coursemodule = $cm->id;
-			    		$modulequiz = update_module($modinfo);
-						if($modulequiz) {
-							$message .= 'Chỉnh sửa kì thi thành công, ';
-						}
-			    	} else {
-			    		$modinfo->cmidnumber = '';
-						$modulequiz = create_module($modinfo);
-						if($modulequiz) {
-							$message .= 'Tạo kì thi thành công';
-						}
+					$quiznamearr = explode(',', $this->data->quizname);
+					// $quizcodearr = explode(',', $this->data->quizcode);
+					foreach($quiznamearr as $key => $quizname) {
+						$modinfo = new stdClass;
+					    $modinfo->name = $quizname;
+					    $modinfo->code = $this->data->quizcode;
+					    $modinfo->modulename = 'quiz';
+					    $modinfo->course = $course->id;
+					    $modinfo->grade = 10;
+					    $modinfo->section = $section;
+					    $modinfo->visible = 1;
+					    $modinfo->quizpassword  = '';
+					    $modinfo->introeditor = ['text' => '', 'format' => '1','itemid' => '0'];
+					    $modinfo->timeclose = $this->data->enddate;
+					    $modinfo->timeopen = $this->data->startdate;
+					    $modinfo->shuffleanswers = 1;
+					    $modinfo->decimalpoints  = 2;
+					    $modinfo->grademethod  = 1;
+					    $modinfo->sectionname = $quizcode[1];
+					    $modinfo->timelimit = 0;
+					    $modinfo->cmidnumber = '';
+					    $modinfo->graceperiod = 0;
+					    $modinfo->questiondecimalpoints  = -1;
+					    $modinfo->preferredbehaviour = 'deferredfeedback';
+					    $modinfo->overduehandling = 'autosubmit';
+					    $modinfo->completion = 2;
+				        $modinfo->completionusegrade = 1;
+				        $modinfo->attempts = 1;
+						$message = '';
+						
+						// $allmodinfo = get_fast_modinfo($courses)->get_section_info_all();
+						// $allsectionname = [];
+					 //    foreach ($allmodinfo as $value) {
+						// 	$allsectionname[] = $value->name; 
+						// }
+						// if(!in_array($quizname, $allsectionname)) {
+						// 	$modinfo->section = count($allmodinfo);
+						// } else {
+						// 	$modinfo->section = array_search($quizname, $allsectionname);
+						// }
+
+				    	if($DB->record_exists('quiz', ['code' => $this->data->quizcode, 'name' => $quizname, 'course' => $course->id])) {
+				    		$quizid = $DB->get_field('quiz', 'id', ['course' => $course->id, 'name' => $modinfo->name]);
+						    $cm = get_coursemodule_from_instance('quiz', $quizid);
+						    $modinfo->coursemodule = $cm->id;
+				    		$modulequiz = update_module($modinfo);
+							if($modulequiz) {
+								$message .= 'Chỉnh sửa kì thi thành công, ';
+							}
+				    	} else {
+				    		$modinfo->cmidnumber = '';
+							$modulequiz = create_module($modinfo);
+							if($modulequiz) {
+								$message .= 'Tạo kì thi thành công';
+							}
+				    	}
 			    	}
 			    	if($modulequiz) {
 			    		if($this->data->studentcode && $this->data->teachercode) {
@@ -318,6 +386,7 @@ class QuizController extends BaseController {
 	    	$this->data->categorycode = $request->getParam('categorycode');
 	    	$this->data->fullname = $request->getParam('fullname');
 	    	$this->data->shortname = $request->getParam('shortname');
+	    	// $this->data->sectionname = $request->getParam('sectionname');
 	    	if($request->getParam('startdate') == '') 
 		    	$this->data->startdate = time();
 		    else
@@ -333,16 +402,16 @@ class QuizController extends BaseController {
         	$this->resp->data[] = $errors;
 	        return $response->withStatus(422)->withJson($this->resp);
 	    }
-	    if($this->data->studentcode && $this->data->teachercode) {
-	    	$userid = find_usercode_by_code($this->data->studentcode);
-			$teacherid = find_usercode_by_code($this->data->teachercode);
-			if(!$userid) {
-				$this->resp->data['studentcode'] = "Mã học viên không tồn tại";
-			}
-			if(!$teacherid) {
-				$this->resp->data['usercode'] = "Mã giáo viên không tồn tại";
-			}
-	    }
+	  //   if($this->data->studentcode && $this->data->teachercode) {
+	  //   	$userid = find_usercode_by_code($this->data->studentcode);
+			// $teacherid = find_usercode_by_code($this->data->teachercode);
+			// if(!$userid) {
+			// 	$this->resp->data['studentcode'] = "Mã học viên không tồn tại";
+			// }
+			// if(!$teacherid) {
+			// 	$this->resp->data['usercode'] = "Mã giáo viên không tồn tại";
+			// }
+	  //   }
 	    if($this->data->categoryname and $this->data->categorycode) {
 			$existing = $DB->get_field('course_categories','id',['name' => $this->data->categoryname, 'idnumber' => $this->data->categorycode]);
 			if($existing) {
@@ -355,86 +424,121 @@ class QuizController extends BaseController {
 		if(empty($this->resp->data)) {
 			$course = $DB->get_record('course', ['shortname' => $this->data->coursecode]);
 		    if($course) {
-		    	$modinfo = new stdClass;
-			    $modinfo->name = $this->data->quizname;
-			    $modinfo->code = $this->data->quizcode;
-			    $modinfo->modulename = 'quiz';
-			    $modinfo->course = $course->id;
-			    $modinfo->grade = 10;
-			    $modinfo->section = 1;
-			    $modinfo->visible = 1;
-			    $modinfo->quizpassword  = '';
-			    $modinfo->introeditor = ['text' => '', 'format' => '1','itemid' => '0'];
-			    $modinfo->timeclose = $this->data->enddate;
-			    $modinfo->timeopen = $this->data->startdate;
-			    $modinfo->shuffleanswers = 1;
-			    $modinfo->decimalpoints  = 2;
-			    $modinfo->grademethod  = 1;
-			    $modinfo->timelimit = 0;
-			    $modinfo->cmidnumber = '';
-			    $modinfo->graceperiod = 0;
-			    $modinfo->questiondecimalpoints  = -1;
-			    $modinfo->preferredbehaviour = 'deferredfeedback';
-			    $modinfo->overduehandling = 'autosubmit';
-			    $message = '';
-		    	if($DB->record_exists('quiz', ['code' => $this->data->quizcode, 'name' => $this->data->quizname])) {
-		    		$quizid = $DB->get_field('quiz', 'id', ['course' => $course->id, 'name' => $modinfo->name]);
-				    $cm = get_coursemodule_from_instance('quiz', $quizid);
-				    $modinfo->coursemodule = $cm->id;
-		    		$modulequiz = update_module($modinfo);
-					if($modulequiz) {
-						$message .= 'Chỉnh sửa kì thi thành công, ';
-					}
-		    	} else {
-		    		$modinfo->cmidnumber = '';
-					$modulequiz = create_module($modinfo);
-					if($modulequiz) {
-						$message .= 'Tạo kì thi thành công';
-					}
+		    	$allmodinfo = get_fast_modinfo($course->id)->get_section_info_all();
+				$allsectionname = [];
+				$quizcode = explode('_', $this->data->quizcode);
+				foreach ($allmodinfo as $value) {
+					$allsectionname[] = $value->name; 
+				}
+				if(!in_array($quizcode[1], $allsectionname)) {
+					$section = count($allmodinfo);
+				} else {
+					$section = array_search($quizcode[1], $allsectionname);
+				}
+				course_create_sections_if_missing($course->id, $section, $quizcode[1]);
+				$message .= 'Chỉnh sửa khóa học thành công, ';
+				$quiznamearr = explode(',', $this->data->quizname);
+				// $quizcodearr = explode(',', $this->data->quizcode);
+				foreach($quiznamearr as $key => $quizname) {
+			    	$modinfo = new stdClass;
+				    $modinfo->name = $quizname;
+				    $modinfo->code = $this->data->quizcode;
+				    $modinfo->modulename = 'quiz';
+				    $modinfo->course = $course->id;
+				    $modinfo->grade = 10;
+				    $modinfo->sectionname = $quizcode[1];
+				    $modinfo->section = $section;
+				    $modinfo->visible = 1;
+				    $modinfo->quizpassword  = '';
+				    $modinfo->introeditor = ['text' => '', 'format' => '1','itemid' => '0'];
+				    $modinfo->timeclose = $this->data->enddate;
+				    $modinfo->timeopen = $this->data->startdate;
+				    $modinfo->shuffleanswers = 1;
+				    $modinfo->decimalpoints  = 2;
+				    $modinfo->grademethod  = 1;
+				    $modinfo->timelimit = 0;
+				    $modinfo->cmidnumber = '';
+				    $modinfo->graceperiod = 0;
+				    $modinfo->questiondecimalpoints  = -1;
+				    $modinfo->preferredbehaviour = 'deferredfeedback';
+				    $modinfo->overduehandling = 'autosubmit';
+				    $modinfo->completion = 2;
+			        $modinfo->completionusegrade = 1;
+			        $modinfo->attempts = 1;
+				    $message = '';
+
+				    // $allmodinfo = get_fast_modinfo($course)->get_section_info_all();
+					// $allsectionname = [];
+				 //    foreach ($allmodinfo as $value) {
+					// 	$allsectionname[] = $value->name; 
+					// }
+					// if(!in_array($this->data->sectionname, $allsectionname)) {
+					// 	$modinfo->section = count($allmodinfo) + 1;
+					// } else {
+					// 	$modinfo->section = array_search($this->data->sectionname, $allsectionname);
+					// }
+
+			    	if($DB->record_exists('quiz', ['code' => $this->data->quizcode, 'name' => $this->data->quizname, 'course' => $course->id])) {
+			    		$quizid = $DB->get_field('quiz', 'id', ['course' => $course->id, 'name' => $modinfo->name]);
+					    $cm = get_coursemodule_from_instance('quiz', $quizid);
+					    $modinfo->coursemodule = $cm->id;
+			    		$modulequiz = update_module($modinfo);
+						if($modulequiz) {
+							$message .= 'Chỉnh sửa kì thi thành công, ';
+						}
+			    	} else {
+			    		$modinfo->cmidnumber = '';
+						$modulequiz = create_module($modinfo);
+						if($modulequiz) {
+							$message .= 'Tạo kì thi thành công';
+						}
+			    	}
 		    	}
 		    	if($modulequiz) {
 		    		if($this->data->studentcode && $this->data->teachercode) {
-		    			$enrol_user = check_user_in_course($course->id,$userid);
-						$enrol_teahcer = check_teacher_in_course($course->id,$teacherid);
-						// var_dump($enrol_teahcer, $enrol_user);die;
-						if(!$enrol_user) {
-							enrol_user($userid, $course->id, 'student');
-							$message .= "Thêm thành công thêm user học viên vào khóa học, ";
-						} else {
-							$message .= "Học viên đã tham gia vào khóa, ";
-						}
-						if(!$enrol_teahcer) {
-							enrol_user($teacherid, $course->id, 'editingteacher');
-							$message .= "Thêm thành công thêm user giáo viên khóa học";
-						} else {
-							$message .= "Giáo viên đã tham gia vào khóa";
-						}
+		    			$studentarr = explode(',', $this->data->studentcode);
+		    			$teacherarr = explode(',', $this->data->teachercode);
+		    			foreach ($studentarr as $student) {
+		    				$userid = find_usercode_by_code($student);
+							$enrol_user = check_user_in_course($course->id,$userid);
+							if(!$enrol_user) {
+								enrol_user($userid, $course->id, 'student');
+							}
+		    			}
+		    			foreach ($teacherarr as $teacher) {
+							$teacherid = find_usercode_by_code($teacher);
+							$enrol_user = check_user_in_course($course->id,$teacherid);
+							if(!$enrol_user) {
+								enrol_user($teacherid, $course->id, 'editingteacher');
+							}
+		    			}
 		    		}
 					$this->resp->error = false;
 					$this->resp->message['info'] = $message;
 					$this->resp->data[] = $this->data;
 		    	}
 		    } else {
-		    	$course = new stdClass;
-				$course->fullname = $this->data->fullname;
-			    $course->shortname = $this->data->shortname;
-			    // $course->courseetup = $request->getParam('setupcode');
-				$course->idnumber = '';
-				$course->format = 'onetopic';
-				$course->showgrades = 1;
-				$course->numsections = 0;
-				$course->newsitems = 10;
-				$course->visible = 1;
-				$course->showreports = 1;
-				$course->summary = '';
-				$course->summaryformat = FORMAT_HTML;
-				$course->lang = 'vi';
-				$course->typeofcourse = 3;
-				$course->enablecompletion = 1;	
-				$data = create_course($course);
-				$this->resp->error = false;
-				$this->resp->message['info'] = 'Tạo thành công khóa online';
-				$this->resp->data[] = $data;
+		  //   	$course = new stdClass;
+				// $course->fullname = $this->data->fullname;
+			 //    $course->shortname = $this->data->shortname;
+			 //    // $course->courseetup = $request->getParam('setupcode');
+				// $course->idnumber = '';
+				// $course->format = 'topics';
+				// $course->showgrades = 1;
+				// $course->numsections = 0;
+				// $course->newsitems = 10;
+				// $course->visible = 1;
+				// $course->showreports = 1;
+				// $course->summary = '';
+				// $course->summaryformat = FORMAT_HTML;
+				// $course->lang = 'vi';
+				// $course->typeofcourse = 3;
+				// $course->enablecompletion = 1;	
+				// $data = create_course($course);
+				// $this->resp->error = false;
+				// $this->resp->message['info'] = 'Tạo thành công khóa online';
+				// $this->resp->data[] = $data;
+				$this->resp->error = true;
 		    }
 		} else {
 			$this->resp->error = true;

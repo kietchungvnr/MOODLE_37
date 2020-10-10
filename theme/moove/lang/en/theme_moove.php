@@ -23,11 +23,10 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
 $string['pluginname'] = 'Moove';
 $string['configtitle'] = 'Moove';
 $string['choosereadme'] = 'Moove is a modern highly-customisable theme. This theme is intended to be used directly, or as a parent theme when creating new themes utilising Bootstrap 4.';
-
+$string['courseoverview'] = 'Course overview';
 $string['currentinparentheses'] = '(current)';
 $string['region-side-pre'] = 'Right';
 $string['login'] = 'Already have an account?';
@@ -252,6 +251,8 @@ $string['slogandesc'] = 'Company Slogan';
 $string['gobackward'] = 'Click to go back, hold to see history';
 $string['goforward'] = 'Click to go forward, hold to see history';
 $string['gotop'] = 'Go top';
+$string['displayhome'] = 'Show button home';
+$string['displayhomedesc'] = 'Enable show button home in menu';
 $string['displaynews'] = 'Show news section';
 $string['displaynewsdesc'] = 'Enable a news section in frontpage';
 $string['displaycoursespopular'] = 'Show coursespopular section';
@@ -282,3 +283,18 @@ $string['newsupper'] = 'NEWS';
 $string['welcomeupper'] = 'WELCOME TO ELEARNING';
 $string['mycoursesupper'] = 'MY COURSE';
 $string['wanttosearchyourcourse'] = 'Search for the course you want';
+$string['administrationtab'] = 'List tab in site administraion';
+$string['nextmodule'] = 'Next' ;
+$string['prevmodule'] = 'Previous' ;
+$string['coursedata'] = 'Course Data';
+$string['focusmod'] = 'Focus Mode';
+$string['administrationtabdesc'] = 'Show/Hidden tab in site administration';
+$string['general'] = 'General' ;
+$string['topic'] = 'Topic';
+$string['aboutus'] = 'ABOUT US';
+$string['links'] = 'ORTHER NAV';
+$string['followus'] = 'FOLLOW US';
+$string['newsfooter'] = 'News';
+$string['coursefooter'] = 'Courses';
+$string['forumfooter'] = 'Forums';
+$string['noteacher'] = 'No teacher';

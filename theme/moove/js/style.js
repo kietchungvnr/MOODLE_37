@@ -61,12 +61,14 @@
         var owlrequiredpositioncourse = $('#requiredcourse-position-slider');
         var owlsuggestcourse = $('#suggest-course-slider');
         var owluserplancourse = $('#course-userplan-slider');
+        var owlnewslastest = $('#new-lastest');
+        var owlnewslastestbycourse = $('#new-lastest-bycourse');
         owlfrontpage.owlCarousel({
             loop: false,
             margin: 10,
             lazyLoad: true,
             // autoplay:true,
-            autoplayTimeout: 5000,
+            autoplayTimeout: 10000,
             responsiveClass: true,
             responsive: {
                 0: {
@@ -89,22 +91,25 @@
             margin: 10,
             lazyLoad: true,
             // autoplay:true,
-            autoplayTimeout: 5000,
+            autoplayTimeout: 10000,
             responsiveClass: true,
-            responsive: {
+           responsive: {
                 0: {
                     items: 1,
                 },
-                600: {
+                576: {
                     items: 2,
                 },
-                1000: {
+                768: {
+                    items: 3,
+                },
+                992: {
                     items: 4,
                 },
-                1300: {
+                1200: {
                     items: 5,
                 },
-                1400: {
+                1350: {
                     items: 6,
                 }
             }
@@ -117,20 +122,23 @@
             // autoplay:true,
             autoplayTimeout: 5000,
             responsiveClass: true,
-            responsive: {
+           responsive: {
                 0: {
                     items: 1,
                 },
-                600: {
+                576: {
                     items: 2,
                 },
-                1000: {
+                768: {
+                    items: 3,
+                },
+                992: {
                     items: 4,
                 },
-                1300: {
+                1200: {
                     items: 5,
                 },
-                1400: {
+                1350: {
                     items: 6,
                 }
             }
@@ -143,20 +151,23 @@
             // autoplay:true,
             autoplayTimeout: 5000,
             responsiveClass: true,
-            responsive: {
+           responsive: {
                 0: {
                     items: 1,
                 },
-                600: {
+                576: {
                     items: 2,
                 },
-                1000: {
+                768: {
+                    items: 3,
+                },
+                992: {
                     items: 4,
                 },
-                1300: {
+                1200: {
                     items: 5,
                 },
-                1400: {
+                1350: {
                     items: 6,
                 }
             }
@@ -191,20 +202,23 @@
             // autoplay:true,
             autoplayTimeout: 5000,
             responsiveClass: true,
-            responsive: {
+           responsive: {
                 0: {
                     items: 1,
                 },
-                600: {
+                576: {
                     items: 2,
                 },
-                1000: {
+                768: {
+                    items: 3,
+                },
+                992: {
                     items: 4,
                 },
-                1300: {
+                1200: {
                     items: 5,
                 },
-                1400: {
+                1350: {
                     items: 6,
                 }
             }
@@ -221,16 +235,19 @@
                 0: {
                     items: 1,
                 },
-                600: {
+                576: {
                     items: 2,
                 },
-                1000: {
+                768: {
+                    items: 3,
+                },
+                992: {
                     items: 4,
                 },
-                1300: {
+                1200: {
                     items: 5,
                 },
-                1400: {
+                1350: {
                     items: 6,
                 }
             }
@@ -243,20 +260,23 @@
             // autoplay:true,
             autoplayTimeout: 5000,
             responsiveClass: true,
-            responsive: {
+           responsive: {
                 0: {
                     items: 1,
                 },
-                600: {
+                576: {
                     items: 2,
                 },
-                1000: {
+                768: {
+                    items: 3,
+                },
+                992: {
                     items: 4,
                 },
-                1300: {
+                1200: {
                     items: 5,
                 },
-                1400: {
+                1350: {
                     items: 6,
                 }
             }
@@ -269,22 +289,66 @@
             // autoplay:true,
             autoplayTimeout: 5000,
             responsiveClass: true,
-            responsive: {
+           responsive: {
                 0: {
                     items: 1,
                 },
-                600: {
+                576: {
                     items: 2,
                 },
-                1000: {
+                768: {
+                    items: 3,
+                },
+                992: {
                     items: 4,
                 },
-                1300: {
+                1200: {
                     items: 5,
                 },
-                1400: {
+                1350: {
                     items: 6,
                 }
+            }
+
+        });
+        owlnewslastest.owlCarousel({
+            loop: true,
+            margin: 0,
+            lazyLoad: true,
+            responsiveClass: true,
+            smartSpeed:250,
+            nav:true,
+            dots:true,
+            navText: ["<a class='left fa fa-chevron-left btn btn-dark btn-owl'></a>", "<a class='right fa fa-chevron-right btn btn-dark btn-owl'></a>"],
+            responsive: {
+                0: {
+                    items: 2,
+                },
+                900: {
+                    items: 3,
+                },
+                1200: {
+                    items: 4,
+                },
+            }
+
+        });
+        owlnewslastestbycourse.owlCarousel({
+            loop: false,
+            margin: 0,
+            lazyLoad: true,
+            responsiveClass: true,
+            smartSpeed:250,
+            responsive: {
+                0: {
+                    items: 2,
+                },
+                900: {
+                    items: 3,
+                },
+                1200: {
+                    items: 4,
+                },
             }
 
         });
