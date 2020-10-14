@@ -333,3 +333,5 @@ $string['email'] = "Email";
 $string['descriptioncourse'] = "Course description";
 $string['noteacher'] = "No teacher";
 $string['lesson'] = "Lesson";
+$string['startdate'] = "Start date";
+$string['enddate'] = "End date";

@@ -333,3 +333,5 @@ $string['email'] = "Email";
 $string['descriptioncourse'] = "Mô tả khóa học";
 $string['noteacher'] = "Không có giáo viên";
 $string['lesson'] = "Giáo trình";
+$string['startdate'] = "Ngày bắt đầu";
+$string['enddate'] = "Ngày kết thúc";
