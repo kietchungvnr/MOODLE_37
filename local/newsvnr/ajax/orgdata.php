@@ -75,12 +75,12 @@ switch ($section) {
 		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
 	}
 	$sql = "
-			SELECT *, (SELECT COUNT(id) FROM {orgstructure_category}) AS total
+			SELECT *, (SELECT COUNT(id) FROM {orgstructure_category} $wheresql) AS total
 			FROM (
 			    SELECT *, ROW_NUMBER() OVER (ORDER BY id) AS RowNum
 			    FROM {orgstructure_category}
+			    $wheresql
 			) AS Mydata
-			$wheresql
 			ORDER BY $ordersql";
 	$get_list = $DB->get_records_sql($sql);
 	$data = [];
@@ -125,12 +125,12 @@ switch ($section) {
 		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
 	}
 	$sql = "
-			SELECT *, (SELECT COUNT(id) FROM {orgstructure_jobtitle}) AS total
+			SELECT *, (SELECT COUNT(id) FROM {orgstructure_jobtitle} $wheresql) AS total
 			FROM (
 			    SELECT *, ROW_NUMBER() OVER (ORDER BY id) AS RowNum
 			    FROM {orgstructure_jobtitle}
+				$wheresql
 			) AS Mydata
-			$wheresql
 			ORDER BY $ordersql";
 	$get_list = $DB->get_records_sql($sql);
 	$data = [];
@@ -176,12 +176,12 @@ switch ($section) {
 		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
 	}
 	$sql = "
-			SELECT *, (SELECT COUNT(id) FROM {orgstructure_position}) AS total
+			SELECT *, (SELECT COUNT(id) FROM {orgstructure_position} $wheresql) AS total
 			FROM (
 			    SELECT *, ROW_NUMBER() OVER (ORDER BY id) AS RowNum
 			    FROM {orgstructure_position}
+				$wheresql
 			) AS Mydata
-			$wheresql
 			ORDER BY $ordersql";
 	$get_list = $DB->get_records_sql($sql);
 	$data = [];
@@ -239,12 +239,12 @@ switch ($section) {
 		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
 	}
 	$sql = "
-			SELECT *, (SELECT COUNT(id) FROM {orgstructure}) AS total
+			SELECT *, (SELECT COUNT(id) FROM {orgstructure} $wheresql) AS total
 			FROM (
 			    SELECT *, ROW_NUMBER() OVER (ORDER BY id) AS RowNum
 			    FROM {orgstructure}
+				$wheresql
 			) AS Mydata
-			$wheresql
 			ORDER BY $ordersql";
 	$get_list = $DB->get_records_sql($sql);
 	$data = [];

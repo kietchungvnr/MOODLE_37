@@ -23,10 +23,25 @@
  * @copyright 2019 VnResource
  * @author   Le Thanh Vu
  **/
+namespace local_newsvnr\output;
 
-defined('MOODLE_INTERNAL') || die();
-$plugin->release   = '1.1.0';
-$plugin->maturity = MATURITY_STABLE;
-$plugin->version   = 2019032708;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2015111602;        // Requires this Moodle version.
-$plugin->component = 'local_newsvnr'; // Full name of the plugin (used for diagnostics).
+require_once('lib.php');
+
+use renderable;
+use templatable;
+use renderer_base;
+use stdClass;
+
+use theme_moove\util\theme_settings;
+
+class generallibrary_page implements renderable, templatable  {
+    public function export_for_template(renderer_base $output) {
+        global $DB,$CFG;
+        $data = array();
+    }
+
+}
+
+
+
+

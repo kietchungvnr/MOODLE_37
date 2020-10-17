@@ -17,10 +17,7 @@
 
     
 </div><!-- Ends .page-wrapper -->
-
-{{> theme_moove/footer }}
-
-
+{{{ output.standard_end_of_body_html }}}
 </body>
 </html>
 <script type="text/javascript">
@@ -341,7 +338,7 @@ require(['theme_moove/metismenu', 'jquery'], function(metisMenu, $) {
 
 });
 
-require(['jquery', 'core/config'], function($, Config) {
+require(['jquery', 'core/config', 'local_newsvnr/requestfiles'], function($, Config, File) {
     var iconsearch = document.querySelector('.moove-search-input .slicon-magnifier');
     var btnclosesearch = document.querySelector('.search-input-form .close-search');
     var searchinputform = document.querySelector('.moove-search-input');
@@ -366,7 +363,7 @@ require(['jquery', 'core/config'], function($, Config) {
         $('[data-region="drawer"]').removeClass('closed');
         $('[data-region="drawer"]').addClass('open');
     }
-   $(document).ready(function() {
+    $(document).ready(function() {
         $('#focus-mod,#return-to-top').tooltip();   
         const regex = /http:\/\/.*\/(.*)\//g;
         const match = regex.exec(window.location.href);
@@ -401,6 +398,15 @@ require(['jquery', 'core/config'], function($, Config) {
             $("#enlaces .nav-active:first").addClass("active-nav");
         }
     });
+    $(document).ready(function() {
+     $('a#accept-file-94546').click(function() {
+     console.log('xx')
+        File.acceptFile(94546);
+    });
+ });
+   
+
+
 }); 
 require(['theme_moove/focusmod']);
 
@@ -464,7 +470,6 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             });
         });
     }
-    // Xóa file trong tài liệu hệ thống
     const deleteFile = (fileName, filePath, id) => {
         require(['jquery', 'core/config'], ($, Config) => {
             var script = Config.wwwroot + '/local/newsvnr/ajax/requestfiles_generallibrary.php';
@@ -488,8 +493,6 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             });
         });
     }
-
-    // Duyệt file trong tài liệu hệ thống
     const acceptFile = (id) => {
         require(['jquery', 'core/config', 'local_newsvnr/requestfiles'], ($, Config, Grid) => {
             var script = Config.wwwroot + '/local/newsvnr/ajax/requestfiles_generallibrary.php';
@@ -507,37 +510,36 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
                 var ele = '#accept-file-' + id;
                 var cfrm = confirm("Bạn đồng ý duyệt file này?");
                 if(cfrm == true) {
-                    Grid.refreshGrid();
+                    Grid.refreshrid()
                 }
             });
         });
     }
+    // const checkRoles = () => {
+    //     require(['jquery', 'core/config'], ($, Config) => {
+    //         var userid = $('[role="listitem"]').attr('data-value');
+    //         var script = Config.wwwroot + '/local/newsvnr/ajax/requestfiles_generallibrary.php';
+    //         var settings = {
+    //             type : "GET",
+    //             processData : true,
+    //             data : {
+    //                 action : 'checkoles',
+    //                 userid : userid
+    //             }
 
-    // Kiểm tra quyền trong tài liệu hệ thống
-    const checkRoles = () => {
-        require(['jquery', 'core/config'], ($, Config) => {
-            var userid = $('[role="listitem"]').attr('data-value');
-            var script = Config.wwwroot + '/local/newsvnr/ajax/requestfiles_generallibrary.php';
-            var settings = {
-                type : "GET",
-                processData : true,
-                data : {
-                    action : 'checkoles',
-                    userid : userid
-                }
+    //         };
+    //         $.ajax(script, settings)
+    //         .then(function(resp) {
+    //             debugger;
+    //             var contextid = resp;
+    //             var roleurl = Config.wwwroot + '/admin/roles/permissions.php?contextid=' + contextid + '&userid=' + userid + '&courseid=1';
+    //             var iframe = '<iframe id="iframe" src="'+roleurl+'" width="700" height="450"></iframe>';
+    //             if(!$('#iframe').length) {
+    //                     $('#iframeHolder').html(iframe);
+    //             }
 
-            };
-            $('#page-local-newsvnr-generallibrary #iframepermissions').css('height', '645px');
-            $.ajax(script, settings)
-            .then(function(resp) {
-                debugger;
-                var contextid = resp;
-                var roleurl = Config.wwwroot + '/admin/roles/portalpermissions.php?contextid=' + contextid + '&userid=' + userid + '&courseid=1';
-                var iframe = '<iframe id="iframe" src="'+roleurl+'" width="100%" height="645" frameBorder="0"></iframe>';
-                $('#iframepermissions').html(iframe);
-
-            });
-        });
-    }
+    //         });
+    //     });
+    // }
    
 </script>

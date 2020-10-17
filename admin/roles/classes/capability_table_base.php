@@ -71,7 +71,7 @@ abstract class core_role_capability_table_base {
     /**
      * Display the table.
      */
-    public function display() {
+    public function display($pagelayout = '') {
         if (count($this->capabilities) > self::NUM_CAPS_FOR_SEARCH) {
             global $PAGE;
             $jsmodule = array(
@@ -82,7 +82,8 @@ abstract class core_role_capability_table_base {
                     array('clear', 'moodle'),                ),
                 'requires' => array('node', 'cookie', 'escape')
             );
-            $PAGE->requires->js_init_call('M.core_role.init_cap_table_filter', array($this->id, $this->context->id), false,
+            // Custom by Vũ: Thêm pagelayout để bỏ header / footer trong tài liệu hệ thống
+            $PAGE->requires->js_init_call('M.core_role.init_cap_table_filter', array($this->id, $this->context->id, $pagelayout), false,
                 $jsmodule);
         }
         echo '<table class="' . implode(' ', $this->classes) . '" id="' . $this->id . '">' . "\n<thead>\n";

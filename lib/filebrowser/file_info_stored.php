@@ -327,6 +327,27 @@ class file_info_stored extends file_info {
         return $this->lf->get_status();
     }
 
+    
+    /**
+     * // Custom by Vũ: Get file path cho repo generallibrary
+     * Returns file path flag.
+     *
+     * @return str get file path
+     */
+    public function get_filepath() {
+        return $this->lf->get_filepath();
+    }
+
+    /**
+     * // Custom by Vũ: Get file name cho repo generallibrary
+     * Returns file filename flag.
+     *
+     * @return str get file name
+     */
+    public function get_filename() {
+        return $this->lf->get_filename();
+    }
+
     /**
      * Returns list of children.
      *

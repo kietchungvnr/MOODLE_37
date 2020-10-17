@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,18 +16,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * repository_generallibrary class is used to browse general library files
  *
+ * @package   repository_generallibrary
+ * @copyright 2020 Le Thanh Vu
+ * @author    Le Thanh Vu 
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- * @package local_newsvnr
- * @copyright 2019 VnResource
- * @author   Le Thanh Vu
- **/
+ */
 
 defined('MOODLE_INTERNAL') || die();
-$plugin->release   = '1.1.0';
-$plugin->maturity = MATURITY_STABLE;
-$plugin->version   = 2019032708;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2015111602;        // Requires this Moodle version.
-$plugin->component = 'local_newsvnr'; // Full name of the plugin (used for diagnostics).
+
+$plugin->version   = 2019052000;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->requires  = 2019051100;        // Requires this Moodle version
+$plugin->component = 'repository_generallibrary'; // Full name of the plugin (used for diagnostics)

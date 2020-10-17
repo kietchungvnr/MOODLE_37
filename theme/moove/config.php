@@ -131,6 +131,12 @@ $THEME->layouts = [
         'regions' => array('side-pre'),
         'defaultregion' => 'side-pre',
     ),
+    // Trang k có header / footer để nhúng trang phần quyền vào trang tài liệu hệ thống
+    'portalpermissions' => array(
+        'file' => 'portalpermissions.php',
+        'regions' => array('side-pre'),
+        'defaultregion' => 'side-pre',
+    ),
     // My dashboard page.
     'mydashboard' => array(
         'file' => 'mydashboard.php',

@@ -244,9 +244,29 @@ class core_files_renderer extends plugin_renderer_base {
      *
      */
     protected function fm_js_template_fileselectlayout() {
+        global $CFG, $USER;
         $context = [
                 'helpicon' => $this->help_icon('setmainfile', 'repository')
         ];
+
+        // Custom by Vũ: Phân quyền cho xóa / cập nhật trong tài liệu hệ thống
+        $generallibraryurl = $CFG->wwwroot . '/local/newsvnr/generallibrary.php';
+        $getcurrenturl = "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]";
+        if($getcurrenturl === $generallibraryurl) {
+            $contextsystem = context_user::instance($USER->id);
+            if(!has_capability('local/newsvnr:editfoldersystem', $contextsystem) || !has_capability('local/newsvnr:editfilesystem', $contextsystem)) {
+                $editfoldersystem = 'd-none';
+                $context['editfoldersystem'] = $editfoldersystem;
+            }
+          
+            if(!has_capability('local/newsvnr:deletefoldersystem', $contextsystem) || !has_capability('local/newsvnr:deletefilesystem', $contextsystem)) {
+                $deletefoldersystem = 'd-none';
+                $context['deletefoldersystem'] = $deletefoldersystem;
+
+            }
+         
+        }
+
         return $this->render_from_template('core/filemanager_fileselect', $context);
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,18 +16,29 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * A moodle form to manage folder files
  *
+ * @package   mod_folder
+ * @copyright 2010 Dongsheng Cai <dongsheng@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- * @package local_newsvnr
- * @copyright 2019 VnResource
- * @author   Le Thanh Vu
- **/
+ */
 
 defined('MOODLE_INTERNAL') || die();
-$plugin->release   = '1.1.0';
-$plugin->maturity = MATURITY_STABLE;
-$plugin->version   = 2019032708;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2015111602;        // Requires this Moodle version.
-$plugin->component = 'local_newsvnr'; // Full name of the plugin (used for diagnostics).
+
+require_once("$CFG->libdir/formslib.php");
+
+class local_newsvnr_filelibrary_form extends moodleform {
+    function definition() {
+        $mform = $this->_form;
+
+        $data    = $this->_customdata['data'];
+        $options = $this->_customdata['options'];
+
+        $mform->setType('id', PARAM_INT);
+        $mform->addElement('filemanager', 'files_filemanager', get_string('files'), null, $options);
+        $submit_string = get_string('savechanges');
+        $this->add_action_buttons(true, $submit_string);
+
+        $this->set_data($data);
+    }
+}

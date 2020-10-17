@@ -66,15 +66,15 @@
             ];
             $api_data = HTTPPost_EBM_return($get_configapi->url, $params_portal);
             $user = get_complete_user_data('username', $api_data->Data);
-         
-            if (complete_user_login($user)) {
-                \core\session\manager::apply_concurrent_login_limit($user->id, session_id());
-                // $auth = true;
-                $USER->loggedin = true;
-                $USER->site = $CFG->wwwroot;
-                set_moodle_cookie($USER->username);
+            if($user) {
+                if (complete_user_login($user)) {
+                    \core\session\manager::apply_concurrent_login_limit($user->id, session_id());
+                    // $auth = true;
+                    $USER->loggedin = true;
+                    $USER->site = $CFG->wwwroot;
+                    set_moodle_cookie($USER->username);
+                }
             }
-
         }
     } 
 

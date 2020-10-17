@@ -70,7 +70,7 @@ class studentuser_learning_rp_page implements renderable, templatable {
                                 WHERE status = 0 AND proficiency = 0 AND userid = ?', [$USER->id]
                             );
         if($countcompencies->countcomp != '0')
-            $data['countcompencies'] = $countcompencies->countcompencies;
+            $data['countcompencies'] = $countcompencies->countcomp;
         $completed_requirecourses = $DB->get_record_sql('
                                 SELECT COUNT(*) AS completed_requirecourses,(SELECT COUNT(*) FROM mdl_course WHERE required = 1) AS total_requirecourses 
                                 FROM mdl_course c JOIN mdl_course_completions cc ON c.id = cc.course 
