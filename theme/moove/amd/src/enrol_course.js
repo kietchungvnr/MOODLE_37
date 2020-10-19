@@ -7,7 +7,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         $('.tab-pane').hide();
         $('.tab-pane#tab' + id).fadeIn('fast');
     });
-    $(".click-expand").click(function() {
+    $("#page .click-expand").click(function() {
         var id = $(this).attr('id');
         $(".click-expand#" + id + " i").toggleClass('active');
         $('.content-expand.' + id).slideToggle();

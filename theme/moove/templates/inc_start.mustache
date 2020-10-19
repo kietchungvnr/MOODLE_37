@@ -3293,6 +3293,9 @@ table#categoryquestions tr {
     #new-lastest .owl-next {
         display: none !important;
     }
+    #folder_library {
+        min-height: auto!important;
+    }
 }
 @media(max-width: 500px){
     .pagelayout-course .progress {
@@ -3957,7 +3960,7 @@ li.nav-item.border-left {
     width: 5px;
     background:#b8b9bf;
 }
-i.rotate-icon.active {
+#focus-mod i.rotate-icon.active {
     transform: rotate(180deg);
     transition: 0.5s;
 }
@@ -4189,7 +4192,7 @@ li.list-category a , li.list-subcategory a{
 .list-category i.fa-angle-right {
     padding:5px 0px 5px 5px;
 }
-.list-category i.fa-angle-right.active {
+i.fa-angle-right.active {
     transform: rotate(90deg);
     transition: 0.5s;
 }
@@ -4564,13 +4567,132 @@ body#page-enrol-index #region-main .generalbox#notice {
 .content-expand {
     display: none;
 }
-.folder_library {
+#folder_library {
     border: 1px solid #dfd1d1;
     margin: 5px;
+    position: relative;
+    font-size: 15px;
+    max-height: 650px;
+    min-height: 610px;
 }
-.file_library {
-    border: 1px solid #dfd1d1;
+#file_library {
     margin: 5px;
+    border: 1px solid #dfd1d1;
+    padding: 5px 15px;
+}
+.popup-setting {
+    position: absolute;
+    width: 175px;
+    height: 100px;
+    right: 2%;
+    display: none;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    background-clip: padding-box;
+    border: 1px solid #d0d6d8;
+    border-radius: .21428571rem;
+    color: #545759;
+}
+.popup-setting ul li{
+    padding: 5px 10px;
+    cursor: pointer;
+}
+#folder_library li.folder.active {
+    font-weight: bold;
+    background: #bfb8b873;
+}
+.module-count {
+    padding: 10px 15px;
+    color: #1177d1;
+    padding-left: 0;
+    font-weight: bold;
+}
+li.folder {
+    padding: 5px;
+}
+li.folder i.fa.fa-folder{
+    margin-right: 5px;
+    color: orange;
+}
+li.folder a {
+    color: #545759;
+}
+#tree-view-folder {
+    background: gainsboro;
+    max-height: 500px;
+    overflow: hidden;
+}
+#tree-view-folder:hover {
+    overflow-y: scroll;
+}
+.modal-content {
+    margin: auto;
+    width: 600px;
+    border-radius: 5px;
+}
+.add-module-popup .option {
+    border-bottom: 1px solid white;
+    padding: 15px 15px;
+    display: flex;
+    align-items: center;
+}
+.modal-body.add-module-popup {
+    padding: 0;
+}
+/*@media(max-width: 1000px) {
+    .modal-content {
+        width: 100%;
+    }
+}*/
+.add-module-popup .option .icon{
+    margin-left: 10px;
+    width: 24px;
+    height: 24px;
+}
+.modal-header {
+    padding: 0.5rem;
+}
+.modal-header h4 {
+    font-size: 19px;
+}
+.modal-body.add-module-popup {
+    background: #f2f2f2;
+}
+.top-library {
+    margin: 0;
+    margin-bottom: 5px;
+    align-items: center;
+}
+#file_library table thead th {
+    background-color: #f6f9fb;
+    color: #36353b;
+}
+#file_library table td {
+    border-top: 0;
+}
+input#searchlibrary.k-input {
+    border: 0;
+    height: 25px;
+    width: -webkit-fill-available;
+}
+i.library {
+    height: 30px;
+    background: white;
+    padding: 10px;
+}
+#file_library .k-autocomplete {
+    border-color: #fa807200;
+}
+button[data-target="#add-popup-modal-module"] {
+    display: none;
+}
+.form-group .content-expand {
+    display: block !important;
+}
+.overflow-auto {
+    overflow: auto;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
@@ -4598,3 +4720,5 @@ body#page-enrol-index #region-main .generalbox#notice {
     <div class="overflow-all"></div>
     <div id="page-wrapper">
       {{{ output.standard_top_of_body_html }}}
+
+

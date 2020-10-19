@@ -1733,5 +1733,24 @@ if($action == "library_folder") {
 	echo json_encode($data,JSON_UNESCAPED_UNICODE);
 }
 
+if($action == "search_module_library") {
+	$data = [];
+	$folderid = optional_param('folderid',0, PARAM_INT);
+	if($folderid == 0) {
+		$modulebyfolder  = $DB->get_records('library_module');
+	} else {
+		$modulebyfolder  = $DB->get_records('library_module',['folderid' => $folderid]);
+	}
+	foreach ($modulebyfolder as $value) {
+		$alldatamodule = $DB->get_record_sql("SELECT rs.name
+ 											FROM {course_modules} cm
+ 											JOIN mdl_$value->moduletype rs on cm.instance = rs.id
+ 											WHERE cm.id = :coursemoduleid",['coursemoduleid' => $value->coursemoduleid]);
+		$object = new stdclass;
+		$object->name = $alldatamodule->name;
+		$data[] = $object;
+	}
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+}
 
 die();

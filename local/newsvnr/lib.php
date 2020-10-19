@@ -477,6 +477,7 @@ function showMenuLi($menus, $table_name)
 {
     switch ($table_name) {
         case 'mdl_orgstructure':
+        case 'mdl_library_folder':
             $arr = array();
                 foreach ($menus as $value) {
                     $arr['id'] = $value->id;
@@ -1687,8 +1688,7 @@ function converttime($time) {
     }
     return $result;
 }
-
-// Convert mimetype to file type
+//Hàm chuyển mimetype qua text 
 function mime2ext($mime) {
     $mime_map = [
         'video/3gpp2'                                                               => '3g2',
@@ -1879,15 +1879,6 @@ function mime2ext($mime) {
 
     return isset($mime_map[$mime]) ? $mime_map[$mime] : false;
 }
-
-// Convert bytes to mb, gb, etc..
-function sizeFilter($bytes) {
-    $label = array( 'B', 'KB', 'MB', 'GB', 'TB', 'PB' );
-    for( $i = 0; $bytes >= 1024 && $i < ( count( $label ) -1 ); $bytes /= 1024, $i++ );
-    return( round( $bytes, 2 ) . " " . $label[$i] );
-}
-
-
 
 /**
  * Tạo node trên menu flat_nav

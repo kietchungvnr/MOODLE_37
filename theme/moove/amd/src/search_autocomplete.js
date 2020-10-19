@@ -50,4 +50,22 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'core/str
 	            }
 	        }
 	    });
+	    var folderid = $('#searchlibrary').attr('folderid');
+	   	$("#searchlibrary").kendoAutoComplete({
+	        dataTextField: "name",
+	        filter: "contains",
+	        minLength: 2,
+	        dataSource: {
+	            transport: {
+	                read: {
+	                    url: script+'search_module_library',
+	                    contentType: 'application/json; charset=utf-8',
+	                    type: 'GET',
+	                    dataType: 'json',
+	                    serverFiltering: true
+	               }
+	            },
+	            folderid:folderid,
+	        }
+	    });
 });

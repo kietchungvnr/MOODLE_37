@@ -377,126 +377,14 @@ require(['jquery'], function($) {
         }
     });
 }); 
-    var quizblock = $('#page-mod-quiz-attempt');
-    if(quizblock.length > 0)
-        $('body').addClass('drawer-open-right')
 
+require(['theme_moove/course_category']);
 
+require(['theme_moove/menumobile_theme_course']);
 
-    //////////course menu//////////////
-    var path = window.location.href;
-    $('.nav-tabs.course li a').each(function() {
-        if(this.href === path){
-            $(this).parent().addClass('active');
-        }
-        if(this.href.indexOf('badge') > 0 && path.indexOf('badge') > 0) {
-            $(this).parent().addClass('active');
-        }
-    })
-    if(path.indexOf('mod')>0 || path.indexOf('backup')>0 || path.indexOf('enrol')>0 ) {
-        $('#nav-drawer').remove();
-    }
-    if($('.nav-tabs.course li').hasClass('active')){
-    }
-    else {
-        if($('.nav-tabs.course li:first').hasClass('active')) {
-        }
-        else {
-            $('.nav-tabs.course li:first').addClass('active');
-        }
-    }
-    $('.nav-tabs.course li:first a').html('{{#str}} courseoverview, theme_moove {{/str}}');
-    $('.nav-tabs.course li[data-key="sitesettings"]').css({'display':'none'});
-    $('.nav-tabs.course li[data-key="addblock"]').css({'display':'none'});
-    $('.nav-tabs.course li:last').css({'display':'none'});
-    //////////js grader////////////
-    $('.grade-navigation ul:first').removeClass('mb-3');
-    if(path.indexOf('mod/quiz/') > 0) {
-        $('.m-t-2.m-b-1.row').css({'display':'none'});
-    }
-    // {{!     /////course_menu_theme_mobile///////// }}
-    size_li = $(".course-content .nav-tabs li").length;
-    $(window).resize(function() {
-        var width = $(window).width();
-        if (width <= 768){
-            $('.menu-show').append($('.course-content .nav-tabs li:lt('+size_li+')'));
-            var active_mb = $('div.menu-show li a.active').attr('title');
-            $('.first').html("<i class='fa fa-folder' aria-hidden='true'></i>"+ active_mb + "<i class='fa fa-caret-down' aria-hidden='true'></i>");
-        }
-        else {
-            $(".course-content .nav-tabs").load(location.href + " .course-content .nav-tabs");
-        }
-    })
-    if (window.matchMedia('(max-width: 768px)').matches) {
-            $('.menu-show').append($('.course-content .nav-tabs li:lt('+size_li+')'))
-            var active_mb = $('div.menu-show li a.active').attr('title');
-            $('.first').html("<i class='fa fa-folder' aria-hidden='true'></i>"+ active_mb + "<i class='fa fa-caret-down' aria-hidden='true'></i>");
-    }
-    $(".nav-item.load-more" ).click(function() {     
-    if($('.menu-show:visible').length)
-        $('.menu-show').hide();
-    else
-        $('.menu-show').show();        
-    });
-    {{! ////////course_menu_mobile/////////// }}
-    $("<div class='arrow-next'><i class='fa fa-angle-right'style='font-size:23px'></i></div>").insertBefore('#nav-drawer');
-    $("<div class='arrow-prev'><i class='fa fa-angle-left'style='font-size:23px'></i></div>").insertBefore('#nav-drawer');
-    $('.arrow-next').click(function(event) {
-        var pos = $('#nav-drawer').scrollLeft() + 300;
-        $('#nav-drawer').animate({scrollLeft:pos},400);
-    });
-    $('.arrow-prev').click(function(event) {
-        var pos = $('#nav-drawer').scrollLeft() - 300;
-        $('#nav-drawer').animate({scrollLeft:pos},400);
-    });
-    $('#nav-drawer').scroll(function () {
-        var $elem=$('#nav-drawer');
-        var newScrollLeft = $elem.scrollLeft(),
-            width=$elem.outerWidth(),
-            scrollWidth=$elem.get(0).scrollWidth;
-        if (scrollWidth-newScrollLeft==Math.round(width)) {
-            $('.arrow-next').css({'display':'none'});
-        }
-        else {
-            $('.arrow-next').css({'display':'block'});
-        }
-        if(newScrollLeft > 0){
-            $('.arrow-prev').css({'display':'block'});
-        }
-        else {
-            $('.arrow-prev').css({'display':'none'});
-        }
-    });
+require(['theme_moove/course_menu']);
 
-    {{!///menu bottom mobile//// }}
-    var path = window.location.href;
-    $('.toolbar ul li a').each(function() {
-        if(this.href === path){
-            $(this).addClass('active');
-        }
-    });
-    {{! check summary }}
-    if($('.pagelayout-course .summary').find('.no-overflow') > 0){
-    }
-    else {
-        $('.pagelayout-course .summary').css('display','none');
-    }
-    {{! chon tất cả table ghi danh học viên }}
-    $('.checkall').click(function () {    
-        $('input.usercheckbox').prop('checked', this.checked);    
-    });
+require(['theme_moove/menu_mobile']);
 
-    $(".nav.tab-click li a").click(function(){
-        var id = $(this).attr('id');
-        $(".nav.tab-click li").removeClass('active');
-        $(this).parent('li').addClass('active');
-        $('.tab-pane').removeClass('active');
-        $('.tab-pane#tab'+id).addClass('active');
-    });
-
-    $(".curriculum-chapter").click(function(){
-        var id = $(this).attr('id');
-        $(".curriculum-chapter#"+id+" i").toggleClass('active');
-        $('.content-'+id).slideToggle();
-    })
+require(['theme_moove/enrol_course']);
 {{/js}}

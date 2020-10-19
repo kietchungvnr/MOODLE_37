@@ -129,7 +129,17 @@ if (!empty($add)) {
     // Delete the module.
     course_delete_module($cm->id);
 
-    redirect($return);
+    //Xóa luôn giữ liệu module này trong folder khi course = 1
+    if($course->id == SITEID) {
+        $DB->delete_records('library_module',array('coursemoduleid'=>$cm->id));
+    }
+    //Custom by Thang : Thêm điều kiện redirect khi course = 1
+    if($course->id == SITEID) {
+        redirect($CFG->wwwroot . $_SESSION['url']);
+    } else {
+        redirect($return);
+    }
+
 }
 
 

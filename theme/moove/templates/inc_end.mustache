@@ -402,6 +402,8 @@ require(['jquery', 'core/config'], function($, Config) {
         }
     });
 }); 
+require(['theme_moove/library_folder']);
+
 require(['theme_moove/focusmod']);
 
 require(['theme_moove/course_category']);
@@ -423,6 +425,12 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
 
 {{/js}}
 <script>
+    // Thông báo khi action thành công  
+    function alertSuccess(response) {
+        var html = "<div class='alert alert-success' id='alert-folder-active' role='alert'>"+response+"<div>";
+        $('.card-body.library').prepend(html);
+        setTimeout(function(){ $('.card-body.library .alert').remove() },10000);
+    }
     ////phân trang khóa học///
     const getCourse = (url) => {
         require(['jquery', 'core/config'], ($, config) => {
@@ -443,12 +451,32 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             })
         });
     };
-
-    const loadComment = (id) => {
+    ////phân trang table thư viện điện tử///
+    const pageLibrary = (url) => {
         require(['jquery', 'core/config'], ($, config) => {
             $('.loading-page').addClass('active');
+            var folderid = $('#pagination').attr('folderid');
+            var settings = {
+                type:"GET",
+                processData:true,
+                data:{
+                    folderid:folderid
+                },
+                contenttype:"application/json",
+            };
+            $.ajax(url,settings)
+            .then(function(response) {
+                $('#file_library').hide().html(response).fadeIn('fast');
+                $('.loading-page').removeClass('active');
+            })
+        });
+    };
+
+    const loadComment = (id) => {
+        require(['jquery', 'core/config'], ($, Config) => {
+            $('.loading-page').addClass('active');
             page++;
-            var url = "./ajax/pagination_comment.php";
+            var url = Config.wwwroot + "/ajax/pagination_comment.php";
             var settings = {
                 type:"GET",
                 processData:true,
@@ -464,6 +492,7 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             });
         });
     }
+
     // Xóa file trong tài liệu hệ thống
     const deleteFile = (fileName, filePath, id) => {
         require(['jquery', 'core/config'], ($, Config) => {
@@ -483,7 +512,7 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
                 var ele = '#delete-file-' + id;
                 var cfrm = confirm("Bạn chắc chắn muốn xóa file này?");
                 if(cfrm == true) {
-                    $(ele).closest("tr").fadeOut('slow');
+                    Grid.refreshGrid();
                 }
             });
         });
@@ -539,5 +568,45 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             });
         });
     }
-   
+
+    //Cập nhật thư mục 
+    const updateFolder = (folderid) => {
+        require(['jquery', 'core/config'], ($, Config) => {
+            var script = Config.wwwroot + "/local/newsvnr/ajax/library_folder_ajax.php";
+            var foldername = $('.edit-folder-popup #foldername').val();
+            var parentid = $('.edit-folder-popup #folderparent').attr('parentid');
+            var folderdes = $('.edit-folder-popup #folderdes').val();
+            var action =  $('#edit-folder-popup').attr('action');
+            if(foldername == '') {
+                alert('Tên thư mục không được để trống');
+                return;
+            }
+            var settings = {
+                type: "GET",
+                processData: true,
+                data: {
+                    foldername: foldername,
+                    folderid: folderid,
+                    parentid: parentid,
+                    folderdes: folderdes,
+                    action: action
+                },
+                contenttype: "application/json"
+            }
+            $.ajax(script, settings).then(function(response) {
+                $('#edit-popup-modal-folder').modal('hide');
+                var obj = $.parseJSON(response);
+                alertSuccess(obj.alert);
+                location.reload();
+            })
+
+        });
+    };
+    //Lấy thông tin thư mục cha
+    const getParentValue = (id,name) => {
+        require(['jquery', 'core/config'], ($, Config) => {
+            $('input#folderparent').val(name);
+            $('input#folderparent').attr('parentid', id);
+        })
+    }
 </script>

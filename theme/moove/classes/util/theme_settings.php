@@ -724,6 +724,21 @@ class theme_settings {
         return $templatecontext;
 
     }
+    public function get_module_data() {
+        $data = array((object) array('moduleicon'=>'mod_book','modulename'=>'Book','value'=>'book'),
+                      (object) array('moduleicon'=>'mod_resource','modulename'=>'File','value'=>'resource'),
+                      (object) array('moduleicon'=>'mod_imscp','modulename'=>'SCORM package','value'=>'imscp'),
+                      (object) array('moduleicon'=>'mod_lesson','modulename'=>'Lesson','value'=>'lesson'));
+        $templatecontext = [];
+        $arr = array();
+        foreach ($data as $key => $value) {        
+            $arr[] = (array)$value;
+        }
+        for ($i = 0 ;$i < count($data); $i++) {
+          $templatecontext['module'][$i] = $arr[$i];
+        }
+        return $templatecontext;
+    }
 
     public function get_news_data()
     {
@@ -779,7 +794,6 @@ class theme_settings {
                 $templatecontext['newslides'][$j]['active'] = true;
             }
         }
-       
         return $templatecontext;
     }
 

@@ -1147,5 +1147,132 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output = '';
         return $output .= \core\session\manager::get_login_token();
     }
+    public function folder_tree($menus, $id_parent = 0, &$output = '', $stt = 0) {
+        global $DB, $CFG;
+        $menu_tmp = array();
+        foreach ($menus as $key => $item) {
+            if ((int) $item->parent == (int) $id_parent) {
+                $menu_tmp[] = $item;
+                unset($menus[$key]);
+            }
+        }
+        if ($menu_tmp) {   
+            if($stt == 0)
+                $output .= '<ul class="tree-folder" role="menu">';
+            else {
+                if($id_parent == 0)
+                    $output .= '<ul class=" 0">';
+            }
+            foreach ($menu_tmp as $item) {
+                if($item->visible == 1) {
+                    $output .= '<li class="click-expand pl-3 folder" id="'.$item->id.'">';
+                    $output .= '<i class="fa fa-folder" aria-hidden="true"></i><a onclick="getParentValue('.$item->id.',\''.$item->name.'\')" tabindex="-1" href="javascript:void(0)" id="'.$item->id.'"">' . $item->name . '</a>';
+                    $getcategory = $DB->get_records_sql('SELECT * FROM {library_folder} WHERE parent = :id',[ 'id' => $item->id] );
+                    if(empty($getcategory)){
+                        $output .= '</li>';
+                    } else { $output .= '<i class="fa fa-angle-right rotate-icon float-right pr-2"></i></li>';}
+                    $output .= '<ul class="content-expand '.$item->id.' pl-3" >';
+                    foreach($menus as $childkey => $childitem) {
+                        // Kiểm tra phần tử có con hay không?
+                        if($childitem->parent == $item->id) {
+                            $output .= '<li class="click-expand pl-3 folder" id="'.$childitem->id.'">';
+                            $output .= '<i class="fa fa-folder" aria-hidden="true"></i><a onclick="getParentValue('.$childitem->id.',\''.$childitem->name.'\')" tabindex="-1" href="javascript:void(0)" id="'.$childitem->id.'">' . $childitem->name . ' </a>';
+                            $getcategory_child = $DB->get_records_sql('SELECT * FROM {library_folder} WHERE parent = :id',[ 'id' => $childitem->id] );
+                            if(empty($getcategory_child)){
+                                $output .= '</li>';
+                            } else { $output .= '<i data="'.$item->id.'" class="fa fa-angle-right rotate-icon float-right pr-2"></i></li>';}
+                            $output .= '<ul class="content-expand '.$childitem->id.' pl-3">';
+
+                            unset($menus[$childkey]);
+                            $this->folder_tree($menus, $childitem->id, $output,++$stt);
+
+                            $output .= '</ul>';
+                        } 
+                    }
+                    $output .= '</ul>';
+                }
+            }
+            if($stt == 0)
+                $output .= '</ul>';
+            else {
+                if($id_parent == 0)
+                    $output .= '</ul>';
+            }
+        }
+        return $output;
+
+    }
+    function count_module_by_folder($folderid = 0) {
+        global $DB,$OUTPUT;
+        $arrcountmodule = array();
+        $output = '';
+        $output .= '<div class="d-flex" id="header-library">';
+        // Phân loại module type để đếm
+        $moduletypes = ['book', 'lesson', 'imscp', 'resource'];
+        // các loại file Khi module type = resource
+        $mimetypes = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/pdf',
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+        // Đếm các loại module
+        foreach ($moduletypes as $moduletype) {
+            /// Đêm trong trường hợp module type là resource thì có các file nhỏ khác
+            if ($moduletype == 'resource') {
+                foreach ($mimetypes as $mimetype) {
+                    if ($folderid == 0) {
+                        $countmodule = $DB->get_record("library_module", ['minetype' => $mimetype], 'COUNT(minetype) AS module');
+                    } else {
+                        $countmodule = $DB->get_record("library_module", ['minetype' => $mimetype, 'folderid' => $folderid], 'COUNT(minetype) AS module');
+                    }
+                    $arrcountmodule[] = $countmodule;
+                }
+            }
+            /// Trường hợp các module type còn lại
+            else {
+                if ($folderid == 0) {
+                    $countmodule = $DB->get_record("library_module", ['moduletype' => $moduletype], 'COUNT(moduletype) AS module');
+                } else {
+                    $countmodule = $DB->get_record("library_module", ['moduletype' => $moduletype, 'folderid' => $folderid], 'COUNT(moduletype) AS module');
+                }
+                $arrcountmodule[] = $countmodule;
+            }
+        }
+        // Hiển thị thông tin đếm module ra màn hình
+        for ($i = 0; $i < count($arrcountmodule); $i++) {
+            if ($i == 0) {
+                $moduleimg = html_writer::img($OUTPUT->image_url('icon', 'book'), 'Book', ['class' => 'pr-2', 'onclick' => "filtermodule('book')"]);
+            }
+            if ($i == 1) {
+                $moduleimg = html_writer::img($OUTPUT->image_url('icon', 'lesson'), 'lesson', ['class' => 'pr-2', 'onclick' => "filtermodule('lesson')"]);
+            }
+            if ($i == 2) {
+                $moduleimg = html_writer::img($OUTPUT->image_url('icon', 'imscp'), 'Imscp', ['class' => 'pr-2', 'onclick' => "filtermodule('imscp')"]);
+            }
+            if ($i == 3) {
+                $moduleimg = html_writer::img($OUTPUT->image_url('f/document-24'), 'Word', ['class' => 'pr-2', 'onclick' => "filtermodule('docx')"]);
+            }
+            if ($i == 4) {
+                $moduleimg = html_writer::img($OUTPUT->image_url('f/pdf-24'), 'Pdf', ['class' => 'pr-2', 'onclick' => "filtermodule('pdf')"]);
+            }
+            if ($i == 5) {
+                $moduleimg = html_writer::img($OUTPUT->image_url('f/powerpoint-24'), 'Ppt', ['class' => 'pr-2', 'onclick' => "filtermodule('ppt')"]);
+            }
+            if ($i == 6) {
+                $moduleimg = html_writer::img($OUTPUT->image_url('f/spreadsheet-24'), 'exel', ['class' => 'pr-2', 'onclick' => "filtermodule('XLSX')"]);
+            }
+            if ($arrcountmodule[$i]->module > 0) {
+                $output .= '<div class="module-count">' . $moduleimg . '(' . $arrcountmodule[$i]->module . ')</div>';
+            }
+        }
+        $output .= '</div>';
+        return $output;
+    }
+
+    public function library_folder() {
+        global $DB;
+        $library = $DB->get_records_sql("SELECT * FROM {library_folder}");        
+        $output = $this->folder_tree($library);
+        return $output;
+    }
 
 }
