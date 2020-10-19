@@ -227,23 +227,24 @@ CREATE TABLE mdl_course_modules_completion_timer
 
 --- *** Script cho bản build version '17102020' *** ---
 -- Add table cho thư viện hệ thống
-CREATE TABLE mdl_library_folders
+CREATE TABLE mdl_library_folder
 (
-	id BIGINT NOT NULL IDENTITY(1, 1),
-	name NVARCHAR(255) NOT NULL,
-	parent BIGINT NOT NULL DEFAULT 0,
-	description NVARCHAR(255) NOT NULL,
-	contextid BIGINT NOT NULL DEFAULT 0,
-	visible BIGINT NOT NULL DEFAULT 1
-	PRIMARY KEY (id)
+	[id] [bigint] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[name] [nvarchar](255) NOT NULL,
+	[parent] [bigint] NOT NULL DEFAULT ((0)),
+	[description] [nvarchar](255) NOT NULL,
+	[Contextid] [bigint] NOT NULL DEFAULT ((0)),
+	[visible] [bigint] NOT NULL DEFAULT ((1))
 )
-CREATE TABLE mdl_library_module 
+CREATE TABLE mdl_library_module
 (
-	id BIGINT NOT NULL IDENTITY(1, 1),
-	folderid BIGINT NOT NULL DEFAULT 0,
-	coursemoduleid BIGINT NOT NULL DEFAULT 0,
-	userid BIGINT NOT NULL DEFAULT 0,
-	timecreated BIGINT NOT NULL DEFAULT 0,
-	PRIMARY KEY (id)
+	[id] [bigint] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[folderid] [bigint] NOT NULL DEFAULT ((0)),
+	[coursemoduleid] [bigint] NOT NULL DEFAULT ((0)),
+	[userid] [bigint] NOT NULL DEFAULT ((0)),
+	[timecreated] [bigint] NOT NULL DEFAULT ((0)),
+	[moduletype] [varchar](255) NULL,
+	[minetype] [varchar](255) NULL,
+	[filesize] [bigint] NULL,
 )
 --- *** Kết thúc script cho bản build version '17102020' ***--
