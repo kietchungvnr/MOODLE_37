@@ -247,4 +247,14 @@ CREATE TABLE mdl_library_module
 	[minetype] [varchar](255) NULL,
 	[filesize] [bigint] NULL,
 )
+CREATE TABLE mdl_files_request
+(
+	[id] BIGINT NOT NULL IDENTITY(1, 1),
+	[fileid] BIGINT NOT NULL DEFAULT ((0)),
+	[status] SMALLINT NOT NULL DEFAULT ((0)),
+	[requester] BIGINT NOT NULL,
+	[reviewer] BIGINT NULL,
+	[timecreated] BIGINT NULL,
+	[timemodified] BIGINT NULL,
+)
 --- *** Kết thúc script cho bản build version '17102020' ***--
