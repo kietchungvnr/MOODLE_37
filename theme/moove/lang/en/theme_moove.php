@@ -298,3 +298,5 @@ $string['newsfooter'] = 'News';
 $string['coursefooter'] = 'Courses';
 $string['forumfooter'] = 'Forums';
 $string['noteacher'] = 'No teacher';
+$string['library'] = "Library";
+$string['filelibrary'] = "File library";

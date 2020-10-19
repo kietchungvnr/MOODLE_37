@@ -296,3 +296,5 @@ $string['newsfooter'] = 'Tin tức';
 $string['coursefooter'] = 'Khóa học';
 $string['forumfooter'] = 'Diễn đàn';
 $string['noteacher'] = 'Chưa có giáo viên';
+$string['library'] = "Thư viện";
+$string['filelibrary'] = "Tài liệu";
