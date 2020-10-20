@@ -85,8 +85,8 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string(''));
 
 echo '<ul class="nav-tabs nav" id="generallibrary-tab">';
-echo '  <li class="nav-item active font-weight-bold " data-key="systemfiles">
-            <a class="nav-link text-dark" href="#systemfiles" data-toggle="tab">'.$strgenerallibrary.'</a>
+echo '  <li class="nav-item" data-key="systemfiles">
+            <a class="nav-link active" href="#systemfiles" data-toggle="tab">'.$strgenerallibrary.'</a>
         </li>
        
         <li class="nav-item " data-key="requestaccecpt">
@@ -103,7 +103,7 @@ echo '</ul>';
 echo '<div id="generallibrary-content" class="tab-content">';
 
 // Tab tài nguyên hệ thống
-echo '<div class="tab-pane fade in active" id="systemfiles">';
+echo '<div class="tab-pane fadein active" id="systemfiles">';
 echo $OUTPUT->box_start('generalbox foldertree');
 $filelibraryform->display();
 echo $OUTPUT->box_end();

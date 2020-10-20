@@ -830,6 +830,7 @@ function file_get_drafarea_files($draftitemid, $filepath = '/') {
             // Custom by Vũ: Chỉ hiện thị file đã được duyệt trong tài liệu hệ thống
             // 0 là đã đuyệt 
             // 1 là chưa duyệt
+            // if(has_capability('local/newsvnr:confirmfilesystem', $context))
             if(!is_siteadmin()) {
                 if($file->get_userid() != $USER->id && $file->get_status() != 0) {
                     continue;

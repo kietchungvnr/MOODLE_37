@@ -61,7 +61,7 @@ switch ($action) {
         $contextid = $context->id;
         $odersql = "";
 
-        if(is_siteadmin()) {
+        if(has_capability('local/newsvnr:confirmfilesystem', $user_context)) {
             $wheresql = "";
         } else {
             $userid = $USER->id;
@@ -101,7 +101,6 @@ switch ($action) {
         $component = 'local_newsvnr';
         $itemid  = 0;
 
-        // var_dump($out);die;
         foreach ($get_list as $exkey => $exfile) {
             if ($files = $fs->get_directory_files($contextid, $component, $filearea, $itemid, $exfile->filepath, false)) {
                 foreach ($files as $file) {
@@ -178,7 +177,7 @@ switch ($action) {
             $object->filename = html_writer::empty_tag('img', array('src' => $fileicon, 'class' => 'mr-1')) .$exfile->filename;
             $object->filepath = $exfile->filepath;
             $object->filetype = mb_strtoupper(mime2ext($exfile->mimetype));
-            $object->filesize = sizeFilter($exfile->filesize);
+            $object->filesize = display_size($exfile->filesize);
             $object->author = $exfile->author;
             $object->timecreated = convertunixtime('d/m/Y',$exfile->timecreated);
             $object->download = html_writer::link($url, get_string('downloadfile', 'local_newsvnr'));

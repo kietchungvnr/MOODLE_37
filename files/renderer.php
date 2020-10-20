@@ -254,17 +254,19 @@ class core_files_renderer extends plugin_renderer_base {
         $getcurrenturl = "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]";
         if($getcurrenturl === $generallibraryurl) {
             $contextsystem = context_user::instance($USER->id);
-            if(!has_capability('local/newsvnr:editfoldersystem', $contextsystem) || !has_capability('local/newsvnr:editfilesystem', $contextsystem)) {
+            if(has_capability('local/newsvnr:editfoldersystem', $contextsystem) || has_capability('local/newsvnr:editfilesystem', $contextsystem)) {
+                $editfoldersystem = '';
+            } else {
                 $editfoldersystem = 'd-none';
-                $context['editfoldersystem'] = $editfoldersystem;
             }
           
-            if(!has_capability('local/newsvnr:deletefoldersystem', $contextsystem) || !has_capability('local/newsvnr:deletefilesystem', $contextsystem)) {
+            if(has_capability('local/newsvnr:deletefoldersystem', $contextsystem) || has_capability('local/newsvnr:deletefilesystem', $contextsystem)) {
+                $deletefoldersystem = '';
+            } else {
                 $deletefoldersystem = 'd-none';
-                $context['deletefoldersystem'] = $deletefoldersystem;
-
             }
-         
+            $context['editfoldersystem'] = $editfoldersystem;
+            $context['deletefoldersystem'] = $deletefoldersystem;
         }
 
         return $this->render_from_template('core/filemanager_fileselect', $context);

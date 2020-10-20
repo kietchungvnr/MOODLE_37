@@ -298,3 +298,5 @@ $string['forumfooter'] = 'Diễn đàn';
 $string['noteacher'] = 'Chưa có giáo viên';
 $string['library'] = "Thư viện";
 $string['filelibrary'] = "Tài liệu";
+$string['noconfirmdeletefolder'] = "Không có quyền xóa thư mục";
+$string['noconfirmdeletefile'] = "Không có quyền xóa tập tin";

@@ -300,3 +300,5 @@ $string['forumfooter'] = 'Forums';
 $string['noteacher'] = 'No teacher';
 $string['library'] = "Library";
 $string['filelibrary'] = "File library";
+$string['noconfirmdeletefolder'] = "You do not have permission to delete the directory";
+$string['noconfirmdeletefile'] = "You do not have permission to delete files";
