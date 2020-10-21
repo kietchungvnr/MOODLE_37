@@ -1335,6 +1335,7 @@ if($action == "gradereport_detail") {
 	$q = optional_param('q','', PARAM_RAW);
 	$odersql = "";
 	$wheresql = "";
+	$data = [];
 	if($q) {
 		$wheresql = "WHERE fullname LIKE N'%$q%'";
 	}

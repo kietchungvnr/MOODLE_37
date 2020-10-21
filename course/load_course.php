@@ -44,9 +44,18 @@ $category = optional_param('category', "", PARAM_TEXT);
 $filter   = optional_param('filter', "", PARAM_TEXT);
 $PAGE->set_context(context_system::instance());
 $theme_settings = new theme_settings();
-
+$params = [];
+$params['id'] = $id;
+$params['page'] = $page;
+$params['pagetake'] = $pagetake;
+$params['keycourse'] = $keycourse;
+$params['teacher'] = $teacher;
+$params['category'] = $category;
+$params['filter'] = $filter;
+$params['id'] = $id;
 ///xử lý phân trang///
 $perPage        = new PerPage();
+$pagetake       = $perPage->perpageCourseNews;
 $paginationlink = $CFG->wwwroot . '/course/load_course.php?page=';
 $strcourse      = "N'" . '%' . $keycourse . '%' . "'";
 $strteacher     = "N'" . '%' . $teacher . '%' . "'";
@@ -57,8 +66,8 @@ $jointable      = '';
 if ($page < 1) {
     $page = 1;
 }
-$start = ($page - 1) * $perPage->perpageCourseNews;
-if ($start < 15) {
+$start = ($page - 1) * $pagetake;
+if ($start < $pagetake) {
     $start = 0;
 }
 
@@ -145,7 +154,7 @@ if ($id < 1 && $keycourse == '' && $teacher == '' && $category == '' && ($filter
     }
 }
 
-$getcourse   = $DB->get_records_sql($sql . 'ORDER BY timecreated DESC OFFSET ' . $start . ' ROWS FETCH NEXT 15 ROWS only', []);
+$getcourse   = $DB->get_records_sql($sql . 'ORDER BY timecreated DESC OFFSET ' . $start . ' ROWS FETCH NEXT '. $pagetake.' ROWS only', []);
 $countcourse = $DB->get_records_sql($sql);
 
 if (empty($getcourse)) {
