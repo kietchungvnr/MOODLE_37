@@ -156,6 +156,10 @@ class participants extends \table_sql implements dynamic_table {
             $hiddenfields = array_flip(explode(',', $CFG->hiddenuserfields));
         }
 
+        //Custom by Thắng : thêm cột tiến trình học vào table
+        $headers[] = get_string('progress','local_newsvnr');
+        $columns[] = 'progress';
+
         // Add column for groups if the user can view them.
         $canseegroups = !isset($hiddenfields['groups']);
         if ($canseegroups) {
@@ -305,6 +309,30 @@ class participants extends \table_sql implements dynamic_table {
         return '';
     }
 
+     /**
+     * // Custom by Thắng : thêm cột tiến trình học vào table
+     * Generate the groups column.
+     *
+     * @param \stdClass $data
+     * @return string
+     */
+    public function col_progress($data) {
+
+        $process = round(\core_completion\progress::get_course_progress_percentage($this->course,$data->id));
+        $roles = isset($this->allroleassignments[$data->id]) ? $this->allroleassignments[$data->id] : [];
+        $output = '';
+        foreach ($roles as $value) {
+            if($value->shortname == 'student') {
+                $output .= '<div class="d-flex participants-collum"><div class="progress course">';
+                $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
+                            aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div>'.$process.'%</div>';
+                $output .= '</div>';
+                
+                $output .= '</div>';
+            }
+        }
+        return $output;
+    }
     /**
      * Generate the last access column.
      *
