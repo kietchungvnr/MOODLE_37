@@ -1587,12 +1587,23 @@ if($action == 'api_managerment') {
 		// 	$OUTPUT->pix_icon('t/show', get_string('show')),
 		// 	array('title' => get_string('show'),'id' => $value->id, 'class' => 'show-item','data-active' => 'orgcate_list','id' => $value->id,'onclick' => 'org_active('.$value->id.',1)'));	
 		// }
-		// $buttons[] = html_writer::link(new moodle_url('/local/newsvnr/orgcate.php',array('id' => $value->id)),
-		// $OUTPUT->pix_icon('t/edit', get_string('edit')),
-		// array('title' => get_string('edit')));
+		$buttons[] = html_writer::link(new moodle_url('/local/newsvnr/api_management_edit.php',array('id' => $value->id)),
+		$OUTPUT->pix_icon('t/edit', get_string('edit')),
+		array('title' => get_string('edit')));
 		$buttons[] = html_writer::link('javascript:void(0)',
 		$OUTPUT->pix_icon('t/delete', get_string('delete')),
 		array('title' => get_string('delete'),'id' => $value->id, 'class' => 'delete-item','data-section' => 'apidelete','id' => $value->id,'onclick' => 'api_delete('.$value->id.')'));
+	
+		if($value->visible){
+			$buttons[] = html_writer::link('javascript:void(0)',
+			$OUTPUT->pix_icon('t/hide',get_string('show')),
+			array('title' => get_string('show'),'id' => $value->id,'class' => 'item_'.$value->id.'','action-status' => 'hide','onclick' => 'api_update('.$value->id.')' ));
+		}
+		else{
+			$buttons[] = html_writer::link('javascript:void(0)',
+			$OUTPUT->pix_icon('t/show',get_string('hide')),
+			array('title' => get_string('hide'),'id' => $value->id,'class' => 'item_'.$value->id.'','action-status' => 'show','onclick' => 'api_update('.$value->id.')' ));
+		}
 		$showbuttons = implode(' ', $buttons);
 		$object->listbtn = $showbuttons;
 		$object->functionapi = $value->functionapi;		

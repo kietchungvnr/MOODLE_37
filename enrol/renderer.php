@@ -96,7 +96,8 @@ class core_enrol_renderer extends plugin_renderer_base {
         $table->initialise_javascript();
 
         $content = '';
-        $searchbutton = $table->get_user_search_button();
+        // Custom by Thang : bỏ bớt 1 button thừa 
+        // $searchbutton = $table->get_user_search_button();
         if ($searchbutton) {
             $content .= $this->output->render($searchbutton);
         }

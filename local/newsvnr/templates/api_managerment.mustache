@@ -369,4 +369,39 @@
           }
     })
 }
+
+
+
+    const api_update = (section_id) => {
+        require(['jquery', 'core/config'], ($, config) => {
+            var script = config.wwwroot + "/local/newsvnr/ajax/apiupdate.php";
+            var section = $("[action-status]").attr("action-status");
+            var settings = {
+                type:"GET",
+                processData:true,
+                data:{
+                    section:section,
+                    id:section_id
+                },
+                contenttype:"application/json",
+            };
+            $.ajax(script,settings)
+            .then(function(response) {
+                if($('.item_'+section_id+' i').hasClass('fa-eye-slash')){
+                    $('.item_'+section_id+' i').removeClass('fa-eye-slash');
+                    $('.item_'+section_id+' i').addClass('fa-eye');
+                    $('.item_'+section_id).attr("action-status","hide");
+                    $('.item_'+section_id).parents('tr').css({'background':'white'});
+                }
+                else {
+                    $('.item_'+section_id+' i').removeClass('fa-eye');
+                    $('.item_'+section_id+' i').addClass('fa-eye-slash');
+                    $('.item_'+section_id).attr("action-status","show");
+                    $('.item_'+section_id).parents('tr').css({'background':'#868e96'});
+                }
+                
+            })
+        });
+    }
+
 </script>
