@@ -183,8 +183,16 @@ $viewobj->infomessages = $viewobj->accessmanager->describe_rules();
 if ($quiz->attempts != 1) {
     $viewobj->infomessages[] = get_string('gradingmethod', 'quiz',
             quiz_get_grading_option_name($quiz->grademethod));
+    
 }
-
+// Custom by Vũ: Thêm thông tin số điểm qua bài thi và tổng số câu hỏi trong bài thi
+$questionusageid  = $DB->get_field('question_usages', 'id', ['contextid' => $context->id]);
+$countquestion = $DB->count_records('question_attempts', ['questionusageid' => $questionusageid]);
+$gradepass = round($grading_info->items[0]->gradepass, 1);
+$strgradepass = get_string('gradepass', 'quiz');
+$strquestiontotal = get_string('questiontotal', 'quiz');
+$viewobj->infomessages[2] = "$strgradepass: $gradepass";
+$viewobj->infomessages[3] = "$strquestiontotal: $countquestion";
 // Determine wheter a start attempt button should be displayed.
 $viewobj->quizhasquestions = $quizobj->has_questions();
 $viewobj->preventmessages = array();

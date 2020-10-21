@@ -123,7 +123,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 $courses = $DB->get_records('course',['category' => $item->id, 'visible' => 1]); 
                 $output .= '<ul class="dropdown-menu">';
                 foreach($courses as $course) {
-                    $output .= '<li><a class="dropdown-item" tabindex="-1" href="">' . $course->fullname . '</a></li>';
+                    $output .= '<li><a class="dropdown-item" tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a></li>';
                 }
                 foreach($menus as $childkey => $childitem) {
                     // Kiểm tra phần tử có con hay không?
@@ -134,7 +134,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                         $output .= '<ul class="dropdown-menu">';
 
                         foreach($childcourses as $childcourse) {
-                            $output .= '<li><a class="dropdown-item" tabindex="-1" href="">' . $childcourse->fullname . '</a></li>';
+                            $output .= '<li><a class="dropdown-item" tabindex="-1" href="'.$courselink . $childcourse->id.'">' . $childcourse->fullname . '</a></li>';
                         }
                         unset($menus[$childkey]);
                         $this->menucoursecategory($menus, $childitem->id, $output, ++$stt);
@@ -156,43 +156,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
         return $output;
     }
-    public function showCategories($categories, $parent_id = 0, &$output = '',$stt = 0)
-    {
-        global $DB, $CFG;
-        $courselink = $CFG->wwwroot . '/course/view.php?id=';
-        $theme_settings = new theme_settings();
-        $cate_child = array();
-        foreach ($categories as $key => $item)
-        {
-            if ($item->parent == $parent_id)
-            {
-                $cate_child[] = $item;
-                unset($categories[$key]);
-            }
-        }
-        if ($cate_child)
-        {
-            if($stt == 0){
-                $output .= '<ul class="dropdown-menu" role="menu" id="drop-course-category">';
-            }
-            else {
-                $output .= '<ul class="dropdown-menu muc">';
-            }
-            foreach ($cate_child as $key => $value) {
-                        $courses = $DB->get_records('course',['category' => $value->id]);                    
-                        $output .= '<li class="dropdown-submenu dropdown-submenu_'.$value->id.'" stt="'.$stt.'" data="'.$value->id.'"><a  class="dropdown-item" tabindex="-1" href="#">'.$value->name.'</a>';
-                        $output .= '<ul class="dropdown-menu khoa" data="'.$value->id.'">';
-                        foreach($courses as $course) {
-                            $output .= '<li class="dropdown-item"><a tabindex="-1" href="'.$courselink . $course->id.'">' . $course->fullname . '</a></li>';
-                        }
-                        $output .= '</ul>';
-                        $this->showCategories($categories,$value->id,$output,++$stt);
-                        $output .= '</li>';
-            }
-            $output .= '</ul>';
-        }
-        return $output;
-    }
+   
     public function nav_course_categories() {
         global $DB;
         $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent FROM mdl_course_categories cc JOIN mdl_course c ON cc.id = c.category 
@@ -220,6 +184,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
         return $output;
     }
+    
     public function nav_coursebyteacher() {
         global $USER, $CFG;
         $output = '';

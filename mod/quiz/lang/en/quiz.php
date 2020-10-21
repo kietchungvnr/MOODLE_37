@@ -1005,3 +1005,11 @@ $string['yourfinalgradeis'] = 'Your final grade for this quiz is {$a}.';
 $string['numattemptsmade'] = '{$a} attempts made on this quiz';
 $string['reviewofattempt'] = 'Review of attempt {$a}';
 $string['reviewofpreview'] = 'Review of preview';
+$string['codeexists'] = 'Existing \'{$a}\' quiz code';
+$string['code'] = 'Code';
+// Custom by Vũ: Chức năng sửa tất cả điểm question với select.
+$string['gradepass'] = 'Grade Pass';
+$string['questiontotal'] = 'Question Total';
+$string['changeallmark'] = 'Change';
+$string['selectallquestion'] = 'Select All';
+>>>>>>> 080524619a0... Chức năng sửa tất cả điểm question với select.

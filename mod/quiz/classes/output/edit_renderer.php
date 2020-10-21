@@ -53,6 +53,11 @@ class edit_renderer extends \plugin_renderer_base {
      */
     public function edit_page(\quiz $quizobj, structure $structure,
             \question_edit_contexts $contexts, \moodle_url $pageurl, array $pagevars) {
+        // Custom by Vũ: get_string() cho button đổi điểm ở 
+        // Chức năng sửa tất cả điểm question với select.
+        $strbtn = get_string('changeallmark', 'mod_quiz');
+        $strselect = get_string('selectallquestion', 'mod_quiz');
+
         $output = '';
 
         // Page title.
@@ -91,6 +96,11 @@ class edit_renderer extends \plugin_renderer_base {
 
         foreach ($structure->get_sections() as $section) {
             $output .= $this->start_section($structure, $section);
+            // Custom by Vũ: Thêm button đổi all điểm câu hỏi
+            // Chức năng sửa tất cả điểm question với select.
+            $output .= '<div id="changeallmark" style="margin-left: 20px;"><div class="d-flex align-items-center"><input type="checkbox" name="all"><label>'.$strselect.'</label>';
+            $output .= '<input type="text" name="maxmark" id="maxmark" class="form-control ml-1 w-auto"><input type="submit" id="changemark" value="'.$strbtn.'" class="btn btn-secondary"></div></div>';
+
             $output .= $this->questions_in_section($structure, $section, $contexts, $pagevars, $pageurl);
 
             if ($structure->is_last_section($section)) {
@@ -741,6 +751,11 @@ class edit_renderer extends \plugin_renderer_base {
         }
 
         $output .= html_writer::start_div('mod-indent-outer');
+        // Custom by Vũ: Thêm ô select chọn câu hỏi muốn đổi điểm
+        // Chức năng sửa tất cả điểm question với select.
+        $slotid = $structure->get_slot_id_for_slot($slot);
+        $output .= html_writer::tag('input', '', array('type' => 'checkbox', 'id' => 'slot-'.$slotid, 'name' => 'slot[]', 'value' => $slotid));
+        
         $checkbox = new \core\output\checkbox_toggleall($this->togglegroup, false, [
             'id' => 'selectquestion-' . $structure->get_displayed_number_for_slot($slot),
             'name' => 'selectquestion[]',
@@ -748,6 +763,7 @@ class edit_renderer extends \plugin_renderer_base {
             'classes' => 'select-multiple-checkbox',
         ]);
         $output .= $this->render($checkbox);
+
         $output .= $this->question_number($structure->get_displayed_number_for_slot($slot));
 
         // This div is used to indent the content.
