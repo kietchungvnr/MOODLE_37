@@ -83,14 +83,15 @@ class core_course_renderer extends plugin_renderer_base {
      */
     public function course_info_box(stdClass $course) {
         $content = '';
-        $content .= $this->output->box_start('generalbox info');
         $chelper = new coursecat_helper();
         $chelper->set_show_courses(self::COURSECAT_SHOW_COURSES_EXPANDED);
+        $content .= $this->output->box_start('generalbox info row pt-1');
         $content .= $this->coursecat_coursebox($chelper, $course);
+        $content .= $this->course_description($course);
+
         $content .= $this->output->box_end();
         return $content;
     }
-
     /**
      * Renderers a structured array of courses and categories into a nice XHTML tree structure.
      *
@@ -677,6 +678,7 @@ class core_course_renderer extends plugin_renderer_base {
      * @return string
      */
     public function course_section_cm_name_title(cm_info $mod, $displayoptions = array()) {
+        global $DB;
         $output = '';
         $url = $mod->url;
         if (!$mod->is_visible_on_course_page() || !$url) {
@@ -704,6 +706,17 @@ class core_course_renderer extends plugin_renderer_base {
         // Get on-click attribute value if specified and decode the onclick - it
         // has already been encoded for display (puke).
         $onclick = htmlspecialchars_decode($mod->onclick, ENT_QUOTES);
+        
+        // Custom by Vũ: Thêm loại view file trên browser (RESOURCELIB_DISPLAY_GOOGLE_DOCS_POPUP == 7)
+        $resource = $DB->get_record('resource', ['id' => $mod->instance]);
+        if($resource && $resource->display == 7) {
+            $itemtype = ['f/spreadsheet-24', 'f/powerpoint-24', 'f/pdf-24', 'f/document-24'];
+            if(in_array($mod->icon, $itemtype)) {
+                $onclick = "showmodal($mod->id, $mod->instance)";
+                $linkclasses = "viewdirect cm-" . $mod->id;
+                $url = 'javascript:void(0)';
+            }    
+        }
 
         // Display link itself.
         $activitylink = html_writer::empty_tag('img', array('src' => $mod->get_icon_url(),

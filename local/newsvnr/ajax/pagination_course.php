@@ -125,8 +125,8 @@ $output = '';
                                 '. $value->imageurl .'
                             <div class="post-info">
                                 <ul class="category">
-                                    <li>Học viên: <a href="#">'. $value->countstudent .'</a></li>
-                                    <li>Giáo viên: <a href="#">'. $value->fullnamet .'</a></li>
+                                    <li>'. get_string('countstudent', 'local_newsvnr') .': <a href="#">'. $value->countstudent .'</a></li>
+                                    <li>'. get_string('teachername', 'local_newsvnr') .': <a href="#">'. $value->fullnamet .'</a></li>
                                    
                                 </ul>
               

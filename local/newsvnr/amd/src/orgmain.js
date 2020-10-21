@@ -87,7 +87,7 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                 }).fail(Notification.exception);
             //click vào cây phòng ban
             $('#treeview-sprites').on('click', '', function() {
-                $('[data-region="buttons-iframe"] #list_users').removeClass("btn-primary");
+                $('[data-region="buttons-iframe"] #orgstructuredetail').removeClass("btn-primary");
                 $('[data-region="buttons-iframe"] #list_users').removeAttr('disabled');
                 $('[data-region="buttons-iframe"] #orgstructuredetail').removeAttr('disabled');
 
@@ -166,6 +166,10 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                 },
                                 {
                                     key: 'completed',
+                                    component: 'local_newsvnr'
+                                },
+                                {
+                                    key: 'progress',
                                     component: 'local_newsvnr'
                                 },
                             ];
@@ -333,6 +337,13 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                                             width: 300
                                                         },
                                                         {
+                                                            template:function(e) {
+                                                                return e.courseprogress;
+                                                            },
+                                                            title: s[11],
+                                                            width: 200
+                                                        },
+                                                        {
                                                             template: function(e) {
                                                                 return e.evidence;
                                                             },
@@ -365,11 +376,15 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                                  
                                 }
                                 var click_orgdetail = $('[data-region="buttons-iframe"] #orgstructuredetail').click(function() {
+                                    $(this).addClass('btn-primary');
+                                    $('[data-region="buttons-iframe"] #list_users').removeClass('btn-primary')
                                     $('#show_orgform').removeClass("d-none");
                                     $('#showtable_data').addClass("d-none");
 
                                 });
                                 var click_listusers = $('[data-region="buttons-iframe"] #list_users').click(function() {
+                                    $(this).addClass('btn-primary');
+                                    $('[data-region="buttons-iframe"] #orgstructuredetail').removeClass('btn-primary')
                                     $('#showtable_data').removeClass("d-none");
                                     $('#show_orgform').addClass("d-none");
 

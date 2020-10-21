@@ -1,7 +1,7 @@
 {{#active}}
 <header id="page-header" class="row">
     <div class="col-12 pb-1">
-        <div class="d-flex flex-wrap pt-1 pb-1">
+        <div class="d-flex flex-wrap">
 
                     {{#hasnavbar}}
                     <div id="page-navbar">
@@ -11,10 +11,25 @@
                     <div class="ml-auto d-flex">
                         {{{pageheadingbutton}}}
                     </div>
-                    <div id="course-header">
-                        {{{courseheader}}}
+        </div>
+        <div id="course-header">
+                {{{courseheader}}}
+        </div>
+        {{#iscontextheader}}
+        <div class="card {{^contextheader}}border-0 bg-transparent{{/contextheader}} d-none">
+            <div class="card-body {{^contextheader}}p-2{{/contextheader}}">
+                <div class="d-flex pt-1 pb-1">
+                    {{#contextheader}}
+                    <div class="mr-auto">
+                        {{{contextheader}}}
                     </div>
+                    {{/contextheader}}
+
                 </div>
+            </div>
+        </div>
+        {{/iscontextheader}}
+        {{^iscontextheader}}
         <div class="card {{^contextheader}}border-0 bg-transparent{{/contextheader}}">
             <div class="card-body {{^contextheader}}p-2{{/contextheader}}">
                 <div class="d-flex pt-1 pb-1">
@@ -24,19 +39,21 @@
                     </div>
                     {{/contextheader}}
 
-                    {{#settingsmenu}}
-                    <div id="setting-context">
-                        <div class="context-header-settings-menu" style="z-index: 100000;">
-                            {{{settingsmenu}}}
-                        </div>
-                    </div>
-                    {{/settingsmenu}}
                 </div>
             </div>
         </div>
+        {{/iscontextheader}}
     </div>
 </header>
+{{#settingsmenu}}
+    <div id="setting-context">
+        <div class="context-header-settings-menu" style="z-index: 100000;">
+            {{{settingsmenu}}}
+        </div>
+    </div>
+{{/settingsmenu}}
 {{/active}}
+
 {{^active}}
 
 

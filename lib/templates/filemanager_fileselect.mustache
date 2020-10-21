@@ -36,7 +36,7 @@
     <form class="mform clearfix">
         <div class="form-group mx-0">
             <button class="fp-file-download btn btn-secondary">{{#str}}download{{/str}}</button>
-            <button class="fp-file-delete btn btn-secondary">{{#str}}delete{{/str}}</button>
+            <button class="fp-file-delete btn btn-secondary {{{deletefoldersystem}}}">{{#str}}delete{{/str}}</button>
             <button class="fp-file-setmain btn btn-secondary">{{#str}}setmainfile, repository{{/str}}</button>
             <span class="fp-file-setmain-help">{{{helpicon}}}</span>
             <button class="fp-file-zip btn btn-secondary">{{#str}}zip, editor{{/str}}</button>
@@ -76,7 +76,7 @@
                     </div>
                 </div>
         <div class="fp-select-buttons form-group">
-            <button class="fp-file-update btn-primary btn">{{#str}}update{{/str}}</button>
+            <button class="fp-file-update btn-primary btn {{{editfoldersystem}}}">{{#str}}update{{/str}}</button>
             <button class="fp-file-cancel btn-secondary btn">{{#str}}cancel{{/str}}</button>
         </div>
     </form>

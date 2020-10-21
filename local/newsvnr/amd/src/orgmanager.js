@@ -159,7 +159,7 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                         search: {
                             fields: ["name"]
                         },
-                        sortable: true,
+                        sortable: false,
                         reorderable: true,
                         groupable: false,
                         resizable: true,
@@ -204,7 +204,7 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                 },
                                 field: "listbtn",
                                 title: s[0],
-                                width: 100
+                                width: 120
                             },
                         ];
                         var orgstructure_columns = [{
@@ -257,23 +257,23 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                 },
                                 field: "listbtn",
                                 title: s[0],
-                                width: 100
+                                width: 120
                             },
                         ];
                         var orgjobtitle_columns = [{
                                 field: "name",
-                                title: s[2],
+                                title: s[6],
                                 width: 300
                             },
                             {
                                 field: "code",
-                                title: s[3],
+                                title: s[7],
                                 width: 150
                             },
                             {
                                 field: "namebylaw",
                                 title: s[15],
-                                width: 150
+                                width: 300
                             },
                             {
                                 template: function(e) {
@@ -289,33 +289,33 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                 },
                                 field: "listbtn",
                                 title: s[0],
-                                width: 100
+                                width: 120
                             },
                         ];
                         var orgposition_columns = [{
                                 field: "name",
-                                title: s[2],
+                                title: s[8],
                                 width: 300
                             },
                             {
                                 field: "code",
-                                title: s[3],
+                                title: s[9],
                                 width: 150
                             },
                             {
                                 field: "namebylaw",
                                 title: s[15],
-                                width: 150
+                                width: 300
                             },
                             {
                                 field: "orgjobtitlename",
-                                title: s[7],
-                                width: 150
+                                title: s[6],
+                                width: 300
                             },
                             {
                                 field: "orgstructurename",
                                 title: s[3],
-                                width: 150
+                                width: 300
                             },
                             {
                                 template: function(e) {
@@ -323,6 +323,7 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                 },
                                 field: "description",
                                 title: s[10],
+                                width: 200
                                
                             },
                             {
@@ -331,7 +332,7 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                 },
                                 field: "listbtn",
                                 title: s[0],
-                                width: 100
+                                width: 120
                             },
                         ];
                         var param = event.target.id; 

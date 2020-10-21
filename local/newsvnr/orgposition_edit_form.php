@@ -84,9 +84,9 @@ class orgposition_edit_form extends moodleform {
             $usernames[$key] = $value->firstname.' '.$value->lastname;
         }
         $mform->addElement('text', 'orgstructureid', get_string('orgstructurename', 'local_newsvnr'), 'maxlength="200" size="50" class="mb-0"');
-        $mform->addRule('orgstructureid', get_string('required'), 'required', null, 'client');
+        // $mform->addRule('orgstructureid', get_string('required'), 'required', null, 'client');
         $mform->setType('orgstructureid', PARAM_TEXT);
-        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3"></div><div class="col-md-3 pr-0 ml-3 form-inline felement" id="treeview-orgposition" style="background-color: #e9ecef"></div></div>');
+        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-2"></div><div class="col-md-9 pr-0 ml-3 form-inline felement" id="treeview-orgposition" style="background-color: #e9ecef"></div></div>');
 
         // $mform->addElement('autocomplete', 'orgstructureid', get_string('orgstructureid', 'local_newsvnr'), $orgstructurenames, $options);
         // $mform->addRule('orgstructureid', get_string('required'), 'required', null, 'client');

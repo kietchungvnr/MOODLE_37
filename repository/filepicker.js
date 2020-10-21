@@ -630,6 +630,11 @@ M.core_filepicker.init = function(Y, options) {
             var api = (args.api ? args.api : this.api) + '?action='+args.action;
             var params = {};
             var scope = args['scope'] ? args['scope'] : this;
+            var fileLibraryUrl = window.location.pathname;
+            // Custom by Vũ: Thêm param trong tài liệu hệ thống
+            if(fileLibraryUrl == '/local/newsvnr/generallibrary.php') {
+                params['filelibrary'] = 1;
+            }
             params['repo_id']=args.repository_id;
             params['p'] = args.path?args.path:'';
             params['page'] = args.page?args.page:'';

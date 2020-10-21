@@ -26,11 +26,16 @@ defined('MOODLE_INTERNAL') || die();
 
 $extraclasses[] = 'moove-login';
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
-
+if(isset($_SERVER['HTTP_REFERER'])) {
+    $hasportal = true;
+} else {
+    $hasportal = false;
+}
 $templatecontext = [
     'sitename' => format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), "escape" => false]),
     'output' => $OUTPUT,
-    'bodyattributes' => $bodyattributes
+    'bodyattributes' => $bodyattributes,
+    'hasportal' => $hasportal
 ];
 
 echo $OUTPUT->render_from_template('theme_moove/login', $templatecontext);

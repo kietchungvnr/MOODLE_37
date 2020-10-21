@@ -4,6 +4,7 @@
 $app->post('/ebm/courses/trackclass-create', local_newsvnr\api\controllers\ebm\CourseController::class . ':create_and_update');
 $app->post('/ebm/courses/user-unenrol', local_newsvnr\api\controllers\ebm\CourseController::class . ':unenrol_user');
 $app->post('/ebm/courses/delete', local_newsvnr\api\controllers\ebm\CourseController::class . ':delete');
+$app->post('/ebm/courses/user-enrol', local_newsvnr\api\controllers\ebm\CourseController::class . ':enrol_users');
 
 //Tích hợp giáo viên +  học viên
 $app->post('/ebm/users/create', local_newsvnr\api\controllers\ebm\UserController::class . ':create_and_update');

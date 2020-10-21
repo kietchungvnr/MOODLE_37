@@ -26,6 +26,12 @@
 require(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 
+// Custom by Vũ: Portal add header để hiện đầy đủ header/footer
+// Khi không phải là iframe  
+if(!isset($_SERVER['HTTP_REFERER'])){
+    header("Referrer-Policy: no-referrer");
+}
+
 admin_externalpage_setup('tool_installaddon_index');
 
 if (!empty($CFG->disableupdateautodeploy)) {

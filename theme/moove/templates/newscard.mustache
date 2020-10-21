@@ -1,0 +1,23 @@
+<div class="news-post">
+   <div class="new-latest-box position-relative">
+      <a href="{{newsurl}}"><img class="new-latest-image" src="{{image}}"></a>
+      <div class="position-absolute view-new">
+         <i class="fa fa-eye" aria-hidden="true"> {{countviews}} </i>
+      </div>
+      <div class="position-absolute author">
+         <i class="fa fa-user mr-1" aria-hidden="true"> {{name}}</i>
+      </div>
+      <div class="content-new">
+         <a href="{{newsurl}}"><label class="new-latest-title" title="{{title}}">{{title}}</label></a>
+         <div class="new-latest-content">
+            <p>{{content}}</p>
+         </div>
+         <div class="position-absolute comment d-flex w-100 justify-content-between">
+            <div class="d-flex"><i class="fa fa-clock-o mr-1"></i><small class="text-date float-left">{{timeago}}</small></div>
+            <div class="new-latest-comment-info mr-4">
+               <i class="fa fa-comment-o" aria-hidden="true"> {{countcomments}} {{#str}}comment, local_newsvnr{{/str}} </i>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

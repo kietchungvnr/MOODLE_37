@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course list block.
+ * Block xem chi tiết biểu đồ, báo cáo....
  *
  * @package    block_user(student)
  * @copyright  2019 Le Thanh Vu
@@ -45,7 +45,7 @@ class viewreport_page implements renderable, templatable {
         $list_chart = [];
         $list_chart_std = new stdClass();
         $list_chart_std->id = 1;
-        $list_chart_std->name = "Báo cáo hoàn thành khóa học";
+        $list_chart_std->name = get_string('reportcompletedcourse', 'block_vnr_db_viewreport');
         $list_chart[] = $list_chart_std;
 
         $list_course = get_list_course_by_teacher($USER->id);

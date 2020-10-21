@@ -1,5 +1,5 @@
 {{#hascourse}}
-<h4 class="text-dark md-block font-weight-bold" align="center">KHÓA HỌC PHỔ BIẾN</h4>
+<h4 class="text-dark md-block font-weight-bold" align="center">{{#str}}popularcourse, theme_moove{{/str}}</h4>
  <div class="container outline-none" id="courseslider" tabindex="1">
         <div class="row">
                 <div id="frontpage-course-slider" class="owl-carousel owl-theme">
@@ -9,8 +9,8 @@
                         {{{courseimage}}}
                         <div class="post-info">
                             <ul class="category">
-                                <li>Học viên <a href="#">{{countstudent}}</a></li>
-                                <li>Giáo viên <a href="#">{{fullnamet}}</a></li>
+                                <li>{{#str}}numberstudent, theme_moove{{/str}} <a href="#">{{countstudent}}</a></li>
+                                <li>{{#str}}teachername, theme_moove{{/str}} <a href="#">{{fullnamet}}</a></li>
                                
                             </ul>
           

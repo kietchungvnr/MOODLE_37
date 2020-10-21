@@ -101,15 +101,11 @@ class api_management_edit_form extends moodleform {
             $objapititle->$default_value = $v->$default_value;
             $objapititle->$id = $v->$id;
         }
-        // var_dump($apititle,$objapititle);die();
-        // echo('<pre>');
-        // print_r($orgcate);
-        // print_r($apititle);
-        // print_r($apiheader);
         $this->add_action_buttons();
         $this->set_data($orgcate);
         $this->set_data($objapiheader);
         $this->set_data($objapititle);
+
     }
 
     // function validation($data, $files) {

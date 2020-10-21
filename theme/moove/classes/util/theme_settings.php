@@ -52,6 +52,24 @@ defined('MOODLE_INTERNAL') || die();
 class theme_settings {
 
     /**
+     * Get config theme news, forums, courses, my courses
+     *
+     * @return array
+     */
+    public function sectionenable() {
+        global $OUTPUT;
+
+        $theme = theme_config::load('moove');
+
+        $templatecontext['displaynews'] = $theme->settings->displaynews;
+        $templatecontext['displaycoursespopular'] = $theme->settings->displaycoursespopular;
+        $templatecontext['displaymycourses'] = $theme->settings->displaymycourses;
+        $templatecontext['displayforums'] = $theme->settings->displayforums;
+
+        return $templatecontext;
+    }
+
+    /**
      * Get config theme footer itens
      *
      * @return array
@@ -282,7 +300,50 @@ class theme_settings {
           else
           {
                     $infoteacher = new stdClass();
-                    $infoteacher->fullnamet = 'No Teacher';
+                    $infoteacher->fullnamet = get_string('noteacher', 'theme_moove');
+                    $infoteacher->studentnumber = 0;
+                    $infoteacher->imgdefault = $imgdefault;
+          }
+           return $infoteacher;
+
+        // var_dump($rolecourse);die();
+
+    }
+    public static function role_courses_teacher_slider_block_course_recent($courseid)
+    {
+        global $DB,$CFG;
+        $arrc = array();
+        $imgurl = $CFG->wwwroot."/theme/moove/pix/f2.png";
+        $imgdefault = \html_writer::empty_tag('img',array('src' => $imgurl,'class'=>'userpicture defaultuserpic owl-lazy','width' => '50px','height'=>'50px','alt' => 'Default picture','title'=>'Default picture'));
+        $sql = "SELECT concat(u.firstname,' ',u.lastname) as fullnamet,u.email,(select COUNT(*) as sts
+        FROM {user_enrolments} ue
+        JOIN {enrol} e ON ue.enrolid = e.id
+        JOIN {course} c ON e.courseid = c.id
+        JOIN {role_assignments} ra ON ra.userid = ue.userid
+        JOIN {context} as ct on ra.contextid= ct.id AND ct.instanceid = c.id
+        where ra.roleid=5 and c.id=?) as studentnumber,u.id
+        from {role_assignments} as ra
+        join {user} as u on u.id= ra.userid
+        join {user_enrolments} as ue on ue.userid=u.id
+        join {enrol} as e on e.id=ue.enrolid
+        join {course} as c on c.id=e.courseid
+        join {context} as ct on ct.id=ra.contextid and ct.instanceid= c.id
+        join {role} as r on r.id= ra.roleid
+        where c.id=? and ra.roleid=3";
+        $rolecourse = $DB->get_records_sql($sql,array($courseid,$courseid));
+        
+        if (!empty($rolecourse)) 
+        {
+             foreach ($rolecourse as $value) 
+             {
+                $infoteacher = new stdclass();
+                $infoteacher = $value;
+             } 
+         }
+          else
+          {
+                    $infoteacher = new stdClass();
+                    $infoteacher->fullnamet = get_string('noteacher', 'theme_moove');
                     $infoteacher->studentnumber = 0;
                     $infoteacher->imgdefault = $imgdefault;
           }
@@ -326,13 +387,51 @@ class theme_settings {
           else
           {
                     $infoteacher = new stdClass();
-                    $infoteacher->fullnamet = 'No Teacher';
+                    $infoteacher->fullnamet = get_string('noteacher', 'theme_moove');
                     $infoteacher->studentnumber = 0;
                     $infoteacher->imgdefault = $imgdefault;
           }
            return $infoteacher;
 
     }
+
+
+    //Lấy thông tin tát cả giáo viên trong khóa
+    public static function role_courses_all_teacher($courseid)
+    {
+        global $DB,$CFG;
+        $arrc = array();
+        $imgurl = $CFG->wwwroot."/theme/moove/pix/f2.png";
+        $imgdefault = \html_writer::empty_tag('img',array('src' => $imgurl,'class'=>'userpicture defaultuserpic','width' => '50px','height'=>'50px','alt' => 'Default picture','title'=>'Default picture'));
+        $sql = "SELECT concat(u.firstname,' ',u.lastname) as fullnamet,u.email,u.phone1,u.phone2,(SELECT COUNT(*) as sts
+                    FROM {user_enrolments} ue
+                    JOIN {enrol} e ON ue.enrolid = e.id
+                    JOIN {course} c ON e.courseid = c.id
+                    JOIN {role_assignments} ra ON ra.userid = ue.userid
+                    JOIN {context} as ct on ra.contextid= ct.id AND ct.instanceid = c.id
+                    WHERE ra.roleid=5 and c.id=?) as studentnumber,u.id
+                    FROM {role_assignments} as ra
+                    JOIN {user} as u on u.id= ra.userid
+                    JOIN {user_enrolments} as ue on ue.userid=u.id
+                    JOIN {enrol} as e on e.id=ue.enrolid
+                    JOIN {course} as c on c.id=e.courseid
+                    JOIN {context} as ct on ct.id=ra.contextid and ct.instanceid= c.id
+                    JOIN {role} as r on r.id= ra.roleid
+                    where c.id=? and ra.roleid=3";
+        $rolecourse = $DB->get_records_sql($sql,array($courseid,$courseid));
+        
+        if(empty($rolecourse)) {
+          $infoteacher = new stdClass();
+          $infoteacher->fullnamet = get_string('noteacher', 'theme_moove');
+          $infoteacher->studentnumber = 0;
+          $infoteacher->imgdefault = $imgdefault;
+        } else {
+          $infoteacher = array();
+          $infoteacher = $rolecourse;
+        }
+        return $infoteacher;
+    }
+
 
     /**
      * [user_courses_list description]
@@ -622,6 +721,21 @@ class theme_settings {
         return $templatecontext;
 
     }
+    public function get_module_data() {
+        $data = array((object) array('moduleicon'=>'mod_book','modulename'=>'Book','value'=>'book'),
+                      (object) array('moduleicon'=>'mod_resource','modulename'=>'File','value'=>'resource'),
+                      (object) array('moduleicon'=>'mod_imscp','modulename'=>'SCORM package','value'=>'imscp'),
+                      (object) array('moduleicon'=>'mod_lesson','modulename'=>'Lesson','value'=>'lesson'));
+        $templatecontext = [];
+        $arr = array();
+        foreach ($data as $key => $value) {        
+            $arr[] = (array)$value;
+        }
+        for ($i = 0 ;$i < count($data); $i++) {
+          $templatecontext['module'][$i] = $arr[$i];
+        }
+        return $templatecontext;
+    }
 
     public function get_news_data()
     {
@@ -677,7 +791,6 @@ class theme_settings {
                 $templatecontext['newslides'][$j]['active'] = true;
             }
         }
-       
         return $templatecontext;
     }
 

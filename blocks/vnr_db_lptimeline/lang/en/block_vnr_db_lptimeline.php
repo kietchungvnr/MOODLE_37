@@ -15,32 +15,34 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_course_list', language 'en', branch 'MOODLE_20_STABLE'
+ * Block hiện thị lộ trình đào tạo dựa theo vị trí
  *
- * @package   block_course_list
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    block_user(student)
+ * @copyright  2019 Le Thanh Vu
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Lộ trình đào tạo';
+$string['pluginname'] = 'Learning plan';
 $string['vnr_db_lptimeline:addinstance'] = 'Add a new lptimeline block';
 $string['vnr_db_lptimeline:myaddinstance'] = 'Add a new lptimeline block to Dashboard';
 $string['privacy:metadata'] = 'The lptimeline block only shows data stored in other locations.';
 
 //dashboard
-$string['detail'] = 'Chi tiết';
-$string['startdate'] = 'Ngày bắt đầu';
-$string['enddate'] = 'Ngày kết thúc';
-$string['progress'] = 'Tiến trình';
-$string['coursedescription'] = 'Giới thiệu khóa học';
-$string['teachername'] = 'Giáo viên';
-$string['reviewer'] = 'Người đánh giá';
-$string['reviewdate'] = 'Ngày đánh giá';
-$string['status'] = 'Trạng thái';
-$string['nocomp'] = 'Chức vụ của bạn chưa có lộ trình đào tạo';
-$string['timereview'] = 'Ngày review';
-$string['userreview'] = 'Người review';
-$string['status'] = 'Trạng thái';
-$string['prestudy'] = 'Chưa học';
-$string['studying'] = 'Đang học';
-$string['finishedstudy'] ='Đã học';
+$string['detail'] = 'detail';
+$string['startdate'] = 'Start date';
+$string['enddate'] = 'End date';
+$string['progress'] = 'Progress';
+$string['coursedescription'] = 'Course description';
+$string['teachername'] = 'Teacher';
+$string['reviewer'] = 'Reviewer';
+$string['reviewdate'] = 'Review date';
+$string['status'] = 'Status';
+$string['nocomp'] = 'Orgposition competency not yet';
+$string['timereview'] = 'Time review';
+$string['userreview'] = 'User review';
+$string['prestudy'] = 'Prestudy';
+$string['studying'] = 'Studying';
+$string['finishedstudy'] ='Finished study';
+$string['learningplan'] ='Learning plan';
+$string['here'] ='Here';
+$string['choose'] ='Choose';

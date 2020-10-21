@@ -750,6 +750,200 @@ class completion_info {
     }
 
     /**
+     * Custom by Vũ: Tích hợp dẩy kết quả điểm danh(dành cho page module)
+     * Khi học viên hoàn thành khóa sẽ gọi EBM API để đẩy thông tin hoàn thành modules
+     * Diều này tuong đương với buổi điểm danh EBM
+     * Marks a module as viewed.
+     *
+     * Should be called whenever a module is 'viewed' (it is up to the module how to
+     * determine that). Has no effect if viewing is not set as a completion condition.
+     *
+     * Note that this function must be called before you print the page header because
+     * it is possible that the navigation block may depend on it. If you call it after
+     * printing the header, it shows a developer debug warning.
+     *
+     * @param stdClass|cm_info $cm Activity
+     * @param int $userid User ID or 0 (default) for current user
+     * @return void
+     */
+    public function set_module_viewed_within_api($cm, $userid=0, $course, $pagecode) {
+        global $PAGE, $USER, $CFG, $DB;
+        require_once($CFG->dirroot . '/local/newsvnr/lib.php');
+        if ($PAGE->headerprinted) {
+            debugging('set_module_viewed must be called before header is printed',
+                    DEBUG_DEVELOPER);
+        }
+        
+        if ($cm->completionview == COMPLETION_VIEW_NOT_REQUIRED || !$this->is_enabled($cm)) {
+            return;
+        }
+        // Get current completion state
+        $data = $this->get_data($cm, false, $userid);
+
+        // If we already viewed it, don't do anything unless the completion status is overridden.
+        // If the completion status is overridden, then we need to allow this 'view' to trigger automatic completion again.
+        if ($data->viewed == COMPLETION_VIEWED && empty($data->overrideby)) {
+            return;
+        }
+
+
+
+        // OK, change state, save it, and update completion
+        $data->viewed = COMPLETION_VIEWED;
+        $this->internal_set_data($cm, $data);
+        $this->update_state($cm, COMPLETION_COMPLETE, $userid);
+        // Custom by Vũ: Điểm danh khi học viên ấn bào buổi học
+        if($course->typeofcourse == 3) {
+            $api_data = $DB->get_record('local_newsvnr_api',['functionapi' => 'Attendance']);
+            if($api_data && $api_data->visible == 1 && $data->completionstate == 1) {
+                if($data->completionstate == 1) {
+                    $completionstate = 0;
+                } else {
+                    $completionstate = 1;
+                }
+                $params_el = [
+                        'ClassCode' => $course->shortname,
+                        'LessonId' =>  $pagecode,
+                        'StudentId' => $USER->usercode,
+                        'Reason' => '',
+                        'IsAbsent' => $completionstate,
+                        'ApiKeyCreate' => 'efcb96ee5e80c46157960459a7509d46',
+                ];
+                $getparams = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $api_data->id]);
+                $params_hrm = [];
+                foreach ($getparams as $key => $value) {
+                    if(array_key_exists($value->client_params, $params_el)) {
+                        $params_hrm[$value->client_params] = $params_el[$value->client_params];
+                    } else {
+                        $params_hrm[$value->client_params] = $value->default_value;
+                    }
+                }
+                $url_hrm = $api_data->url;
+                HTTPPost_EBM($url_hrm, $params_hrm);
+            }
+        }
+    }
+
+    /**
+     * Custom by Vũ: Điều kiện ràng buộc theo thời gian để hoàn thành resourece modules
+     *
+     * Should be called whenever a module is 'viewed' (it is up to the module how to
+     * determine that). Has no effect if viewing is not set as a completion condition.
+     *
+     * Note that this function must be called before you print the page header because
+     * it is possible that the navigation block may depend on it. If you call it after
+     * printing the header, it shows a developer debug warning.
+     *
+     * @param stdClass|cm_info $cm Activity
+     * @param int $userid User ID or 0 (default) for current user
+     * @return void
+     */
+    public function set_module_resource_completion_viewed($cm, $userid=0) {
+        global $PAGE, $DB, $USER;
+        if ($PAGE->headerprinted) {
+            debugging('set_module_viewed must be called before header is printed',
+                    DEBUG_DEVELOPER);
+        }
+
+        // Don't do anything if view condition is not turned on
+        if ($cm->completionview == COMPLETION_VIEW_NOT_REQUIRED || !$this->is_enabled($cm)) {
+            return;
+        }
+
+        // Get current completion state
+        $data = $this->get_data($cm, false, $userid);
+
+        // If we already viewed it, don't do anything unless the completion status is overridden.
+        // If the completion status is overridden, then we need to allow this 'view' to trigger automatic completion again.
+        if ($data->viewed == COMPLETION_VIEWED && empty($data->overrideby)) {
+            return;
+        }
+
+        $completionrules = $DB->get_record('course_modules_completion_rule', ['moduleid' => $cm->id]);
+        if($completionrules->completiontimespent > 0) {
+            $completiontimer = $DB->get_record('course_modules_completion_timer', ['completionruleid' => $completionrules->id, 'userid' => $USER->id]);
+            $completiontimespent = $completionrules->completiontimespent;
+            $duration = $completiontimer->lastseentime - $completiontimer->starttime;
+            if($duration >= $completiontimespent) {
+                // OK, change state, save it, and update completion
+                $data->viewed = COMPLETION_VIEWED;
+                $this->internal_set_data($cm, $data);
+                $this->update_state($cm, COMPLETION_COMPLETE, $userid);    
+            } else {
+                return;
+            }
+        } else {
+            // OK, change state, save it, and update completion
+            $data->viewed = COMPLETION_VIEWED;
+            $this->internal_set_data($cm, $data);
+            $this->update_state($cm, COMPLETION_COMPLETE, $userid);
+        }
+
+       
+    }
+
+    /**
+     * Custom by Vũ: Điều kiện ràng buộc theo thời gian để hoàn thành book modules
+     *
+     * Should be called whenever a module is 'viewed' (it is up to the module how to
+     * determine that). Has no effect if viewing is not set as a completion condition.
+     *
+     * Note that this function must be called before you print the page header because
+     * it is possible that the navigation block may depend on it. If you call it after
+     * printing the header, it shows a developer debug warning.
+     *
+     * @param stdClass|cm_info $cm Activity
+     * @param int $userid User ID or 0 (default) for current user
+     * @return void
+     */
+    public function set_module_book_completion_viewed($cm, $userid=0) {
+        global $PAGE, $DB, $USER;
+        if ($PAGE->headerprinted) {
+            debugging('set_module_viewed must be called before header is printed',
+                    DEBUG_DEVELOPER);
+        }
+
+        // Don't do anything if view condition is not turned on
+        if ($cm->completionview == COMPLETION_VIEW_NOT_REQUIRED || !$this->is_enabled($cm)) {
+            return;
+        }
+
+        // Get current completion state
+        $data = $this->get_data($cm, false, $userid);
+
+        // If we already viewed it, don't do anything unless the completion status is overridden.
+        // If the completion status is overridden, then we need to allow this 'view' to trigger automatic completion again.
+        if ($data->viewed == COMPLETION_VIEWED && empty($data->overrideby)) {
+            return;
+        }
+
+        $completionrules = $DB->get_record('course_modules_completion_rule', ['moduleid' => $cm->id]);
+        if($completionrules->completiontimespent > 0) {
+            $completiontimer = $DB->get_record('course_modules_completion_timer', ['completionruleid' => $completionrules->id, 'userid' => $USER->id]);
+            if($completiontimer) {
+                $completiontimespent = $completionrules->completiontimespent;
+                $duration = $completiontimer->lastseentime - $completiontimer->starttime;
+                if($duration >= $completiontimespent) {
+                    // OK, change state, save it, and update completion
+                    $data->viewed = COMPLETION_VIEWED;
+                    $this->internal_set_data($cm, $data);
+                    $this->update_state($cm, COMPLETION_COMPLETE, $userid);    
+                } else {
+                    return;
+                }    
+            }
+            
+        } else {
+            // OK, change state, save it, and update completion
+            $data->viewed = COMPLETION_VIEWED;
+            $this->internal_set_data($cm, $data);
+            $this->update_state($cm, COMPLETION_COMPLETE, $userid);
+        }
+
+       
+    }
+
+    /**
      * Determines how much completion data exists for an activity. This is used when
      * deciding whether completion information should be 'locked' in the module
      * editing form.

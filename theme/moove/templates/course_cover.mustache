@@ -49,7 +49,12 @@
         "hasregionmainsettingsmenu": false
     }
 }}
-    {{>theme_moove/inc_start}}
+    {{#hasportal}}
+        {{>theme_moove/portal_inc_start}}
+    {{/hasportal}}
+    {{^hasportal}}
+        {{>theme_moove/inc_start}}
+    {{/hasportal}}
 
     <div id="page" class="container-fluid">
         {{{ output.courseheaderimage }}}
@@ -65,7 +70,9 @@
                 {{/hasregionmainsettingsmenu}}
                 <section id="region-main">
 
-                    {{{ output.full_header }}}
+                    {{^hasportal}}
+                        {{{ output.full_header }}}
+                    {{/hasportal}}
 
                     <div class="card">
                         <div class="card-body">
@@ -85,4 +92,9 @@
         </div>
     </div>
 
-    {{>theme_moove/inc_end}}
+    {{#hasportal}}
+        {{>theme_moove/portal_inc_end}}
+    {{/hasportal}}
+    {{^hasportal}}
+        {{>theme_moove/inc_end}}
+    {{/hasportal}}

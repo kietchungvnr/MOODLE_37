@@ -62,6 +62,7 @@ if ($categoryid) {
 $PAGE->set_pagelayout('coursecategory');
 $courserenderer = $PAGE->get_renderer('core', 'course');
 
+$PAGE->set_title($heading);
 $PAGE->set_heading($heading);
 $content = $courserenderer->course_category($categoryid);
 

@@ -22,8 +22,8 @@
                         {{{courseimage}}}
                         <div class="post-info">
                             <ul class="category">
-                                <li>Học viên <a href="#">{{countstudent}}</a></li>
-                                <li>Giáo viên <a href="#">{{fullnamet}}</a></li>
+                                <li>{{#str}}countstudent, block_vnr_db_lptimeline_userplan{{/str}} <a href="#">{{countstudent}}</a></li>
+                                <li>{{#str}}teachername, block_vnr_db_lptimeline_userplan{{/str}} <a href="#">{{fullnamet}}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -53,12 +53,12 @@
             </div>
             {{/listusercoursecomp}}
             {{#nohascusercoursecomp}}
-                <div class="d-flex justify-content-center alert alert-info alert-block fade in w-100 ">Không có khoá học cho kế hoạch này!</div>
+                <div class="d-flex justify-content-center alert alert-info alert-block fade in w-100 ">{{#str}}nocourse, block_vnr_db_lptimeline_userplan{{/str}}</div>
             {{/nohascusercoursecomp}}
     </div>
 </div>
 {{#js}}
-require(['jquery', 'core/templates', 'core/notification', 'core/config'], function($, templates, notification, Config) {
+require(['jquery', 'core/templates', 'core/notification', 'core/config', 'core/str'], function($, templates, notification, Config, Str) {
     
     $('#listuserplan').on('change', function(){
 
@@ -76,17 +76,23 @@ require(['jquery', 'core/templates', 'core/notification', 'core/config'], functi
         var script = Config.wwwroot + '/local/newsvnr/ajax.php';
         $.ajax(script, settings)
         .then(function(response) {
-            var data = JSON.parse(response);
-            
-            if(data.listusercoursecomp.length != 0) {
-                templates.render('block_vnr_db_lptimeline_userplan/lptimeline_usercoursecomp', data).done(function(html, js) {
-                    owluserplancourse_block.replaceWith(html);
-                    templates.runTemplateJS(js);
-                }).fail(notification.exception);
-            } 
-            else {
-                owluserplancourse_block.html('<div class="d-flex justify-content-center alert alert-info alert-block fade in ">Không có khoá học cho kế hoạch này!</div>');
-            }
+            var strings = [{
+                key: 'nocourse',
+                component: 'block_vnr_db_lptimeline_userplan'
+            }, ];
+            Str.get_strings(strings).then(function(s) {
+                var data = JSON.parse(response);
+                if(data.listusercoursecomp.length != 0) {
+                    templates.render('block_vnr_db_lptimeline_userplan/lptimeline_usercoursecomp', data).done(function(html, js) {
+                        owluserplancourse_block.replaceWith(html);
+                        templates.runTemplateJS(js);
+                    }).fail(notification.exception);
+                } 
+                else {
+                    var html = '<div class="d-flex justify-content-center alert alert-info alert-block fade in ">' + s[0] + '</div>';
+                    owluserplancourse_block.html(html);
+                }
+            });
         }).fail(notification.exception);
     });
 

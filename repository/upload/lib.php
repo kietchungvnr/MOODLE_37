@@ -59,8 +59,9 @@ class repository_upload extends repository {
         $author   = optional_param('author', '', PARAM_TEXT);
         $areamaxbytes = optional_param('areamaxbytes', FILE_AREA_MAX_BYTES_UNLIMITED, PARAM_INT);
         $overwriteexisting = optional_param('overwrite', false, PARAM_BOOL);
+        $filelibrary = optional_param('filelibrary', 0, PARAM_INT); // Custom by Vũ: Get filelibrary trong tài liệu hệ thống
 
-        return $this->process_upload($saveas_filename, $maxbytes, $types, $savepath, $itemid, $license, $author, $overwriteexisting, $areamaxbytes);
+        return $this->process_upload($saveas_filename, $maxbytes, $types, $savepath, $itemid, $license, $author, $overwriteexisting, $areamaxbytes, $filelibrary);
     }
 
     /**
@@ -77,7 +78,7 @@ class repository_upload extends repository {
      * @return object containing details of the file uploaded
      */
     public function process_upload($saveas_filename, $maxbytes, $types = '*', $savepath = '/', $itemid = 0,
-            $license = null, $author = '', $overwriteexisting = false, $areamaxbytes = FILE_AREA_MAX_BYTES_UNLIMITED) {
+            $license = null, $author = '', $overwriteexisting = false, $areamaxbytes = FILE_AREA_MAX_BYTES_UNLIMITED, $filelibrary) {
         global $USER, $CFG;
 
         if ((is_array($types) and in_array('*', $types)) or $types == '*') {
@@ -99,7 +100,14 @@ class repository_upload extends repository {
         $record->itemid   = $itemid;
         $record->license  = $license;
         $record->author   = $author;
-
+        // Custom by Vũ: Trong tài liệu hệ thống nếu user thường upload file thì mặc định là chưa duyệt
+        if($filelibrary == 1) {
+            if(!is_siteadmin()) {
+                $record->status   = 1;
+            }
+        }
+        
+        
         $context = context_user::instance($USER->id);
         $elname = 'repo_upload_file';
 

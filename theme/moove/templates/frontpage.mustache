@@ -48,33 +48,52 @@
         "hasregionmainsettingsmenu": false
     }
 }}
-{{>theme_moove/inc_start}}
+{{#hasportal}}
+    {{>theme_moove/portal_inc_start}}
+{{/hasportal}}
+{{^hasportal}}
+    {{>theme_moove/inc_start}}
+{{/hasportal}}
 {{>theme_moove/fp_slideshow}}
 <div id="page" class="container-fluid p-0">
 
-    {{{ output.full_header }}}
+    {{^hasportal}}
+        {{{ output.full_header }}}
+    {{/hasportal}}
     
     <div id="page-content" style="outline: none;">
     
     <div class="p-3">
-    {{>theme_moove/fp_slidenews}}
-
-    {{>theme_moove/fp_slidecourse}}
-    {{# hascourses }}<h4 class="text-dark md-block font-weight-bold" align="center">KHÓA HỌC CỦA TÔI</h4>{{/ hascourses }}
+    {{#displaynews}}
+        {{>theme_moove/fp_slidenews}}
+    {{/displaynews}}
+    {{#displaycoursespopular}}
+        {{>theme_moove/fp_slidecourse}}
+    {{/displaycoursespopular}}
         <div id="region-main-box">
             <section id="region-main" style="overflow: unset;">
-            {{>theme_moove/fp_mycourse}}
-                    {{#hasregionmainsettingsmenu}}
-                    <div class="region_main_settings_menu_proxy"></div>
-                    {{/hasregionmainsettingsmenu}}
-                    {{{ output.course_content_header }}}
-                    <div style="display:none">{{{ output.main_content }}}</div>
-                    {{{ output.course_content_footer }}}
+                {{#displaymycourses}}
+                    {{# hascourses }}<h4 class="text-dark md-block font-weight-bold" align="center">{{#str}}mycoursesupper, theme_moove{{/str}}</h4>{{/ hascourses }}
+                    {{>theme_moove/fp_mycourse}}
+                {{/displaymycourses}}
+                {{#hasregionmainsettingsmenu}}
+                <div class="region_main_settings_menu_proxy"></div>
+                {{/hasregionmainsettingsmenu}}
+                {{{ output.course_content_header }}}
+                <div style="display:none">{{{ output.main_content }}}</div>
+                {{{ output.course_content_footer }}}
             </section>
         </div>
-    {{>theme_moove/fp_forum}}
+    {{#displayforums}}
+        {{>theme_moove/fp_forum}}
+    {{/displayforums}}
     </div>
     </div>
 </div>
 
-{{>theme_moove/inc_end}}
+{{#hasportal}}
+    {{>theme_moove/portal_inc_end}}
+{{/hasportal}}
+{{^hasportal}}
+    {{>theme_moove/inc_end}}
+{{/hasportal}}

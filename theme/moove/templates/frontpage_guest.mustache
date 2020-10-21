@@ -42,7 +42,12 @@
         "shoulddisplaymarketing": true
     }
 }}
-    {{>theme_moove/inc_start}}
+    {{#hasportal}}
+        {{>theme_moove/portal_inc_start}}
+    {{/hasportal}}
+    {{^hasportal}}
+        {{>theme_moove/inc_start}}
+    {{/hasportal}}
 
     <div id="page" class="container-fluid">
         <div id="page-header" class="frontpage-guest-header">
@@ -141,4 +146,9 @@
         {{!>theme_moove/frontpage_sponsorsclients}}
     </div>
 
-{{>theme_moove/inc_end}}
+    {{#hasportal}}
+        {{>theme_moove/portal_inc_end}}
+    {{/hasportal}}
+    {{^hasportal}}
+        {{>theme_moove/inc_end}}
+    {{/hasportal}}

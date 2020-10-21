@@ -186,13 +186,17 @@ if ($quiz->attempts != 1) {
     
 }
 // Custom by Vũ: Thêm thông tin số điểm qua bài thi và tổng số câu hỏi trong bài thi
-$questionusageid  = $DB->get_field('question_usages', 'id', ['contextid' => $context->id]);
-$countquestion = $DB->count_records('question_attempts', ['questionusageid' => $questionusageid]);
+$countquestion = $DB->count_records('quiz_slots', ['quizid' => $quiz->id]);
+if($countquestion) {
+    $quizquestion = $countquestion;  
+} else {
+    $quizquestion = 0;
+}
 $gradepass = round($grading_info->items[0]->gradepass, 1);
 $strgradepass = get_string('gradepass', 'quiz');
 $strquestiontotal = get_string('questiontotal', 'quiz');
 $viewobj->infomessages[2] = "$strgradepass: $gradepass";
-$viewobj->infomessages[3] = "$strquestiontotal: $countquestion";
+$viewobj->infomessages[3] = "$strquestiontotal: $quizquestion";
 // Determine wheter a start attempt button should be displayed.
 $viewobj->quizhasquestions = $quizobj->has_questions();
 $viewobj->preventmessages = array();

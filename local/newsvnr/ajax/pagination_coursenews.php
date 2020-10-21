@@ -17,10 +17,11 @@ $courseid =  optional_param('courseid', "" ,PARAM_INT);
 
 if($courseid)
 {
-	$sql = "SELECT p.id as postid, d.countviews, d.id as discussionid, f.course, p.message,p.subject,
+	$sql = "SELECT p.id as postid, d.countviews, d.id as discussionid, f.course, p.message,p.subject,CONCAT(us.firstname,' ',us.lastname) as name,
 			p.modified,fn.contextid,fn.component,fn.filearea,fn.filepath,fn.itemid,fn.filename 
             from mdl_forum f join mdl_forum_discussions d on f.id=d.forum and f.course=d.course 
 			join mdl_forum_posts p on d.id = p.discussion join mdl_files fn on d.firstpost = fn.itemid 
+			JOIN mdl_user us on us.id = p.userid
             where f.type='news' and fn.filesize>0
             and fn.filearea = 'attachment'
 			and f.course = ?
@@ -89,7 +90,7 @@ $output = '';
                 '/'. $value->contextid. '/'. $value->component. '/'.
                 $value->filearea. $value->filepath.$value->itemid.'/'. $value->filename, !$isimage);
 
-            $time = convertunixtime('l, d m Y, H:i A',$value->modified,'Asia/Ho_Chi_Minh');
+            $time = converttime($value->modified);
 
             $link = $CFG->wwwroot."/local/newsvnr/news.php?id=".$value->discussionid;
 
@@ -97,28 +98,30 @@ $output = '';
 
             $message = strip_tags($value->message); 
 
-				$output .= '
-						<div class="col-lg-3 cl-5 col-sm-4 col-xs-12 ">
-							<div class="new-latest-box">
-								<a href="'. $link .'"><img class="new-latest-image" src="'. $imageurl .'"></a>
-								<label class="new-latest-title mt-1"><a href="'. $link .'" title="'. $value->subject .'">'. $value->subject .'</a></label>
-								<br />
-								<small class="new-latest-time text-date">'. $time .'</small>
-								<br />
-								<div class="row">
-									<div class="col-lg-12">
-										<span class="new-latest-content" id="new-latest-content">'. $message .'</span>
-									</div>
-									<div class="col-lg-12">
-										<div class="new-latest-comment-info">
-											<i class="fa fa-eye" aria-hidden="true"> '. $value->countviews .'&nbsp&nbsp</i>
-											<i class="fa fa-comment-o" aria-hidden="true"> '. $get_count_comment .' &nbsp&nbsp</i>
-										</div>
-									</div>
-								</div>					
-							</div>
-					
-					</div>';
+				$output .='
+				<div class="news-post col-lg-3 cl-5 col-sm-4 col-xs-6">
+				   <div class="new-latest-box position-relative">
+				      <a href="'.$link.'"><img class="new-latest-image" src="'.$imageurl.'"></a>
+				      <div class="position-absolute view-new">
+				         <i class="fa fa-eye" aria-hidden="true">  '.$value->countviews.'</i>
+				      </div>
+				      <div class="position-absolute author">
+				         <i class="fa fa-user mr-1" aria-hidden="true">  '.$value->name.'</i>
+				      </div>
+				      <div class="content-new">
+				         <a href="'.$link.'"><label class="new-latest-title" title="'. $value->subject .'">'. $value->subject .'</label></a>
+				         <div class="new-latest-content">
+				            <p>'. $message .'</p>
+				         </div>
+				         <div class="position-absolute comment d-flex w-100 justify-content-between">
+				            <div class="d-flex"><i class="fa fa-clock-o mr-1"></i><small class="text-date float-left">'.$time.'</small></div>
+				            <div class="new-latest-comment-info mr-3">
+				               <i class="fa fa-comment-o" aria-hidden="true"> '. $get_count_comment .' '.get_string('comment','local_newsvnr').'</i>
+				            </div>
+				         </div>
+				      </div>
+				   </div>
+				</div>';
 	}
 
 	

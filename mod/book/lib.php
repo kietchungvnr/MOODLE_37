@@ -81,6 +81,21 @@ function book_add_instance($data, $mform) {
 
     $id = $DB->insert_record('book', $data);
 
+    // Custom by Vũ: Thêm điều kiện ràng buộc hoàn thành khóa học
+    if($data->completion == 2) {
+        $completionrules = new stdClass;
+        if($data->completiontimespent) {
+            $completionrules->moduleid = $data->coursemodule;
+            $completionrules->completiontimespent = $data->completiontimespent;
+            $completionrules->timemodified = time();
+            $completionrules->id = $DB->insert_record('course_modules_completion_rule', $completionrules);    
+        } else {
+            $completionrules->moduleid = $cmid;
+            $completionrules->timemodified = time();
+            $completionrules->id = $DB->insert_record('course_modules_completion_rule', $completionrules);    
+        }
+    }
+
     $completiontimeexpected = !empty($data->completionexpected) ? $data->completionexpected : null;
     \core_completion\api::update_completion_date_event($data->coursemodule, 'book', $id, $completiontimeexpected);
 
@@ -104,6 +119,29 @@ function book_update_instance($data, $mform) {
     }
 
     $DB->update_record('book', $data);
+
+    // Custom by Vũ: Thêm điều kiện ràng buộc hoàn thành khóa học
+    if($data->completion == 2) {
+        $completionrules = new stdClass;
+        if($DB->record_exists('course_modules_completion_rule', ['moduleid' => $data->update])) {
+            $completionrules->id = $DB->get_field('course_modules_completion_rule', 'id', ['moduleid' => $data->update]);
+            $completionrules->completiontimespent = $data->completiontimespent;
+            $completionrules->timemodified = time();
+            $DB->update_record('course_modules_completion_rule', $completionrules); 
+            $DB->delete_records('course_modules_completion_timer', ['completionruleid' => $completionrules->id]);       
+        } else {
+            if($data->completiontimespent) {
+                $completionrules->moduleid = $data->update;
+                $completionrules->completiontimespent = $data->completiontimespent;
+                $completionrules->timemodified = time();
+                $completionrules->id = $DB->insert_record('course_modules_completion_rule', $completionrules);    
+            } else {
+                $completionrules->moduleid = $data->update;
+                $completionrules->timemodified = time();
+                $completionrules->id = $DB->insert_record('course_modules_completion_rule', $completionrules);    
+            }
+        }
+    }
 
     $book = $DB->get_record('book', array('id'=>$data->id));
     $DB->set_field('book', 'revision', $book->revision+1, array('id'=>$book->id));
@@ -679,7 +717,8 @@ function book_view($book, $chapter, $islastchapter, $course, $cm, $context) {
         if ($islastchapter) {
             // We cheat a bit here in assuming that viewing the last page means the user viewed the whole book.
             $completion = new completion_info($course);
-            $completion->set_module_viewed($cm);
+            // Custom by Vũ: Điều kiện ràng buộc phải đủ thời gian xem book module mới hoàn thành module
+            $completion->set_module_book_completion_viewed($cm);
         }
     }
 }

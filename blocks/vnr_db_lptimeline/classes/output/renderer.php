@@ -15,14 +15,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * Block hiện thị lộ trình đào tạo dựa theo vị trí
  *
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- * @package local_newsvnr
- * @copyright 2019 VnResource
- * @author   Le Thanh Vu
- **/
+ * @package    block_user(student)
+ * @copyright  2019 Le Thanh Vu
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace block_vnr_db_lptimeline\output;
 defined('MOODLE_INTERNAL') || die;
 

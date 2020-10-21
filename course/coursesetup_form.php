@@ -34,7 +34,7 @@ class coursesetup_form extends moodleform {
      * Form definition
      */
     function definition () {
-        global $USER, $CFG, $DB;;
+        global $USER, $CFG, $DB;
 
         $mform =$this->_form;
         $coursesetup = $this->_customdata['coursesetup'];

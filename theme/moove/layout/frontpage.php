@@ -33,6 +33,12 @@ $extraclasses = [];
 
 $themesettings = new \theme_moove\util\theme_settings();
 
+if(isset($_SERVER['HTTP_REFERER'])) {
+    $hasportal = true;
+} else {
+    $hasportal = false;
+}
+
 if (isloggedin()) {
     global $DB;
 
@@ -69,7 +75,8 @@ if (isloggedin()) {
         'navdraweropen' => $navdraweropen,
         'draweropenright' => $draweropenright,
         'regionmainsettingsmenu' => $regionmainsettingsmenu,
-        'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu)
+        'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
+        'hasportal' => $hasportal
     ];
 
     // Improve boost navigation.
@@ -77,7 +84,7 @@ if (isloggedin()) {
    
     $templatecontext['flatnavigation'] = $PAGE->flatnav;
 
-    $templatecontext = array_merge($templatecontext, $themesettings->footer_items(), $themesettings->slideshow(),$themesettings->get_news_data(),$themesettings->get_courses_data(),$themesettings->get_discussions_data(),$themesettings->get_btn_add_news());
+    $templatecontext = array_merge($templatecontext, $themesettings->footer_items(), $themesettings->slideshow(),$themesettings->get_news_data(),$themesettings->get_courses_data(),$themesettings->get_discussions_data(),$themesettings->get_btn_add_news(), $themesettings->sectionenable());
 
     //mycourse 
     $usercourses = \theme_moove\util\extras::user_courses_with_progress($user);
@@ -153,7 +160,8 @@ if (isloggedin()) {
         'sponsorsfrontpage' => $sponsorsfrontpage,
         'clientsfrontpage' => $clientsfrontpage,
         'disablefrontpageloginbox' => $disablefrontpageloginbox,
-        'logintoken' => \core\session\manager::get_login_token()
+        'logintoken' => \core\session\manager::get_login_token(),
+        'hasportal' => $hasportal
     ];
 
     $templatecontext = array_merge($templatecontext, $themesettings->footer_items(), $themesettings->marketing_items());

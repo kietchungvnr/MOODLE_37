@@ -3,7 +3,7 @@
   
     <div class="card h-100">
         <div class="card-header has-arrow bg-info text-white border-0 font-weight-bold" href="javascript:void(0);" aria-expanded="false" data-toggle="collapse" data-target="#dskh">
-            DANH SÁCH KHÓA HỌC
+            {{#str}}listcourse, block_vnr_db_teacheruser_rm{{/str}}
         </div>
         <div class="collapse" id="dskh">
             {{#list_course}}
@@ -19,7 +19,7 @@
                <div class="row no-gutters align-items-center inside{{stt}}" style="display: none">
                     <div class="card h-100 w-100">
                         <div class="card-header bg-danger text-white border-0 font-weight-bold">
-                            DANH SÁCH HỌC VIÊN
+                            {{#str}}liststudent, block_vnr_db_teacheruser_rm{{/str}}
                         </div>
                             {{#list_user}}
                             <div class="card-body p-1 cl-border-bt">
@@ -39,7 +39,7 @@
     </div>
     <div class="card h-100">
         <div class="card-header has-arrow bg-info text-white border-0 font-weight-bold" href="javascript:void(0);" aria-expanded="false" data-toggle="collapse" data-target="#qlht">
-            QUẢN LÝ HỌC TẬP
+            {{#str}}learningmanagement, block_vnr_db_teacheruser_rm{{/str}}
         </div>
         <div class="collapse" id="qlht">
             {{#list_assignment}}
@@ -56,7 +56,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="card h-100 w-100">
                             <div class="card-header bg-danger text-white border-0 font-weight-bold">
-                                DANH SÁCH KHÓA HỌC
+                                {{#str}}listcourse, block_vnr_db_teacheruser_rm{{/str}}
                             </div>
                             {{#list_course_assign}}
                             <div class="card-body p-1 cl-border-bt addactive">
@@ -72,7 +72,7 @@
                     <div class="row no-gutters align-items-center d-none" id="dsbt">
                         <div class="card h-100 w-100">
                             <div class="card-header bg-danger text-white border-0 font-weight-bold">
-                                DANH SÁCH BÀI TẬP 
+                                {{#str}}listassignment, block_vnr_db_teacheruser_rm{{/str}}
                             </div>
                             <div class="card-body p-1 cl-border-bt">
                               <div class="row no-gutters align-items-center">
@@ -100,7 +100,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="card h-100 w-100">
                             <div class="card-header bg-danger text-white border-0 font-weight-bold">
-                                DANH SÁCH KHÓA HỌC
+                                {{#str}}listcourse, block_vnr_db_teacheruser_rm{{/str}}
                             </div>
                             {{#list_course_feedback}}
                             <div class="card-body p-1 cl-border-bt addactive">
@@ -116,7 +116,7 @@
                     <div class="row no-gutters align-items-center d-none" id="dsfb">
                         <div class="card h-100 w-100">
                             <div class="card-header bg-danger text-white border-0 font-weight-bold">
-                                DANH SÁCH FEEDBACK
+                                {{#str}}listfeedback, block_vnr_db_teacheruser_rm{{/str}}
                             </div>
                             <div class="card-body p-1 cl-border-bt">
                               <div class="row no-gutters align-items-center">
@@ -174,40 +174,31 @@
 </script>
 {{#js}}
 require(
-
-    [
-       
-        'jquery',
-        'core/config',
-        'core/notification',
-        'core/str'
-    ],
-
-    // This function runs when the above files have been loaded.
-    function ($,Config,Notification,Str) {
-
-        {{#list_course}}
-        $("#clickcourse{{stt}}").click(function(){
-               
-                $(".inside{{stt}}").fadeToggle("slow");
-            
-        });
-        {{/list_course}}
-        
-        $("#click_assign").click(function(){
-                $('#ls_assign').fadeToggle("slow");
-        });
-        $("#ls_assign").click(function(){
-                $('#dsbt').removeClass("d-none");
-               
-        });
-        $("#click_feedback").click(function(){
-                $('#ls_feedback').fadeToggle("slow");
-        });
-        $("#ls_feedback").click(function(){
-                $('#dsfb').removeClass("d-none");
-               
-        });
-     
+[
+    'jquery',
+    'core/config',
+    'core/notification',
+    'core/str'
+],
+// This function runs when the above files have been loaded.
+function ($,Config,Notification,Str) {
+    {{#list_course}}
+    $("#clickcourse{{stt}}").click(function(){
+            $(".inside{{stt}}").fadeToggle("slow");
+    });
+    {{/list_course}}
+    $("#click_assign").click(function(){
+            $('#ls_assign').fadeToggle("slow");
+    });
+    $("#ls_assign").click(function(){
+            $('#dsbt').removeClass("d-none");
+           
+    });
+    $("#click_feedback").click(function(){
+            $('#ls_feedback').fadeToggle("slow");
+    });
+    $("#ls_feedback").click(function(){
+            $('#dsfb').removeClass("d-none");
+    });
 });
 {{/js}}

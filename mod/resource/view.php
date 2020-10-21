@@ -102,6 +102,12 @@ switch ($displaytype) {
     case RESOURCELIB_DISPLAY_FRAME:
         resource_display_frame($resource, $cm, $course, $file);
         break;
+    // Custom by Vũ: Thêm loại view resource module(cho chức năng thời gian ràng buộc cho module)
+    case RESOURCELIB_DISPLAY_GOOGLE_DOCS_POPUP:
+        $path = '/'.$context->id.'/mod_resource/content/'.$resource->revision.$file->get_filepath().$file->get_filename();
+        $fullurl = moodle_url::make_file_url('/pluginfile.php', $path, $displaytype == RESOURCELIB_DISPLAY_DOWNLOAD);
+        redirect($fullurl);
+        break;
     default:
         resource_print_workaround($resource, $cm, $course, $file);
         break;

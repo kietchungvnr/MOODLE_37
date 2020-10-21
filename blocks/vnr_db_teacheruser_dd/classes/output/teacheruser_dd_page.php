@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course list block.
+ * Block xu hướng tham gia hoạt động
  *
  * @package    block_user(student)
  * @copyright  2019 Le Thanh Vu
@@ -45,12 +45,12 @@ class teacheruser_dd_page implements renderable, templatable {
         global $DB,$USER,$CFG;
         $data = array();
         $str_courseid = get_list_courseid_by_teacher($USER->id);
-        $list_forum_sql = "SELECT TOP 3 fd.id as fdid,f.id as fid, COUNT(fd.id) as tbv ,f.name as fname,fd.name as fdname, cm.id as viewid from mdl_forum f 
+        $list_forum_sql = "SELECT TOP 3 cm.id as viewid, fd.id as fdid,f.id as fid, COUNT(fd.id) as tbv ,f.name as fname,fd.name as fdname from mdl_forum f 
                                 left join mdl_forum_discussions fd on f.id = fd.forum 
                                 left join mdl_forum_posts fp on fd.id = fp.discussion
                                 left join mdl_course_modules cm on fd.forum = cm.instance
                             where f.course IN ($str_courseid) and fd.id is not null
-                            group by fd.id, f.id, f.name,fd.name,cm.id
+                            group by cm.id, fd.id, f.id, f.name,fd.name
                             order by COUNT(fd.id) DESC";
         $top_activity_forum_arr =  array();
         $list_forum_ex = $DB->get_records_sql($list_forum_sql,[]);

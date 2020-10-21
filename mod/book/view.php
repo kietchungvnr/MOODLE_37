@@ -198,6 +198,9 @@ $islastchapter = false;
 if (!$nextid) {
     $islastchapter = true;
 }
+// Custom By Vũ: call js amd cho chức yêu cầu thời gian ràng buộc hoàn thành module
+$params = ['cmid' => $cm->id, 'instance' => $cm->instance];
+$PAGE->requires->js_call_amd('mod_book/completiontimerequire', 'init', $params);
 
 book_view($book, $chapter, $islastchapter, $course, $cm, $context);
 
@@ -248,5 +251,5 @@ if ($book->navstyle) {
     // Lower navigation.
     echo '<div class="navbottom py-3 border-bottom clearfix ' . $navclasses[$book->navstyle] . '">' . $chnavigation . '</div>';
 }
-
+echo '<span id="time" class="d-none">00:00</span>';
 echo $OUTPUT->footer();

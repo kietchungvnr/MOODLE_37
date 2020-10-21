@@ -6,17 +6,15 @@
          {{title}}
       </div>
       <div class="new-detail-time">
+         {{{useravatar}}}
+         <div>
          <small class="text-date">{{time}}</small>
+         <br>
+         <i>{{#str}}poster, local_newsvnr{{/str}}: </i> <i class="new-detail-user">{{{discussionart}}}</i>
+         </div>
       </div>
       <div class="content">
          {{{content}}}
-      </div>
-      <div class="row">
-         <div class="col-md-6">
-         </div>
-         <div class="col-md-6" style="text-align:right">
-            <i>Người đăng: </i> <i class="new-detail-user">{{{discussionart}}}</i>
-         </div>
       </div>
       <div class="row">
          <div class="col-md-6">
@@ -31,133 +29,36 @@
       <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v3.3"></script>
       <div class="fb-comments" data-href="http://221.132.17.180:8089/local/newsvnr/news.php?id= {{{discussionid}}} " data-width="100%" data-mobile="true" data-numposts="5"></div>
       -->
-   <div class="new-detail-comment">
+   <div class="new-detail-comment" >
       {{#user}}
       <form>
          <div class="new-detail-comment-body">
-            <label class="new-detail-comment-title">Bình luận</label>
-            <textarea class="new-detail-comment-content" name="content" id="content_comment" placeholder="Bạn nghĩ gì về tin này ?"></textarea>
+            <label class="new-detail-comment-title">{{#str}}comment, local_newsvnr{{/str}}</label>
+            <textarea class="new-detail-comment-content" name="content" id="content_comment" maxlength="1000" placeholder="{{#str}}yourcomment, local_newsvnr{{/str}}"></textarea>
             <input type="hidden" id="userid" name="userid" value="{{{id}}}" />
             <input type="hidden" id="fullname" value="{{{firstname}}} {{{lastname}}}" name="">
             <div class="new-detail-comment-control">
-               <button type="button" onclick="PostComment()" id="post_comment" name="post_comment" class="btn btn-submit ">Gửi bình luận</button>
+               <button type="button" onclick="PostComment()" id="post_comment" name="post_comment" class="btn btn-submit ">{{#str}}sendcomment, local_newsvnr{{/str}}</button>
             </div>
          </div>
       </form>
       {{/user}}
    </div>
-   <div class="new-detail-chat" id="list_comment">
-      {{#commentdata}}
-      <div class="row">
-         <div class="col chat-panel" id="comment_{{{id}}}">
-            <input type="hidden" name="" id="test{{{id}}}" value="1" />
-            <div class="chat-image">
-               <img class="rounded-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6IMTq-efHer8sp1p23DxIw_NsFFUtc6ZI0vAexxMm0MPEsii-" />
-            </div>
-            <div class="chat-content">
-               <div class="chat-body">
-                  <h3 class="name">{{{fullname_comment}}}</h3><div style="margin-left:30px;color: grey"><label class="date-feedback">{{createdAt_comment}}</label></div>
-                  
-               </div>
-               <p>{{{content_comment}}}</p>
-               <div class="chat-footer">
-                  <div class="chat-footer">
-                     <label class="like" id="{{{id}}}">Like</label>
-                     <!-- Action delete comment here 
-                        <label class="delete" onclick="DeleteComment({{{id}}})" id="{{{id}}}">Xóa</label>
-                        -->
-                     {{{label_delete}}}
-                     <input type="hidden" id="delete_comment{{{id}}}"  value="delete">
-                     <label class="feedback" onclick="FeedBack({{{id}}})" id="{{{id}}}">Phản hồi</label>
-                     
-                  </div>
-                  <!-- ACTION SHOW AND HIDE REPLIES -->
-                  <p class="chat-show-reply" id="show-reply{{{id}}}" 
-                     onclick="ShowReplies({{{id}}})" ><i class="fa fa-chevron-down" style="display:block"> Xem phản hồi</i></p>
-                  <p style="display: none;" class="chat-hidden-reply" id="hidden-reply{{{id}}}"
-                     onclick="HiddenReplies({{{id}}})"><i class="fa fa-chevron-up"> Ẩn phản hồi</i></p>
-                  <!-- ACTION END SHOW AND HIDE REPLIES --> 
-                  <div class="new-detail-reply-body form-reply" style="width: 80%; display: none;">
-                     <form>
-                        <textarea class="new-detail-reply-content" name="content_reply" id="content_reply" placeholder="Ý kiến của bạn"></textarea>
-                        <input type="hidden" id="commentid" name="" value="{{{id}}}"> {{#user}}
-                        <input type="hidden" id="userid" name="userid" value="{{{id}}}" /> {{/user}}
-                        <input type="hidden" id="fullname" value="{{{firstname}}} {{{lastname}}}" name="" />
-                        <div class="new-detail-reply-control">
-                           <button type="button" class="btn btn-cancel">Hủy</button>
-                           <button type="button" id="post_reply" name="post_reply" class="btn btn-submit ">Gửi bình luận</button>
-                        </div>
-                     </form>
-                  </div>
-                  <div class="clearfix"></div>
-                  <div class="list-reply{{{id}}}" id="list_reply{{{id}}}" style="display: none; overflow: hidden;">
-                     <!-- COMMENT IS HAVING REPLIES -->
-                     {{#reply}}                 
-                     <div class="chat-reply" id="reply_{{{id_reply}}}">
-                        <!-- Comment 1 -->
-                        <div class="col chat-panel">
-                           <div class="chat-image">
-                              <img class="rounded-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6IMTq-efHer8sp1p23DxIw_NsFFUtc6ZI0vAexxMm0MPEsii-" />
-                           </div>
-                           <div class="chat-content">
-                              <div class="chat-body">
-                                 <h3 class="name">{{fullname_reply}}</h3>
-                                 <div style="margin-left:30px;color: grey"><label class="date-feedback">{{createdAt_comment}}</label></div>
-                              </div>
-                              <p>{{content_reply}}</p>
-                              <div class="chat-footer">
-                                 <label class="like">Like</label>
-                                 <label class="delete_reply" 
-                                    onclick="DeleteReply({{{id_reply}}})" id="{{{id_reply}}}">Xóa</label>    
-                                 <input type="hidden" id="delete_reply{{{id_reply}}}" name="" value="delete" />
-                                 {{! <label class="date-feedback">{{createdAt_reply}}</label>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     {{/reply}}
-                     <!-- END COMMENT IS HAVING REPLIES -->
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-      {{/commentdata}}
+   <div class="new-detail-chat position-relative" data="{{{discussionid}}}" id="list_comment">
+      <div class="loading-page"></div>
    </div>
-   <div class="new-detail-see-more">
-      <div class="new-detail-see-more-title">
-         <small class="new-detail-btn-see-more" id="see-more">Xem thêm Bình luận </small>
-      </div>
-   </div>
-
-    
 <hr>
 {{/coursedata}}
-<div class="btn-new-Related">
-   <button type="button" class="btn btn-course-fs">Tin liên quan</button>
+<div class="btn-new-Related pt-1">
+   <button type="button" class="btn btn-course-fs">{{#str}}relatednews, local_newsvnr{{/str}}</button>
 </div>
 <div class="new-Related-body">
    <div class="row">
+      <div class="owl-carousel owl-theme" id="new-lastest">
       {{#courselqdata}} 
-      <div class="col-md-3">
-         <div class="new-Related-img">
-            <a href="{{newsurl}}"><img src="{{image}}"></a>
-         </div>
-         <a href="{{newsurl}}">
-            <h6 class="new-Related-title">{{title}}</h6>
-         </a>
-         <small class="text-date">{{time}}</small>
-         <br />
-         <small class="text-date">Người đăng: </small> <small class="new-Related-user">{{{discussionart}}}</small>
-         <p class="p-courselq">
-            {{content}}
-         </p>
-         <label class="new-Related-comment-info">
-         <i class="fa fa-eye" aria-hidden="true"> {{countviews}} &nbsp;</i>
-         <i class="fa fa-comment-o" aria-hidden="true"> {{countcomments}} &nbsp;</i>
-         </label>
-      </div>
+         {{> theme_moove/newscard}}
       {{/courselqdata}} 
+      </div>
    </div>
 </div>
 
@@ -172,31 +73,10 @@
 }}
 <script type="text/javascript">
    function ShowReplies(id)
-   {
-      
-
-
-       var show = $('#show-reply'+id); 
-      
-       show.hide();
-   
-       show.siblings('#hidden-reply'+id).show(200);
-       show.siblings('.list-reply'+id).show();
+   {      
+       var show = $('#show-reply'+id);       
+       show.fadeOut('fast');
+       $('#hidden-reply'+id).show();
+       $('.list-reply'+id).show();
    }
-   
-   
-   function HiddenReplies(id)
-   {  
-       var hidden = $('#hidden-reply'+id);
-       hidden.hide();
-   
-       hidden.siblings('#show-reply'+id).show(200);
-   
-       hidden.siblings('.list-reply'+id).hide();
-
-
-   
-   
-   }
-   
 </script>

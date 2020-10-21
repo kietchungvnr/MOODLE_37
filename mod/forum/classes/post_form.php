@@ -144,6 +144,7 @@ class mod_forum_post_form extends moodleform {
                 $mform->addElement('filemanager', 'attachments', get_string('attachment', 'forum'), null,
                     self::attachment_options($forum));
                 $mform->addHelpButton('attachments', 'attachment', 'forum');
+                $mform->addRule('attachments', get_string('required'), 'required', null, 'client');
             }
 
             if (!$post->parent && has_capability('mod/forum:pindiscussions', $modcontext)) {

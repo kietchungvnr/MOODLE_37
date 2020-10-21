@@ -30,8 +30,8 @@ user_preference_allow_ajax_update('sidepre-open', PARAM_ALPHA);
 require_once($CFG->libdir . '/behat/lib.php');
 
 if (isloggedin()) {
-    $navdraweropen = (get_user_preferences('drawer-open-nav', 'true') == 'true');
-    $draweropenright = (get_user_preferences('sidepre-open', 'true') == 'true');
+    $navdraweropen = (get_user_preferences('drawer-open-nav', 'false') == 'false');
+    $draweropenright = (get_user_preferences('sidepre-open', 'false') == 'false');
 } else {
     $navdraweropen = false;
     $draweropenright = false;
@@ -46,12 +46,17 @@ if ($navdraweropen) {
 }
 
 if ($draweropenright && $hasblocks) {
-    $extraclasses[] = 'drawer-open-right';
+    $extraclasses[] = 'drawer-open-left';
 }
 
 $coursepresentation = theme_moove_get_setting('coursepresentation');
 if ($coursepresentation == 2) {
     $extraclasses[] = 'coursepresentation-cover';
+}
+if(isset($_SERVER['HTTP_REFERER'])) {
+    $hasportal = true;
+} else {
+    $hasportal = false;
 }
 
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
@@ -66,8 +71,11 @@ $templatecontext = [
     'navdraweropen' => $navdraweropen,
     'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
-    'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu)
+    'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
+    'hasportal' => $hasportal
 ];
+
+// var_dump($templatecontext['hasportal']);die;
 
 // Improve boost navigation.
 theme_moove_extend_flat_navigation($PAGE->flatnav, 'course');

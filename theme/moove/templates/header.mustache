@@ -22,7 +22,7 @@
     Example context (json): {}
 }}
 <nav class="fixed-top navbar navbar-light navbar-expand moodle-has-zindex" menu>
-    <a href="#" class="btn-menu" id="btn-menu" style="margin-right:10px"><i class="icono fa fa-bars fa-2x text-gray" aria-hidden="true"></i></a>
+    <a href="javascript:;" class="btn-menu" id="btn-menu" style="margin-right:10px"><i class="icono fa fa-bars fa-2x text-gray" aria-hidden="true"></i></a>
     
     <a href="{{{ config.wwwroot }}}" class="navbar-brand {{# output.get_logo }}has-logo{{/ output.get_logo }}
         {{^ output.get_logo }}
@@ -30,7 +30,7 @@
         {{/ output.get_logo }}
             ">
         {{# output.get_logo }}
-            <span class="logo d-none d-sm-inline">
+            <span class="logo d-sm-inline">
                 <img src="{{output.get_logo}}" alt="{{sitename}}">
             </span>
         {{/ output.get_logo }}
@@ -43,7 +43,7 @@
         {{{output.nav_header}}}
         {{# flatnavigation }}
             {{#showdivider}}
-                <li class="metismenu" data-key="{{key}}" id=''><a class ="nav-active" href="{{{action}}}">{{{text}}}</a></li>
+                <a class ="nav-active" href="{{{action}}}"><li class="metismenu" data-key="{{key}}" id=''>{{{text}}}</li></a>
             {{/showdivider}}
         
         {{/ flatnavigation }}
@@ -66,7 +66,7 @@
 </nav>
 <header id="header" style="margin-top: 52px;">
     <nav class="menu">
-      <div class="enlaces" id="enlaces" style="display: none;">
+      <div class="enlaces" id="enlaces">
         {{{output.nav_header}}}
         {{# flatnavigation }}
             {{#showdivider}}
@@ -82,28 +82,27 @@
 
 {{#js}}
     $(function(){
-
-    var header = document.getElementById('header');
     //menu responsive
     //calcular ancho
     var ancho = $(window).width(),
-        enlaces = $('#enlaces'),
+        menu = $('#header .menu'),
         btnMenu = $('#btn-menu'),
         icono = $('#btn-menu .icono');
-
+        overflow = $('.overflow-all');
 
         btnMenu.on('click', function(e){
-            enlaces.slideToggle();
             icono.toggleClass('fa-bars');
             icono.toggleClass('fa-times');
+            menu.toggleClass('width-60');
+            overflow.toggleClass('d-block');
         });
-        if ($(this).width() <= 1380) {
-            icono.addClass('fa-bars');
-            icono.removeClass('fa-times');
 
-        } 
-
-        
+        overflow.click(function(e){
+            menu.removeClass('width-60');   
+            overflow.removeClass('d-block');
+            icono.toggleClass('fa-bars');
+            icono.toggleClass('fa-times');
+        })
     });
     $(function() {
         $('[data-key=addblock]').click(function(e){

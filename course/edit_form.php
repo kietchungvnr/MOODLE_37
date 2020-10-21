@@ -106,7 +106,8 @@ class course_edit_form extends moodleform {
 
         $toclist = array(
             '1' => 'Tuyển dụng',
-            '2' => 'Đào tạo'
+            '2' => 'Đào tạo',
+            '3' => 'EBM',
         );
 
         $orgjobtitle_options = array(
@@ -153,8 +154,8 @@ class course_edit_form extends moodleform {
         }
 
         //custom by Vũ - add cousesetup
-        $mform->addElement('autocomplete', 'coursesetup', get_string('coursesetup','local_newsvnr'), $coursesetupnames, $coursesetup_options);
-        $mform->setType('coursesetup', PARAM_TEXT);
+        // $mform->addElement('autocomplete', 'coursesetup', get_string('coursesetup','local_newsvnr'), $coursesetupnames, $coursesetup_options);
+        // $mform->setType('coursesetup', PARAM_TEXT);
 
         $mform->addElement('select', 'typeofcourse', get_string('typeofcourse','local_newsvnr'), $toclist);
         $mform->addRule('typeofcourse', get_string('missingtypeofcourse','local_newsvnr'), 'required', null, 'client');
@@ -424,7 +425,6 @@ class course_edit_form extends moodleform {
                 }
             }
         }
-
         if (core_tag_tag::is_enabled('core', 'course') &&
                 ((empty($course->id) && guess_if_creator_will_have_course_capability('moodle/course:tag', $categorycontext))
                 || (!empty($course->id) && has_capability('moodle/course:tag', $coursecontext)))) {

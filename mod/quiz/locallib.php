@@ -765,11 +765,9 @@ function get_postion_user($orgpositionid)
 
 
 function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
-     global $DB, $OUTPUT, $USER;
-
+    global $DB, $OUTPUT, $USER, $COURSE;
     if (empty($userid)) {
         $userid = $USER->id;
-      
     }
 
     if (!$attempts) {
@@ -777,28 +775,22 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
         $attempts = quiz_get_user_attempts($quiz->id, $userid);
     }
 
-
     // Calculate the best grade.
     $bestgrade = quiz_calculate_best_grade($quiz, $attempts);
     $bestgrade = quiz_rescale_grade($bestgrade, $quiz, false);
-
 
     $sql = "SELECT * from {grade_items} gi where gi.itemmodule = ? and gi.iteminstance = ?";
 
     $grade_item = $DB->get_record_sql($sql, array('quiz', $quiz->id));
 
-    $query = "SELECT code FROM {course} WHERE id = ?";
-
-    $coursecode = $DB->get_field_sql($query,[$grade_item->courseid]);
     //phần custom core
     // check gradepass
-    if($bestgrade >= $grade_item->gradepass)
-    {
+    if($bestgrade >= $grade_item->gradepass) {
         $result_interview = "E_PASS";
         $result_traning = "E_PASSED";
         $result = "PASS";
     }
-    else{
+    else {
         $result_interview = "E_FAIL";
         $result_traning = "E_FAILED";
         $result = "FAIL";
@@ -822,7 +814,10 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
     $timestart = end($attempts)->timestart;
 
     $date = new DateTime();
-
+    $timeopen = $quiz->timeopen;
+    $timeclose = $quiz->timeclose;
+    $convtimeopen = new DateTime("@$timeopen");
+    $convtimeclose = new DateTime("@$timeclose");
     $params_el = [
         'usercode' => $usercode,
         'grade' =>  $bestgrade,
@@ -835,7 +830,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
     ];
     $params_training_el = [
         'CodeEmp' => $usercode,
-        'CourseCode' => $coursecode,
+        'CourseCode' => $COURSE->code,
         'TestScore' =>  $bestgrade,
         'Result' => $result_traning,
         'TestName' => $quiz->name,
@@ -851,11 +846,33 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
         'DateInterview' => $date->format('Y-m-d H:i:sP'), 
         'Status' => '', 
     ];
+    $params_portal_exam_el = [
+        'ClassCode' => $COURSE->shortname,
+        'SubjectName' =>  $quiz->name,
+        'ExamName' => $quiz->code,
+        'ExamCode' => '',
+        'StudentId' => $USER->usercode,
+        'ExamScore' => $bestgrade, 
+        'ApiKeyCreate' => 'efcb96ee5e80c46157960459a7509d46'
+    ];
+    $params_portal_register_test_el = [
+        'GroupCourseName' => $DB->get_field('course_categories', 'name', ['id' => $COURSE->category]),
+        'PlacementTestName' => $COURSE->fullname,
+        'SubjectName' =>  $quiz->name,
+        'ExamName' => $quiz->code,
+        'ExamCode' => '',
+        // 'StartDate' => $convtimeopen->format('Y-m-d'),
+        // 'EndDate' => $convtimeclose->format('Y-m-d'), 
+        'StudentId' => $USER->usercode, 
+        'ExamScore' => $bestgrade,
+        'ApiKeyCreate' => 'efcb96ee5e80c46157960459a7509d46'
+    ];
     $training_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'UpdateTraineeResult']);
     $interview_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateInterviewResult']);
+    $portal_exam_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateClassResult']);
+    $portal_register_test_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreatePlacementTestResult']);
     
     $url_el = curPageURL() . '/local/newsvnr/ajax.php';
-
 
     // Save the best grade in the database.
     if (is_null($bestgrade)) {
@@ -869,8 +886,9 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
         $success = $DB->update_record('quiz_grades', $grade);
         // Custom by Vũ: POST CURL 
         if($success) {
+            // Đẩy thông tin kết quả tuyển dụng sang HRM
             if($typeofcourse == 1) {
-                if($interview_api) {
+                if($interview_api && $interview_api->visible == 1) {
                     $get_params_interview_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $interview_api->id]);
                     $params_interview_hrm = [];
                     
@@ -915,10 +933,10 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                     $url_interview_hrm = $interview_api->url;
                     HTTPPost($url_interview_hrm, $params_interview_hrm);
                 }
-
             }
+            // Đẩy thông tin kết quả đào tạo sang HRM
             if($typeofcourse == 2) {
-                if($training_api) {
+                if($training_api && $training_api->visible == 1) {
                     $get_params_training_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $training_api->id]);
                     $params_training_hrm = [];
                     
@@ -964,6 +982,39 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                     HTTPPost($url_training_hrm, $params_training_hrm);
                 }
             }
+            // Đẩy thông tin kết quả kì thi đầu vào và kì thi trong lớp sang EBM
+            if($typeofcourse == 3) {
+                if($portal_exam_api && $portal_exam_api->visible == 1) {
+                    $get_params_portal_ebm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $portal_exam_api->id]);
+                    $params_portal_ebm = [];
+                    foreach ($get_params_portal_ebm as $key => $value) {
+                        if(array_key_exists($value->client_params, $params_portal_exam_el)) {
+                            $params_portal_ebm[$value->client_params] = $params_portal_exam_el[$value->client_params];
+                        } else {
+                            $params_portal_ebm[$value->client_params] = $value->default_value;
+                        }
+                        
+                    }
+
+                    $url_portal_ebm = $portal_exam_api->url;
+                    HTTPPost_EBM($url_portal_ebm, $params_portal_ebm);
+                }
+                if($portal_register_test_api && $portal_register_test_api->visible == 1) {
+                    $get_params_portal_ebm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $portal_register_test_api->id]);
+                    $params_portal_ebm = [];
+                    foreach ($get_params_portal_ebm as $key => $value) {
+                        if(array_key_exists($value->client_params, $params_portal_register_test_el)) {
+                            $params_portal_ebm[$value->client_params] = $params_portal_register_test_el[$value->client_params];
+                        } else {
+                            $params_portal_ebm[$value->client_params] = $value->default_value;
+                        }
+                        
+                    }
+
+                    $url_portal_ebm = $portal_register_test_api->url;
+                    HTTPPost_EBM($url_portal_ebm, $params_portal_ebm);
+                }
+            }
             HTTP_POST($ch = curl_init(), $params_el, $url_el);
         }
 
@@ -978,9 +1029,9 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
 
         //Custom by Vũ: POST CURL 
         if($success) {
+            // Đẩy thông tin kết quả tuyển dụng sang HRM
             if($typeofcourse == 1) {
-            
-                if($interview_api) {
+                if($interview_api && $interview_api->visible == 1) {
                     $get_params_interview_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $interview_api->id]);
                     $params_interview_hrm = [];
                     
@@ -1026,8 +1077,9 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                     HTTPPost($url_interview_hrm, $params_interview_hrm);
                 }
             }
+            // Đẩy thông tin kết quả đào tạo sang HRM
             if($typeofcourse == 2) {
-            if($training_api) {
+                if($training_api && $training_api->visible == 1) {
                     $get_params_training_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $training_api->id]);
                     $params_training_hrm = [];
                     
@@ -1073,10 +1125,41 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                     HTTPPost($url_training_hrm, $params_training_hrm);
                 }
             }
+            // Đẩy thông tin kết quả kì thi đầu vào và kì thi trong lớp sang EBM
+            if($typeofcourse == 3) {
+                if($portal_exam_api && $portal_exam_api->visible == 1) {
+                    $get_params_portal_ebm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $portal_exam_api->id]);
+                    $params_portal_ebm = [];
+                    foreach ($get_params_portal_ebm as $key => $value) {
+                        if(array_key_exists($value->client_params, $params_portal_exam_el)) {
+                            $params_portal_ebm[$value->client_params] = $params_portal_exam_el[$value->client_params];
+                        } else {
+                            $params_portal_ebm[$value->client_params] = $value->default_value;
+                        }
+                        
+                    }
+
+                    $url_portal_ebm = $portal_exam_api->url;
+                    HTTPPost_EBM($url_portal_ebm, $params_portal_ebm);
+                }
+                if($portal_register_test_api && $portal_register_test_api->visible == 1) {
+                    $get_params_portal_ebm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $portal_register_test_api->id]);
+                    $params_portal_ebm = [];
+                    foreach ($get_params_portal_ebm as $key => $value) {
+                        if(array_key_exists($value->client_params, $params_portal_register_test_el)) {
+                            $params_portal_ebm[$value->client_params] = $params_portal_register_test_el[$value->client_params];
+                        } else {
+                            $params_portal_ebm[$value->client_params] = $value->default_value;
+                        }
+                        
+                    }
+
+                    $url_portal_ebm = $portal_register_test_api->url;
+                    HTTPPost_EBM($url_portal_ebm, $params_portal_ebm);
+                }
+            }
             HTTP_POST($ch = curl_init(), $params_el, $url_el);
         }
-
-      
     }
 
     quiz_update_grades($quiz, $userid);

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course list block.
+ * Block khóa học theo kế hoạch cá nhân của user
  *
  * @package    block_user(student)
  * @copyright  2019 Le Thanh Vu

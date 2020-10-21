@@ -11,7 +11,7 @@
                             <div class="card-body">
                                 <div class="row align-items-start mb-3 pb-1" style="border-bottom: 1px solid wheat;">
                                     <div class="col">
-                                        <span style="font-weight: 700; color: grey">XU HƯỚNG HOẠT ĐỘNG</span>
+                                        <span style="font-weight: 700; color: grey">{{#str}}trendactivity, block_vnr_db_teacheruser_dd{{/str}}</span>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fa fa-window-minimize m-0 cl-position cl-cursor" aria-hidden="true" data-toggle="collapse" data-target="#coursemodulecomp_chart"></i>
@@ -46,7 +46,7 @@
                             <div class="card-body">
                                 <div class="row align-items-start pb-1" style="border-bottom: 1px solid wheat;">
                                     <div class="col">
-                                        <span style="font-weight: 700; color: grey">TOP HOẠT ĐỘNG DIỄN ĐÀN</span>
+                                        <span style="font-weight: 700; color: grey">{{#str}}topjoinforum, block_vnr_db_teacheruser_dd{{/str}}</span>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fa fa-window-minimize m-0 cl-position cl-cursor" aria-hidden="true" data-toggle="collapse" data-target="#hdhd"></i>
@@ -60,9 +60,9 @@
                                         <table class="table table-striped mb-0">
                                             <thead>
                                               <tr>
-                                                <th>Chủ đề</th>
-                                                <th>Bài viết</th>
-                                                <th>Bình luận</th>
+                                                <th>{{#str}}topic, block_vnr_db_teacheruser_dd{{/str}}</th>
+                                                <th>{{#str}}post, block_vnr_db_teacheruser_dd{{/str}}</th>
+                                                <th>{{#str}}comment, block_vnr_db_teacheruser_dd{{/str}}</th>
                                               </tr>
                                             </thead>
                                             <tbody>
@@ -91,7 +91,7 @@
                             <div class="card-body">
                                 <div class="row align-items-start pb-1" style="border-bottom: 1px solid wheat;">
                                     <div class="col">
-                                        <span style="font-weight: 700; color: grey">BẢNG XẾP HẠNG</span>
+                                        <span style="font-weight: 700; color: grey">{{#str}}rankchart, block_vnr_db_teacheruser_dd{{/str}}</span>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fa fa-window-minimize mr-0 cl-position cl-cursor" aria-hidden="true" data-toggle="collapse" data-target="#bxh"></i>
@@ -106,9 +106,9 @@
                                         <table class="table table-striped mb-0">
                                             <thead>
                                               <tr>
-                                                <th>Tên</th>
-                                                <th>Bài viết</th>
-                                                <th>Bình luận</th>
+                                                <th>{{#str}}student, block_vnr_db_teacheruser_dd{{/str}}</th>
+                                                <th>{{#str}}post, block_vnr_db_teacheruser_dd{{/str}}</th>
+                                                <th>{{#str}}comment, block_vnr_db_teacheruser_dd{{/str}}</th>
                                               </tr>
                                             </thead>
                                             <tbody>
@@ -180,22 +180,25 @@ require(
         $.ajax(script,settings)
         .then(function(response) {
 
-          if (response.error) {
+        if (response.error) {
               Notification.addNotification({
                   message: response.error,
                   type: "error"
               });
-          } else {
-              var strings = [{
-                  key: 'nodatatable',
-                  component: 'local_newsvnr'
-              }, ];
-              Str.get_strings(strings).then(function(s) {
-                    var list_coursename = response.list_coursename;
-                    var list_modules_comp = response.list_modules_comp;
-                    // Create a chart.
-                    Highcharts.chart('coursemodulecomp_chart', {
-                    chart: {
+        } else {
+            var strings = [{
+                key: 'numbertickcompletedcourse',
+                component: 'block_vnr_db_teacheruser_dd'
+            }, {
+                key: 'numbercompletedmodules',
+                component: 'block_vnr_db_teacheruser_dd'
+            }];
+            Str.get_strings(strings).then(function(s) {
+                var list_coursename = response.list_coursename;
+                var list_modules_comp = response.list_modules_comp;
+                // Create a chart.
+                Highcharts.chart('coursemodulecomp_chart', {
+                chart: {
                         type: 'column'
                     },
                     title: {
@@ -214,10 +217,9 @@ require(
                     yAxis: {
                         min: 0,
                         title: {
-                            text: 'Số lượng hoàn thành modules'
+                            text: s[1]
                         }
                     },
-
                     tooltip: {
                         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
@@ -233,20 +235,15 @@ require(
                         }
                     },
                     series: [{
-                        name: 'Số lượt đánh dấu hoàn thành khóa học',
+                        name: s[0],
                         data: list_modules_comp,
                         color: '#e87c01'
                     }]
                 });
-                        
             });
-
-          }
-          return;
+        }
+            return;
         }).fail(Notification.exception);
-        
-       
-
     }
 
 );

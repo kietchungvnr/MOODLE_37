@@ -5,6 +5,7 @@
     require_once('../config.php');
     require_once('lib.php');
     require_once($CFG->libdir.'/completionlib.php');
+    require_once('../local/newsvnr/lib.php');
 
     $id          = optional_param('id', 0, PARAM_INT);
     $name        = optional_param('name', '', PARAM_TEXT);
@@ -18,6 +19,7 @@
     $marker      = optional_param('marker',-1 , PARAM_INT);
     $switchrole  = optional_param('switchrole',-1, PARAM_INT); // Deprecated, use course/switchrole.php instead.
     $return      = optional_param('return', 0, PARAM_LOCALURL);
+    $portalebmtoken      = optional_param('tokenbase', '', PARAM_RAW);
 
     $params = array();
     if (!empty($name)) {
@@ -54,6 +56,27 @@
     if ($switchrole == 0 && confirm_sesskey()) {
         role_switch($switchrole, $context);
     }
+
+    // Custom by Vũ: Tích hợp SSO EBM, tự đăng nhập khi gọi LMS từ portal ebm
+    if(!empty($portalebmtoken)) {
+        $get_configapi = $DB->get_record('local_newsvnr_api', ['functionapi' => 'ValidateAuthenticate', 'visible' => '1']);
+        if($get_configapi) {
+            $params_portal = [
+                'Token' => $portalebmtoken
+            ];
+            $api_data = HTTPPost_EBM_return($get_configapi->url, $params_portal);
+            $user = get_complete_user_data('username', $api_data->Data);
+            if($user) {
+                if (complete_user_login($user)) {
+                    \core\session\manager::apply_concurrent_login_limit($user->id, session_id());
+                    // $auth = true;
+                    $USER->loggedin = true;
+                    $USER->site = $CFG->wwwroot;
+                    set_moodle_cookie($USER->username);
+                }
+            }
+        }
+    } 
 
     require_login($course);
 

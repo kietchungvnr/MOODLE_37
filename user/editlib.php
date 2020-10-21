@@ -382,7 +382,6 @@ function useredit_shared_definition(&$mform, $editoroptions, $filemanageroptions
             $mform->setType($allname, PARAM_NOTAGS);
         }
     }
-
     if (core_tag_tag::is_enabled('core', 'user') and empty($USER->newadminuser)) {
         $mform->addElement('header', 'moodle_interests', get_string('interests'));
         $mform->addElement('tags', 'interests', get_string('interestslist'),
