@@ -156,9 +156,9 @@ if(!empty($course->id)) {
         if(in_array($value->courseofposition, $courseofposition) == false)
             $courseofposition[] = $value->courseofposition;
     }
-    $course->courseoforgstructure = $DB->get_records_sql('SELECT TOP(1) courseoforgstructure FROM {course_position} WHERE course = ?', [$course->id]);
-    if($course->courseoforgstructure) {
-        $course->courseoforgstructure = $DB->get_field('orgstructure', 'name', ['id' => $course->courseoforgstructure]);    
+    $courseoforgstructure = $DB->get_record_sql('SELECT TOP(1) courseoforgstructure FROM {course_position} WHERE course = ?', [$course->id]);
+    if($courseoforgstructure) {
+        $course->courseoforgstructure = $DB->get_field('orgstructure', 'name', ['id' => $courseoforgstructure->courseoforgstructure]);    
     } else {
         $course->courseoforgstructure = '';
     }
