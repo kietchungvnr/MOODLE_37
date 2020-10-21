@@ -362,6 +362,7 @@ class mod_assign_renderer extends plugin_renderer_base {
                 $cell1content = get_string('latesubmissions', 'assign');
                 $cutoffdate = $summary->cutoffdate;
                 if ($cutoffdate) {
+                    $cell1content = get_string('latesubmissions', 'assign');
                     if ($cutoffdate > $time) {
                         $cell2content = get_string('latesubmissionsaccepted', 'assign', userdate($summary->cutoffdate));
                     } else {

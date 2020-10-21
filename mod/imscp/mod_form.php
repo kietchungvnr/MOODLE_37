@@ -55,6 +55,10 @@ class mod_imscp_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $this->standard_intro_elements();
+        
+         // Custom by Thắng : Thêm field chứa folder id khi tạo module trên trang thư viện trực tuyến
+        $mform->addElement('hidden', 'folderid', null);
+        $mform->setType('folderid', PARAM_INT);
 
         // IMS-CP file upload.
         $mform->addElement('header', 'content', get_string('contentheader', 'imscp'));
@@ -66,6 +70,7 @@ class mod_imscp_mod_form extends moodleform_mod {
         $mform->addElement('select', 'keepold', get_string('keepold', 'imscp'), $options);
         $mform->setDefault('keepold', $config->keepold);
         $mform->setAdvanced('keepold', $config->keepold_adv);
+
 
         $this->standard_coursemodule_elements();
 

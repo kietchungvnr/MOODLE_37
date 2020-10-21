@@ -106,6 +106,21 @@ function resource_add_instance($data, $mform) {
     $DB->set_field('course_modules', 'instance', $data->id, array('id'=>$cmid));
     resource_set_mainfile($data);
 
+    // Custom by Vũ: Thêm điều kiện ràng buộc hoàn thành khóa học
+    if($data->completion == 2) {
+        $completionrules = new stdClass;
+        if($data->completiontimespent) {
+            $completionrules->moduleid = $cmid;
+            $completionrules->completiontimespent = $data->completiontimespent;
+            $completionrules->timemodified = time();
+            $completionrules->id = $DB->insert_record('course_modules_completion_rule', $completionrules);    
+        } else {
+            $completionrules->moduleid = $cmid;
+            $completionrules->timemodified = time();
+            $completionrules->id = $DB->insert_record('course_modules_completion_rule', $completionrules);    
+        }
+    }
+
     $completiontimeexpected = !empty($data->completionexpected) ? $data->completionexpected : null;
     \core_completion\api::update_completion_date_event($cmid, 'resource', $data->id, $completiontimeexpected);
 
@@ -129,6 +144,29 @@ function resource_update_instance($data, $mform) {
 
     $DB->update_record('resource', $data);
     resource_set_mainfile($data);
+
+    // Custom by Vũ: Thêm điều kiện ràng buộc hoàn thành khóa học
+    if($data->completion == 2) {
+        $completionrules = new stdClass;
+        if($DB->record_exists('course_modules_completion_rule', ['moduleid' => $data->update])) {
+            $completionrules->id = $DB->get_field('course_modules_completion_rule', 'id', ['moduleid' => $data->update]);
+            $completionrules->completiontimespent = $data->completiontimespent;
+            $completionrules->timemodified = time();
+            $DB->update_record('course_modules_completion_rule', $completionrules); 
+            $DB->delete_records('course_modules_completion_timer', ['completionruleid' => $completionrules->id]);       
+        } else {
+            if(isset($data->completiontimespent)) {
+                $completionrules->moduleid = $data->update;
+                $completionrules->completiontimespent = $data->completiontimespent;
+                $completionrules->timemodified = time();
+                $completionrules->id = $DB->insert_record('course_modules_completion_rule', $completionrules);    
+            } else {
+                $completionrules->moduleid = $data->update;
+                $completionrules->timemodified = time();
+                $completionrules->id = $DB->insert_record('course_modules_completion_rule', $completionrules);    
+            }
+        }
+    }
 
     $completiontimeexpected = !empty($data->completionexpected) ? $data->completionexpected : null;
     \core_completion\api::update_completion_date_event($data->coursemodule, 'resource', $data->id, $completiontimeexpected);
@@ -364,7 +402,7 @@ function resource_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
         return false;
     }
 
-    require_course_login($course, true, $cm);
+    // require_course_login($course, true, $cm);
     if (!has_capability('mod/resource:view', $context)) {
         return false;
     }
@@ -531,7 +569,8 @@ function resource_view($resource, $course, $cm, $context) {
 
     // Completion.
     $completion = new completion_info($course);
-    $completion->set_module_viewed($cm);
+    // Custom by Vũ: Điều kiện hoàn thành module theo thời gian quy định
+    $completion->set_module_resource_completion_viewed($cm);
 }
 
 /**

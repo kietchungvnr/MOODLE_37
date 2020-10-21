@@ -1,0 +1,40 @@
+{{#hasforum}}
+<h4 class="text-dark md-block font-weight-bold" align="center">{{#str}}discussionforum, theme_moove{{/str}}</h4>	
+<div class="container ">
+    <div class="row">
+        
+            {{#forumdata}}
+		<div class="col-md-12 fp-mg card course-bs outline-none" id="mydiscussion" tabindex="1">
+			
+			<div class="row">
+				<div class="col-8 ">
+					<div class="parentbox1z">
+					<div class="row">
+						<div class="col-1">
+							<i class="fa fa-comments-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-11 p-2">
+							{{{discussurl}}}
+							<div class="rows">
+								
+							<div class="d-inline text-date">{{#str}}course, theme_moove{{/str}}:</div>
+							<div class="d-inline">{{{courseurl}}}</div>
+							</div>
+						</div>
+					</div>
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="parentbox2 p-2" style="background: rgba(211, 211, 211, 0.7);border-radius: 10px; display: block;">
+					<div class="row"><div class="col">{{{userurl}}}</div></div>
+					<div class="row"><div class="col">
+					<small class="text-date">{{{timeurl}}}</small>
+					</div></div>
+					</div>
+				</div>
+			</div>	
+		</div>
+	{{/forumdata}}
+    </div>
+</div>
+{{/hasforum}}

@@ -151,6 +151,16 @@ class behat_context_helper {
     }
 
     /**
+     * Return whether there is a context of the specified classname.
+     *
+     * @param string $classname
+     * @return bool
+     */
+    public static function has_context(string $classname): bool {
+        return self::$environment->hasContextClass($classname);
+    }
+
+    /**
      * Translates string to XPath literal.
      *
      * @param string $label label to escape

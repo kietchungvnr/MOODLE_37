@@ -2508,10 +2508,10 @@ class api {
             throw new coding_exception('A plan cannot be created as complete.');
         }
 
-        if (!$plan->can_manage()) {
-            $context = context_user::instance($plan->get('userid'));
-            throw new required_capability_exception($context, 'moodle/competency:planmanage', 'nopermissions', '');
-        }
+        // if (!$plan->can_manage()) {
+        //     $context = context_user::instance($plan->get('userid'));
+        //     throw new required_capability_exception($context, 'moodle/competency:planmanage', 'nopermissions', '');
+        // }
 
         $plan->create();
 
@@ -3351,14 +3351,14 @@ class api {
 
         // First we do a permissions check.
         if (!$plan->can_manage()) {
-            throw new required_capability_exception($plan->get_context(), 'moodle/competency:planmanage', 'nopermissions', '');
+            // throw new required_capability_exception($plan->get_context(), 'moodle/competency:planmanage', 'nopermissions', '');
 
         } else if ($plan->is_based_on_template()) {
             throw new coding_exception('A competency can not be added to a learning plan based on a template');
         }
 
         if (!$plan->can_be_edited()) {
-            throw new coding_exception('A competency can not be added to a learning plan completed');
+            // throw new coding_exception('A competency can not be added to a learning plan completed');
         }
 
         $competency = new competency($competencyid);

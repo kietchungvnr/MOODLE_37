@@ -9842,7 +9842,7 @@ div.dropdown-item:focus-within {
   display: inline; }
 
 .notifytiny {
-  font-size: 0.703125rem; }
+  font-size: 15px; }
 
 .notifytiny li,
 .notifytiny td {

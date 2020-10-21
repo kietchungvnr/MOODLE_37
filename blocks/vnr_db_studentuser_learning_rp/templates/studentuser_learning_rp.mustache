@@ -1,0 +1,89 @@
+{{! <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
+    </div>
+       
+</div> }}
+
+<style type="text/css">
+    /*@media (min-width: 576px) {
+        .card-deck .card {
+            margin-right: 1rem;
+            margin-bottom: 0;
+            margin-left: 1rem;
+        }
+        #first-column.card {
+            margin-left: 0px;
+            padding: 0 30px 0 30px;
+        }
+        #first-column.card .card-body {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+            
+    }*/
+     @media (max-width: 1366px) {
+          [data-block="vnr_db_studentuser_learning_rp"].card .card-body {
+            padding: 0.25rem; 
+          }
+      }
+</style>
+<div class="container-fluid p-0">
+ 
+  <div class="card-deck">
+    <div class="card" style="background-color: #f3a837" id="first-column">
+      <div class="card-body text-center text-white" style="padding-left: 0.1rem;
+    padding-right: 0.1rem;">
+        <div class="d-flex justify-content-center">
+          <div class="flex-fill" style="border-right: 1px solid #fff;padding-left: 0.1rem;
+    padding-right: 0.1rem;"><p class="card-text block-text-number">{{#countcourse}}{{countcourse}}{{/countcourse}}{{^countcourse}}0{{/countcourse}}</p>
+        <p class="card-text font-weight-bold">{{#str}}coursecompleted, block_vnr_db_studentuser_learning_rp{{/str}}</p></div>
+          <div class="flex-fill" style="padding-left: 0.1rem;
+    padding-right: 0.1rem;"><p class="card-text block-text-number">{{#completedcourses}}{{completedcourses}}{{/completedcourses}}{{^completedcourses}}0{{/completedcourses}}</p>
+        <p class="card-text font-weight-bold">{{#str}}coursenotcompleted, block_vnr_db_studentuser_learning_rp{{/str}}</p></div>
+         
+        </div>
+     
+      </div>
+    </div>
+    <div class="card" style="background-color: #272453">
+      <div class="card-body text-center text-white">
+        <p class="card-text block-text-number">{{#completed_percent_requirecourses}}{{completed_percent_requirecourses}}%{{/completed_percent_requirecourses}}{{^completed_percent_requirecourses}}0%{{/completed_percent_requirecourses}}</p>
+        <p class="card-text font-weight-bold">({{#completed_requirecourses}}{{completed_requirecourses}}{{/completed_requirecourses}}{{^completed_requirecourses}}0{{/completed_requirecourses}}/{{#total_requirecourses}}{{total_requirecourses}}{{/total_requirecourses}}{{^total_requirecourses}}0{{/total_requirecourses}} {{#str}}course, block_vnr_db_studentuser_learning_rp{{/str}})</p>
+        <p class="card-text">{{#str}}requiredcoursecompletedrate, block_vnr_db_studentuser_learning_rp{{/str}}</p>
+      </div>
+    </div>
+    <div class="card" style="background-color: #272453">
+      <div class="card-body text-center text-white">
+        <p class="card-text block-text-number">{{#completed_percent_positioncourses}}{{completed_percent_positioncourses}}%{{/completed_percent_positioncourses}}{{^completed_percent_positioncourses}}0%{{/completed_percent_positioncourses}}</p>
+        <p class="card-text font-weight-bold">({{#completed_positioncourses}}{{completed_positioncourses}}{{/completed_positioncourses}}{{^completed_positioncourses}}0{{/completed_positioncourses}}/{{#total_positioncourses}}{{total_positioncourses}}{{/total_positioncourses}}{{^total_positioncourses}}0{{/total_positioncourses}} {{#str}}course, block_vnr_db_studentuser_learning_rp{{/str}})</p>
+        <p class="card-text">{{#str}}coursecompletedbyuserplanrate, block_vnr_db_studentuser_learning_rp{{/str}}</p>
+      </div>
+    </div>
+    <div class="card" style="background-color: #272453">
+      <div class="card-body text-center text-white">
+        <p class="card-text block-text-number">{{#completed_percent_plancourses}}{{completed_percent_plancourses}}%{{/completed_percent_plancourses}}{{^completed_percent_plancourses}}0%{{/completed_percent_plancourses}}</p>
+        <p class="card-text font-weight-bold">({{#completed_plancourses}}{{completed_plancourses}}{{/completed_plancourses}}{{^completed_plancourses}}0{{/completed_plancourses}}/{{#total_plancourses}}{{total_plancourses}}{{/total_plancourses}}{{^total_plancourses}}0{{/total_plancourses}} {{#str}}course, block_vnr_db_studentuser_learning_rp{{/str}})</p>
+        <p class="card-text">{{#str}}userplancompletedrate, block_vnr_db_studentuser_learning_rp{{/str}}</p>
+      </div>
+    </div>
+    <div class="card" style="background-color: #1cc560">
+      <div class="card-body text-center text-white">
+        <p class="card-text block-text-number">{{#countcompetencies}}{{countcompetencies}}{{/countcompetencies}}{{^countcompetencies}}0{{/countcompetencies}}</p>
+        <p class="card-text font-weight-bold">{{#str}}competencyachieved, block_vnr_db_studentuser_learning_rp{{/str}}</p>
+        <p class="card-text">{{#str}}totalcompetencycompleted, block_vnr_db_studentuser_learning_rp{{/str}}</p>
+      </div>
+    </div>  
+    <div class="card" style="background-color: #1cc560">
+      <div class="card-body text-center text-white">
+        <p class="card-text block-text-number">{{#countbadges}}{{countbadges}}{{/countbadges}}{{^countbadges}}0{{/countbadges}}</p>
+        <p class="card-text font-weight-bold">{{#str}}badgeachieved, block_vnr_db_studentuser_learning_rp{{/str}}</p>
+        <p class="card-text">{{#str}}totalbadgecompleted, block_vnr_db_studentuser_learning_rp{{/str}}</p>
+      </div>
+  </div>
+</div>
+</div>

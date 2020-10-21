@@ -819,7 +819,7 @@ class flexible_table {
      * @return string contents of cell in column 'fullname', for this row.
      */
     function col_fullname($row) {
-        global $COURSE;
+        global $PAGE, $COURSE;
 
         $name = fullname($row, has_capability('moodle/site:viewfullnames', $this->get_context()));
         if ($this->download) {

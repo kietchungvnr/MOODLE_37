@@ -7554,6 +7554,40 @@
         "yuitest-coverage": ">=0.0.5"
       },
       "dependencies": {
+        "cli": {
+          "version": "0.4.3",
+          "resolved": "https://registry.npmjs.org/cli/-/cli-0.4.3.tgz",
+          "integrity": "sha1-5oGcjV+qlX9k+Y9mqFBiaMHR8X0=",
+          "dev": true,
+          "requires": {
+            "glob": ">= 3.1.4"
+          }
+        },
+        "jshint": {
+          "version": "0.9.1",
+          "resolved": "https://registry.npmjs.org/jshint/-/jshint-0.9.1.tgz",
+          "integrity": "sha1-/zLsfwn4QAH3SY7q/WPJ5Puy3A4=",
+          "dev": true,
+          "requires": {
+            "cli": "0.4.3",
+            "minimatch": "0.0.x"
+          }
+        },
+        "lru-cache": {
+          "version": "1.0.6",
+          "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-1.0.6.tgz",
+          "integrity": "sha1-qlD5cEdCKsclQ72hd6nJ0BjZhFI=",
+          "dev": true
+        },
+        "minimatch": {
+          "version": "0.0.5",
+          "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-0.0.5.tgz",
+          "integrity": "sha1-lrtJC707poNrv6wRGt91MBsVhN4=",
+          "dev": true,
+          "requires": {
+            "lru-cache": "~1.0.2"
+          }
+        },
         "progress": {
           "version": "0.1.0",
           "resolved": "https://registry.npmjs.org/progress/-/progress-0.1.0.tgz",

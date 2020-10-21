@@ -1,0 +1,100 @@
+ <div class="container-fulid mb-2" id="testthoi">
+     
+    <div class="row">
+         <div class="col-md-3">
+            <select class="form-control" id="listuserplan">
+                {{! <option    selected="selected" value="">Chọn kế hoạch</option> }}
+                {{#listuserplan}}
+                <option value="{{id}}"  selected="selected">{{name}}</option>
+                {{/listuserplan}}
+            </select>
+        </div>
+    </div>
+</div>
+
+ <div class="container-fluid outline-none " id="courseuserplanslider" tabindex="1">
+    <div class="row align-content-start">
+            {{#listusercoursecomp}}
+            <div id="course-userplan-slider" class="owl-carousel owl-theme">
+                {{#newscourse}}
+                <div class="post-slide6">
+                    <div class="post-img">
+                        {{{courseimage}}}
+                        <div class="post-info">
+                            <ul class="category">
+                                <li>{{#str}}countstudent, block_vnr_db_lptimeline_userplan{{/str}} <a href="#">{{countstudent}}</a></li>
+                                <li>{{#str}}teachername, block_vnr_db_lptimeline_userplan{{/str}} <a href="#">{{fullnamet}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="post-review">
+                        <span class="icons">
+                               {{{imageteacher}}}
+                        </span>
+                        <h3 class="post-title"><a href="{{{link}}}" title="{{fullname}}">{{#shortentext}}80, {{fullname}}{{/shortentext}}</a></h3>
+                            <p class="post-teachername">{{#shortentext}}30, {{fullnamet}}{{/shortentext}}</p>
+                            
+                            <p class="post-description">{{#shortentext}}90, {{summary}}{{/shortentext}}</p>
+
+                            <p class="post-enrolmethod">
+                                {{#enrolmethod}}{{{enrolmethod}}}{{/enrolmethod}}
+                                {{#progress}}
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}"
+                                      aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%">
+                                            {{progress}}%
+                                        </div>
+                                    </div>
+                                {{/progress}}
+                            </p>
+                    </div>
+                </div>
+                {{/newscourse}}
+            </div>
+            {{/listusercoursecomp}}
+            {{#nohascusercoursecomp}}
+                <div class="d-flex justify-content-center alert alert-info alert-block fade in w-100 ">{{#str}}nocourse, block_vnr_db_lptimeline_userplan{{/str}}</div>
+            {{/nohascusercoursecomp}}
+    </div>
+</div>
+{{#js}}
+require(['jquery', 'core/templates', 'core/notification', 'core/config', 'core/str'], function($, templates, notification, Config, Str) {
+    
+    $('#listuserplan').on('change', function(){
+
+        var userplanid = $(this).val();
+        var owluserplancourse_block = $('#course-userplan-slider');
+        var settings = {
+                type: 'GET',
+                processData: true,
+                data:{
+                    action: 'get_courseplan',
+                    userplanid: userplanid,
+                },
+                contentType: "application/json"
+        };
+        var script = Config.wwwroot + '/local/newsvnr/ajax.php';
+        $.ajax(script, settings)
+        .then(function(response) {
+            var strings = [{
+                key: 'nocourse',
+                component: 'block_vnr_db_lptimeline_userplan'
+            }, ];
+            Str.get_strings(strings).then(function(s) {
+                var data = JSON.parse(response);
+                if(data.listusercoursecomp.length != 0) {
+                    templates.render('block_vnr_db_lptimeline_userplan/lptimeline_usercoursecomp', data).done(function(html, js) {
+                        owluserplancourse_block.replaceWith(html);
+                        templates.runTemplateJS(js);
+                    }).fail(notification.exception);
+                } 
+                else {
+                    var html = '<div class="d-flex justify-content-center alert alert-info alert-block fade in ">' + s[0] + '</div>';
+                    owluserplancourse_block.html(html);
+                }
+            });
+        }).fail(notification.exception);
+    });
+
+});
+{{/js}}

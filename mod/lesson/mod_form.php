@@ -61,7 +61,10 @@ class mod_lesson_mod_form extends moodleform_mod {
         $mform->addElement('hidden', 'width');
         $mform->setType('width', PARAM_INT);
         $mform->setDefault('width', $lessonconfig->slideshowwidth);
-
+         // Custom by Thắng : Thêm field chứa folder id khi tạo module trên trang thư viện trực tuyến
+        $mform->addElement('hidden', 'folderid', null);
+        $mform->setType('folderid', PARAM_INT);
+        
         /** Legacy slideshow height element to maintain backwards compatibility */
         $mform->addElement('hidden', 'height');
         $mform->setType('height', PARAM_INT);

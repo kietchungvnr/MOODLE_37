@@ -68,7 +68,7 @@ if ($plan != null) {
         throw new coding_exception('Completed plan can not be edited');
     }
 } else if (!$cancreate) {
-    throw new required_capability_exception($PAGE->context, 'moodle/competency:planmanage', 'nopermissions', '');
+    // throw new required_capability_exception($PAGE->context, 'moodle/competency:planmanage', 'nopermissions', '');
 }
 
 $form = new \tool_lp\form\plan($url->out(false), $customdata);

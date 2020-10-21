@@ -2428,7 +2428,7 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
                 $this->assertFalse($adminoptions->editcompletion);
                 $this->assertFalse($adminoptions->copy);
             } else {
-                $this->assertCount(15, $course['options']);
+                $this->assertCount(14, $course['options']);
                 $this->assertFalse($adminoptions->update);
                 $this->assertFalse($adminoptions->filters);
                 $this->assertFalse($adminoptions->reports);

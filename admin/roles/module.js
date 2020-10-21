@@ -15,11 +15,12 @@ M.core_role = {};
  * @param {string} tableid
  * @param {int} contextid
  */
-M.core_role.init_cap_table_filter = function(Y, tableid, contextid) {
+M.core_role.init_cap_table_filter = function(Y, tableid, contextid, pagelayout) {
 
     var CapTableFilter = function(tableid) {
         this.tableid = tableid;
         this.context = contextid;
+        this.pagelayout = pagelayout;
         this.initializer();
     };
     CapTableFilter.prototype = {
@@ -45,11 +46,16 @@ M.core_role.init_cap_table_filter = function(Y, tableid, contextid) {
             this.table = Y.one('#'+this.tableid);
 
             // Create a div to hold the search UI.
+
             this.div = Y.Node.create('<div class="capabilitysearchui form-inline"></div>').setStyles({
                 width : this.table.get('offsetWidth'),
                 marginLeft : 'auto',
                 marginRight : 'auto'
             });
+            // Custom by Vũ: Nếu là trang tài liệu hệ thống thì nhúng iframe với input value là vnr để phân quyền tài liệu hệ thống
+            if(this.pagelayout == 'portalpermissions') {
+                filtervalue = 'vnr';
+            }
             // Create the capability search input.
             this.input = Y.Node.create('<input class="form-control mx-1" type="text"' +
                 ' id="'+this.table.get('id')+'capabilitysearch" value="'+Y.Escape.html(filtervalue)+'" />');

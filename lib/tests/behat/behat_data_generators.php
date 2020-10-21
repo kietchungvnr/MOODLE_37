@@ -170,4 +170,42 @@ class behat_data_generators extends behat_base {
         $instance = new $componentclass($component);
         return $instance;
     }
+
+    /**
+     * Mute an existing group conversation for user
+     *
+     * @param array $data
+     * @return void
+     */
+    protected function process_mute_group_conversations(array $data) {
+        if (groups_is_member($data['groupid'], $data['userid'])) {
+            $context = context_course::instance($data['courseid']);
+            $conversation = \core_message\api::get_conversation_by_area(
+                'core_group',
+                'groups',
+                $data['groupid'],
+                $context->id
+            );
+            if ($conversation) {
+                \core_message\api::mute_conversation($data['userid'], $conversation->id);
+            }
+        }
+    }
+
+    /**
+     * Mute a private conversation for user
+     *
+     * @param array $data
+     * @return void
+     */
+    protected function process_mute_private_conversations(array $data) {
+        if (!$conversationid = \core_message\api::get_conversation_between_users([$data['userid'], $data['contactid']])) {
+            $conversation = \core_message\api::create_conversation(
+                \core_message\api::MESSAGE_CONVERSATION_TYPE_INDIVIDUAL,
+                [$data['userid'], $data['contactid']]
+            );
+            $conversationid = $conversation->id;
+        }
+        \core_message\api::mute_conversation($data['userid'], $conversationid);
+    }
 }

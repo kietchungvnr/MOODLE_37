@@ -1,0 +1,29 @@
+
+{{#sliderenabled}}
+<div id="mooveslideshow" class="carousel slide m-0"  data-interval="5000">
+ <ol class="carousel-indicators">
+    {{#slides}}
+    <li data-target="#mooveslideshow" data-slide-to="{{{ key }}}" {{#active}}class="active"{{/active}}></li>
+    {{/slides}}
+</ol>
+<div class="carousel-inner">
+
+    {{#slides}}
+
+    <div class="carousel-item main {{#active}}active{{/active}}" >
+        <img class="d-block w-100 animated fadeIn" src="{{{ image }}}" alt="{{{ slidercap }}}">
+
+        <div class="grid-black">
+            <span class="slide-title">{{#str}}welcomeupper, theme_moove{{/str}}</span>
+            <div class="slide-btn-group" role="group">
+              <button type="button" class="btn btn-warning wrn-btn rounded" onclick="$('#newslider')[0].focus()">{{#str}}newsupper, theme_moove{{/str}}</button>
+              <button type="button" class="btn btn-primary wrn-btn rounded" onclick="$('#courseslider')[0].focus()">{{#str}}courseupper, theme_moove{{/str}}</button>
+              <button type="button" class="btn btn-danger wrn-btn rounded" onclick="$('#mydiscussion')[0].focus()">{{#str}}forumupper, theme_moove{{/str}}</button>
+            </div>
+        </div> 
+
+    </div>
+  {{/slides}}
+</div>
+</div>
+{{/sliderenabled}}

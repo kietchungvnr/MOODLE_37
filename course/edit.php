@@ -25,6 +25,7 @@
 require_once('../config.php');
 require_once('lib.php');
 require_once('edit_form.php');
+require_once($CFG->dirroot . '/local/newsvnr/lib.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course id.
 $categoryid = optional_param('category', 0, PARAM_INT); // Course category - can be changed in edit form.
@@ -142,11 +143,34 @@ if (!empty($course)) {
         file_prepare_standard_filemanager($course, 'overviewfiles', $overviewfilesoptions, null, 'course', 'overviewfiles', 0);
     }
 }
-
+$coursesetup = '';
 // First create the form.
+if(!empty($course->id)) {
+    //Custom by Vũ: Lưu khoá học cho từng PB - CD - CV
+    $courseofjobtitle = [];
+    $courseofposition = [];
+    $courseposition = $DB->get_records_sql('SELECT id, courseofposition, courseofjobtitle FROM {course_position} WHERE course = ?', [$course->id]);
+    foreach ($courseposition as $value) {
+        if(in_array($value->courseofjobtitle, $courseofjobtitle) == false)
+            $courseofjobtitle[] = $value->courseofjobtitle;
+        if(in_array($value->courseofposition, $courseofposition) == false)
+            $courseofposition[] = $value->courseofposition;
+    }
+    $courseoforgstructure = $DB->get_record_sql('SELECT TOP(1) courseoforgstructure FROM {course_position} WHERE course = ?', [$course->id]);
+    if($courseoforgstructure) {
+        $course->courseoforgstructure = $DB->get_field('orgstructure', 'name', ['id' => $courseoforgstructure->courseoforgstructure]);    
+    } else {
+        $course->courseoforgstructure = '';
+    }
+    $course->courseofjobtitle = $courseofjobtitle;
+    $course->courseofposition = $courseofposition;
+    $coursesetup = $DB->get_record_sql('SELECT TOP 1 cs.* FROM {course} c JOIN {course_setup} cs ON c.category = cs.category WHERE c.id = ?', [$course->id]);
+}
+
 $args = array(
     'course' => $course,
     'category' => $category,
+    'coursesetup' => $coursesetup,
     'editoroptions' => $editoroptions,
     'returnto' => $returnto,
     'returnurl' => $returnurl
@@ -156,10 +180,74 @@ if ($editform->is_cancelled()) {
     // The form has been cancelled, take them back to what ever the return to is.
     redirect($returnurl);
 } else if ($data = $editform->get_data()) {
+    //Custom by Vũ: Params and url hrm api
+    $params_el = [
+                'CourseName' => $data->fullname,
+                'CourseCode' =>  $data->code,
+            ];
+    $params_hrm = [];
+    $course_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecCourse']);
+    if($course_api) {
+        $getparams_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $course_api->id]);
+        foreach ($getparams_hrm as $key => $value) {
+            if(array_key_exists($value->client_params, $params_el)) {
+                $params_hrm[$value->client_params] = $params_el[$value->client_params];
+            } else {
+                $params_hrm[$value->client_params] = $value->default_value;
+            }
+        }
+        $url_hrm = $course_api->url;
+    }
+    
+    //Custom by Vũ : Add coursesetup vào course data
+    if(isset($_REQUEST['coursesetup'])) {
+        $data->coursesetup = $_REQUEST['coursesetup'][0];
+    }
+    if($data->courseoforgstructure) {
+        $data->courseoforgstructure = $DB->get_field('orgstructure', 'id', ['name' => $data->courseoforgstructure]);
+    }
+    $courseposition = [];
+    
+    if($data->courseofposition)
+        $courseofposition = $data->courseofposition;
+    if($data->courseofposition)
+        $courseofjobtitle = $data->courseofjobtitle;
+    //Nếu bảng course k còn pb - cd - cv thì không cần những dòng này
+    unset($data->courseofposition);
+    unset($data->courseofjobtitle);
+    
     // Process data if submitted.
     if (empty($course->id)) {
         // In creating the course.
         $course = create_course($data, $editoroptions);
+        
+        //Đẩy khoá học khi tạo mới realtime qua HRM
+        if($course) {
+            if($params_hrm) {
+                $params_hrm['Status'] = "E_CREATE";
+                if($data->typeofcourse == 1) {
+                    // HTTPPost($url_hrm, $params_hrm);
+                }
+            }
+        }
+        if($data->courseoforgstructure) {
+            foreach ($courseofjobtitle as $jobtitile) {
+                foreach ($courseofposition as $position) {
+                    $courseposition_data = new stdClass;
+                    $courseposition_data->course = $course->id;
+                    $courseposition_data->courseoforgstructure = $data->courseoforgstructure;
+                    $courseposition_data->courseofjobtitle = $jobtitile;
+                    $courseposition_data->courseofposition = $position;
+                    $courseposition_data->usermodified = $USER->id;
+                    $courseposition_data->timecreated = time();
+                    $courseposition_data->timemodified = time();
+                    $courseposition[] = $courseposition_data;
+                }
+            }
+        }
+        if($course->id & $courseposition) {
+            $courseposition = $DB->insert_records('course_position',$courseposition);
+        } 
 
         // Get the context of the newly created course.
         $context = context_course::instance($course->id, MUST_EXIST);
@@ -189,8 +277,65 @@ if ($editform->is_cancelled()) {
             }
         }
     } else {
+        //Vũ custom: tạo lớp học theo vị trí PB-CD-CV
+        if($courseofposition and $courseofjobtitle) {
+            $olddata = $DB->get_records('course_position', ['course' => $data->id]);
+            foreach($olddata as $value) {
+                if($value->courseoforgstructure != $data->courseoforgstructure)
+                    $DB->delete_records('course_position', ['courseoforgstructure' => $value->courseoforgstructure]);
+            }
+            foreach ($courseofjobtitle as $jobtitile) {
+                foreach($olddata as $value) {
+                    if(in_array($value->courseofjobtitle, $courseofjobtitle) == false)
+                        $DB->delete_records('course_position', ['courseofjobtitle' => $value->courseofjobtitle, 'courseoforgstructure' => $data->courseoforgstructure]);
+                }
+                foreach ($courseofposition as $position) {
+                    foreach($olddata as $value) {
+                        if(in_array($value->courseofposition, $courseofjobtitle) == false)
+                            $DB->delete_records('course_position', ['courseofposition' => $value->courseofposition, 'courseoforgstructure' => $data->courseoforgstructure, 'courseofjobtitle' => $jobtitile]);
+                    }
+                    $courseposition_data = $DB->get_record('course_position', ['course' => $data->id, 'courseoforgstructure' => $data->courseoforgstructure, 'courseofjobtitle' => $jobtitile, 'courseofposition' => $position],'*');
+                    if($courseposition_data) {
+                        $courseposition_data->usermodified = $USER->id;
+                        $courseposition_data->timemodified = time();
+                        $DB->update_record('course_position', $courseposition_data);
+                    } 
+                    else {
+                        $courseposition_data = new stdClass;
+                        $courseposition_data->course = $course->id;
+                        $courseposition_data->courseoforgstructure = $data->courseoforgstructure;
+                        $courseposition_data->courseofjobtitle = $jobtitile;
+                        $courseposition_data->courseofposition = $position;
+                        $courseposition_data->usermodified = $USER->id;
+                        $courseposition_data->timecreated = time();
+                        $courseposition_data->timemodified = time();
+                        $courseposition[] = $courseposition_data;
+                        
+                    }
+                }
+            }
+            if($courseposition)
+                $DB->insert_records('course_position', $courseposition);
+        }
         // Save any changes to the files used in the editor.
         update_course($data, $editoroptions);
+        // Cutstom by Vũ: Đẩy khoá học khi cập nhật realtime qua HRM
+        if($params_hrm) {
+            $quizzes = $DB->get_records_sql('SELECT * FROM {quiz} WHERE course = :course',['course' => $data->id]);
+            if($quizzes) {
+                $examcode = [];
+                foreach($quizzes as $quiz) {
+                    $examcode[] = $quiz->code;
+                }
+                $strexamcode = implode(",", $examcode);
+                $params_hrm['ExamCode'] = $strexamcode;
+            }
+            $params_hrm['Status'] = "E_UPDATE";
+            if($data->typeofcourse == 1)
+                HTTPPost($url_hrm, $params_hrm);    
+        }
+        
+
         // Set the URL to take them too if they choose save and display.
         $courseurl = new moodle_url('/course/view.php', array('id' => $course->id));
     }
@@ -242,7 +387,7 @@ if (!empty($course->id)) {
 
 $PAGE->set_title($title);
 $PAGE->set_heading($fullname);
-
+$PAGE->requires->js_call_amd('core_course/orgtreeview','orgtreeview');
 echo $OUTPUT->header();
 echo $OUTPUT->heading($pagedesc);
 

@@ -233,6 +233,7 @@ $string['unpublishalluploadedcourses'] = 'Remove all courses that were shared on
 $string['unpublishconfirmation'] = 'Do you really want to remove the course "{$a->courseshortname}" from "{$a->hubname}"';
 $string['unpublishcourse'] = 'Stop sharing {$a}';
 $string['updatesite'] = 'Update registration on {$a}';
+$string['updatesiteregistration'] = 'Update registration';
 $string['updatestatus'] = 'Check it now.';
 $string['unregisterfrom'] = 'Unregister from {$a}';
 $string['unregisterexplained'] = 'If the site with URL {$a} is registered, then its registration will be removed.';

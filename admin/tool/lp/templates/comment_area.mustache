@@ -71,7 +71,7 @@
         {{#canpost}}
             <div class="comment-area">
                 <div class="db">
-                    <textarea name="context" id="dlg-content-{{cid}}" rows="2" {{^fullwidth}}cols="20"{{/fullwidth}}{{#fullwidth}}class="fullwidth"{{/fullwidth}}></textarea>
+                    <textarea name="context" id="dlg-content-{{cid}}" rows="2" maxlength="200" {{^fullwidth}}cols="20"{{/fullwidth}}{{#fullwidth}}class="fullwidth"{{/fullwidth}}></textarea>
                 </div>
                 <div class="fd" id="comment-action-{{cid}}">
                     <a href="#" id="comment-action-post-{{cid}}">{{#str}}savecomment{{/str}}</a>

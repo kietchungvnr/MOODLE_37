@@ -1,0 +1,39 @@
+    
+
+
+<div class="container">
+        <div class="row">
+        <div class="col-md-12 p-0">
+            <div class="tab-content" id="mypublic-tab">
+                {{# hascourses }}
+                <div class="tab-pane fade show active" id="cursos" role="tabpanel" aria-labelledby="courses-tab">
+                    {{# courses }}
+                    <div id="course-{{ id }}" class="card fp-mg course-bs">
+                        <div class="row">
+                            <div class="col-xl-2 col-md-3 col-sm-6 col-6 courseimage">
+                                {{{ courseimage }}}
+                            </div>
+                            <div class="card-body col-xl-10 col-md-9 col-sm-6 col-6 row">
+                                <div class="media-body">
+                                    <a href="{{ link }}"><h5 class="mt-0 text-tt">{{{ fullname }}}</h5></a>
+                                    {{# startdate }}<small class="text-date">{{#str}}startedon, theme_moove{{/str}}: {{#userdate}} {{startdate}}, %A, %d %B %Y {{/userdate}}</small>{{/ startdate }}
+                                    <div class="mt-1" style="display: none;">
+                                        {{{ summary }}}
+                                    </div>
+                                </div>
+
+                            {{# enablecompletion }}
+                            <div class="col-md-3 d-none d-md-block d-lg-block d-xl-block text-right">
+                                <div class="progress-circle" data-progress="{{ progress }}"></div>
+                            </div>
+                            {{/ enablecompletion }}
+                            </div>
+                        </div>
+                    </div>
+                    {{/ courses }}
+                </div>
+                {{/ hascourses }}
+            </div>                           
+        </div>
+    </div>
+</div>

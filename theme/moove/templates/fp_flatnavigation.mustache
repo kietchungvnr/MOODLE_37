@@ -1,0 +1,39 @@
+{{#active}}
+<nav class="navcourse" id="nav-course" style="background-color: {{{output.get_navcourse_color}}}">
+    <div class="row pr-2 pl-2 w-100">
+        <div class="col-auto font-weight-bold nav-course-padding">
+            <span class="sr-only">{{#str}}sidepanel, core{{/str}}</span>
+        </div>
+        <div class="dropdown">
+            <div class="col-auto font-weight-bold cl-cursor nav-course-padding  menu-menu" data-toggle="dropdown">
+                <span>{{#str}}coursecategories, theme_moove{{/str}}</span>
+            </div>
+            {{#nav_course_categories}}{{{nav_course_categories}}}{{/nav_course_categories}}
+        </div>
+        <div class="dropdown">
+            <div class="col-auto font-weight-bold cl-cursor nav-course-padding" data-toggle="dropdown">
+                <span>{{#str}}mycourses, theme_moove{{/str}}</span>
+            </div>
+            <ul class="dropdown-menu " role="menu" id="drop-course-by-student">
+                {{#nav_coursebystudent}}{{{nav_coursebystudent}}}{{/nav_coursebystudent}}
+                {{^nav_coursebystudent}}
+                    <li class="dropdown-item"><a href="javascript:;">{{#str}}nojoincourse, theme_moove{{/str}}</a></li>
+                {{/nav_coursebystudent}}
+            </ul>
+        </div>
+        {{#nav_coursebyteacher}}
+        <div class="dropdown">
+            <div class="col-auto font-weight-bold cl-cursor nav-course-padding" data-toggle="dropdown">
+                <span >{{#str}}owncourses, theme_moove{{/str}}</span>
+            </div>
+            <ul class="dropdown-menu " role="menu" id="drop-course-by-teacher">
+               {{#nav_coursebyteacher}}{{{nav_coursebyteacher}}}{{/nav_coursebyteacher}}
+            </ul>
+        </div>
+        {{/nav_coursebyteacher}}
+        <div class="col d-flex">
+            {{#course_search_form_fp}}{{{course_search_form_fp}}}{{/course_search_form_fp}}
+        </div>
+    </div>
+</nav>
+{{/active}}

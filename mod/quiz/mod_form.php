@@ -75,6 +75,15 @@ class mod_quiz_mod_form extends moodleform_mod {
         }
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+        //Custom by Vũ: Thêm field Code.
+        $mform->addElement('text', 'code', get_string('code', 'mod_quiz'), array('size'=>'40'));
+        if (!empty($CFG->formatstringstriptags)) {
+            $mform->setType('code', PARAM_TEXT);
+        } else {
+            $mform->setType('code', PARAM_CLEANHTML);
+        }
+        $mform->addRule('code', null, 'required', null, 'client');
+        $mform->addRule('code', get_string('maximumchars', '', 100), 'maxlength', 100, 'client');
 
         // Introduction.
         $this->standard_intro_elements(get_string('introduction', 'quiz'));
@@ -484,8 +493,22 @@ class mod_quiz_mod_form extends moodleform_mod {
     }
 
     public function validation($data, $files) {
+        global $DB;
         $errors = parent::validation($data, $files);
-
+        // Custom by Vũ: bắt trùng tên Quiz
+        $code = trim($data['code']);
+        if ($data['instance']) {
+            $current = $DB->get_record('quiz', array('id'=>$data['instance']), '*', MUST_EXIST);
+            if ($current->code !== $code) {
+                if ($DB->record_exists('orgstructure_position', array('code'=>$code))) {
+                    $errors['code'] = get_string('codeexists', 'mod_quiz', $code);
+                }
+            }
+        } else {
+            if ($DB->record_exists('quiz', array('code'=>$code))) {
+                $errors['code'] = get_string('codeexists', 'mod_quiz', $code);
+            }
+        }
         // Check open and close times are consistent.
         if ($data['timeopen'] != 0 && $data['timeclose'] != 0 &&
                 $data['timeclose'] < $data['timeopen']) {

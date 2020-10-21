@@ -71,6 +71,9 @@ class core_backup_external extends external_api {
         // Release session lock.
         \core\session\manager::write_close();
 
+        // Release session lock.
+        \core\session\manager::write_close();
+
         // Parameter validation.
         self::validate_parameters(
                 self::get_async_backup_progress_parameters(),

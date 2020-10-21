@@ -1,0 +1,36 @@
+<div id="showlistcoursesetup_data"></div>
+
+<div style="margin-bottom: 60px">
+  <a href="coursesetup.php" type="submit" value="Add new" id="coursesetup_list" data-action="coursesetupmodal" class="btn btn-primary pull-right mb-3 mt-2">Add new</a>
+</div>
+
+<script type="text/javascript">
+
+
+const coursesetup_delete = (section_id) => {
+    require(['jquery', 'core/config'], ($, config) => {
+          var confm = confirm("Bạn muốn xóa trường này?");
+          var script = config.wwwroot + "/course/ajax/coursesetup_delete.php";  
+          var settings = {
+            type: "GET",
+            processData: true,
+            data:{
+              id: section_id
+            },
+            contentType: "application/json"
+          }; 
+          if(confm) {
+            $.ajax(script, settings)
+            .then(function(response) {
+             if(response)
+             {
+               $("#" + section_id).parents("tr").fadeOut(500, function(){
+                $("#" + section_id).remove();
+              });
+             }    
+           });
+          }
+    })
+}
+
+</script>

@@ -1,0 +1,152 @@
+
+<div class="container-fluid">
+
+    {{#haslpt}}
+    <div class="timeline">
+        <ul class="list-group pull-right list-group-horizontal mb-2">
+              <li class="list-group-item gray-lptimeline padding-lptimeline">{{#str}}prestudy, block_vnr_db_lptimeline{{/str}}</li>
+              <li class="list-group-item primary-lptimeline padding-lptimeline">{{#str}}studying, block_vnr_db_lptimeline{{/str}}</li>
+              <li class="list-group-item green-lptimeline padding-lptimeline" style="margin-bottom: -1px;">{{#str}}finishedstudy, block_vnr_db_lptimeline{{/str}}</li>
+ 
+        </ul>
+        {{#positionname}}
+        <div class="timeline-month text-lpt">
+            {{#str}}learningplan, block_vnr_db_lptimeline{{/str}} {{positionname}}
+            
+        </div>
+        
+        {{/positionname}}
+       
+        {{#list_comp}}
+        <div class="timeline-section {{color_sn}}">
+            <div class="timeline-date text-lpt {{color_sn}}">
+                {{shortname}}
+            </div>
+            <div class="row">
+                {{#list_courses}}
+                <div class="col-md-6 col-xs-12 col-sm-12">
+                    <div class="timeline-box">
+                        <div class="box-title">
+                            <div class="row align-items-center">
+                                
+                                <div class="col-10" style="padding: 0px 5px"><p class="hidden-text text-lpt pl-2">{{{link}}}</p></div>
+                                <div class="col-2" style="padding: 0px 5px"><i class="fa fa-plus-square-o pull-right pb-1" style="cursor: pointer;" aria-hidden="true" data-toggle="collapse" data-target="#{{fullname}}"></i></div>
+                            </div>
+                            
+                        </div>
+                        <div id="{{fullname}}" class="collapse show">
+                            <div class="box-content">
+                                {{#progress}}
+                                <div class="box-item"><strong>{{#str}}progress, block_vnr_db_lptimeline{{/str}}</strong>: </div>
+                                <div class="box-item">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <div class="row align-items-center no-gutters">
+                                                <div class="col-auto">
+                                                    <div class="small mr-2">{{progress}}%</div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="progress progress-sm m-0">
+                                                        <div class="progress-bar" role="progressbar" style="width: {{progress}}%" aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/progress}}
+                                <div class="box-item"><strong>{{#str}}startdate, block_vnr_db_lptimeline{{/str}}</strong>: {{startdate}}</div>
+                                <div class="box-item"><strong>{{#str}}enddate, block_vnr_db_lptimeline{{/str}}</strong>: {{enddate}}</div>
+                                <div class="box-item"><strong>{{#str}}teachername, block_vnr_db_lptimeline{{/str}}</strong>: <span class="{{#color_teachername}}{{color_teachername}}{{/color_teachername}}">{{#teachername}}{{{teachername}}}{{/teachername}}</span></div>
+                                <div class="box-item"><strong>{{#str}}coursedescription, block_vnr_db_lptimeline{{/str}}</strong>: {{{summary}}} </div>
+                            </div>
+                        </div>
+                     
+                    </div>
+                </div>
+                {{/list_courses}}
+                {{^list_courses}}
+                {{#list_courses_all}}
+                <div class="col-md-6 col-xs-12 col-sm-12">
+                    <div class="timeline-box">
+                        <div class="box-title">
+                            <div class="row align-items-center">
+                                <div class="col-10" style="padding: 0px 5px"><p class="hidden-text text-lpt pl-2">{{{link}}}</p></div>
+                                <div class="col-2" style="padding: 0px 5px"><i class="fa fa-plus-square-o pull-right pb-1" style="cursor: pointer;" aria-hidden="true" data-toggle="collapse" data-target="#{{fullname}}"></i></div>
+                            </div>
+                            
+                        </div>
+                        <div id="{{fullname}}" class="collapse show">
+                            <div class="box-content">
+                                <a class="btn btn-xs btn-primary rounded pull-right" href="{{enrollink}}" target="_blank">{{#str}}enrol, enrol{{/str}}</a>
+                                {{#progress}}
+                                <div class="box-item"><strong>{{#str}}progress, block_vnr_db_lptimeline{{/str}}</strong>: </div>
+                                <div class="box-item">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <div class="row align-items-center no-gutters">
+                                                <div class="col-auto">
+                                                    <div class="small mr-2">{{progress}}%</div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="progress progress-sm m-0">
+                                                        <div class="progress-bar" role="progressbar" style="width: {{progress}}%" aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/progress}}
+                                <div class="box-item"><strong>{{#str}}startdate, block_vnr_db_lptimeline{{/str}}</strong>: {{startdate}}</div>
+                                <div class="box-item"><strong>{{#str}}enddate, block_vnr_db_lptimeline{{/str}}</strong>: {{enddate}}</div>
+                                <div class="box-item"><strong>{{#str}}teachername, block_vnr_db_lptimeline{{/str}}</strong>: <span class="{{#color_teachername}}{{color_teachername}}{{/color_teachername}}">{{#teachername}}{{{teachername}}}{{/teachername}}</span></div>
+                                <div class="box-item"><strong>{{#str}}coursedescription, block_vnr_db_lptimeline{{/str}}</strong>: {{{summary}}} </div>
+                            </div>
+                        </div>
+                     
+                    </div>
+                </div>
+                {{/list_courses_all}}
+                {{/list_courses}}
+                {{#list_userevidence}}
+                <div class="col-md-6 col-xs-12 col-sm-12">
+                    <div class="timeline-box">
+                        <div class="box-title bg-evidence">
+                            <div class="row align-items-center">
+                         
+                                <div class="col-10" style="padding: 0px 5px"><p class="hidden-text text-lpt pl-2">{{{link}}}</p></div>
+                                <div class="col-2" style="padding: 0px 5px"><i class="fa fa-plus-square-o pull-right pb-1 text-white" style="cursor: pointer;" aria-hidden="true" data-toggle="collapse" data-target="#{{timemodified}}"></i></div>
+                            </div>
+                            
+                        </div>
+                        <div id="{{timemodified}}" class="collapse show">
+                            <div class="box-content">
+                            <div class="box-item"><strong>{{#str}}userreview, block_vnr_db_lptimeline{{/str}}</strong>: {{namereviewer}}</div>
+                            <div class="box-item"><strong>{{#str}}timereview, block_vnr_db_lptimeline{{/str}}</strong>: {{timereview}}</div>
+                            <div class="box-item"><strong>{{#str}}status, block_vnr_db_lptimeline{{/str}}</strong>: {{status_evi}}</div>
+                            </div>
+                        </div>
+                     
+                    </div>
+                </div>
+                {{/list_userevidence}}
+                {{#rolemanager}}
+                <div class="col-md-6 col-xs-12 col-sm-12">
+                    <div class="timeline-box" style="border-radius: 0px">
+                        <div class="box-content b-0" style="background-color: lightsteelblue;">
+                                <p class="hidden-text pl-2 text-white">{{nocourse}}{{#linknocourse}} {{#str}}choose, block_vnr_db_lptimeline{{/str}} <a href="{{linknocourse}}" target="_blank">{{#str}}here, block_vnr_db_lptimeline{{/str}}</a>{{/linknocourse}}</p>
+                        </div>
+                    </div>
+                </div>
+                {{/rolemanager}}             
+            </div>
+        </div>
+        {{/list_comp}}
+        
+    </div>
+    {{/haslpt}}
+    {{^haslpt}}
+        <div class="d-flex justify-content-center alert alert-info alert-block fade in ">{{nocomp}}</div>
+    {{/haslpt}}
+</div>

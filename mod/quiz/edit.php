@@ -187,6 +187,9 @@ $node = $PAGE->settingsnav->find('mod_quiz_edit', navigation_node::TYPE_SETTING)
 if ($node) {
     $node->make_active();
 }
+// Custom by Vũ: Chức năng sửa tất cả điểm question với select.
+$PAGE->requires->js_call_amd('mod_quiz/edit_all_question','editquestion');
+
 echo $OUTPUT->header();
 
 // Initialise the JavaScript.

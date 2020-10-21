@@ -1,0 +1,301 @@
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-6 padding-db">
+
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <div class="card-group" style="border-top: 5px solid #1177d1;">
+
+                        <div class="card" style="border-bottom-left-radius: .5rem;border-bottom-right-radius: .5rem;">
+                            <div class="card-body">
+                                <div class="row align-items-start mb-3 pb-1" style="border-bottom: 1px solid wheat;">
+                                    <div class="col">
+                                        <span style="font-weight: 700; color: grey">{{#str}}numberstudentcompletedcourse, block_vnr_db_teacheruser_xh{{/str}}</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-window-minimize mr-0 cl-position cl-cursor" aria-hidden="true" data-toggle="collapse" data-target="#hvhtk"></i>
+                                        <i class="icon fa fa-th-large fa-fw m-0"></i>
+                                        <i class="icon fa fa-ellipsis-v fa-fw m-0"></i>
+                                    </div>
+
+                                </div>
+                                <div data-region="hvhtk" id="hvhtk" class="collapse show">
+
+                                    <div class="row align-items-center">
+                                        <div id="coursecomp_chart" class="container-fluid"></div>
+                                    </div>
+                                 
+                                 
+                                </div>
+                                <div class="viewmorebtn"><a href="/../../blocks/vnr_db_viewreport/viewreport.php?id=1"><font class="text-white">{{#str}}viewmore, local_newsvnr{{/str}}</font></a></div>   
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <div class="col-md-6 padding-db">
+
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <div class="card-group" style="border-top: 5px solid #1177d1;">
+
+                        <div class="card" style="border-bottom-left-radius: .5rem;border-bottom-right-radius: .5rem;">
+                            <div class="card-body">
+                                <div class="row align-items-start mb-3 pb-1" style="border-bottom: 1px solid wheat;">
+                                    <div class="col">
+                                        <span style="font-weight: 700; color: grey">{{#str}}reportgrade, block_vnr_db_teacheruser_xh{{/str}}</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="icon fa fa-window-minimize fa-fw m-0 cl-cursor cl-position" aria-hidden="true" data-toggle="collapse" data-target="#bcd"></i>
+                                        <i class="icon fa fa-th-large fa-fw m-0"></i>
+                                        <i class="icon fa fa-ellipsis-v fa-fw m-0"></i>
+                                    </div>
+
+                                </div>
+                                <div data-region="bcd" id="bcd" class="collapse show">
+                                  
+                                     <div class="row align-items-end mb-2">
+                                        <div class="col">
+
+                                        </div>
+                                        <div class="col-auto">
+                                           
+                                        </div>
+                                    </div>
+                                    <div class="row align-items-center">
+                                        <div id="quizoverview_chart" class="container-fluid"></div>
+                                    </div>
+                                </div>
+                                <div class="viewmorebtn"><a href="/../../blocks/vnr_db_viewreport/viewreport.php?id=2"><font class="text-white">{{#str}}viewmore, local_newsvnr{{/str}}</font></a></div>   
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        
+    </div>
+</div>
+
+{{#js}}
+
+
+require.config({
+    packages: [{
+        name: 'highcharts',
+        main: 'highcharts'
+    }],
+    paths: {
+        // Change this to your server if you do not wish to use our CDN.
+        highcharts: 'https://code.highcharts.com',
+        jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr"
+    }
+});
+
+// Load the depedencies and create your chart
+require(
+    [
+        'highcharts',
+        'highcharts/modules/exporting',
+        'highcharts/modules/accessibility',
+        'jquery',
+        'core/config',
+        'core/notification',
+        'core/str',
+        'jspicker'
+    ],
+    // This function runs when the above files have been loaded.
+    function (Highcharts, ExportingModule, AccessibilityModule,$,Config,Notification,Str,jspicker) {
+
+        // We need to initialize module files and pass in Highcharts.
+        ExportingModule(Highcharts);
+
+        // Load accessibility after exporting.
+        AccessibilityModule(Highcharts);
+        //Load data from ajax for coursecomp_chart
+        var settings = {
+                type: 'GET',
+                data: {
+                    "action":"coursecomp_chart"
+                },
+                processData: true,
+                contentType: "application/json"
+            };
+        var script = Config.wwwroot + '/local/newsvnr/restfulapi/webservice.php';
+        $.ajax(script,settings)
+        .then(function(response) {
+
+            if (response.error) {
+                Notification.addNotification({
+                    message: response.error,
+                    type: "error"
+                });
+            } else {
+                var strings = [{
+                    key: 'nodatatable',
+                    component: 'local_newsvnr'
+                }, {
+                    key: 'numberstudent',
+                    component: 'block_vnr_db_teacheruser_xh'
+                }, {
+                    key: 'totalstudent',
+                    component: 'block_vnr_db_teacheruser_xh'
+                }, {
+                    key: 'numbercompletedcourse',
+                    component: 'block_vnr_db_teacheruser_xh'
+                }];
+                Str.get_strings(strings).then(function(s) {
+                    var list_coursename = response.list_coursename;
+                    var list_enroll = response.list_enroll;
+                    var list_completion_course = response.list_completion_course;
+                    // Create a chart.
+                    Highcharts.chart('coursecomp_chart', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: ''
+                    },
+                    subtitle: {
+                        text: ''
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        categories: list_coursename,
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: s[1]
+                        }
+                    },
+
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: s[2],
+                        data: list_enroll,
+                        color: '#223dc4'
+
+                    }, {
+                        name: s[3],
+                        data: list_completion_course,
+                        color: '#f24012'
+
+                    }]
+                });
+                        
+            });
+        }
+        return;
+        }).fail(Notification.exception);
+        var quizoverview_settings = {
+                type: 'GET',
+                data: {
+                    "action":"quizoverview_chart"
+                },
+                processData: true,
+                contentType: "application/json"
+        }
+        $.ajax(script,quizoverview_settings)
+        .then(function(response) {
+
+            if (response.error) {
+                Notification.addNotification({
+                    message: response.error,
+                    type: "error"
+                });
+            } else {
+                var strings = [{
+                    key: 'nodatatable',
+                    component: 'local_newsvnr'
+                }, {
+                    key: 'avgscore',
+                    component: 'block_vnr_db_teacheruser_xh'
+                }, {
+                    key: 'score',
+                    component: 'block_vnr_db_teacheruser_xh'
+                }];
+                Str.get_strings(strings).then(function(s) {
+                    var list_coursename = response.list_coursename;
+                    var list_quiz_parent = response.list_quizname_parent;
+                    // Create a chart.
+                    Highcharts.chart('quizoverview_chart', {
+                    chart: {
+                        type: 'bar'
+                    },
+                    title: {
+                        text: ''
+                    },
+                    subtitle: {
+                        text: ''
+                    },
+                    xAxis: {
+                        categories: list_coursename,
+                        title: {
+                            text: null
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: s[1],
+                            align: 'high'
+                        },
+                        labels: {
+                            overflow: 'justify'
+                        }
+                    },
+                    tooltip: {
+                        valueSuffix: s[2]
+                    },
+                    plotOptions: {
+                        bar: {
+                            dataLabels: {
+                                enabled: true
+                            }
+                        }
+                    },
+                    legend: {
+                        borderWidth: 1,
+                        backgroundColor:
+                            Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+                        shadow: true
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    series: list_quiz_parent
+                });
+                        
+            });
+
+          }
+          return;
+        }).fail(Notification.exception);
+     
+
+});
+
+
+{{/js}}

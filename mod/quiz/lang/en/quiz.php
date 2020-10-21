@@ -156,13 +156,13 @@ $string['cannotstartmissingquestion'] = 'Cannot start an attempt at this quiz. T
 $string['cannotstartnoquestions'] = 'Cannot start an attempt at this quiz. The quiz has not been set up yet. No questions have been added.';
 $string['cannotwrite'] = 'Cannot write to export file ({$a})';
 $string['canredoquestions'] = 'Allow redo within an attempt';
-$string['canredoquestions_desc'] = 'If enabled, after finishing attempting a question, a \'Try another question like this one\' button is displayed. This allows for a similar question (selected randomly) to be attempted, or the same question again, without the entire quiz attempt having to be submitted and another attempt started. This option is useful for practice quizzes.
+$string['canredoquestions_desc'] = 'If enabled, when a student has finished attempting a question, they will see a Redo question button. This allows them to attempt another version of the same question, without having to submit the entire quiz attempt and start another attempt. This option is useful for practice quizzes.
 
-This setting only affects questions and behaviours (such as immediate feedback or interactive with multiple tries) where it is possible to finish a question before the attempt is submitted.';
-$string['canredoquestions_help'] = 'If enabled, after finishing attempting a question, a \'Try another question like this one\' button is displayed. This allows for a similar question (selected randomly) to be attempted, or the same question again, without the entire quiz attempt having to be submitted and another attempt started. This option is useful for practice quizzes.
+This setting only affects questions and behaviours (such as immediate feedback or interactive with multiple tries) where it is possible for student to finish the question before the attempt is submitted.';
+$string['canredoquestions_help'] = 'If enabled, when a student has finished attempting a question, they will see a Redo question button. This allows them to attempt another version of the same question, without having to submit the entire quiz attempt and start another attempt. This option is useful for practice quizzes.
 
-This setting only affects questions and behaviours (such as immediate feedback or interactive with multiple tries) where it is possible to finish a question before the attempt is submitted.';
-$string['canredoquestionsyes'] = 'Yes, provide the option to try another question';
+This setting only affects questions and behaviours (such as immediate feedback or interactive with multiple tries) where it is possible for student to finish the question before the attempt is submitted.';
+$string['canredoquestionsyes'] = 'Students may redo another version of any finished question';
 $string['caseno'] = 'No, case is unimportant';
 $string['casesensitive'] = 'Case sensitivity';
 $string['caseyes'] = 'Yes, case must match';
@@ -342,7 +342,6 @@ $string['eventoverrideupdated'] = 'Quiz override updated';
 $string['eventquestionmanuallygraded'] = 'Question manually graded';
 $string['eventquizattemptabandoned'] = 'Quiz attempt abandoned';
 $string['eventquizattempttimelimitexceeded'] = 'Quiz attempt time limit exceeded';
-$string['eventquizattemptregraded'] = 'Quiz attempt regraded';
 $string['eventquizattemptstarted'] = 'Quiz attempt started';
 $string['eventquizattemptsubmitted'] = 'Quiz attempt submitted';
 $string['eventreportviewed'] = 'Quiz report viewed';
@@ -382,8 +381,8 @@ $string['functiondisabledbysecuremode'] = 'That functionality is currently disab
 $string['generalfeedback'] = 'General feedback';
 $string['generalfeedback_help'] = 'General feedback is text which is shown after a question has been attempted. Unlike feedback for a specific question which depends on the response given, the same general feedback is always shown.';
 $string['graceperiod'] = 'Submission grace period';
-$string['graceperiod_desc'] = 'If what to do when the time expires is set to \'There is a grace period...\', then this is the default amount of extra time that is allowed.';
-$string['graceperiod_help'] = 'If what to do when the time expires is set to \'There is a grace period...\', then this is the amount of extra time that is allowed.';
+$string['graceperiod_desc'] = 'If what to do when time expires is set to \'Allow a grace period to submit, but not change any responses\', this is the default amount of extra time that is allowed.';
+$string['graceperiod_help'] = 'If what to do when time expires is set to \'Allow a grace period to submit, but not change any responses\', this is the amount of extra time that is allowed.';
 $string['graceperiodmin'] = 'Last submission grace period';
 $string['graceperiodmin_desc'] = 'There is a potential problem right at the end of the quiz. On the one hand, we want to let students continue working right up until the last second - with the help of the timer that automatically submits the quiz when time runs out. On the other hand, the server may then be overloaded, and take some time to get to process the responses. Therefore, we will accept responses for up to this long after time expires, so they are not penalised for the server being slow. However, the student could cheat and get this many seconds to answer the quiz. You have to make a trade-off based on how much you trust the performance of your server during quizzes.';
 $string['graceperiodtoosmall'] = 'The grace period must be more than {$a}.';
@@ -433,18 +432,12 @@ $string['importingquestions'] = 'Importing {$a} questions from file';
 $string['importmaxerror'] = 'There is an error in the question. There are too many answers.';
 $string['importmax10error'] = 'There is an error in the question. You may not have more than ten answers';
 $string['importquestions'] = 'Import questions from file';
-$string['inactiveoverridehelp'] = '* This override is inactive because the user\'s access to the activity is restricted. This can be due to group or role assignments, other access restrictions, or the activity being hidden.';
+$string['inactiveoverridehelp'] = '* Student does not have the correct group or role to attempt the quiz';
 $string['incorrect'] = 'Incorrect';
 $string['indicator:cognitivedepth'] = 'Quiz cognitive';
 $string['indicator:cognitivedepth_help'] = 'This indicator is based on the cognitive depth reached by the student in a Quiz activity.';
-$string['indicator:cognitivedepthdef'] = 'Quiz cognitive';
-$string['indicator:cognitivedepthdef_help'] = 'The participant has reached this percentage of the cognitive engagement offered by the Quiz activities during this analysis interval (Levels = No view, View, Submit, View feedback, Comment on feedback, Resubmit after viewing feedback)';
-$string['indicator:cognitivedepthdef_link'] = 'Learning_analytics_indicators#Cognitive_depth';
 $string['indicator:socialbreadth'] = 'Quiz social';
 $string['indicator:socialbreadth_help'] = 'This indicator is based on the social breadth reached by the student in a Quiz activity.';
-$string['indicator:socialbreadthdef'] = 'Quiz social';
-$string['indicator:socialbreadthdef_help'] = 'The participant has reached this percentage of the social engagement offered by the Quiz activities during this analysis interval (Levels = No participation, Participant alone, Participant with others)';
-$string['indicator:socialbreadthdef_link'] = 'Learning_analytics_indicators#Social_breadth';
 $string['indivresp'] = 'Responses of individuals to each item';
 $string['info'] = 'Info';
 $string['infoshort'] = 'i';
@@ -570,6 +563,7 @@ $string['notyetviewed'] = 'Not yet viewed';
 $string['notyourattempt'] = 'This is not your attempt!';
 $string['noview'] = 'Logged-in user is not allowed to view this quiz';
 $string['numattempts'] = '{$a->studentnum} {$a->studentstring} have made {$a->attemptnum} attempts';
+$string['numattemptsmade'] = '{$a} attempts made on this quiz';
 $string['numberabbr'] = '#';
 $string['numerical'] = 'Numerical';
 $string['numquestionsx'] = 'Questions: {$a}';
@@ -736,7 +730,6 @@ $string['quizordernotrandom'] = 'Order of quiz not shuffled';
 $string['quizorderrandom'] = '* Order of quiz is shuffled';
 $string['quiz:preview'] = 'Preview quizzes';
 $string['quiz:regrade'] = 'Regrade quiz attempts';
-$string['quizreport'] = 'Quiz report';
 $string['quiz:reviewmyattempts'] = 'Review your own attempts';
 $string['quizsettings'] = 'Quiz settings';
 $string['quiz:view'] = 'View quiz information';
@@ -830,6 +823,8 @@ $string['reviewclosed'] = 'After the quiz is closed';
 $string['reviewduring'] = 'During the attempt';
 $string['reviewimmediately'] = 'Immediately after the attempt';
 $string['reviewnever'] = 'Never allow review';
+$string['reviewofattempt'] = 'Review of attempt {$a}';
+$string['reviewofpreview'] = 'Review of preview';
 $string['reviewofquestion'] = 'Review of question {$a->question} in {$a->quiz} by {$a->user}';
 $string['reviewopen'] = 'Later, while the quiz is still open';
 $string['reviewoptions'] = 'Students may review';
@@ -871,7 +866,6 @@ $string['sectionheadingremove'] = 'Remove heading \'{$a}\'';
 $string['seequestions'] = '(See questions)';
 $string['select'] = 'Select';
 $string['selectall'] = 'Select all';
-$string['selectattempt'] = 'Select attempt';
 $string['selectcategory'] = 'Select category';
 $string['selectedattempts'] = 'Selected attempts...';
 $string['selectmultipleitems'] = 'Select multiple items';
@@ -1000,8 +994,11 @@ $string['wronguse'] = 'You can not use this page like that';
 $string['xhtml'] = 'XHTML';
 $string['youneedtoenrol'] = 'You need to enrol in this course before you can attempt this quiz';
 $string['yourfinalgradeis'] = 'Your final grade for this quiz is {$a}.';
-
-// Deprecated since Moodle 3.8.
-$string['numattemptsmade'] = '{$a} attempts made on this quiz';
-$string['reviewofattempt'] = 'Review of attempt {$a}';
-$string['reviewofpreview'] = 'Review of preview';
+$string['codeexists'] = 'Existing \'{$a}\' quiz code';
+$string['code'] = 'Code';
+// Custom by Vũ: Chức năng sửa tất cả điểm question với select.
+$string['gradepass'] = 'Grade pass';
+$string['questiontotal'] = 'Question total';
+$string['changeallmark'] = 'Change';
+$string['selectallquestion'] = 'Select all';
+$string['changeallmarksuccess'] = 'Change all mark success!';

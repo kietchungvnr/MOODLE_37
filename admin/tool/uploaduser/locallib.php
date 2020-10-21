@@ -61,7 +61,7 @@ class uu_progress_tracker {
      * The columns shown on the table.
      * @var array
      */
-    public $columns = array('status', 'line', 'id', 'username', 'firstname', 'lastname', 'email',
+    public $columns = array('status', 'line', 'id', 'username', 'firstname', 'lastname', 'usercode', 'orgpositionname', 'email',
                             'password', 'auth', 'enrolments', 'suspended', 'theme', 'deleted');
 
     /**
@@ -78,6 +78,8 @@ class uu_progress_tracker {
         echo '<th class="header c'.$ci++.'" scope="col">'.get_string('username').'</th>';
         echo '<th class="header c'.$ci++.'" scope="col">'.get_string('firstname').'</th>';
         echo '<th class="header c'.$ci++.'" scope="col">'.get_string('lastname').'</th>';
+        echo '<th class="header c'.$ci++.'" scope="col">'.get_string('usercode','local_newsvnr').'</th>';
+        echo '<th class="header c'.$ci++.'" scope="col">'.get_string('posname','local_newsvnr').'</th>';
         echo '<th class="header c'.$ci++.'" scope="col">'.get_string('email').'</th>';
         echo '<th class="header c'.$ci++.'" scope="col">'.get_string('password').'</th>';
         echo '<th class="header c'.$ci++.'" scope="col">'.get_string('authentication').'</th>';

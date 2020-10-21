@@ -36,6 +36,7 @@ require_once($CFG->dirroot . '/mod/quiz/accessmanager.php');
 require_once($CFG->dirroot . '/mod/quiz/accessmanager_form.php');
 require_once($CFG->dirroot . '/mod/quiz/renderer.php');
 require_once($CFG->dirroot . '/mod/quiz/attemptlib.php');
+require_once($CFG->dirroot . '/local/newsvnr/lib.php');
 require_once($CFG->libdir . '/completionlib.php');
 require_once($CFG->libdir . '/filelib.php');
 require_once($CFG->libdir . '/questionlib.php');
@@ -737,9 +738,34 @@ function quiz_set_grade($newgrade, $quiz) {
  * avoid repeated querying.
  * @return bool Indicates success or failure.
  */
-function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
-    global $DB, $OUTPUT, $USER;
+/* --- Custom by Vũ --- */
 
+function get_typeofcourse($courseid)
+{
+    global $DB;
+
+    $sql = "SELECT c.typeofcourse FROM {course} c where c.id = ? ";
+
+    $data = $DB->get_record_sql($sql, array($courseid));
+
+    return $data;
+}
+
+function get_postion_user($orgpositionid)
+{
+    global $DB;
+
+    $sql_position = "SELECT * from {orgstructure_position} op where op.id = ?";
+
+    $position_data = $DB->get_record_sql($sql_position, array($orgpositionid));
+
+    return $position_data;
+}
+
+
+
+function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
+    global $DB, $OUTPUT, $USER, $COURSE;
     if (empty($userid)) {
         $userid = $USER->id;
     }
@@ -753,6 +779,101 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
     $bestgrade = quiz_calculate_best_grade($quiz, $attempts);
     $bestgrade = quiz_rescale_grade($bestgrade, $quiz, false);
 
+    $sql = "SELECT * from {grade_items} gi where gi.itemmodule = ? and gi.iteminstance = ?";
+
+    $grade_item = $DB->get_record_sql($sql, array('quiz', $quiz->id));
+
+    //phần custom core
+    // check gradepass
+    if($bestgrade >= $grade_item->gradepass) {
+        $result_interview = "E_PASS";
+        $result_traning = "E_PASSED";
+        $result = "PASS";
+    }
+    else {
+        $result_interview = "E_FAIL";
+        $result_traning = "E_FAILED";
+        $result = "FAIL";
+    }
+
+    $typeofcourse =  get_typeofcourse($quiz->course)->typeofcourse;   
+
+    $orgpositionid = $USER->orgpositionid;
+
+    if(!empty($orgpositionid))
+    {
+        $position_name = get_postion_user($orgpositionid)->name;
+        if(empty($position_name))
+             $position_name = '';
+    } else {
+         $position_name = '';
+    }
+
+    $usercode = $USER->usercode;
+
+    $timestart = end($attempts)->timestart;
+
+    $date = new DateTime();
+    $timeopen = $quiz->timeopen;
+    $timeclose = $quiz->timeclose;
+    $convtimeopen = new DateTime("@$timeopen");
+    $convtimeclose = new DateTime("@$timeclose");
+    $params_el = [
+        'usercode' => $usercode,
+        'grade' =>  $bestgrade,
+        'result' => $result,
+        'orgstruct_position' => $position_name,
+        'quiz' => $quiz->code,
+        'type' => $typeofcourse,
+        'timestart' => time(),
+        'action' => 'test'  
+    ];
+    $params_training_el = [
+        'CodeEmp' => $usercode,
+        'CourseCode' => $COURSE->code,
+        'TestScore' =>  $bestgrade,
+        'Result' => $result_traning,
+        'TestName' => $quiz->name,
+        'TestCode' => $quiz->code,
+        'Status' => '',
+    ];
+    $params_interview_el = [
+        'CodeCandidate' => $usercode,
+        'TestScore' =>  $bestgrade,
+        'TestResult' => '',
+        'TestCode' => $quiz->code,
+        'Score' => 0,
+        'DateInterview' => $date->format('Y-m-d H:i:sP'), 
+        'Status' => '', 
+    ];
+    $params_portal_exam_el = [
+        'ClassCode' => $COURSE->shortname,
+        'SubjectName' =>  $quiz->name,
+        'ExamName' => $quiz->code,
+        'ExamCode' => '',
+        'StudentId' => $USER->usercode,
+        'ExamScore' => $bestgrade, 
+        'ApiKeyCreate' => 'efcb96ee5e80c46157960459a7509d46'
+    ];
+    $params_portal_register_test_el = [
+        'GroupCourseName' => $DB->get_field('course_categories', 'name', ['id' => $COURSE->category]),
+        'PlacementTestName' => $COURSE->fullname,
+        'SubjectName' =>  $quiz->name,
+        'ExamName' => $quiz->code,
+        'ExamCode' => '',
+        // 'StartDate' => $convtimeopen->format('Y-m-d'),
+        // 'EndDate' => $convtimeclose->format('Y-m-d'), 
+        'StudentId' => $USER->usercode, 
+        'ExamScore' => $bestgrade,
+        'ApiKeyCreate' => 'efcb96ee5e80c46157960459a7509d46'
+    ];
+    $training_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'UpdateTraineeResult']);
+    $interview_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateInterviewResult']);
+    $portal_exam_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateClassResult']);
+    $portal_register_test_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreatePlacementTestResult']);
+    
+    $url_el = curPageURL() . '/local/newsvnr/ajax.php';
+
     // Save the best grade in the database.
     if (is_null($bestgrade)) {
         $DB->delete_records('quiz_grades', array('quiz' => $quiz->id, 'userid' => $userid));
@@ -761,7 +882,141 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
             array('quiz' => $quiz->id, 'userid' => $userid))) {
         $grade->grade = $bestgrade;
         $grade->timemodified = time();
-        $DB->update_record('quiz_grades', $grade);
+
+        $success = $DB->update_record('quiz_grades', $grade);
+        // Custom by Vũ: POST CURL 
+        if($success) {
+            // Đẩy thông tin kết quả tuyển dụng sang HRM
+            if($typeofcourse == 1) {
+                if($interview_api && $interview_api->visible == 1) {
+                    $get_params_interview_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $interview_api->id]);
+                    $params_interview_hrm = [];
+                    
+                    foreach ($get_params_interview_hrm as $key => $value) {
+                        if(array_key_exists($value->client_params, $params_interview_el)) {
+                            $params_interview_hrm[$value->client_params] = $params_interview_el[$value->client_params];
+                        } else {
+                            $params_interview_hrm[$value->client_params] = $value->default_value;
+                        }
+                        
+                    }
+                    $finalresult = $DB->get_record_sql("SELECT c.shortname AS shortname, CONCAT(mu.firstname, ' ', mu.lastname) AS fullname, gg.finalgrade AS finalgrade, ccc.gradepass
+                                                        FROM mdl_grade_items AS gi
+                                                            INNER JOIN mdl_course c ON c.id = gi.courseid
+                                                            LEFT JOIN mdl_grade_grades AS gg ON gg.itemid = gi.id
+                                                            INNER JOIN mdl_user AS mu ON gg.userid = mu.id
+                                                            LEFT JOIN mdl_course_completion_criteria ccc ON gi.courseid = ccc.course 
+                                                        WHERE gi.itemtype = 'course' AND ccc.gradepass IS NOT NULL AND ccc.criteriatype = 6 
+                                                            AND gg.userid = ? AND gi.courseid = ? 
+                                                        ORDER BY c.id ASC", [$userid, $quiz->course]);
+                    if($finalresult) {
+                        $check_finalquiz = $DB->get_record_sql("SELECT gg.finalgrade 
+                                                                FROM mdl_grade_grades gg JOIN mdl_grade_items gi ON gi.id = gg.itemid 
+                                                                WHERE gi.itemtype = 'course' AND gg.userid = ? AND  gi.courseid = ?  AND gg.finalgrade IS NOT NULL", [$quiz->course, $userid]);
+                        if($finalresult->finalgrade >= $finalresult->gradepass) {
+                            $params_interview_hrm['TestResult'] = 'E_PASS';
+                            $params_interview_hrm['Testscore'] = $bestgrade;
+                            if($check_finalquiz >= $finalresult->gradepass) {
+                                $params_interview_hrm['Result'] = 'E_PASS';
+                                $params_interview_hrm['Score'] = $finalresult->finalgrade;
+                            } 
+                        } else {
+                            $params_interview_hrm['TestResult'] = 'E_FAIL';
+                            $params_interview_hrm['Testscore'] = $bestgrade;
+                            if($check_finalquiz < $finalresult->gradepass) {
+                                $params_interview_hrm['Result'] = 'E_FAIL';
+                                $params_interview_hrm['Score'] = $finalresult->finalgrade;
+                            }
+                        }
+                    }
+                        
+                    $url_interview_hrm = $interview_api->url;
+                    HTTPPost($url_interview_hrm, $params_interview_hrm);
+                }
+            }
+            // Đẩy thông tin kết quả đào tạo sang HRM
+            if($typeofcourse == 2) {
+                if($training_api && $training_api->visible == 1) {
+                    $get_params_training_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $training_api->id]);
+                    $params_training_hrm = [];
+                    
+                    foreach ($get_params_training_hrm as $key => $value) {
+                        if(array_key_exists($value->client_params, $params_training_el)) {
+                            $params_training_hrm[$value->client_params] = $params_training_el[$value->client_params];
+                        } else {
+                            $params_training_hrm[$value->client_params] = $value->default_value;
+                        }
+                        
+                    }
+                    $finalresult = $DB->get_record_sql("SELECT c.shortname AS shortname, CONCAT(mu.firstname, ' ', mu.lastname) AS fullname, gg.finalgrade AS finalgrade, ccc.gradepass
+                                                        FROM mdl_grade_items AS gi
+                                                            INNER JOIN mdl_course c ON c.id = gi.courseid
+                                                            LEFT JOIN mdl_grade_grades AS gg ON gg.itemid = gi.id
+                                                            INNER JOIN mdl_user AS mu ON gg.userid = mu.id
+                                                            LEFT JOIN mdl_course_completion_criteria ccc ON gi.courseid = ccc.course 
+                                                        WHERE gi.itemtype = 'course' AND ccc.gradepass IS NOT NULL AND ccc.criteriatype = 6 
+                                                            AND gg.userid = ? AND gi.courseid = ? 
+                                                        ORDER BY c.id ASC", [$userid, $quiz->course]);
+                    if($finalresult) {
+                        $check_finalquiz = $DB->get_record_sql("SELECT gg.finalgrade 
+                                                                FROM mdl_grade_grades gg JOIN mdl_grade_items gi ON gi.id = gg.itemid 
+                                                                WHERE gi.itemtype = 'course' AND gg.userid = ? AND  gi.courseid = ?  AND gg.finalgrade IS NOT NULL", [$quiz->course, $userid]);
+                        if($finalresult->finalgrade >= $finalresult->gradepass) {
+                            $params_training_hrm['TestResult'] = 'E_PASS';
+                            $params_training_hrm['Testscore'] = $bestgrade;
+                            if($check_finalquiz >= $finalresult->gradepass) {
+                                $params_training_hrm['Result'] = 'E_PASS';
+                                $params_training_hrm['Score'] = $finalresult->finalgrade;
+                            } 
+                        } else {
+                            $params_training_hrm['TestResult'] = 'E_FAIL';
+                            $params_training_hrm['Testscore'] = $bestgrade;
+                            if($check_finalquiz < $finalresult->gradepass) {
+                                $params_training_hrm['Result'] = 'E_FAIL';
+                                $params_training_hrm['Score'] = $finalresult->finalgrade;
+                            }
+                        }
+                    }
+                    
+                    $url_training_hrm = $training_api->url;
+                    HTTPPost($url_training_hrm, $params_training_hrm);
+                }
+            }
+            // Đẩy thông tin kết quả kì thi đầu vào và kì thi trong lớp sang EBM
+            if($typeofcourse == 3) {
+                if($portal_exam_api && $portal_exam_api->visible == 1) {
+                    $get_params_portal_ebm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $portal_exam_api->id]);
+                    $params_portal_ebm = [];
+                    foreach ($get_params_portal_ebm as $key => $value) {
+                        if(array_key_exists($value->client_params, $params_portal_exam_el)) {
+                            $params_portal_ebm[$value->client_params] = $params_portal_exam_el[$value->client_params];
+                        } else {
+                            $params_portal_ebm[$value->client_params] = $value->default_value;
+                        }
+                        
+                    }
+
+                    $url_portal_ebm = $portal_exam_api->url;
+                    HTTPPost_EBM($url_portal_ebm, $params_portal_ebm);
+                }
+                if($portal_register_test_api && $portal_register_test_api->visible == 1) {
+                    $get_params_portal_ebm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $portal_register_test_api->id]);
+                    $params_portal_ebm = [];
+                    foreach ($get_params_portal_ebm as $key => $value) {
+                        if(array_key_exists($value->client_params, $params_portal_register_test_el)) {
+                            $params_portal_ebm[$value->client_params] = $params_portal_register_test_el[$value->client_params];
+                        } else {
+                            $params_portal_ebm[$value->client_params] = $value->default_value;
+                        }
+                        
+                    }
+
+                    $url_portal_ebm = $portal_register_test_api->url;
+                    HTTPPost_EBM($url_portal_ebm, $params_portal_ebm);
+                }
+            }
+            HTTP_POST($ch = curl_init(), $params_el, $url_el);
+        }
 
     } else {
         $grade = new stdClass();
@@ -769,11 +1024,148 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
         $grade->userid = $userid;
         $grade->grade = $bestgrade;
         $grade->timemodified = time();
-        $DB->insert_record('quiz_grades', $grade);
+
+        $success = $DB->insert_record('quiz_grades', $grade);
+
+        //Custom by Vũ: POST CURL 
+        if($success) {
+            // Đẩy thông tin kết quả tuyển dụng sang HRM
+            if($typeofcourse == 1) {
+                if($interview_api && $interview_api->visible == 1) {
+                    $get_params_interview_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $interview_api->id]);
+                    $params_interview_hrm = [];
+                    
+                    foreach ($get_params_interview_hrm as $key => $value) {
+                        if(array_key_exists($value->client_params, $params_interview_el)) { 
+                            $params_interview_hrm[$value->client_params] = $params_interview_el[$value->client_params];
+                        } else {
+                            $params_interview_hrm[$value->client_params] = $value->default_value;
+                        }
+                        
+                    }
+                    $finalresult = $DB->get_record_sql("SELECT c.shortname AS shortname, CONCAT(mu.firstname, ' ', mu.lastname) AS fullname, gg.finalgrade AS finalgrade, ccc.gradepass
+                                                        FROM mdl_grade_items AS gi
+                                                            INNER JOIN mdl_course c ON c.id = gi.courseid
+                                                            LEFT JOIN mdl_grade_grades AS gg ON gg.itemid = gi.id
+                                                            INNER JOIN mdl_user AS mu ON gg.userid = mu.id
+                                                            LEFT JOIN mdl_course_completion_criteria ccc ON gi.courseid = ccc.course 
+                                                        WHERE gi.itemtype = 'course' AND ccc.gradepass IS NOT NULL AND ccc.criteriatype = 6 
+                                                            AND gg.userid = ? AND gi.courseid = ? 
+                                                        ORDER BY c.id ASC", [$userid, $quiz->course]);
+                    if($finalresult) {
+                        $check_finalquiz = $DB->get_record_sql("SELECT gg.finalgrade 
+                                                                FROM mdl_grade_grades gg JOIN mdl_grade_items gi ON gi.id = gg.itemid 
+                                                                WHERE gi.itemtype = 'course' AND gg.userid = ? AND  gi.courseid = ?  AND gg.finalgrade IS NOT NULL", [$quiz->course, $userid]);
+                        if($finalresult->finalgrade >= $finalresult->gradepass) {
+                            $params_interview_hrm['TestResult'] = 'E_PASS';
+                            $params_interview_hrm['Testscore'] = $bestgrade;
+                            if($check_finalquiz >= $finalresult->gradepass) {
+                                $params_interview_hrm['Result'] = 'E_PASS';
+                                $params_interview_hrm['Score'] = $finalresult->finalgrade;
+                            } 
+                        } else {
+                            $params_interview_hrm['TestResult'] = 'E_FAIL';
+                            $params_interview_hrm['Testscore'] = $bestgrade;
+                            if($check_finalquiz < $finalresult->gradepass) {
+                                $params_interview_hrm['Result'] = 'E_FAIL';
+                                $params_interview_hrm['Score'] = $finalresult->finalgrade;
+                            }
+                        }
+                    }
+                        
+                    $url_interview_hrm = $interview_api->url;
+                    HTTPPost($url_interview_hrm, $params_interview_hrm);
+                }
+            }
+            // Đẩy thông tin kết quả đào tạo sang HRM
+            if($typeofcourse == 2) {
+                if($training_api && $training_api->visible == 1) {
+                    $get_params_training_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $training_api->id]);
+                    $params_training_hrm = [];
+                    
+                    foreach ($get_params_training_hrm as $key => $value) {
+                        if(array_key_exists($value->client_params, $params_training_el)) {
+                            $params_training_hrm[$value->client_params] = $params_training_el[$value->client_params];
+                        } else {
+                            $params_training_hrm[$value->client_params] = $value->default_value;
+                        }
+                        
+                    }
+                    $finalresult = $DB->get_record_sql("SELECT c.shortname AS shortname, CONCAT(mu.firstname, ' ', mu.lastname) AS fullname, gg.finalgrade AS finalgrade, ccc.gradepass
+                                                        FROM mdl_grade_items AS gi
+                                                            INNER JOIN mdl_course c ON c.id = gi.courseid
+                                                            LEFT JOIN mdl_grade_grades AS gg ON gg.itemid = gi.id
+                                                            INNER JOIN mdl_user AS mu ON gg.userid = mu.id
+                                                            LEFT JOIN mdl_course_completion_criteria ccc ON gi.courseid = ccc.course 
+                                                        WHERE gi.itemtype = 'course' AND ccc.gradepass IS NOT NULL AND ccc.criteriatype = 6 
+                                                            AND gg.userid = ? AND gi.courseid = ? 
+                                                        ORDER BY c.id ASC", [$userid, $quiz->course]);
+                    if($finalresult) {
+                        $check_finalquiz = $DB->get_record_sql("SELECT gg.finalgrade 
+                                                                FROM mdl_grade_grades gg JOIN mdl_grade_items gi ON gi.id = gg.itemid 
+                                                                WHERE gi.itemtype = 'course' AND gg.userid = ? AND  gi.courseid = ?  AND gg.finalgrade IS NOT NULL", [$quiz->course, $userid]);
+                        if($finalresult->finalgrade >= $finalresult->gradepass) {
+                            $params_training_hrm['TestResult'] = 'E_PASS';
+                            $params_training_hrm['Testscore'] = $bestgrade;
+                            if($check_finalquiz >= $finalresult->gradepass) {
+                                $params_training_hrm['Result'] = 'E_PASS';
+                                $params_training_hrm['Score'] = $finalresult->finalgrade;
+                            } 
+                        } else {
+                            $params_training_hrm['TestResult'] = 'E_FAIL';
+                            $params_training_hrm['Testscore'] = $bestgrade;
+                            if($check_finalquiz < $finalresult->gradepass) {
+                                $params_training_hrm['Result'] = 'E_FAIL';
+                                $params_training_hrm['Score'] = $finalresult->finalgrade;
+                            }
+                        }
+                    }
+
+                    $url_training_hrm = $training_api->url;
+                    HTTPPost($url_training_hrm, $params_training_hrm);
+                }
+            }
+            // Đẩy thông tin kết quả kì thi đầu vào và kì thi trong lớp sang EBM
+            if($typeofcourse == 3) {
+                if($portal_exam_api && $portal_exam_api->visible == 1) {
+                    $get_params_portal_ebm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $portal_exam_api->id]);
+                    $params_portal_ebm = [];
+                    foreach ($get_params_portal_ebm as $key => $value) {
+                        if(array_key_exists($value->client_params, $params_portal_exam_el)) {
+                            $params_portal_ebm[$value->client_params] = $params_portal_exam_el[$value->client_params];
+                        } else {
+                            $params_portal_ebm[$value->client_params] = $value->default_value;
+                        }
+                        
+                    }
+
+                    $url_portal_ebm = $portal_exam_api->url;
+                    HTTPPost_EBM($url_portal_ebm, $params_portal_ebm);
+                }
+                if($portal_register_test_api && $portal_register_test_api->visible == 1) {
+                    $get_params_portal_ebm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $portal_register_test_api->id]);
+                    $params_portal_ebm = [];
+                    foreach ($get_params_portal_ebm as $key => $value) {
+                        if(array_key_exists($value->client_params, $params_portal_register_test_el)) {
+                            $params_portal_ebm[$value->client_params] = $params_portal_register_test_el[$value->client_params];
+                        } else {
+                            $params_portal_ebm[$value->client_params] = $value->default_value;
+                        }
+                        
+                    }
+
+                    $url_portal_ebm = $portal_register_test_api->url;
+                    HTTPPost_EBM($url_portal_ebm, $params_portal_ebm);
+                }
+            }
+            HTTP_POST($ch = curl_init(), $params_el, $url_el);
+        }
     }
 
     quiz_update_grades($quiz, $userid);
 }
+
+/* --- Kết thúc Custom --- */
 
 /**
  * Calculate the overall grade for a quiz given a number of attempts by a particular user.

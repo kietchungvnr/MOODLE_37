@@ -81,6 +81,46 @@ switch ($action) {
         $outcome->outcome = \core_course\management\helper::action_course_change_sortorder_after_course(
             $courseid, $moveaftercourseid);
         break;
+    /**
+     * Custom by Vũ
+     * drag and drop cây thư mục khoá học.
+     */
+    case 'movecategoryafter' :
+        $categoryid = required_param('categoryid', PARAM_INT);
+        $moveaftercategoryid = required_param('moveafter', PARAM_INT);
+        $category = $DB->get_record('course_categories',['id' => $categoryid]);
+        $moveaftercategory = $DB->get_record('course_categories',['id' => $moveaftercategoryid]);
+        $params = array($moveaftercategory->sortorder, $moveaftercategory->parent);
+
+        $select = 'sortorder = ? AND parent = ?';
+    
+        fix_course_sortorder();
+        $swapcategory = $DB->get_records_select('course_categories', $select, $params, '', '*', 0, 1);
+        $swapcategory = reset($swapcategory);
+        if ($swapcategory) {
+            $DB->set_field('course_categories', 'sortorder', $swapcategory->sortorder, array('id' => $category->id));
+            $DB->set_field('course_categories', 'sortorder', $category->sortorder, array('id' => $swapcategory->id));
+            // $this->sortorder = $swapcategory->sortorder;
+
+            $event = \core\event\course_category_updated::create(array(
+                'objectid' => $category->id,
+                'context' => \context_coursecat::instance($category->id)
+            ));
+            $event->set_legacy_logdata(array(SITEID, 'category', 'move', 'management.php?categoryid=' . $category->id,
+                $category->id));
+            $event->trigger();
+
+            // Finally reorder courses.
+            fix_course_sortorder();
+            cache_helper::purge_by_event('changesincoursecat');
+            
+        } 
+        $outcome->outcome = true;
+        break;
+    /**
+     * Kết thúc Custom
+     */
+    
     case 'hidecourse' :
         $courseid = required_param('courseid', PARAM_INT);
         $outcome->outcome = \core_course\management\helper::action_course_hide_by_record($courseid);

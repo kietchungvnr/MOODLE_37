@@ -55,6 +55,10 @@ class mod_resource_mod_form extends moodleform_mod {
         }
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+         // Custom by Thắng : Thêm field chứa folder id khi tạo module trên trang thư viện trực tuyến
+        $mform->addElement('hidden', 'folderid', null);
+        $mform->setType('folderid', PARAM_INT);
+        
         $this->standard_intro_elements();
         $element = $mform->getElement('introeditor');
         $attributes = $element->getAttributes();
@@ -77,6 +81,8 @@ class mod_resource_mod_form extends moodleform_mod {
 
         //-------------------------------------------------------
         $mform->addElement('header', 'optionssection', get_string('appearance'));
+        // Custom by Vũ: Thêm loại view file trên browser (RESOURCELIB_DISPLAY_GOOGLE_DOCS_POPUP)
+        $config->displayoptions .= ',' . RESOURCELIB_DISPLAY_GOOGLE_DOCS_POPUP; 
 
         if ($this->current->instance) {
             $options = resourcelib_get_displayoptions(explode(',', $config->displayoptions), $this->current->display);
@@ -197,6 +203,37 @@ class mod_resource_mod_form extends moodleform_mod {
         parent::definition_after_data();
     }
 
+    // Custom by Vũ: Thêm điều kiện hoàn thành module với ràng buộc thời gian tối thiểu
+    
+    /**
+     * Display module-specific activity completion rules.
+     * Part of the API defined by moodleform_mod
+     * @return array Array of string IDs of added items, empty array if none
+     */
+    public function add_completion_rules() {
+        $mform = $this->_form;
+
+        $group = array();
+        $group[] =& $mform->createElement('checkbox', 'completiontimespentenabled', '',
+                get_string('completiontimespent', 'lesson'));
+        $group[] =& $mform->createElement('duration', 'completiontimespent', '', array('optional' => false));
+        $mform->addGroup($group, 'completiontimespentgroup', get_string('completiontimespentgroup', 'core_langvnr'), array(' '), false);
+        $mform->disabledIf('completiontimespent[number]', 'completiontimespentenabled', 'notchecked');
+        $mform->disabledIf('completiontimespent[timeunit]', 'completiontimespentenabled', 'notchecked');
+
+        return array('completiontimespentgroup');
+    }
+
+    /**
+     * Called during validation. Indicates whether a module-specific completion rule is selected.
+     *
+     * @param array $data Input data (not yet validated)
+     * @return bool True if one or more rules is enabled, false if none are.
+     */
+    public function completion_rule_enabled($data) {
+        return $data['completiontimespent'] > 0;
+    }
+
     function validation($data, $files) {
         global $USER;
 
@@ -227,5 +264,23 @@ class mod_resource_mod_form extends moodleform_mod {
             }
         }
         return $errors;
+    }
+    /**
+     * Allows module to modify the data returned by form get_data().
+     * This method is also called in the bulk activity completion form.
+     *
+     * Only available on moodleform_mod.
+     *
+     * @param stdClass $data the form data to be modified.
+     */
+    public function data_postprocessing($data) {
+        parent::data_postprocessing($data);
+        // Turn off completion setting if the checkbox is not ticked.
+        if (!empty($data->completionunlocked)) {
+            $autocompletion = !empty($data->completion) && $data->completion == COMPLETION_TRACKING_AUTOMATIC;
+            if (empty($data->completiontimespentenabled) || !$autocompletion) {
+                $data->completiontimespent = 0;
+            }
+        }
     }
 }

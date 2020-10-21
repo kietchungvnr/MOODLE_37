@@ -1,0 +1,42 @@
+
+{{#sliderenabled}}
+<div id="mooveslideshow" class="carousel slide m-0"  data-interval="5000">
+ <ol class="carousel-indicators">
+    {{#slides}}
+    <li data-target="#mooveslideshow" data-slide-to="{{{ key }}}" {{#active}}class="active"{{/active}}></li>
+    {{/slides}}
+</ol>
+<div class="carousel-inner">
+
+    {{#slides}}
+
+    <div class="carousel-item {{#active}}active{{/active}}" style="max-height: 500px;">
+        <img class="d-block w-100 animated fadeIn" src="../theme/moove/pix/jeshoots-com-219386-unsplash.jpg" alt="{{{ slidercap }}}">
+
+    <!--     <div class="intro">
+            <h2>Welcome to E-learning</h2>
+        </div> -->
+<!-- 
+        <div class="grid-black">
+
+        </div> 
+
+        <div class="outer">
+                
+            <div class="card" style="background: none; border: none" >
+                <div class="container p-1">
+                      <div class="row mx-lg-n5 pb-3 pt-3" style="padding: 0!important;">
+                        <div class="col-10 col-lg-4 px-lg-5 "><button type="button" class="btn btn-warning wrn-btn rounded" onclick="$('#newslider')[0].focus()">TIN TỨC</button></div>
+                        <div class="col-10 col-lg-4 px-lg-5"><button type="button" class="btn btn-primary wrn-btn rounded" onclick="$('#courseslider')[0].focus()">KHÓA HỌC</button></div>
+                        <div class="col-10 col-lg-4 px-lg-5"><button type="button" class="btn btn-danger wrn-btn rounded" onclick="$('#mydiscussion')[0].focus()">DIỄN ĐÀN</button></div>
+                      </div>
+                </div>
+            </div>
+
+        </div> -->
+
+     {{/slides}}
+    </div>
+
+</div>
+{{/sliderenabled}}

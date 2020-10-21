@@ -25,6 +25,7 @@
 require_once(__DIR__ . '/../config.php');
 require_once($CFG->dirroot . '/course/lib.php');
 require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
+require_once($CFG->dirroot . '/local/newsvnr/lib.php');
 
 $id = required_param('id', PARAM_INT); // Course ID.
 $delete = optional_param('delete', '', PARAM_ALPHANUM); // Confirmation hash.
@@ -64,6 +65,30 @@ if ($delete === md5($course->timemodified)) {
     echo $OUTPUT->heading($strdeletingcourse);
     // This might take a while. Raise the execution time limit.
     core_php_time_limit::raise();
+    /* -- Custom by Vũ -- */
+    //Đẩy thông tin khoá học khi xoá realtime qua HRM
+    $detete_course_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecCourse']);
+    if($detete_course_api && $delete_course_api->visible == 1) {
+        $params_el = [
+                'CourseName' => $course->fullname,
+                'CourseCode' =>  $course->code,
+                'Status' => 'E_DELETE'
+        ];
+        $getparams = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $detete_course_api->id]);
+        $params_hrm = [];
+        foreach ($getparams as $key => $value) {
+            if(array_key_exists($value->client_params, $params_el)) {
+                $params_hrm[$value->client_params] = $params_el[$value->client_params];
+            } else {
+                $params_hrm[$value->client_params] = $value->default_value;
+            }
+            
+        }
+        $url_hrm = $detete_course_api->url;
+        if($course->typeofcourse == 1)
+            HTTPPost($url_hrm, $params_hrm);
+    }
+    /* -- Kết thúc custom -- */
     // We do this here because it spits out feedback as it goes.
     delete_course($course);
     echo $OUTPUT->heading( get_string("deletedcourse", "", $courseshortname) );

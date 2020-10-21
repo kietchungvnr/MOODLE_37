@@ -96,10 +96,11 @@ class core_enrol_renderer extends plugin_renderer_base {
         $table->initialise_javascript();
 
         $content = '';
-        $searchbutton = $table->get_user_search_button();
-        if ($searchbutton) {
-            $content .= $this->output->render($searchbutton);
-        }
+        // Custom by Thang : bỏ bớt 1 button thừa 
+        // $searchbutton = $table->get_user_search_button();
+        // if ($searchbutton) {
+        //     $content .= $this->output->render($searchbutton);
+        // }
         $content .= html_writer::tag('div', get_string('otheruserdesc', 'enrol'), array('class'=>'otherusersdesc'));
         $content .= $this->output->render($table->get_paging_bar());
         $content .= html_writer::table($table);

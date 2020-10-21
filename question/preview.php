@@ -1,3 +1,21 @@
+<style type="text/css">
+    #techinfo_inner .notifytiny {
+        font-size: 15px;
+    }
+    .collapsibleregioncaption a {
+        font-size: 24px;
+    }
+    #techinfo_sizer {
+        padding: 0px 15px;
+    }
+    #id_displayoptionsheader .custom-select {
+        width: 262px;
+    }
+    .col-12 #region-main {
+        padding: 15px;
+        overflow: hidden;
+    }
+</style>
 <?php
 // This file is part of Moodle - http://moodle.org/
 //

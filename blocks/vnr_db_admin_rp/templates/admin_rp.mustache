@@ -1,0 +1,243 @@
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-4 padding-db">
+
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <div class="card-group" style="border-top: 5px solid #1177d1;">
+                        <div class="card" style="border-bottom-left-radius: .5rem;border-bottom-right-radius: .5rem;">
+                            <div class="card-body">
+                                    <div class="d-flex justify-content-around">
+                                        <div class="form-group">
+                                          <select class="form-control" id="list_category">
+                                            <option value="0">{{#str}}choosecoursecategory, block_vnr_db_admin_rp{{/str}}</option>
+                                            {{#categories}}
+                                                <option value="{{id}}">{{{name}}}</option>
+                                            {{/categories}}
+                                          </select>
+                                        </div>
+                                        <div class="form-group ml-2">
+                                            <select class="form-control" id="list_course">
+                                                <option value="0">{{#str}}choosecourse, block_vnr_db_admin_rp{{/str}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                     <div data-region="graderp" id="graderp" class="collapse show">
+
+                                    <div class="row align-items-center">
+                                        <div id="gradereport" class="container-fluid"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <div class="col-md-8 padding-db">
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <div class="card-group" style="border-top: 5px solid #1177d1;">
+
+                        <div class="card" style="border-bottom-left-radius: .5rem;border-bottom-right-radius: .5rem;">
+                            <div class="card-body">
+                                <div data-region="graderp_detail" id="graderp_detail" class="collapse show">
+                                    <div class="row align-items-center">
+                                        <div id="gradereport_detail" class="container-fluid p-0"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+             <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{#str}}pluginname, block_vnr_db_admin_rp{{/str}}</h5>
+                </div>
+                <div class="modal-body">
+                    <p>{{#str}}pluginname_help, block_vnr_db_admin_rp{{/str}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{#str}}closebuttontitle{{/str}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{#js}}
+
+require.config({
+    packages: [{
+        name: 'highcharts',
+        main: 'highcharts'
+    }],
+    paths: {
+        // Change this to your server if you do not wish to use our CDN.
+        highcharts: 'https://code.highcharts.com',
+        jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr"
+    }
+});
+
+// Load the depedencies and create your chart
+require(
+
+    [
+        'highcharts',
+        'highcharts/modules/exporting',
+        'highcharts/modules/accessibility',
+        'jquery',
+        'core/config',
+        'core/notification',
+        'core/str',
+        'block_vnr_db_admin_rp/grade_report'
+    ],
+    
+    // This function runs when the above files have been loaded.
+    function (Highcharts, ExportingModule, AccessibilityModule,$,Config,Notification,Str,GradeReport) {
+        
+        // Lấy danh sách khoá học theo thư mục khoá học
+        $('#list_category').change(function() {
+            var categoryid = $(this).val();
+
+            if (categoryid != '') {
+                var getURL = Config.wwwroot + '/local/newsvnr/ajax.php';
+                $.ajax({
+                    url: getURL,
+                    method: 'GET',
+                    data: {
+                        action: "get_list_course",
+                        categoryid: categoryid
+                    },
+                    success: function(result) {
+                        $('#list_course').html(result);
+                    }
+                });
+            }
+        });
+        var loadchart = (courseid, lastcourseid) => {
+            var settings = {
+                    type: 'GET',
+                    data: {
+                        "action" : "gradereport_chart",
+                        "courseid" : courseid,
+                        "lastcourseid" : lastcourseid
+                    },
+                    processData: true,
+                    contentType: "application/json"
+            };
+            var script = Config.wwwroot + '/local/newsvnr/restfulapi/webservice.php';
+            $.ajax(script,settings)
+            .then(function(response) {
+                
+                  if (response.error) {
+                      Notification.addNotification({
+                          message: response.error,
+                          type: "error"
+                      });
+                  } else {
+                      var strings = [{
+                          key: 'nodatatable',
+                          component: 'local_newsvnr'
+                      }, ];
+                      Str.get_strings(strings).then(function(s) {
+                            // Create a chart.
+                            Highcharts.chart('gradereport', {
+                                chart: {
+                                    plotBackgroundColor: null,
+                                    plotBorderWidth: null,
+                                    plotShadow: false,
+                                    type: 'pie'
+                                },
+                                title: {
+                                    text: response.coursename
+                                },
+                                subtitle: {
+                                    text: ''
+                                }, 
+                                credits: {
+                                    enabled: false
+                                },
+                                tooltip: {
+                                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                },
+                                accessibility: {
+                                    point: {
+                                        valueSuffix: '%'
+                                    }
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: true,
+                                        cursor: 'pointer',
+                                        dataLabels: {
+                                            enabled: false
+                                        },
+                                        showInLegend: true
+                                    }
+                                },
+                                series: [{
+                                    animation: false,
+                                    point:{
+                                        events:{
+                                            click: function (event) {
+                                                GradeReport.gradereport(this.name, courseid);
+                                            }
+                                        }
+                                    },
+                                    colorByPoint: true,
+                                    data: response.data
+                                }]
+                            });
+                                
+                    });
+
+                  }
+                  return;
+                }).fail(Notification.exception);
+            GradeReport.gradereport("Đạt", courseid);
+        }
+
+       {{!  var courseid = $('#list_course').val();
+        var categoryid = $('#list_category').val();
+        var getURL = Config.wwwroot + '/local/newsvnr/ajax.php';
+        $.ajax({
+                    url: getURL,
+                    method: 'GET',
+                    data: {
+                        action: "get_list_course",
+                        categoryid: categoryid
+                    },
+                    success: function(result) {
+                        $('#list_course').html(result);
+                    }
+                }); }}
+        // Show chart bảng điểm
+        loadchart(0,0);
+
+        // We need to initialize module files and pass in Highcharts.
+        ExportingModule(Highcharts);
+
+        // Load accessibility after exporting.
+        AccessibilityModule(Highcharts);
+        //Load data from ajax for gradereport
+        $('#list_course').change(function() {
+            var courseid = $(this).val();
+            loadchart(courseid);
+        });
+        
+        
+
+});
+
+
+{{/js}}

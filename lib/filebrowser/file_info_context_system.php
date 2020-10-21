@@ -71,6 +71,47 @@ class file_info_context_system extends file_info_context_coursecat {
     }
 
     /**
+     * // Custom by Vũ: Get content cho file manager trong trang tài liệu hệ thống
+     * Return information about this specific part of context level
+     *
+     * @param string $component component
+     * @param string $filearea file area
+     * @param int $itemid item ID
+     * @param string $filepath file path
+     * @param string $filename file name
+     * @return file_info|null file_info instance or null if not found or access not allowed
+     */
+
+    protected function get_area_local_newsvnr_content($itemid, $filepath, $filename) {
+        global $USER, $CFG;
+
+        if (is_null($itemid)) {
+            // go to parent, we do not use itemids here in private area
+            return $this;
+        }
+
+        $fs = get_file_storage();
+
+        $filepath = is_null($filepath) ? '/' : $filepath;
+        $filename = is_null($filename) ? '.' : $filename;
+
+        if (!$storedfile = $fs->get_file($this->context->id, 'local_newsvnr', 'content', 0, $filepath, $filename)) {
+            if ($filepath === '/' and $filename === '.') {
+                // root dir does not exist yet
+                $storedfile = new virtual_root_file($this->context->id, 'local_newsvnr', 'content', 0);
+            } else {
+                // not found
+                return null;
+            }
+        }
+        $urlbase = $CFG->wwwroot.'/pluginfile.php';
+
+        //TODO: user quota from $CFG->userquota
+
+        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('areauserpersonal', 'repository'), false, true, true, false);
+    }
+
+    /**
      * Gets a stored file for the backup course filearea directory.
      *
      * @param int $itemid item ID

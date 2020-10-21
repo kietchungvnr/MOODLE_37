@@ -1,0 +1,69 @@
+<div class="container-fluid p-0">
+   <div id="listuser">
+      {{#haslistuser}}
+      <table class="table">
+         <thead>
+            <tr>
+               <th colspan="2"><b>{{#str}}pluginname, block_vnr_course_topgrade{{/str}}Bảng xếp hạng</b></th>
+               <th scope="col"><i class="fa fa-trophy" aria-hidden="true" style="font-size: 17px;
+                  "></i></th>
+            </tr>
+         </thead>
+         <tbody style="vertical-align: center !important">
+            {{#listuser}}
+            <tr>
+               <td class="pr-0"> {{{image}}} </td>
+               <td class="align-middle pl-0"><a href="{{link}}">{{fullname}}</a></td>
+               <td class="align-middle"><span title="{{#str}}finalresult, block_vnr_course_topgrade{{/str}}">{{finalgrade}}</span></td>
+            </tr>
+            {{/listuser}}
+         </tbody>
+      </table>
+      {{/haslistuser}}
+      {{^haslistuser}}
+      <div class="d-flex justify-content-center alert alert-info alert-block fade in">{{#str}}nograde, block_vnr_course_topgrade{{/str}}</div>
+      {{/haslistuser}}
+   </div>
+</div>
+
+{{#js}}
+require(['jquery', 'core/templates', 'core/notification', 'core/config'], function($, templates, notification, Config) {
+    const listuser = (courseid) => {
+        var owlcourse_block = $('#listuser');
+        var settings = {
+                type: 'GET',
+                processData: true,
+                data:{
+                    action: 'get_topgrade',
+                    courseid: courseid,
+                },
+                contentType: "application/json"
+        };
+        var script = Config.wwwroot + '/local/newsvnr/ajax.php';
+        $.ajax(script, settings)
+        .then(function(response) {
+            var data = JSON.parse(response);
+            
+            if(data.listuser.length != 0) {
+                templates.render('block_vnr_course_topgrade/topgrade_user', data).done(function(html, js) {
+                    owlcourse_block.html(html);
+                    templates.runTemplateJS(js);
+                }).fail(notification.exception);
+            } 
+            else {
+                owlcourse_block.html('<div class="d-flex justify-content-center alert alert-info alert-block fade in">Không có khoá học cho kế hoạch này!</div>');
+            }
+        }).fail(notification.exception);
+    };
+    var courseid = $('select[name=listcourse]').val();
+    {{! listuser(courseid);
+    $('#listcourse').on('change', function(){
+        var courseid = $(this).val();
+        console.log(courseid);
+        listuser(courseid);
+    }); }}
+
+});
+
+
+{{/js}}

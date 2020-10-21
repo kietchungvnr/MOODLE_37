@@ -1,0 +1,68 @@
+
+<div id="loginbox" class="d-none d-lg-block" style="top: 69px;right: 378px;">
+                            
+    <ul class="list-group" style="
+                            -webkit-box-shadow: 0 10px 16px 10px rgba(25,64,87,.16), 0 10px 16px 10px rgba(25,64,87,.12);
+                            box-shadow: 0 10px 16px 10px rgba(25,64,87,.16), 0 10px 16px 10px rgba(25,64,87,.12);
+                            color: #404040;
+                            background-color: #eef0f1;">
+        <li class="list-group-item" style="background-color: #0e3b51">
+            <h5 class="d-flex justify-content-center text-white">Tài khoản Demo</h5>
+            <h6 class="d-flex justify-content-center text-white">Chọn tài khoản đăng nhập</h6>
+        </li>
+        <li class="list-group-item cl-cursor" onclick="submitform('admin','Vnr@1234')" style="border-bottom: 2px solid ##eff1f1;">
+            Super Admin
+        <span class="fa fa-sign-in" style="float: right; font-size: 20px; width: 21px; font-family: fontAwesome; line-height: 22px;"></span>
+        </li>
+        <li class="list-group-item cl-cursor" onclick="submitform('viduong','Vnr@1234')" style="border-bottom: 2px solid ##eff1f1;">
+            Quản trị viên
+        <span class="fa fa-sign-in" style="float: right; font-size: 20px; width: 21px; font-family: fontAwesome; line-height: 22px;"></span>
+        </li>
+        <li class="list-group-item cl-cursor" onclick="submitform('vulethanh','L3thanhvu@')" style="border-bottom: 2px solid ##eff1f1;">
+            Học viên
+        <span class="fa fa-sign-in" style="float: right; font-size: 20px; width: 21px; font-family: fontAwesome; line-height: 22px;"></span>
+        </li>
+
+    </ul>
+
+</div>
+<script type="text/javascript">
+    
+    function submitform(username, password){
+        var username = username;
+        var password = password;
+        var intervalID = setInterval(function() {
+            if(document.getElementById('username').className != 'complete'){
+                var val = document.getElementById('username').value;
+                if(val.length == username.length){
+                    document.getElementById('username').classList.add("complete");
+                }else{
+                    for(var i = 0; i < username.length; i++){
+                        if(val.length <= i){
+                            document.getElementById('username').value = val + username.charAt(i);
+                            return;
+                        }
+                    }
+                }
+            }
+            if(document.getElementById('password').className != 'complete'){
+                var val = document.getElementById('password').value;
+                if(val.length == password.length){
+                    document.getElementById('password').classList.add("complete");
+                }else{
+                    for(var i = 0; i < password.length; i++){
+                        if(val.length <= i){
+                            document.getElementById('password').value = val + password.charAt(i);
+                            return;
+                        }
+                    }
+                }
+            }
+            var x = document.getElementsByClassName('signup-form');
+            x[0].submit();
+            clearInterval(intervalID);
+
+        }, 100);
+    }
+    
+</script>

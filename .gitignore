@@ -27,12 +27,14 @@
 /.patches/
 /.idea/
 /nbproject/
+/local/commander/
 CVS
 .DS_Store
 /.settings/
 /.project
 /.buildpath
 /.cache
+/local/commander
 phpunit.xml
 # Composer support. Do not ignore composer.json, or composer.lock. These should be shipped by us.
 composer.phar

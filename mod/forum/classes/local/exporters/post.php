@@ -425,6 +425,12 @@ class post extends exporter {
             $charcount = null;
         }
 
+        $replysubject = $subject;
+        $strre = get_string('re', 'forum');
+        if (!(substr($replysubject, 0, strlen($strre)) == $strre)) {
+            $replysubject = "{$strre} {$replysubject}";
+        }
+
         return [
             'id' => $post->get_id(),
             'subject' => $subject,

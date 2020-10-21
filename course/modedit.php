@@ -30,24 +30,28 @@ require_once($CFG->libdir.'/gradelib.php');
 require_once($CFG->libdir.'/completionlib.php');
 require_once($CFG->libdir.'/plagiarismlib.php');
 require_once($CFG->dirroot . '/course/modlib.php');
+require_once($CFG->dirroot . '/local/newsvnr/lib.php');
 
 $add    = optional_param('add', '', PARAM_ALPHANUM);     // Module name.
 $update = optional_param('update', 0, PARAM_INT);
 $return = optional_param('return', 0, PARAM_BOOL);    //return to course/view.php if false or mod/modname/view.php if true
 $type   = optional_param('type', '', PARAM_ALPHANUM); //TODO: hopefully will be removed in 2.0
 $sectionreturn = optional_param('sr', null, PARAM_INT);
+$folderid = optional_param('folderid',0, PARAM_INT);
 
 $url = new moodle_url('/course/modedit.php');
 $url->param('sr', $sectionreturn);
-if (!empty($return)) {
+    if (!empty($return)) {
     $url->param('return', $return);
 }
-
 if (!empty($add)) {
     $section = required_param('section', PARAM_INT);
     $course  = required_param('course', PARAM_INT);
+    //tạo module theo thư mục , chỉ dùng cho course = 1
+
 
     $url->param('add', $add);
+    $url->param('folderid', $folderid);
     $url->param('section', $section);
     $url->param('course', $course);
     $PAGE->set_url($url);
@@ -64,6 +68,7 @@ if (!empty($add)) {
     $data->return = 0;
     $data->sr = $sectionreturn;
     $data->add = $add;
+    $data->folderid = $folderid;
     if (!empty($type)) { //TODO: hopefully will be removed in 2.0
         $data->type = $type;
     }
@@ -136,9 +141,18 @@ if (file_exists($modmoodleform)) {
 } else {
     print_error('noformdesc');
 }
-
+// Custom by Vũ: completion rule thời gian yêu cầu hoàn thành modole (resource)
+if($data->modulename == 'resource' || $data->modulename == 'book') {
+    $completiontimespent = $DB->get_field('course_modules_completion_rule', 'completiontimespent', ['moduleid' => $data->coursemodule]);
+    if($completiontimespent) {
+        $data->completiontimespent = (string)$completiontimespent;
+        $data->completiontimespentenabled = 'checked';
+        // $data->completiontimespent['timeunit'] = '1';
+        // $data->completiontimespent['number'] = '1';
+    }
+}
 $mformclassname = 'mod_'.$module->name.'_mod_form';
-$mform = new $mformclassname($data, $cw->section, $cm, $course);
+$mform = new $mformclassname($data, $cw->section, $cm, $course, $folderid);
 $mform->set_data($data);
 
 if ($mform->is_cancelled()) {
@@ -153,10 +167,61 @@ if ($mform->is_cancelled()) {
         redirect(course_get_url($course, $cw->section, array('sr' => $sectionreturn)));
     }
 } else if ($fromform = $mform->get_data()) {
+    // Custom by Vũ: Đẩy danh sách quiz qua hrm via api
+    if($data->modulename == 'quiz') {
+        $quiz_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecTest']);
+        $params_el = [
+                'TestName' => $fromform->name,
+                'TestCode' =>  $fromform->code,
+                'CourseCode' => $course->code
+        ];
+        if($quiz_api) {
+            $getparams_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $quiz_api->id]);
+            $params_hrm = [];
+            foreach ($getparams_hrm as $key => $value) {
+                if(array_key_exists($value->client_params, $params_el)) {
+                    $params_hrm[$value->client_params] = $params_el[$value->client_params];
+                } else {
+                    $params_hrm[$value->client_params] = $value->default_value;
+                }
+            }
+            $url_hrm = $quiz_api->url;
+        }
+    }
     if (!empty($fromform->update)) {
+        if($data->modulename == 'quiz' && isset($params_hrm)) {
+            $params_hrm['Status'] = "E_UPDATE";
+            HTTPPost($url_hrm, $params_hrm);
+        }
         list($cm, $fromform) = update_moduleinfo($cm, $fromform, $course, $mform);
     } else if (!empty($fromform->add)) {
+        if($data->modulename == 'quiz' && isset($params_hrm)) {
+            $params_hrm['Status'] = "E_CREATE";
+            HTTPPost($url_hrm, $params_hrm);
+        }
         $fromform = add_moduleinfo($fromform, $course, $mform);
+        //Dữ liệu insert vào table library_module khi course = 1
+        if($course->id == SITEID) {
+            $record = new stdClass();
+            $record->folderid = $folderid;
+            $record->timecreated = time();
+            $record->userid = $USER->id;
+            $record->coursemoduleid = $fromform->coursemodule;
+            $record->moduletype = $fromform->modulename;
+            if($fromform->modulename == 'resource') {
+                $getfile = $DB->get_record_sql("SELECT TOP 1 * 
+                                                FROM {files} 
+                                                where component = 'user' 
+                                                    AND filearea = 'draft' 
+                                                    AND itemid = :itemid 
+                                                    AND filesize IS NOT NULL",array('itemid' => $fromform->files));
+                $record->minetype = $getfile->mimetype;
+                $record->filesize = $getfile->filesize;
+            }
+            
+            $DB->insert_record('library_module',$record);
+        }
+
     } else {
         print_error('invaliddata');
     }
