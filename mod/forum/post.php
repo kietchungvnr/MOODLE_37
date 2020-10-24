@@ -596,7 +596,6 @@ if (!empty($forum)) {
         $newdiscussion->usermodified = $post->userid;
         $newdiscussion->timestart    = $discussion->timestart;
         $newdiscussion->timeend      = $discussion->timeend;
-
         $newid = $DB->insert_record('forum_discussions', $newdiscussion);
 
         $newpost = new stdClass();
@@ -817,6 +816,7 @@ if ($mformpost->is_cancelled()) {
     $fromform->itemid        = $fromform->message['itemid'];
     $fromform->messageformat = $fromform->message['format'];
     $fromform->message       = $fromform->message['text'];
+    $fromform->countviews    = 0;
     // WARNING: the $fromform->message array has been overwritten, do not use it anymore!
     $fromform->messagetrust  = trusttext_trusted($modcontext);
 

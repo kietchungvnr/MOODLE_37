@@ -1,8 +1,10 @@
 {{>theme_moove/inc_start}}
     <div id="page" class="container-fluid">
+    	<div class="mt-2">
         {{^hasportal}}
             {{{ output.full_header }}}
         {{/hasportal}}
+    	</div>
         <div id="page-content" class="row">
             <div id="region-main-box" class="col-12">
                 {{#hasregionmainsettingsmenu}}
@@ -47,7 +49,7 @@
 	                       					</div>
 	                       				</div>
 		                       			<div class="col-xl-2 col-lg-4 col-12 mt-2 mb-2 pr-0">
-		                       				<div class="pl-0 pr-0 text-right float-right d-flex" style="border:1px solid #dfd1d1">
+		                       				<div class="pl-0 pr-0 text-right float-right d-flex border">
 										 		<input id="searchlibrary" folderid="0" type="text" placeholder=""><i class="fa fa-search library"></i>
 										 	</div>
 										</div>
@@ -68,7 +70,6 @@
 											</thead>
 											 <div class="loading-page"></div>
 											<tbody id="table-library">
-												
 											</tbody>
 										</table>
 									</div>
@@ -84,7 +85,7 @@
         </div>
     </div>
     <!-- popup thêm thư mục mới -->
-    <div class="modal" id="add-popup-modal-folder">
+    <div class="modal modal-library" id="add-popup-modal-folder">
 		<div class="modal-dialog">
 			<!-- Modal content-->
 			<div class="modal-content">
@@ -100,7 +101,7 @@
 					<div class="form-group">
 						<label class="mb-1" for="pwd">{{#str}}folderparent, local_newsvnr{{/str}}:</label>
 						<input autocomplete="off" class="form-control" id="folderparent" onclick="viewTree();">
-						<div id="tree-view-folder">
+						<div class="tree-view-folder">
 							{{{output.library_folder}}}
 						</div>
 					</div>
@@ -119,7 +120,7 @@
     <!-- popup chỉnh sửa thư mục -->
     <div id="edit-popup-modal-folder"></div>
     <!-- popup thêm module -->
-    <div class="modal" id="add-popup-modal-module">
+    <div class="modal modal-library" id="add-popup-modal-module">
 		<div class="modal-dialog">
 			<!-- Modal content-->
 			<div class="modal-content">
@@ -144,7 +145,7 @@
 		</div>
     </div>
     <!-- popup nhúng iframe -->
-    <div class="modal fade " id="modal-iframe-library" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade modal-viewfile" id="modal-iframe-library" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       	<div class="modal-dialog modal-fluid" role="document">
 		    <div class="modal-iframe modal-content">
 		      <div class="modal-header">
@@ -152,7 +153,7 @@
 		          <span aria-hidden="true">&times;</span>
 		        </button>
 		      </div>
-		      <div class="modal-body">
+		      <div class="modal-body pt-0">
 		      	<iframe width='100%' height='700px'></iframe>
 		      </div>
 		    </div>

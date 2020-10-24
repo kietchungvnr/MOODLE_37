@@ -1778,9 +1778,6 @@ nav.navbar ul.navbar-nav .popover-region .popover-region-toggle .count-container
 .message-app.drawer {
     top: 52px;
 }
-[data-region="blocks-column"] {
-    top: 49px;
-}
 #action-menu-2-menu.dropdown-menu {
     left: 6px !important;
 }
@@ -3404,7 +3401,7 @@ tr.drag-samenode td {
 }
 .message-app.drawer {
     top: 43px;
-    height: calc(100% - 45px);
+    height: 100%;
 }
 .forum-general-table thead {
     background-color: #3c8dbc;
@@ -4475,37 +4472,14 @@ table.k-selectable .hyperlink {
     display: none;
 }
 .k-header.k-grid-toolbar {
-    background-color: #3c8dbc;
-    border-color: #3c8dbc;
+    background-color: #4285f4;
+    border-color: #4285f4;
 }
 .k-grid tr.k-state-selected {
     background-color: #3c8dbc !important;
 }
 #page-course-editsection label.form-check-inline {
     justify-content: unset;
-}
-.section-modchooser-link {
-    border: 1px solid #1177d1;
-    padding: 10px;
-    background-color: #1177d1;
-    border-radius: 10px;
-}
-.section-modchooser-link a {
-    color: #fff;
-}
-.section-modchooser-link .icon{
-    color: #fff;
-}
-
-a.add-sections {
-    border: 1px solid #1177d1;
-    padding: 10px;
-    background-color: #1177d1;
-    border-radius: 10px;
-    color: #fff;
-}
-.section-modchooser-text {
-    color: #fff;
 }
 .course-tab {
     display: none;
@@ -4579,7 +4553,7 @@ body#page-enrol-index #region-main .generalbox#notice {
 }
 .tree-search input.courses_search_input.k-input {
     max-height: 40px;
-    border: solid 1px #d9d9d9;
+border: solid 1px #d9d9d9;
 }
 .content-expand {
     display: none;
@@ -4597,202 +4571,22 @@ body#page-enrol-index #region-main .generalbox#notice {
     border: 1px solid #dfd1d1;
     padding: 5px 15px;
 }
-.popup-setting {
-    position: absolute;
-    width: 175px;
-    height: 100px;
-    right: 2%;
-    display: none;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    background-clip: padding-box;
-    border: 1px solid #d0d6d8;
-    border-radius: .21428571rem;
-    color: #545759;
-}
-.popup-setting ul li{
-    padding: 5px 10px;
-    cursor: pointer;
-}
-#folder_library li.folder.active {
-    font-weight: bold;
-    background: #bfb8b873;
-}
-.module-count {
-    padding: 10px 15px;
-    color: #1177d1;
-    padding-left: 0;
-    font-weight: bold;
-}
-li.folder {
-    padding: 5px;
-}
-li.folder i.fa.fa-folder{
-    margin-right: 5px;
-    color: orange;
-}
-li.folder a {
-    color: #545759;
-}
-.tree-view-folder {
-    background: gainsboro;
-    max-height: 500px;
-    overflow: hidden;
-    display: none;
-}
-.tree-view-folder li.active {
-    background: #8080809c;
-}
-.tree-view-folder:hover {
-    overflow-y: scroll;
-}
-.modal-library .modal-content {
-    margin: auto;
-    width: 600px;
-    border-radius: 5px;
-}
-.modal-viewfile .modal-content {
-    width: 85%;
-    margin: auto;
-}
-.add-module-popup .option {
-    border-bottom: 1px solid white;
-    padding: 15px 15px;
-    display: flex;
-    align-items: center;
-}
-.modal-body.add-module-popup {
-    padding: 0;
-}
-/*@media(max-width: 1000px) {
-    .modal-content {
-        width: 100%;
-    }
-}*/
-.add-module-popup .option .icon{
-    margin-left: 10px;
-    width: 24px;
-    height: 24px;
-}
-.modal-header {
-    padding: 0.5rem;
-}
-.modal-header h4 {
-    font-size: 19px;
-}
-.modal-body.add-module-popup {
-    background: #f2f2f2;
-}
-.top-library {
-    margin: 0;
-    margin-bottom: 5px;
-    align-items: center;
-}
-#file_library table thead th {
-    background-color: #f6f9fb;
-    color: #36353b;
-}
-#file_library table td {
-    border-top: 0;
-}
-input#searchlibrary.k-input {
-    max-height: 30px;
-    width: -webkit-fill-available;
-}
-input#searchlibrary {
-    height: 35px !important;
-    border:0;
-}
-i.library {
-    height: 30px;
-    background: white;
-    padding: 10px;
-    cursor: pointer;
-}
-#file_library .k-autocomplete {
-    border-color: #fa807200;
-    box-shadow: none;
-    border: transparent;
-}
-button[data-target="#add-popup-modal-module"] {
-    display: none;
-}
-.overflow-auto {
-    overflow: auto;
-}
-
-.headerpopup {
-    margin-bottom: 0;
-    padding: 0.6rem 0;
-}
-.fp-pathbar .fp-path-folder:not(:first-child) {
-    margin-left: 0;
-}
-.fp-pathbar .fp-path-folder-name {
-    margin-left: 14px;
-}
-.fp-pathbar .fp-margin {
-    margin: 0 5px;
-}
-.fp-navbar {
-    padding: 5px 0;
-}
-.fp-navbar .fp-viewbar a {
-    margin-left: 5px !important;
-}
-.modal-iframe {
-    width: 1300px;
-}
-.modal-dialog {
-    max-width: 100%;
-}
-#table-library td a {
-    cursor: pointer;
-}
-#table-library td a .fa-download{
-    color: #3c8dbc;
-}
-.headerpopup {
-    margin-bottom: 0;
-    padding: 0.6rem 0;
-}
-.fp-pathbar .fp-path-folder:not(:first-child) {
-    margin-left: 0;
-}
-.fp-pathbar .fp-path-folder-name {
-    margin-left: 14px;
-}
-.fp-pathbar .fp-margin {
-    margin: 0 5px;
-}
-.fp-navbar {
-    padding: 5px 0;
-}
-.fp-navbar .fp-viewbar a {
-    margin-left: 5px !important;
-}
-.generaltable th {
-    vertical-align: middle;
-}
-.region_main_settings_menu_proxy {
-    display: none;
-}
-#nav-course input#coursesearchbox.form-control {
-    height: auto;
-}
-.path-calendar .maincalendar .header {
-    flex-wrap: unset !important;
-}
-#page #page-header .card-body {
-    padding: 0;
-}
 .not-allow {
     pointer-events:none; 
 }
-.modal-iframe iframe {
-    border:none;
+[data-region="blocks-column"] {
+    top: 0;
+    height: 100%!important;
+    border-left: 1px solid #8080804d;
+}
+#region-main-box {
+    padding: 0!important;
+}
+#page.container-fluid {
+    padding: 0 !important;
+}
+body {
+    background: white;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
@@ -4810,15 +4604,6 @@ button[data-target="#add-popup-modal-module"] {
 <body {{{ bodyattributes }}}>
 
     <a id="return-to-top" title="{{#str}}gotop, theme_moove{{/str}}" data-placement="left"><i class="fa fa-arrow-up"></i></a>
-    {{{output.menu_mobile_bottom}}}
-    {{{output.test}}}
-    <div class="modal123"></div>  
-    <div class="all-header">
-        {{>theme_moove/header}}
-    </div>
-    {{{output.menu_focus}}}
-    <div class="overflow-all"></div>
-    <div id="page-wrapper">
       {{{ output.standard_top_of_body_html }}}
 
 

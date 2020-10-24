@@ -94,8 +94,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
     // Làm mới dữ liệu input khi tắt popup
     $("#add-popup-modal-folder").on('show.bs.modal', function() {
         $('#add-popup-modal-folder input#foldername').val('');
-        $('#tree-view-folder').slideUp();
-        // $('#add-popup-modal-folder input#folderparent').replaceWith('<input autocomplete="off" class="form-control" id="folderparent">');
+        $('.tree-view-folder').slideUp();
         $('#add-popup-modal-folder textarea#folderdes').val('');
     });
     //Láy parameter folder id khi click vào cây thư mục
@@ -104,6 +103,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
     	$('.alert-warning').removeClass('alert');
         $('.loading-page').addClass('active');
         $('#folder_library li.folder').removeClass('active');
+        $('#folder_library li.folder').addClass('not-allow');
         $(this).addClass('active');
         var folderid = $(this).attr('id');
         $('.add-module-popup input[name="selectmodule"]').attr('folderid', folderid);
@@ -119,7 +119,6 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         }
         $.ajax(scriptmodule, settings).then(function(response) {
             var obj = $.parseJSON(response);
-            console.log(obj.result);
             $('#table-library').hide().html(obj.result).fadeIn('fast');
             $('#header-library').replaceWith(obj.header);
             $('#pagination').replaceWith(obj.pagination);
@@ -127,6 +126,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             if(obj.result == '') {
             	$('.alert-warning').replaceWith(obj.alert);
             }
+             $('#folder_library li.folder').removeClass('not-allow');
         });
     })
     // Tạo module mới trên thư viện ( truyền vào value và folderid)

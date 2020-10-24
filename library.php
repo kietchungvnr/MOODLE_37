@@ -80,11 +80,11 @@ if (file_exists($CFG->dirroot.'/local/hub/lib.php') and get_config('local_hub', 
         exit;
     }
 }
-
+$PAGE->set_context(context_system::instance());
 $PAGE->set_pagetype('site-index-library');
 $PAGE->set_docs_path('');
 $editing = $PAGE->user_is_editing();
-$PAGE->set_title($SITE->fullname);
+$PAGE->set_title(get_string('library','local_newsvnr'));
 $PAGE->set_heading(get_string('library','local_newsvnr'));
 $courserenderer = $PAGE->get_renderer('core', 'course');
 echo $OUTPUT->header();

@@ -32,7 +32,7 @@ require_once($CFG->libdir.'/plagiarismlib.php');
 require_once($CFG->dirroot . '/course/modlib.php');
 require_once($CFG->dirroot . '/local/newsvnr/lib.php');
 
-$add    = optional_param('add', '', PARAM_ALPHA);     // module name
+$add    = optional_param('add', '', PARAM_ALPHANUM);     // Module name.
 $update = optional_param('update', 0, PARAM_INT);
 $return = optional_param('return', 0, PARAM_BOOL);    //return to course/view.php if false or mod/modname/view.php if true
 $type   = optional_param('type', '', PARAM_ALPHANUM); //TODO: hopefully will be removed in 2.0
@@ -157,9 +157,19 @@ $mform->set_data($data);
 
 if ($mform->is_cancelled()) {
     if ($return && !empty($cm->id)) {
-        redirect("$CFG->wwwroot/mod/$module->name/view.php?id=$cm->id");
+        $urlparams = [
+            'id' => $cm->id, // We always need the activity id.
+            'forceview' => 1, // Stop file downloads in resources.
+        ];
+        $activityurl = new moodle_url("/mod/$module->name/view.php", $urlparams);
+        redirect($activityurl);
     } else {
-        redirect(course_get_url($course, $cw->section, array('sr' => $sectionreturn)));
+        //Custom by Thang : Thêm điều kiện redirect khi course = 1
+        if($course->id == SITEID) {
+            redirect($CFG->wwwroot . $_SESSION['url']);
+        } else {
+            redirect(course_get_url($course, $cw->section, array('sr' => $sectionreturn)));
+        }
     }
 } else if ($fromform = $mform->get_data()) {
     // Custom by Vũ: Đẩy danh sách quiz qua hrm via api
