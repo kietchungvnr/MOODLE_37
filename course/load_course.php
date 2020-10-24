@@ -44,15 +44,7 @@ $category = optional_param('category', "", PARAM_TEXT);
 $filter   = optional_param('filter', "", PARAM_TEXT);
 $PAGE->set_context(context_system::instance());
 $theme_settings = new theme_settings();
-$params = [];
-$params['id'] = $id;
-$params['page'] = $page;
-$params['pagetake'] = $pagetake;
-$params['keycourse'] = $keycourse;
-$params['teacher'] = $teacher;
-$params['category'] = $category;
-$params['filter'] = $filter;
-$params['id'] = $id;
+
 ///xử lý phân trang///
 $perPage        = new PerPage();
 $pagetake       = $perPage->perpageCourseNews;
@@ -84,7 +76,7 @@ if ($filter == "coursepopular") {
 }
 
 // Script lấy danh sách khóa học theo giảng viên, tên khóa và tên danh mục
-$sql .= "SELECT c.id, cc.name category, c.fullname, c.timecreated, CONCAT(u.firstname, ' ', u.lastname) fullnamet, r.shortname
+$sql .= "SELECT DISTINCT c.id, cc.name category, c.fullname, c.timecreated, CONCAT(u.firstname, ' ', u.lastname) fullnamet
             FROM {role_assignments} ra
                 JOIN {user} u ON ra.userid = u.id
                 JOIN {user_enrolments} ue ON u.id = ue.userid 

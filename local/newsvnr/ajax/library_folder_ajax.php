@@ -68,11 +68,11 @@ switch ($action) {
         $folder       = $DB->get_record_sql('SELECT * FROM {library_folder} WHERE id = :id', ['id' => $folderid]);
         $folderparent = $DB->get_record_sql('SELECT * FROM {library_folder} WHERE id = :parentid', ['parentid' => $folder->parent]);
         if ($folderparent == false) {
-            $input = '<input autocomplete="off" class="form-control" id="folderparent">';
+            $input = '<input autocomplete="off" class="form-control" id="folderparent" onclick="viewTree()">';
         } else {
-            $input = '<input autocomplete="off" class="form-control" id="folderparent" parentid="' . $folderparent->id . '" value="' . $folderparent->name . '">';
+            $input = '<input autocomplete="off" class="form-control" id="folderparent" onclick="viewTree()" parentid="' . $folderparent->id . '" value="' . $folderparent->name . '">';
         }
-        $output = '<div class="modal fade" id="edit-popup-modal-folder" role="dialog">
+        $output = '<div class="modal fade modal-library" id="edit-popup-modal-folder" role="dialog">
 					    <div class="modal-dialog">
 					      <!-- Modal content-->
 					      <div class="modal-content">
@@ -88,7 +88,7 @@ switch ($action) {
 							    <div class="form-group">
 							      <label for="pwd">'.get_string('folderparent','local_newsvnr').':</label>
 							      ' . $input . '
-							      <div id="tree-view-folder">' . $OUTPUT->library_folder() . '</div>
+							      <div class="tree-view-folder">' . $OUTPUT->library_folder() . '</div>
 							    </div>
 							   	<div class="form-group">
 							      <label for="pwd">'.get_string('description','local_newsvnr').':</label>

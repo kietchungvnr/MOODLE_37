@@ -102,9 +102,9 @@ if (!empty($modulebyfolder)) {
                 $output .= '<a  href="' . $CFG->wwwroot . '/course/mod.php?sesskey=IfaneUnu2h&delete=' . $module->id . '">' . $OUTPUT->pix_icon('t/delete', get_string('delete')) . '</a>';
                 $output .= '<a href="' . $CFG->wwwroot . '/course/modedit.php?update=' . $module->id . '&return=0&sr=">' . $OUTPUT->pix_icon('t/edit', get_string('edit')) . '</a>';
                 if ($module->visible == 1) {
-                    $output .= '<a href="' . $CFG->wwwroot . '/course/mod.php?sesskey=NO9xFS8Lzm&hide=' . $module->id . '">' . $OUTPUT->pix_icon('t/hide', get_string('hide')) . '</a>';
+                    $output .= '<a href="' . $CFG->wwwroot . '/course/mod.php?sesskey='.$USER->sesskey.'&hide=' . $module->id . '">' . $OUTPUT->pix_icon('t/hide', get_string('hide')) . '</a>';
                 } else {
-                    $output .= '<a href="' . $CFG->wwwroot . '/course/mod.php?sesskey=NO9xFS8Lzm&show=' . $module->id . '">' . $OUTPUT->pix_icon('t/show', get_string('show')) . '</a>';
+                    $output .= '<a href="' . $CFG->wwwroot . '/course/mod.php?sesskey='.$USER->sesskey.'&show=' . $module->id . '">' . $OUTPUT->pix_icon('t/show', get_string('show')) . '</a>';
                 }
                 if ($module->moduletype == 'resource') {
                     $output .= '<a href="' . $url . '" download><i class="fa fa-download" aria-hidden="true"></i></a>';
