@@ -89,7 +89,12 @@ if (!empty($add)) {
 
      // Duplicate the module.
      $newcm = duplicate_module($course, $cm);
-     redirect(course_get_url($course, $cm->sectionnum, array('sr' => $sectionreturn)));
+    //Custom by Thang : Thêm điều kiện redirect khi course = 1
+    if($course->id == SITEID) {
+        redirect($CFG->wwwroot . $_SESSION['url']);
+    } else {
+        redirect(course_get_url($course, $cm->sectionnum, array('sr' => $sectionreturn)));
+    }
 
 } else if (!empty($delete)) {
     $cm     = get_coursemodule_from_id('', $delete, 0, true, MUST_EXIST);
@@ -129,7 +134,7 @@ if (!empty($add)) {
     // Delete the module.
     course_delete_module($cm->id);
 
-    //Xóa luôn giữ liệu module này trong folder khi course = 1
+    // Xóa luôn giữ liệu module này trong folder khi course = 1
     if($course->id == SITEID) {
         $DB->delete_records('library_module',array('coursemoduleid'=>$cm->id));
     }
@@ -202,7 +207,12 @@ if ((!empty($movetosection) or !empty($moveto)) and confirm_sesskey()) {
 
     rebuild_course_cache($cm->course);
 
-    redirect(course_get_url($course, $cm->sectionnum, array('sr' => $sectionreturn)));
+    //Custom by Thang : Thêm điều kiện redirect khi course = 1
+    if($course->id == SITEID) {
+        redirect($CFG->wwwroot . $_SESSION['url']);
+    } else {
+        redirect(course_get_url($course, $cm->sectionnum, array('sr' => $sectionreturn)));
+    }
 
 } else if (!empty($hide) and confirm_sesskey()) {
     $cm     = get_coursemodule_from_id('', $hide, 0, true, MUST_EXIST);
@@ -216,7 +226,12 @@ if ((!empty($movetosection) or !empty($moveto)) and confirm_sesskey()) {
     if (set_coursemodule_visible($cm->id, 0)) {
         \core\event\course_module_updated::create_from_cm($cm, $modcontext)->trigger();
     }
-    redirect(course_get_url($course, $cm->sectionnum, array('sr' => $sectionreturn)));
+    //Custom by Thang : Thêm điều kiện redirect khi course = 1
+    if($course->id == SITEID) {
+        redirect($CFG->wwwroot . $_SESSION['url']);
+    } else {
+        redirect(course_get_url($course, $cm->sectionnum, array('sr' => $sectionreturn)));
+    }
 
 } else if (!empty($stealth) and confirm_sesskey()) {
     list($course, $cm) = get_course_and_cm_from_cmid($stealth);
@@ -226,7 +241,12 @@ if ((!empty($movetosection) or !empty($moveto)) and confirm_sesskey()) {
     if (set_coursemodule_visible($cm->id, 1, 0)) {
         \core\event\course_module_updated::create_from_cm($cm)->trigger();
     }
-    redirect(course_get_url($course, $cm->sectionnum, array('sr' => $sectionreturn)));
+    //Custom by Thang : Thêm điều kiện redirect khi course = 1
+    if($course->id == SITEID) {
+        redirect($CFG->wwwroot . $_SESSION['url']);
+    } else {
+        redirect(course_get_url($course, $section->section, array('sr' => $sectionreturn)));
+    }
 
 } else if (!empty($show) and confirm_sesskey()) {
     list($course, $cm) = get_course_and_cm_from_cmid($show);
@@ -237,7 +257,12 @@ if ((!empty($movetosection) or !empty($moveto)) and confirm_sesskey()) {
     if (set_coursemodule_visible($cm->id, 1)) {
         \core\event\course_module_updated::create_from_cm($cm)->trigger();
     }
-    redirect(course_get_url($course, $section->section, array('sr' => $sectionreturn)));
+    //Custom by Thang : Thêm điều kiện redirect khi course = 1
+    if($course->id == SITEID) {
+        redirect($CFG->wwwroot . $_SESSION['url']);
+    } else {
+        redirect(course_get_url($course, $section->section, array('sr' => $sectionreturn)));
+    }
 
 } else if ($groupmode > -1 and confirm_sesskey()) {
     $id = required_param('id', PARAM_INT);

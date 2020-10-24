@@ -1431,7 +1431,7 @@ nav.navbar .navbar-brand .logo img {
 #nav-course #drop-course-by-student {
     background-color: #306b8e;
     left: -1px !important;
-    top: -0.15723rem !important;
+    top: -2px !important;
 }
 @media only screen and (min-width: 600px) and (max-width: 1366px) {
     #nav-course input#coursesearchbox.form-control {
@@ -1744,10 +1744,10 @@ nav.navbar {
 nav.navcourse {
     background: #3c8dbc;
     width: 100%;
-    height: 48px;
+    height: 52px;
 }
 .nav-course-padding {
-    padding: 15px 15px 12px 15px;
+    padding: 15px;
     color: #fff;
 }
 nav.navbar ul.navbar-nav .lang-menu .dropdown-menu {
@@ -1774,6 +1774,9 @@ nav.navbar .moove-search-input .search-input-form .form-control {
 nav.navbar ul.navbar-nav .popover-region .popover-region-toggle .count-container {
     top: 19px;
     right: -6px;
+}
+.message-app.drawer {
+    top: 52px;
 }
 [data-region="blocks-column"] {
     top: 49px;
@@ -3281,7 +3284,7 @@ table#categoryquestions tr {
     #page-mod-quiz-edit #changeallmark {
         margin-left: 0!important;
     }
-    #load-course .row {
+    .row {
         margin: auto;
     }
     #new-lastest .owl-dots {
@@ -3493,6 +3496,9 @@ tr.drag-samenode td {
 .mdl-left,.mdl-right {
     margin-bottom:10px;
 }
+.mdl-left a,.mdl-right a {
+    color: #363535;
+}
 .mdl-left {
     padding-right: 10px;
 }
@@ -3509,7 +3515,6 @@ tr.drag-samenode td {
 }
 .section-modchooser {
     margin-right: 15px;
-    margin-top: 5px;
 }
 .pagelayout-course .summary {
     padding: 8px;
@@ -4120,10 +4125,10 @@ table#participants .fa-sort-asc ,
     }
 {{/hasfocusmod}}
 /*cây danh mục*/
-li.list-subcategory a, li.list-subcategory .list-category a {
+/*li.list-subcategory a, li.list-subcategory .list-category a {
     padding-left: 10px;
     color: #191818;
-}
+}*/
 
 .course-ajax-load {
     padding-left: 5px;
@@ -4132,6 +4137,7 @@ li.list-subcategory a, li.list-subcategory .list-category a {
 .menu-tree-course .border {
     border-radius: 5px;
     margin-top: 1rem;
+    overflow: hidden;
 }
 .menu-tree-course #drop-course-category {
     max-height: 800px;
@@ -4141,41 +4147,50 @@ li.list-subcategory a, li.list-subcategory .list-category a {
 .menu-tree-course #drop-course-category:hover {
     overflow-y: auto;
 }
-#load-course #pagination {
+#pagination {
     padding-top: 10px;
     margin: 0 auto;
     text-align: center;
 }
-#load-course #pagination .first {
+#pagination .first {
     border-left: #bccfd8 1px solid;
 }
-#load-course #pagination .link {
+#pagination .link {
     padding: 5px 10px;
     background: transparent;  
     cursor: pointer;
     color: #607d8b;
     -webkit-transition: .4s ease-in;
 }
-#load-course #pagination .link:hover {
+#pagination .link:hover {
     background: #0e63ae;
     color: #fff;
     border-radius:5px;
 }
-#load-course #pagination .link.current1 {
+#pagination .link.current1 {
     background: #0e63ae;
     color: #fff;
     border-radius:5px;
 }
-#load-course #pagination .link.disabled {
+#pagination .link.disabled {
     cursor: not-allowed;
     color: #bccfd8;
 }
 li.list-category {
-    padding: .5rem 1.25rem;
+    padding: .5rem 1rem;
     background-color: #fff;
-    border-top: 1px dashed rgba(0,0,0,.125);
     background: #f2f4f5;
     cursor: pointer;
+    position: relative;
+}
+li.list-category:before,.dropdown-menu-tree li:before  {
+    position: absolute;
+    content:"";
+    border-bottom: 1px dashed rgba(0,0,0,.125);
+    left: -50px;
+    right: 0;
+    bottom: 0;
+
 }
 li.list-category a , li.list-subcategory a{
     color: #191818;
@@ -4183,11 +4198,12 @@ li.list-category a , li.list-subcategory a{
 }
 .dropdown-menu-tree {
     display: none;
+    padding-left: 15px;
 }
-.dropdown-menu-tree li{
-    padding:0.75rem 1.25rem 0.75rem 25px ;
-    border-top: 1px dashed rgba(0,0,0,.125);
+.dropdown-menu-tree li {
+    padding:.5rem 1.25rem;
     cursor: pointer;
+    position: relative;
 }
 .list-category i.fa-angle-right {
     padding:5px 0px 5px 5px;
@@ -4237,10 +4253,10 @@ i.fa-angle-right.active {
     margin: 1rem -10px 0 -10px;
     border-radius: 5px;
 }
-.dropdown-menu-tree  .list-category {
+/*.dropdown-menu-tree .list-category {
     padding: 0.75rem 1.25rem 0.75rem 45px;
     background: white;
-}
+}*/
 #load-course .alert-warning {
     margin-top: 10px;
 }
@@ -4458,13 +4474,15 @@ table.k-selectable .hyperlink {
 #new-lastest .owl-dots {
     display: none;
 }
-/** Custom kendo grid */
 .k-header.k-grid-toolbar {
     background-color: #3c8dbc;
     border-color: #3c8dbc;
 }
 .k-grid tr.k-state-selected {
     background-color: #3c8dbc !important;
+}
+#page-course-editsection label.form-check-inline {
+    justify-content: unset;
 }
 .section-modchooser-link {
     border: 1px solid #1177d1;
@@ -4489,7 +4507,6 @@ a.add-sections {
 .section-modchooser-text {
     color: #fff;
 }
-
 .course-tab {
     display: none;
 }
@@ -4573,7 +4590,7 @@ body#page-enrol-index #region-main .generalbox#notice {
     position: relative;
     font-size: 15px;
     max-height: 650px;
-    min-height: 610px;
+    min-height: 500px;
 }
 #file_library {
     margin: 5px;
@@ -4623,6 +4640,10 @@ li.folder a {
     background: gainsboro;
     max-height: 500px;
     overflow: hidden;
+    display: none;
+}
+#tree-view-folder li.active {
+    background: #8080809c;
 }
 #tree-view-folder:hover {
     overflow-y: scroll;
@@ -4673,27 +4694,31 @@ li.folder a {
     border-top: 0;
 }
 input#searchlibrary.k-input {
-    border: 0;
-    height: 25px;
+    max-height: 30px;
     width: -webkit-fill-available;
+}
+input#searchlibrary {
+    height: 35px !important;
+    border:0;
 }
 i.library {
     height: 30px;
     background: white;
     padding: 10px;
+    cursor: pointer;
 }
 #file_library .k-autocomplete {
     border-color: #fa807200;
+    box-shadow: none;
+    border: transparent;
 }
 button[data-target="#add-popup-modal-module"] {
     display: none;
 }
-.form-group .content-expand {
-    display: block !important;
-}
 .overflow-auto {
     overflow: auto;
 }
+
 .headerpopup {
     margin-bottom: 0;
     padding: 0.6rem 0;
@@ -4712,6 +4737,18 @@ button[data-target="#add-popup-modal-module"] {
 }
 .fp-navbar .fp-viewbar a {
     margin-left: 5px !important;
+}
+.modal-iframe {
+    width: 1300px;
+}
+.modal-dialog {
+    max-width: 100%;
+}
+#table-library td a {
+    cursor: pointer;
+}
+#table-library td a .fa-download{
+    color: #3c8dbc;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
@@ -4733,7 +4770,9 @@ button[data-target="#add-popup-modal-module"] {
     {{{output.test}}}
     <div class="modal123"></div>  
     <div class="all-header">
-        {{>theme_moove/header}}
+        {{^hasiframe}}
+            {{>theme_moove/header}}
+        {{/hasiframe}}
     </div>
     {{{output.menu_focus}}}
     <div class="overflow-all"></div>

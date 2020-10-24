@@ -1151,6 +1151,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output = '';
         return $output .= \core\session\manager::get_login_token();
     }
+
     public function folder_tree($menus, $id_parent = 0, &$output = '', $stt = 0) {
         global $DB, $CFG;
         $menu_tmp = array();
@@ -1169,22 +1170,22 @@ class core_renderer extends \theme_boost\output\core_renderer {
             }
             foreach ($menu_tmp as $item) {
                 if($item->visible == 1) {
-                    $output .= '<li class="click-expand pl-3 folder" id="'.$item->id.'">';
-                    $output .= '<i class="fa fa-folder" aria-hidden="true"></i><a onclick="getParentValue('.$item->id.',\''.$item->name.'\')" tabindex="-1" href="javascript:void(0)" id="'.$item->id.'"">' . $item->name . '</a>';
+                    $output .= '<li onclick="getParentValue('.$item->id.',\''.$item->name.'\')" class="click-expand pl-3 folder" id="'.$item->id.'">';
+                    $output .= '<i class="fa fa-folder" aria-hidden="true"></i><a tabindex="-1" href="javascript:void(0)" id="'.$item->id.'"">' . $item->name . '</a>';
                     $getcategory = $DB->get_records_sql('SELECT * FROM {library_folder} WHERE parent = :id',[ 'id' => $item->id] );
                     if(empty($getcategory)){
                         $output .= '</li>';
-                    } else { $output .= '<i class="fa fa-angle-right rotate-icon float-right pr-2"></i></li>';}
+                    } else { $output .= '<i class="fa fa-angle-right rotate-icon float-right mr-2"></i></li>';}
                     $output .= '<ul class="content-expand '.$item->id.' pl-3" >';
                     foreach($menus as $childkey => $childitem) {
                         // Kiểm tra phần tử có con hay không?
                         if($childitem->parent == $item->id) {
-                            $output .= '<li class="click-expand pl-3 folder" id="'.$childitem->id.'">';
-                            $output .= '<i class="fa fa-folder" aria-hidden="true"></i><a onclick="getParentValue('.$childitem->id.',\''.$childitem->name.'\')" tabindex="-1" href="javascript:void(0)" id="'.$childitem->id.'">' . $childitem->name . ' </a>';
+                            $output .= '<li onclick="getParentValue('.$childitem->id.',\''.$childitem->name.'\')" class="click-expand pl-3 folder" id="'.$childitem->id.'">';
+                            $output .= '<i class="fa fa-folder" aria-hidden="true"></i><a tabindex="-1" href="javascript:void(0)" id="'.$childitem->id.'">' . $childitem->name . ' </a>';
                             $getcategory_child = $DB->get_records_sql('SELECT * FROM {library_folder} WHERE parent = :id',[ 'id' => $childitem->id] );
                             if(empty($getcategory_child)){
                                 $output .= '</li>';
-                            } else { $output .= '<i data="'.$item->id.'" class="fa fa-angle-right rotate-icon float-right pr-2"></i></li>';}
+                            } else { $output .= '<i data="'.$item->id.'" class="fa fa-angle-right rotate-icon float-right mr-2"></i></li>';}
                             $output .= '<ul class="content-expand '.$childitem->id.' pl-3">';
 
                             unset($menus[$childkey]);
@@ -1206,27 +1207,37 @@ class core_renderer extends \theme_boost\output\core_renderer {
         return $output;
 
     }
-    function count_module_by_folder($folderid = 0) {
+    
+    function count_module_by_folder($folderid = 0,$search = "") {
         global $DB,$OUTPUT;
         $arrcountmodule = array();
         $output = '';
         $output .= '<div class="d-flex" id="header-library">';
+        $strsearch      = "N'" . '%' . $search . '%' . "'";
         // Phân loại module type để đếm
         $moduletypes = ['book', 'lesson', 'imscp', 'resource'];
+        $sql         = "FROM mdl_library_module lm
+                            JOIN mdl_course_modules cm on cm.id = lm.coursemoduleid
+                            LEFT JOIN mdl_resource rs on cm.instance = rs.id
+                            LEFT JOIN mdl_book b on cm.instance = b.id
+                            LEFT JOIN mdl_lesson l on cm.instance = l.id
+                            LEFT JOIN mdl_imscp i on cm.instance = i.id
+                            JOIN mdl_user u on u.id = lm.userid
+                        WHERE CONCAT(rs.name,b.name,l.name,i.name) LIKE $strsearch";
         // các loại file Khi module type = resource
         $mimetypes = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'application/pdf',
-            'application/vnd.ms-powerpoint',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+                      'application/pdf',
+                      'application/vnd.ms-powerpoint',
+                      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
         // Đếm các loại module
         foreach ($moduletypes as $moduletype) {
             /// Đêm trong trường hợp module type là resource thì có các file nhỏ khác
             if ($moduletype == 'resource') {
                 foreach ($mimetypes as $mimetype) {
                     if ($folderid == 0) {
-                        $countmodule = $DB->get_record("library_module", ['minetype' => $mimetype], 'COUNT(minetype) AS module');
+                        $countmodule = $DB->get_record_sql("SELECT COUNT(minetype) AS module $sql AND lm.minetype =:minetype", ['minetype' => $mimetype]);
                     } else {
-                        $countmodule = $DB->get_record("library_module", ['minetype' => $mimetype, 'folderid' => $folderid], 'COUNT(minetype) AS module');
+                        $countmodule = $DB->get_record_sql("SELECT COUNT(minetype) AS module $sql AND lm.minetype =:minetype AND lm.folderid =:folderid", ['minetype' => $mimetype, 'folderid' => $folderid]);
                     }
                     $arrcountmodule[] = $countmodule;
                 }
@@ -1234,13 +1245,14 @@ class core_renderer extends \theme_boost\output\core_renderer {
             /// Trường hợp các module type còn lại
             else {
                 if ($folderid == 0) {
-                    $countmodule = $DB->get_record("library_module", ['moduletype' => $moduletype], 'COUNT(moduletype) AS module');
+                    $countmodule = $DB->get_record_sql("SELECT COUNT(moduletype) AS module $sql AND lm.moduletype =:moduletype", ['moduletype' => $moduletype]);
                 } else {
-                    $countmodule = $DB->get_record("library_module", ['moduletype' => $moduletype, 'folderid' => $folderid], 'COUNT(moduletype) AS module');
+                    $countmodule = $DB->get_record_sql("SELECT COUNT(moduletype) AS module $sql AND lm.moduletype =:moduletype AND lm.folderid =:folderid", ['moduletype' => $moduletype, 'folderid' => $folderid]);
                 }
                 $arrcountmodule[] = $countmodule;
             }
         }
+        // var_dump($arrcountmodule);die();
         // Hiển thị thông tin đếm module ra màn hình
         for ($i = 0; $i < count($arrcountmodule); $i++) {
             if ($i == 0) {

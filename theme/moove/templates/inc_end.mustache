@@ -17,9 +17,9 @@
 
     
 </div><!-- Ends .page-wrapper -->
-
-{{> theme_moove/footer }}
-
+{{^hasiframe}}
+    {{> theme_moove/footer }}
+{{/hasiframe}}
 
 </body>
 </html>
@@ -442,21 +442,33 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
         require(['jquery', 'core/config'], ($, config) => {
             $('.loading-page').addClass('active');
             var folderid = $('#pagination').attr('folderid');
+            var search = $('#pagination').attr('search');
             var settings = {
                 type:"GET",
-                processData:true,
-                data:{
-                    folderid:folderid
-                },
+                processData:true,   
                 contenttype:"application/json",
             };
             $.ajax(url,settings)
             .then(function(response) {
-                $('#file_library').hide().html(response).fadeIn('fast');
+                var obj = $.parseJSON(response);
+                $('#table-library').hide().html(obj.result).fadeIn('fast');
+                $('#pagination').replaceWith(obj.pagination);
                 $('.loading-page').removeClass('active');
             })
         });
     };
+    // nhúng iframe mở module trang thư viện
+    const iFrameLibrary = (url,moduletype) => {
+        require(['jquery', 'core/config'], ($, config) => {
+            if(moduletype == 'resource') {
+                $('#modal-iframe-library iframe').replaceWith('<iframe height="800px" src="https://view.officeapps.live.com/op/embed.aspx?src='+url+'" width="100%"></iframe>');
+                $('#modal-iframe-library').modal();
+            } else {
+                $('#modal-iframe-library iframe').replaceWith('<iframe height="800px" src="'+url+'" width="100%"></iframe>');
+                $('#modal-iframe-library').modal();
+            }
+        })
+    }
 
     const loadComment = (id) => {
         require(['jquery', 'core/config'], ($, Config) => {
@@ -588,11 +600,20 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
 
         });
     };
-    //Lấy thông tin thư mục cha
+    //Lấy thông tin thư mục cha thư viện trực tuyến
     const getParentValue = (id,name) => {
         require(['jquery', 'core/config'], ($, Config) => {
+            $('#tree-view-folder li').removeClass('active');
+            $('#tree-view-folder li#'+id).addClass('active');
+            $('#tree-view-folder .content-expand.'+id).slideToggle();
             $('input#folderparent').val(name);
             $('input#folderparent').attr('parentid', id);
+        })
+    }
+    // Mở cây thư mục thư viện trực tuyến
+    const viewTree = () => {
+        require(['jquery', 'core/config'], ($, Config) => {
+            $('#tree-view-folder').slideDown();
         })
     }
 </script>

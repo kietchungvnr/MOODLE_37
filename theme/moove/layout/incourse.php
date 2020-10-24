@@ -56,10 +56,16 @@ if (isset($PAGE->cm->modname) && in_array($PAGE->cm->modname, $moduleswithnavinb
 
     $extraclasses = [];
 }
+
 if(isset($_SERVER['HTTP_REFERER'])) {
     $hasportal = true;
 } else {
     $hasportal = false;
+}
+if($_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
+    $hasiframe = true;
+} else {
+    $hasiframe = false;
 }
 if(isset($_COOKIE['cookie']) == 'focusmod' ) {
     $hasfocusmod = true;
@@ -80,6 +86,7 @@ $templatecontext = [
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'hasportal' => $hasportal,
+    'hasiframe' => $hasiframe,
     'hasfocusmod' => $hasfocusmod
 ];
 
