@@ -1878,7 +1878,19 @@ function mime2ext($mime) {
 
     return isset($mime_map[$mime]) ? $mime_map[$mime] : false;
 }
-
+// lấy url module loại module resource (pdf,word,exel...)
+function get_link_file($module) {
+    global $DB,$CFG;
+    $resource = $DB->get_record('resource', array('id'=>$module->instance), '*', MUST_EXIST);
+    $context = context_module::instance($module->id);
+    $fs = get_file_storage();
+    $files = $fs->get_area_files($context->id, 'mod_resource', 'content', 0, 'sortorder DESC, id ASC', false);
+    $file = reset($files);
+    $filename = $file->get_filename();
+    $path = '/'.$file->get_contextid().'/mod_resource/content/'.$resource->revision.$file->get_filepath().$file->get_filename();
+    $fullurl = file_encode_url($CFG->wwwroot.'/pluginfile.php', $path, false);
+    return $fullurl;
+}
 /**
  * Tạo node trên menu flat_nav
  * @param  global_navigation $navigation []

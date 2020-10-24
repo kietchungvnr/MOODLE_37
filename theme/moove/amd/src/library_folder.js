@@ -94,7 +94,8 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
     // Làm mới dữ liệu input khi tắt popup
     $("#add-popup-modal-folder").on('show.bs.modal', function() {
         $('#add-popup-modal-folder input#foldername').val('');
-        $('#add-popup-modal-folder input#folderparent').replaceWith('<input autocomplete="off" class="form-control" id="folderparent">');
+        $('#tree-view-folder').slideUp();
+        // $('#add-popup-modal-folder input#folderparent').replaceWith('<input autocomplete="off" class="form-control" id="folderparent">');
         $('#add-popup-modal-folder textarea#folderdes').val('');
     });
     //Láy parameter folder id khi click vào cây thư mục
@@ -118,8 +119,10 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         }
         $.ajax(scriptmodule, settings).then(function(response) {
             var obj = $.parseJSON(response);
+            console.log(obj.result);
             $('#table-library').hide().html(obj.result).fadeIn('fast');
             $('#header-library').replaceWith(obj.header);
+            $('#pagination').replaceWith(obj.pagination);
             $('.loading-page').removeClass('active');
             if(obj.result == '') {
             	$('.alert-warning').replaceWith(obj.alert);
@@ -137,10 +140,12 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
     //     var obj = $.parseJSON(response);
     //     $('#table-library').hide().html(obj.result).fadeIn('fast');
     // })
-    $.getJSON('/local/newsvnr/ajax/library_module_ajax.php',function(data) {
-    	$('#table-library').hide().html(data.result).fadeIn('fast');
-
-    })
+    var libraryurl = Config.wwwroot + "/library.php";
+    if(window.location.href == libraryurl) {
+        $.getJSON('/local/newsvnr/ajax/library_module_ajax.php',function(data) {
+        	$('#table-library').hide().html(data.result).fadeIn('fast');
+        })
+    }
     // Search tài liệu thư viện
     $("i.library").click(function() {
         var folderid = $('#searchlibrary').attr('folderid');
@@ -158,6 +163,8 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             var obj = $.parseJSON(response);
             $('#table-library tr').remove();
             $('#table-library').append(obj.result);
+            $('#header-library').replaceWith(obj.header);
+            $('#pagination').replaceWith(obj.pagination);
         })
     })
     $('#searchlibrary').keypress(function(e) {
@@ -174,4 +181,6 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
 	        }
 	    }
 	});
+    // iframe 
+    // $("iframe").contents().find("*:not(#page-content)").remove();
 });

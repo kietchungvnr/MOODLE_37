@@ -62,7 +62,16 @@ if(isset($_SERVER['HTTP_REFERER'])) {
 } else {
     $hasportal = false;
 }
-
+if($_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
+    $hasiframe = true;
+} else {
+    $hasiframe = false;
+}
+if(isset($_COOKIE['cookie']) == 'focusmod' ) {
+    $hasfocusmod = true;
+} else {
+    $hasfocusmod = false;
+}
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [
@@ -76,7 +85,9 @@ $templatecontext = [
     'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
-    'hasportal' => $hasportal
+    'hasportal' => $hasportal,
+    'hasiframe' => $hasiframe,
+    'hasfocusmod' => $hasfocusmod
 ];
 
 // Improve boost navigation.

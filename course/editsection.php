@@ -113,7 +113,12 @@ $mform->set_data($initialdata);
 
 if ($mform->is_cancelled()){
     // Form cancelled, return to course.
-    redirect(course_get_url($course, $section, array('sr' => $sectionreturn)));
+    //Custom by Thang : Thêm điều kiện redirect khi course = 1
+    if($course->id == SITEID) {
+        redirect($CFG->wwwroot . $_SESSION['url']);
+    } else {
+        redirect(course_get_url($course, $section, array('sr' => $sectionreturn)));
+    }
 } else if ($data = $mform->get_data()) {
     // Data submitted and validated, update and return to course.
 
@@ -129,7 +134,12 @@ if ($mform->is_cancelled()){
     course_update_section($course, $section, $data);
 
     $PAGE->navigation->clear_cache();
-    redirect(course_get_url($course, $section, array('sr' => $sectionreturn)));
+    //Custom by Thang : Thêm điều kiện redirect khi course = 1
+    if($course->id == SITEID) {
+        redirect($CFG->wwwroot . $_SESSION['url']);
+    } else {
+        redirect(course_get_url($course, $section, array('sr' => $sectionreturn)));
+    }
 }
 
 // The edit form is displayed for the first time or if there was validation error on the previous step.

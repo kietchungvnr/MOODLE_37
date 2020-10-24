@@ -229,7 +229,12 @@ if ($mform->is_cancelled()) {
             redirect($fromform->gradingman->get_management_url($url));
         }
     } else {
-        redirect(course_get_url($course, $cw->section, array('sr' => $sectionreturn)));
+        //Custom by Thang : Thêm điều kiện redirect khi course = 1
+        if($course->id == SITEID) {
+            redirect($CFG->wwwroot . $_SESSION['url']);
+        } else {
+            redirect(course_get_url($course, $cw->section, array('sr' => $sectionreturn)));
+        }
     }
     exit;
 
