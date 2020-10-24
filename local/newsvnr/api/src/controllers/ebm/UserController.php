@@ -72,7 +72,7 @@ class UserController extends BaseController {
 				$lastname = array_pop($parts);
 				$firstname = implode(" ", $parts);
 			} else {
-				$firstname = $fullname;
+				$firstname = $firstname = array_pop($parts);
 				$lastname = " ";
 			}
 			// $email = $this->data->email;
