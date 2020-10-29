@@ -25,6 +25,8 @@
     paths: {
       "kendo.all.min": "//kendo.cdn.telerik.com/2020.3.915/js/kendo.all.min",
       "dttable": "/local/newsvnr/js/datatable.min",
+      "alertjs": "//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min",
+      "validatefm" : "//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min",
     }
 });
 
@@ -613,4 +615,12 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             $('.tree-view-folder').slideDown();
         })
     }
+    // Tạo / chỉnh sửa môn thi
+    const getParentValue2 = (id,name) => {
+        require(['jquery', 'core/config'], ($, Config) => {
+            $('input#folderparent').val(name);
+            $('input#folderparent').attr('parentid', id);
+        })
+    }
+
 </script>
