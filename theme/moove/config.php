@@ -131,6 +131,12 @@ $THEME->layouts = [
         'defaultregion' => 'side-pre',
         'options' => array('nonavbar' => true),
     ),
+    'examonline' => array(
+        'file' => 'examonline.php',
+        'regions' => array('side-pre'),
+        'defaultregion' => 'side-pre',
+        'options' => array('nonavbar' => true),
+    ),
     // Server administration scripts.
     'admin' => array(
         'file' => 'columns2.php',
