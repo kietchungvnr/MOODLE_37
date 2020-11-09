@@ -47,6 +47,9 @@ class mod_page_mod_form extends moodleform_mod {
         }
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+        // Custom by Thắng : Thêm field chứa folder id khi tạo module trên trang thư viện trực tuyến
+        $mform->addElement('hidden', 'folderid', null);
+        $mform->setType('folderid', PARAM_INT);
         //Custom by Vũ: Thêm field mã vào page mod để tích hợp EBM
         if($COURSE->typeofcourse == '3') {
             $mform->addElement('text', 'code', get_string('code', 'local_newsvnr'), array('size'=>'48'));

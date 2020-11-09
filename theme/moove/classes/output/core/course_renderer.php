@@ -775,7 +775,7 @@ class course_renderer extends \core_course_renderer {
         $end = count($modinfo->sections);
         $output = '';
         $output .= '<div class="all-tab-content col-xl-9 col-md-8 col-12">';
-        $output .= '<ul class="nav nav-tabs tab-click">';
+        $output .= '<ul class="nav nav-tabs tab-click multi-tab">';
         $output .=  '<li class="nav-item active"><a class="nav-link" id="1">'.get_string('descriptioncourse','local_newsvnr').'</a></li>
                      <li class="nav-item"><a class="nav-link" id="2">'.get_string('lesson','local_newsvnr').'</a></li>
                      <li class="nav-item"><a class="nav-link" id="3">'.get_string('teachername','local_newsvnr').'</a></li>';

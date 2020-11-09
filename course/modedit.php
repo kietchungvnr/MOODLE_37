@@ -213,6 +213,9 @@ if ($mform->is_cancelled()) {
             $record->userid = $USER->id;
             $record->coursemoduleid = $fromform->coursemodule;
             $record->moduletype = $fromform->modulename;
+            if(!is_siteadmin()) {
+                $record->approval = 0;
+            }
             if($fromform->modulename == 'resource') {
                 $getfile = $DB->get_record_sql("SELECT TOP 1 * 
                                                 FROM {files} 
