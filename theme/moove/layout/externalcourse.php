@@ -32,8 +32,13 @@ require_once($CFG->libdir . '/behat/lib.php');
 $extraclasses = [];
 
 $themesettings = new \theme_moove\util\theme_settings();
-
+$context = context_system::instance();
 $permit = new stdCLass();
+if(has_capability('moodle/site:configview',$context)) {
+    $permit->canapproval = true;
+} else {
+    $permit->canapproval = false;
+}
 
 if(isset($_SERVER['HTTP_REFERER'])) {
     $hasportal = true;
@@ -45,6 +50,13 @@ if(is_siteadmin()) {
 } else {
     $permit->canedit = false;
 }
+
+if(isloggedin()) {
+    $permit->canaddresource = true;
+} else {
+    $permit->canaddresource = false;
+}
+
 if (isloggedin()) {
     global $DB;
 
@@ -71,7 +83,9 @@ if (isloggedin()) {
         'regionmainsettingsmenu' => $regionmainsettingsmenu,
         'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
         'hasportal' => $hasportal,
-        'canedit' => $permit->canedit
+        'canedit' => $permit->canedit,
+        'canaddresource' => $permit->canaddresource,
+        'canapproval' => $permit->canapproval
     ];
 
     // Improve boost navigation.

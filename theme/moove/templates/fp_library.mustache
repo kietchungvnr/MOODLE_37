@@ -17,68 +17,91 @@
                         <div class="card-body d-none">
                             {{{ output.main_content }}}
                         </div>
-                    <div class="card-body library">
-                    	{{#canedit}}
-                    	<div class="d-flex justify-content-between">
-					        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-popup-modal-folder"><i class="fa fa-plus mr-2" aria-hidden="true"></i>{{#str}}addfolder, local_newsvnr{{/str}}</button>
-					    	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-popup-modal-module"><i class="fa fa-plus mr-2" aria-hidden="true"></i>{{#str}}addresource, local_newsvnr{{/str}}</button>
-					    </div>
-					    {{/canedit}}
-	                    <div class="row">
-	                        <div class="col-12 col-md-3 pl-2 pr-1">
-	                        	<div id="folder_library">
-	                       			{{{output.library_folder}}}
-	                       			<!-- popup thêm thư mục mới -->
-	                       			{{#canedit}}
-  									<div class="popup-setting">
-  										<ul>
-	  										<li action="edit"><i class="fa fa-pencil-square-o mr-2" aria-hidden="true"></i>{{#str}}editfolder, local_newsvnr{{/str}}</li>
-	  										<li action="delete"><i class="fa fa-trash-o mr-2"></i>{{#str}}deletefolder, local_newsvnr{{/str}}</li>
-	  										<li data-toggle="modal" data-target="#add-popup-modal-folder" action="addchildfolder"><i class="fa fa-plus mr-2" aria-hidden="true"></i>{{#str}}addchildfolder, local_newsvnr{{/str}}</li>
-  										</ul>
-  									</div> 
-  									{{/canedit}}
-	                       		</div>
-	                       </div>
-	                       <div class="col-12 col-md-9 pl-1 pr-2">
-	                       		<div id="file_library">
-	                       			<div class="row top-library">
-	                       				<div class="col-xl-10 col-lg-8 col-12 ">
-	                       					<div class="d-flex" id="header-library">
-	                       						{{{output.count_module_by_folder }}}
-	                       					</div>
-	                       				</div>
-		                       			<div class="col-xl-2 col-lg-4 col-12 mt-2 mb-2 pr-0">
-		                       				<div class="pl-0 pr-0 text-right float-right d-flex border">
-										 		<input id="searchlibrary" folderid="0" type="text" placeholder=""><i class="fa fa-search library"></i>
-										 	</div>
-										</div>
-									</div>
-									<div class="overflow-auto">
-										<table class="table" >
-							 				<thead>
-							 					<tr>
-							 					<th scope="col">File</th>
-							 					<th scope="col">{{#str}}type, local_newsvnr{{/str}}</th>
-												<th scope="col">{{#str}}size, local_newsvnr{{/str}}</th>
-							 					<th scope="col">{{#str}}timecreated, local_newsvnr{{/str}}</th>
-							 					<th scope="col">{{#str}}author, local_newsvnr{{/str}}</th>
-							 					{{#canedit}}
-							 						<th scope="col">{{#str}}function, local_newsvnr{{/str}}</th>
-							 					{{/canedit}}
-							 				    </tr>
-											</thead>
-											 <div class="loading-page"></div>
-											<tbody id="table-library">
-											</tbody>
-										</table>
-									</div>
-									<div class="col-md-12 mb-2" id="pagination"></div>
-									<div class="alert-warning" role="alert"></div>
-	                       		</div>
-	                       </div>
-	                   </div>
-	               </div>
+		                    <div class="card-body library">
+		                    	{{#canedit}}
+        				        <ul class="nav-tabs nav multi-tab mb-3">
+							        <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="library">{{#str}}library, local_newsvnr{{/str}}</a></li>
+					             	<li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="approvalmodule">{{#str}}approvalmodule, local_newsvnr{{/str}}</a></li>
+						   		</ul>
+						   		{{/canedit}}
+						   		<div class="tab-content">
+    							<div data="library" class="tab-pane active">
+		                    
+			                    	<div class="d-flex justify-content-between">
+			                    	{{#canedit}}
+								        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-popup-modal-folder"><i class="fa fa-plus mr-2" aria-hidden="true"></i>{{#str}}addfolder, local_newsvnr{{/str}}</button>
+								    {{/canedit}}
+								    {{#canaddresource}}
+								    	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-popup-modal-module"><i class="fa fa-plus mr-2" aria-hidden="true"></i>{{#str}}addresource, local_newsvnr{{/str}}</button>
+									{{/canaddresource}}
+								    </div>
+		
+				                    <div class="row">
+				                        <div class="col-12 col-md-3 pl-2 pr-1">
+				                        	<div id="folder_library">
+				                        		<div class="folder-tree-replace">
+				                       			{{{output.library_folder}}}
+				                       			</div>
+				                       			<!-- popup thêm thư mục mới -->
+				                       			{{#canedit}}
+			  									<div class="popup-setting">
+			  										<ul>
+
+			  										</ul>
+			  									</div> 
+			  									{{/canedit}}
+				                       		</div>
+				                       </div>
+				                       <div class="col-12 col-md-9 pl-1 pr-2">
+				                       		<div id="file_library">
+				                       			<div class="top-library">
+				                       				<div id="header-library">
+				                       				</div>
+				    								<div class="d-flex justify-content-end mb-2">
+				                      					<select class="form-control" id="filter_search_library">
+														  <option value="searchname">{{#str}}searchbyname, local_newsvnr{{/str}}</option>
+														  <option value="searchcontent">{{#str}}searchbycontent, local_newsvnr{{/str}}</option>
+														</select>
+					                       				<div class="pl-0 pr-0 text-right float-right d-flex border">
+													 		<input id="searchlibrary" folderid="0" type="text" searchtype="searchname" placeholder=""><i class="fa fa-search library"></i>
+													 	</div>
+													 </div>
+												</div>
+												<div class="overflow-auto">
+													<table class="table" >
+										 				<thead>
+										 					<tr>
+										 					<th scope="col">{{#str}}name, local_newsvnr{{/str}}</th>
+										 					<th scope="col">{{#str}}type, local_newsvnr{{/str}}</th>
+															<th scope="col">{{#str}}size, local_newsvnr{{/str}}</th>
+										 					<th scope="col">{{#str}}timecreated, local_newsvnr{{/str}}</th>
+										 					<th scope="col">{{#str}}author, local_newsvnr{{/str}}</th>
+										 					<th scope="col">{{#str}}function, local_newsvnr{{/str}}</th>
+										 				    </tr>
+														</thead>
+														 <div class="loading-page"></div>
+														<tbody id="table-library">
+														</tbody>
+													</table>
+												</div>
+												<div class="col-md-12 mb-2" id="pagination"></div>
+												<div class="alert-warning" role="alert"></div>
+				                       		</div>
+				                       </div>
+				                   </div>
+			               		</div>
+			               		{{#canapproval}}
+			               		<div data="approvalmodule" class="tab-pane">
+			               			<div id="library-approval-module">
+			               			</div>
+			               			<div class="d-flex mt-3">
+								        <button type="button" class="btn btn-primary mr-2" id="delete-module-select"><i class="fa fa-trash mr-2" aria-hidden="true"></i>{{#str}}deletecheck, local_newsvnr{{/str}}</button>
+								    	<button type="button" class="btn btn-primary" id="approval-module-select"><i class="fa fa-check mr-2" aria-hidden="true"></i>{{#str}}approvalcheck, local_newsvnr{{/str}}</button>
+								   </div>
+			               		</div>
+			               		{{/canapproval}}
+			           		</div>
+                		</div>
                     </div>
                 </section>
             </div>
@@ -100,7 +123,7 @@
 					</div>
 					<div class="form-group">
 						<label class="mb-1" for="pwd">{{#str}}folderparent, local_newsvnr{{/str}}:</label>
-						<input autocomplete="off" class="form-control" id="folderparent" onclick="viewTree();">
+						<input autocomplete="off" data-role="tagsinput" class="form-control" id="folderparent" onclick="viewTree();">
 						<div class="tree-view-folder">
 							{{{output.library_folder}}}
 						</div>
@@ -112,7 +135,7 @@
 				</div>
 				<div class="modal-footer">
 				    <button type="button" class="btn btn-primary" action="add" id="add-new-folder">{{#str}}createfolder, local_newsvnr{{/str}}</button>
-				    <button type="button" class="btn btn-default" data-dismiss="modal" id="cancel-popup">{{#str}}cancel, local_newsvnr{{/str}}</button>
+				    <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancel-popup">{{#str}}cancel, local_newsvnr{{/str}}</button>
 				</div>
 			</div>
 		</div>
@@ -139,7 +162,7 @@
 				</div>
 				<div class="modal-footer">
 				    <button type="button" class="btn btn-primary" action="add" id="add-new-module">{{#str}}createresource, local_newsvnr{{/str}}</button>
-				    <button type="button" class="btn btn-default" data-dismiss="modal" id="cancel-popup">{{#str}}cancel, local_newsvnr{{/str}}</button>
+				    <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancel-popup">{{#str}}cancel, local_newsvnr{{/str}}</button>
 				</div>
 			</div>
 		</div>

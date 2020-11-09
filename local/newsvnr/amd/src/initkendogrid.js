@@ -25,6 +25,54 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
                 selectable: true, width: 55
             });
             //edit
+            if (gridConfig.approvalModuleEvent != undefined) {
+                var funcApprovalModule = function(e) {
+                    e.preventDefault();
+                    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                    var script = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_approval_module_ajax.php?action=approval';
+                    var settings = {
+                        type:"POST",
+                        processData:true,
+                        data:{
+                            moduleid:dataItem.id
+                        }
+                    }
+                    $.ajax(script,settings).then(function() {
+                    }) 
+                    gridConfig.approvalModuleEvent(dataItem);
+                }
+                var objEventApprovalModule = {
+                    click: funcApprovalModule,
+                    text: " ",
+                    name: "approval",
+                    iconClass: 'fa fa-check',
+                }
+                eventArr.push(objEventApprovalModule);
+            }
+            if (gridConfig.deleteModuleEvent != undefined) {
+                var funcDeleteModule = function(e) {
+                    e.preventDefault();
+                    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                    var script = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_approval_module_ajax.php?action=delete';
+                    var settings = {
+                        type:"POST",
+                        processData:true,
+                        data:{
+                            moduleid:dataItem.id
+                        }
+                    }
+                    $.ajax(script,settings).then(function() {
+                    }) 
+                    gridConfig.deleteModuleEvent(dataItem);
+                }
+                var objEventDeleteModule = {
+                    click: funcDeleteModule,
+                    text: " ",
+                    name: "delete",
+                    iconClass: 'fa fa-trash',
+                }
+                eventArr.push(objEventDeleteModule);
+            }
             if (gridConfig.editEvent != undefined) {
                 var funcEdit = function (e) {
                     e.preventDefault();

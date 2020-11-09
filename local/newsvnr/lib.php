@@ -1879,11 +1879,27 @@ function mime2ext($mime) {
 
     return isset($mime_map[$mime]) ? $mime_map[$mime] : false;
 }
+
+// Chuyển mimetype thành hình ảnh
+function mimetype2Img($mimetype) {
+    global $OUTPUT;
+    $typeresource = mime2ext($mimetype);
+    if ($typeresource == 'xls' || $typeresource == 'xlsx' || $typeresource == 'xlsm') {
+        $img = html_writer::img($OUTPUT->image_url('f/spreadsheet-24'),'',['class' => 'pr-1']);
+    } elseif ($typeresource == 'ppt') {
+        $img = html_writer::img($OUTPUT->image_url('f/powerpoint-24'),'',['class' => 'pr-1']);
+    } elseif ($typeresource == 'docx' || $typeresource == 'doc' || $typeresource == 'docm') {
+        $img = html_writer::img($OUTPUT->image_url('f/document-24'),'',['class' => 'pr-1']);
+    } elseif ($typeresource == 'pdf') {
+        $img = html_writer::img($OUTPUT->image_url('f/pdf-24'),'',['class' => 'pr-1']);
+    }
+    return $img;
+}
 // lấy url module loại module resource (pdf,word,exel...)
 function get_link_file($module) {
     global $DB,$CFG;
     $resource = $DB->get_record('resource', array('id'=>$module->instance), '*', MUST_EXIST);
-    $context = context_module::instance($module->id);
+    $context = context_module::instance($module->coursemoduleid);
     $fs = get_file_storage();
     $files = $fs->get_area_files($context->id, 'mod_resource', 'content', 0, 'sortorder DESC, id ASC', false);
     $file = reset($files);
@@ -1897,6 +1913,24 @@ function get_link_file($module) {
  * @param  global_navigation $navigation []
  * @return [type]                        []
  */
+function get_link_folder($folder,&$output = '',$stt = 0) {
+    global $DB;
+    if($folder->parent != 0) {  
+        $parentfolder = $DB->get_record_sql("SELECT lf.name,lf.id,lf.parent FROM {library_folder} lf WHERE lf.id = $folder->parent");
+        $temp = $output;
+        $output = '';
+        if($stt == 0) {
+            $temp = $folder->foldername;
+        }
+        $output .= $parentfolder->name .'/ '. $temp;
+        get_link_folder($parentfolder,$output,++$stt);
+    }
+    if($folder->parent == 0 && $stt == 0) {
+        $output = $folder->foldername;
+    }
+    return $output;
+}
+
 function local_newsvnr_extend_navigation($navigation) {
     $newsurl = new moodle_url('/local/newsvnr/index.php');
     $news = navigation_node::create(get_string('pagetitle', 'local_newsvnr'), $newsurl,navigation_node::TYPE_CUSTOM,'newspage',

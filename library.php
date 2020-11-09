@@ -81,11 +81,13 @@ if (file_exists($CFG->dirroot.'/local/hub/lib.php') and get_config('local_hub', 
     }
 }
 $PAGE->set_context(context_system::instance());
-$PAGE->set_pagetype('site-index-library');
+
+$PAGE->set_pagetype('library');
 $PAGE->set_docs_path('');
 $editing = $PAGE->user_is_editing();
 $PAGE->set_title(get_string('library','local_newsvnr'));
 $PAGE->set_heading(get_string('library','local_newsvnr'));
+$PAGE->requires->js_call_amd('theme_moove/kendo_approval_library','init');
 $courserenderer = $PAGE->get_renderer('core', 'course');
 echo $OUTPUT->header();
 

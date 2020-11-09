@@ -45,6 +45,10 @@ class mod_url_mod_form extends moodleform_mod {
         }
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+        // Custom by Thắng : Thêm field chứa folder id khi tạo module trên trang thư viện trực tuyến
+        $mform->addElement('hidden', 'folderid', null);
+        $mform->setType('folderid', PARAM_INT);
+        
         $mform->addElement('url', 'externalurl', get_string('externalurl', 'url'), array('size'=>'60'), array('usefilepicker'=>true));
         $mform->setType('externalurl', PARAM_RAW_TRIMMED);
         $mform->addRule('externalurl', null, 'required', null, 'client');

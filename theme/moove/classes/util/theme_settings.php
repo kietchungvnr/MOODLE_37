@@ -725,10 +725,17 @@ class theme_settings {
 
     }
     public function get_module_data() {
-        $data = array((object) array('moduleicon'=>'mod_book','modulename'=>'Book','value'=>'book'),
-                      (object) array('moduleicon'=>'mod_resource','modulename'=>'File','value'=>'resource'),
+        $moduleadmin = array((object) array('moduleicon'=>'mod_book','modulename'=>'Book','value'=>'book'),
                       (object) array('moduleicon'=>'mod_imscp','modulename'=>'SCORM package','value'=>'imscp'),
-                      (object) array('moduleicon'=>'mod_lesson','modulename'=>'Lesson','value'=>'lesson'));
+                      (object) array('moduleicon'=>'mod_lesson','modulename'=>'Lesson','value'=>'lesson'),
+                      (object) array('moduleicon'=>'mod_page','modulename'=>'Page','value'=>'page'));
+        $moduleuser = array((object) array('moduleicon'=>'mod_url','modulename'=>'Url','value'=>'url'),
+                      (object) array('moduleicon'=>'mod_resource','modulename'=>'File','value'=>'resource'));
+        if(is_siteadmin()) {
+            $data = array_merge($moduleadmin,$moduleuser);
+        } else {
+            $data = $moduleuser;
+        }
         $templatecontext = [];
         $arr = array();
         foreach ($data as $key => $value) {        

@@ -4589,8 +4589,8 @@ body#page-enrol-index #region-main .generalbox#notice {
     margin: 5px;
     position: relative;
     font-size: 15px;
-    max-height: 650px;
-    min-height: 500px;
+    height: 650px;
+    min-height: 650px;
 }
 #file_library {
     margin: 5px;
@@ -4600,7 +4600,7 @@ body#page-enrol-index #region-main .generalbox#notice {
 .popup-setting {
     position: absolute;
     width: 175px;
-    height: 100px;
+    height: auto;
     right: 2%;
     display: none;
     background-color: #f9f9f9;
@@ -4625,6 +4625,7 @@ body#page-enrol-index #region-main .generalbox#notice {
     color: #1177d1;
     padding-left: 0;
     font-weight: bold;
+    cursor: pointer;
 }
 li.folder {
     padding: 5px;
@@ -4652,7 +4653,7 @@ li.folder a {
     border-radius: 5px;
 }
 .modal-viewfile .modal-content {
-    width: 85%;
+    width: 100%;
     margin: auto;
 }
 .add-module-popup .option {
@@ -4796,6 +4797,26 @@ span.k-dropdown {
 span.k-datetimepicker {
     width: 100%;
 }
+
+.modal-library .modal-content{
+    width: 550px;
+    margin: auto;
+}
+li.folder.hide a {
+    color: #545759ab;
+}
+ul.hide li.folder a {
+    color: #545759ab;
+}
+
+#filter_search_library {
+    width: 220px;
+    margin-right: 10px;
+    border-radius: 0;
+    border: 1px solid #dee2e6;
+}
+
+
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />
