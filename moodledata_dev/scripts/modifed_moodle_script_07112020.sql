@@ -258,3 +258,9 @@ CREATE TABLE mdl_files_request
 	[timemodified] BIGINT NULL,
 )
 --- *** Kết thúc script cho bản build version '17102020' ***--
+
+--- *** Script cho bản build version '07112020' *** ---
+-- Thêm cột phê duyệt module của trang thư viện trực tuyến
+ALTER TABLE mdl_library_module
+ADD approval INT NOT NULL DEFAULT 1
+--- *** Kết thúc script cho bản build version '07112020' ***--
