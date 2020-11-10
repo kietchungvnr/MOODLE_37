@@ -1687,6 +1687,29 @@ function converttime($time) {
     }
     return $result;
 }
+//
+function convertTimeExam($time) {
+    $result = '';
+    $time = (int)$time;
+    if($time > 0) {
+        switch ($time) {
+            case ($time <= 3600):
+                $result = round($time/60) . ' '.get_string('minute','local_newsvnr').'';
+                break;
+            case ($time > 3600 && $time <= 86400):
+                $result = round($time/3600) .' '.get_string('hour','local_newsvnr').'';
+                break;
+            case ($time > 86400):
+                $result = round($time/86400) .' '.get_string('day','local_newsvnr').'';
+                break;
+            default:
+                break;
+        }
+    } else {
+        $result = get_string('nolimit','local_newsvnr');
+    }
+    return $result;
+}
 //Hàm chuyển mimetype qua text 
 function mime2ext($mime) {
     $mime_map = [

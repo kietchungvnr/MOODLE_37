@@ -713,6 +713,7 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             }
             $.ajax(script, settings).then(function(response) {
                 var obj = $.parseJSON(response);
+                $('#header-library').replaceWith(obj.header);
                 $('#table-library').hide().html(obj.result).fadeIn('fast');
                 $('#pagination').replaceWith(obj.pagination);
                 $('.loading-page').removeClass('active');
