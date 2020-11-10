@@ -98,6 +98,8 @@ require(['theme_moove/search_autocomplete']);
 
 require(['theme_moove/kendo_translate']);
 
+require(['theme_moove/examonline']);
+
 var id = $('.new-detail-chat').attr('data');
 $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussionid='+id);
 
@@ -455,7 +457,7 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
                 $('#modal-iframe-library iframe').replaceWith('<iframe height="800px" src="https://view.officeapps.live.com/op/embed.aspx?src='+url+'" width="100%"></iframe>');
                 $('#modal-iframe-library').modal();
             } else {
-                $('#modal-iframe-library iframe').replaceWith('<iframe height="800px" src="'+url+'" width="100%"></iframe>');
+                $('#modal-iframe-library iframe').replaceWith('<iframe height="800px" src="'+url+'&iframe=true" width="100%"></iframe>');
                 $('#modal-iframe-library').modal();
             }
         })
