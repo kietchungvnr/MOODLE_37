@@ -1299,4 +1299,28 @@ class core_renderer extends \theme_boost\output\core_renderer {
         return $output;
     }
 
+    public function exam_subject_tree() {
+        global $DB;
+        $list_exam = $DB->get_records('exam',[]);
+        $output = '';
+        $output .= '<ul id="exam-tree">';
+        $output .= '<li class="list-category title exam" id="0"><a>'.get_string('listexamonline','local_newsvnr').'</a></li>';
+        $output .= '<ul>';
+        foreach ($list_exam as $exam) {
+            $output .= '<li class="list-category click-expand exam" id="'.$exam->id.'"><a>'.$exam->name.'</a><i data="33" class="fa fa-angle-right rotate-icon float-right"></i></li>';
+            $output .= '<ul class="dropdown-menu-tree content-expand '.$exam->id.'">';
+            $list_subject = $DB->get_records_sql("SELECT DISTINCT es.id,es.name FROM mdl_exam_subject es 
+                                                    JOIN mdl_exam_subject_exam ese ON ese.subjectid = es.id
+                                                    JOIN mdl_exam e ON ese.examid = e.id
+                                                WHERE e.id = :examid",['examid' => $exam->id]);
+            foreach ($list_subject as $subject) {
+                $output .= '<li class="list-subcategory subject-exam" id="'.$subject->id.'"><a>'.$subject->name.'</a></li>';
+            }
+            $output .= '</ul>';
+        }
+        $output .= '</ul>';
+        $output .= '</ul>';
+        return $output;
+    }
+
 }
