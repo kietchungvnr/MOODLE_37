@@ -72,6 +72,11 @@ if(isset($_COOKIE['cookie']) == 'focusmod' ) {
 } else {
     $hasfocusmod = false;
 }
+if($COURSE->id == 1) {
+    $settingexam = true;
+} else {
+    $settingexam = false;
+}
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [
@@ -87,7 +92,8 @@ $templatecontext = [
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'hasportal' => $hasportal,
     'hasiframe' => $hasiframe,
-    'hasfocusmod' => $hasfocusmod
+    'hasfocusmod' => $hasfocusmod,
+    'settingexam' => $settingexam
 ];
 
 // Improve boost navigation.

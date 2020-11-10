@@ -4220,7 +4220,7 @@ i.fa-angle-right.active {
     transform: rotate(90deg);
     transition: 0.5s;
 }
-.list-category.active .ajax-load {
+.list-category.active a{
     font-weight: bold;
 }
 .list-subcategory.active a{
@@ -4232,7 +4232,7 @@ i.fa-angle-right.active {
 .list-category.title a {
     color: white !important;
 }
-.courses_search_input {
+.courses_search_input,.exam_search_input {
      width: 240px; 
      height: 48px; 
      border: solid 1px #d9d9d9; 
@@ -4240,7 +4240,7 @@ i.fa-angle-right.active {
      background: #FFFFFF; 
      padding-left: 20px; 
 }
-#courses_search_button {
+#courses_search_button,#exam_search_button {
     width: 161px;
     height: 46px;
     background: #3c8dbc;
@@ -4449,6 +4449,7 @@ select#formactionid {
 }
 .tree-search input {
     width: 100%;
+    background-color: #fafafa;
 }
 body {
     overflow-x: hidden;
@@ -4805,7 +4806,6 @@ span.k-dropdown {
 span.k-datetimepicker {
     width: 100%;
 }
-
 .modal-library .modal-content{
     width: 550px;
     margin: auto;
@@ -4823,8 +4823,68 @@ ul.hide li.folder a {
     border-radius: 0;
     border: 1px solid #dee2e6;
 }
-
-
+.child-list {
+    padding: .5rem 1rem;
+    padding-left: 10px;
+}
+#page-site-index-examonline .dropdown-menu-tree li {
+    padding: .5rem 0;
+}
+{{#settingexam}}
+    #page-course-admin div[role="main"] .container .row {
+        display: none;
+    }
+    #page-course-admin div[role="main"] .container {
+        max-width: initial;
+    }
+    #page-course-admin div[role="main"] .container .row:nth-child(5) {
+        display: flex;
+    }
+    #page-course-admin .container hr {
+        display: none;
+    }
+    #page-course-admin .nav.nav-tabs {
+        display: none;
+    }
+    #page-course-admin div[role="main"] h2 {
+        display: none;
+    }
+{{/settingexam}}
+.exam-title {
+    text-align: center;
+    margin: 15px 0px;
+    color: white;
+    background: #3c8dbc;
+    padding: 8px;
+    font-weight: bold;
+}
+.subject-title {
+    color: orange;
+    font-weight: bold;
+}
+.detail-quiz {
+    padding: 0 10px;
+    color: #918c8c;
+}
+.module-quiz-online:nth-of-type(even) {
+    background:#80808021;
+}
+.exam_search_form {
+    margin: 0 8px;
+}
+.tree-search .k-datepicker  {
+    border-color: #d9d9d9;
+    width: 100%;
+    padding: 0;
+}
+.tree-search .k-state-default {
+    border-color: #d9d9d9 !important;
+}
+.tree-search .k-state-default .k-select {
+    display: flex;
+    align-items: center;
+    background: #fafafa;
+}
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />

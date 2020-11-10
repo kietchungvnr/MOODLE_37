@@ -69,5 +69,4 @@ define(["jquery", "core/config", 'kendo.all.min', "core/str", "core/notification
             $('.loading-page').removeClass('active');
         })
     })
-    //
 })

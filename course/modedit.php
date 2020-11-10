@@ -38,7 +38,7 @@ $return = optional_param('return', 0, PARAM_BOOL);    //return to course/view.ph
 $type   = optional_param('type', '', PARAM_ALPHANUM); //TODO: hopefully will be removed in 2.0
 $sectionreturn = optional_param('sr', null, PARAM_INT);
 $folderid = optional_param('folderid',0, PARAM_INT);
-
+$subjectid = optional_param('subjectid',0, PARAM_INT);
 $url = new moodle_url('/course/modedit.php');
 $url->param('sr', $sectionreturn);
     if (!empty($return)) {
@@ -52,6 +52,7 @@ if (!empty($add)) {
 
     $url->param('add', $add);
     $url->param('folderid', $folderid);
+    $url->param('subjectid', $subjectid);
     $url->param('section', $section);
     $url->param('course', $course);
     $PAGE->set_url($url);
@@ -69,6 +70,7 @@ if (!empty($add)) {
     $data->sr = $sectionreturn;
     $data->add = $add;
     $data->folderid = $folderid;
+    $data->subjectid = $subjectid;
     if (!empty($type)) { //TODO: hopefully will be removed in 2.0
         $data->type = $type;
     }
@@ -152,7 +154,7 @@ if($data->modulename == 'resource' || $data->modulename == 'book') {
     }
 }
 $mformclassname = 'mod_'.$module->name.'_mod_form';
-$mform = new $mformclassname($data, $cw->section, $cm, $course, $folderid);
+$mform = new $mformclassname($data, $cw->section, $cm, $course,$folderid,$subjectid);
 $mform->set_data($data);
 
 if ($mform->is_cancelled()) {
@@ -205,8 +207,8 @@ if ($mform->is_cancelled()) {
             HTTPPost($url_hrm, $params_hrm);
         }
         $fromform = add_moduleinfo($fromform, $course, $mform);
-        //Dữ liệu insert vào table library_module khi course = 1
-        if($course->id == SITEID) {
+        //Dữ liệu insert vào table library_module khi course = 1 (thư viện trực tuyến)
+        if($course->id == SITEID && $add != 'quiz') {
             $record = new stdClass();
             $record->folderid = $folderid;
             $record->timecreated = time();
@@ -229,7 +231,17 @@ if ($mform->is_cancelled()) {
             
             $DB->insert_record('library_module',$record);
         }
-
+        //Dữ liệu insert vào table exam_quiz khi course = 1 (kì thi ngoài khóa)
+        if($course->id == SITEID && $add == 'quiz') {
+            $examrecord = new stdClass();
+            $examrecord->coursemoduleid = $fromform->coursemodule;
+            $examrecord->subjectexamid = $subjectid;
+            $examrecord->timecreated = time();
+            $examrecord->timemodified = time();
+            $examrecord->usercreate = $USER->id;
+            $examrecord->usermodified = $USER->id;
+            $DB->insert_record('exam_quiz',$examrecord);
+        }
     } else {
         print_error('invaliddata');
     }
