@@ -1,25 +1,28 @@
-define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config, Str, kendo) {
-	var initGrid = function (gridConfig) {
-        if (gridConfig.columns === undefined) { gridConfig.columns = []; }
-        gridConfig.selectData = function (e) {
-            var myGrid = $('div[kendo-grid][k-options=' + gridConfig.gridName + ']').getKendoGrid();
-            var selectedRows = myGrid.select();
-            var arrObject = [];
-            for (var i = 0; i < selectedRows.length; i++) {
-                arrObject.push(myGrid.dataItem(selectedRows[i]));
-            }
-            return arrObject;
-        };
-        gridConfig.selectId = function (e) {
-            var myGrid = $('div[kendo-grid][k-options=' + gridConfig.gridName + ']').getKendoGrid();
-            var selectedRows = myGrid.select();
-            var arrObject = [];
-            for (var i = 0; i < selectedRows.length; i++) {
-                arrObject.push(myGrid.dataItem(selectedRows[i]).Id);
-            }
-            return arrObject;
-        };
-
+define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Config, Str, kendo) {
+    var initGrid = function(gridConfig) {
+        if (gridConfig.columns === undefined) {
+            gridConfig.columns = [];
+        }
+        var eventArr = [];
+        // var checkedIds = {};
+        // gridConfig.selectData = function (e) {
+        // var myGrid = $('#library-approval-module').getKendoGrid();
+        // var selectedRows = myGrid.select();
+        // var arrObject = [];
+        // for (var i = 0; i < selectedRows.length; i++) {
+        //     arrObject.push(myGrid.dataItem(selectedRows[i]));
+        // }
+        // console.log(arrObject);
+        // };
+        // gridConfig.selectId = function (e) {
+        //     var myGrid = $('div[kendo-grid][k-options=' + gridConfig.gridName + ']').getKendoGrid();
+        //     var selectedRows = myGrid.select();
+        //     var arrObject = [];
+        //     for (var i = 0; i < selectedRows.length; i++) {
+        //         arrObject.push(myGrid.dataItem(selectedRows[i]).Id);
+        //     }
+        //     return arrObject;
+        // };
         gridConfig.columns.unshift({
             selectable: true,
             width: 45
@@ -37,54 +40,6 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
         //         gridConfig.selectRowEvent(arrObject);
         //     }
         // }
-        if (gridConfig.approvalModuleEvent != undefined) {
-            var funcApprovalModule = function(e) {
-                e.preventDefault();
-                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                var script = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_approval_module_ajax.php?action=approval';
-                var settings = {
-                    type:"POST",
-                    processData:true,
-                    data:{
-                        moduleid:dataItem.id
-                    }
-                }
-                $.ajax(script,settings).then(function() {
-                }) 
-                gridConfig.approvalModuleEvent(dataItem);
-            }
-            var objEventApprovalModule = {
-                click: funcApprovalModule,
-                text: " ",
-                name: "approval",
-                iconClass: 'fa fa-check',
-            }
-            eventArr.push(objEventApprovalModule);
-        }
-        if (gridConfig.deleteModuleEvent != undefined) {
-            var funcDeleteModule = function(e) {
-                e.preventDefault();
-                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                var script = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_approval_module_ajax.php?action=delete';
-                var settings = {
-                    type:"POST",
-                    processData:true,
-                    data:{
-                        moduleid:dataItem.id
-                    }
-                }
-                $.ajax(script,settings).then(function() {
-                }) 
-                gridConfig.deleteModuleEvent(dataItem);
-            }
-            var objEventDeleteModule = {
-                click: funcDeleteModule,
-                text: " ",
-                name: "delete",
-                iconClass: 'fa fa-trash',
-            }
-            eventArr.push(objEventDeleteModule);
-        }
         if (gridConfig.editEvent != undefined) {
             var funcEdit = function(e) {
                 e.preventDefault();
@@ -99,6 +54,7 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
             }
             eventArr.push(objEventEdit);
         }
+       
         if (gridConfig.deleteEvent != undefined) {
             var funcDelete = function(e) {
                 e.preventDefault();
@@ -116,8 +72,26 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
         gridConfig.columns.push({
             title: 'Action',
             command: eventArr,
-            width: 100
+            width: 150
         });
+        if (gridConfig.enrollExamUsers != undefined) {
+            var funcEnroll = function(e) {
+                e.preventDefault();
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                gridConfig.enrollExamUsers(dataItem);
+            }
+            var objEventEdit = {
+                click: funcEnroll,
+                text: "Ghi danh",
+                name: "enroll",
+                iconClass: 'fa fa-user-plus',
+            }
+            gridConfig.columns.push({
+                title: 'Quản lý ghi danh',
+                command: objEventEdit,
+                width: 150
+            });
+        }
         return {
             dataSource: newDatasourceGrid(gridConfig),
             persistSelection: true,
@@ -139,8 +113,7 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
             columns: gridConfig.columns,
             noRecords: {
                 template: 'No Records'
-            },
-            // editable: "popup"
+            }
         }
     };
     var newDatasourceGrid = function(gridConfig) {

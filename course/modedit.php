@@ -31,14 +31,15 @@ require_once($CFG->libdir.'/completionlib.php');
 require_once($CFG->libdir.'/plagiarismlib.php');
 require_once($CFG->dirroot . '/course/modlib.php');
 require_once($CFG->dirroot . '/local/newsvnr/lib.php');
+require_once($CFG->dirroot . '/calendar/lib.php');
 
 $add    = optional_param('add', '', PARAM_ALPHANUM);     // Module name.
 $update = optional_param('update', 0, PARAM_INT);
 $return = optional_param('return', 0, PARAM_BOOL);    //return to course/view.php if false or mod/modname/view.php if true
 $type   = optional_param('type', '', PARAM_ALPHANUM); //TODO: hopefully will be removed in 2.0
 $sectionreturn = optional_param('sr', null, PARAM_INT);
-$folderid = optional_param('folderid',0, PARAM_INT);
-$subjectid = optional_param('subjectid',0, PARAM_INT);
+$folderid = optional_param('folderid', 0, PARAM_INT);
+$examsubjectexamid = optional_param('examsubjectexamid', 0, PARAM_INT);
 $url = new moodle_url('/course/modedit.php');
 $url->param('sr', $sectionreturn);
     if (!empty($return)) {
@@ -52,7 +53,7 @@ if (!empty($add)) {
 
     $url->param('add', $add);
     $url->param('folderid', $folderid);
-    $url->param('subjectid', $subjectid);
+    $url->param('examsubjectexamid', $examsubjectexamid);
     $url->param('section', $section);
     $url->param('course', $course);
     $PAGE->set_url($url);
@@ -70,7 +71,7 @@ if (!empty($add)) {
     $data->sr = $sectionreturn;
     $data->add = $add;
     $data->folderid = $folderid;
-    $data->subjectid = $subjectid;
+    $data->examsubjectexamid = $examsubjectexamid;
     if (!empty($type)) { //TODO: hopefully will be removed in 2.0
         $data->type = $type;
     }
@@ -154,7 +155,7 @@ if($data->modulename == 'resource' || $data->modulename == 'book') {
     }
 }
 $mformclassname = 'mod_'.$module->name.'_mod_form';
-$mform = new $mformclassname($data, $cw->section, $cm, $course,$folderid,$subjectid);
+$mform = new $mformclassname($data, $cw->section, $cm, $course, $folderid, $examsubjectexamid);
 $mform->set_data($data);
 
 if ($mform->is_cancelled()) {
@@ -231,16 +232,44 @@ if ($mform->is_cancelled()) {
             
             $DB->insert_record('library_module',$record);
         }
-        //Dữ liệu insert vào table exam_quiz khi course = 1 (kì thi ngoài khóa)
+        // Custom by Vũ: Dữ liệu insert vào table exam_quiz khi course = 1 và auto tạo sự kiện kỳ thi vào lịch theo (kì thi ngoài khóa)
         if($course->id == SITEID && $add == 'quiz') {
             $examrecord = new stdClass();
             $examrecord->coursemoduleid = $fromform->coursemodule;
-            $examrecord->subjectexamid = $subjectid;
+            $examrecord->subjectexamid = $examsubjectexamid;
             $examrecord->timecreated = time();
             $examrecord->timemodified = time();
             $examrecord->usercreate = $USER->id;
             $examrecord->usermodified = $USER->id;
+            $get_quizid = $DB->get_field('course_modules', 'instance', ['id' => $fromform->coursemodule]);
+            $quizinfo = $DB->get_field('quiz', 'id', ['id' => $get_quizid]);
+            $get_subjectid = $DB->get_field('exam_subject_exam', 'subjectid', ['id' => $examsubjectexamid]);
+            $subjectname = $DB->get_field('exam_subject', 'name', ['id' => $get_subjectid]);
             $DB->insert_record('exam_quiz',$examrecord);
+            $sql = "SELECT eu.userid, e.name
+                    FROM {exam_subject_exam} esx
+                        LEFT JOIN {exam_user} eu ON esx.examid = eu.examid
+                        LEFT JOIN {exam} e ON e.id = esx.examid
+                    WHERE esx.id = :subjectexamid";
+            $listexamuser = $DB->get_records_sql($sql, ['subjectexamid' => $examsubjectexamid]);
+            $calendarevents = [];
+            foreach ($listexamuser as $examuser) {
+                $event = new stdClass();
+                $event->eventtype = 'open';
+                $event->type = CALENDAR_IMPORT_FROM_URL;
+                $event->name = $examuser->name . ' - ' . $subjectname;
+                $event->description = '';
+                $event->format = FORMAT_HTML;
+                $event->courseid = SITEID;
+                $event->groupid = 0;
+                $event->userid = $examuser->userid;
+                $event->modulename = 'quiz';
+                $event->instance = $quizinfo;
+                $event->timestart = time();
+                $event->timesort = time();
+                $event->timemodified = time();
+                calendar_event::create($event);
+            }
         }
     } else {
         print_error('invaliddata');

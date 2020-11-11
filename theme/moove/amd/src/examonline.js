@@ -2,7 +2,7 @@ define(["jquery", "core/config", 'kendo.all.min', "core/str", "core/notification
     var script = Config.wwwroot + '/local/newsvnr/exam/ajax/examonline.php';
     //load môn thi mỗi khi click vào danh mục kì thi
     $('#exam-tree li.exam').click(function() {
-        $('.loading-page').addClass('active');
+        // $('.loading-page').addClass('active');
         $('#exam-tree li.exam').removeClass('active');
         $('#exam-tree li.exam').addClass('not-allow');
         $(this).addClass('active');
@@ -24,13 +24,13 @@ define(["jquery", "core/config", 'kendo.all.min', "core/str", "core/notification
     })
     //load bài thi mỗi khi click vào danh mục môn thi
     $('#exam-tree li.subject-exam').click(function() {
-        $('.loading-page').addClass('active');
-        var subjectid = $(this).attr('id');
+        // $('.loading-page').addClass('active');
+        var examsubjectexamid = $(this).attr('data-examsujbectexam');
         var settings = {
             type: "GET",
             processData: true,
             data: {
-                subjectid: subjectid
+                examsubjectexamid: examsubjectexamid
             },
             contenttype: "application/json",
         }
@@ -44,8 +44,8 @@ define(["jquery", "core/config", 'kendo.all.min', "core/str", "core/notification
     $('#exam-tree li.list-subcategory').click(function() {
         $('#exam-tree li.list-subcategory').removeClass('active');
         $(this).addClass('active');
-        var id = $(this).attr('id');
-        var href = Config.wwwroot + '/course/modedit.php?add=quiz&type=&course=1&section=0&return=0&sr=0&subjectid=' + id;
+        var id = $(this).attr('data-examsujbectexam');
+        var href = Config.wwwroot + '/course/modedit.php?add=quiz&type=&course=1&section=0&return=0&sr=0&examsubjectexamid=' + id;
         $('#add-quiz').attr('href', href);
         $('#add-quiz').removeClass('d-none');
     })
@@ -58,7 +58,7 @@ define(["jquery", "core/config", 'kendo.all.min', "core/str", "core/notification
     //Kendo chọn ngày tháng
     $("#examdate").kendoDatePicker();
     $('#exam_search_button').click(function() {
-        $('.loading-page').addClass('active');
+        // $('.loading-page').addClass('active');
         var datepicker = $("#examdate").val();
         var date = parseInt((new Date(datepicker).getTime() / 1000).toFixed(0))
         var examname = $('.exam_search_input#examname').val().trim().split(' ').join('+');

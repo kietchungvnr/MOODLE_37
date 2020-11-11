@@ -11,6 +11,7 @@ require_once($CFG->libdir . '/completionlib.php');
 require_once($CFG->libdir . '/enrollib.php');
 require_once($CFG->dirroot . '/mod/forum/lib.php');
 require_once($CFG->dirroot . '/course/lib.php');
+require_once($CFG->dirroot.'/calendar/lib.php');
 use renderable;
 use templatable;
 use renderer_base;
@@ -19,6 +20,7 @@ use context_module;
 use context_course;
 use context_system;
 use core_competency\api;
+use calendar_event;
 class orgmain_page implements renderable, templatable {
 
 	public function export_for_template(renderer_base $output) {
@@ -45,6 +47,37 @@ class orgmain_page implements renderable, templatable {
     // $url = "http://192.168.1.3:2707/api/Rec_InterviewCampaignDetail/CreateOrUpdateRecCourse";
     $url = "http://192.168.1.3:2707/api/Rec_InterviewCampaignDetail/CreateOrUpdateRecTest";
 
+    $event = new stdClass();
+    $event->eventtype = 'open'; // Constant defined somewhere in your code - this can be any string value you want. It is a way to identify the event.
+    $event->type = CALENDAR_IMPORT_FROM_URL; // This is used for events we only want to display on the calendar, and are not needed on the block_myoverview.
+    $event->name = 'TEST API';
+    $event->description = '';
+    $event->format = FORMAT_HTML;
+    $event->courseid = 1;
+    $event->groupid = 0;
+    $event->userid = 0;
+    $event->modulename = 'quiz';
+    $event->instance = 174;
+    $event->timestart = time();
+    $event->timeduration = 0;
+     
+    calendar_event::create($event);
+
+    // $obj_calendar_event = new stdClass;
+    // $obj_calendar_event->name = 'Kì thi test API 144';
+    // $obj_calendar_event->format = 1;
+    // $obj_calendar_event->description = 'Kì thi test API 144';
+    // $obj_calendar_event->timestart = time();
+    // $obj_calendar_event->timesort = time();
+    // $obj_calendar_event->timemodified = time();
+    // $obj_calendar_event->userid = 144;
+    // $obj_calendar_event->courseid = 1086;
+    // $obj_calendar_event->instance = 161;
+    // $obj_calendar_event->modulename = 'quiz';
+    // $obj_calendar_event->location = 'http://localhost:8080/local/newsvnr/exam/index.php';
+    // $obj_calendar_event->type = 1;
+    // $obj_calendar_event->eventtype = 'open';
+    // $DB->insert_record('event', $obj_calendar_event);
     // $modinfo = new stdClass;
     // $modinfo->name = 'Apicreatetest';
     // $modinfo->code = 'code1233';

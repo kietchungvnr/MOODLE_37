@@ -63,5 +63,13 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('local_newsvnr/generallibrary', $data);
     }
+    public function render_exam_page(exam_page $page) {
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('local_newsvnr/exam', $data);
+    }
+    public function render_exam_view_page(exam_view_page $page) {
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('local_newsvnr/exam_view', $data);
+    }
 
 }

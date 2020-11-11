@@ -75,9 +75,9 @@ class mod_quiz_mod_form extends moodleform_mod {
         }
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
-        // Custom by Thắng : Thêm field chứa subjectid khi tạo quiz trên trang thi ngoài khóa
-        $mform->addElement('hidden', 'subjectid', null);
-        $mform->setType('subjectid', PARAM_INT);
+        // Custom by Thắng : Thêm field chứa examsubjectexamid khi tạo quiz trên trang thi ngoài khóa
+        $mform->addElement('hidden', 'examsubjectexamid', null);
+        $mform->setType('examsubjectexamid', PARAM_INT);
         //Custom by Vũ: Thêm field Code.
         $mform->addElement('text', 'code', get_string('code', 'mod_quiz'), array('size'=>'40'));
         if (!empty($CFG->formatstringstriptags)) {

@@ -27,7 +27,7 @@ require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/../lib.php');
 
 require_login();
-$title = 'Trang kì thi';
+$title = 'Quản lý kì thì';
 // $navstr = get_string('navbar','local_newsvnr');
 // Set up the page.
 $url = new moodle_url("/local/newsvnr/exam/index.php");
@@ -39,11 +39,11 @@ $PAGE->set_title($title);
 $PAGE->set_heading($title);
 $PAGE->navbar->add($title,$url);
 $PAGE->navbar->ignore_active();
-$PAGE->requires->js_call_amd('local_newsvnr/exam', 'initExamSubject');
-$PAGE->requires->js_call_amd('local_newsvnr/exam', 'initExam');
+$PAGE->requires->js_call_amd('local_newsvnr/exam', 'initViewExam');
 $output = $PAGE->get_renderer('local_newsvnr');
 
-$page = new \local_newsvnr\output\exam_page();
+
+$page = new \local_newsvnr\output\exam_view_page();
 
 
 echo $output->header();
