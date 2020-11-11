@@ -1309,12 +1309,13 @@ class core_renderer extends \theme_boost\output\core_renderer {
         foreach ($list_exam as $exam) {
             $output .= '<li class="list-category click-expand exam" id="'.$exam->id.'"><a>'.$exam->name.'</a><i data="33" class="fa fa-angle-right rotate-icon float-right"></i></li>';
             $output .= '<ul class="dropdown-menu-tree content-expand '.$exam->id.'">';
-            $list_subject = $DB->get_records_sql("SELECT DISTINCT es.id,es.name FROM mdl_exam_subject es 
-                                                    JOIN mdl_exam_subject_exam ese ON ese.subjectid = es.id
-                                                    JOIN mdl_exam e ON ese.examid = e.id
-                                                WHERE e.id = :examid",['examid' => $exam->id]);
+            $list_subject = $DB->get_records_sql("SELECT DISTINCT es.id,es.name,ese.id as examsubjectexam 
+                                                    FROM mdl_exam_subject es 
+                                                        JOIN mdl_exam_subject_exam ese ON ese.subjectid = es.id
+                                                        JOIN mdl_exam e ON ese.examid = e.id
+                                                    WHERE e.id = :examid AND e.visible = 1",['examid' => $exam->id]);
             foreach ($list_subject as $subject) {
-                $output .= '<li class="list-subcategory subject-exam" id="'.$subject->id.'"><a>'.$subject->name.'</a></li>';
+                $output .= '<li class="list-subcategory subject-exam" data-examsujbectexam="'.$subject->examsubjectexam.'" id="'.$subject->id.'"><a>'.$subject->name.'</a></li>';
             }
             $output .= '</ul>';
         }

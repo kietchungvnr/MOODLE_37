@@ -1,0 +1,33 @@
+<ul class="nav-tabs nav" id="exam-tab">
+	<li class="nav-item " data-key="managesubjectexam">
+	    <a class="nav-link active" href="#managesubjectexam" data-toggle="tab">Quản lý môn thi</a>
+	</li>
+	<li class="nav-item" data-key="manageexam">
+        <a class="nav-link" href="#manageexam" data-toggle="tab">Quản lý kì thi</a>
+	</li>
+</ul>
+<div id="exam-content" class="tab-content mt-2">
+	<div class="tab-pane fadein active" id="managesubjectexam">
+		<button type="submit" id="btn-subjectexam" value="Tạo môn thi" class="btn btn-secondary k-button hide-on-narrow">Tạo môn thi</button>
+        <div id="modal-subjectexam">
+          <form id="form-subjectexam"></form>
+            
+        </div>
+        <div id="subjectexam-grid"  class="mt-2"></div>
+	</div>
+	<div class="tab-pane fadein" id="manageexam">
+		<button type="submit" id="btn-exam" value="Tạo kì thi" class="btn btn-secondary ">Tạo kì thi</button>
+         <div id="modal-exam">
+          <form id="form-exam"></form>
+            
+        </div>
+        <div id="exam-grid" class="mt-2"></div>
+	</div>
+</div>
+<div id="modal-enrollexamusers">
+    <form id="form-enrollexamusers"></form>
+    <div id="enrollexamusers-grid" class="mt-3"></div>
+</div>
+<div id="modal-enrollexamusers-edit">
+    <form id="form-enrollexamusers-edit" class="mt-3"></form>
+</div>

@@ -35,7 +35,7 @@ $examname       = optional_param('examname', '', PARAM_TEXT);
 $subjectname    = optional_param('subjectname', '', PARAM_TEXT);
 $date           = optional_param('date', 0, PARAM_INT);
 $action         = optional_param('action', '', PARAM_TEXT);
-$subjectid    = optional_param('subjectid', 0, PARAM_INT);
+$examsubjectexamid    = optional_param('examsubjectexamid', 0, PARAM_INT);
 $output         = '';
 $arrtemp        = [];
 $examdata       = $DB->get_record('exam', ['id' => $examid]);
@@ -43,13 +43,16 @@ $data           = [];
 $conditionquiz  = '';
 $strexamname    = "N'" . '%' . $examname . '%' . "'";
 $strsubjectname = "N'" . '%' . $subjectname . '%' . "'";
-$sql            = 'SELECT DISTINCT es.id,es.name FROM {exam_subject} es
-                JOIN {exam_subject_exam} ese ON ese.subjectid = es.id
-                JOIN {exam} e ON ese.examid = e.id';
+$sql            = 'SELECT esx.id, es.id AS subjectid ,es.name, esx.subjectid, e.name AS examname
+                    FROM mdl_exam_subject_exam esx 
+                        LEFT JOIN mdl_exam e ON esx.examid = e.id
+                        LEFT JOIN mdl_exam_subject es ON esx.subjectid = es.id';
+// Tìm kiếm theo ngày thi
 if ($date != 0) {
     $conditionquiz = "AND (q.timeopen <= $date AND q.timeclose >= $date)";
 }
-if ($examid == 0 && $subjectid == 0) {
+// Tìm kiếm theo kỳ thi và môn thi
+if ($examid == 0 && $examsubjectexamid == 0) {
     $subjectdata = $DB->get_records_sql($sql . " WHERE e.name like $strexamname AND es.name like $strsubjectname");
     if ($action == 'search') {
         $output .= '<div class="exam-title mt-3">' . get_string('resultsearch', 'local_newsvnr') . '</div>';
@@ -57,26 +60,29 @@ if ($examid == 0 && $subjectid == 0) {
         $output .= '<div class="exam-title mt-3">' . get_string('allsubjectexam', 'local_newsvnr') . '</div>';
     }
 } else {
-    if($subjectid == 0) {
+    if($examsubjectexamid == 0) {
+        // Load theo môn thi
         $subjectdata = $DB->get_records_sql($sql . " WHERE e.id = :examid", ['examid' => $examid]);
         $output .= '<div class="exam-title mt-3">' . $examdata->name . '</div>';
     } else {
-        $subjectdata = $DB->get_records_sql($sql . " WHERE es.id = :subjectid", ['subjectid' => $subjectid]);
+        // Load theo kì thi
+        $subjectdata = $DB->get_records_sql($sql . " WHERE esx.id = :examsubjectexamid", ['examsubjectexamid' => $examsubjectexamid]);
     }
 
 }
 foreach ($subjectdata as $subject) {
-    if($subjectid) {
+    if($examsubjectexamid) {
         $output .= '<div class="exam-title mt-3">' . $subject->name . '</div>';
     }
-    $quizdata = $DB->get_records_sql("SELECT q.id as quizid,q.*,eq.* FROM {exam_quiz} eq
-                            JOIN {exam_subject} es ON es.id = eq.subjectexamid
-                            JOIN {course_modules} cm ON cm.id = eq.coursemoduleid
-                            JOIN {quiz} q ON q.id = cm.instance
-                        WHERE es.id = :subjectid $conditionquiz", ['subjectid' => $subject->id]);
+    $quizdata = $DB->get_records_sql("SELECT q.id as quizid,q.*,eq.*
+                                        FROM {exam_quiz} eq
+                                            JOIN {exam_subject_exam} esx ON esx.id = eq.subjectexamid
+                                            JOIN {course_modules} cm ON cm.id = eq.coursemoduleid
+                                            JOIN {quiz} q ON q.id = cm.instance
+                                        WHERE eq.subjectexamid = :subjectid $conditionquiz", ['subjectid' => $subject->id]);
     $arrtemp = array_merge($quizdata, $arrtemp);
     if ($date == 0) {
-        $output .= '<div class="subject-title mt-1"><i class="fa fa-clock-o mr-2" aria-hidden="true"></i>' . $subject->name . ' (' . count($quizdata) . ' ' . get_string('quiz', 'local_newsvnr') . ')</div>';
+        $output .= '<div class="subject-title mt-1"><i class="fa fa-clock-o mr-2" aria-hidden="true"></i>'. $subject->examname.' - '. $subject->name .' (' . count($quizdata) . ' ' . get_string('quiz', 'local_newsvnr') . ')</div>';
     }
     $output .= '<div class="quiz-in-subject mt-2">';
     foreach ($quizdata as $quiz) {

@@ -48,6 +48,7 @@ $ADMIN->add('root', new admin_category('mnet', new lang_string('net','mnet'), (i
 $ADMIN->add('root', new admin_category('reports', new lang_string('reports')));
 $ADMIN->add('root', new admin_category('development', new lang_string('development', 'admin')));
 $ADMIN->add('root', new admin_category('newsvnr', new lang_string('sitetabadmin', 'local_newsvnr')));
+$ADMIN->add('root', new admin_category('examvnr', new lang_string('manageexam', 'local_newsvnr')));
 
 // hidden unsupported category
 $ADMIN->add('root', new admin_category('unsupported', new lang_string('unsupported', 'admin'), true));

@@ -419,4 +419,4 @@ $string['examname'] = "Tên kỳ thi";
 $string['examdate'] = "Ngày thi";
 $string['subjectexam'] = "Môn thi";
 $string['createquiz'] = "Tạo đề thi";
-$string['questionbank'] = "Ngân hàng câu hỏi"; 
+$string['questionbank'] = "Ngân hàng câu hỏi";

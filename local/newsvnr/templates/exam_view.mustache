@@ -1,0 +1,86 @@
+<div class="row">
+	<div class="col-xl-3 col-lg-4 col-md-4" id="menu-tree-exam">
+		<div class="border">
+			<li class="list-category" id="exam-type">Danh sách kì thi</li>
+			<ul style="" id="exam-category">
+				
+			</ul>
+		</div>
+	</div>
+	<div class="col-xl-9 col-lg-8 col-md-8 position-relative">
+		<ul class="nav-tabs nav" id="infoexam-tab">
+			<li class="nav-item " data-key="exam-description">
+			    <a class="nav-link active" href="#exam-description" data-toggle="tab">Thông tin kì thi</a>
+			</li>
+			<li class="nav-item" data-key="exam-subjectexam">
+		        <a class="nav-link" href="#exam-subjectexam" data-toggle="tab">Môn thi</a>
+			</li>
+			<li class="nav-item" data-key="exam-user">
+		        <a class="nav-link" href="#exam-user" data-toggle="tab">Danh sách thí sinh</a>
+			</li>
+			<li class="nav-item" data-key="exam-result">
+		        <a class="nav-link" href="#exam-result" data-toggle="tab">Kết quả thi</a>
+			</li>
+		</ul>
+		<div id="infoexam-content" class="tab-content mt-2">
+			<div class="tab-pane fadein active" id="exam-description">
+				<div class="form-group row">
+			    	<label class="col-2 col-form-label">Tên kì thi</label>
+			    	<div class="col-10">
+			      		<input type="text" class="form-control" id="ed-name">
+			    	</div>
+			  	</div>
+			  	<div class="form-group row">
+			    	<label class="col-2 col-form-label">Mã kì thi</label>
+			    	<div class="col-10">
+			      		<input type="text" class="form-control" id="ed-code">
+			    	</div>
+			  	</div>
+			  	<div class="form-group row">
+			    	<label class="col-2 col-form-label">Loại kì thi</label>
+			    	<div class="col-10">
+			      		<input type="text" class="form-control" id="ed-type">
+			    	</div>
+			  	</div>
+			  	<div class="form-group row">
+			    	<label class="col-2 col-form-label">Thời gian bắt đầu</label>
+			    	<div class="col-10">
+			      		<input type="text" class="form-control" id="ed-datestart">
+			    	</div>
+			  	</div>
+			  	<div class="form-group row">
+			    	<label class="col-2 col-form-label">Thời gian kết thúc</label>
+			    	<div class="col-10">
+			      		<input type="text" class="form-control" id="ed-dateend">
+			    	</div>
+			  	</div>
+			  	<div class="form-group row">
+			    	<label class="col-2 col-form-label">Mô tả</label>
+			    	<div class="col-10">
+			      		<input type="text" class="form-control" id="ed-description">
+			    	</div>
+			  	</div>
+			  	<div class="form-group row">
+			    	<label class="col-2 col-form-label">Giáo viên</label>
+			    	<div class="col-10">
+			    		<span id="ed-teacher"></span>
+			    	</div>
+			  	</div>
+			  	<div class="form-group row">
+			    	<label class="col-2 col-form-label">Số lượng thí sinh</label>
+			    	<div class="col-10">
+			    		<span id="ed-numnberstudent"></span>
+			    	</div>
+			  	</div>
+			</div>
+			<div class="tab-pane fadein" id="exam-subjectexam">
+				<div id="exam-list-grid"></div>
+			</div>
+			<div class="tab-pane fadein" id="exam-user">
+				<div id="exam-users-grid"></div>
+			</div>
+			<div class="tab-pane fadein" id="exam-result">
+			</div>
+		</div>
+	</div>
+</div>
