@@ -138,7 +138,7 @@ function($, kendo, Config, Notification, Str) {
 
 		      /* PAGER MESSAGES 
 		       ****************************************************************************/
-		      display: '{0} - {1} ' + s[1] +'{2} '+ s[2],
+		      display: '{0} - {1} ' + s[1] +' {2} '+ s[2],
 		      empty: s[3],
 		      page: s[9],
 		      of: s[1] + " {0}",

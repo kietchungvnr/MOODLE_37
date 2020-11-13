@@ -24,11 +24,11 @@
  * @author   Le Thanh Vu
  **/
 
-define('AJAX_SCRIPT', false);
+define('AJAX_SCRIPT', true);
 
 require_once __DIR__ . '/../../../../config.php';
 require_once __DIR__ . '/../../lib.php';
-// require_login();
+require_login();
 $PAGE->set_context(context_system::instance());
 
 $action = required_param('action', PARAM_ALPHANUMEXT);
@@ -56,7 +56,7 @@ switch ($action) {
 		}
         $obj->description = $exam_params['sxdescription'];
         $DB->insert_record('exam_subject', $obj);
-        $data['success'] = 'Thêm môn thi thành công';
+        $data['success'] = get_string('add_success', 'local_newsvnr');
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die;
     case 'subjectexam_edit':
@@ -76,15 +76,23 @@ switch ($action) {
 		}
         $obj->description = $exam_params['sxdescription'];
         $DB->update_record('exam_subject', $obj);
-        $data['success'] = 'Chỉnh sửa môn thi thành công';
+        $data['success'] = get_string('edit_success', 'local_newsvnr');
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
     	die;
     case 'subjectexam_delete':
     	$subjectexamid = optional_param('id', 0, PARAM_INT);
     	$DB->delete_records('exam_subject', ['id' => $subjectexamid]);
-    	$data['success'] = 'Xóa thành công môn thi';
+    	$data['success'] = get_string('delete_success', 'local_newsvnr');
     	echo json_encode($data, JSON_UNESCAPED_UNICODE);
     	die;
+    case 'subjectexam_delete_all':
+		$dataselect = json_decode($_POST['rowselected']);
+    	foreach ($dataselect as $subjectexam) {
+            $DB->delete_records('exam_subject', ['id' => $subjectexam->id]);
+        }
+        $data['success'] = get_string('delete_success', 'local_newsvnr');
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        die;
     case 'subjectexam_validate':
     	if($DB->record_exists('exam_subject', ['name' => $exam_params['sxname']])) {
     		$data['errors'] = false;
@@ -148,9 +156,9 @@ switch ($action) {
 			$obj->name = $value->name;		
 			$obj->code = $value->code;
 			if($value->type == 1) {
-				$obj->type = 'Tự do';
+				$obj->type = get_string('free', 'local_newsvnr');
 			} else {
-				$obj->type = 'Bắt buộc';
+				$obj->type = get_string('required', 'local_newsvnr');
 			}
 			// $obj->datestart =  new \DateTime($value->datestart, core_date::get_user_timezone_object(99));
 			$obj->datestart =  convertunixtime('d/m/Y, H:i A',$value->datestart, 'Asia/Ho_Chi_Minh');
@@ -178,7 +186,7 @@ switch ($action) {
         $obj->description = $exam_params['examdescription'];
         $exam = $DB->insert_record('exam', $obj);
 
-        if($exam_params['subjectexam']) {
+        if(isset($exam_params['subjectexam'])) {
         	$subjectexam_arr = explode(",", $exam_params['subjectexam']);
         	$allSubjectExam = [];
         	foreach($subjectexam_arr as $subjectexam) {
@@ -198,7 +206,7 @@ switch ($action) {
         		$DB->insert_records('exam_subject_exam', $allSubjectExam);
         	}
         }
-        $data['success'] = 'Thêm kì thi thành công';
+        $data['success'] = get_string('add_success', 'local_newsvnr');
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die;
     case 'exam_edit':
@@ -251,17 +259,31 @@ switch ($action) {
 				}
 			}
 		}
-		$data['success'] = 'Chỉnh sửa kì thi thành công';
+		$data['success'] = get_string('edit_success', 'local_newsvnr');
 		echo json_encode($data, JSON_UNESCAPED_UNICODE);
 		die;
 	case 'exam_delete':
 		$examid = optional_param('id', 0, PARAM_INT);
-		$DB->delete_records('exam_subject_exam', ['examid' => $examid]);
 		$DB->delete_records('exam_user', ['examid' => $examid]);
+		$examsubjectexamid = $DB->get_field('exam_subject_exam', 'id', ['examid' => $exam->id]);
+		$DB->delete_records('exam_quiz', ['subjectexamid' => $examsubjectexamid]);
+		$DB->delete_records('exam_subject_exam', ['examid' => $examid]);
     	$DB->delete_records('exam', ['id' => $examid]);
-    	$data['success'] = 'Xóa thành công kì thi';
+    	$data['success'] = get_string('delete_success', 'local_newsvnr');
     	echo json_encode($data, JSON_UNESCAPED_UNICODE);
     	die;
+    case 'exam_delete_all':
+		$dataselect = json_decode($_POST['rowselected']);
+    	foreach ($dataselect as $exam) {
+            $DB->delete_records('exam_user', ['examid' => $exam->id]);
+            $examsubjectexamid = $DB->get_field('exam_subject_exam', 'id', ['examid' => $exam->id]);
+            $DB->delete_records('exam_quiz', ['subjectexamid' => $examsubjectexamid]);
+            $DB->delete_records('exam_subject_exam', ['examid' => $exam->id]);
+            $DB->delete_records('exam', ['id' => $exam->id]);
+        }
+        $data['success'] = get_string('delete_success', 'local_newsvnr');
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        die;
 	case 'list_subjectexam';
 		$ordersql = "";
 		$wheresql = "";
@@ -299,6 +321,7 @@ switch ($action) {
 		echo json_encode($data, JSON_UNESCAPED_UNICODE);
 		die;
 	case 'list_users':
+		$examid = optional_param('examid', 0, PARAM_RAW);
 		$ordersql = "";
 		$wheresql = "";
 		if($q) {
@@ -318,7 +341,7 @@ switch ($action) {
 					ORDER BY $ordersql";
     	$get_list = $DB->get_records_sql($sql);
     	foreach($get_list as $user) {
-    		if($DB->record_exists('exam_user', ['userid' => $user->id])) {
+    		if($DB->record_exists('exam_user', ['userid' => $user->id, 'examid' => $examid])) {
 				continue;
 			}
     		$obj = new stdclass;
@@ -387,9 +410,9 @@ switch ($action) {
 			$obj->userid = $examuser->userid;
 			$obj->roleid = $examuser->roleid;
 			if($examuser->roleid == 5) {
-				$obj->rolename = 'Học viên';
+				$obj->rolename = get_string('studentrole', 'local_newsvnr');
 			} else if($examuser->roleid == 4){
-				$obj->rolename = 'Giáo viên';
+				$obj->rolename = get_string('teacherrole', 'local_newsvnr');
 			}
 			$obj->usercreate = fullname($DB->get_record('user', ['id' => $examuser->usercreate]));
 			$obj->total = $examuser->total;
@@ -476,7 +499,7 @@ switch ($action) {
 					$DB->insert_records('exam_user', $alluser);
 			}
 		}
-		$data['success'] = 'Ghi danh người dùng thành công';
+		$data['success'] = get_string('enrolluser_success', 'local_newsvnr');
 		echo json_encode($data, JSON_UNESCAPED_UNICODE);
 		die;
 	case 'examusers_enroll_edit':
@@ -488,19 +511,15 @@ switch ($action) {
 		$obj->usermodified = $USER->id;
 		$obj->timemodified = time();
 		$DB->update_record('exam_user', $obj);
-		$data['success'] = 'Chỉnh sửa ghi danh thành công';
+		$data['success'] = get_string('edit_success', 'local_newsvnr');
 		echo json_encode($data, JSON_UNESCAPED_UNICODE);
 		die;
 	case 'examusers_enroll_delete':
 		$id = optional_param('id', 0, PARAM_INT);
 		$DB->delete_records('exam_user', ['id' => $id]);
-		$data['success'] = 'Rút tên học viên ra khỏi kì thi thành công';
+		$data['success'] = get_string('unenrollexamuser_success', 'local_newsvnr');
 		echo json_encode($data, JSON_UNESCAPED_UNICODE);
 		die();
-	case 'check_duplicated':
-		$data['success'] = false;
-		echo json_encode($data, JSON_UNESCAPED_UNICODE);
-		die;
     default:
         # code...
         break;

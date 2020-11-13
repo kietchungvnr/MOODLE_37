@@ -51,7 +51,7 @@ switch ($action) {
 			}
 			$data['category'] = $output;
 		} else {
-			$data['category'] = 'Không có kì thi';
+			$data['category'] = get_string('noexam', 'local_newsvnr');
 		}
 		
 		echo json_encode($data, JSON_UNESCAPED_UNICODE);
@@ -67,9 +67,9 @@ switch ($action) {
 			$obj_examdescription->name = $exam->name;
 			$obj_examdescription->code = $exam->code;
 			if($exam->type == 0) {
-				$obj_examdescription->type = 'Bắt buộc';
+				$obj_examdescription->type = get_string('required', 'local_newsvnr');
 			} else {
-				$obj_examdescription->type = 'Tự do';
+				$obj_examdescription->type = get_string('free', 'local_newsvnr');
 			}
 			$obj_examdescription->datestart = convertunixtime('d/m/Y, H:i A',$exam->datestart);
 			$obj_examdescription->dateend = convertunixtime('d/m/Y, H:i A',$exam->dateend);
@@ -87,7 +87,7 @@ switch ($action) {
 					} 
 				}
 			} else {
-				$fullname = 'Chưa có giáo viên';
+				$fullname = get_string('noteacher', 'local_newsvnr');
 			}
 			$obj_examdescription->numberstudent = $getstudent;
 			$obj_examdescription->teacher = $fullname;
@@ -110,14 +110,15 @@ switch ($action) {
 		} else {
 			$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
 		}
-		$sql = "SELECT *, (SELECT COUNT(esx.examid) 
+		$sql = "SELECT *, ( SELECT COUNT(esx.examid)
 							FROM mdl_exam_subject_exam esx 
 								LEFT JOIN mdl_exam_subject es ON es.id = esx.subjectid 
 							$wheresql
 							) AS total
-				FROM (SELECT ROW_NUMBER() OVER (ORDER BY esx.examid) AS RowNum, esx.examid, es.name, esx.subjectid
+				FROM (SELECT ROW_NUMBER() OVER (ORDER BY esx.examid) AS RowNum, esx.examid, es.name, esx.subjectid, COUNT(eq.coursemoduleid) AS numbersubjectexam
 						FROM mdl_exam_subject_exam esx 
 							LEFT JOIN mdl_exam_subject es ON es.id = esx.subjectid
+							LEFT JOIN mdl_exam_quiz eq ON eq.subjectexamid = esx.id
 						$wheresql
 						GROUP BY esx.examid, es.name, esx.subjectid
 					) AS Mydata
@@ -126,7 +127,7 @@ switch ($action) {
     	foreach($get_list as $subjectexam) {
     		$obj = new stdclass;
     		$obj->name = $subjectexam->name;
-    		$obj->numbersubjectexam = 0;
+    		$obj->numbersubjectexam = $subjectexam->numbersubjectexam;
     		$obj->total = $subjectexam->total;
     		$data[] = $obj;
     	}
