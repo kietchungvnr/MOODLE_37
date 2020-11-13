@@ -27,7 +27,7 @@ require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/../lib.php');
 
 require_login();
-$title = 'Quản lý kì thì';
+$title = 'Quản lý kỳ thì';
 // $navstr = get_string('navbar','local_newsvnr');
 // Set up the page.
 $url = new moodle_url("/local/newsvnr/exam/index.php");
@@ -40,6 +40,10 @@ $PAGE->set_heading($title);
 $PAGE->navbar->add($title,$url);
 $PAGE->navbar->ignore_active();
 $PAGE->requires->js_call_amd('local_newsvnr/exam', 'initViewExam');
+$PAGE->requires->strings_for_js(
+                                array('required', 'free', 'clear', 'name',
+                                    'code', 'shortname', 'description', 'examvisible',
+                                    'createexam', 'enrol', 'examtype', 'selectexamtype', 'subjectexam', 'selectsubjectexam', 'cohort', 'selectcohort', 'teacherrole', 'studentrole', 'examuserfullname', 'usercreate', 'enrollexamuser', 'editenrollexamuser', 'numbersubjectexam', 'enrolltime', 'listexamrequired', 'listexamfree', 'addnew', 'examdatestart', 'examdateend', 'fieldrequired', 'edit', 'createsubjectexam', 'type', 'email', 'selectusers', 'role', 'error_norowselectd', 'deleteall', 'confirm_datadelete', 'warning_examdelete'), 'local_newsvnr');
 $output = $PAGE->get_renderer('local_newsvnr');
 
 

@@ -1,14 +1,14 @@
 <ul class="nav-tabs nav" id="exam-tab">
 	<li class="nav-item " data-key="managesubjectexam">
-	    <a class="nav-link active" href="#managesubjectexam" data-toggle="tab">Quản lý môn thi</a>
+	    <a class="nav-link active" href="#managesubjectexam" data-toggle="tab">{{#str}}managesubjectexam, local_newsvnr{{/str}}</a>
 	</li>
 	<li class="nav-item" data-key="manageexam">
-        <a class="nav-link" href="#manageexam" data-toggle="tab">Quản lý kì thi</a>
+        <a class="nav-link" href="#manageexam" data-toggle="tab">{{#str}}manageexam, local_newsvnr{{/str}}</a>
 	</li>
 </ul>
 <div id="exam-content" class="tab-content mt-2">
 	<div class="tab-pane fadein active" id="managesubjectexam">
-		<button type="submit" id="btn-subjectexam" value="Tạo môn thi" class="btn btn-secondary k-button hide-on-narrow">Tạo môn thi</button>
+		<button type="submit" id="btn-subjectexam" value="Tạo môn thi" class="btn btn-secondary hide-on-narrow">{{#str}}createsubjectexam, local_newsvnr{{/str}}</button>
         <div id="modal-subjectexam">
           <form id="form-subjectexam"></form>
             
@@ -16,7 +16,7 @@
         <div id="subjectexam-grid"  class="mt-2"></div>
 	</div>
 	<div class="tab-pane fadein" id="manageexam">
-		<button type="submit" id="btn-exam" value="Tạo kì thi" class="btn btn-secondary ">Tạo kì thi</button>
+		<button type="submit" id="btn-exam" value="Tạo kì thi" class="btn btn-secondary ">{{#str}}createexam, local_newsvnr{{/str}}</button>
          <div id="modal-exam">
           <form id="form-exam"></form>
             

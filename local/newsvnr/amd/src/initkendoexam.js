@@ -1,28 +1,28 @@
 define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Config, Str, kendo) {
     var initGrid = function(gridConfig) {
+        var strings = [
+            {
+                key: 'action',
+                component: 'local_newsvnr'
+            }, {
+                key: 'enrol',
+                component: 'local_newsvnr'
+            }, {
+                key: 'manageenroll',
+                component: 'local_newsvnr'
+            }, {
+                key: 'emptydata',
+                component: 'local_newsvnr'
+            }, 
+        ];
         if (gridConfig.columns === undefined) {
             gridConfig.columns = [];
         }
+        if(gridConfig.toolbar === undefined) {
+            gridConfig.toolbar = ["search"];
+        }
         var eventArr = [];
-        // var checkedIds = {};
-        // gridConfig.selectData = function (e) {
-        // var myGrid = $('#library-approval-module').getKendoGrid();
-        // var selectedRows = myGrid.select();
-        // var arrObject = [];
-        // for (var i = 0; i < selectedRows.length; i++) {
-        //     arrObject.push(myGrid.dataItem(selectedRows[i]));
-        // }
-        // console.log(arrObject);
-        // };
-        // gridConfig.selectId = function (e) {
-        //     var myGrid = $('div[kendo-grid][k-options=' + gridConfig.gridName + ']').getKendoGrid();
-        //     var selectedRows = myGrid.select();
-        //     var arrObject = [];
-        //     for (var i = 0; i < selectedRows.length; i++) {
-        //         arrObject.push(myGrid.dataItem(selectedRows[i]).Id);
-        //     }
-        //     return arrObject;
-        // };
+
         gridConfig.columns.unshift({
             selectable: true,
             width: 45
@@ -30,8 +30,7 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
         //edit
         // if (gridConfig.selectRowEvent != undefined) {
         //     var funcSelectRow = function(e) {
-        //         e.preventDefault();
-        //         var myGrid = $('#library-approval-module').getKendoGrid();
+        //         var myGrid = $(gridName).getKendoGrid();
         //         var selectedRows = myGrid.select();
         //         var arrObject = [];
         //         for (var i = 0; i < selectedRows.length; i++) {
@@ -50,7 +49,7 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
                 click: funcEdit,
                 text: " ",
                 name: "edit",
-                iconClass: 'fa fa-pencil-square-o',
+                iconClass: 'fa fa-pencil-square-o text-primary',
             }
             eventArr.push(objEventEdit);
         }
@@ -65,15 +64,19 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
                 click: funcDelete,
                 text: " ",
                 name: "delete",
-                iconClass: 'fa fa-trash-o'
+                iconClass: 'fa fa-trash-o text-primary',
             }
             eventArr.push(objEventDelete);
         }
-        gridConfig.columns.push({
-            title: 'Action',
-            command: eventArr,
-            width: 150
-        });
+
+        if(eventArr.length > 0) {
+            gridConfig.columns.push({
+                title: 'Chức năng',
+                command: eventArr,
+                width: 180
+            });    
+        }
+        
         if (gridConfig.enrollExamUsers != undefined) {
             var funcEnroll = function(e) {
                 e.preventDefault();
@@ -82,15 +85,18 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
             }
             var objEventEdit = {
                 click: funcEnroll,
-                text: "Ghi danh",
+                text: 'Ghi danh',
                 name: "enroll",
-                iconClass: 'fa fa-user-plus',
+                iconClass: 'fa fa-user-plus text-primary',
             }
             gridConfig.columns.push({
                 title: 'Quản lý ghi danh',
                 command: objEventEdit,
-                width: 150
+                width: 155
             });
+            // Str.get_strings(strings).then(function(s) {
+                
+            // });
         }
         return {
             dataSource: newDatasourceGrid(gridConfig),
@@ -99,8 +105,8 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
             //sortable: true,
             resizable: true,
             //dataBound: gridConfig.dataBound,
-            //height: 520,
-            toolbar: ["search"],
+            // height: 450,
+            toolbar: gridConfig.toolbar,    
             search: {
                 fields: ["name"]
             },
@@ -112,7 +118,7 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
             },
             columns: gridConfig.columns,
             noRecords: {
-                template: 'No Records'
+                template: '<span class="grid-empty">Không có dữ liệu trong lưới!</span>'
             }
         }
     };
