@@ -557,6 +557,9 @@ a {
     img {
         margin: auto;
     }
+    .exam-first-col {
+        width: auto !important;
+    }
 }
 
 #news-slider .owl-nav {
@@ -4071,9 +4074,6 @@ table thead th a {
 table tbody .icon {
     color: #3c8dbc;
 }
-table tbody a {
-    color: #373a3c;
-}
 table#participants .fa-sort-asc ,
 .fp-viewbar.disabled {
     display: none;
@@ -4095,12 +4095,6 @@ table#participants .fa-sort-asc ,
 .badge-success {
     border-radius: 20px;
     padding: .3em .5em;
-}
-table tbody .icon {
-    color: #3c8dbc;
-}
-table tbody a {
-    color: #373a3c;
 }
 table#participants .fa-sort-asc ,
 .fp-viewbar.disabled {
@@ -4828,7 +4822,7 @@ ul.hide li.folder a {
     padding-left: 10px;
 }
 #page-site-index-examonline .dropdown-menu-tree li {
-    padding: .5rem 0;
+    padding: .5rem 0.5rem;
 }
 {{#settingexam}}
     #page-course-admin div[role="main"] .container .row {
@@ -4924,6 +4918,65 @@ ul.hide li.folder a {
     margin: auto;
     font-style: italic;
     color: #101010;
+}
+#filter_exam_required,#filter_exam_free {
+    background: #3c8dbc;
+    color: white;
+}
+.font-bold {
+    font-weight: bold;
+}
+#exam-required-table, #exam-free-table {
+    width: 100%;
+    padding: 20px 15px;
+}
+.exam-first-col {
+    width: 60%;
+}
+.table-quiz-report table thead th{
+    background-color: white;
+    color: #555555;
+    border: 0;
+}
+.table-quiz-report table tbody td{
+    border: 0;
+}
+.k-primary {
+    border-color: #4285f4 !important;
+    background-color: #4285f4 !important;
+}
+.k-window-titlebar {
+    background-color: #4285f4 !important;
+}
+.k-button:focus {
+    color: #fff !important;
+}
+#menu-tree-exam {
+    max-height: 800px;
+    height: auto;
+    overflow: hidden;
+}
+#menu-tree-exam .k-dropdown .k-state-default {
+    border-color: #3c8dbc !important;
+    background-color: #3c8dbc !important;
+    color: #fff;
+}
+#menu-tree-exam .k-dropdown .k-input {
+    color: #fff !important;
+    font-weight: 700;
+}
+#exam-type {
+    border-color: #3c8dbc !important;
+    background-color: #3c8dbc !important;
+    font-weight: 700;
+    color: #fff;
+    overflow: hidden;
+}
+#exam-category {
+    overflow: hidden;
+}
+.form-control {
+    font-size: 14px;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />

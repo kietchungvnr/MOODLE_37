@@ -84,8 +84,8 @@ $PAGE->set_context(context_system::instance());
 $PAGE->set_pagetype('site-index-examonline');
 $PAGE->set_docs_path('');
 $editing = $PAGE->user_is_editing();
-$PAGE->set_title(get_string('library','local_newsvnr'));
-$PAGE->set_heading(get_string('library','local_newsvnr'));
+$PAGE->set_title(get_string('examonline','local_newsvnr'));
+$PAGE->set_heading(get_string('examonline','local_newsvnr'));
 $courserenderer = $PAGE->get_renderer('core', 'course');
 echo $OUTPUT->header();
 

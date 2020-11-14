@@ -174,6 +174,7 @@ switch ($action) {
                 array('title' => get_string('reject', 'local_newsvnr'), 'id' => 'delete-file-'.$exfile->id.'', 'class' => 'delete-item','data-section' => 'deletefile', 'onclick' => "deleteFile('$exfile->filename','$exfile->filepath', $exfile->id)"));
             $showbuttons = implode(' ', $buttons);
             $object = new stdclass;
+            $object->id = $exfile->id;
             $object->filename = html_writer::empty_tag('img', array('src' => $fileicon, 'class' => 'mr-1')) .$exfile->filename;
             $object->filepath = $exfile->filepath;
             $object->filetype = mb_strtoupper(mime2ext($exfile->mimetype));
@@ -276,6 +277,25 @@ switch ($action) {
         $contexid = context_user::instance($userid)->id;
         echo json_encode($contexid,JSON_UNESCAPED_UNICODE);
         die;
+    case 'acceptFileSelect':
+        $dataSelect = json_decode($_POST['dataSelect']);
+        foreach ($dataSelect as $file) {
+            $newfiles = new stdClass;
+            $newfiles->id = $file->id;
+            $newfiles->status = 0;
+            $DB->update_record('files', $newfiles);
+
+            $newrequestfile = new stdClass;
+            $fileid = $DB->get_field('files_request', 'id', ['fileid' => $file->id]);
+            $newrequestfile->id = $fileid;
+            $newrequestfile->fileid = $file->id;
+            $newrequestfile->status = 1;
+            $newrequestfile->reviewer = $USER->id;
+            $newrequestfile->timemodified = time();
+            $DB->update_record('files_request', $newrequestfile);
+        }
+        echo json_encode('OK');
+        die();
     default:
         # code...
         break;
