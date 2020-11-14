@@ -193,6 +193,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 unset($menus[$key]);
             }
         }
+        $output .= '<div class="border">';
         if ($menu_tmp) {   
             if($stt == 0)
                 $output .= '<ul class="dropdown-menu" role="menu" id="drop-course-category">';
@@ -236,6 +237,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                     $output .= '</ul>';
             }
         }
+        $output .= '</div>';
         return $output;
 
     }
@@ -1193,7 +1195,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                         $iconhide = '';
                     }
                     $output .= '<li onclick="getParentValue('.$item->id.',\''.$item->name.'\')" class="click-expand pl-3 folder '.$item->id.' '.$visible.'" id="'.$item->id.'" allmodule="'.$OUTPUT->recursive_module_folder($item->id).'">';
-                    $output .= '<i class="fa fa-folder" aria-hidden="true"></i><a tabindex="-1" href="javascript:void(0)" id="'.$item->id.'"">' . $item->name . ' '.$iconhide.'</a>';
+                    $output .= '<i class="fa fa-folder" aria-hidden="true"></i><a tabindex="-1" href="javascript:void(0)" class="mr-2" id="'.$item->id.'"">' . $item->name . '</a>'.$iconhide.'';
                     $getcategory = $DB->get_records_sql('SELECT * FROM {library_folder} WHERE parent = :id',[ 'id' => $item->id] );
                     if(empty($getcategory)){
                         $output .= '</li>';
@@ -1201,9 +1203,16 @@ class core_renderer extends \theme_boost\output\core_renderer {
                     $output .= '<ul class="content-expand '.$item->id.' pl-3 '.$visible.'" >';
                     foreach($menus as $childkey => $childitem) {
                         // Kiểm tra phần tử có con hay không?
-                        if($childitem->parent == $item->id) {
-                            $output .= '<li onclick="getParentValue('.$childitem->id.',\''.$childitem->name.'\')" class="click-expand pl-3 folder '.$childitem->id.'" id="'.$childitem->id.'" allmodule="'.$OUTPUT->recursive_module_folder($item->id).'">';
-                            $output .= '<i class="fa fa-folder" aria-hidden="true"></i><a tabindex="-1" href="javascript:void(0)" id="'.$childitem->id.'">' . $childitem->name . ' '.$iconhide.' </a>';
+                        if($childitem->visible == 0) {
+                            $visible = 'hide';
+                            $iconhide = $OUTPUT->pix_icon('t/show', get_string('show'));
+                        } else {
+                            $visible = 'show';
+                            $iconhide = '';
+                        }
+                        if($childitem->parent == $item->id && ($childitem->visible == 1 || is_siteadmin())) {
+                            $output .= '<li onclick="getParentValue('.$childitem->id.',\''.$childitem->name.'\')" class="click-expand pl-3 folder '.$childitem->id.' '.$visible.'" id="'.$childitem->id.'" allmodule="'.$OUTPUT->recursive_module_folder($item->id).'">';
+                            $output .= '<i class="fa fa-folder" aria-hidden="true"></i><a tabindex="-1" href="javascript:void(0)" class="mr-2" id="'.$childitem->id.'">' . $childitem->name . '</a>'.$iconhide.'';
                             $getcategory_child = $DB->get_records_sql('SELECT * FROM {library_folder} WHERE parent = :id',[ 'id' => $childitem->id] );
                             if(empty($getcategory_child)){
                                 $output .= '</li>';
@@ -1243,6 +1252,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
         $moduletypes = array_count_values(array_column($arr, 'moduletype'));
         $resources   = array_count_values(array_column($arr, 'minetype'));
+        $allowmodule = ['book', 'lesson', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt'];
         $output .= '<div class="d-flex" id="header-library">';
         $sum = 0;
         foreach ($moduletypes as $value) {
@@ -1259,33 +1269,38 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 $output .= '<div class="module-count" onclick="filterModule(\''.$keymodule.'\','.$folderid.')">' . $moduleimg . '(' . $moduletype . ')</div>';
             } else {
                 foreach ($resources as $keyresource => $resource) {
-                    $count = $resource;
-                    if($keyresource == 'pdf') {
-                        $moduleimg = html_writer::img($OUTPUT->image_url('f/pdf-24'), 'Pdf', ['class' => 'pr-2']);
-                        $keyfilter = 'pdf';
-                    }
-                    if($keyresource == 'xlsx' || $keyresource == 'xls') {
-                        if(isset($resources['xlsx']) && isset($resources['xls'])) {
-                            $count = $resources['xlsx'] + $resources['xls'];
+                    if(in_array($keyresource, $allowmodule)) {
+                        $count = $resource;
+                        if($keyresource == 'pdf') {
+                            $moduleimg = html_writer::img($OUTPUT->image_url('f/pdf-24'), 'Pdf', ['class' => 'pr-2']);
+                            $keyfilter = 'pdf';
                         }
-                        $moduleimg = html_writer::img($OUTPUT->image_url('f/spreadsheet-24'), 'exel', ['class' => 'pr-2']);
-                        $keyfilter = 'excel';
-                    }
-                    if($keyresource == 'ppt') {
-                        $moduleimg = html_writer::img($OUTPUT->image_url('f/powerpoint-24'), 'Ppt', ['class' => 'pr-2']);
-                        $keyfilter = 'powerpoint';
-                    }
-                    if($keyresource == 'docx' || $keyresource == 'doc') {
-                        if(isset($resources['doc']) && isset($resources['docx'])) {
-                            $count = $resources['doc'] + $resources['docx'];
+                        if($keyresource == 'xlsx' || $keyresource == 'xls') {
+                            if(isset($resources['xlsx']) && isset($resources['xls'])) {
+                                $count = $resources['xlsx'] + $resources['xls'];
+                            }
+                            $moduleimg = html_writer::img($OUTPUT->image_url('f/spreadsheet-24'), 'exel', ['class' => 'pr-2']);
+                            $keyfilter = 'excel';
                         }
-                        $moduleimg = html_writer::img($OUTPUT->image_url('f/document-24'), 'Word', ['class' => 'pr-2']);
-                        $keyfilter = 'word';
+                        if($keyresource == 'ppt') {
+                            $moduleimg = html_writer::img($OUTPUT->image_url('f/powerpoint-24'), 'Ppt', ['class' => 'pr-2']);
+                            $keyfilter = 'powerpoint';
+                        }
+                        if($keyresource == 'docx' || $keyresource == 'doc') {
+                            if(isset($resources['doc']) && isset($resources['docx'])) {
+                                $count = $resources['doc'] + $resources['docx'];
+                            }
+                            $moduleimg = html_writer::img($OUTPUT->image_url('f/document-24'), 'Word', ['class' => 'pr-2']);
+                            $keyfilter = 'word';
+                        }
+                        if (($keyresource == 'doc' && isset($resources['docx'])) || ($keyresource == 'xls' && isset($resources['xlsx']))) {
+                            continue;
+                        }
+                        else {
+
+                        }
+                        $output .= '<div class="module-count" onclick="filterModule(\''.$keyfilter.'\','.$folderid.')">' . $moduleimg . '(' . $count . ')</div>';
                     }
-                    if (($keyresource == 'doc' && isset($resources['docx'])) || ($keyresource == 'xls' && isset($resources['xlsx']))) {
-                        continue;
-                    }
-                    $output .= '<div class="module-count" onclick="filterModule(\''.$keyfilter.'\','.$folderid.')">' . $moduleimg . '(' . $count . ')</div>';
                 }
             }
         }
@@ -1298,30 +1313,51 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output = $this->folder_tree($library);
         return $output;
     }
-
-    public function exam_subject_tree() {
-        global $DB;
-        $list_exam = $DB->get_records('exam',[]);
-        $output = '';
-        $output .= '<ul id="exam-tree">';
-        $output .= '<li class="list-category title exam" id="0"><a>'.get_string('listexamonline','local_newsvnr').'</a></li>';
-        $output .= '<ul>';
-        foreach ($list_exam as $exam) {
-            $output .= '<li class="list-category click-expand exam" id="'.$exam->id.'"><a>'.$exam->name.'</a><i data="33" class="fa fa-angle-right rotate-icon float-right"></i></li>';
-            $output .= '<ul class="dropdown-menu-tree content-expand '.$exam->id.'">';
-            $list_subject = $DB->get_records_sql("SELECT DISTINCT es.id,es.name,ese.id as examsubjectexam 
-                                                    FROM mdl_exam_subject es 
-                                                        JOIN mdl_exam_subject_exam ese ON ese.subjectid = es.id
-                                                        JOIN mdl_exam e ON ese.examid = e.id
-                                                    WHERE e.id = :examid AND e.visible = 1",['examid' => $exam->id]);
-            foreach ($list_subject as $subject) {
-                $output .= '<li class="list-subcategory subject-exam" data-examsujbectexam="'.$subject->examsubjectexam.'" id="'.$subject->id.'"><a>'.$subject->name.'</a></li>';
-            }
-            $output .= '</ul>';
-        }
-        $output .= '</ul>';
+    public function grade_report_nav() {
+        $output  = '';
+        $output .= '<ul class="nav-tabs nav multi-tab mb-3">';
+        $output .= '<li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="mycourse">'.get_string('courselearning','local_newsvnr').'</a></li>';
+        $output .= '<li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="exam-report">'.get_string('exam','local_newsvnr').'</a></li>';
         $output .= '</ul>';
         return $output;
     }
+    public function grade_report_tab() {
+        global $DB;
+        $output  = '';
+        $output .= '<div class="tab-pane active" data="exam-report">';
+        $output .= '<div class="font-bold mb-2">'.get_string('requiredexam','local_newsvnr').'</div>';
+        $output .= '<div class="row">';
+        $output .= '<div class="col-md-5 col-xl-5">';
+        $output .= '<p class="font-bold mb-1 mt-2">'.get_string('exam','local_newsvnr').'</p>';
+        $output .= '<div class="w-100" id="exam-required-input"></div>';
+        $output .= '</div>';
+        $output .= '<div class="col-md-5 col-xl-5">';
+        $output .= '<p class="font-bold mb-1 mt-2">'.get_string('subjectexam','local_newsvnr').'</p>';
+        $output .= '<div class="w-100" id="subject-required-input"></div>';
+        $output .= '</div>';
+        $output .= '<div class="col-md-2 col-xl-2 d-flex align-items-end">';
+        $output .= '<button type="button" id="filter_exam_required" class="btn color-lms ml-auto w-100 mt-3">'.get_string('viewgrade','local_newsvnr').'</button>';
+        $output .= '</div>';
+        $output .= '<div id="exam-required-table" class="table-quiz-report"></div>';
+        $output .= '</div>';//end row
+        $output .= '<div class="font-bold mb-2">'.get_string('freeexam','local_newsvnr').'</div>';
+        $output .= '<div class="row">';
+        $output .= '<div class="col-md-5 col-xl-5">';
+        $output .= '<p class="font-bold mb-1 mt-2">'.get_string('exam','local_newsvnr').'</p>';
+        $output .= '<div class="w-100" id="exam-free-input"></div>';
+        $output .= '</div>'; 
+        $output .= '<div class="col-md-5 col-xl-5">';
+        $output .= '<p class="font-bold mb-1 mt-2">'.get_string('subjectexam','local_newsvnr').'</p>';
+        $output .= '<div class="w-100" id="subject-free-input"></div>';
+        $output .= '</div>';
+        $output .= '<div class="col-md-2 col-xl-2 d-flex align-items-end">';
+        $output .= '<button type="button" id="filter_exam_free" class="btn color-lms ml-auto w-100 mt-3">'.get_string('viewgrade','local_newsvnr').'</button>';
+        $output .= '</div>';
+        $output .= '<div id="exam-free-table" class="table-quiz-report"></div>';
+        $output .= '</div>';//end row
+        $output .= '</div>';//end tab-pane
+        return $output;
+    }
+
 
 }

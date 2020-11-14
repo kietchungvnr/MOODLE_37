@@ -1694,6 +1694,9 @@ function convertTimeExam($time) {
     $time = (int)$time;
     if($time > 0) {
         switch ($time) {
+            case ($time <= 60):
+                $result = $time . ' '.get_string('second','local_newsvnr').'';
+                break;
             case ($time <= 3600):
                 $result = round($time/60) . ' '.get_string('minute','local_newsvnr').'';
                 break;

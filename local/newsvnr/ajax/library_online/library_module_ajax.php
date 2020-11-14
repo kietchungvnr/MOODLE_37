@@ -106,6 +106,7 @@ if (!empty($modulebyfolder)) {
             $output .= '<td>' . $module->fullnamet . '</td>';
             $output .= '<td>';
             if (is_siteadmin()) {
+                $output .= html_writer::link('javascript:void(0)','<i class="icon fa fa-share mr-2" aria-hidden="true"></i>',array('id' => 'share-module-library','moduleid' => $module->id));
                 $output .= html_writer::link('javascript:void(0)', $OUTPUT->pix_icon('t/delete', get_string('delete')), array("onclick" => "actionModule($module->id,'delete',$folderid)"));
                 $output .= html_writer::link("/course/modedit.php?update=$module->id&return=0&sr=", $OUTPUT->pix_icon('t/edit', get_string('edit')));
 

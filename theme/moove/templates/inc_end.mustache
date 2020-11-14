@@ -100,11 +100,21 @@ require(['theme_moove/kendo_translate']);
 
 require(['theme_moove/examonline']);
 
+require(['theme_moove/exam_grade_report']);
+
 var id = $('.new-detail-chat').attr('data');
 $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussionid='+id);
-
 {{/js}}
 <script type="text/javascript">
+    function getSelectRow(gridname) {
+        var myGrid = $(gridname).getKendoGrid();
+        var selectedRows = myGrid.select();
+        var arrObject = [];
+        for (var i = 0; i < selectedRows.length; i++) {
+            arrObject.push(myGrid.dataItem(selectedRows[i]));
+        }
+        return arrObject;
+    }
     // Xem file trực tiếp trên popup
     var modalStore = {};
     const showmodal = (cmid, instance) => {
@@ -678,7 +688,7 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
                 return;
             }
             var settings = {
-                type: "GET",
+                type: "POST",
                 processData: true,
                 data: {
                     folderid: folderid,
@@ -692,11 +702,24 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
                 if(action == 'edit') {
                     $('#edit-popup-modal-folder').replaceWith(obj.result);
                     $('#edit-popup-modal-folder').modal('show');
-                } else {
-                    alertify.notify(obj.alert,'success',3)
-                    location.reload();
+                } 
+                if(action == 'hide' || action == 'show') {
+                    $('.tree-folder li.folder.'+folderid).toggleClass('show');
+                    $('.tree-folder li.folder.'+folderid).toggleClass('hide');
+                    $('ul.'+folderid).toggleClass('hide');
+                    if(action == 'hide') {
+                        $('.tree-folder li.folder.'+folderid).append('<i class="fa fa-eye-slash" aria-hidden="true"></i>');
+                    } else {
+                        $('.tree-folder li.folder.'+folderid+' i.fa-eye-slash').remove();
+                    }
+                    alertify.notify(obj.alert,'success',3);
                 }
-            });
+                if(action == 'delete') {
+                    $('.tree-folder li.folder.'+folderid).remove();
+                    $('ul.'+folderid).remove();
+                    alertify.notify(obj.alert,'success',3);
+                }
+            })
         })
     }
     // Lọc theo loại module thư viện
@@ -723,4 +746,37 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
         })
     }
 
+    // Duyệt file trong trang tài nguyên hệ thống
+    const acceptFileSelect = () => {
+        require(['jquery', 'core/config', 'alertjs'], ($, Config, alertify) => {
+            var script = Config.wwwroot + '/local/newsvnr/ajax/requestfiles_generallibrary.php';
+            var arrObject = getSelectRow('#requestfile_grid');
+            var data = JSON.stringify(arrObject);
+            console.log(data);
+            var settings = {
+                type : "POST",
+                processData : true,
+                data : {
+                    action : 'acceptFileSelect',
+                    dataSelect : data
+                }
+            };
+            debugger
+            if(arrObject.length == 0) {
+                debugger
+                alertify.error('{{#str}} approvalerror,local_newsvnr {{/str}}');
+            } 
+            else {
+                alertify.confirm('{{#str}} alert, local_newsvnr {{/str}}', '{{#str}} approvalfileselect, local_newsvnr {{/str}} ?',
+                    function(){  
+                        $.ajax(script, settings).then(function(resp) {
+                            $('#requestfile_grid').data("kendoGrid").dataSource.read();
+                            alertify.success('{{#str}} approvalmodulesuccess,local_newsvnr {{/str}}');
+                        })
+                    },
+                    function() { return }
+                );
+            }
+        });
+    }
 </script>

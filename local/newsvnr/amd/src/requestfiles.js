@@ -38,6 +38,8 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
 		];
 		Str.get_strings(strings).then(function(s) {
 			var columns =  	[
+								{ selectable: true, 
+									width: "50px" },
 								{	
 									template: function(e) {
 			                            return e.filename;
@@ -126,7 +128,7 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
 	            search: {
 	                fields: ["filename"]
 	            },
-	            height: 300,
+	            height: 600,
 	            sortable: false,
 	            reorderable: true,
 	            groupable: false,
@@ -190,6 +192,7 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
 
         });
 	}
+
 
 	return {
 		init : init,
