@@ -22,11 +22,13 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
             gridConfig.toolbar = ["search"];
         }
         var eventArr = [];
-
-        gridConfig.columns.unshift({
-            selectable: true,
-            width: 45
-        });
+        if(gridConfig.editEvent != undefined) {
+            gridConfig.columns.unshift({
+                selectable: true,
+                width: 50
+            });
+        }
+        
         //edit
         // if (gridConfig.selectRowEvent != undefined) {
         //     var funcSelectRow = function(e) {
@@ -87,7 +89,7 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
                 click: funcEnroll,
                 text: 'Ghi danh',
                 name: "enroll",
-                iconClass: 'fa fa-user-plus text-primary',
+                iconClass: 'fa fa-user-plus text-primary mr-1',
             }
             gridConfig.columns.push({
                 title: 'Quản lý ghi danh',

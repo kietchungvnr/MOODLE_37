@@ -133,6 +133,33 @@ switch ($action) {
     	}
 		echo json_encode($data, JSON_UNESCAPED_UNICODE);
 		die;
+	case 'exam_listsubjectexam':
+		$examid = optional_param('examid', 0, PARAM_INT);
+		$wheresql = "";
+		$ordersql = "";
+		if($q) {
+			$wheresql .= "WHERE es.name LIKE N'%$q%' AND esx.examid = $examid AND es.name IS NOT NULL";
+		} else {
+			$wheresql .= "WHERE esx.examid = $examid AND es.name IS NOT NULL";
+		}
+		if($pagetake == 0) {
+			$ordersql = "RowNum";
+		} else {
+			$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
+		}
+		$sql = "SELECT es.id, es.name 
+				FROM mdl_exam_subject_exam esx 
+					LEFT JOIN mdl_exam_subject es ON esx.subjectid = es.id 
+				$wheresql";
+		$get_list = $DB->get_records_sql($sql);
+		foreach($get_list as $subjectexam) {
+    		$obj = new stdclass;
+    		$obj->id = $subjectexam->id;
+    		$obj->name = $subjectexam->name;
+    		$data[] = $obj;
+    	}
+		echo json_encode($data, JSON_UNESCAPED_UNICODE);
+		die;
 	case 'exam_listusersexam_grid':
 		$examid = optional_param('examid', 0, PARAM_INT);
 		$wheresql = "";
@@ -171,6 +198,112 @@ switch ($action) {
     		$obj->total = $user->total;
     		$data[] = $obj;
     	}
+		echo json_encode($data, JSON_UNESCAPED_UNICODE);
+		die;
+	case 'exam_userresult_grid':
+		$examid = optional_param('examid', 0, PARAM_INT);
+		$subjectid = optional_param('subjectid', 0, PARAM_INT);
+		$wheresql = "";
+		$ordersql = "";
+		if($q) {
+			$wheresql .= "WHERE esx.examid = $examid AND esx.subjectid = $subjectid AND CONCAT(u.firstname, ' ', u.lastname) LIKE N'%$q%' AND eq.coursemoduleid IS NOT NULL";
+		} else {
+			$wheresql .= "WHERE esx.examid = $examid AND esx.subjectid = $subjectid";
+		}
+		if($pagetake == 0) {
+			$ordersql = "RowNum";
+		} else {
+			$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
+		}
+		$sql = "SELECT *, (SELECT COUNT(eu.userid) 
+							FROM mdl_exam_subject_exam esx 
+								LEFT JOIN mdl_exam_subject es ON esx.subjectid = es.id
+								LEFT JOIN mdl_exam_user eu ON esx.examid = eu.examid
+								LEFT JOIN mdl_user u ON u.id = eu.userid
+								LEFT JOIN mdl_exam_quiz eq ON eq.subjectexamid = esx.id 
+							$wheresql) AS total 
+				FROM (
+					SELECT ROW_NUMBER() OVER (ORDER BY esx.examid) AS RowNum,u.id AS userid, es.id AS subjectid, es.name, u.username, eq.coursemoduleid
+					FROM mdl_exam_subject_exam esx 
+						LEFT JOIN mdl_exam_subject es ON esx.subjectid = es.id
+						LEFT JOIN mdl_exam_user eu ON esx.examid = eu.examid
+						LEFT JOIN mdl_user u ON u.id = eu.userid
+						LEFT JOIN mdl_exam_quiz eq ON eq.subjectexamid = esx.id 
+					$wheresql
+					) AS Mydata
+				ORDER BY $ordersql";
+		$get_list = $DB->get_records_sql($sql);
+		$results = [];
+		$coursemodulearr = [];
+		$columns = [];
+		$firsttime = true;
+		$userarr = [];
+		$listcoursemodule = $DB->get_records_sql('SELECT eq.coursemoduleid 
+													FROM mdl_exam_subject_exam esx 
+														LEFT JOIN mdl_exam_quiz eq ON esx.id = eq.subjectexamid
+													WHERE esx.examid = :examid AND esx.subjectid = :subjectid', ['examid' => $examid, 'subjectid' => $subjectid]);
+		if($listcoursemodule) {
+			$objuser = new stdClass;
+			$objuser->field = "fullname";
+			$objuser->title = get_string('studentrole', 'local_newsvnr');
+			$objuser->width = "200px";
+			$columns[] = $objuser;
+			foreach($listcoursemodule as $coursemodule) {
+				if(!in_array($coursemodule, $coursemodulearr)) {
+					$coursemodulearr[] = $coursemodule->coursemoduleid;
+				}
+				$quizid = $DB->get_field('course_modules', 'instance',['id' => $coursemodule->coursemoduleid]);
+				$quiz = $DB->get_record('quiz', ['id' => $quizid]);
+				$objquiz = new stdClass;
+				$objquiz->field = "quiz" . $quiz->id;
+				$objquiz->title = $quiz->name;
+				$objquiz->width = "200px";
+				$columns[] = $objquiz;
+			}
+		} else {
+			$data['success'] = 'Không có môn thi trong kỳ thi';
+			echo json_encode($data, JSON_UNESCAPED_UNICODE);
+			die;
+		}
+		
+		foreach(array_values($get_list) as $keyvalue => $value) {
+			if(in_array($value->coursemoduleid, $coursemodulearr)) {
+			
+				if($firsttime == true) {
+					$obj = new stdClass;
+					$obj->fullname = fullname($DB->get_record('user', ['id' => $value->userid]));
+					$obj->userid = $value->userid;
+					$quizid = $DB->get_field('course_modules', 'instance',['id' => $value->coursemoduleid]);
+					$quiz = $DB->get_record('quiz', ['id' => $quizid]); 
+					$quizcolumn = "quiz" . $quiz->id;
+					$obj->$quizcolumn = 0;
+					$results[$value->userid] = $obj;
+					$firsttime = false;
+					$userarr[] = $value->userid;
+					continue;
+				}
+				if(isset($results)) {
+					if(in_array($value->userid, $userarr)) {
+						$quizid = $DB->get_field('course_modules', 'instance',['id' => $value->coursemoduleid]);
+						$quiz = $DB->get_record('quiz', ['id' => $quizid]); 
+						$quizcolumn = "quiz" . $quiz->id;
+						$results[$value->userid]->$quizcolumn = 0;
+					} else {
+						$obj = new stdClass;
+						$obj->fullname = fullname($DB->get_record('user', ['id' => $value->userid]));
+						$obj->userid = $value->userid;
+						$quizid = $DB->get_field('course_modules', 'instance',['id' => $value->coursemoduleid]);
+						$quiz = $DB->get_record('quiz', ['id' => $quizid]); 
+						$quizcolumn = "quiz" . $quiz->id;
+						$obj->$quizcolumn = 0;
+						$results[$value->userid] = $obj;
+						$userarr[] = $value->userid;
+					}
+				}
+			}
+		}
+		$data['data_grid'] = array_values($results);
+		$data['data_columns'] = $columns;
 		echo json_encode($data, JSON_UNESCAPED_UNICODE);
 		die;
 	default:
