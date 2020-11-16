@@ -520,6 +520,14 @@ switch ($action) {
 		$data['success'] = get_string('unenrollexamuser_success', 'local_newsvnr');
 		echo json_encode($data, JSON_UNESCAPED_UNICODE);
 		die();
+	case 'enrolexamusers_delete_all':
+		$dataselect = json_decode($_POST['rowselected']);
+    	foreach ($dataselect as $examuser) {
+            $DB->delete_records('exam_user', ['id' => $examuser->id]);
+        }
+        $data['success'] = get_string('delete_success', 'local_newsvnr');
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        die;
     default:
         # code...
         break;

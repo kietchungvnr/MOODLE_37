@@ -311,7 +311,6 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
 		                    transport: {
 		                        read: settings,
 				                parameterMap: function(options, operation) {
-				                	debugger;
 				                    if (operation == "read") {
 				                        if (options["filter"]) {
 				                        	if(options["filter"]["filters"][0])
@@ -527,7 +526,6 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                                 transport: {
                                     read: settingsUsers,
                                     parameterMap: function(options, operation) {
-                                        debugger;
                                         if (operation == "read") {
                                             if (options["filter"]) {
                                                 if(options["filter"]["filters"][0])
@@ -566,7 +564,6 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                                 transport: {
                                     read: settingsCohort,
                                     parameterMap: function(options, operation) {
-                                        debugger;
                                         if (operation == "read") {
                                             if (options["filter"]) {
                                                 if(options["filter"]["filters"][0])
@@ -829,6 +826,9 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
         ];
         kendoConfig.columns = examUsersColumns;
         kendoConfig.apiSettings = settingsExamUserGrid;
+        kendoConfig.toolbar = [{
+                                template: '<a class="btn btn-secondary" id="btn-enrollexamusers-delete" href="javascript:;"><i class="fa fa-trash-o mr-2" aria-hidden="true"></i>'+M.util.get_string('deleteall', 'local_newsvnr')+'</a>'},"search"
+                              ];
 
         // Chỉnh sửa ghi danh  học viên đã được ghi danh
         kendoConfig.editEvent = function(enrollExamUsersDataItem) {
@@ -872,6 +872,30 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
 
         var gridData = kendo.initGrid(kendoConfig);
         $(gridEnrollExamUsers).kendoGrid(gridData);
+        $("#btn-enrollexamusers-delete").click(function() {
+            var selectedRows = getSelectRow(gridEnrollExamUsers);
+            console.log(selectedRows)
+            if(selectedRows.length > 0 ) {
+                var settingsSelectedRows = {
+                    type: "POST",
+                    processData: true,
+                    // dataType: "json",
+                    // contentType: 'application/json; charset=utf-8',
+                    data: {
+                        action: 'enrolexamusers_delete_all',
+                        rowselected: JSON.stringify(selectedRows)
+                    }
+                }
+                $.ajax(script, settingsSelectedRows).then(function(resp) {
+                    if(resp.success) {
+                        $(gridEnrollExamUsers).data("kendoGrid").dataSource.read();
+                        alertify.success(resp.success, 'success', 3);
+                    }
+                })
+            } else {
+                alertify.error(M.util.get_string('error_norowselectd', 'local_newsvnr'), 'error', 3);
+            }
+        })
     }
 
     // Tạo modal form chỉnh sửa học viên đã ghi danh vào kỳ thi
@@ -924,7 +948,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
         kendoConfig.columns = subjectExamColumns;
         kendoConfig.apiSettings = settings;
         kendoConfig.toolbar = [{
-                                template: '<a class="btn btn-secondary" id="btn-subjectexam-delete" href="javascript:;">'+M.util.get_string('deleteall', 'local_newsvnr')+'</a>'},"search"
+                                template: '<a class="btn btn-secondary" id="btn-subjectexam-delete" href="javascript:;"><i class="fa fa-trash-o mr-2" aria-hidden="true"></i>'+M.util.get_string('deleteall', 'local_newsvnr')+'</a>'},"search"
                               ];
         kendoConfig.editEvent = function(dataItem) {
         	actionExamSubjectForm = 'subjectexam_edit';
@@ -972,6 +996,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
         $(gridSubjectExam).kendoGrid(gridData);
         $("#btn-subjectexam-delete").click(function() {
             var selectedRows = getSelectRow(gridSubjectExam);
+
             if(selectedRows.length > 0 ) {
                 var settingsSelectedRows = {
                     type: "POST",
@@ -1044,7 +1069,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
         kendoConfig.columns = examColumns;
         kendoConfig.apiSettings = settings;
         kendoConfig.toolbar = [{
-                                template: '<a class="btn btn-secondary" id="btn-exam-delete" href="javascript:;">'+M.util.get_string('deleteall', 'local_newsvnr')+'</a>'},"search"
+                                template: '<a class="btn btn-secondary" id="btn-exam-delete" href="javascript:;"><i class="fa fa-trash-o mr-2" aria-hidden="true"></i>'+M.util.get_string('deleteall', 'local_newsvnr')+'</a>'},"search"
                               ];
         kendoConfig.editEvent = function(dataItem) {
         	var form = $('#form-exam');
@@ -1245,7 +1270,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
         ];
         kendoConfig.columns = listSubjectExamColumns;
         kendoConfig.toolbar = [{
-                                template: '<a class="btn btn-secondary" id="btn-enrollexamusers" href="javascript:;">'+M.util.get_string('enrol', 'local_newsvnr')+'</a>'},"search"
+                                template: '<a class="btn btn-secondary" id="btn-enrollexamusers" href="javascript:;"><i class="fa fa-user-plus mr-2" aria-hidden="true"></i>'+M.util.get_string('enrol', 'local_newsvnr')+'</a>'},"search"
                               ];
         kendoConfig.apiSettings = settingsListSbujectExam;
         var gridData = kendo.initGrid(kendoConfig);
@@ -1281,8 +1306,10 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                         examtype: examType
                     }
                 }
+                kendoControl.ui.progress($('#menu-tree-exam'), true);
                 $.ajax(scriptExamView, settingsExamCategory).then(function(resp) {
                     $('#exam-category').html(resp.category);
+                    kendoControl.ui.progress($('#menu-tree-exam'), false);
                 });
             }
 
@@ -1297,11 +1324,16 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                 examtype: examType
             }
         }
-        
+        kendoControl.ui.progress($('#menu-tree-exam'), true);
         $.ajax(scriptExamView, settingsExamCategory).then(function(resp) {
             $('#exam-category').html(resp.category);
+            kendoControl.ui.progress($('#menu-tree-exam'), false);
         })
+
+        // Click cây kỳ thi để load dữ liệu của kỳ thi đó
         $('#exam-category').on('click', 'li', function(e) {
+            // kendoControl.ui.progress($('#infoexam-content'), true);
+
             $(this).addClass('active').siblings().removeClass('active');
             var examId = $(this).attr('data-exam');
             var settingsExamDescription = {
@@ -1314,7 +1346,6 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                 }
             }
             $.ajax(scriptExamView, settingsExamDescription).then(function(resp) {
-                console.log(resp)
                 $('#ed-name').val(resp.examdescription.name);
                 $('#ed-code').val(resp.examdescription.code);
                 $('#ed-type').val(resp.examdescription.type);
@@ -1323,14 +1354,17 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                 $('#ed-description').val(resp.examdescription.description);
                 $('#ed-teacher').html(resp.examdescription.teacher);
                 $('#ed-numnberstudent').html(resp.examdescription.numberstudent);
+                // kendoControl.ui.progress($('#infoexam-content'), false);
             });
             prepareListSubjectExamGrid(examId);
             prepareListUsersGrid(examId);
+            
             
         });
         var examId = $('#exam-category li.active').attr('data-exam');
         prepareListUsersGrid(examId);
 
+        // Click vào ghi danh trong tab danh sách học viên để ghi danh
         $('#btn-enrollexamusers').click(function() {
             var form = $("#form-enrollexamusers"),
             dialog = $("#modal-enrollexamusers");
@@ -1351,6 +1385,97 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
             });
             dialog.data('kendoWindow').open();
         })
+        
+        
+        $('[data-key=exam-result]').click(function() {
+            var examId = $('#exam-category li.active').attr('data-exam');
+            if(examId != undefined) {
+                var settingsListSbujectExam = {
+                    url: scriptExamView,
+                    type: 'GET',
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    data: {
+                        action: 'exam_listsubjectexam',
+                        examid: examId
+                   }
+                }
+                $('#list-subjectexam').kendoDropDownList({
+                    dataSource: {
+                                    serverFiltering: true,
+                                    pageSize: 10,
+                                    transport: {
+                                        read: settingsListSbujectExam,
+                                        parameterMap: function(options, operation) {
+                                           if (operation == "read") {
+                                                if (options["filter"]) {
+                                                    if(options["filter"]["filters"][0])
+                                                        options["q"] = options["filter"]["filters"][0].value;
+                                                }
+                                                return options;
+                                            }
+                                        }
+                                    },
+                                    serverSorting: true,
+                                    schema: {
+                                        model: {
+                                            id : "id",
+                                            fields: {
+                                                id : { type: "number" },
+                                                name: { type: "string" },
+                                            }
+                                        },
+                                        total: function(data) {
+                                            if (data != null && data.length > 0) return data[0].total;
+                                        },
+                                    }
+                                },
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    placeholder: "Chọn môn thi để xem kết quả",
+                    filter: "startswith",
+                    change: function(e) {
+                        var subjectId = this.value();
+                        var settings = {
+                            type: 'GET',
+                            dataType: "json",
+                            contentType: 'application/json; charset=utf-8',
+                            data: {
+                                action: 'exam_userresult_grid',
+                                examid: examId,
+                                subjectid: subjectId
+                            }
+                        }
+                        $.ajax(scriptExamView, settings).then(function(resp) {
+                            let kendoConfig = {};
+                            // var settingsListSbujectExam = {
+                            //     url: scriptExamView,
+                            //     type: 'GET',
+                            //     dataType: "json",
+                            //     contentType: 'application/json; charset=utf-8',
+                            //     data: {
+                            //         action: 'exam_listusersexam_grid',
+                            //         examid: examId
+                            //     }
+                            // }
+                            var listSubjectExamColumns = resp.data_columns;
+                            kendoConfig.columns = listSubjectExamColumns;
+                            // kendoConfig.toolbar = [{
+                            //                         template: '<a class="btn btn-secondary" id="btn-enrollexamusers" href="javascript:;"><i class="fa fa-user-plus mr-2" aria-hidden="true"></i>'+M.util.get_string('enrol', 'local_newsvnr')+'</a>'},"search"
+                            //                       ];
+                            kendoConfig.apiSettings = settingsListSbujectExam;
+                            // var gridData = kendo.initGrid(kendoConfig);
+                            $("#exam-result-grid").kendoGrid({
+                                dataSource: resp.data_grid,
+                                height: 450,
+                                columns: resp.data_columns
+                            }); 
+                            console.log(resp);
+                        });
+                    }
+                });
+            }
+        });
         
     }
 

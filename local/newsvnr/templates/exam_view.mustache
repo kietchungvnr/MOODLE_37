@@ -1,4 +1,4 @@
-<button type="submit" id="btn-exam" class="btn btn-secondary mb-1">{{#str}}createexam, local_newsvnr{{/str}}</button>
+<button type="submit" id="btn-exam" class="btn btn-secondary mb-1"><i class="fa fa-plus mr-2" aria-hidden="true"></i>{{#str}}createexam, local_newsvnr{{/str}}</button>
 <div class="row">
 	<div id="modal-exam">
           <form id="form-exam"></form>
@@ -11,14 +11,14 @@
           <form id="form-enrollexamusers-edit"></form>
         </div>
 	<div class="col-xl-3 col-lg-4 col-md-4" id="menu-tree-exam">
-		<div class="border">
+		<div class="border mb-2">
 			<li class="list-category" id="exam-type">{{#str}}listexam, local_newsvnr{{/str}}</li>
 			<ul style="" id="exam-category">
 				
 			</ul>
 		</div>
 	</div>
-	<div class="col-xl-9 col-lg-8 col-md-8 position-relative">
+	<div class="col-xl-9 col-lg-8 col-md-8 position-relative" >
 		<ul class="nav-tabs nav" id="infoexam-tab">
 			<li class="nav-item " data-key="exam-description">
 			    <a class="nav-link active" href="#exam-description" data-toggle="tab">{{#str}}infoexam, local_newsvnr{{/str}}</a>
@@ -91,6 +91,8 @@
 				<div id="exam-users-grid"></div>
 			</div>
 			<div class="tab-pane fadein" id="exam-result">
+				<div class="d-inline mr-1">Môn thi</div><div id="list-subjectexam" class="d-inline"></div>
+				<div id="exam-result-grid" class="mt-3"></div>
 			</div>
 		</div>
 	</div>

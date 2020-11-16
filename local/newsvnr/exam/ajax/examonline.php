@@ -51,7 +51,7 @@ $sql               = 'SELECT esx.id, es.id AS subjectid ,es.name, esx.subjectid,
                         LEFT JOIN mdl_exam_subject es ON esx.subjectid = es.id';
 // điều kiện khi lọc loại kỳ thi
 if ($action == "exam_category") {
-    $list_exam = $DB->get_records('exam', ['type' => $examtype]);
+    $list_exam = $DB->get_records('exam', ['type' => $examtype, 'visible' => 1]);
     foreach ($list_exam as $exam) {
         $category_exam .= '<li class="list-category click-expand exam" id="' . $exam->id . '"><a>' . $exam->name . '</a><i data="33" class="fa fa-angle-right rotate-icon float-right"></i></li>';
         $category_exam .= '<ul class="dropdown-menu-tree content-expand ' . $exam->id . '">';
@@ -59,7 +59,7 @@ if ($action == "exam_category") {
                                                 FROM mdl_exam_subject es
                                                     JOIN mdl_exam_subject_exam ese ON ese.subjectid = es.id
                                                     JOIN mdl_exam e ON ese.examid = e.id
-                                                WHERE e.id = :examid AND e.visible = 1", ['examid' => $exam->id]);
+                                                WHERE e.id = :examid AND e.visible = 1 AND es.visible = 1", ['examid' => $exam->id]);
         foreach ($list_subject as $subject) {
             $category_exam .= '<li class="list-subcategory subject-exam" data-examsujbectexam="' . $subject->examsubjectexam . '" id="' . $subject->id . '"><a>' . $subject->name . '</a></li>';
         }
@@ -72,7 +72,7 @@ if ($date != 0) {
 }
 // Tìm kiếm theo kỳ thi và môn thi
 if ($examid == 0 && $examsubjectexamid == 0) {
-    $subjectdata = $DB->get_records_sql($sql . " WHERE e.name like $strexamname AND es.name like $strsubjectname AND e.type = $examtype");
+    $subjectdata = $DB->get_records_sql($sql . " WHERE e.name like $strexamname AND es.visible = 1 AND e.visible = 1 AND es.name like $strsubjectname AND e.type = $examtype");
     if ($action == 'search') {
         $output .= '<div class="exam-title mt-1">' . get_string('resultsearch', 'local_newsvnr') . '</div>';
     } else {
@@ -81,11 +81,11 @@ if ($examid == 0 && $examsubjectexamid == 0) {
 } else {
     if ($examsubjectexamid == 0) {
         // Load theo môn thi
-        $subjectdata = $DB->get_records_sql($sql . " WHERE e.id = :examid AND e.type = :examtype", ['examid' => $examid, 'examtype' => $examtype]);
+        $subjectdata = $DB->get_records_sql($sql . " WHERE e.id = :examid AND e.type = :examtype AND es.visible = 1 AND e.visible = 1", ['examid' => $examid, 'examtype' => $examtype]);
         $output .= '<div class="exam-title mt-1">' . $examdata->name . '</div>';
     } else {
         // Load theo kì thi
-        $subjectdata = $DB->get_records_sql($sql . " WHERE esx.id = :examsubjectexamid AND e.type = :examtype", ['examsubjectexamid' => $examsubjectexamid, 'examtype' => $examtype]);
+        $subjectdata = $DB->get_records_sql($sql . " WHERE esx.id = :examsubjectexamid AND e.type = :examtype AND es.visible = 1 AND e.visible = 1", ['examsubjectexamid' => $examsubjectexamid, 'examtype' => $examtype]);
     }
 
 }
@@ -94,11 +94,11 @@ foreach ($subjectdata as $subject) {
         $output .= '<div class="exam-title mt-1">' . $subject->name . '</div>';
     }
     $quizdata = $DB->get_records_sql("SELECT q.id as quizid,q.*,eq.*
-                                            FROM {exam_quiz} eq
-                                                JOIN {exam_subject_exam} esx ON esx.id = eq.subjectexamid
-                                                JOIN {course_modules} cm ON cm.id = eq.coursemoduleid
-                                                JOIN {quiz} q ON q.id = cm.instance
-                                            WHERE eq.subjectexamid = :subjectid $conditionquiz", ['subjectid' => $subject->id]);
+                                        FROM {exam_quiz} eq
+                                            JOIN {exam_subject_exam} esx ON esx.id = eq.subjectexamid
+                                            JOIN {course_modules} cm ON cm.id = eq.coursemoduleid
+                                            JOIN {quiz} q ON q.id = cm.instance
+                                        WHERE eq.subjectexamid = :subjectid $conditionquiz", ['subjectid' => $subject->id]);
     $arrtemp = array_merge($quizdata, $arrtemp);
     if ($date == 0) {
         $output .= '<div class="subject-title mt-1"><i class="fa fa-clock-o mr-2" aria-hidden="true"></i>' . $subject->examname . ' - ' . $subject->name . ' (' . count($quizdata) . ' ' . get_string('quiz', 'local_newsvnr') . ')</div>';
@@ -106,11 +106,11 @@ foreach ($subjectdata as $subject) {
     $output .= '<div class="quiz-in-subject mt-2">';
     foreach ($quizdata as $quiz) {
         $countattempt = $DB->get_record_sql("SELECT COUNT(q.id) as count FROM {quiz} q
-                                                    JOIN {quiz_attempts} qa ON qa.quiz = q.id
-                                                    WHERE q.id = :quizid", ['quizid' => $quiz->quizid]);
+                                                JOIN {quiz_attempts} qa ON qa.quiz = q.id
+                                                WHERE q.id = :quizid", ['quizid' => $quiz->quizid]);
         $countquestion = $DB->get_record_sql("SELECT COUNT(qs.id) as count FROM {quiz} q
-                                                    JOIN {quiz_slots} qs ON qs.quizid = q.id
-                                                    WHERE q.id = :quizid", ['quizid' => $quiz->quizid]);
+                                                JOIN {quiz_slots} qs ON qs.quizid = q.id
+                                                WHERE q.id = :quizid", ['quizid' => $quiz->quizid]);
         $img = '<img title="quiz" class="pr-2" src="' . $OUTPUT->image_url('icon', 'quiz') . '">';
         $url = $CFG->wwwroot . '/mod/quiz/view.php?id=' . $quiz->coursemoduleid;
         $output .= '<div class="pl-3 pt-2 pb-2 module-quiz-online">';

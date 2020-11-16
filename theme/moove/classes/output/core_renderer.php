@@ -193,7 +193,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 unset($menus[$key]);
             }
         }
-        $output .= '<div class="border">';
+        // $output .= '<div class="border">';
         if ($menu_tmp) {   
             if($stt == 0)
                 $output .= '<ul class="dropdown-menu" role="menu" id="drop-course-category">';
@@ -237,7 +237,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                     $output .= '</ul>';
             }
         }
-        $output .= '</div>';
+        // $output .= '</div>';
         return $output;
 
     }
@@ -1313,6 +1313,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output = $this->folder_tree($library);
         return $output;
     }
+
     public function grade_report_nav() {
         $output  = '';
         $output .= '<ul class="nav-tabs nav multi-tab mb-3">';

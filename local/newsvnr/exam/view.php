@@ -27,7 +27,7 @@ require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/../lib.php');
 
 require_login();
-$title = 'Quản lý kỳ thì';
+$title = get_string('viewexaminfo', 'local_newsvnr');
 // $navstr = get_string('navbar','local_newsvnr');
 // Set up the page.
 $url = new moodle_url("/local/newsvnr/exam/index.php");
