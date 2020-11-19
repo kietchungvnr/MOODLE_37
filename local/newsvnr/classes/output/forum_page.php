@@ -27,7 +27,7 @@ class forum_page implements renderable, templatable {
         $data['forumgeneraldata'] = self::get_type_forum('general');
         $data['forumblogdata'] = self::get_type_forum('blog');
         $data['forumsingledata'] = self::get_type_forum('single');
-        $data['quandadata'] = self::get_type_forum('quanda');
+        $data['quandadata'] = self::get_type_forum('qanda');
         $data['eachuserdata'] = self::get_type_forum('eachuser');
 
         return $data;
@@ -95,7 +95,6 @@ class forum_page implements renderable, templatable {
             $query_admin = "SELECT cm.id as viewid, f.id as forumid, c.id as courseid, f.name as forumname, f.timemodified as ngaytao, f.type
             from mdl_course as c 
             join mdl_forum as f on f.course = c.id
-            JOIN mdl_forum_discussions AS fd ON fd.forum = f.id
             join mdl_course_modules cm on cm.instance = f.id
             where  f.type = ? AND cm.module = 9
             group by cm.id, f.id, c.id, c.fullname, f.type, f.name,f.timemodified";
@@ -106,7 +105,6 @@ class forum_page implements renderable, templatable {
                $query_user ="SELECT f.id as forumid, c.id as courseid, cm.id as viewid, f.name as forumname, f.timemodified as ngaytao, f.type, e.courseid, e.status, c.fullname
                     from mdl_forum f                    
                   join mdl_course c on f.course = c.id
-                  JOIN mdl_forum_discussions AS fd ON fd.forum = f.id
                   join mdl_course_modules cm on cm.instance = f.id
                   join mdl_enrol e on e.courseid = c.id
                   join mdl_user_enrolments ue on ue.enrolid = e.id                        

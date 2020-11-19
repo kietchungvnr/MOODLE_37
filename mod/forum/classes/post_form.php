@@ -80,7 +80,7 @@ class mod_forum_post_form extends moodleform {
      * @return void
      */
     function definition() {
-        global $CFG, $OUTPUT;
+        global $CFG, $OUTPUT ,$DB;
 
         $mform =& $this->_form;
 
@@ -144,7 +144,13 @@ class mod_forum_post_form extends moodleform {
                 $mform->addElement('filemanager', 'attachments', get_string('attachment', 'forum'), null,
                     self::attachment_options($forum));
                 $mform->addHelpButton('attachments', 'attachment', 'forum');
-                $mform->addRule('attachments', get_string('required'), 'required', null, 'client');
+                // Custom by Thắng : Nếu course = 1 (trang tin tức) thì bắt buộc thêm file
+                $new = $DB->get_record_sql("SELECT DISTINCT fr.id FROM mdl_forum fr
+                                                    JOIN mdl_forum_discussions fd ON fr.course = fd.course
+                                                WHERE fd.course = :courseid AND fr.type = 'news'",['courseid' => $cm->course]);
+                if(isset($new)) {
+                    $mform->addRule('attachments', get_string('required'), 'required', null, 'client');
+                }
             }
 
             if (!$post->parent && has_capability('mod/forum:pindiscussions', $modcontext)) {

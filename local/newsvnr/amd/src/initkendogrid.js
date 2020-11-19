@@ -1,5 +1,6 @@
 define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config, Str, kendo) {
 	var initGrid = function (gridConfig) {
+        eventArr = [];
         if (gridConfig.columns === undefined) { gridConfig.columns = []; }
         gridConfig.selectData = function (e) {
             var myGrid = $('div[kendo-grid][k-options=' + gridConfig.gridName + ']').getKendoGrid();

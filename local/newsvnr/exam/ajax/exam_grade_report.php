@@ -44,38 +44,40 @@ switch ($action) {
         }
         break;
     case 'subject_filter_required':
-        $datasubject = $DB->get_records_sql("SELECT ese.id,es.id as subjectid,es.name,e.id as examid FROM {exam_subject} es
+        $datasubject = $DB->get_records_sql("SELECT ese.id,es.id as subjectid,es.name,e.id as examid ,ese.id as examsubjectexamid FROM {exam_subject} es
                                                 JOIN {exam_subject_exam} ese ON ese.subjectid = es.id
                                                 JOIN {exam} e ON ese.examid = e.id
                                             WHERE e.type = :examtype", ['examtype' => REQUIRED]);
         foreach ($datasubject as $subject) {
-            $object         = new stdclass();
-            $object->name   = $subject->name;
-            $object->id     = $subject->subjectid;
-            $object->examid = $subject->examid;
-            $data[]         = $object;
+            $object                    = new stdclass();
+            $object->name              = $subject->name;
+            $object->id                = $subject->subjectid;
+            $object->examid            = $subject->examid;
+            $object->examsubjectexamid = $subject->examsubjectexamid;
+            $data[]                    = $object;
         }
         break;
     case 'exam_filter_free':
         $dataexam = $DB->get_records("exam", ['type' => FREE]);
         foreach ($dataexam as $exam) {
-            $object       = new stdclass();
-            $object->name = $exam->name;
-            $object->examid   = $exam->id;
-            $data[]       = $object;
+            $object         = new stdclass();
+            $object->name   = $exam->name;
+            $object->examid = $exam->id;
+            $data[]         = $object;
         }
         break;
     case 'subject_filter_free':
-        $datasubject = $DB->get_records_sql("SELECT ese.id,es.id as subjectid,es.name,e.id as examid FROM {exam_subject} es
+        $datasubject = $DB->get_records_sql("SELECT ese.id,es.id as subjectid,es.name,e.id as examid,ese.id as examsubjectexamid FROM {exam_subject} es
                                                 JOIN {exam_subject_exam} ese ON ese.subjectid = es.id
                                                 JOIN {exam} e ON ese.examid = e.id
                                             WHERE e.type = :examtype", ['examtype' => FREE]);
         foreach ($datasubject as $subject) {
-            $object         = new stdclass();
-            $object->name   = $subject->name;
-            $object->id     = $subject->subjectid;
-            $object->examid = $subject->examid;
-            $data[]         = $object;
+            $object                    = new stdclass();
+            $object->name              = $subject->name;
+            $object->id                = $subject->subjectid;
+            $object->examid            = $subject->examid;
+            $object->examsubjectexamid = $subject->examsubjectexamid;
+            $data[]                    = $object;
         }
         break;
     default:

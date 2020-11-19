@@ -1880,8 +1880,8 @@ class quiz_attempt {
         $bc = new block_contents();
         $bc->attributes['id'] = 'mod_quiz_navblock';
         $bc->attributes['role'] = 'navigation';
-        $bc->attributes['aria-labelledby'] = 'mod_quiz_navblock_title';
-        $bc->title = html_writer::span(get_string('quiznavigation', 'quiz'), '', array('id' => 'mod_quiz_navblock_title'));
+        // $bc->attributes['aria-labelledby'] = 'mod_quiz_navblock_title';
+        // $bc->title = html_writer::span(get_string('quiznavigation', 'quiz'), '', array('id' => 'mod_quiz_navblock_title'));
         $bc->content = $output->navigation_panel($panel);
         return $bc;
     }
@@ -2789,14 +2789,10 @@ class quiz_attempt_nav_panel extends quiz_nav_panel_base {
     }
 
     public function render_end_bits(mod_quiz_renderer $output) {
-        if ($this->page == -1) {
-            // Don't link from the summary page to itself.
-            return '';
-        }
-        return html_writer::link($this->attemptobj->summary_url(),
-                get_string('endtest', 'quiz'), array('class' => 'endtestlink aalink')) .
-                $output->countdown_timer($this->attemptobj, time()) .
-                $this->render_restart_preview_link($output);
+        $html  = '';
+        $html .= html_writer::div($output->countdown_timer($this->attemptobj, time()));
+        $html .= html_writer::link($this->attemptobj->summary_url(),get_string('endtest', 'quiz'), array('class' => 'endtestlink btn btn-primary')).$this->render_restart_preview_link($output);
+        return $html ;
     }
 }
 
