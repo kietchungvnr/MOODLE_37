@@ -45,13 +45,26 @@ $data              = [];
 $conditionquiz     = '';
 $strexamname       = "N'" . '%' . $examname . '%' . "'";
 $strsubjectname    = "N'" . '%' . $subjectname . '%' . "'";
+
 $sql               = 'SELECT esx.id, es.id AS subjectid ,es.name, esx.subjectid, e.name AS examname
-                        FROM mdl_exam_subject_exam esx
+                      FROM mdl_exam_subject_exam esx
                         LEFT JOIN mdl_exam e ON esx.examid = e.id
                         LEFT JOIN mdl_exam_subject es ON esx.subjectid = es.id';
+
+if($examtype == 0) {
+    $sql = $sql . " LEFT JOIN mdl_exam_user eu ON eu.examid = e.id";
+}
 // điều kiện khi lọc loại kỳ thi
 if ($action == "exam_category") {
-    $list_exam = $DB->get_records('exam', ['type' => $examtype, 'visible' => 1]);
+    if($examtype == 0) {
+         $list_exam = $DB->get_records_sql("SELECT DISTINCT e.id, e.name 
+                                            FROM mdl_exam e 
+                                                JOIN mdl_exam_subject_exam esx ON e.id = esx.examid
+                                                JOIN mdl_exam_user eu ON eu.examid = e.id
+                                            WHERE eu.userid = :userid AND e.type = :examtype AND e.visible = 1", ['userid' => $USER->id, 'examtype' => $examtype]);
+    } else {
+        $list_exam = $DB->get_records('exam', ['type' => $examtype, 'visible' => 1]);
+    }
     foreach ($list_exam as $exam) {
         $category_exam .= '<li class="list-category click-expand exam" id="' . $exam->id . '"><a>' . $exam->name . '</a><i data="33" class="fa fa-angle-right rotate-icon float-right"></i></li>';
         $category_exam .= '<ul class="dropdown-menu-tree content-expand ' . $exam->id . '">';
@@ -71,21 +84,27 @@ if ($date != 0) {
     $conditionquiz = "AND (q.timeopen <= $date AND q.timeclose >= $date)";
 }
 // Tìm kiếm theo kỳ thi và môn thi
+if($examtype == 0) {
+    $wheresql = " AND eu.userid = $USER->id";
+} else {
+    $wheresql = "";
+}
 if ($examid == 0 && $examsubjectexamid == 0) {
-    $subjectdata = $DB->get_records_sql($sql . " WHERE e.name like $strexamname AND es.visible = 1 AND e.visible = 1 AND es.name like $strsubjectname AND e.type = $examtype");
+    $subjectdata = $DB->get_records_sql($sql . " WHERE e.name like $strexamname AND es.visible = 1 AND e.visible = 1 AND es.name like $strsubjectname AND e.type = $examtype $wheresql");
     if ($action == 'search') {
         $output .= '<div class="exam-title mt-1">' . get_string('resultsearch', 'local_newsvnr') . '</div>';
     } else {
         $output .= '<div class="exam-title mt-1">' . get_string('allsubjectexam', 'local_newsvnr') . '</div>';
     }
 } else {
+    
     if ($examsubjectexamid == 0) {
         // Load theo môn thi
-        $subjectdata = $DB->get_records_sql($sql . " WHERE e.id = :examid AND e.type = :examtype AND es.visible = 1 AND e.visible = 1", ['examid' => $examid, 'examtype' => $examtype]);
+        $subjectdata = $DB->get_records_sql($sql . " WHERE e.id = :examid AND e.type = :examtype AND es.visible = 1 AND e.visible = 1 $wheresql", ['examid' => $examid, 'examtype' => $examtype]);
         $output .= '<div class="exam-title mt-1">' . $examdata->name . '</div>';
     } else {
         // Load theo kì thi
-        $subjectdata = $DB->get_records_sql($sql . " WHERE esx.id = :examsubjectexamid AND e.type = :examtype AND es.visible = 1 AND e.visible = 1", ['examsubjectexamid' => $examsubjectexamid, 'examtype' => $examtype]);
+        $subjectdata = $DB->get_records_sql($sql . " WHERE esx.id = :examsubjectexamid AND e.type = :examtype AND es.visible = 1 AND e.visible = 1 $wheresql", ['examsubjectexamid' => $examsubjectexamid, 'examtype' => $examtype]);
     }
 
 }

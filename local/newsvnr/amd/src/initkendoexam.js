@@ -25,7 +25,7 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
         if(gridConfig.editEvent != undefined) {
             gridConfig.columns.unshift({
                 selectable: true,
-                width: 50
+                width: 52
             });
         }
         
@@ -69,6 +69,25 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
                 iconClass: 'fa fa-trash-o text-primary',
             }
             eventArr.push(objEventDelete);
+        }
+        debugger
+        if(gridConfig.activeEvent != undefined) {
+            var funcActive = function(e) {
+                e.preventDefault();
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                gridConfig.activeEvent(dataItem);
+            }
+
+            var objEventActive = {
+                click: funcActive,
+                name: "active",
+                template: '<input class="apple-switch" type="checkbox" id="sxactive">'
+            }
+            gridConfig.columns.push({
+                title: 'Kích hoạt',
+                command: objEventActive,
+                width: 100
+            });
         }
 
         if(eventArr.length > 0) {

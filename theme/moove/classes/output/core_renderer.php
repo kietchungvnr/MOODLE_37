@@ -324,6 +324,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $dashboard = $CFG->wwwroot . '/my/';
         $library = $CFG->wwwroot . '/library.php';
         $filelibrary = $CFG->wwwroot . '/local/newsvnr/generallibrary.php';
+        $examonline = $CFG->wwwroot . '/examonline.php';
         $course = $CFG->wwwroot . '/course/index.php';
         $news = $CFG->wwwroot . '/local/newsvnr/index.php';
         $forum = $CFG->wwwroot . '/local/newsvnr/forum.php';
@@ -336,6 +337,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             <a class="nav-active" href="'.$dashboard .'"><li>'. get_string('dashboard', 'theme_moove') .'</li></a>
             <a class="nav-active" href="'.$library .'"><li>'. get_string('library', 'theme_moove') .'</li></a>
             <a class="nav-active" href="'.$filelibrary .'"><li>'. get_string('filelibrary', 'theme_moove') .'</li></a>
+            <a class="nav-active" href="'.$examonline .'"><li>'. get_string('examonline', 'theme_moove') .'</li></a>
             <a class="nav-active" href="'.$course .'"><li>'. get_string('course', 'theme_moove') .'</li></a>
             <a class="nav-active" href="'.$news .'"><li>'. get_string('news', 'theme_moove') .'</li></a>
             <a class="nav-active" href="'.$forum .'"><li>'. get_string('forum', 'theme_moove') .'</li></a>

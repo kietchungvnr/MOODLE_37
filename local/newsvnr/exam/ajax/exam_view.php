@@ -41,7 +41,7 @@ $data = [];
 switch ($action) {
 	case 'exam_category':
 		$type = optional_param('examtype', 0, PARAM_INT);
-		$exams = $DB->get_records('exam', ['type' => $type]);
+		$exams = $DB->get_records('exam', ['type' => $type, 'visible' => 1]);
 		$output = '';
 		if($exams) {
 			foreach ($exams as $exam) {
@@ -51,7 +51,7 @@ switch ($action) {
 			}
 			$data['category'] = $output;
 		} else {
-			$data['category'] = get_string('noexam', 'local_newsvnr');
+			$data['nocategory'] = get_string('noexam', 'local_newsvnr');
 		}
 		
 		echo json_encode($data, JSON_UNESCAPED_UNICODE);
@@ -115,7 +115,7 @@ switch ($action) {
 								LEFT JOIN mdl_exam_subject es ON es.id = esx.subjectid 
 							$wheresql
 							) AS total
-				FROM (SELECT ROW_NUMBER() OVER (ORDER BY esx.examid) AS RowNum, esx.examid, es.name, esx.subjectid, COUNT(eq.coursemoduleid) AS numbersubjectexam
+				FROM (SELECT ROW_NUMBER() OVER (ORDER BY esx.examid) AS RowNum, esx.examid, es.name, esx.subjectid, COUNT(eq.coursemoduleid) AS numberquiz
 						FROM mdl_exam_subject_exam esx 
 							LEFT JOIN mdl_exam_subject es ON es.id = esx.subjectid
 							LEFT JOIN mdl_exam_quiz eq ON eq.subjectexamid = esx.id
@@ -124,11 +124,11 @@ switch ($action) {
 					) AS Mydata
 				ORDER BY $ordersql";
 		$get_list = $DB->get_records_sql($sql);
-    	foreach($get_list as $subjectexam) {
+    	foreach($get_list as $quiz) {
     		$obj = new stdclass;
-    		$obj->name = $subjectexam->name;
-    		$obj->numbersubjectexam = $subjectexam->numbersubjectexam;
-    		$obj->total = $subjectexam->total;
+    		$obj->name = $quiz->name;
+    		$obj->numberquiz = $quiz->numberquiz;
+    		$obj->total = $quiz->total;
     		$data[] = $obj;
     	}
 		echo json_encode($data, JSON_UNESCAPED_UNICODE);
@@ -152,6 +152,10 @@ switch ($action) {
 					LEFT JOIN mdl_exam_subject es ON esx.subjectid = es.id 
 				$wheresql";
 		$get_list = $DB->get_records_sql($sql);
+		$firstobj = new stdClass;
+		$firstobj->id = -1;
+		$firstobj->name = 'Chọn môn thi';
+		$data[] = $firstobj;
 		foreach($get_list as $subjectexam) {
     		$obj = new stdclass;
     		$obj->id = $subjectexam->id;
@@ -223,7 +227,7 @@ switch ($action) {
 								LEFT JOIN mdl_exam_quiz eq ON eq.subjectexamid = esx.id 
 							$wheresql) AS total 
 				FROM (
-					SELECT ROW_NUMBER() OVER (ORDER BY esx.examid) AS RowNum,u.id AS userid, es.id AS subjectid, es.name, u.username, eq.coursemoduleid
+					SELECT ROW_NUMBER() OVER (ORDER BY esx.examid) AS RowNum, u.id AS userid, es.id AS subjectid, es.name, u.username, eq.coursemoduleid
 					FROM mdl_exam_subject_exam esx 
 						LEFT JOIN mdl_exam_subject es ON esx.subjectid = es.id
 						LEFT JOIN mdl_exam_user eu ON esx.examid = eu.examid
@@ -236,15 +240,16 @@ switch ($action) {
 		$results = [];
 		$coursemodulearr = [];
 		$columns = [];
-		$firsttime = true;
 		$userarr = [];
+		$firsttime = true;
 		$listcoursemodule = $DB->get_records_sql('SELECT eq.coursemoduleid 
 													FROM mdl_exam_subject_exam esx 
-														LEFT JOIN mdl_exam_quiz eq ON esx.id = eq.subjectexamid
+														RIGHT JOIN mdl_exam_quiz eq ON esx.id = eq.subjectexamid
 													WHERE esx.examid = :examid AND esx.subjectid = :subjectid', ['examid' => $examid, 'subjectid' => $subjectid]);
 		if($listcoursemodule) {
 			$objuser = new stdClass;
 			$objuser->field = "fullname";
+			$objuser->template = "function(e) { return e.fullname; }";
 			$objuser->title = get_string('studentrole', 'local_newsvnr');
 			$objuser->width = "200px";
 			$columns[] = $objuser;
@@ -271,12 +276,14 @@ switch ($action) {
 			
 				if($firsttime == true) {
 					$obj = new stdClass;
-					$obj->fullname = fullname($DB->get_record('user', ['id' => $value->userid]));
+					$user = $DB->get_record('user', ['id' => $value->userid]);
+					$obj->fullname = $OUTPUT->user_picture($user, array('size'=>35)) . fullname($user);
 					$obj->userid = $value->userid;
 					$quizid = $DB->get_field('course_modules', 'instance',['id' => $value->coursemoduleid]);
 					$quiz = $DB->get_record('quiz', ['id' => $quizid]); 
 					$quizcolumn = "quiz" . $quiz->id;
 					$obj->$quizcolumn = 0;
+					$obj->total = $value->total;
 					$results[$value->userid] = $obj;
 					$firsttime = false;
 					$userarr[] = $value->userid;
@@ -290,12 +297,14 @@ switch ($action) {
 						$results[$value->userid]->$quizcolumn = 0;
 					} else {
 						$obj = new stdClass;
-						$obj->fullname = fullname($DB->get_record('user', ['id' => $value->userid]));
+						$user = $DB->get_record('user', ['id' => $value->userid]);
+						$obj->fullname = $OUTPUT->user_picture($user, array('size'=>35)) . fullname($user);
 						$obj->userid = $value->userid;
 						$quizid = $DB->get_field('course_modules', 'instance',['id' => $value->coursemoduleid]);
 						$quiz = $DB->get_record('quiz', ['id' => $quizid]); 
 						$quizcolumn = "quiz" . $quiz->id;
 						$obj->$quizcolumn = 0;
+						$obj->total = $value->total;
 						$results[$value->userid] = $obj;
 						$userarr[] = $value->userid;
 					}

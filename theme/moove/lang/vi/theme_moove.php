@@ -311,3 +311,4 @@ $string['next'] = 'Trang trước';
 $string['last'] = 'Tới trang cuối';
 $string['search'] = 'Tìm kiếm';
 $string['page'] = 'trang';
+$string['examonline'] = 'Kỳ thi';

@@ -86,6 +86,7 @@ $PAGE->set_docs_path('');
 $editing = $PAGE->user_is_editing();
 $PAGE->set_title(get_string('examonline','local_newsvnr'));
 $PAGE->set_heading(get_string('examonline','local_newsvnr'));
+$PAGE->requires->js_call_amd('theme_moove/examonline', 'init');
 $courserenderer = $PAGE->get_renderer('core', 'course');
 echo $OUTPUT->header();
 

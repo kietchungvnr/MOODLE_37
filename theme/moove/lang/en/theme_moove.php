@@ -313,3 +313,4 @@ $string['next'] = 'Go to the next page';
 $string['last'] = 'Go to the next last';
 $string['search'] = 'Search';
 $string['page'] = 'Page';
+$string['examonline'] = 'Exam';
