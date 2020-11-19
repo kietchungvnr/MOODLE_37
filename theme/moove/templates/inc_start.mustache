@@ -4981,6 +4981,42 @@ ul.hide li.folder a {
     font-style: italic;
     color: #101010;
 }
+input.apple-switch {
+    position: relative;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+    width: 48px;
+    height: 26px;
+    background-color: #fff;
+    border: 1px solid #D9DADC;
+    border-radius: 50px;
+    box-shadow: inset -20px 0 0 0 #fff;
+    transform: translate3d(2px, 2px, 0) scale3d(1, 1, 1);
+    transition: all 0.1s linear;
+}
+
+input.apple-switch:after {
+    content: "";
+    position: absolute;
+    top: 0px;
+    left: 1px;
+    background: transparent;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    box-shadow: 2px 4px 6px rgba(0,0,0,0.2);
+}
+
+input.apple-switch:checked {
+    box-shadow: inset 20px 0 0 0 #4ed164;
+    border-color: #4ed164;
+}
+
+input.apple-switch:checked:after {
+    left: 20px;
+    box-shadow: -2px 4px 3px rgba(0,0,0,0.05);
+}
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />

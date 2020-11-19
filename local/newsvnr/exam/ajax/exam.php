@@ -28,6 +28,8 @@ define('AJAX_SCRIPT', true);
 
 require_once __DIR__ . '/../../../../config.php';
 require_once __DIR__ . '/../../lib.php';
+require_once($CFG->dirroot . '/calendar/lib.php');
+
 require_login();
 $PAGE->set_context(context_system::instance());
 
@@ -93,6 +95,16 @@ switch ($action) {
         $data['success'] = get_string('delete_success', 'local_newsvnr');
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die;
+    case 'subjectexam_active':
+    	$obj = new stdClass;
+    	$obj->id = $exam_params['id'];
+    	$obj->visible = $exam_params['visible'];
+    	$obj->usermodified = $USER->id;
+    	$obj->timemodified = time();
+    	$DB->update_record('exam_subject', $obj);
+    	$data['success'] = get_string('edit_success', 'local_newsvnr');
+    	echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        die;
     case 'subjectexam_validate':
     	if($DB->record_exists('exam_subject', ['name' => $exam_params['sxname']])) {
     		$data['errors'] = false;
@@ -128,6 +140,11 @@ switch ($action) {
 			$obj->visible = $value->visible;
 			$obj->description = $value->description;
 			$obj->total = $value->total;
+			if($obj->visible == 1) {
+				$obj->tempvisible = '<input class="apple-switch" type="checkbox" data-subjectexam='.$value->id.' onclick="activeSubjectExam('.$value->id.', 0)" checked>';
+			} else {
+				$obj->tempvisible = '<input class="apple-switch" type="checkbox" data-subjectexam='.$value->id.' onclick="activeSubjectExam('.$value->id.', 1)" check>';
+			}
 			$data[] = $obj;		
 		}
 		echo json_encode($data,JSON_UNESCAPED_UNICODE);
@@ -165,6 +182,11 @@ switch ($action) {
 			$obj->dateend = convertunixtime('d/m/Y, H:i A',$value->dateend, 'Asia/Ho_Chi_Minh');
 			$obj->usercreate = fullname($DB->get_record('user',['id' => $value->usercreate]));
 			$obj->visible = $value->visible;
+			if($obj->visible == 1) {
+				$obj->tempvisible = '<input class="apple-switch" type="checkbox" data-subjectexam='.$value->id.' onclick="activeExam('.$value->id.', 0)" checked>';
+			} else {
+				$obj->tempvisible = '<input class="apple-switch" type="checkbox" data-subjectexam='.$value->id.' onclick="activeExam('.$value->id.', 1)" check>';
+			}
 			$obj->description = $value->description;
 			$obj->total = $value->total;
 			$data[] = $obj;		
@@ -283,6 +305,16 @@ switch ($action) {
         }
         $data['success'] = get_string('delete_success', 'local_newsvnr');
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        die;
+    case 'exam_active':
+    	$obj = new stdClass;
+    	$obj->id = $exam_params['id'];
+    	$obj->visible = $exam_params['visible'];
+    	$obj->usermodified = $USER->id;
+    	$obj->timemodified = time();
+    	$DB->update_record('exam', $obj);
+    	$data['success'] = get_string('edit_success', 'local_newsvnr');
+    	echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die;
 	case 'list_subjectexam';
 		$ordersql = "";
@@ -455,7 +487,6 @@ switch ($action) {
 				$obj->timemodified        = time();
 				$alluser[] = $obj;
 			}
-			$DB->insert_records('exam_user', $alluser);
 		} else if($exam_params['examusers']) {
 			$cvert_examusers = explode(",", $exam_params['examusers']);
 			foreach($cvert_examusers as $examusers) {
@@ -473,7 +504,6 @@ switch ($action) {
 				$obj->timemodified        = time();
 				$alluser[] = $obj;
 			}
-			$DB->insert_records('exam_user', $alluser);
 		} else if($exam_params['examcohort']) {
 			$cvert_examcohort  = explode(",", $exam_params['examcohort']);
 			foreach($cvert_examcohort as $cohort) {
@@ -495,8 +525,39 @@ switch ($action) {
 					}
 					
 				}
-				if($alluser)
-					$DB->insert_records('exam_user', $alluser);
+			}
+		}
+		if($alluser) {
+			$DB->insert_records('exam_user', $alluser);
+			foreach($alluser as $user) {
+				$examsubjectexams = $DB->get_records('exam_subject_exam', ['examid' => $examid]);
+				foreach($examsubjectexams as $examsubjectexam) {
+					$examquiz = $DB->get_record('exam_quiz', ['subjectexamid' => $examsubjectexam->id]);
+					if(!$examquiz)
+						continue;
+					$examname = $DB->get_field('exam', 'name',['id' => $examid]);
+					$subjectname = $DB->get_field('exam_subject', 'name',['id' => $examsubjectexam->subjectid]);
+					$quizid = $DB->get_field('course_modules', 'instance',['id' => $examquiz->coursemoduleid]);
+					if(isset($examquiz) && $DB->record_exists('event', ['courseid' => SITEID, 'userid' => $user->userid, 'instance' => $DB->get_field('course_modules', 'instance',['id' => $examquiz->coursemoduleid])])) {
+						continue;
+					} else {
+						$event = new stdClass();
+						$event->eventtype = 'open';
+						$event->type = CALENDAR_IMPORT_FROM_URL;
+						$event->name = $examname . ' - ' . $subjectname;
+						$event->description = '';
+						$event->format = FORMAT_HTML;
+						$event->courseid = SITEID;
+						$event->groupid = 0;
+						$event->userid = $user->userid;
+						$event->modulename = 'quiz';
+						$event->instance = $quizid;
+						$event->timestart = time();
+						$event->timesort = time();
+						$event->timemodified = time();
+						// calendar_event::create($event);
+					}
+				}
 			}
 		}
 		$data['success'] = get_string('enrolluser_success', 'local_newsvnr');
