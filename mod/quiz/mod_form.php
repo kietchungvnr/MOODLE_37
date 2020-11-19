@@ -553,7 +553,13 @@ class mod_quiz_mod_form extends moodleform_mod {
                 $data['timeclose'] < $data['timeopen']) {
             $errors['timeclose'] = get_string('closebeforeopen', 'quiz');
         }
-
+        // Custom by Thắng : check ngày bắt đầu và kết thúc phải nằm trong khoảng thời gian của kỳ thi
+        if($data["examsubjectexamid"]) {
+            $exam = $DB->get_record_sql("SELECT * FROM {exam} ex JOIN {exam_subject_exam} ese on ese.examid = ex.id WHERE ese.id =:examsubjectexamid",["examsubjectexamid" => $data['examsubjectexamid']]);
+            if($data['timeopen'] != 0 && $data['timeclose'] != 0 && $data['timeopen'] < $exam->datestart || $data['timeclose'] > $exam->dateend ) {
+                $errors['timeclose'] = get_string('examtimevalidate','local_newsvnr').'( '.convertunixtime('d/m/Y',$exam->datestart,'Asia/Ho_Chi_Minh').' - '.convertunixtime('d/m/Y',$exam->dateend,'Asia/Ho_Chi_Minh').' )';
+            }
+        }
         // Check that the grace period is not too short.
         if ($data['overduehandling'] == 'graceperiod') {
             $graceperiodmin = get_config('quiz', 'graceperiodmin');

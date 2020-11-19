@@ -3640,7 +3640,7 @@ div::-webkit-scrollbar {
 #page-local-newsvnr-index .btn-primary {
     color: #545454;
     background-color: #ffffff !important;
-    border: 1px solid #8f959e;
+    border: 1px solid #ced4da;
     border-left: 0;
     border-radius: 0 5px 5px 0;
 }
@@ -5019,6 +5019,76 @@ input.apple-switch:checked {
 input.apple-switch:checked:after {
     left: 20px;
     box-shadow: -2px 4px 3px rgba(0,0,0,0.05);
+}
+/* trang làm bài quiz */
+.path-mod-quiz #mod_quiz_navblock .qnbutton {
+    height: 30px;
+    width: 40px;
+    overflow: hidden;
+    margin: 0px 3px 8px 5px;
+    font-weight: bold;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #d4cfcf !important;
+    font-size: 16px;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton .thispageholder {
+    border: 1px solid #e0e0e0;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton.notyetanswered .trafficlight, 
+.path-mod-quiz #mod_quiz_navblock .qnbutton.invalidanswer .trafficlight {
+    background-color: #d4cfcf;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton.answersaved  {
+    background: #4285f4 !important;   
+} 
+.path-mod-quiz #mod_quiz_navblock .qnbutton.answersaved .trafficlight {
+    background: #4285f4;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton.thispage .thispageholder {
+    border: 2px solid black;
+}
+.othernav .singlebutton {
+    width: 100%;
+}
+.othernav .singlebutton .btn {
+    width: 100%;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton.flagged .thispageholder {
+    background: transparent url(/theme/image.php/moove/theme/1605254876/mod/quiz/flag-on) 26px 0 no-repeat;
+}
+.othernav #quiz-timer {
+    display: block;
+    /*background: #f06363;*/
+    color: black;
+    font-weight: bold;
+    padding: 4px;
+    font-size: 18px;
+    text-align: center;
+    margin: 0;
+    border-radius: 5px;
+}
+/*Trang review bài quiz */
+.path-mod-quiz #mod_quiz_navblock .qnbutton.correct {
+    background: #7dc87d !important;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton.correct .trafficlight {
+    background: #7dc87d !important;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton.incorrect {
+    background: #d9534f !important;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton.correct .thispageholder,
+.path-mod-quiz #mod_quiz_navblock .qnbutton.incorrect .thispageholder {
+    border: none;
+}
+.que span.qno {
+    font-size: 1em;
+}
+.k-dropdown .k-state-default {
+    height: 38px;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />

@@ -106,7 +106,6 @@ if ($examid == 0 && $examsubjectexamid == 0) {
         // Load theo kì thi
         $subjectdata = $DB->get_records_sql($sql . " WHERE esx.id = :examsubjectexamid AND e.type = :examtype AND es.visible = 1 AND e.visible = 1 $wheresql", ['examsubjectexamid' => $examsubjectexamid, 'examtype' => $examtype]);
     }
-
 }
 foreach ($subjectdata as $subject) {
     if ($examsubjectexamid) {
