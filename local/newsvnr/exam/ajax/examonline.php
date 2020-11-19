@@ -57,11 +57,16 @@ if($examtype == 0) {
 // điều kiện khi lọc loại kỳ thi
 if ($action == "exam_category") {
     if($examtype == 0) {
-         $list_exam = $DB->get_records_sql("SELECT DISTINCT e.id, e.name 
+        if(is_siteadmin()) {
+            $wheresql = "WHERE e.type = :examtype AND e.visible = 1";
+        } else {
+            $wheresql = "WHERE eu.userid = :userid AND e.type = :examtype AND e.visible = 1";
+        }
+        $list_exam = $DB->get_records_sql("SELECT DISTINCT e.id, e.name 
                                             FROM mdl_exam e 
                                                 JOIN mdl_exam_subject_exam esx ON e.id = esx.examid
                                                 JOIN mdl_exam_user eu ON eu.examid = e.id
-                                            WHERE eu.userid = :userid AND e.type = :examtype AND e.visible = 1", ['userid' => $USER->id, 'examtype' => $examtype]);
+                                            $wheresql", ['userid' => $USER->id, 'examtype' => $examtype]);
     } else {
         $list_exam = $DB->get_records('exam', ['type' => $examtype, 'visible' => 1]);
     }
