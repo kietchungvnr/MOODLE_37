@@ -1,7 +1,7 @@
 define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Config, Str, kendo) {
     var kendoConfigDefault = {
             apiSettings: {
-                type:"POSTs",
+                type:"POST",
                 dataType:"json",
                 processData:true,
                 contenttype:"application/json"

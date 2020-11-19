@@ -200,7 +200,7 @@ switch ($action) {
         $obj->type        = (int)$exam_params['examtype'];
         $obj->datestart        = (int)$exam_params['examdatestart'];
         $obj->dateend        = (int)$exam_params['examdateend'];
-        $obj->visible        = (int)$exam_params['visible'];
+        $obj->visible        = (int)$exam_params['examvisible'];
         $obj->usercreate        = $USER->id;
         $obj->usermodified        = $USER->id;
         $obj->timecreated        = time();

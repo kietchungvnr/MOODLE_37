@@ -172,7 +172,7 @@ define(["jquery", "core/config", 'kendo.all.min', "core/str", "core/notification
             }
             examDropdown();
             subjectDropdown();
-        }
+        });
     }
     return {
         init: init

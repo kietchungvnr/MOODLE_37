@@ -421,10 +421,10 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                         if (e.model.subjectexam) {
                             e.model.subjectexam = $('#subjectexam').data("kendoMultiSelect").value().toString();
                         }
-                        if (e.model.visible == true) {
-                            e.model.visible = 1;
+                        if (e.model.examvisible == true) {
+                            e.model.examvisible = 1;
                         } else {
-                            e.model.visible = 0;
+                            e.model.examvisible = 0;
                         }
                         if (e.model.examtype) {
                             e.model.examtype = $('#examtype').data("kendoDropDownList").value();
@@ -1441,7 +1441,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                 dialog = $("#modal-enrollexamusers");
             var dataItem = {};
             dataItem.id = $('#exam-category li.active').attr('data-exam');
-            initEnrollExamUsers(dialog, dataItem);
+            initEnrollExamUsers(dataItem);
 
             function onOpen(e) {
                 prepareEnrollExamUsersForm(form, dataItem);
@@ -1529,6 +1529,13 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                         }
                        
                         $.ajax(scriptExamView, settings).then(function(resp) {
+                            if(!resp.data_columns) {
+                                $('#exam-result-grid').css('height', '25px');
+                                $('#exam-result-grid').html('<div class="alert-danger d-flex justify-content-center p-2">' + 'Không có đề thi cho môn này!' + '!</div>');
+                                return false;
+                            } else {
+                                $('#exam-result-grid').empty();
+                            }
                             resp.data_columns.forEach(function(columns) {
                                 if(columns.template) {
                                     columns.template = looseJsonParse(columns.template);
@@ -1561,7 +1568,6 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                                     },
                                     data: 'data_grid',
                                     total: function(data) {
-                                        debugger
                                         if (data != null && data.length > 0) return data[0].total;
                                     },
                                 },

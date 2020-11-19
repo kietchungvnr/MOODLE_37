@@ -30,7 +30,7 @@ define("FREE", 1);
 require_once __DIR__ . '/../../../../config.php';
 require_login();
 $PAGE->set_context(context_system::instance());
-$action = required_param('action', PARAM_TEXT);
+$action = required_param('action', PARAM_ALPHANUMEXT);
 
 $data = [];
 switch ($action) {
