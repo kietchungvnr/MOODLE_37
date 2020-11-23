@@ -46,7 +46,7 @@ $conditionquiz     = '';
 $strexamname       = "N'" . '%' . $examname . '%' . "'";
 $strsubjectname    = "N'" . '%' . $subjectname . '%' . "'";
 
-$sql               = 'SELECT esx.id, es.id AS subjectid ,es.name, esx.subjectid, e.name AS examname
+$sql               = 'SELECT DISTINCT esx.id, es.id AS subjectid ,es.name, esx.subjectid, e.name AS examname
                       FROM mdl_exam_subject_exam esx
                         LEFT JOIN mdl_exam e ON esx.examid = e.id
                         LEFT JOIN mdl_exam_subject es ON esx.subjectid = es.id';
@@ -90,7 +90,11 @@ if ($date != 0) {
 }
 // Tìm kiếm theo kỳ thi và môn thi
 if($examtype == 0) {
-    $wheresql = " AND eu.userid = $USER->id";
+    if(!is_siteadmin()) {
+        $wheresql = "AND eu.userid = $USER->id";
+    } else {
+        $wheresql = "";
+    }
 } else {
     $wheresql = "";
 }
