@@ -53,6 +53,7 @@ $search_text   = optional_param('s', '', PARAM_CLEANHTML);
 $linkexternal  = optional_param('linkexternal', '', PARAM_ALPHA);
 $usefilereference  = optional_param('usefilereference', false, PARAM_BOOL);
 $usecontrolledlink  = optional_param('usecontrolledlink', false, PARAM_BOOL);
+$filelibrary = optional_param('filelibrary', 0, PARAM_INT); // Custom by Vũ: Get filelibrray trong tài liệu hệ thống
 
 list($context, $course, $cm) = get_context_info_array($contextid);
 require_login($course, false, $cm, false, true);
@@ -194,6 +195,12 @@ switch ($action) {
             $record->itemid = $itemid;
             $record->license = $license;
             $record->author = $author;
+            // Custom by Vũ: user pick file từ rep trong tài liệu hệ thống
+            if($filelibrary == 1) {
+                if(!is_siteadmin()) {
+                    $record->status = 1;
+                }
+            }
 
             if ($record->filepath !== '/') {
                 $record->filepath = trim($record->filepath, '/');

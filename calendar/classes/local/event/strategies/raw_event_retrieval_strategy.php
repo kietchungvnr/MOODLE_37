@@ -312,7 +312,16 @@ class raw_event_retrieval_strategy implements raw_event_retrieval_strategy_inter
             $params = array_merge($params, $whereparams);
         }
 
+        // Custom by Vũ: Add sự kiện vào lịch khi tạo đề thi cho môn thi (kỳ thi ngoài khóa)
         $events = $DB->get_records_sql($sql, $params, $offset, $limitnum);
+        foreach ($events as $keyevent => $event) {
+            if($event->courseid == 1 && $event->modulename == 'quiz') {
+                if($event->userid == $user)
+                    continue;
+                else 
+                    unset($events[$keyevent]);
+            }
+        }
 
         return  $events === false ? [] : $events;
     }

@@ -302,6 +302,39 @@ function file_prepare_standard_filemanager($data, $field, array $options, $conte
 }
 
 /**
+ * // Custom by Vũ: prepare dữ liệu cho trang tài liệu hệ thống
+ * Saves text and files modified by Editor formslib element
+ *
+ * @category files
+ * @param stdClass $data $database entry field
+ * @param string $field name of data field
+ * @param array $options various options
+ * @param stdClass $context context - must already exist
+ * @param string $component
+ * @param string $filearea file area name
+ * @param int $itemid must already exist, usually means data is in db
+ * @return stdClass modified data obejct
+ */
+function file_prepare_standard_filemanager_filelibrary($data, $field, array $options, $context=null, $component=null, $filearea=null, $itemid=null) {
+    $options = (array)$options;
+    if (!isset($options['subdirs'])) {
+        $options['subdirs'] = false;
+    }
+    if (is_null($itemid) or is_null($context)) {
+        $itemid = null;
+        $contextid = null;
+    } else {
+        $contextid = $context->id;
+    }
+
+    $draftid_editor = file_get_submitted_draft_itemid($field.'_filemanager');
+    file_prepare_draft_area_generallibrary($draftid_editor, $contextid, $component, $filearea, $itemid, $options);
+    $data->{$field.'_filemanager'} = $draftid_editor;
+
+    return $data;
+}
+
+/**
  * Saves files modified by File manager formslib element
  *
  * @todo MDL-31073 review this function
@@ -454,6 +487,93 @@ function file_prepare_draft_area(&$draftitemid, $contextid, $component, $fileare
 
     // relink embedded files - editor can not handle @@PLUGINFILE@@ !
     return file_rewrite_pluginfile_urls($text, 'draftfile.php', $usercontext->id, 'user', 'draft', $draftitemid, $options);
+}
+/**
+ * Custom by Vũ: prepare dữ liệu cho trang tài liệu hệ thống (clone func)
+ * 
+ * Initialise a draft file area from a real one by copying the files. A draft
+ * area will be created if one does not already exist. Normally you should
+ * get $draftitemid by calling file_get_submitted_draft_itemid('elementname');
+ *
+ * @category files
+ * @global stdClass $CFG
+ * @global stdClass $USER
+ * @param int $draftitemid the id of the draft area to use, or 0 to create a new one, in which case this parameter is updated.
+ * @param int $contextid This parameter and the next two identify the file area to copy files from.
+ * @param string $component
+ * @param string $filearea helps indentify the file area.
+ * @param int $itemid helps identify the file area. Can be null if there are no files yet.
+ * @param array $options text and file options ('subdirs'=>false, 'forcehttps'=>false)
+ * @param string $text some html content that needs to have embedded links rewritten to point to the draft area.
+ * @return string|null returns string if $text was passed in, the rewritten $text is returned. Otherwise NULL.
+ */
+function file_prepare_draft_area_generallibrary(&$draftitemid, $contextid, $component, $filearea, $itemid, array $options=null, $text=null) {
+    global $CFG, $USER, $CFG;
+
+    $options = (array)$options;
+    if (!isset($options['subdirs'])) {
+        $options['subdirs'] = false;
+    }
+    if (!isset($options['forcehttps'])) {
+        $options['forcehttps'] = false;
+    }
+
+    // if(0)
+
+    $usercontext = context_user::instance($USER->id);
+    $fs = get_file_storage();
+
+    if (empty($draftitemid)) {
+        // create a new area and copy existing files into
+        $draftitemid = file_get_unused_draft_itemid();
+        $file_record = array('contextid'=>$usercontext->id, 'component'=>'user', 'filearea'=>'draft', 'itemid'=>$draftitemid);
+        if (!is_null($itemid) and $files = $fs->get_area_files($contextid, $component, $filearea, $itemid)) {
+            foreach ($files as $file) {
+                if ($file->is_directory() and $file->get_filepath() === '/') {
+                    // we need a way to mark the age of each draft area,
+                    // by not copying the root dir we force it to be created automatically with current timestamp
+                    continue;
+                }
+                // if (!$options['subdirs'] and ($file->is_directory() or $file->get_filepath() !== '/')) {
+                //     continue;
+                // }
+                $draftfile = $fs->create_file_from_storedfile($file_record, $file);
+                // XXX: This is a hack for file manager (MDL-28666)
+                // File manager needs to know the original file information before copying
+                // to draft area, so we append these information in mdl_files.source field
+                // {@link file_storage::search_references()}
+                // {@link file_storage::search_references_count()}
+                $sourcefield = $file->get_source();
+                $newsourcefield = new stdClass;
+                $newsourcefield->source = $sourcefield;
+                $original = new stdClass;
+                $original->contextid = $contextid;
+                $original->component = $component;
+                $original->filearea  = $filearea;
+                $original->itemid    = $itemid;
+                $original->filename  = $file->get_filename();
+                $original->filepath  = $file->get_filepath();
+                $newsourcefield->original = file_storage::pack_reference($original);
+                $draftfile->set_source(serialize($newsourcefield));
+                // End of file manager hack
+            }
+        }
+        if (!is_null($text)) {
+            // at this point there should not be any draftfile links yet,
+            // because this is a new text from database that should still contain the @@pluginfile@@ links
+            // this happens when developers forget to post process the text
+            $text = str_replace("\"$CFG->wwwroot/draftfile.php", "\"$CFG->wwwroot/brokenfile.php#", $text);
+        }
+    } else {
+        // nothing to do
+    }
+
+    if (is_null($text)) {
+        return null;
+    }
+
+    // relink embedded files - editor can not handle @@PLUGINFILE@@ !
+    return file_rewrite_pluginfile_urls($text, 'draftfile.php', $usercontext->id, 'local_newsvnr', 'content', $draftitemid, $options);
 }
 
 /**
@@ -681,7 +801,7 @@ function file_get_drafarea_folders($draftitemid, $filepath, &$data) {
  * @return stdClass
  */
 function file_get_drafarea_files($draftitemid, $filepath = '/') {
-    global $USER, $OUTPUT, $CFG;
+    global $USER, $OUTPUT, $CFG, $DB; // Custom by Vũ: add them $DB
 
     $context = context_user::instance($USER->id);
     $fs = get_file_storage();
@@ -707,6 +827,16 @@ function file_get_drafarea_files($draftitemid, $filepath = '/') {
     $maxlength = 12;
     if ($files = $fs->get_directory_files($context->id, 'user', 'draft', $draftitemid, $filepath, false)) {
         foreach ($files as $file) {
+            // Custom by Vũ: Chỉ hiện thị file đã được duyệt trong tài liệu hệ thống
+            // 0 là đã đuyệt 
+            // 1 là chưa duyệt
+            // if(has_capability('local/newsvnr:confirmfilesystem', $context))
+            if(!is_siteadmin()) {
+                if($file->get_userid() != $USER->id && $file->get_status() != 0) {
+                    continue;
+                }
+            }
+            
             $item = new stdClass();
             $item->filename = $file->get_filename();
             $item->filepath = $file->get_filepath();
@@ -723,6 +853,58 @@ function file_get_drafarea_files($draftitemid, $filepath = '/') {
             $item->isref = $file->is_external_file();
             if ($item->isref && $file->get_status() == 666) {
                 $item->originalmissing = true;
+            }
+            
+            // Custom by Vũ: Phân quyền trong trang tài liệu hệ thống
+            if(has_capability('local/newsvnr:createfoldersystem', $context)) {
+                $item->cancreatefoldersystem = true;
+            } else {
+                $item->cancreatefoldersystem = false;
+            }
+            if(has_capability('local/newsvnr:deletefoldersystem', $context)) {
+                $item->candeletefoldersystem = true;
+            } else {
+                $item->candeletefoldersystem = false;
+            }
+            if(has_capability('local/newsvnr:editfoldersystem', $context)) {
+                $item->caneditfoldersystem = true;
+            } else {
+                $item->caneditfoldersystem = false;
+            }
+            if(has_capability('local/newsvnr:createfilesystem', $context)) {
+                $item->cancreatefilesystem = true;
+            } else {
+                $item->cancreatefilesystem = false;
+            }
+            if(has_capability('local/newsvnr:readfoldersystem', $context)) {
+                $item->canreadfoldersystem = true;
+            } else {
+                $item->canreadfoldersystem = false;
+            }
+            if(has_capability('local/newsvnr:assignmentfilesystem', $context)) {
+                $item->canassignmentfilesystem = true;
+            } else {
+                $item->canassignmentfilesystem = false;
+            }
+            if(has_capability('local/newsvnr:confirmfilesystem', $context)) {
+                $item->canconfirmfilesystem = true;
+            } else {
+                $item->canconfirmfilesystem = false;
+            }
+            if(has_capability('local/newsvnr:readfilesystem', $context)) {
+                $item->canreadfilesystem = true;
+            } else {
+                $item->canreadfilesystem = false;
+            }
+            if(has_capability('local/newsvnr:deletefilesystem', $context)) {
+                $item->candeletefilesystem = true;
+            } else {
+                $item->candeletefilesystem = false;
+            }
+            if(has_capability('local/newsvnr:editfilesystem', $context)) {
+                $item->caneditfilesystem = true;
+            } else {
+                $item->caneditfilesystem = false;
             }
             // find the file this draft file was created from and count all references in local
             // system pointing to that file
@@ -1040,7 +1222,7 @@ function file_copy_file_to_file_area($file, $filename, $itemid) {
  * @return string|null if $text was passed in, the rewritten $text is returned. Otherwise NULL.
  */
 function file_save_draft_area_files($draftitemid, $contextid, $component, $filearea, $itemid, array $options=null, $text=null, $forcehttps=false) {
-    global $USER;
+    global $USER, $DB; // Custom by Vũ: Thêm $DB để insert dữ liệu vài file request
 
     // Do not merge files, leave it as it was.
     if ($draftitemid === IGNORE_FILE_MERGE) {
@@ -1063,6 +1245,11 @@ function file_save_draft_area_files($draftitemid, $contextid, $component, $filea
     }
     if (!isset($options['areamaxbytes'])) {
         $options['areamaxbytes'] = FILE_AREA_MAX_BYTES_UNLIMITED; // Unlimited.
+    }
+
+    // Custom by Vũ: Cho phép insert file vào folder trường hợp không là manager / admin
+    if($component == 'local_newsvnr') {
+        $options['subdirs'] = 1;
     }
     $allowreferences = true;
     if (isset($options['return_types']) && !($options['return_types'] & (FILE_REFERENCE | FILE_CONTROLLED_LINK))) {
@@ -1226,8 +1413,16 @@ function file_save_draft_area_files($draftitemid, $contextid, $component, $filea
                     $file_record['reference'] = $reference;
                 }
             }
-
-            $fs->create_file_from_storedfile($file_record, $file);
+            $storedfile = $fs->create_file_from_storedfile($file_record, $file);
+            // Custom by Vũ: Mỗi khi upfile lên general library thì insert record vào bảng files_request
+            if($file_record['component'] == 'local_newsvnr' && $file_record['filearea'] == 'content') {
+                $requestfile = new stdClass;
+                $requestfile->fileid = $storedfile->get_id();
+                $requestfile->requester = $USER->id;
+                $requestfile->timecreated = time();
+                $requestfile->timemodified = time();
+                $DB->insert_record('files_request', $requestfile);
+            }
         }
     }
 

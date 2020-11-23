@@ -1,0 +1,107 @@
+<button type="submit" id="btn-exam" class="btn btn-secondary mb-1"><i class="fa fa-plus mr-2" aria-hidden="true"></i>{{#str}}createexam, local_newsvnr{{/str}}</button>
+<div class="row">
+	<div id="modal-exam">
+          <form id="form-exam"></form>
+        </div>
+        <div id="modal-enrollexamusers">
+          <form id="form-enrollexamusers"></form>
+          <div id="enrollexamusers-grid" class="mt-3"></div>
+        </div>
+        <div id="modal-enrollexamusers-edit">
+          <form id="form-enrollexamusers-edit"></form>
+        </div>
+	<div class="col-xl-3 col-lg-4 col-md-4" id="menu-tree-exam">
+		<div class="border mb-2">
+			<li class="list-category" id="exam-type">{{#str}}listexam, local_newsvnr{{/str}}</li>
+			<ul style="" id="exam-category">
+				
+			</ul>
+		</div>
+	</div>
+	<div class="col-xl-9 col-lg-8 col-md-8 position-relative" >
+		<ul class="nav-tabs nav" id="infoexam-tab">
+			<li class="nav-item " data-key="exam-description">
+			    <a class="nav-link active" href="#exam-description" data-toggle="tab">{{#str}}infoexam, local_newsvnr{{/str}}</a>
+			</li>
+			<li class="nav-item" data-key="exam-subjectexam">
+		        <a class="nav-link" href="#exam-subjectexam" data-toggle="tab">{{#str}}subjectexam, local_newsvnr{{/str}}</a>
+			</li>
+			<li class="nav-item" data-key="exam-user">
+		        <a class="nav-link" href="#exam-user" data-toggle="tab">{{#str}}listuser, local_newsvnr{{/str}}</a>
+			</li>
+			<li class="nav-item" data-key="exam-result">
+		        <a class="nav-link" href="#exam-result" data-toggle="tab">{{#str}}examresult, local_newsvnr{{/str}}</a>
+			</li>
+		</ul>
+		<div id="infoexam-content" class="tab-content mt-2">
+			<div class="tab-pane fadein active" id="exam-description">
+				<div class="form-group row">
+			    	<label class="col-2 col-form-label">{{#str}}name, local_newsvnr{{/str}}</label>
+			    	<div class="col-10">
+			      		<input type="text" class="form-control" id="ed-name">
+			    	</div>
+			  	</div>
+			  	<div class="form-group row">
+			    	<label class="col-2 col-form-label">{{#str}}code, local_newsvnr{{/str}}</label>
+			    	<div class="col-10">
+			      		<input type="text" class="form-control" id="ed-code">
+			    	</div>
+			  	</div>
+			  	<div class="form-group row">
+			    	<label class="col-2 col-form-label">{{#str}}type, local_newsvnr{{/str}}</label>
+			    	<div class="col-10">
+			      		<input type="text" class="form-control" id="ed-type">
+			    	</div>
+			  	</div>
+			  	<div class="form-group row">
+			    	<label class="col-2 col-form-label">{{#str}}examdatestart, local_newsvnr{{/str}}</label>
+			    	<div class="col-10">
+			      		<input type="text" class="form-control" id="ed-datestart">
+			    	</div>
+			  	</div>
+			  	<div class="form-group row">
+			    	<label class="col-2 col-form-label">{{#str}}examdateend, local_newsvnr{{/str}}</label>
+			    	<div class="col-10">
+			      		<input type="text" class="form-control" id="ed-dateend">
+			    	</div>
+			  	</div>
+			  	<div class="form-group row">
+			    	<label class="col-2 col-form-label">{{#str}}description, local_newsvnr{{/str}}</label>
+			    	<div class="col-10">
+			      		<input type="text" class="form-control" id="ed-description">
+			    	</div>
+			  	</div>
+			  	<div class="form-group row">
+			    	<label class="col-2 col-form-label">{{#str}}teacherrole, local_newsvnr{{/str}}</label>
+			    	<div class="col-10">
+			    		<span id="ed-teacher"></span>
+			    	</div>
+			  	</div>
+			  	<div class="form-group row">
+			    	<label class="col-2 col-form-label">{{#str}}numberstudent, local_newsvnr{{/str}}</label>
+			    	<div class="col-10">
+			    		<span id="ed-numnberstudent"></span>
+			    	</div>
+			  	</div>
+			</div>
+			<div class="tab-pane fadein" id="exam-subjectexam">
+				<div id="exam-list-grid"></div>
+			</div>
+			<div class="tab-pane fadein" id="exam-user">
+				<div id="exam-users-grid"></div>
+			</div>
+			<div class="tab-pane fadein" id="exam-result">
+				<div class="row align-items-center">
+					<div class="col-auto">
+						<div>Môn thi:</div>
+					</div>
+					<div class="col-6">
+						<div id="list-subjectexam"></div>
+					</div>
+				</div>
+				
+				<div id="exam-result-grid" class="mt-3"></div>
+			</div>
+		</div>
+	</div>
+</div>

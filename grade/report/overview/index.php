@@ -58,7 +58,8 @@ if (empty($userid)) {
 }
 
 if (isset($personalcontext) && $courseid == SITEID) {
-    $PAGE->set_context($personalcontext);
+    // Ẩn hình user và messgae ở header của trang
+    // $PAGE->set_context($personalcontext);
 } else {
     $PAGE->set_context($context);
 }
@@ -144,7 +145,6 @@ if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
 
     // Create a report instance
     $report = new grade_report_overview($userid, $gpr, $context);
-
     if (!empty($report->studentcourseids)) {
         // If the course id matches the site id then we don't have a course context to work with.
         // Display a standard page.
@@ -152,7 +152,8 @@ if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
             $PAGE->set_pagelayout('standard');
             $header = get_string('grades', 'grades') . ' - ' . fullname($report->user);
             $PAGE->set_title($header);
-            $PAGE->set_heading(fullname($report->user));
+            // $PAGE->set_heading(fullname($report->user));
+            $PAGE->set_heading(get_string('gradereport','local_newsvnr'));
 
             if ($USER->id != $report->user->id) {
                 $PAGE->navigation->extend_for_user($report->user);
@@ -164,6 +165,9 @@ if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
             }
 
             echo $OUTPUT->header();
+            echo $OUTPUT->grade_report_nav();
+            echo html_writer::start_div('tab-content');
+            echo html_writer::start_div('tab-pane', array('data' => 'mycourse'));
             if ($report->fill_table(true, true)) {
                 echo html_writer::tag('h3', get_string('coursesiamtaking', 'grades'));
                 echo '<br />' . $report->print_table(true);
@@ -179,7 +183,8 @@ if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
         $PAGE->set_pagelayout('standard');
         $header = get_string('grades', 'grades') . ' - ' . fullname($report->user);
         $PAGE->set_title($header);
-        $PAGE->set_heading(fullname($report->user));
+        // $PAGE->set_heading(fullname($report->user));
+        $PAGE->set_heading(get_string('gradereport','local_newsvnr'));
         echo $OUTPUT->header();
     }
 
@@ -193,7 +198,9 @@ if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
         echo $OUTPUT->notification(get_string('noreports', 'grades'), 'notifymessage');
     }
 }
-
+echo html_writer::end_div(); // end tab-pane
+echo $OUTPUT->grade_report_tab();
+echo html_writer::end_div(); // end tab-content
 grade_report_overview::viewed($context, $courseid, $userid);
 
 echo $OUTPUT->footer();

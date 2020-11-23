@@ -293,9 +293,8 @@ class mod_quiz_renderer extends plugin_renderer_base {
             }
             $this->initialise_timer($timerstartvalue, $ispreview);
         }
-
-        return html_writer::tag('div', get_string('timeleft', 'quiz') . ' ' .
-                html_writer::tag('span', '', array('id' => 'quiz-time-left')),
+        // Custom by Thắng : Chỉnh sửa giao diện thời gian làm bài thi
+        return html_writer::tag('div', '<i class="fa fa-clock-o mr-2" aria-hidden="true"></i>' . html_writer::tag('span', '', array('id' => 'quiz-time-left')),
                 array('id' => 'quiz-timer', 'role' => 'timer',
                     'aria-atomic' => 'true', 'aria-relevant' => 'text'));
     }
@@ -922,6 +921,7 @@ class mod_quiz_renderer extends plugin_renderer_base {
     }
 
     /**
+     * Custom by Vũ: Quản lý kỳ thi không hiện thị nút làm bài khi là giáo viên
      * Outputs and error message for anyone who is not enrolle don the course
      *
      * @param int $course The course ID
@@ -933,11 +933,12 @@ class mod_quiz_renderer extends plugin_renderer_base {
     public function view_page_notenrolled($course, $quiz, $cm, $context, $messages) {
         global $CFG;
         $output = '';
-        $output .= $this->view_information($quiz, $cm, $context, $messages);
-        $youneedtoenrol = html_writer::tag('p', get_string('youneedtoenrol', 'quiz'));
+        // $output .= $this->view_information($quiz, $cm, $context, $messages);
+        // $youneedtoenrol = html_writer::tag('p', get_string('youneedtoenrol', 'quiz'));
+        $output .= $this->view_information_table($quiz, $cm, $context, $messages);
         $button = html_writer::tag('p',
                 $this->continue_button($CFG->wwwroot . '/course/view.php?id=' . $course->id));
-        $output .= $this->box($youneedtoenrol."\n\n".$button."\n", 'generalbox', 'notice');
+        $output .= $this->box($button, 'generalbox', 'notice');
         return $output;
     }
 

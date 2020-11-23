@@ -1335,6 +1335,7 @@ if($action == "gradereport_detail") {
 	$q = optional_param('q','', PARAM_RAW);
 	$odersql = "";
 	$wheresql = "";
+	$data = [];
 	if($q) {
 		$wheresql = "WHERE fullname LIKE N'%$q%'";
 	}
@@ -1670,8 +1671,87 @@ if($action == 'coursesetup_management') {
 	}
 	echo json_encode($data,JSON_UNESCAPED_UNICODE);
 }
+
+if($action == 'search_category') {
+	$sql = "SELECT * FROM {course_categories} WHERE visible = 1";
+	$get_list = $DB->get_records_sql($sql);
+	$data = [];
+	foreach ($get_list as $value) {
+		$object = new stdclass;
+		$object->name = $value->name;
+		$data[] = $object;
+	}
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+}
+
+if($action == 'search_course') {
+	$sql = "SELECT c.fullname,cc.name FROM {course} c
+			JOIN {course_categories} cc on c.category = cc.id
+			WHERE c.visible = 1";
+	$get_list = $DB->get_records_sql($sql);
+	$data = [];
+	foreach ($get_list as $value) {
+		$object = new stdclass;
+		$object->fullname = $value->fullname;
+		$object->name = $value->name;
+		$data[] = $object;
+	}
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+}
+
+if($action == 'search_teacher') {
+	$sql = "SELECT CONCAT(u.firstname,' ', u.lastname) fullnamet,u.id
+            FROM {role_assignments} ra
+                JOIN {user} u ON ra.userid = u.id
+                JOIN {user_enrolments} ue ON u.id = ue.userid 
+                JOIN {enrol} enr ON ue.enrolid = enr.id
+                JOIN {course} c ON enr.courseid = c.id
+                JOIN {context} ct ON ct.id = ra.contextid AND ct.instanceid = c.id
+                JOIN {role} r ON ra.roleid = r.id
+                JOIN {course_categories} cc ON c.category = cc.id
+            WHERE c.visible = 1 AND cc.visible = 1 AND ra.roleid = 3";
+	$get_list = $DB->get_records_sql($sql);
+	$data = [];
+	foreach ($get_list as $value) {
+		$object = new stdclass;
+		$object->fullnamet = $value->fullnamet;
+		$data[] = $object;
+	}
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+}
+
+
+if($action == "library_folder") {
+	$sql = "SELECT * FROM {library_folder}";
+	$get_list = $DB->get_records_sql($sql);
+	$data = [];
+	foreach ($get_list as $value) {
+		$object = new stdclass;
+		$object->name = $value->name;
+		$object->parent = $value->parent;
+		$data[] = $object;
+	}
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+}
+
+if($action == "search_module_library") {
+	$data = [];
+	$folderid = optional_param('folderid',0, PARAM_INT);
+	if($folderid == 0) {
+		$modulebyfolder  = $DB->get_records('library_module');
+	} else {
+		$modulebyfolder  = $DB->get_records('library_module',['folderid' => $folderid]);
+	}
+	foreach ($modulebyfolder as $value) {
+		$alldatamodule = $DB->get_record_sql("SELECT rs.name
+ 											FROM {course_modules} cm
+ 											JOIN mdl_$value->moduletype rs on cm.instance = rs.id
+ 											WHERE cm.id = :coursemoduleid",['coursemoduleid' => $value->coursemoduleid]);
+		$object = new stdclass;
+		$object->name = $alldatamodule->name;
+		$data[] = $object;
+	}
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+}
+
 die();
-
-
-
-

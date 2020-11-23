@@ -56,15 +56,26 @@ if (isset($PAGE->cm->modname) && in_array($PAGE->cm->modname, $moduleswithnavinb
 
     $extraclasses = [];
 }
+
 if(isset($_SERVER['HTTP_REFERER'])) {
     $hasportal = true;
 } else {
     $hasportal = false;
 }
+if($_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
+    $hasiframe = true;
+} else {
+    $hasiframe = false;
+}
 if(isset($_COOKIE['cookie']) == 'focusmod' ) {
     $hasfocusmod = true;
 } else {
     $hasfocusmod = false;
+}
+if($COURSE->id == 1) {
+    $settingexam = true;
+} else {
+    $settingexam = false;
 }
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
@@ -80,7 +91,9 @@ $templatecontext = [
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'hasportal' => $hasportal,
-    'hasfocusmod' => $hasfocusmod
+    'hasiframe' => $hasiframe,
+    'hasfocusmod' => $hasfocusmod,
+    'settingexam' => $settingexam
 ];
 
 // Improve boost navigation.

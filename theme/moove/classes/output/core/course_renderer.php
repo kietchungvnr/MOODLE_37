@@ -443,16 +443,16 @@ class course_renderer extends \core_course_renderer {
         $output = '';
         $output .= '<div id="courses_search_form" class="">';
         $output .= '<div class="row">';
-        $output .= '<div class="col-xl-3 col-6 pt-1 pl-1 tree-search">';
-        $output .= '<input name="category" type="text" class="courses_search_input" id="category" placeholder="'.get_string('coursecatogories','local_newsvnr').'" value="">';
+        $output .= '<div class="col-xl-3 col-6 pl-1 tree-search">';
+        $output .= '<input name="category" type="text" class="courses_search_input" id="category"  placeholder="'.get_string('coursecatogories','local_newsvnr').'" value="">';
         $output .= '</div>';
-        $output .= '<div class="col-xl-3 col-6 pt-1 pl-1 tree-search">';
+        $output .= '<div class="col-xl-3 col-6 pl-1 tree-search">';
         $output .= '<input name="keyword" type="text" class="courses_search_input" id="keyword" placeholder="'.get_string('coursename','local_newsvnr').'" value="">';
         $output .= '</div>';
-        $output .= '<div class="col-xl-3 col-6 pt-1 pl-1 tree-search">';
+        $output .= '<div class="col-xl-3 col-6 pl-1 tree-search">';
         $output .= '<input name="teacher" type="text" class="courses_search_input" id="teacher" placeholder="'.get_string('teachernames','local_newsvnr').'" value="">';
         $output .= '</div>';
-        $output .= '<div class="col-xl-3 col-6 pt-1 pl-1">';
+        $output .= '<div class="col-xl-3 col-6 pl-1">';
         $output .= '<button id="courses_search_button" class="ml-auto w-100"><i class="fa fa-search mr-1"></i>'.get_string('search','local_newsvnr').'</button>';
         $output .= '</div>';
         $output .= '</div>';
@@ -725,6 +725,46 @@ class course_renderer extends \core_course_renderer {
 
         return $output;
     }
+    //Đếm số lượng module 
+    function count_module($course,$currentsection) {
+        global $DB,$OUTPUT;
+        $modinfo = get_fast_modinfo($course);
+        $output = array(
+            //lấy thông tin module
+            "activityinfo" => array(),
+            //Đếm số lượng module
+            "total" => array(),
+        );
+        $sectionmods = [];
+        $total = 0;
+        foreach ($modinfo->sections[$currentsection->section] as $cmid) {
+            $thismod = $modinfo->cms[$cmid];
+            $getmodules = $DB->get_records_sql('SELECT cm.id, cm.deletioninprogress FROM {course_modules} cm JOIN {course_sections} cs ON cm.section = cs.id WHERE cm.instance = :section AND cm.course = :courseid',['section' => $thismod->instance,'courseid' => $course->id]);
+            //Check điều kiện là là label hoặc module đã xóa
+            if ($thismod->modname == 'label' || $thismod->visible == 0) {
+                continue;
+            }
+            foreach($getmodules as $getmodule) {
+                if($getmodule->deletioninprogress != 0) {
+                    continue 2;
+                }    
+            }
+            if (isset($sectionmods[$thismod->modname])) {
+                $sectionmods[$thismod->modname]['name'] = $thismod->modplural;
+                $sectionmods[$thismod->modname]['count']++;
+            } else {
+                $sectionmods[$thismod->modname]['name'] = $thismod->modfullname;
+                $sectionmods[$thismod->modname]['count'] = 1;
+                $sectionmods[$thismod->modname]['image'] = $OUTPUT->image_url('icon', $thismod->modname);
+            }
+            $total++;
+        }
+        foreach($sectionmods as $mod) {
+            $output['activityinfo'][] = '<img class="mr-3" src="'.$mod['image'].'">'.$mod['count'].' '.$mod['name'];
+        }
+        $output['total'] = $total;
+        return $output;
+    }
     ///Thâm phần mô tả,thông tin khóa học , ở ngoài khóa học
     function course_description($course) {
         global $DB,$OUTPUT;
@@ -735,25 +775,27 @@ class course_renderer extends \core_course_renderer {
         $end = count($modinfo->sections);
         $output = '';
         $output .= '<div class="all-tab-content col-xl-9 col-md-8 col-12">';
-        $output .= '<ul class="nav nav-tabs tab-click">';
+        $output .= '<ul class="nav nav-tabs tab-click multi-tab">';
         $output .=  '<li class="nav-item active"><a class="nav-link" id="1">'.get_string('descriptioncourse','local_newsvnr').'</a></li>
                      <li class="nav-item"><a class="nav-link" id="2">'.get_string('lesson','local_newsvnr').'</a></li>
-                     <li class="nav-item"><a class="nav-link" id="3">'.get_string('teachernames','local_newsvnr').'</a></li>';
+                     <li class="nav-item"><a class="nav-link" id="3">'.get_string('teachername','local_newsvnr').'</a></li>';
         $output .= '</ul>';
         $output .= '<div class="tab-content">';
-        $output .= ' <div id="tab1" class="tab-pane in active">
-                        <div class="count-module"><p>'.$course->summary.'</p></div>
-                    </div>';
+        $output .= ' <div id="tab1" class="tab-pane in active">';
+        $output .= '<div class="count-module">';
+        $output .= get_string('startdate','local_newsvnr').': '. convertunixtime('l, d-m-Y,',$course->startdate,'Asia/Ho_Chi_Minh').'<br>';
+        if($course->enddate > 0) {
+            $output .= get_string('enddate','local_newsvnr').': '. convertunixtime('l, d-m-Y,',$course->enddate,'Asia/Ho_Chi_Minh');
+        }
+        $output .= '<p>'.$course->summary.'</p>';
+        $output .= '</div></div>';
         $output .= '<div id="tab2" class="tab-pane">';
-
         for ($section = $startfrom; $section <= $end; $section++) {
             $currentsection = $modinfo->get_section_info($section);
-            if($currentsection == null) {
+            if($currentsection == null || $currentsection->visible != 1) {
                 continue;
             }
-            $total = 0;
-            // var_dump($currentsection->id);die();
-            $output .= '<div class="curriculum-chapter mt-2" id="'.$currentsection->id.'">';
+            $output .= '<div class="curriculum-chapter click-expand mt-2" id="'.$currentsection->id.'">';
             if($currentsection->name == '' && $currentsection->section != 0) {
                 $output .= '<div>'.get_string('topic', 'theme_moove').' '.$currentsection->section.'</div>';
             } else {
@@ -763,37 +805,14 @@ class course_renderer extends \core_course_renderer {
                 $output .= '</div>';
                 continue;
             }
-            $sectionmods = [];
-            // Đểm số lượng module
-            foreach ($modinfo->sections[$currentsection->section] as $cmid) {
-                $thismod = $modinfo->cms[$cmid];
-                $getmodules = $DB->get_records_sql('SELECT cm.id, cm.deletioninprogress FROM {course_modules} cm JOIN {course_sections} cs ON cm.section = cs.id WHERE cm.instance = :section AND cm.course = :courseid',['section' => $thismod->instance,'courseid' => $course->id]);
-                //Check điều kiện là là label hoặc module đã xóa
-                if ($thismod->modname == 'label') {
-                    continue;
-                }
-                foreach($getmodules as $getmodule) {
-                    if($getmodule->deletioninprogress != 0) {
-                        continue 2;
-                    }    
-                }
-                if (isset($sectionmods[$thismod->modname])) {
-                    $sectionmods[$thismod->modname]['name'] = $thismod->modplural;
-                    $sectionmods[$thismod->modname]['count']++;
-                } else {
-                    $sectionmods[$thismod->modname]['name'] = $thismod->modfullname;
-                    $sectionmods[$thismod->modname]['count'] = 1;
-                    $sectionmods[$thismod->modname]['image'] = $OUTPUT->image_url('icon', $thismod->modname);
-                }
-                $total++;
-            }
-            if($total > 0) {
-                $output .= '<a>'.$total .' '.get_string('countmodule','local_newsvnr').'  <i class="fa fa-angle-up rotate-icon"></i></a>';
+            $sectionmods = $this->count_module($course,$currentsection);
+            if($sectionmods['total'] > 0) {
+                $output .= '<a>'.$sectionmods['total'] .' '.get_string('countmodule','local_newsvnr').'  <i class="fa fa-angle-up rotate-icon"></i></a>';
             }
             $output .= '</div>';
-            $output .= '<div class="content-'.$currentsection->id.' display-none">';
-            foreach($sectionmods as $mod) {
-                $output .= '<div class="count-module"><img class="mr-3" src="'.$mod['image'].'">'.$mod['count'].' '.$mod['name'].'</div>';
+            $output .= '<div class="content-expand '.$currentsection->id.' display-none">';
+            foreach ($sectionmods['activityinfo'] as $value) {
+                $output .= '<div class="count-module">'.$value.'</div>';
             }
             $output .= '</div>';
         }
@@ -825,8 +844,10 @@ class course_renderer extends \core_course_renderer {
         $output .= '</div>'; //end div tab-content
         $output .= '</div>'; //end div all-tab-content
         return $output;
+        }
     }
 
 
-}
+
+
  

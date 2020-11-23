@@ -70,8 +70,14 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
     var map = {};
     $('#course-filter option').each(function () {
         if (map[this.value]) {
-            $(this).remove()
+            $(this).remove();
         }
         map[this.value] = true;
     })
+    $('li.list-category').each(function(){
+        if($(this).parent('.dropdown-menu-tree').length) {
+            $(this).css('background','transparent')
+        }
+    })
+
 });

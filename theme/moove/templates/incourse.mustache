@@ -53,12 +53,18 @@
         {{>theme_moove/portal_inc_start}}
     {{/hasportal}}
     {{^hasportal}}
-        {{>theme_moove/inc_start}}
+        {{^hasiframe}}
+            {{>theme_moove/inc_start}}
+        {{/hasiframe}}
+        {{#hasiframe}}
+            {{>theme_moove/iframe_inc_start}}
+        {{/hasiframe}}
     {{/hasportal}}
-   
     <div id="page" class="container-fluid">
         {{^hasportal}}
-            {{{ output.full_header }}}
+            {{^hasiframe}}
+                {{{ output.full_header }}}
+            {{/hasiframe}}
         {{/hasportal}}
         <div id="page-content" class="row">
             <div id="region-main-box" class="col-12">
@@ -69,9 +75,11 @@
                 {{/hasregionmainsettingsmenu}}
                 <section id="region-main">
                     <div class="card">
-                        <div class="">
-                            {{> theme_moove/nav-drawer }}
-                        </div>
+                        {{^hasiframe}}
+                            <div class="">
+                                {{> theme_moove/nav-drawer }}
+                            </div>
+                        {{/hasiframe}}
                         <div class="card-body">
                              {{#hasregionmainsettingsmenu}}
                                 <div class="region_main_settings_menu_proxy"></div>
@@ -86,10 +94,14 @@
             </div>
         </div>
     </div>
-
     {{#hasportal}}
         {{>theme_moove/portal_inc_end}}
     {{/hasportal}}
     {{^hasportal}}
-        {{>theme_moove/inc_end}}
+        {{^hasiframe}}
+            {{>theme_moove/inc_end}}
+        {{/hasiframe}}
+        {{#hasiframe}}
+            {{>theme_moove/iframe_inc_end}}
+        {{/hasiframe}}
     {{/hasportal}}

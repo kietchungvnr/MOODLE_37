@@ -16,6 +16,9 @@
 <style type="text/css">
         
         /*@import url(http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css);*/
+*:focus-within {
+    outline: 0;
+}
 body {
     font-size: 14px;
 }
@@ -156,7 +159,12 @@ a {
     text-decoration: none;
     color: black;
 }
-
+.mg-0 {
+    margin: 0 !important;
+}
+.pd-0 {
+    padding: 0 !important;
+}
 .magrin-block {}
 
 .md-block {
@@ -548,6 +556,9 @@ a {
     }
     img {
         margin: auto;
+    }
+    .exam-first-col {
+        width: auto !important;
     }
 }
 
@@ -3284,9 +3295,6 @@ table#categoryquestions tr {
     #page-mod-quiz-edit #changeallmark {
         margin-left: 0!important;
     }
-    #load-course .row {
-        margin: auto;
-    }
     #new-lastest .owl-dots {
         display: block !important;
     }
@@ -3295,6 +3303,15 @@ table#categoryquestions tr {
     }
     #new-lastest .owl-next {
         display: none !important;
+    }
+    #folder_library {
+        min-height: auto!important;
+    }
+    .pd-0-mobile {
+        padding: 0 !important;
+    }
+    .mg-0-mobile {
+        margin: 0 !important;
     }
 }
 @media(max-width: 500px){
@@ -3401,7 +3418,7 @@ tr.drag-samenode td {
 }
 .message-app.drawer {
     top: 43px;
-    height: 100%;
+    height: calc(100% - 45px);
 }
 .forum-general-table thead {
     background-color: #3c8dbc;
@@ -3493,6 +3510,9 @@ tr.drag-samenode td {
 .mdl-left,.mdl-right {
     margin-bottom:10px;
 }
+.mdl-left a,.mdl-right a {
+    color: #363535;
+}
 .mdl-left {
     padding-right: 10px;
 }
@@ -3509,7 +3529,6 @@ tr.drag-samenode td {
 }
 .section-modchooser {
     margin-right: 15px;
-    margin-top: 5px;
 }
 .pagelayout-course .summary {
     padding: 8px;
@@ -3960,7 +3979,7 @@ li.nav-item.border-left {
     width: 5px;
     background:#b8b9bf;
 }
-i.rotate-icon.active {
+#focus-mod i.rotate-icon.active {
     transform: rotate(180deg);
     transition: 0.5s;
 }
@@ -4058,9 +4077,6 @@ table thead th a {
 table tbody .icon {
     color: #3c8dbc;
 }
-table tbody a {
-    color: #373a3c;
-}
 table#participants .fa-sort-asc ,
 .fp-viewbar.disabled {
     display: none;
@@ -4082,12 +4098,6 @@ table#participants .fa-sort-asc ,
 .badge-success {
     border-radius: 20px;
     padding: .3em .5em;
-}
-table tbody .icon {
-    color: #3c8dbc;
-}
-table tbody a {
-    color: #373a3c;
 }
 table#participants .fa-sort-asc ,
 .fp-viewbar.disabled {
@@ -4120,10 +4130,10 @@ table#participants .fa-sort-asc ,
     }
 {{/hasfocusmod}}
 /*cây danh mục*/
-li.list-subcategory a, li.list-subcategory .list-category a {
+/*li.list-subcategory a, li.list-subcategory .list-category a {
     padding-left: 10px;
     color: #191818;
-}
+}*/
 
 .course-ajax-load {
     padding-left: 5px;
@@ -4132,6 +4142,7 @@ li.list-subcategory a, li.list-subcategory .list-category a {
 .menu-tree-course .border {
     border-radius: 5px;
     margin-top: 1rem;
+    overflow: hidden;
 }
 .menu-tree-course #drop-course-category {
     max-height: 800px;
@@ -4141,41 +4152,50 @@ li.list-subcategory a, li.list-subcategory .list-category a {
 .menu-tree-course #drop-course-category:hover {
     overflow-y: auto;
 }
-#load-course #pagination {
+#pagination {
     padding-top: 10px;
     margin: 0 auto;
     text-align: center;
 }
-#load-course #pagination .first {
+#pagination .first {
     border-left: #bccfd8 1px solid;
 }
-#load-course #pagination .link {
+#pagination .link {
     padding: 5px 10px;
     background: transparent;  
     cursor: pointer;
     color: #607d8b;
     -webkit-transition: .4s ease-in;
 }
-#load-course #pagination .link:hover {
+#pagination .link:hover {
     background: #0e63ae;
     color: #fff;
     border-radius:5px;
 }
-#load-course #pagination .link.current1 {
+#pagination .link.current1 {
     background: #0e63ae;
     color: #fff;
     border-radius:5px;
 }
-#load-course #pagination .link.disabled {
+#pagination .link.disabled {
     cursor: not-allowed;
     color: #bccfd8;
 }
 li.list-category {
-    padding: .5rem 1.25rem;
+    padding: .5rem 1rem;
     background-color: #fff;
-    border-top: 1px dashed rgba(0,0,0,.125);
     background: #f2f4f5;
     cursor: pointer;
+    position: relative;
+}
+li.list-category:before,.dropdown-menu-tree li:before  {
+    position: absolute;
+    content:"";
+    border-bottom: 1px dashed rgba(0,0,0,.125);
+    left: -50px;
+    right: 0;
+    bottom: 0;
+
 }
 li.list-category a , li.list-subcategory a{
     color: #191818;
@@ -4183,20 +4203,21 @@ li.list-category a , li.list-subcategory a{
 }
 .dropdown-menu-tree {
     display: none;
+    padding-left: 15px;
 }
-.dropdown-menu-tree li{
-    padding:0.75rem 1.25rem 0.75rem 25px ;
-    border-top: 1px dashed rgba(0,0,0,.125);
+.dropdown-menu-tree li {
+    padding:.5rem 1.25rem;
     cursor: pointer;
+    position: relative;
 }
 .list-category i.fa-angle-right {
     padding:5px 0px 5px 5px;
 }
-.list-category i.fa-angle-right.active {
+i.fa-angle-right.active {
     transform: rotate(90deg);
     transition: 0.5s;
 }
-.list-category.active .ajax-load {
+.list-category.active a{
     font-weight: bold;
 }
 .list-subcategory.active a{
@@ -4208,17 +4229,17 @@ li.list-category a , li.list-subcategory a{
 .list-category.title a {
     color: white !important;
 }
-.courses_search_input {
+.courses_search_input,.exam_search_input {
      width: 240px; 
-     height: 46px; 
+     height: 37px; 
      border: solid 1px #d9d9d9; 
      border-radius: 3px; 
      background: #FFFFFF; 
      padding-left: 20px; 
 }
-#courses_search_button {
+#courses_search_button,#exam_search_button {
     width: 161px;
-    height: 46px;
+    height: 35px;
     background: #3c8dbc;
     color: #FFFFFF;
     font-size: 14px;
@@ -4226,8 +4247,8 @@ li.list-category a , li.list-subcategory a{
     text-transform: uppercase;
     border: none;
     outline: none;
-    border-radius: 3px;
     cursor: pointer;
+    margin-top: 2px;
 }
 #courses_search_form {
     padding: 0.5rem;
@@ -4237,10 +4258,10 @@ li.list-category a , li.list-subcategory a{
     margin: 1rem -10px 0 -10px;
     border-radius: 5px;
 }
-.dropdown-menu-tree  .list-category {
+/*.dropdown-menu-tree .list-category {
     padding: 0.75rem 1.25rem 0.75rem 45px;
     background: white;
-}
+}*/
 #load-course .alert-warning {
     margin-top: 10px;
 }
@@ -4425,6 +4446,7 @@ select#formactionid {
 }
 .tree-search input {
     width: 100%;
+    background-color: #fafafa;
 }
 body {
     overflow-x: hidden;
@@ -4458,13 +4480,15 @@ table.k-selectable .hyperlink {
 #new-lastest .owl-dots {
     display: none;
 }
-/** Custom kendo grid */
 .k-header.k-grid-toolbar {
-    background-color: #4285f4;
-    border-color: #4285f4;
+    background-color: #3c8dbc;
+    border-color: #3c8dbc;
 }
 .k-grid tr.k-state-selected {
     background-color: #3c8dbc !important;
+}
+#page-course-editsection label.form-check-inline {
+    justify-content: unset;
 }
 .section-modchooser-link {
     border: 1px solid #1177d1;
@@ -4489,7 +4513,6 @@ a.add-sections {
 .section-modchooser-text {
     color: #fff;
 }
-
 .course-tab {
     display: none;
 }
@@ -4557,6 +4580,516 @@ body#page-enrol-index #region-main .generalbox#notice {
     text-align: center;
     color: red;
 }
+.tree-search span.courses_search_input {
+    width: 100%;
+}
+.tree-search input.courses_search_input.k-input {
+    max-height: 40px;
+    border: solid 1px #d9d9d9;
+}
+.content-expand {
+    display: none;
+}
+#folder_library {
+    border: 1px solid #dfd1d1;
+    margin: 5px;
+    position: relative;
+    font-size: 15px;
+    height: 650px;
+    min-height: 650px;
+}
+#file_library {
+    margin: 5px;
+    border: 1px solid #dfd1d1;
+    padding: 5px 15px;
+}
+.popup-setting {
+    position: absolute;
+    width: 175px;
+    height: auto;
+    right: 2%;
+    display: none;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    background-clip: padding-box;
+    border: 1px solid #d0d6d8;
+    border-radius: .21428571rem;
+    color: #545759;
+}
+.popup-setting ul li{
+    padding: 5px 10px;
+    cursor: pointer;
+}
+#folder_library li.folder.active {
+    font-weight: bold;
+    background: #bfb8b873;
+}
+.module-count {
+    padding: 10px 15px;
+    color: #1177d1;
+    padding-left: 0;
+    font-weight: bold;
+    cursor: pointer;
+}
+li.folder {
+    padding: 5px;
+}
+li.folder i.fa.fa-folder{
+    margin-right: 5px;
+    color: orange;
+}
+li.folder a {
+    color: #545759;
+}
+.tree-view-folder {
+    background: gainsboro;
+    max-height: 500px;
+    overflow: hidden;
+    display: none;
+}
+.tree-view-folder li.active {
+    background: #8080809c;
+}
+.tree-view-folder:hover {
+    overflow-y: scroll;
+}
+.modal-content {
+    border-radius: 5px;
+}
+.modal-viewfile .modal-content {
+    width: 100%;
+    margin: auto;
+}
+.add-module-popup .option {
+    border-bottom: 1px solid white;
+    padding: 15px 15px;
+    display: flex;
+    align-items: center;
+}
+.modal-body.add-module-popup {
+    padding: 0;
+}
+/*@media(max-width: 1000px) {
+    .modal-content {
+        width: 100%;
+    }
+}*/
+.add-module-popup .option .icon{
+    margin-left: 10px;
+    width: 24px;
+    height: 24px;
+}
+.modal-header {
+    padding: 0.5rem;
+}
+.modal-header h4 {
+    font-size: 19px;
+}
+.modal-body.add-module-popup {
+    background: #f2f2f2;
+}
+.top-library {
+    margin: 0;
+    margin-bottom: 5px;
+    align-items: center;
+}
+#file_library table thead th {
+    background-color: #f6f9fb;
+    color: #36353b;
+}
+#file_library table td {
+    border-top: 0;
+}
+input#searchlibrary.k-input {
+    max-height: 30px;
+    width: -webkit-fill-available;
+}
+input#searchlibrary {
+    height: 35px !important;
+    border:0;
+}
+i.library {
+    height: 30px;
+    background: white;
+    padding: 10px;
+    cursor: pointer;
+}
+#file_library .k-autocomplete {
+    border-color: #fa807200;
+    box-shadow: none;
+    border: transparent;
+}
+button[data-target="#add-popup-modal-module"] {
+    display: none;
+}
+.overflow-auto {
+    overflow: auto;
+}
+
+.headerpopup {
+    margin-bottom: 0;
+    padding: 0.6rem 0;
+}
+.fp-pathbar .fp-path-folder:not(:first-child) {
+    margin-left: 0;
+}
+.fp-pathbar .fp-path-folder-name {
+    margin-left: 14px;
+}
+.fp-pathbar .fp-margin {
+    margin: 0 5px;
+}
+.fp-navbar {
+    padding: 5px 0;
+}
+.fp-navbar .fp-viewbar a {
+    margin-left: 5px !important;
+}
+.modal-iframe {
+    width: 1300px;
+}
+#table-library td a {
+    cursor: pointer;
+}
+#table-library td a .fa-download{
+    color: #3c8dbc;
+}
+.headerpopup {
+    margin-bottom: 0;
+    padding: 0.6rem 0;
+}
+.fp-pathbar .fp-path-folder:not(:first-child) {
+    margin-left: 0;
+}
+.fp-pathbar .fp-path-folder-name {
+    margin-left: 14px;
+}
+.fp-pathbar .fp-margin {
+    margin: 0 5px;
+}
+.fp-navbar {
+    padding: 5px 0;
+}
+.fp-navbar .fp-viewbar a {
+    margin-left: 5px !important;
+}
+.generaltable th {
+    vertical-align: middle;
+}
+.region_main_settings_menu_proxy {
+    display: none;
+}
+#nav-course input#coursesearchbox.form-control {
+    height: auto;
+}
+.path-calendar .maincalendar .header {
+    flex-wrap: unset !important;
+}
+#page #page-header .card-body {
+    padding: 0;
+}
+.not-allow {
+    pointer-events:none; 
+}
+.modal-iframe iframe {
+    border:none;
+}
+/* Custom kendo*/
+span.k-dropdown {
+    width: 100%;
+}
+span.k-datetimepicker {
+    width: 100%;
+}
+.modal-library .modal-content{
+    width: 550px;
+    margin: auto;
+}
+li.folder.hide a {
+    color: #545759ab;
+}
+ul.hide li.folder a {
+    color: #545759ab;
+}
+
+#filter_search_library {
+    width: 220px;
+    margin-right: 10px;
+    border-radius: 0;
+    border: 1px solid #dee2e6;
+}
+.child-list {
+    padding: .5rem 1rem;
+    padding-left: 10px;
+}
+#page-site-index-examonline .dropdown-menu-tree li {
+    padding: .5rem 0.5rem;
+}
+{{#settingexam}}
+    #page-course-admin div[role="main"] .container .row {
+        display: none;
+    }
+    #page-course-admin div[role="main"] .container {
+        max-width: initial;
+    }
+    #page-course-admin div[role="main"] .container .row:nth-child(5) {
+        display: flex;
+    }
+    #page-course-admin .container hr {
+        display: none;
+    }
+    #page-course-admin .nav.nav-tabs {
+        display: none;
+    }
+    #page-course-admin div[role="main"] h2 {
+        display: none;
+    }
+{{/settingexam}}
+.exam-title {
+    text-align: center;
+    margin: 15px 0px;
+    color: white;
+    background: #3c8dbc;
+    padding: 8px;
+    font-weight: bold;
+}
+.subject-title {
+    color: orange;
+    font-weight: bold;
+}
+.detail-quiz {
+    padding: 0 10px;
+    color: #918c8c;
+}
+.module-quiz-online:nth-of-type(even) {
+    background:#80808021;
+}
+.exam_search_form {
+    margin: 0 8px 10px 8px;
+}
+.tree-search .k-datepicker  {
+    border-color: #d9d9d9;
+    width: 100%;
+    padding: 0;
+}
+.tree-search .k-state-default {
+    border-color: #d9d9d9 !important;
+}
+.tree-search .k-state-default .k-select {
+    display: flex;
+    align-items: center;
+    background: #fafafa;
+}
+.k-primary {
+    border-color: #4285f4 !important;
+    background-color: #4285f4 !important;
+}
+.k-window-titlebar {
+    background-color: #4285f4 !important;
+}
+.k-button:focus {
+    color: #fff !important;
+}
+#menu-tree-exam {
+    max-height: 800px;
+    height: auto;
+    overflow: hidden;
+}
+#menu-tree-exam .k-dropdown .k-state-default {
+    border-color: #3c8dbc !important;
+    background-color: #3c8dbc !important;
+    color: #fff;
+}
+#menu-tree-exam .k-dropdown .k-input {
+    color: #fff !important;
+    font-weight: 700;
+}
+#exam-type {
+    border-color: #3c8dbc !important;
+    background-color: #3c8dbc !important;
+    font-weight: 700;
+    color: #fff;
+    overflow: hidden;
+}
+#exam-category {
+    overflow: hidden;
+}
+.grid-empty {
+    padding: 5px 0;
+    margin: auto;
+    font-style: italic;
+    color: #101010;
+}
+#filter_exam_required,#filter_exam_free {
+    background: #3c8dbc;
+    color: white;
+}
+.font-bold {
+    font-weight: bold;
+}
+#exam-required-table, #exam-free-table {
+    width: 100%;
+    padding: 20px 15px;
+}
+.exam-first-col {
+    width: 60%;
+}
+.table-quiz-report table thead th{
+    background-color: white;
+    color: #555555;
+    border: 0;
+}
+.table-quiz-report table tbody td{
+    border: 0;
+}
+.k-primary {
+    border-color: #4285f4 !important;
+    background-color: #4285f4 !important;
+}
+.k-window-titlebar {
+    background-color: #4285f4 !important;
+}
+.k-button:focus {
+    color: #fff !important;
+}
+#menu-tree-exam {
+    max-height: 800px;
+    height: auto;
+    overflow: hidden;
+}
+#menu-tree-exam .k-dropdown .k-state-default {
+    border-color: #3c8dbc !important;
+    background-color: #3c8dbc !important;
+    color: #fff;
+}
+#menu-tree-exam .k-dropdown .k-input {
+    color: #fff !important;
+    font-weight: 700;
+}
+#exam-type {
+    border-color: #3c8dbc !important;
+    background-color: #3c8dbc !important;
+    font-weight: 700;
+    color: #fff;
+    overflow: hidden;
+}
+#exam-category {
+    overflow: hidden;
+}
+.grid-empty {
+    padding: 5px 0;
+    margin: auto;
+    font-style: italic;
+    color: #101010;
+}
+input.apple-switch {
+    position: relative;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+    width: 48px;
+    height: 26px;
+    background-color: #fff;
+    border: 1px solid #D9DADC;
+    border-radius: 50px;
+    box-shadow: inset -20px 0 0 0 #fff;
+    transform: translate3d(2px, 2px, 0) scale3d(1, 1, 1);
+    transition: all 0.1s linear;
+}
+
+input.apple-switch:after {
+    content: "";
+    position: absolute;
+    top: 0px;
+    left: 1px;
+    background: transparent;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    box-shadow: 2px 4px 6px rgba(0,0,0,0.2);
+}
+
+input.apple-switch:checked {
+    box-shadow: inset 20px 0 0 0 #4ed164;
+    border-color: #4ed164;
+}
+
+input.apple-switch:checked:after {
+    left: 20px;
+    box-shadow: -2px 4px 3px rgba(0,0,0,0.05);
+}
+/* trang làm bài quiz */
+.path-mod-quiz #mod_quiz_navblock .qnbutton {
+    height: 30px;
+    width: 40px;
+    overflow: hidden;
+    margin: 0px 3px 8px 5px;
+    font-weight: bold;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #d4cfcf !important;
+    font-size: 16px;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton .thispageholder {
+    border: 1px solid #e0e0e0;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton.notyetanswered .trafficlight, 
+.path-mod-quiz #mod_quiz_navblock .qnbutton.invalidanswer .trafficlight {
+    background-color: #d4cfcf;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton.answersaved  {
+    background: #4285f4 !important;   
+} 
+.path-mod-quiz #mod_quiz_navblock .qnbutton.answersaved .trafficlight {
+    background: #4285f4;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton.thispage .thispageholder {
+    border: 2px solid black;
+}
+.othernav .singlebutton {
+    width: 100%;
+}
+.othernav .singlebutton .btn {
+    width: 100%;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton.flagged .thispageholder {
+    background: transparent url(/theme/image.php/moove/theme/1605254876/mod/quiz/flag-on) 26px 0 no-repeat;
+}
+.othernav #quiz-timer {
+    display: block;
+    /*background: #f06363;*/
+    color: black;
+    font-weight: bold;
+    padding: 4px;
+    font-size: 18px;
+    text-align: center;
+    margin: 0;
+    border-radius: 5px;
+}
+/*Trang review bài quiz */
+.path-mod-quiz #mod_quiz_navblock .qnbutton.correct {
+    background: #7dc87d !important;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton.correct .trafficlight {
+    background: #7dc87d !important;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton.incorrect {
+    background: #d9534f !important;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton.correct .thispageholder,
+.path-mod-quiz #mod_quiz_navblock .qnbutton.incorrect .thispageholder {
+    border: none;
+}
+.que span.qno {
+    font-size: 1em;
+}
+.k-dropdown .k-state-default {
+    height: 38px;
+}
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />
@@ -4564,6 +5097,14 @@ body#page-enrol-index #region-main .generalbox#notice {
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/themes/dark.css">
+<!-- CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+<!-- Default theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
+<!-- Semantic UI theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css"/>
+<!-- Bootstrap theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/>
 
 {{! <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"> }}
 {{! <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css" /> }}
@@ -4583,3 +5124,5 @@ body#page-enrol-index #region-main .generalbox#notice {
     <div class="overflow-all"></div>
     <div id="page-wrapper">
       {{{ output.standard_top_of_body_html }}}
+
+

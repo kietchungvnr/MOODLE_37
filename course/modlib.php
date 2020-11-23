@@ -437,13 +437,17 @@ function can_add_moduleinfo($course, $modulename, $section, $sectionname = null)
     $module = $DB->get_record('modules', array('name'=>$modulename), '*', MUST_EXIST);
 
     $context = context_course::instance($course->id);
-    require_capability('moodle/course:manageactivities', $context);
-
+    // Custom by Thắng : cho phép user thêm tài nguyên khi course = 1 (chặn báo lỗi)
+    if($course->id != 1) {
+        require_capability('moodle/course:manageactivities', $context);
+    }
     course_create_sections_if_missing($course, $section, $sectionname);
     $cw = get_fast_modinfo($course)->get_section_info($section);
-
-    if (!course_allowed_module($course, $module->name)) {
-        print_error('moduledisable');
+    // Custom by Thắng : cho phép user thêm tài nguyên khi course = 1 (chặn báo lỗi)
+    if($course->id != 1) {
+        if (!course_allowed_module($course, $module->name)) {
+            print_error('moduledisable');
+        }
     }
 
     return array($module, $context, $cw);

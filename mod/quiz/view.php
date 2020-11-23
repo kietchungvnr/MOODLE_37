@@ -243,6 +243,19 @@ if (!$viewobj->quizhasquestions) {
 $viewobj->showbacktocourse = ($viewobj->buttontext === '' &&
         course_get_format($course)->has_view_page());
 
+// Custom by Vũ: Quản lý kỳ thi không hiện thị nút làm bài khi là giáo viên
+// type = 0 là kỳ thi bắt buộc, 1 là kỳ thi tự do
+// roleid = 4 là giáo viên, 5 là học viên
+if(!is_siteadmin() && $DB->record_exists('exam_user', ['userid' => $USER->id, 'roleid' => 4])) {
+    $examsubjectexams = $DB->get_record_sql("SELECT esx.examid
+                                                FROM {exam_subject_exam} esx 
+                                                    LEFT JOIN {exam_quiz} eq ON esx.id = eq.subjectexamid
+                                                    LEFT JOIN {exam} e ON e.id = esx.examid
+                                                WHERE eq.coursemoduleid = :cm AND e.type = 0", ['cm' => $cm->id]);
+    if($examsubjectexams)
+        $canattempt = false;
+}
+
 echo $OUTPUT->header();
 
 if (isguestuser()) {

@@ -31,24 +31,29 @@ require_once($CFG->libdir.'/completionlib.php');
 require_once($CFG->libdir.'/plagiarismlib.php');
 require_once($CFG->dirroot . '/course/modlib.php');
 require_once($CFG->dirroot . '/local/newsvnr/lib.php');
+require_once($CFG->dirroot . '/calendar/lib.php');
 
-$add    = optional_param('add', '', PARAM_ALPHA);     // module name
+$add    = optional_param('add', '', PARAM_ALPHANUM);     // Module name.
 $update = optional_param('update', 0, PARAM_INT);
 $return = optional_param('return', 0, PARAM_BOOL);    //return to course/view.php if false or mod/modname/view.php if true
 $type   = optional_param('type', '', PARAM_ALPHANUM); //TODO: hopefully will be removed in 2.0
 $sectionreturn = optional_param('sr', null, PARAM_INT);
-
+$folderid = optional_param('folderid', 0, PARAM_INT);
+$examsubjectexamid = optional_param('examsubjectexamid', 0, PARAM_INT);
 $url = new moodle_url('/course/modedit.php');
 $url->param('sr', $sectionreturn);
-if (!empty($return)) {
+    if (!empty($return)) {
     $url->param('return', $return);
 }
-
 if (!empty($add)) {
     $section = required_param('section', PARAM_INT);
     $course  = required_param('course', PARAM_INT);
+    //tạo module theo thư mục , chỉ dùng cho course = 1
+
 
     $url->param('add', $add);
+    $url->param('folderid', $folderid);
+    $url->param('examsubjectexamid', $examsubjectexamid);
     $url->param('section', $section);
     $url->param('course', $course);
     $PAGE->set_url($url);
@@ -65,6 +70,8 @@ if (!empty($add)) {
     $data->return = 0;
     $data->sr = $sectionreturn;
     $data->add = $add;
+    $data->folderid = $folderid;
+    $data->examsubjectexamid = $examsubjectexamid;
     if (!empty($type)) { //TODO: hopefully will be removed in 2.0
         $data->type = $type;
     }
@@ -148,14 +155,24 @@ if($data->modulename == 'resource' || $data->modulename == 'book') {
     }
 }
 $mformclassname = 'mod_'.$module->name.'_mod_form';
-$mform = new $mformclassname($data, $cw->section, $cm, $course);
+$mform = new $mformclassname($data, $cw->section, $cm, $course, $folderid, $examsubjectexamid);
 $mform->set_data($data);
 
 if ($mform->is_cancelled()) {
     if ($return && !empty($cm->id)) {
-        redirect("$CFG->wwwroot/mod/$module->name/view.php?id=$cm->id");
+        $urlparams = [
+            'id' => $cm->id, // We always need the activity id.
+            'forceview' => 1, // Stop file downloads in resources.
+        ];
+        $activityurl = new moodle_url("/mod/$module->name/view.php", $urlparams);
+        redirect($activityurl);
     } else {
-        redirect(course_get_url($course, $cw->section, array('sr' => $sectionreturn)));
+        //Custom by Thang : Thêm điều kiện redirect khi course = 1
+        if($course->id == SITEID) {
+            redirect($CFG->wwwroot . $_SESSION['url']);
+        } else {
+            redirect(course_get_url($course, $cw->section, array('sr' => $sectionreturn)));
+        }
     }
 } else if ($fromform = $mform->get_data()) {
     // Custom by Vũ: Đẩy danh sách quiz qua hrm via api
@@ -191,6 +208,69 @@ if ($mform->is_cancelled()) {
             HTTPPost($url_hrm, $params_hrm);
         }
         $fromform = add_moduleinfo($fromform, $course, $mform);
+        //Dữ liệu insert vào table library_module khi course = 1 (thư viện trực tuyến)
+        if($course->id == SITEID && $add != 'quiz') {
+            $record = new stdClass();
+            $record->folderid = $folderid;
+            $record->timecreated = time();
+            $record->userid = $USER->id;
+            $record->coursemoduleid = $fromform->coursemodule;
+            $record->moduletype = $fromform->modulename;
+            if(!is_siteadmin()) {
+                $record->approval = 0;
+            }
+            if($fromform->modulename == 'resource') {
+                $getfile = $DB->get_record_sql("SELECT TOP 1 * 
+                                                FROM {files} 
+                                                where component = 'user' 
+                                                    AND filearea = 'draft' 
+                                                    AND itemid = :itemid 
+                                                    AND filesize IS NOT NULL",array('itemid' => $fromform->files));
+                $record->minetype = $getfile->mimetype;
+                $record->filesize = $getfile->filesize;
+            }
+            
+            $DB->insert_record('library_module',$record);
+        }
+        // Custom by Vũ: Dữ liệu insert vào table exam_quiz khi course = 1 và auto tạo sự kiện kỳ thi vào lịch theo (kì thi ngoài khóa)
+        if($course->id == SITEID && $add == 'quiz') {
+            $examrecord = new stdClass();
+            $examrecord->coursemoduleid = $fromform->coursemodule;
+            $examrecord->subjectexamid = $examsubjectexamid;
+            $examrecord->timecreated = time();
+            $examrecord->timemodified = time();
+            $examrecord->usercreate = $USER->id;
+            $examrecord->usermodified = $USER->id;
+            $get_quizid = $DB->get_field('course_modules', 'instance', ['id' => $fromform->coursemodule]);
+            $quizinfo = $DB->get_field('quiz', 'id', ['id' => $get_quizid]);
+            $get_subjectid = $DB->get_field('exam_subject_exam', 'subjectid', ['id' => $examsubjectexamid]);
+            $subjectname = $DB->get_field('exam_subject', 'name', ['id' => $get_subjectid]);
+            $DB->insert_record('exam_quiz',$examrecord);
+            $sql = "SELECT eu.userid, e.name
+                    FROM {exam_subject_exam} esx
+                        LEFT JOIN {exam_user} eu ON esx.examid = eu.examid
+                        LEFT JOIN {exam} e ON e.id = esx.examid
+                    WHERE esx.id = :subjectexamid";
+            $listexamuser = $DB->get_records_sql($sql, ['subjectexamid' => $examsubjectexamid]);
+            $calendarevents = [];
+            foreach ($listexamuser as $examuser) {
+                $event = new stdClass();
+                $event->eventtype = 'open';
+                $event->type = CALENDAR_IMPORT_FROM_URL;
+                $event->name = $examuser->name . ' - ' . $subjectname;
+                $event->description = '';
+                $event->format = FORMAT_HTML;
+                $event->courseid = SITEID;
+                $event->groupid = 0;
+                $event->userid = $examuser->userid;
+                $event->modulename = 'quiz';
+                $event->instance = $quizinfo;
+                $event->timestart = time();
+                $event->timesort = time();
+                $event->timemodified = time();
+                calendar_event::create($event);
+            }
+        }
     } else {
         print_error('invaliddata');
     }
@@ -203,7 +283,12 @@ if ($mform->is_cancelled()) {
             redirect($fromform->gradingman->get_management_url($url));
         }
     } else {
-        redirect(course_get_url($course, $cw->section, array('sr' => $sectionreturn)));
+        //Custom by Thang : Thêm điều kiện redirect khi course = 1
+        if($course->id == SITEID) {
+            redirect($CFG->wwwroot . $_SESSION['url']);
+        } else {
+            redirect(course_get_url($course, $cw->section, array('sr' => $sectionreturn)));
+        }
     }
     exit;
 
