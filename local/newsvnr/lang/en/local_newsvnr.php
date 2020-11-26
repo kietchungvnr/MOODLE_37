@@ -486,3 +486,5 @@ $string['listuser'] = "Danh sách thí sinh";
 $string['examresult'] = "Kết quả thi";
 $string['viewexaminfo'] = "Chi tiết kỳ thi";
 $string['numberquiz'] = "Số lượng đề thi";
+$string['checkdatestart'] = "Ngày bắt đầu phải lớn hơn hoặc bằng ngày hiện tại";
+$string['checkdateend'] = "Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu";

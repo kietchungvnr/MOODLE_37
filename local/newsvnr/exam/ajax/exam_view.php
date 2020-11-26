@@ -115,17 +115,19 @@ switch ($action) {
 								LEFT JOIN mdl_exam_subject es ON es.id = esx.subjectid 
 							$wheresql
 							) AS total
-				FROM (SELECT ROW_NUMBER() OVER (ORDER BY esx.examid) AS RowNum, esx.examid, es.name, esx.subjectid, COUNT(eq.coursemoduleid) AS numberquiz
+				FROM (SELECT ROW_NUMBER() OVER (ORDER BY esx.examid) AS RowNum, esx.examid, es.name, esx.subjectid, eq.subjectexamid, COUNT(eq.coursemoduleid) AS numberquiz
 						FROM mdl_exam_subject_exam esx 
 							LEFT JOIN mdl_exam_subject es ON es.id = esx.subjectid
 							LEFT JOIN mdl_exam_quiz eq ON eq.subjectexamid = esx.id
 						$wheresql
-						GROUP BY esx.examid, es.name, esx.subjectid
+						GROUP BY esx.examid, es.name, esx.subjectid, eq.subjectexamid
 					) AS Mydata
 				ORDER BY $ordersql";
 		$get_list = $DB->get_records_sql($sql);
     	foreach($get_list as $quiz) {
     		$obj = new stdclass;
+    		$obj->subjectid = $quiz->subjectid;
+    		$obj->subjectexamid = $quiz->subjectexamid;
     		$obj->name = $quiz->name;
     		$obj->numberquiz = $quiz->numberquiz;
     		$obj->total = $quiz->total;
@@ -164,6 +166,23 @@ switch ($action) {
     	}
 		echo json_encode($data, JSON_UNESCAPED_UNICODE);
 		die;
+	case 'exam_listsubjectexam_detail':
+		$subjectexamid = optional_param('subjectexamid', 0, PARAM_INT);
+		$get_list = $DB->get_records_sql('SELECT eq.coursemoduleid, q.name
+										FROM mdl_exam_quiz eq 
+											LEFT JOIN mdl_course_modules cm ON eq.coursemoduleid = cm.id
+											LEFT JOIN mdl_quiz q ON cm.instance = q.id
+										WHERE eq.subjectexamid = :subjectexamid', ['subjectexamid' => $subjectexamid]);
+		$output = '';
+		$stt = 1;
+		$quizurl = $CFG->wwwroot . '/mod/quiz/view.php?id=';
+		foreach($get_list as $quiz) {
+			$output .= '<li><a href="'.$quizurl.$quiz->coursemoduleid.'">' . $stt . '. ' .$quiz->name . '</a></li>';
+			$stt++;
+		}
+		$data['success'] = $output;
+		echo json_encode($data, JSON_UNESCAPED_UNICODE);
+		die;
 	case 'exam_listusersexam_grid':
 		$examid = optional_param('examid', 0, PARAM_INT);
 		$wheresql = "";
@@ -196,7 +215,8 @@ switch ($action) {
     	foreach($get_list as $user) {
     		$obj = new stdclass;
     		// $obj->id = $user->id;
-    		$obj->fullname = $user->fullname;
+    		$userimg = $DB->get_record('user', ['id' => $user->userid]);
+			$obj->fullname = $OUTPUT->user_picture($userimg, array('size'=>35)) . fullname($userimg);
     		$obj->email = $user->email;
     		$obj->enrolltime = convertunixtime('d/m/Y, H:i A',$user->timecreated);
     		$obj->total = $user->total;
@@ -280,9 +300,16 @@ switch ($action) {
 					$obj->fullname = $OUTPUT->user_picture($user, array('size'=>35)) . fullname($user);
 					$obj->userid = $value->userid;
 					$quizid = $DB->get_field('course_modules', 'instance',['id' => $value->coursemoduleid]);
-					$quiz = $DB->get_record('quiz', ['id' => $quizid]); 
-					$quizcolumn = "quiz" . $quiz->id;
-					$obj->$quizcolumn = 0;
+					$quiz = $DB->get_record_sql('SELECT q.id, qg.grade 
+												FROM {quiz} q
+													JOIN {quiz_grades} qg ON q.id = qg.quiz
+												WHERE qg.quiz = :quizid', ['quizid' => $quizid]); 
+					$quizcolumn = "quiz" . $quizid;
+					if($quiz) {
+						$obj->$quizcolumn = $quiz->grade;
+					} else {
+						$obj->$quizcolumn = '-';
+					}
 					$obj->total = $value->total;
 					$results[$value->userid] = $obj;
 					$firsttime = false;
@@ -292,18 +319,32 @@ switch ($action) {
 				if(isset($results)) {
 					if(in_array($value->userid, $userarr)) {
 						$quizid = $DB->get_field('course_modules', 'instance',['id' => $value->coursemoduleid]);
-						$quiz = $DB->get_record('quiz', ['id' => $quizid]); 
-						$quizcolumn = "quiz" . $quiz->id;
-						$results[$value->userid]->$quizcolumn = 0;
+						$quiz = $DB->get_record_sql('SELECT q.id, qg.grade 
+													FROM {quiz} q
+														JOIN {quiz_grades} qg ON q.id = qg.quiz
+													WHERE q.id = :quizid', ['quizid' => $quizid]); 
+						$quizcolumn = "quiz" . $quizid;
+						if($quiz) {
+							$results[$value->userid]->$quizcolumn = $quiz->grade;
+						} else {
+							$results[$value->userid]->$quizcolumn = '-';
+						}
 					} else {
 						$obj = new stdClass;
 						$user = $DB->get_record('user', ['id' => $value->userid]);
 						$obj->fullname = $OUTPUT->user_picture($user, array('size'=>35)) . fullname($user);
 						$obj->userid = $value->userid;
 						$quizid = $DB->get_field('course_modules', 'instance',['id' => $value->coursemoduleid]);
-						$quiz = $DB->get_record('quiz', ['id' => $quizid]); 
-						$quizcolumn = "quiz" . $quiz->id;
-						$obj->$quizcolumn = 0;
+						$quiz = $DB->get_record_sql('SELECT q.id, qg.grade 
+													FROM {quiz} q
+														JOIN {quiz_grades} qg ON q.id = qg.quiz
+													WHERE qg.quiz = :quizid', ['quizid' => $quizid]); 
+						$quizcolumn = "quiz" . $quizid;
+						if($quiz) {
+							$obj->$quizcolumn = $quiz->grade;
+						} else {
+							$obj->$quizcolumn = '-';
+						}
 						$obj->total = $value->total;
 						$results[$value->userid] = $obj;
 						$userarr[] = $value->userid;

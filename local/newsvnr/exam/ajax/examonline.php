@@ -64,8 +64,8 @@ if ($action == "exam_category") {
         }
         $list_exam = $DB->get_records_sql("SELECT DISTINCT e.id, e.name 
                                             FROM mdl_exam e 
-                                                JOIN mdl_exam_subject_exam esx ON e.id = esx.examid
-                                                JOIN mdl_exam_user eu ON eu.examid = e.id
+                                                LEFT JOIN mdl_exam_subject_exam esx ON e.id = esx.examid
+                                                LEFT JOIN mdl_exam_user eu ON eu.examid = e.id
                                             $wheresql", ['userid' => $USER->id, 'examtype' => $examtype]);
     } else {
         $list_exam = $DB->get_records('exam', ['type' => $examtype, 'visible' => 1]);
