@@ -264,3 +264,68 @@ CREATE TABLE mdl_files_request
 ALTER TABLE mdl_library_module
 ADD approval INT NOT NULL DEFAULT 1
 --- *** Kết thúc script cho bản build version '07112020' ***--
+
+--- *** Script cho bản build version '28112020' *** ---
+CREATE TABLE mdl_exam
+(
+	id BIGINT NOT NULL IDENTITY(1, 1),
+	name NVARCHAR(200) NOT NULL,
+	code NVARCHAR(50) NOT NULL,
+	[type] SMALLINT NOT NULL,
+	datestart BIGINT NULL,
+	dateend BIGINT NULL,
+	[timecreated] BIGINT NULL,
+	[timemodified] BIGINT NULL,
+	usercreate BIGINT NOT NULL,
+	usermodified BIGINT NOT NULL,
+	visible SMALLINT NOT NULL DEFAULT ((1)),
+	[description] NVARCHAR(200) NULL
+)
+
+CREATE TABLE mdl_exam_subject
+(
+	id BIGINT NOT NULL IDENTITY(1, 1),
+	name NVARCHAR(200) NOT NULL,
+	code NVARCHAR(50) NOT NULL,
+	shortname NVARCHAR(100) NOT NULL,
+	[timecreated] BIGINT NULL,
+	[timemodified] BIGINT NULL,
+	usercreate BIGINT NOT NULL,
+	usermodified BIGINT NOT NULL,
+	visible SMALLINT NOT NULL DEFAULT ((1)),
+	[description] NVARCHAR(200) NULL
+)
+CREATE TABLE mdl_exam_subject_exam
+(
+	id BIGINT NOT NULL IDENTITY(1, 1),
+	examid BIGINT NOT NULL,
+	subjectid BIGINT NOT NULL,
+	[timecreated] BIGINT NULL,
+	[timemodified] BIGINT NULL,
+	usercreate BIGINT NOT NULL,
+	usermodified BIGINT NOT NULL,
+)
+
+CREATE TABLE mdl_exam_user
+(
+	id BIGINT NOT NULL IDENTITY(1, 1),
+	examid BIGINT NOT NULL,
+	userid BIGINT NOT NULL,
+	enrolmethod NVARCHAR(50) NOT NULL,
+	roleid BIGINT NOT NULL,
+	[timecreated] BIGINT NULL,
+	[timemodified] BIGINT NULL,
+	usercreate BIGINT NOT NULL,
+	usermodified BIGINT NOT NULL,
+)
+CREATE TABLE mdl_exam_quiz
+(
+	id BIGINT NOT NULL IDENTITY(1, 1),
+	coursemoduleid BIGINT NOT NULL,
+	subjectexamid BIGINT NOT NULL,
+	[timecreated] BIGINT NULL,
+	[timemodified] BIGINT NULL,
+	usercreate BIGINT NOT NULL,
+	usermodified BIGINT NOT NULL,
+)
+--- *** Kết thúc script cho bản build version '28112020' ***--

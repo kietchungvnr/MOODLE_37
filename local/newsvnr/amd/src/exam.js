@@ -1435,7 +1435,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                     dataSource: newDataSource(settingsListSbujectExam),
                     dataTextField: "name",
                     dataValueField: "id",
-                    placeholder: "Chọn môn thi",
+                    placeholder: M.util.get_string('selectsubjectexam', 'local_newsvnr'),
                     filter: "contains",
                     change: function(e) {
                         var subjectId = this.value();
@@ -1443,7 +1443,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                             $("#exam-result-grid").data('kendoGrid').destroy();
                         }
                         if(subjectId < 0) {
-                            alertify.error('Vui lòng chọn môn thi', 'error', 3);
+                            alertify.error(M.util.get_string('requiredselectsubjectexam', 'local_newsvnr'), 'error', 3);
                             return true;
                         }
                         var settings = {
@@ -1461,7 +1461,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                         $.ajax(scriptExamView, settings).then(function(resp) {
                             if(!resp.data_columns) {
                                 $('#exam-result-grid').css('height', '25px');
-                                $('#exam-result-grid').html('<div class="alert-danger d-flex justify-content-center p-2">' + 'Không có đề thi cho môn này!' + '!</div>');
+                                $('#exam-result-grid').html('<div class="alert-danger d-flex justify-content-center p-2">' + M.util.get_string('noquizforsubjectexam', 'local_newsvnr')+ '!</div>');
                                 return false;
                             } else {
                                 $('#exam-result-grid').empty();
@@ -1521,8 +1521,8 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                                 height: 450,
                                 columns: resp.data_columns,
                                 noRecords: {
-                                    template: '<span class="grid-empty">Không có dữ liệu trong lưới!</span>'
-                                },
+                                    template: '<span class="grid-empty">' + M.util.get_string('emptydata', 'local_newsvnr') + '</span>'
+                                }
                             });
                         });
                     }

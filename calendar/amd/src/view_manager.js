@@ -55,7 +55,6 @@ define([
 
             // Bind click events to event links.
             root.on('click', CalendarSelectors.links.eventLink, function(e) {
-                debugger
                 var target = $(e.target);
                 var eventId = null;
 

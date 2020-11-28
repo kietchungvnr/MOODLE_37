@@ -114,17 +114,20 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
             }
             eventArr.push(objEventDelete);
         }
-        gridConfig.columns.push({
-            title: 'Action',
-            command: eventArr,
-            width: 100
-        });
+        if(eventArr.length > 0) {
+            gridConfig.columns.push({
+                title: M.util.get_string('action', 'local_newsvnr'),
+                command: eventArr,
+                width: 100
+            });
+        }
         return {
             dataSource: newDatasourceGrid(gridConfig),
             persistSelection: true,
             groupable: false,
             //sortable: true,
             resizable: true,
+            selectable: "multiple",
             //dataBound: gridConfig.dataBound,
             //height: 520,
             toolbar: ["search"],
@@ -139,9 +142,8 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
             },
             columns: gridConfig.columns,
             noRecords: {
-                template: 'No Records'
-            },
-            // editable: "popup"
+                template: '<span class="grid-empty">' + M.util.get_string('emptydata', 'local_newsvnr') + '</span>'
+            }
         }
     };
     var newDatasourceGrid = function(gridConfig) {

@@ -41,9 +41,7 @@ $PAGE->navbar->add($title,$url);
 $PAGE->navbar->ignore_active();
 $PAGE->requires->js_call_amd('local_newsvnr/exam', 'initViewExam');
 $PAGE->requires->strings_for_js(
-                                array('required', 'free', 'clear', 'name',
-                                    'code', 'shortname', 'description', 'examvisible',
-                                    'createexam', 'enrol', 'examtype', 'selectexamtype', 'subjectexam', 'selectsubjectexam', 'cohort', 'selectcohort', 'teacherrole', 'studentrole', 'examuserfullname', 'usercreate', 'enrollexamuser', 'editenrollexamuser', 'numbersubjectexam', 'enrolltime', 'listexamrequired', 'listexamfree', 'addnew', 'examdatestart', 'examdateend', 'fieldrequired', 'edit', 'createsubjectexam', 'type', 'email', 'selectusers', 'role', 'error_norowselectd', 'deleteall', 'confirm_datadelete', 'warning_examdelete', 'numberquiz', 'listsubjectexam', 'accept', 'cancel', 'checkdatestart', 'checkdateend'), 'local_newsvnr');
+                                array('required', 'free', 'clear', 'name', 'code', 'shortname', 'description', 'examvisible', 'createexam', 'enrol', 'examtype', 'selectexamtype', 'subjectexam', 'selectsubjectexam', 'cohort', 'selectcohort', 'teacherrole', 'studentrole', 'examuserfullname', 'usercreate', 'enrollexamuser', 'editenrollexamuser', 'numbersubjectexam', 'enrolltime', 'listexamrequired', 'listexamfree', 'addnew', 'examdatestart', 'examdateend', 'fieldrequired', 'edit', 'createsubjectexam', 'type', 'email', 'selectusers', 'role', 'error_norowselectd', 'deleteall', 'confirm_datadelete', 'warning_examdelete', 'numberquiz', 'listsubjectexam', 'accept', 'cancel', 'checkdatestart', 'checkdateend', 'manageenroll', 'list', 'action', 'emptydata', 'noquizforsubjectexam', 'requiredselectsubjectexam'), 'local_newsvnr');
 $output = $PAGE->get_renderer('local_newsvnr');
 
 

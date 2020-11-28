@@ -65,7 +65,7 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
 
         if(eventArr.length > 0) {
             gridConfig.columns.push({
-                title: 'Chức năng',
+                title: M.util.get_string('action', 'local_newsvnr'),
                 command: eventArr,
                 width: 180
             });    
@@ -79,12 +79,12 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
             }
             var objEventEdit = {
                 click: funcEnroll,
-                text: 'Ghi danh',
+                text: M.util.get_string('enrol', 'local_newsvnr'),
                 name: "enroll",
                 iconClass: 'fa fa-user-plus text-primary mr-1',
             }
             gridConfig.columns.push({
-                title: 'Quản lý ghi danh',
+                title: M.util.get_string('manageenroll', 'local_newsvnr'),
                 command: objEventEdit,
                 width: 155
             });
@@ -100,7 +100,7 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
             }
             var objEventListSubjectExamDetail = {
                 click: funcListSubjectExamDetail,
-                text: 'Danh sách',
+                text: M.util.get_string('list', 'local_newsvnr'),
                 name: "",
                 iconClass: 'fa fa-list-alt text-primary mr-1',
             }
@@ -132,7 +132,7 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
             },
             columns: gridConfig.columns,
             noRecords: {
-                template: '<span class="grid-empty">Không có dữ liệu trong lưới!</span>'
+                template: '<span class="grid-empty">' + M.util.get_string('emptydata', 'local_newsvnr') + '</span>'
             }
         }
     };
