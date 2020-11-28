@@ -328,6 +328,8 @@ class mod_quiz_renderer extends plugin_renderer_base {
         $output .= $panel->render_before_button_bits($this);
 
         $bcc = $panel->get_button_container_class();
+        $output .= $panel->render_countdown_timer($this);
+        // Custom by Thắng : đưa thời gian thi lên đầu
         $output .= html_writer::start_tag('div', array('class' => "qn_buttons clearfix $bcc"));
         foreach ($panel->get_question_buttons() as $button) {
             $output .= $this->render($button);

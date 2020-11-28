@@ -56,3 +56,10 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
         initSearchAutoComplete: initSearchAutoComplete
     }
 })
+// vd:
+// var kendoConfig = {};
+// kendoConfig.cascadeFrom = "examname";
+// kendoConfig.apiSettings = apiSettings;
+// kendoConfig.value = "examsubjectexamid";
+// var initDropDownList = kendoService.initDropDownList(kendoConfig);
+// $("#subjectname").kendoDropDownList(initDropDownList);

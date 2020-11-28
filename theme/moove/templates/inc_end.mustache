@@ -443,11 +443,9 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
         });
     };
     ////phân trang table thư viện điện tử///
-    const pageLibrary = (url) => {
+    const nextPage = (url,place) => {
         require(['jquery', 'core/config'], ($, config) => {
             $('.loading-page').addClass('active');
-            var folderid = $('#pagination').attr('folderid');
-            var search = $('#pagination').attr('search');
             var settings = {
                 type:"GET",
                 processData:true,   
@@ -456,7 +454,7 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             $.ajax(url,settings)
             .then(function(response) {
                 var obj = $.parseJSON(response);
-                $('#table-library').hide().html(obj.result).fadeIn('fast');
+                $(place).hide().html(obj.result).fadeIn('fast');
                 $('#pagination').replaceWith(obj.pagination);
                 $('.loading-page').removeClass('active');
             })

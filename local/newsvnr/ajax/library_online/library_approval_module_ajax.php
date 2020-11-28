@@ -28,6 +28,7 @@ define('AJAX_SCRIPT', false);
 
 require_once __DIR__ . '/../../../../config.php';
 require_once $CFG->dirroot . '/local/newsvnr/lib.php';
+require_once $CFG->dirroot . '/course/lib.php';
 require_login();
 $PAGE->set_context(context_system::instance());
 
@@ -39,7 +40,7 @@ if (isset($_POST['dataselect'])) {
 switch ($action) {
     case 'delete':
         $DB->delete_records('library_module', ['coursemoduleid' => $moduleid]);
-        $DB->delete_records('course_modules', ['id' => $moduleid]);
+        course_delete_module($moduleid);
         break;
     case 'hide':
         $DB->update_record('course_modules', ['id' => $moduleid, 'visible' => 0]);
@@ -54,7 +55,7 @@ switch ($action) {
     case 'deleteselect':
         foreach ($dataselect as $value) {
             $DB->delete_records('library_module', ['coursemoduleid' => $value->id]);
-            $DB->delete_records('course_modules', ['id' => $value->id]);
+            course_delete_module($value->id);
         }
         break;
     case 'approvalselect':
