@@ -243,8 +243,8 @@ if ($mform->is_cancelled()) {
             $examrecord->usermodified = $USER->id;
             $get_quizid = $DB->get_field('course_modules', 'instance', ['id' => $fromform->coursemodule]);
             $quizinfo = $DB->get_field('quiz', 'id', ['id' => $get_quizid]);
-            $get_subjectid = $DB->get_field('exam_subject_exam', 'subjectid', ['id' => $examsubjectexamid]);
-            $subjectname = $DB->get_field('exam_subject', 'name', ['id' => $get_subjectid]);
+            // $get_subjectid = $DB->get_field('exam_subject_exam', 'subjectid', ['id' => $examsubjectexamid]);
+            // $subjectname = $DB->get_field('exam_subject', 'name', ['id' => $get_subjectid]);
             $DB->insert_record('exam_quiz',$examrecord);
             $sql = "SELECT eu.userid, e.name
                     FROM {exam_subject_exam} esx
@@ -257,7 +257,7 @@ if ($mform->is_cancelled()) {
                 $event = new stdClass();
                 $event->eventtype = 'open';
                 $event->type = CALENDAR_IMPORT_FROM_URL;
-                $event->name = $examuser->name . ' - ' . $subjectname;
+                $event->name = $DB->get_field('quiz', 'name', ['id' => $get_quizid]);
                 $event->description = '';
                 $event->format = FORMAT_HTML;
                 $event->courseid = SITEID;

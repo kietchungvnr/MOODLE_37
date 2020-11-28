@@ -95,7 +95,8 @@ echo '  <li class="nav-item" data-key="systemfiles">
 if(is_siteadmin()) {
     echo '  <li class="nav-item " data-key="rolepermissions">
             <a class="nav-link" href="#rolepermissions" data-toggle="tab">'.$strrolepermissions.'</a>
-        </li>';
+        </li><li class="nav-item " data-key="rolepermissionsmanage">
+            <a class="nav-link" href="#rolepermissionsmanage" data-toggle="tab">Quản lý quyền người dùng</a></li>';
 }
 
 echo '</ul>';
@@ -124,7 +125,9 @@ if(is_siteadmin()) {
     echo $OUTPUT->box_end();
     echo '</div>';
 }
-
+// Tab quản lý quyền
+echo '<div class="tab-pane fade" id="rolepermissionsmanage">';
+echo '<div id="rolepermissionsmanage_grid" class="mt-3"></div><div id="md-viewlistuser"></div>';
 echo '</div>';
 
 echo $OUTPUT->footer();

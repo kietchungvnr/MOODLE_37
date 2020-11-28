@@ -235,6 +235,7 @@ define([
 
     return {
         init: function(root) {
+            debugger
             root = $(root);
             CalendarViewManager.init(root);
             registerEventListeners(root);

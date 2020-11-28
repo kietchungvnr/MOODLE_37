@@ -29,15 +29,9 @@
         {{#candelete}}
             <button type="button" class="btn btn-secondary" data-action="delete">{{#str}} delete {{/str}}</button>
         {{/candelete}}
-        {{#action.actionable}}
-            <a href="{{action.url}}">{{{action.name}}}</a>
-        {{/action.actionable}}
-        {{^action.actionable}}
-            {{#isactionevent}}
-            <a href="{{url}}">{{#str}} gotoactivity, core_calendar {{/str}}</a>
-            {{/isactionevent}}
-        {{/action.actionable}}
-
+        {{#isactionevent}}
+            <a href="{{url}}" class="btn btn-primary">{{#str}} gotoactivity, core_calendar {{/str}}</a>
+        {{/isactionevent}}
         {{^isactionevent}}
             {{#canedit}}
                 <button type="button" class="btn btn-primary" data-action="edit">{{#str}} edit {{/str}}</button>
