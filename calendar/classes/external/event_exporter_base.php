@@ -90,6 +90,10 @@ class event_exporter_base extends exporter {
         $data->visible = $event->is_visible() ? 1 : 0;
         $data->timemodified = $event->get_times()->get_modified_time()->getTimestamp();
 
+        $data->hasexam = false;
+        $data->examname = '';
+        $data->subjectexamname = '';
+
         if ($repeats = $event->get_repeats()) {
             $data->repeatid = $repeats->get_id();
             $data->eventcount = $repeats->get_num() + 1;
@@ -178,6 +182,15 @@ class event_exporter_base extends exporter {
             'timesort' => ['type' => PARAM_INT],
             'visible' => ['type' => PARAM_INT],
             'timemodified' => ['type' => PARAM_INT],
+            'hasexam' => [
+                'type' => PARAM_BOOL
+            ],
+            'examname' => [
+                'type' => PARAM_TEXT
+            ],
+            'subjectexamname' => [
+                'type' => PARAM_TEXT
+            ]
         ];
     }
 

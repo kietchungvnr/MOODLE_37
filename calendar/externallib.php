@@ -789,7 +789,7 @@ class core_calendar_external extends external_api {
      * @return array Array of event details
      */
     public static function get_calendar_event_by_id($eventid) {
-        global $PAGE, $USER;
+        global $PAGE, $USER, $DB;
 
         $params = self::validate_parameters(self::get_calendar_event_by_id_parameters(), ['eventid' => $eventid]);
         $context = \context_user::instance($USER->id);
@@ -819,8 +819,29 @@ class core_calendar_external extends external_api {
 
         $exporter = new event_exporter($event, $relatedobjects);
         $renderer = $PAGE->get_renderer('core_calendar');
-
-        return array('event' => $exporter->export($renderer), 'warnings' => $warnings);
+        
+        // Custom by Vũ: Chỉnh sửa event đối với sự kiện của kỳ thi trong/ngoài khóa, course = 1 và mod = quiz
+        $data = $exporter->export($renderer);
+        if($data->modulename == 'quiz' && $data->course->id = SITEID) {
+            $exam_info = $DB->get_record_sql('SELECT e.name AS examname, es.name AS subjectexamname 
+                                            FROM mdl_exam_quiz eq 
+                                                LEFT JOIN mdl_exam_subject_exam ese ON eq.subjectexamid = ese.id
+                                                LEFT JOIN mdl_exam e ON e.id = ese.examid
+                                                LEFT JOIN mdl_exam_subject es ON es.id = ese.subjectid
+                                            WHERE eq.coursemoduleid = :coursemoduleid', ['coursemoduleid' => $data->instance]);
+                    
+            $data->hasexam = true;
+            if($exam_info->examname)
+                $data->examname = $exam_info->examname;
+            else
+                $data->examname = '';
+        
+            if($exam_info->subjectexamname)
+                $data->subjectexamname = $exam_info->subjectexamname;
+            else
+                $data->subjectexamname = '';
+        }
+        return array('event' => $data, 'warnings' => $warnings);
     }
 
     /**

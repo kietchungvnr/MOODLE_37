@@ -541,30 +541,32 @@ switch ($action) {
 			foreach($alluser as $user) {
 				$examsubjectexams = $DB->get_records('exam_subject_exam', ['examid' => $examid]);
 				foreach($examsubjectexams as $examsubjectexam) {
-					$examquiz = $DB->get_record('exam_quiz', ['subjectexamid' => $examsubjectexam->id]);
-					if(!$examquiz)
+					$examquizes = $DB->get_records('exam_quiz', ['subjectexamid' => $examsubjectexam->id]);
+					foreach($examquizes as $examquiz) {
+						if(!$examquiz)
 						continue;
-					$examname = $DB->get_field('exam', 'name',['id' => $examid]);
-					$subjectname = $DB->get_field('exam_subject', 'name',['id' => $examsubjectexam->subjectid]);
-					$quizid = $DB->get_field('course_modules', 'instance',['id' => $examquiz->coursemoduleid]);
-					if(isset($examquiz) && $DB->record_exists('event', ['courseid' => SITEID, 'userid' => $user->userid, 'instance' => $DB->get_field('course_modules', 'instance',['id' => $examquiz->coursemoduleid])])) {
-						continue;
-					} else {
-						$event = new stdClass();
-						$event->eventtype = 'open';
-						$event->type = CALENDAR_IMPORT_FROM_URL;
-						$event->name = $examname . ' - ' . $subjectname;
-						$event->description = '';
-						$event->format = FORMAT_HTML;
-						$event->courseid = SITEID;
-						$event->groupid = 0;
-						$event->userid = $user->userid;
-						$event->modulename = 'quiz';
-						$event->instance = $quizid;
-						$event->timestart = time();
-						$event->timesort = time();
-						$event->timemodified = time();
-						calendar_event::create($event);
+						// $examname = $DB->get_field('exam', 'name',['id' => $examid]);
+						// $subjectname = $DB->get_field('exam_subject', 'name',['id' => $examsubjectexam->subjectid]);
+						$quizid = $DB->get_field('course_modules', 'instance',['id' => $examquiz->coursemoduleid]);
+						if(isset($examquiz) && $DB->record_exists('event', ['courseid' => SITEID, 'userid' => $user->userid, 'instance' => $DB->get_field('course_modules', 'instance',['id' => $examquiz->coursemoduleid])])) {
+							continue;
+						} else {
+							$event = new stdClass();
+							$event->eventtype = 'open';
+							$event->type = CALENDAR_IMPORT_FROM_URL;
+							$event->name = $DB->get_field('quiz', 'name', ['id' => $quizid]);
+							$event->description = '';
+							$event->format = FORMAT_HTML;
+							$event->courseid = SITEID;
+							$event->groupid = 0;
+							$event->userid = $user->userid;
+							$event->modulename = 'quiz';
+							$event->instance = $quizid;
+							$event->timestart = time();
+							$event->timesort = time();
+							$event->timemodified = time();
+							calendar_event::create($event);
+						}
 					}
 				}
 			}
