@@ -115,6 +115,12 @@ if ($examid == 0 && $examsubjectexamid == 0) {
         // Load theo kì thi
         $subjectdata = $DB->get_records_sql($sql . " WHERE esx.id = :examsubjectexamid AND e.type = :examtype AND es.visible = 1 AND e.visible = 1 $wheresql", ['examsubjectexamid' => $examsubjectexamid, 'examtype' => $examtype]);
     }
+    if ($examid == 0) {
+        $subjectdata = $DB->get_records_sql($sql . " WHERE esx.id = :examsubjectexamid AND e.type = :examtype", ['examsubjectexamid' => $examsubjectexamid, 'examtype' => $examtype]);
+    } else {
+        // Load theo kì thi
+        $subjectdata = $DB->get_records_sql($sql . " WHERE esx.id = :examsubjectexamid AND e.type = :examtype AND e.id = :examid", ['examsubjectexamid' => $examsubjectexamid, 'examtype' => $examtype, 'examid' => $examid]);
+    }
 }
 foreach ($subjectdata as $subject) {
     if ($examsubjectexamid) {

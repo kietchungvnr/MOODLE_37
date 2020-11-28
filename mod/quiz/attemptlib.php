@@ -2629,11 +2629,16 @@ class quiz_attempt_nav_panel extends quiz_nav_panel_base {
         return html_writer::tag('div', get_string('navnojswarning', 'quiz'),
                 array('id' => 'quiznojswarning'));
     }
-
+    // Đưa count down thời gian làm bài thi lên đầu
     public function render_end_bits(mod_quiz_renderer $output) {
         $html  = '';
-        $html .= html_writer::div($output->countdown_timer($this->attemptobj, time()));
+        // $html .= html_writer::div($output->countdown_timer($this->attemptobj, time()));
         $html .= html_writer::link($this->attemptobj->summary_url(),get_string('endtest', 'quiz'), array('class' => 'endtestlink btn btn-primary')).$this->render_restart_preview_link($output);
+        return $html ;
+    }
+    public function render_countdown_timer(mod_quiz_renderer $output) {
+        $html  = '';
+        $html .= html_writer::div($output->countdown_timer($this->attemptobj, time()));
         return $html ;
     }
 }
@@ -2664,6 +2669,10 @@ class quiz_review_nav_panel extends quiz_nav_panel_base {
         }
         $html .= $output->finish_review_link($this->attemptobj);
         $html .= $this->render_restart_preview_link($output);
+        return $html;
+    }
+    public function render_countdown_timer(mod_quiz_renderer $output) { 
+        $html  = '';
         return $html;
     }
 }
