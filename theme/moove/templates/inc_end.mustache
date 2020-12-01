@@ -79,6 +79,32 @@ require(['jquery', 'core/config'], function($, Config) {
         ).addClass('active-nav').siblings().removeClass('active-nav');
     });
 
+    // active UI câu hỏi trong bài kiểm tra quiz
+    if($('#responseform')) {
+        $('#responseform .content input').click(function() {
+            var questionId = $(this).attr('id');
+            var split = questionId.split(":");
+            var splitAgian = split[1].split("_");
+            var result = '#question-' + split[0].slice(1) + '-' + splitAgian[0];
+            for(var i = 1; i <= $('a.qnbutton').length; i++) {
+            var elment = 'a#quiznavbutton' + i;
+            if($(elment).attr('href') == '#') {
+                $(elment).addClass('answersaved').removeClass('notyetanswered');
+            } else if($(elment).attr('href') == result) {
+                $(elment).addClass('answersaved').removeClass('notyetanswered');
+            }
+        }
+
+        })
+        $('.qtype_multichoice_clearchoice').click(function() {
+            var elm = $(this).attr('id');
+            var splitElm = elm.split(":");
+            var splitElmAgian = splitElm[1].split("_");
+            var result = 'a#quiznavbutton' + splitElmAgian[0];
+            $(result).addClass('notyetanswered').removeClass('answersaved');
+        })
+    }
+
 }); 
 require(['theme_moove/library_folder']);
 
@@ -560,7 +586,6 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             $('#page-local-newsvnr-generallibrary #iframepermissions').css('height', '645px');
             $.ajax(script, settings)
             .then(function(resp) {
-                debugger;
                 var contextid = resp;
                 var roleurl = Config.wwwroot + '/admin/roles/portalpermissions.php?contextid=' + contextid + '&userid=' + userid + '&courseid=1';
                 var iframe = '<iframe id="iframe" src="'+roleurl+'" width="100%" height="645" frameBorder="0"></iframe>';
