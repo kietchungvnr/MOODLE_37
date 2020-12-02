@@ -13,6 +13,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], fu
     /// Thêm thư mục mới
     var scriptfolder = "/local/newsvnr/ajax/library_online/library_folder_ajax.php";
     var scriptmodule = "/local/newsvnr/ajax/library_online/library_module_ajax.php";
+    var scriptshare = "/local/newsvnr/ajax/library_online/library_share_module.php?action=";
     Str.get_strings(strings).then(function(s) {
         $('#add-new-folder').click(function() {
             var foldername = $('.add-folder-popup #foldername').val();
@@ -33,7 +34,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], fu
                 contenttype: "application/json",
             }
             if (foldername == '') {
-                alertify.alert(s[0],s[2]);
+                alertify.alert(s[0], s[2]);
                 return;
             }
             $.ajax(scriptfolder, settings).then(function(response) {
@@ -46,7 +47,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], fu
         // mở popup setting thư mục
         $('.tree-folder .folder').bind("contextmenu", function(e) {
             $('.popup-setting').hide();
-            if($(this).hasClass('show')) {
+            if ($(this).hasClass('show')) {
                 var visible = 1;
             } else {
                 var visible = 0;
@@ -61,9 +62,9 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], fu
                 data: {
                     visible: visible,
                     action: action,
-                    allmodule:allmodule,
-                    folderid:folderid,
-                    foldername:foldername
+                    allmodule: allmodule,
+                    folderid: folderid,
+                    foldername: foldername
                 },
                 contenttype: "application/json",
             }
@@ -80,7 +81,6 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], fu
             $.ajax(scriptfolder, settings).then(function(response) {
                 var obj = $.parseJSON(response);
                 $.when($('.popup-setting ul').replaceWith(obj.setting)).then(setting.show());
-   
             });
         });
         $('body').click(function() {
@@ -242,6 +242,67 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], fu
             }
             $.ajax(href, settings).then(function() {
                 $('#library-approval-module').data("kendoGrid").dataSource.read();
+            })
+        })
+        // Mở popup share module thư viện vào khóa học
+        $('#table-library').on('click', 'a#share-module-library', function(e) {
+            $('#share-popup-modal-module').modal('show');
+            var moduleid = $(this).attr('moduleid');
+            $('#module-from-library').attr('moduleid', moduleid);
+        })
+        // kendo lọc khóa học 
+        $("#course-share-input").kendoDropDownList({
+            dataTextField: "name",
+            dataValueField: "courseid",
+            autoBind: false,
+            filter: "contains",
+            dataSource: {
+                transport: {
+                    read: {
+                        url: scriptshare + 'filter_course',
+                        contentType: 'application/json; charset=utf-8',
+                        type: 'POST',
+                        dataType: 'json',
+                        serverFiltering: true
+                    }
+                }
+            }
+        });
+        // kendo lọc section của khóa học
+        $("#course-section-input").kendoDropDownList({
+            cascadeFrom: "course-share-input",
+            dataTextField: "name",
+            dataValueField: "sectionid",
+            autoBind: false,
+            filter: "contains",
+            dataSource: {
+                transport: {
+                    read: {
+                        url: scriptshare + 'filter_course_section',
+                        contentType: 'application/json; charset=utf-8',
+                        type: 'POST',
+                        dataType: 'json',
+                        serverFiltering: true
+                    }
+                }
+            }
+        });
+        $("#share-module-library").click(function(){
+            var moduleid = $('#module-from-library').attr('moduleid');
+            var courseid = $('#course-share-input').val();
+            var sectionid = $('#course-section-input').val();
+            var settings = {
+                type: "GET",
+                processData: true,
+                dataType: "json",
+                data: {
+                    moduleid: moduleid,
+                    courseid: courseid,
+                    sectionid: sectionid
+                }
+            }
+            $.ajax(scriptshare+'share_module', settings).then(function(response) {
+                alertify.notify(response.success, 'success', 3);
             })
         })
     })

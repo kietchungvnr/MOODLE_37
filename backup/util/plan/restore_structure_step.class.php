@@ -60,7 +60,7 @@ abstract class restore_structure_step extends restore_step {
     }
 
     final public function execute() {
-
+        global $COURSE; // Custom by Vũ: duplicate module trong trang thư viện - Thêm $COURSE
         if (!$this->execute_condition()) { // Check any condition to execute this
             return;
         }
@@ -77,7 +77,11 @@ abstract class restore_structure_step extends restore_step {
 
         // And it MUST exist
         if (!file_exists($fullpath)) { // Shouldn't happen ever, but...
-            throw new restore_step_exception('missing_moodle_backup_xml_file', $fullpath);
+            // Custom by Vũ: duplicate module trong trang thư viện(không có file backup xml)
+            if($COURSE->id == 1)
+                return;
+            else
+                throw new restore_step_exception('missing_moodle_backup_xml_file', $fullpath);
         }
 
         // Get restore_path elements array adapting and preparing it for processing

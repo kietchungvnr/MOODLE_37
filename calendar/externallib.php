@@ -831,10 +831,10 @@ class core_calendar_external extends external_api {
                                                 LEFT JOIN mdl_exam_subject es ON es.id = ese.subjectid
                                             WHERE eq.coursemoduleid = :coursemoduleid', ['coursemoduleid' => $data->instance]);
                     
-            $data->hasexam = true;
-            if($exam_info->examname)
+            if($exam_info->examname) {
                 $data->examname = $exam_info->examname;
-            else
+                $data->hasexam = true;
+            } else
                 $data->examname = '';
         
             if($exam_info->subjectexamname)
