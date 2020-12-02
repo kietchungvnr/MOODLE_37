@@ -69,12 +69,17 @@ switch ($action) {
         }
         break;
     case 'share_module':
-        $cm = get_coursemodule_from_id('', $moduleid, 0, true, MUST_EXIST);
-        $cm->course = $courseid;
-        $sectiondata = $DB->get_record('course_sections',['id' => $sectionid]);
-        $cm->section = $sectiondata->section;
-        $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-        $newcm = duplicate_module($course, $cm);
+        list($course, $cm) = get_course_and_cm_from_cmid($moduleid);
+        $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+        $newcm = new stdClass;
+        $newcm->id = $cm->id;
+        $newcm->modname = $cm->modname;
+        $newcm->name = $cm->name;
+        $newcm->section = $sectionid;
+        $newcm->course = $courseid;
+        $newcm = duplicate_module_library($course, $newcm);
+        $data['success'] = get_string('sharemodulesuccess', 'local_newsvnr');
+        // cache_helper::purge_all();
         break;
     default:
         break;

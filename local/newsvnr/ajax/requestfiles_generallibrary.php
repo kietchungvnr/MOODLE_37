@@ -205,7 +205,7 @@ switch ($action) {
                 FROM mdl_role_capabilities rc 
                     LEFT JOIN mdl_context ctx ON rc.contextid = ctx.id 
                     LEFT JOIN mdl_user u ON u.id = ctx.instanceid
-                WHERE rc.capability = :capability AND rc.roleid > 1 AND rc.contextid <> 1";
+                WHERE rc.capability = :capability AND rc.roleid > 1 AND rc.contextid <> 1 AND permission = 1";
         $get_list = $DB->get_records_sql($sql, ['capability' => $capability]);
        
         if($get_list) {

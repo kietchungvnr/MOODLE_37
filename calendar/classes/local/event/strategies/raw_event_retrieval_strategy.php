@@ -316,7 +316,7 @@ class raw_event_retrieval_strategy implements raw_event_retrieval_strategy_inter
         $events = $DB->get_records_sql($sql, $params, $offset, $limitnum);
         foreach ($events as $keyevent => $event) {
             if($event->courseid == 1 && $event->modulename == 'quiz') {
-                if($event->userid == $users)
+                if($event->userid == $user)
                     continue;
                 else 
                     unset($events[$keyevent]);

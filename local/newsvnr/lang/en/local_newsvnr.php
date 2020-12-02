@@ -487,3 +487,5 @@ $string['list'] = 'List';
 $string['noquizforsubjectexam'] = 'There are no exam questions for this subject!';
 $string['requiredselectsubjectexam'] = 'Please select exam subjects';
 $string['managerolesuser'] = 'Manage roles user';
+$string['sharemodulesuccess'] = 'Successfully added resource to the course!';
+$string['eventtype_exam'] = "Exam event";

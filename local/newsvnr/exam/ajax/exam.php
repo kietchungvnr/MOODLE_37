@@ -180,7 +180,7 @@ switch ($action) {
 			// $obj->datestart =  new \DateTime($value->datestart, core_date::get_user_timezone_object(99));
 			$obj->datestart = convertunixtime('d/m/Y, H:i A',$value->datestart);
 			$obj->dateend = convertunixtime('d/m/Y, H:i A',$value->dateend);
-			$obj->datestart_raw = convertunixtime('r',$value->dateend);
+			$obj->datestart_raw = convertunixtime('r',$value->datestart);
 			$obj->dateend_raw = convertunixtime('r',$value->dateend);
 			$obj->usercreate = fullname($DB->get_record('user',['id' => $value->usercreate]));
 			$obj->visible = $value->visible;
@@ -548,7 +548,7 @@ switch ($action) {
 						// $examname = $DB->get_field('exam', 'name',['id' => $examid]);
 						// $subjectname = $DB->get_field('exam_subject', 'name',['id' => $examsubjectexam->subjectid]);
 						$quizid = $DB->get_field('course_modules', 'instance',['id' => $examquiz->coursemoduleid]);
-						if(isset($examquiz) && $DB->record_exists('event', ['courseid' => SITEID, 'userid' => $user->userid, 'instance' => $DB->get_field('course_modules', 'instance',['id' => $examquiz->coursemoduleid])])) {
+						if(!isset($examquiz) && $DB->record_exists('event', ['courseid' => SITEID, 'userid' => $user->userid, 'instance' => $DB->get_field('course_modules', 'instance',['id' => $examquiz->coursemoduleid])])) {
 							continue;
 						} else {
 							$event = new stdClass();
