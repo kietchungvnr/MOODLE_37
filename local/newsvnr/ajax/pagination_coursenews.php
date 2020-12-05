@@ -25,14 +25,14 @@ if($courseid)
 			JOIN mdl_user us on us.id = p.userid
             where f.type='news' and fn.filesize>0
             and fn.filearea = 'attachment'
-			and f.course = ? and p.parent = 0
+			and f.course = ? and p.parent = 0 and f.course != 1
             order by p.id desc";
 }
 else{
 	$sql = "SELECT p.id as postid, d.countviews, d.id as discussionid, f.course, p.message,p.subject,p.modified,fn.contextid,fn.component,fn.filearea,fn.filepath,fn.itemid,fn.filename,CONCAT(us.firstname,' ',us.lastname) as name
             from mdl_forum f join mdl_forum_discussions d on f.id=d.forum and f.course=d.course join mdl_forum_posts p on d.id = p.discussion join mdl_files fn on d.firstpost = fn.itemid JOIN mdl_user us on us.id = p.userid
             where f.type='news' and fn.filesize>0
-            and fn.filearea = 'attachment' and p.parent = 0
+            and fn.filearea = 'attachment' and p.parent = 0 and f.course != 1
             order by p.id desc";
 }
 

@@ -29,7 +29,6 @@
       "validatefm" : "//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min",
     }
 });
-
 require(['theme_boost/loader']);
 require(['theme_boost/drawer'], function(mod) {
     mod.init();
@@ -134,6 +133,7 @@ var id = $('.new-detail-chat').attr('data');
 $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussionid='+id);
 {{/js}}
 <script type="text/javascript">
+
     function getSelectRow(gridname) {
         var myGrid = $(gridname).getKendoGrid();
         var selectedRows = myGrid.select();
@@ -503,7 +503,7 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
         require(['jquery', 'core/config'], ($, Config) => {
             $('.loading-page').addClass('active');
             page++;
-            var url = Config.wwwroot + "/ajax/pagination_comment.php";
+            var url = Config.wwwroot + "/local/newsvnr/ajax/pagination_comment.php";
             var settings = {
                 type:"GET",
                 processData:true,
@@ -786,9 +786,7 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
                     dataSelect : data
                 }
             };
-            debugger
             if(arrObject.length == 0) {
-                debugger
                 alertify.error('{{#str}} approvalerror,local_newsvnr {{/str}}');
             } 
             else {

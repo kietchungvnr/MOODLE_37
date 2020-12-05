@@ -68,6 +68,12 @@ class forum extends exporter {
                     'gradingenabled' => ['type' => PARAM_BOOL],
                 ],
             ],
+            // Custom by Thắng : thêm properties kiểm tra loại tin tức
+            'check' => [
+                'type' => [
+                    'isnew' => ['type' => PARAM_BOOL],
+                ],
+            ],
             'userstate' => [
                 'type' => [
                     'tracked' => ['type' => PARAM_INT],
@@ -110,13 +116,16 @@ class forum extends exporter {
      * @return array Keys are the property names, values are their values.
      */
     protected function get_other_values(renderer_base $output) {
+        global $DB; 
         $capabilitymanager = $this->related['capabilitymanager'];
         $urlfactory = $this->related['urlfactory'];
         $user = $this->related['user'];
         $currentgroup = $this->related['currentgroup'];
+        //Custom by Thắng : thêm điều kiện check tin tức chung
+        $datacourse = $DB->get_record('forum',['id' => $this->forum->get_id()]);
+        $isnew = ($datacourse->course == 1) ? true : false ;
         $vaultfactory = $this->related['vaultfactory'];
         $discussionvault = $vaultfactory->get_discussions_in_forum_vault();
-
         return [
             'id' => $this->forum->get_id(),
             'name' => $this->forum->get_name(),
@@ -126,6 +135,9 @@ class forum extends exporter {
             ],
             'userstate' => [
                 'tracked' => forum_tp_is_tracked($this->get_forum_record(), $this->related['user']),
+            ],
+            'check' => [
+                'isnew' => $isnew,
             ],
             'capabilities' => [
                 'viewdiscussions' => $capabilitymanager->can_view_discussions($user),

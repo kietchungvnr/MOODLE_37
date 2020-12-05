@@ -1,6 +1,6 @@
 define(["jquery", "core/config", 'kendo.all.min', "core/str", "core/notification", "local_newsvnr/initkendocontrolservices"], function($, Config, kendo, Str, Notification, kendoService) {
     var init = function() {
-            var strings = [{
+        var strings = [{
             key: 'listexamrequired',
             component: 'local_newsvnr'
         }, {
@@ -80,6 +80,7 @@ define(["jquery", "core/config", 'kendo.all.min', "core/str", "core/notification
                 $('#menu-tree-exam li.exam').removeClass('active');
                 $('#menu-tree-exam li.subject-exam').removeClass('active');
                 $('#menu-tree-exam li.exam').addClass('not-allow');
+                $('#add-quiz').addClass('d-none');
                 $(this).addClass('active');
                 $('.content-expand.' + examid).slideToggle();
                 $(this).children('i.rotate-icon').toggleClass('active');

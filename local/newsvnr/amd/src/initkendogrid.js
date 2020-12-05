@@ -20,11 +20,12 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
             }
             return arrObject;
         };
-
-        gridConfig.columns.unshift({
-            selectable: true,
-            width: 45
-        });
+        if(gridConfig.selectable === undefined) {
+            gridConfig.columns.unshift({
+                selectable: true,
+                width: 45
+            });
+        }
         //edit
         // if (gridConfig.selectRowEvent != undefined) {
         //     var funcSelectRow = function(e) {
@@ -61,6 +62,20 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
                 iconClass: 'fa fa-check',
             }
             eventArr.push(objEventApprovalModule);
+        }
+        if (gridConfig.viewCourseInfoPopupEvent != undefined) {
+            var funcViewCourseInfoPopup = function(e) {
+                e.preventDefault();
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                gridConfig.viewCourseInfoPopupEvent(dataItem);
+            }
+            var objEventViewCourseInfoPopup = {
+                click: funcViewCourseInfoPopup,
+                text: M.util.get_string('viewcourse', 'local_newsvnr'),
+                name: M.util.get_string('viewcourse', 'local_newsvnr'),
+                iconClass: '',
+            }
+            eventArr.push(objEventViewCourseInfoPopup);
         }
         if (gridConfig.deleteModuleEvent != undefined) {
             var funcDeleteModule = function(e) {
@@ -121,6 +136,9 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
                 width: 100
             });
         }
+        if(gridConfig.toolbar === undefined) {
+            gridConfig.toolbar = ["search"];
+        } 
         return {
             dataSource: newDatasourceGrid(gridConfig),
             persistSelection: true,
@@ -130,7 +148,8 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
             selectable: "multiple",
             //dataBound: gridConfig.dataBound,
             //height: 520,
-            toolbar: ["search"],
+            toolbar: gridConfig.toolbar,
+            excel: gridConfig.excel,
             search: {
                 fields: ["name"]
             },

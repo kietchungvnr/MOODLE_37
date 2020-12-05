@@ -36,22 +36,22 @@
     data-region="post"
     data-target="{{id}}-target"
     tabindex="0"
-    aria-labelledby="post-header-{{id}}-{{uniqid}}"
+    aria-labelledby="post-header-{{id}}"
     aria-describedby="post-content-{{id}}"
 >
-    {{! The firstpost and starter classes below aren't used for anything other than to identify the first post in behat. }}
+    <!-- The firstpost and starter classes below aren't used for anything other than to identify the first post in behat -->
     <div
-        class="d-flex border p-2 mb-2 forumpost focus-target {{#unread}}unread{{/unread}} {{#firstpost}}firstpost starter{{/firstpost}}"
+        class="d-flex border-bottom p-2 mb-2 forumpost focus-target {{#unread}}unread{{/unread}} {{#firstpost}}firstpost starter{{/firstpost}}"
         aria-label='{{#str}} postbyuser, mod_forum, {"post": "{{subject}}", "user": "{{author.fullname}}"} {{/str}}'
         data-post-id="{{id}}" data-content="forum-post"
     >
         {{#isfirstunread}}<a id="unread" aria-hidden="true"></a>{{/isfirstunread}}
 
         <div class="d-flex flex-column w-100"  data-region-content="forum-post-core">
-            <header id="post-header-{{id}}-{{uniqid}}" class="mb-2 header row d-flex">
+            <header  class="header row d-flex">
                 {{^isdeleted}}
                     {{#author}}
-                        <div class="mr-2" style="width: 45px;">
+                        <div class="mr-2" style="width: 35px;">
                             {{#urls.profileimage}}
                                 <img
                                     class="rounded-circle w-100"
@@ -68,24 +68,20 @@
                     {{#parentauthorname}}
                         <span class="sr-only">{{#str}} inreplyto, mod_forum, {{.}} {{/str}}</span>
                     {{/parentauthorname}}
-                    {{$subjectheading}}
-                        <h3 {{!
-                            }}class="h6 font-weight-bold mb-0" {{!
-                            }}data-region-content="forum-post-core-subject" {{!
-                            }}data-reply-subject="{{replysubject}}" {{!
-                            }}>{{$subject}}{{{subject}}}{{/subject}}</h3>
-                    {{/subjectheading}}
+                    <h4 {{!
+                        }}class="h6 font-weight-bold mb-0 font-14" {{!
+                        }}data-region-content="forum-post-core-subject" {{!
+                        }}data-reply-subject="{{replysubject}}" {{!
+                        }}>{{$subject}}{{{subject}}}{{/subject}}</h4>
                     {{^isdeleted}}
-                        <div class="mb-3" tabindex="-1">
+                        <address tabindex="-1">
                             {{#html.authorsubheading}}{{{.}}}{{/html.authorsubheading}}
                             {{^html.authorsubheading}}
-                                {{< core/time_element }}
-                                    {{$elementid}}created-{{id}}-{{uniqid}}{{/elementid}}
-                                    {{$timestampval}}{{timecreated}}{{/timestampval}}
-                                    {{$userdateformatval}}{{#str}} strftimedaydatetime, core_langconfig {{/str}}{{/userdateformatval}}
-                                {{/core/time_element}}
+                                <time>
+                                    {{#userdate}} {{timecreated}}, {{#str}} strftimedaydatetime, core_langconfig {{/str}} {{/userdate}}
+                                </time>
                             {{/html.authorsubheading}}
-                        </div>
+                        </address>
                     {{/isdeleted}}
                     {{#isprivatereply}}
                         <div class="privatereplyinfo">
@@ -101,7 +97,7 @@
             <div class="d-flex body-content-container">
                 {{^isdeleted}}
                     {{#author}}
-                        <div class="mr-2 author-groups-container" style="width: 45px; flex-shrink: 0">
+                        <div class="mr-2 d-none author-groups-container">
                             {{#groups}}
                                 {{#urls.group}}
                                     {{#urls.image}}
@@ -130,7 +126,7 @@
                     {{/author}}
                 {{/isdeleted}}
 
-                <div class="no-overflow w-100 content-alignment-container">
+                <div class="w-100 content-alignment-container">
                     <div id="post-content-{{id}}" class="post-content-container">
                         {{{message}}}
                     </div>
@@ -183,14 +179,14 @@
                             {{/isimage}}
                         {{/attachments}}
 
-                        {{^readonly}}
-                            <div class="d-flex flex-wrap">
-                                {{#html.rating}}
-                                    <div class="mt-2">{{{.}}}</div>
-                                {{/html.rating}}
-                                {{$actions}}
+                        <div class="d-flex flex-wrap">
+                            {{#html.rating}}
+                                <div class="mt-2">{{{.}}}</div>
+                            {{/html.rating}}
+                            {{$actions}}
+                                {{^readonly}}
                                     <div
-                                        class="post-actions d-flex align-self-end justify-content-end flex-wrap ml-auto"
+                                        class="post-actions d-flex align-self-end justify-content-end flex-wrap"
                                         data-region="post-actions-container"
                                         role="menubar"
                                         aria-label='{{#str}} postbyuser, mod_forum, {"post": "{{subject}}", "user": "{{author.fullname}}"} {{/str}}'
@@ -201,10 +197,9 @@
                                                 <a
                                                     data-region="post-action"
                                                     href="{{{urls.view}}}"
-                                                    class="btn btn-link"
+                                                    class="btn btn-link d-none"
                                                     title="{{#str}} permanentlinktopost, mod_forum {{/str}}"
                                                     aria-label="{{#str}} permanentlinktopost, mod_forum {{/str}}"
-                                                    role="menuitem"
                                                 >
                                                     {{#str}} permalink, mod_forum {{/str}}
                                                 </a>
@@ -214,8 +209,7 @@
                                                     <a
                                                         data-region="post-action"
                                                         href="{{{urls.markasread}}}"
-                                                        class="btn btn-link"
-                                                        role="menuitem"
+                                                        class="btn btn-link d-none"
                                                     >
                                                         {{#str}} markread, mod_forum {{/str}}
                                                     </a>
@@ -224,8 +218,7 @@
                                                     <a
                                                         data-region="post-action"
                                                         href="{{{urls.markasunread}}}"
-                                                        class="btn btn-link"
-                                                        role="menuitem"
+                                                        class="btn btn-link d-none"
                                                     >
                                                         {{#str}} markunread, mod_forum {{/str}}
                                                     </a>
@@ -235,10 +228,9 @@
                                                 <a
                                                     data-region="post-action"
                                                     href="{{{.}}}"
-                                                    class="btn btn-link"
+                                                    class="btn btn-link d-none"
                                                     title="{{#str}} permanentlinktoparentpost, mod_forum {{/str}}"
                                                     aria-label="{{#str}} permanentlinktoparentpost, mod_forum {{/str}}"
-                                                    role="menuitem"
                                                 >
                                                     {{#str}} parent, mod_forum {{/str}}
                                                 </a>
@@ -248,7 +240,6 @@
                                                     data-region="post-action"
                                                     href="{{{urls.edit}}}"
                                                     class="btn btn-link"
-                                                    role="menuitem"
                                                 >
                                                     {{#str}} edit, mod_forum {{/str}}
                                                 </a>
@@ -257,8 +248,7 @@
                                                 <a
                                                     data-region="post-action"
                                                     href="{{{urls.split}}}"
-                                                    class="btn btn-link"
-                                                    role="menuitem"
+                                                    class="btn btn-link d-none"
                                                 >
                                                     {{#str}} prune, mod_forum {{/str}}
                                                 </a>
@@ -268,7 +258,6 @@
                                                     data-region="post-action"
                                                     href="{{{urls.delete}}}"
                                                     class="btn btn-link"
-                                                    role="menuitem"
                                                 >
                                                     {{#str}} delete, mod_forum {{/str}}
                                                 </a>
@@ -283,7 +272,6 @@
                                                         data-action="collapsible-link"
                                                         data-can-reply-privately="{{canreplyprivately}}"
                                                         title="{{#str}} reply, mod_forum {{/str}}"
-                                                        role="menuitem"
                                                     >
                                                         {{#str}} reply, mod_forum {{/str}}
                                                     </a>
@@ -293,12 +281,11 @@
                                                 {{#selfenrol}}
                                                     {{$replyoutput}}
                                                         <a
-                                                            href="{{{urls.reply}}}"
-                                                            class="btn btn-link"
-                                                            data-post-id="{{id}}"
-                                                            data-can-reply-privately="{{canreplyprivately}}"
-                                                            title="{{#str}} reply, mod_forum {{/str}}"
-                                                            role="menuitem"
+                                                                href="{{{urls.reply}}}"
+                                                                class="btn btn-link"
+                                                                data-post-id="{{id}}"
+                                                                data-can-reply-privately="{{canreplyprivately}}"
+                                                                title="{{#str}} reply, mod_forum {{/str}}"
                                                         >
                                                             {{#str}} reply, mod_forum {{/str}}
                                                         </a>
@@ -309,17 +296,16 @@
                                                 <a
                                                     data-region="post-action"
                                                     href="{{{urls.export}}}"
-                                                    class="btn btn-link"
-                                                    role="menuitem"
+                                                    class="btn btn-link d-none"
                                                 >
                                                     {{#str}} addtoportfolio, core_portfolio {{/str}}
                                                 </a>
                                             {{/export}}
                                         {{/capabilities}}
                                     </div>
-                                {{/actions}}
-                            </div>
-                        {{/readonly}}
+                                {{/readonly}}
+                            {{/actions}}
+                        </div>
 
                         {{$footer}}{{/footer}}
                     {{/isdeleted}}
@@ -328,13 +314,15 @@
         </div>
     </div>
 
+    <div data-region="replies-container">
     {{$replies}}
-        <div data-region="replies-container">
-            {{#hasreplies}}
-                {{#replies}}
-                    {{> mod_forum/forum_discussion_post }}
-                {{/replies}}
-            {{/hasreplies}}
+        <div>
+        {{#hasreplies}}
+            {{#replies}}
+                {{> mod_forum/forum_discussion_post }}
+            {{/replies}}
+        {{/hasreplies}}
         </div>
     {{/replies}}
+    </div>
 </article>

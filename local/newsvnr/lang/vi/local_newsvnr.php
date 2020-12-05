@@ -487,5 +487,7 @@ $string['list'] = 'Danh sách';
 $string['noquizforsubjectexam'] = 'Không có đề thi cho môn này!';
 $string['requiredselectsubjectexam'] = 'Vui lòng chọn môn thi';
 $string['managerolesuser'] = 'Quản lý quyền người dùng';
+$string['viewcourse'] = 'Xem khóa';
 $string['sharemodulesuccess'] = 'Thêm thành công nguyên vào khóa!';
 $string['eventtype_exam'] = "Sự kiện kỳ thi";
+$string['examtimevalidate'] = "Thời gian bắt đầu và kết thúc bài thi phải nằm trong khoảng thời gian thi";

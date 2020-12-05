@@ -148,7 +148,7 @@ class mod_forum_post_form extends moodleform {
                 $new = $DB->get_record_sql("SELECT DISTINCT fr.id FROM mdl_forum fr
                                                     JOIN mdl_forum_discussions fd ON fr.course = fd.course
                                                 WHERE fd.course = :courseid AND fr.type = 'news'",['courseid' => $cm->course]);
-                if(isset($new)) {
+                if($new != false) {
                     $mform->addRule('attachments', get_string('required'), 'required', null, 'client');
                 }
             }

@@ -487,5 +487,7 @@ $string['list'] = 'List';
 $string['noquizforsubjectexam'] = 'There are no exam questions for this subject!';
 $string['requiredselectsubjectexam'] = 'Please select exam subjects';
 $string['managerolesuser'] = 'Manage roles user';
+$string['viewcourse'] = 'View course';
 $string['sharemodulesuccess'] = 'Successfully added resource to the course!';
 $string['eventtype_exam'] = "Exam event";
+$string['examtimevalidate'] = "Exam start and end times must be within the exam period";
