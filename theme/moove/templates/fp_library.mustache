@@ -62,10 +62,10 @@
 														  <option value="searchname">{{#str}}searchbyname, local_newsvnr{{/str}}</option>
 														  <option value="searchcontent">{{#str}}searchbycontent, local_newsvnr{{/str}}</option>
 														</select>
-					                       				<div class="pl-0 pr-0 text-right float-right d-flex border">
+					                       				<div class="pl-0 pr-0 text-right float-right d-flex border" >
 													 		<input id="searchlibrary" folderid="0" type="text" searchtype="searchname" placeholder=""><i class="fa fa-search library"></i>
 													 	</div>
-													 </div>
+													</div>
 												</div>
 												<div class="overflow-auto">
 													<table class="table" >
@@ -182,4 +182,28 @@
 		    </div>
   		</div>
 	</div>
+	{{! popup chia sẻ module từ thư viện sang khóa học }}
+	<div class="modal modal-share-module" id="share-popup-modal-module">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+				    <h4 class="modal-title">Đưa tài liệu từ thư viện vào khóa học</h4>
+				    <button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<div class="modal-body">
+					<p class="font-bold mb-1 mt-2">Tài nguyên</p>
+        			<div class="w-100" id="module-from-library"></div>
+					<p class="font-bold mb-1 mt-2">Khóa học</p>
+        			<div class="w-100" id="course-share-input"></div>
+				 	<p class="font-bold mb-1 mt-2">Section Khóa học</p>
+        			<div class="w-100" id="course-section-input"></div>
+				</div>
+				<div class="modal-footer">
+				    <button type="button" class="btn btn-primary" id="share-module-library">Thêm</button>
+				    <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancel-popup">{{#str}}cancel, local_newsvnr{{/str}}</button>
+				</div>
+			</div>
+		</div>
+    </div>
 {{>theme_moove/inc_end}}

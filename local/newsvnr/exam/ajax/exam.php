@@ -24,7 +24,7 @@
  * @author   Le Thanh Vu
  **/
 
-define('AJAX_SCRIPT', true);
+define('AJAX_SCRIPT', false);
 
 require_once __DIR__ . '/../../../../config.php';
 require_once __DIR__ . '/../../lib.php';
@@ -178,8 +178,10 @@ switch ($action) {
 				$obj->type = get_string('required', 'local_newsvnr');
 			}
 			// $obj->datestart =  new \DateTime($value->datestart, core_date::get_user_timezone_object(99));
-			$obj->datestart =  convertunixtime('d/m/Y, H:i A',$value->datestart, 'Asia/Ho_Chi_Minh');
-			$obj->dateend = convertunixtime('d/m/Y, H:i A',$value->dateend, 'Asia/Ho_Chi_Minh');
+			$obj->datestart = convertunixtime('d/m/Y, H:i A',$value->datestart);
+			$obj->dateend = convertunixtime('d/m/Y, H:i A',$value->dateend);
+			$obj->datestart_raw = convertunixtime('r',$value->datestart);
+			$obj->dateend_raw = convertunixtime('r',$value->dateend);
 			$obj->usercreate = fullname($DB->get_record('user',['id' => $value->usercreate]));
 			$obj->visible = $value->visible;
 			if($obj->visible == 1) {
@@ -200,7 +202,11 @@ switch ($action) {
         $obj->type        = (int)$exam_params['examtype'];
         $obj->datestart        = (int)$exam_params['examdatestart'];
         $obj->dateend        = (int)$exam_params['examdateend'];
-        $obj->visible        = (int)$exam_params['examvisible'];
+        if($exam_params['examvisible'] == 'true') {
+			$obj->visible = 1;
+		} else {
+			$obj->visible = 0;
+		}
         $obj->usercreate        = $USER->id;
         $obj->usermodified        = $USER->id;
         $obj->timecreated        = time();
@@ -233,6 +239,7 @@ switch ($action) {
         die;
     case 'exam_edit':
     	$obj              = new stdclass;
+    	// var_dump($exam_params);die;
     	$obj->id = (int)$exam_params['examid'];
         $obj->name        = $exam_params['examname'];
         $obj->code        = $exam_params['examcode'];
@@ -438,7 +445,9 @@ switch ($action) {
 			$obj = new stdclass;
 			$obj->id = $examuser->id;		
 			$obj->examname = $examuser->name;		
-			$obj->fullname = $examuser->fullname;
+			$userimg = $DB->get_record('user', ['id' => $examuser->userid]);
+			$obj->fullname = $OUTPUT->user_picture($userimg, array('size'=>35)) . fullname($userimg);
+			$obj->fullname_raw = $examuser->fullname;
 			$obj->userid = $examuser->userid;
 			$obj->roleid = $examuser->roleid;
 			if($examuser->roleid == 5) {
@@ -532,30 +541,32 @@ switch ($action) {
 			foreach($alluser as $user) {
 				$examsubjectexams = $DB->get_records('exam_subject_exam', ['examid' => $examid]);
 				foreach($examsubjectexams as $examsubjectexam) {
-					$examquiz = $DB->get_record('exam_quiz', ['subjectexamid' => $examsubjectexam->id]);
-					if(!$examquiz)
+					$examquizes = $DB->get_records('exam_quiz', ['subjectexamid' => $examsubjectexam->id]);
+					foreach($examquizes as $examquiz) {
+						if(!$examquiz)
 						continue;
-					$examname = $DB->get_field('exam', 'name',['id' => $examid]);
-					$subjectname = $DB->get_field('exam_subject', 'name',['id' => $examsubjectexam->subjectid]);
-					$quizid = $DB->get_field('course_modules', 'instance',['id' => $examquiz->coursemoduleid]);
-					if(isset($examquiz) && $DB->record_exists('event', ['courseid' => SITEID, 'userid' => $user->userid, 'instance' => $DB->get_field('course_modules', 'instance',['id' => $examquiz->coursemoduleid])])) {
-						continue;
-					} else {
-						$event = new stdClass();
-						$event->eventtype = 'open';
-						$event->type = CALENDAR_IMPORT_FROM_URL;
-						$event->name = $examname . ' - ' . $subjectname;
-						$event->description = '';
-						$event->format = FORMAT_HTML;
-						$event->courseid = SITEID;
-						$event->groupid = 0;
-						$event->userid = $user->userid;
-						$event->modulename = 'quiz';
-						$event->instance = $quizid;
-						$event->timestart = time();
-						$event->timesort = time();
-						$event->timemodified = time();
-						// calendar_event::create($event);
+						// $examname = $DB->get_field('exam', 'name',['id' => $examid]);
+						// $subjectname = $DB->get_field('exam_subject', 'name',['id' => $examsubjectexam->subjectid]);
+						$quizid = $DB->get_field('course_modules', 'instance',['id' => $examquiz->coursemoduleid]);
+						if(!isset($examquiz) && $DB->record_exists('event', ['courseid' => SITEID, 'userid' => $user->userid, 'instance' => $DB->get_field('course_modules', 'instance',['id' => $examquiz->coursemoduleid])])) {
+							continue;
+						} else {
+							$event = new stdClass();
+							$event->eventtype = 'open';
+							$event->type = CALENDAR_IMPORT_FROM_URL;
+							$event->name = $DB->get_field('quiz', 'name', ['id' => $quizid]);
+							$event->description = '';
+							$event->format = FORMAT_HTML;
+							$event->courseid = SITEID;
+							$event->groupid = 0;
+							$event->userid = $user->userid;
+							$event->modulename = 'quiz';
+							$event->instance = $quizid;
+							$event->timestart = time();
+							$event->timesort = time();
+							$event->timemodified = time();
+							calendar_event::create($event);
+						}
 					}
 				}
 			}

@@ -914,7 +914,11 @@ function file_get_drafarea_files($draftitemid, $filepath = '/') {
             }
 
             if ($file->is_directory()) {
-                $item->filesize = 0;
+                $foldersize = $DB->get_field_sql('SELECT SUM(filesize) AS foldersize 
+                                                FROM {files}
+                                                WHERE filepath = :filepath AND itemid = :itemid', ['filepath' => $file->get_filepath(),'itemid' => $file->get_itemid()]);
+                $item->filesize = display_size((int)$foldersize);
+                $item->size = (int)$foldersize;
                 $item->icon = $OUTPUT->image_url(file_folder_icon(24))->out(false);
                 $item->type = 'folder';
                 $foldername = explode('/', trim($item->filepath, '/'));

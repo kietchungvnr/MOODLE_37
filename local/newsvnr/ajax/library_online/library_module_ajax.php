@@ -28,7 +28,7 @@ define('AJAX_SCRIPT', false);
 require_once __DIR__ . '/../../../../config.php';
 require_once $CFG->dirroot . '/local/newsvnr/lib.php';
 require_once $CFG->dirroot . '\theme\moove\classes\output\core_renderer.php';
-require_once "library_pagination.php";
+require_once "../system_paginationAll.class.php";
 // require_login();
 $PAGE->set_context(context_system::instance());
 $perPage         = new PerPage();
@@ -42,7 +42,8 @@ $strmodulefilter = "N'" . '%' . $modulefilter . '%' . "'";
 $data            = [];
 $modulebyfolder  = [];
 $output          = '';
-$paginationlink  = $CFG->wwwroot . '/local/newsvnr/ajax/library_online/library_module_ajax.php?page=';
+$allowmodule      = ['book', 'lesson', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt'];
+$paginationlink  = $CFG->wwwroot . '/local/newsvnr/ajax/library_online/library_module_ajax.php?folderid='.$folderid.'&search='.$search.'&page=';
 if ($searchtype == "searchcontent") {
     $searchsql = "(CONCAT(rs.name,b.name) LIKE $strsearch OR lp.title LIKE $strsearch OR lp.contents LIKE $strsearch OR pa.intro LIKE $strsearch OR pa.content LIKE $strsearch OR ur.intro LIKE $strsearch)";
 } else {
@@ -61,18 +62,12 @@ $sql = "SELECT DISTINCT lm.*,cm.id,CONCAT(rs.name,b.name,l.name,i.name,pa.name,u
                         JOIN mdl_user u on u.id = lm.userid
                         JOIN mdl_library_folder lf on lf.id = lm.folderid
                     WHERE $searchsql AND lm.approval = 1 AND (lm.moduletype LIKE $strmodulefilter OR lm.minetype LIKE $strmodulefilter)";
-if ($page < 1) {
-    $page = 1;
-}
-$start = ($page - 1) * $perPage->perpageModule;
-if ($start < 10) {
-    $start = 0;
-}
+$start = $perPage->getStart($page);
 if ($folderid == 0) {
-    $modulebyfolder = $DB->get_records_sql("$sql ORDER BY timecreated DESC OFFSET $start ROWS FETCH NEXT 10 ROWS only");
+    $modulebyfolder = $DB->get_records_sql("$sql ORDER BY timecreated DESC OFFSET $start ROWS FETCH NEXT $perPage->itemPerPage ROWS only");
     $countall       = $DB->get_records_sql("$sql");
 } else {
-    $modulebyfolder = $DB->get_records_sql("$sql AND lm.folderid =:folderid ORDER BY timecreated DESC OFFSET $start ROWS FETCH NEXT 10 ROWS only", ['folderid' => $folderid]);
+    $modulebyfolder = $DB->get_records_sql("$sql AND lm.folderid =:folderid ORDER BY timecreated DESC OFFSET $start ROWS FETCH NEXT $perPage->itemPerPage ROWS only", ['folderid' => $folderid]);
     $countall       = $DB->get_records_sql("$sql AND lm.folderid =:folderid", ['folderid' => $folderid]);
 }
 if (!empty($modulebyfolder)) {
@@ -87,16 +82,18 @@ if (!empty($modulebyfolder)) {
                 $url = $CFG->wwwroot . '/mod/' . $module->moduletype . '/view.php?id=' . $module->id;
             }
             $output .= '<tr>';
-            if ($module->moduletype == 'url') {
-                $output .= '<td><a href="' . $url . '" target="_blank" >' . $img . '' . $module->name . '</a></td>';
-            } else {
+            if (($module->moduletype != 'resource' && in_array($module->moduletype, $allowmodule)) || ($module->moduletype == 'resource' && in_array($typeresource, $allowmodule))) {
                 $output .= '<td><a onclick="iFrameLibrary(\'' . $url . '\',\'' . $module->moduletype . '\')">' . $img . '' . $module->name . '</a></td>';
+            } else {
+                $output .= '<td><a href="' . $url . '" target="_blank" >' . $img . '' . $module->name . '</a></td>';
             }
+            // Xử lý đạng module
             if ($module->moduletype == "resource") {
                 $output .= '<td>' . strtoupper($typeresource) . '</td>';
             } else {
                 $output .= '<td>' . strtoupper($module->moduletype) . '</td>';
             }
+            // Xử lý file size của module resource
             if ($module->filesize > 0) {
                 $output .= '<td>' . display_size($module->filesize) . '</td>';
             } else {
@@ -124,7 +121,7 @@ if (!empty($modulebyfolder)) {
         }
     }
 }
-$perpageresult = $perPage->getAllPageLinks(count($countall), $paginationlink);
+$perpageresult = $perPage->getAllPageLinks(count($countall), $paginationlink ,'#table-library');
 if (!empty($perpageresult)) {
     $pagination = '<div class="col-md-12 mb-2" id="pagination" folderid="' . $folderid . '" search="' . $search . '">' . $perpageresult . '</div> </div>';
 } else {

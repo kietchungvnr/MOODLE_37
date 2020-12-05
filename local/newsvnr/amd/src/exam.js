@@ -31,7 +31,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
     // Convert datetime to unix
     function convertDateToUnix(datetime) {
         var date = new Date(datetime).toUTCString();
-        var result = (new Date(date).getTime() / 1000) + (3600 * 7);
+        var result = (new Date(date).getTime() / 1000);
         return result;
     }
 
@@ -74,25 +74,19 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
             onkeyup: false,
             onclick: false,
             rules: {
-                "subjectexam-name": {
+                "examname": {
                     required: true,
                 },
-                "subjectexam-code": {
-                    required: true,
-                },
-                "subjectexam-shortname": {
+                "examcode": {
                     required: true,
                 }
             },
             messages: {
-                "subjectexam-name": {
+                "examname": {
                     required: "Bắt buộc nhập tên kì thi",
                 },
-                "subjectexam-code": {
+                "examcode": {
                     required: "Bắt buộc nhập mã kì thi",
-                },
-                "subjectexam-shortname": {
-                    required: "Bắt buộc nhập tên rút gọn",
                 },
             },
             submitHandler: function(form) {
@@ -160,7 +154,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                     field: "sxname",
                     label: M.util.get_string('name', 'local_newsvnr'),
                     validation: {
-                        required: true,
+                        // required: true,
                     }
                 }, {
                     field: "sxcode",
@@ -170,13 +164,13 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                         // encoded: true,   
                     },
                     validation: {
-                        required: true
+                        // required: true
                     }
                 }, {
                     field: "sxshortname",
                     label: M.util.get_string('shortname', 'local_newsvnr'),
                     validation: {
-                        required: true
+                        // required: true
                     }
                 }, {
                     field: "sxdescription",
@@ -191,8 +185,8 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                 }],
                 submit: function(e) {
                     kendoControl.ui.progress($("#modal-subjectexam"), true);
+                    e.preventDefault();
                     if (validateSubjectExamForm()) {
-                        e.preventDefault();
                         var getAction = $('#form-subjectexam .k-form-submit').attr('data-action');
                         var settings = {
                             type: 'GET',
@@ -220,7 +214,6 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                     }
                 }
             });
-
             function validateSubjectExamForm() {
                 var validator = form.kendoValidator({
                     rules: {
@@ -230,22 +223,17 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                             } else {
                                 return $.trim(input.val()) !== "";
                             }
-                        },
-                        // ruleDuplicated: function(input) {
 
-                        // },
+                            return true;
+                        },
                     },
                     messages: {
-                        // ruleDuplicated: "Your UserName must be Tom",
-                        ruleRequired: M.util.get_string('fieldrequired', 'local_newsvnr')
-
+                        ruleRequired: M.util.get_string('fieldrequired', 'local_newsvnr'),
                     }
-
                 }).data("kendoValidator");
                 if (validator.validate()) {
                     return true;
                 } else {
-                    // alert("Oops! There is invalid data in the form.\n" + validator.errors());
                     return false;
                 }
             }
@@ -320,13 +308,13 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                     field: "examname",
                     label: M.util.get_string('name', 'local_newsvnr'),
                     validation: {
-                        required: true
+                        // required: true
                     }
                 }, {
                     field: "examcode",
                     label: M.util.get_string('code', 'local_newsvnr'),
                     validation: {
-                        required: true
+                        // required: true
                     }
                 }, {
                     field: "subjectexam",
@@ -400,7 +388,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                     field: "examdescription",
                     label: M.util.get_string('description', 'local_newsvnr'),
                     editor: function(container, options) {
-                        $("<textarea class='k-textarea' name='" + options.field + "' data-bind='value: " + options.field + "'></textarea>").appendTo(container);
+                        $("<textarea class='k-textarea' id='" + options.field + "' name='" + options.field + "' data-bind='value: " + options.field + "'></textarea>").appendTo(container);
                     }
                 }, {
                     field: "examvisible",
@@ -410,8 +398,9 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
 
                 submit: function(e) {
                     kendoControl.ui.progress($("#modal-exam"), true);
+                    e.preventDefault();
                     if (validateExamForm()) {
-                        e.preventDefault();
+                        
                         if (e.model.examdatestart) {
                             e.model.examdatestart = convertDateToUnix(e.model.examdatestart);
                         }
@@ -420,11 +409,6 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                         }
                         if (e.model.subjectexam) {
                             e.model.subjectexam = $('#subjectexam').data("kendoMultiSelect").value().toString();
-                        }
-                        if (e.model.examvisible == true) {
-                            e.model.examvisible = 1;
-                        } else {
-                            e.model.examvisible = 0;
                         }
                         if (e.model.examtype) {
                             e.model.examtype = $('#examtype').data("kendoDropDownList").value();
@@ -468,38 +452,52 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                 var validator = form.kendoValidator({
                     rules: {
                         ruleRequired: function(input) {
-                            // console.log(input);
-                            // if (input.is("[name=examdescription]")) {
-                            //     return true
-                            // } else {
-                            //     return $.trim(input.val()) !== "";
-                            // }
+                            if (input.is("[name=examdescription]") || input.is("[title=subjectexam]")) {
+                                return true
+                            } else {
+                                return $.trim(input.val()) !== "";
+                            }
+
                             return true;
                         },
-                        // date: function(intput) {
-                        //     if(input.is("[name=examdatestart]") <= new Date()) {
-                        //         return false;
-                        //     }
-                        //     if(input.is("[name=examdatestart]") < input.is("[name=examdateend]")) {
-                        //         return false;
-                        //     }
-                        //     return true;
-                        // }
-                        // ruleDuplicated: function(input) {
-
-                        // },
+                        checkDateStart: function(input) {
+                            if(input.is("[name=examdatestart]")) {
+                                var examdatestart = convertDateToUnix($("[name=examdatestart]").data('kendoDateTimePicker').value());
+                                var now = convertDateToUnix(new Date());
+                                if(examdatestart <= now - 120) {
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            }
+                            return true;
+                            
+                        },
+                        checkDateEnd: function(input) {
+                           
+                            if(input.is("[name=examdateend]")) {
+                                var examdatestart = convertDateToUnix($("[name=examdatestart]").data('kendoDateTimePicker').value());
+                                var examdateend = convertDateToUnix($("[name=examdateend]").data('kendoDateTimePicker').value());
+                                if(examdateend < examdatestart) {
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            }
+                            return true;
+                        }
+                       
                     },
                     messages: {
-                        // ruleDuplicated: "Your UserName must be Tom",
                         ruleRequired: M.util.get_string('fieldrequired', 'local_newsvnr'),
-                        // date: "Ngày bắt đầu phải lớn hơn kết thúc"
+                        checkDateStart: M.util.get_string('checkdatestart', 'local_newsvnr'),
+                        checkDateEnd: M.util.get_string('checkdateend', 'local_newsvnr')
 
                     }
                 }).data("kendoValidator");
                 if (validator.validate()) {
                     return true;
                 } else {
-                    // alert("Oops! There is invalid data in the form.\n" + validator.errors());
                     return false;
                 }
             }
@@ -520,7 +518,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
     
     // Chuẩn bị Init form ghi danh học viên vào kì thi
     var prepareEnrollExamUsersForm = function(form, dataItem) {
-        if(form.getKendoForm() == undefined) {
+        if(!form.getKendoForm()) {
             var settingsUsers = {
                     url: script,
                     type: 'GET',
@@ -596,106 +594,41 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                         dataValueField: "value"
                     }
                 }],
-                // submit: function(e) {
-                //     kendoControl.ui.progress($("#modal-enrollexamusers"), true);
-                //     e.preventDefault();
-                //     if (e.model.examusers) {
-                //         e.model.examusers = $('#examusers').data("kendoMultiSelect").value().toString();
-                //     }
-                //     if (e.model.examcohort) {
-                //         e.model.examcohort = $('#examcohort').data("kendoMultiSelect").value().toString();
-                //     }
-                //     if (e.model.examusersrole) {
-                //         e.model.examusersrole = $('#examusersrole').data("kendoDropDownList").value();
-                //     }
-                //     var settingsEnrollExamUsers = {
-                //         type: 'GET',
-                //         dataType: "json",
-                //         contentType: 'application/json; charset=utf-8',
-                //         data: {
-                //             action: 'examusers_enroll',
-                //             exam: e.model
-                //         }
-                //     }
-                //     $.ajax(script, settingsEnrollExamUsers).then(function(resp) {
-                //         if (resp.success) {
-                //             var grid = $(gridEnrollExamUsers).data('kendoGrid');
-                //             var gridEnrollView = $("#exam-users-grid").data('kendoGrid');
-                //             grid.dataSource.read();
-                //             // if(gridEnrollView != undefined) {
-                //             //     gridEnrollView.dataSource.read();
-                //             // }
-                //             $("#examusers").data("kendoMultiSelect").value("");
-                //             $("#examcohort").data("kendoMultiSelect").value("");
-                //             $("#examusers").data("kendoMultiSelect").dataSource.read();
-                //             alertify.success(resp.success, 'success', 3);
-                //             kendoControl.ui.progress($("#modal-enrollexamusers"), false);
-                //         }
-                //     })
-                // }
+                submit: function(e) {
+                    e.preventDefault();
+                    kendoControl.ui.progress($("#modal-enrollexamusers"), true);
+                    e.model.examusers = $('#examusers').data("kendoMultiSelect").value().toString();
+                    e.model.examcohort = $('#examcohort').data("kendoMultiSelect").value().toString();
+                    if (e.model.examusersrole) {
+                        e.model.examusersrole = $('#examusersrole').data("kendoDropDownList").value();
+                    }
+                    var settingsEnrollExamUsers = {
+                        type: 'GET',
+                        dataType: "json",
+                        contentType: 'application/json; charset=utf-8',
+                        data: {
+                            action: 'examusers_enroll',
+                            exam: e.model
+                        }
+                    }
+                    $.ajax(script, settingsEnrollExamUsers).then(function(resp) {
+                        if (resp.success) {
+                            var grid = $(gridEnrollExamUsers).data('kendoGrid');
+                            var gridEnrollView = $("#exam-users-grid").data('kendoGrid');
+                            grid.dataSource.read();
+                            if(gridEnrollView != undefined) {
+                                gridEnrollView.dataSource.read();
+                            }
+                            $("#examusers").data("kendoMultiSelect").value("");
+                            $("#examcohort").data("kendoMultiSelect").value("");
+                            $("#examusers").data("kendoMultiSelect").dataSource.read();
+                            alertify.success(resp.success, 'success', 3);
+                            kendoControl.ui.progress($("#modal-enrollexamusers"), false);
+                        }
+                    })
+                }
             })
         
-        } else {
-            var settingsUsers = {
-                    url: script,
-                    type: 'GET',
-                    dataType: "json",
-                    contentType: 'application/json; charset=utf-8',
-                    data: {
-                        action: 'list_users',
-                        examid: dataItem.id
-                    }
-            }
-            var settingsCohort = {
-                url: script,
-                type: 'GET',
-                dataType: "json",
-                contentType: 'application/json; charset=utf-8',
-                data: {
-                    action: 'list_cohort'
-                }
-            }
-            $("#examusers").data("kendoMultiSelect").setDataSource(newDataSource(settingsUsers));
-            $("#examcohort").data("kendoMultiSelect").setDataSource(newDataSource(settingsCohort));
-            form.getKendoForm().bind("submit", function(e) {
-                // kendoControl.ui.progress($("#modal-enrollexamusers"), true);
-                e.preventDefault();
-                if (e.model.examusers) {
-                    e.model.examusers = $('#examusers').data("kendoMultiSelect").value().toString();
-                }
-                if (e.model.examcohort) {
-                    e.model.examcohort = $('#examcohort').data("kendoMultiSelect").value().toString();
-                }
-                if (e.model.examusersrole) {
-                    e.model.examusersrole = $('#examusersrole').data("kendoDropDownList").value();
-                }
-                var settingsEnrollExamUsers = {
-                    type: 'GET',
-                    dataType: "json",
-                    contentType: 'application/json; charset=utf-8',
-                    data: {
-                        action: 'examusers_enroll',
-                        exam: e.model
-                    }
-                }
-                $.ajax(script, settingsEnrollExamUsers).then(function(resp) {
-                    console.log(resp)
-                    if (resp.success) {
-                        var grid = $(gridEnrollExamUsers).data('kendoGrid');
-                        var gridEnrollView = $("#exam-users-grid").data('kendoGrid');
-                        grid.dataSource.read();
-                        // if(gridEnrollView != undefined) {
-                        //     gridEnrollView.dataSource.read();
-                        // }
-                        $("#examusers").data("kendoMultiSelect").value("");
-                        $("#examcohort").data("kendoMultiSelect").value("");
-                        $("#examusers").data("kendoMultiSelect").dataSource.read();
-                        alertify.success(resp.success, 'success', 3);
-                        // kendoControl.ui.progress($("#modal-enrollexamusers"), false);
-                    }
-                })
-            });
-            
         }
     }
 
@@ -763,9 +696,9 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                             var grid = $(gridEnrollExamUsers).data('kendoGrid');
                             var gridEnrollView = $("#exam-users-grid").data('kendoGrid');
                             grid.dataSource.read();
-                            // if(gridEnrollView != undefined) {
-                            //     gridEnrollView.dataSource.read();
-                            // }
+                            if(gridEnrollView != undefined) {
+                                gridEnrollView.dataSource.read();
+                            }
                             alertify.success(resp.success, 'success', 3);
                             kendoControl.ui.progress($("#modal-enrollexamusers-edit"), false);
                         }
@@ -847,7 +780,6 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
     // Tạo modal form ghi danh học viên vào kỳ thi
     var initEnrollExamUsers = function(dataItem) {
         var kendoConfig = {};
-        console.log(kendoConfig)
         var settingsExamUserGrid = {
             url: script,
             type: 'GET',
@@ -858,23 +790,27 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                 examid: dataItem.id
             }
         };
-        var examUsersColumns = [{
-            field: "examname",
-            title: M.util.get_string('name', 'local_newsvnr'),
-            width: "200px"
-        }, {
-            field: "fullname",
-            title: M.util.get_string('examuserfullname', 'local_newsvnr'),
-            width: "200px"
-        }, {
-            field: "rolename",
-            title: M.util.get_string('role', 'local_newsvnr'),
-            width: "200px"
-        }, {
-            field: "usercreate",
-            title: M.util.get_string('usercreate', 'local_newsvnr'),
-            width: "200px"
-        }];
+        var examUsersColumns = [
+            {
+                field: "examname",
+                title: M.util.get_string('name', 'local_newsvnr'),
+                width: "200px"
+            }, {
+                template: function(e) {
+                    return e.fullname;
+                },
+                field: "fullname",
+                title: M.util.get_string('examuserfullname', 'local_newsvnr'),
+                width: "200px"
+            }, {
+                field: "rolename",
+                title: M.util.get_string('role', 'local_newsvnr'),
+                width: "200px"
+            }, {
+                field: "usercreate",
+                title: M.util.get_string('usercreate', 'local_newsvnr'),
+                width: "200px"
+            }];
         kendoConfig.columns = examUsersColumns;
         kendoConfig.apiSettings = settingsExamUserGrid;
         kendoConfig.toolbar = [{
@@ -891,7 +827,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                     enrolluserid: enrollExamUsersDataItem.id,
                     examid: dataItem.id,
                     examuserid: enrollExamUsersDataItem.userid,
-                    examuserfullname: enrollExamUsersDataItem.fullname,
+                    examuserfullname: enrollExamUsersDataItem.fullname_raw,
                     examusersrole: enrollExamUsersDataItem.roleid,
                 },
             });
@@ -914,15 +850,18 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                     var grid = $(gridEnrollExamUsers).data('kendoGrid');
                     var gridEnrollView = $("#exam-users-grid").data('kendoGrid');
                     grid.dataSource.read();
-                    // if(gridEnrollView != undefined) {
-                    //     gridEnrollView.dataSource.read();
-                    // }
+                    if(gridEnrollView != undefined) {
+                        gridEnrollView.dataSource.read();
+                    }
                     // alertify.success(resp.success, 'success', 3);
                 }
             });
         }
         
         var gridData = kendo.initGrid(kendoConfig);
+        if($(gridEnrollExamUsers).data('kendoGrid')) {
+            $(gridEnrollExamUsers).data('kendoGrid').destroy();
+        }
         $(gridEnrollExamUsers).kendoGrid(gridData);
 
         if(fristClick == true) {
@@ -940,6 +879,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                         }
                     }
                     $.ajax(script, settingsSelectedRows).then(function(resp) {
+                        var resp = JSON.parse(resp);
                         if (resp.success) {
                             $(gridEnrollExamUsers).data("kendoGrid").dataSource.read();
                             alertify.success(resp.success, 'success', 3);
@@ -986,30 +926,31 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                 action: 'subjectexam_grid'
             }
         };
-        var subjectExamColumns = [{
-            field: "name",
-            title: M.util.get_string('name', 'local_newsvnr'),
-            width: "200px"
-        }, {
-            field: "code",
-            title: M.util.get_string('code', 'local_newsvnr'),
-            width: "150px"
-        }, {
-            field: "shortname",
-            title: M.util.get_string('shortname', 'local_newsvnr'),
-            width: "150px"
-        }, {
-            field: "description",
-            title: M.util.get_string('description', 'local_newsvnr'),
-            width: "200px"
-        }, {
-            template: function(e) {
-                return e.tempvisible;
-            },
-            field: "tempvisible",
-            title: M.util.get_string('examvisible', 'local_newsvnr'),
-            width: "100px"
-        }];
+        var subjectExamColumns = [
+            {
+                field: "name",
+                title: M.util.get_string('name', 'local_newsvnr'),
+                width: "200px"
+            }, {
+                field: "code",
+                title: M.util.get_string('code', 'local_newsvnr'),
+                width: "150px"
+            }, {
+                field: "shortname",
+                title: M.util.get_string('shortname', 'local_newsvnr'),
+                width: "150px"
+            }, {
+                field: "description",
+                title: M.util.get_string('description', 'local_newsvnr'),
+                width: "200px"
+            }, {
+                template: function(e) {
+                    return e.tempvisible;
+                },
+                field: "tempvisible",
+                title: M.util.get_string('examvisible', 'local_newsvnr'),
+                width: "100px"
+            }];
         kendoConfig.columns = subjectExamColumns;
         kendoConfig.apiSettings = settings;
         kendoConfig.toolbar = [{
@@ -1075,6 +1016,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                     }
                 }
                 $.ajax(script, settingsSelectedRows).then(function(resp) {
+                    var resp = JSON.parse(resp);
                     if (resp.success) {
                         $(gridSubjectExam).data("kendoGrid").dataSource.read();
                         alertify.success(resp.success, 'success', 3);
@@ -1100,42 +1042,43 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                 action: 'exam_grid'
             }
         };
-        var examColumns = [{
-            field: "name",
-            title: M.util.get_string('name', 'local_newsvnr'),
-            width: "200px"
-        }, {
-            field: "code",
-            title: M.util.get_string('code', 'local_newsvnr'),
-            width: "150px"
-        }, {
-            field: "type",
-            title: M.util.get_string('type', 'local_newsvnr'),
-            width: "100px"
-        },  {
-            field: "datestart",
-            title: M.util.get_string('examdatestart', 'local_newsvnr'),
-            width: "200px"
-        }, {
-            field: "dateend",
-            title: M.util.get_string('examdateend', 'local_newsvnr'),
-            width: "200px"
-        }, {
-            field: "usercreate",
-            title: M.util.get_string('usercreate', 'local_newsvnr'),
-            width: "200px"
-        }, {
-            field: "description",
-            title: M.util.get_string('description', 'local_newsvnr'),
-            width: "200px"
-        }, {
-            template: function(e) {
-                return e.tempvisible;
-            },
-            field: "tempvisible",
-            title: M.util.get_string('examvisible', 'local_newsvnr'),
-            width: "100px"
-        }];
+        var examColumns = [
+            {
+                field: "name",
+                title: M.util.get_string('name', 'local_newsvnr'),
+                width: "200px"
+            }, {
+                field: "code",
+                title: M.util.get_string('code', 'local_newsvnr'),
+                width: "150px"
+            }, {
+                field: "type",
+                title: M.util.get_string('type', 'local_newsvnr'),
+                width: "100px"
+            },  {
+                field: "datestart",
+                title: M.util.get_string('examdatestart', 'local_newsvnr'),
+                width: "200px"
+            }, {
+                field: "dateend",
+                title: M.util.get_string('examdateend', 'local_newsvnr'),
+                width: "200px"
+            }, {
+                field: "usercreate",
+                title: M.util.get_string('usercreate', 'local_newsvnr'),
+                width: "200px"
+            }, {
+                field: "description",
+                title: M.util.get_string('description', 'local_newsvnr'),
+                width: "200px"
+            }, {
+                template: function(e) {
+                    return e.tempvisible;
+                },
+                field: "tempvisible",
+                title: M.util.get_string('examvisible', 'local_newsvnr'),
+                width: "100px"
+            }];
         kendoConfig.columns = examColumns;
         kendoConfig.apiSettings = settings;
         kendoConfig.toolbar = [{
@@ -1169,8 +1112,8 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                 examname: dataItem.name,
                 examcode: dataItem.code,
                 examtype: dataItem.type,
-                examdatestart: new Date(),
-                examdateend: new Date(),
+                examdatestart: new Date(dataItem.datestart_raw),
+                examdateend: new Date(dataItem.dateend_raw),
                 examdescription: dataItem.description,
             }
             form.getKendoForm().setOptions({
@@ -1187,11 +1130,14 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
             $('#modal-exam').data("kendoWindow").open();
         }
         kendoConfig.enrollExamUsers = function(dataItem) {
-            console.log(dataItem)
             var form = $("#form-enrollexamusers"),
                 dialog = $("#modal-enrollexamusers");
             initEnrollExamUsers(dataItem);
             function onOpen(e) {
+                if(form.getKendoForm()) {
+                    form.getKendoForm().destroy();
+                    form.empty();
+                }
                 prepareEnrollExamUsersForm(form, dataItem);
                 e.sender.center();
             }
@@ -1233,7 +1179,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                 function() {
 
                 }
-            );
+            ).set('labels', {ok:M.util.get_string('accept', 'local_newsvnr'), cancel:M.util.get_string('cancel', 'local_newsvnr')});
         }
         var gridData = kendo.initGrid(kendoConfig);
         $(gridExam).kendoGrid(gridData);
@@ -1253,6 +1199,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                             }
                         }
                         $.ajax(script, settingsSelectedRows).then(function(resp) {
+                            var resp = JSON.parse(resp);
                             if (resp.success) {
                                 $(gridExam).data("kendoGrid").dataSource.read();
                                 alertify.success(resp.success, 'success', 3);
@@ -1262,7 +1209,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                     function() {
 
                     }
-                );
+                ).set('labels', {ok:M.util.get_string('accept', 'local_newsvnr'), cancel:M.util.get_string('cancel', 'local_newsvnr')});
             } else {
                 alertify.error(M.util.get_string('error_norowselectd', 'local_newsvnr'), 'error', 3);
             }
@@ -1295,7 +1242,42 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
         }, ];
         kendoConfig.columns = listSubjectExamColumns;
         kendoConfig.apiSettings = settingsListSbujectExam;
+
+        kendoConfig.listSubjectExamDetailEvent = function(dataItem) {
+            var dialog = $("#modal-listsubjectexam");
+            var settingsListSbujectExamDetail = {
+                type: 'GET',
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                data: {
+                    action: 'exam_listsubjectexam_detail',
+                    subjectexamid : dataItem.subjectexamid
+                }
+            }
+            function onOpen(e) {
+                kendoControl.ui.progress($("#modal-listsubjectexam"), true);
+                 $.ajax(scriptExamView, settingsListSbujectExamDetail).then(function(resp) {
+                    dialog.data('kendoWindow').content(resp.success);
+                    kendoControl.ui.progress($("#modal-listsubjectexam"), false);
+                });
+                e.sender.center();
+            }
+           
+            dialog.kendoWindow({
+                width: "450px",
+                title: M.util.get_string('listsubjectexam', 'local_newsvnr'),
+                modal: true,
+                open: onOpen,
+            });
+            dialog.data('kendoWindow').open();
+            
+        }
+
+
         var gridData = kendo.initGrid(kendoConfig);
+        if($("#exam-list-grid").data('kendoGrid')) {
+            $("#exam-list-grid").data('kendoGrid').destroy();
+        }
         $("#exam-list-grid").kendoGrid(gridData);
 
     }
@@ -1314,6 +1296,9 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
             }
         }
         var listSubjectExamColumns = [{
+            template: function(e) {
+                return e.fullname;
+            },
             field: "fullname",
             title: M.util.get_string('examuserfullname', 'local_newsvnr'),
             width: "200px"
@@ -1332,6 +1317,9 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
         }, "search"];
         kendoConfig.apiSettings = settingsListSbujectExam;
         var gridData = kendo.initGrid(kendoConfig);
+        if($("#exam-users-grid").data('kendoGrid')) {
+            $("#exam-users-grid").data('kendoGrid').destroy();
+        }
         $("#exam-users-grid").kendoGrid(gridData);
 
 
@@ -1427,40 +1415,9 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                 $('#ed-numnberstudent').html(resp.examdescription.numberstudent);
                 // kendoControl.ui.progress($('#infoexam-content'), false);
             });
+        
             prepareListSubjectExamGrid(examId);
             prepareListUsersGrid(examId);
-
-
-        });
-        var examId = $('#exam-category li.active').attr('data-exam');
-        prepareListUsersGrid(examId);
-
-        // Click vào ghi danh trong tab danh sách học viên để ghi danh
-        $('#btn-enrollexamusers').click(function() {
-            var form = $("#form-enrollexamusers"),
-                dialog = $("#modal-enrollexamusers");
-            var dataItem = {};
-            dataItem.id = $('#exam-category li.active').attr('data-exam');
-            initEnrollExamUsers(dataItem);
-
-            function onOpen(e) {
-                prepareEnrollExamUsersForm(form, dataItem);
-                e.sender.center();
-            }
-            dialog.kendoWindow({
-                width: "1368px",
-                height: "768px",
-                title: M.util.get_string('enrollexamuser', 'local_newsvnr'),
-                modal: true,
-                visible: true,
-                open: onOpen
-            });
-            dialog.data('kendoWindow').open();
-        })
-
-
-        $('[data-key=exam-result]').click(function() {
-            var examId = $('#exam-category li.active').attr('data-exam');
             if (examId != undefined) {
                 var settingsListSbujectExam = {
                     url: scriptExamView,
@@ -1472,48 +1429,21 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                         examid: examId
                     }
                 }
+                if($('#list-subjectexam').data('kendoDropDownList'))
+                    $('#list-subjectexam').data('kendoDropDownList').destroy();
                 $('#list-subjectexam').kendoDropDownList({
-                    dataSource: {
-                        serverFiltering: true,
-                        pageSize: 10,
-                        transport: {
-                            read: settingsListSbujectExam,
-                            parameterMap: function(options, operation) {
-                                if (operation == "read") {
-                                    if (options["filter"]) {
-                                        if (options["filter"]["filters"][0])
-                                            options["q"] = options["filter"]["filters"][0].value;
-                                    }
-                                    return options;
-                                }
-                            }
-                        },
-                        serverSorting: true,
-                        schema: {
-                            model: {
-                                id: "id",
-                                fields: {
-                                    id: {
-                                        type: "number"
-                                    },
-                                    name: {
-                                        type: "string"
-                                    },
-                                }
-                            },
-                            total: function(data) {
-                                if (data != null && data.length > 0) return data[0].total;
-                            },
-                        }
-                    },
+                    dataSource: newDataSource(settingsListSbujectExam),
                     dataTextField: "name",
                     dataValueField: "id",
-                    placeholder: "Chọn môn thi",
+                    placeholder: M.util.get_string('selectsubjectexam', 'local_newsvnr'),
                     filter: "contains",
                     change: function(e) {
                         var subjectId = this.value();
+                        if($("#exam-result-grid").data('kendoGrid')) {
+                            $("#exam-result-grid").data('kendoGrid').destroy();
+                        }
                         if(subjectId < 0) {
-                            alertify.error('Vui lòng chọn môn thi', 'error', 3);
+                            alertify.error(M.util.get_string('requiredselectsubjectexam', 'local_newsvnr'), 'error', 3);
                             return true;
                         }
                         var settings = {
@@ -1527,11 +1457,11 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                                 subjectid: subjectId
                             }
                         }
-                       
+                        kendoControl.ui.progress($('#exam-result-grid'), true)
                         $.ajax(scriptExamView, settings).then(function(resp) {
                             if(!resp.data_columns) {
                                 $('#exam-result-grid').css('height', '25px');
-                                $('#exam-result-grid').html('<div class="alert-danger d-flex justify-content-center p-2">' + 'Không có đề thi cho môn này!' + '!</div>');
+                                $('#exam-result-grid').html('<div class="alert-danger d-flex justify-content-center p-2">' + M.util.get_string('noquizforsubjectexam', 'local_newsvnr')+ '!</div>');
                                 return false;
                             } else {
                                 $('#exam-result-grid').empty();
@@ -1567,11 +1497,12 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                                         }
                                     },
                                     data: 'data_grid',
-                                    total: function(data) {
-                                        if (data != null && data.length > 0) return data[0].total;
-                                    },
+                                    // total: function(data) {
+                                    //     if (data != null && data.length > 0) return data[0].total;
+                                    // },
                                 },
                             });
+                            kendoControl.ui.progress($('#exam-result-grid'), false)
                             $("#exam-result-grid").kendoGrid({
                                 dataSource: dataSource,
                                 persistSelection: true,
@@ -1590,14 +1521,42 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendoexam', 'a
                                 height: 450,
                                 columns: resp.data_columns,
                                 noRecords: {
-                                    template: '<span class="grid-empty">Không có dữ liệu trong lưới!</span>'
-                                },
+                                    template: '<span class="grid-empty">' + M.util.get_string('emptydata', 'local_newsvnr') + '</span>'
+                                }
                             });
                         });
                     }
                 });
             }
         });
+        var examId = $('#exam-category li.active').attr('data-exam');
+        prepareListUsersGrid(examId);
+
+        // Click vào ghi danh trong tab danh sách học viên để ghi danh
+        $('#btn-enrollexamusers').click(function() {
+            var form = $("#form-enrollexamusers"),
+                dialog = $("#modal-enrollexamusers");
+            var dataItem = {};
+            dataItem.id = $('#exam-category li.active').attr('data-exam');
+            initEnrollExamUsers(dataItem);
+            function onOpen(e) {
+                if(form.getKendoForm()) {
+                    form.getKendoForm().destroy();
+                    form.empty();
+                }
+                prepareEnrollExamUsersForm(form, dataItem);
+                e.sender.center();
+            }
+            dialog.kendoWindow({
+                width: "1368px",
+                height: "768px",
+                title: M.util.get_string('enrollexamuser', 'local_newsvnr'),
+                modal: true,
+                // visible: true,
+                open: onOpen
+            });
+            dialog.data('kendoWindow').open();
+        })
 
     }
 

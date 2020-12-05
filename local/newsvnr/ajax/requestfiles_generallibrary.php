@@ -56,8 +56,10 @@ file_prepare_standard_filemanager_filelibrary($draftitemid, 'files', $options, $
 $draftitemid = $draftitemid->files_filemanager;
 $fs = get_file_storage();
 $list = array();
+$data = [];
+
 switch ($action) {
-    case 'getdata':
+    case 'requestfiles':
         $contextid = $context->id;
         $odersql = "";
 
@@ -95,12 +97,9 @@ switch ($action) {
                 ) AS Mydata
                 ORDER BY $ordersql";
         $get_list = $DB->get_records_sql($sql, ['q1_contextid' => $contextid, 'q2_contextid' => $contextid]);
-        $data = [];
-
         $filearea = 'content';
         $component = 'local_newsvnr';
         $itemid  = 0;
-
         foreach ($get_list as $exkey => $exfile) {
             if ($files = $fs->get_directory_files($contextid, $component, $filearea, $itemid, $exfile->filepath, false)) {
                 foreach ($files as $file) {
@@ -187,7 +186,42 @@ switch ($action) {
             $data[] = $object;      
 
         }
-    break;
+        break;
+    case 'listrole':
+        $roles = ['local/newsvnr:createfoldersystem', 'local/newsvnr:editfoldersystem', 'local/newsvnr:assignmentfilesystem', 'local/newsvnr:confirmfilesystem', 'local/newsvnr:readfilesystem', 'local/newsvnr:editfilesystem', 'local/newsvnr:createfilesystem', 'local/newsvnr:readfoldersystem', 'local/newsvnr:assignmentfoldersystem', 'local/newsvnr:deletefoldersystem', 'local/newsvnr:deletefilesystem'];
+        foreach($roles as $role) {
+            $split = explode(":",$role);
+            $str = 'newsvnr:' . $split[1];
+            $obj = new stdClass;
+            $obj->name = get_string($str, 'local_newsvnr');
+            $obj->name_raw = $role;
+            $data[] = $obj;
+        }
+        break;
+    case 'listuser':
+        $capability = optional_param('capability', '', PARAM_RAW);
+        $sql = "
+                SELECT rc.*, u.id AS userid, CONCAT(u.firstname, ' ', u.lastname) AS fullname
+                FROM mdl_role_capabilities rc 
+                    LEFT JOIN mdl_context ctx ON rc.contextid = ctx.id 
+                    LEFT JOIN mdl_user u ON u.id = ctx.instanceid
+                WHERE rc.capability = :capability AND rc.roleid > 1 AND rc.contextid <> 1 AND permission = 1";
+        $get_list = $DB->get_records_sql($sql, ['capability' => $capability]);
+       
+        if($get_list) {
+
+            $output = '';
+            $stt = 1;
+            $userurl = $CFG->wwwroot . '/user/profile.php?id=';
+            foreach($get_list as $value) {
+                $output .= '<li><a href="'.$userurl.$value->userid.'">' . $stt . '. ' .$value->fullname . '</a></li>';
+                $stt++;
+            }
+            $data['success'] = $output;
+        } else {
+            $data['success'] = get_string('gl_empty_listuser', 'local_newsvnr');
+        }
+        break;
     case 'acceptfile': 
         $id   = required_param('id', PARAM_INT);
         // Update bảng files

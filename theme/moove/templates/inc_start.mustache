@@ -328,6 +328,7 @@ a {
 .post-slide6 .post-img {
     position: relative;
     overflow: hidden;
+    border-radius: 5px;
 }
 
 .post-slide6 .post-img:before {
@@ -4237,7 +4238,7 @@ i.fa-angle-right.active {
      background: #FFFFFF; 
      padding-left: 20px; 
 }
-#courses_search_button,#exam_search_button {
+.search-button {
     width: 161px;
     height: 35px;
     background: #3c8dbc;
@@ -4248,12 +4249,23 @@ i.fa-angle-right.active {
     border: none;
     outline: none;
     cursor: pointer;
-    margin-top: 2px;
+    margin-top: 6px;
+}
+#courses_search_button {
+    width: 161px;
+    height: 35px;
+    background: #3c8dbc;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin-top: 5px;
 }
 #courses_search_form {
-    padding: 0.5rem;
-    padding-left: 20px;
-/*    padding-right: 20px;*/
+    padding: 0.5rem 0.5rem 0.75rem 1.25rem;
     background: #f2f4f5;
     margin: 1rem -10px 0 -10px;
     border-radius: 5px;
@@ -5059,16 +5071,11 @@ input.apple-switch:checked:after {
 .path-mod-quiz #mod_quiz_navblock .qnbutton.flagged .thispageholder {
     background: transparent url(/theme/image.php/moove/theme/1605254876/mod/quiz/flag-on) 26px 0 no-repeat;
 }
-.othernav #quiz-timer {
-    display: block;
-    /*background: #f06363;*/
-    color: black;
-    font-weight: bold;
-    padding: 4px;
-    font-size: 18px;
+#page-mod-quiz-attempt #quiz-timer {
+    margin-top: -15px;
     text-align: center;
-    margin: 0;
-    border-radius: 5px;
+    font-size: 18px;
+    margin-bottom: 5px;
 }
 /*Trang review bài quiz */
 .path-mod-quiz #mod_quiz_navblock .qnbutton.correct {
@@ -5090,6 +5097,67 @@ input.apple-switch:checked:after {
 .k-dropdown .k-state-default {
     height: 38px;
 }
+#page-mod-quiz-view .row.m-0.w-100 {
+    margin-top: .5rem!important;
+}
+.path-calendar .maincalendar .calendarmonth ul li {
+    border-radius: 1rem;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton.notanswered .trafficlight {
+    background: #d4cfcf;
+}
+#exam-description .form-control {
+    font-size: 14px;
+}
+.ajs-ok,
+.ajs-cancel {
+    cursor: pointer;
+}
+#page-my-index .k-grid tr.k-state-selected td a {
+    color: white;
+}
+.font-14 {
+    font-size: 14px !important
+}
+#page-mod-forum-discuss address {
+    margin-bottom: 0.2rem;
+    color: #363535;
+}
+#page-mod-forum-discuss address a {
+    font-weight: bold;
+    color: #363535;
+}
+.forumpost {
+    background: #ffffff;
+    border:0;
+}
+.post-actions a.btn-link {
+    font-size: 13px;
+    padding: 5px 5px 0 0px;
+    color: #363535;
+    /*text-decoration-line: revert;*/
+    /* border-top: 1px solid gainsboro; */
+    border-radius: 0;
+    color: #808080;
+}
+.modal-header .close {
+    opacity: 1;
+}
+.modal-header span {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    position: absolute;
+    display: block;
+    outline: none;
+    z-index: 1046;
+    touch-action: manipulation;
+    background: #fff !important;
+    right: -15px;
+    top: -15px;
+    border-radius: 50%;
+}
+
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />

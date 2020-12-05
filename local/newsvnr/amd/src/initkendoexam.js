@@ -1,20 +1,6 @@
 define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Config, Str, kendo) {
     var initGrid = function(gridConfig) {
-        var strings = [
-            {
-                key: 'action',
-                component: 'local_newsvnr'
-            }, {
-                key: 'enrol',
-                component: 'local_newsvnr'
-            }, {
-                key: 'manageenroll',
-                component: 'local_newsvnr'
-            }, {
-                key: 'emptydata',
-                component: 'local_newsvnr'
-            }, 
-        ];
+      
         if (gridConfig.columns === undefined) {
             gridConfig.columns = [];
         }
@@ -29,18 +15,6 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
             });
         }
         
-        //edit
-        // if (gridConfig.selectRowEvent != undefined) {
-        //     var funcSelectRow = function(e) {
-        //         var myGrid = $(gridName).getKendoGrid();
-        //         var selectedRows = myGrid.select();
-        //         var arrObject = [];
-        //         for (var i = 0; i < selectedRows.length; i++) {
-        //             arrObject.push(myGrid.dataItem(selectedRows[i]));
-        //         }
-        //         gridConfig.selectRowEvent(arrObject);
-        //     }
-        // }
         if (gridConfig.editEvent != undefined) {
             var funcEdit = function(e) {
                 e.preventDefault();
@@ -70,7 +44,6 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
             }
             eventArr.push(objEventDelete);
         }
-        debugger
         if(gridConfig.activeEvent != undefined) {
             var funcActive = function(e) {
                 e.preventDefault();
@@ -84,7 +57,7 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
                 template: '<input class="apple-switch" type="checkbox" id="sxactive">'
             }
             gridConfig.columns.push({
-                title: 'Kích hoạt',
+                title: M.util.get_string('examvisible', 'local_newsvnr'),
                 command: objEventActive,
                 width: 100
             });
@@ -92,7 +65,7 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
 
         if(eventArr.length > 0) {
             gridConfig.columns.push({
-                title: 'Chức năng',
+                title: M.util.get_string('action', 'local_newsvnr'),
                 command: eventArr,
                 width: 180
             });    
@@ -106,12 +79,12 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
             }
             var objEventEdit = {
                 click: funcEnroll,
-                text: 'Ghi danh',
+                text: M.util.get_string('enrol', 'local_newsvnr'),
                 name: "enroll",
                 iconClass: 'fa fa-user-plus text-primary mr-1',
             }
             gridConfig.columns.push({
-                title: 'Quản lý ghi danh',
+                title: M.util.get_string('manageenroll', 'local_newsvnr'),
                 command: objEventEdit,
                 width: 155
             });
@@ -119,10 +92,30 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
                 
             // });
         }
+        if (gridConfig.listSubjectExamDetailEvent != undefined) {
+            var funcListSubjectExamDetail = function(e) {
+                e.preventDefault();
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                gridConfig.listSubjectExamDetailEvent(dataItem);
+            }
+            var objEventListSubjectExamDetail = {
+                click: funcListSubjectExamDetail,
+                text: M.util.get_string('list', 'local_newsvnr'),
+                name: "",
+                iconClass: 'fa fa-list-alt text-primary mr-1',
+            }
+            gridConfig.columns.push({
+                title: '',
+                command: objEventListSubjectExamDetail,
+                width: 155
+            });
+         
+        }
         return {
             dataSource: newDatasourceGrid(gridConfig),
             persistSelection: true,
             groupable: false,
+            selectable: "multiple",
             //sortable: true,
             resizable: true,
             //dataBound: gridConfig.dataBound,
@@ -139,7 +132,7 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
             },
             columns: gridConfig.columns,
             noRecords: {
-                template: '<span class="grid-empty">Không có dữ liệu trong lưới!</span>'
+                template: '<span class="grid-empty">' + M.util.get_string('emptydata', 'local_newsvnr') + '</span>'
             }
         }
     };

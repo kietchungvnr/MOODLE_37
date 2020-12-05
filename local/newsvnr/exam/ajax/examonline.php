@@ -64,8 +64,8 @@ if ($action == "exam_category") {
         }
         $list_exam = $DB->get_records_sql("SELECT DISTINCT e.id, e.name 
                                             FROM mdl_exam e 
-                                                JOIN mdl_exam_subject_exam esx ON e.id = esx.examid
-                                                JOIN mdl_exam_user eu ON eu.examid = e.id
+                                                LEFT JOIN mdl_exam_subject_exam esx ON e.id = esx.examid
+                                                LEFT JOIN mdl_exam_user eu ON eu.examid = e.id
                                             $wheresql", ['userid' => $USER->id, 'examtype' => $examtype]);
     } else {
         $list_exam = $DB->get_records('exam', ['type' => $examtype, 'visible' => 1]);
@@ -99,6 +99,7 @@ if($examtype == 0) {
     $wheresql = "";
 }
 if ($examid == 0 && $examsubjectexamid == 0) {
+    // Trường hợp mặc định khi lần đầu vào trang
     $subjectdata = $DB->get_records_sql($sql . " WHERE e.name like $strexamname AND es.visible = 1 AND e.visible = 1 AND es.name like $strsubjectname AND e.type = $examtype $wheresql");
     if ($action == 'search') {
         $output .= '<div class="exam-title mt-1">' . get_string('resultsearch', 'local_newsvnr') . '</div>';
@@ -108,12 +109,19 @@ if ($examid == 0 && $examsubjectexamid == 0) {
 } else {
     
     if ($examsubjectexamid == 0) {
-        // Load theo môn thi
+        // Load theo kì thi
         $subjectdata = $DB->get_records_sql($sql . " WHERE e.id = :examid AND e.type = :examtype AND es.visible = 1 AND e.visible = 1 $wheresql", ['examid' => $examid, 'examtype' => $examtype]);
         $output .= '<div class="exam-title mt-1">' . $examdata->name . '</div>';
-    } else {
-        // Load theo kì thi
+    } elseif($examsubjectexamid != 0) {
+        // Load theo môn thi
         $subjectdata = $DB->get_records_sql($sql . " WHERE esx.id = :examsubjectexamid AND e.type = :examtype AND es.visible = 1 AND e.visible = 1 $wheresql", ['examsubjectexamid' => $examsubjectexamid, 'examtype' => $examtype]);
+    }
+    // if ($examid == 0) {
+    //     $subjectdata = $DB->get_records_sql($sql . " WHERE esx.id = :examsubjectexamid AND e.type = :examtype", ['examsubjectexamid' => $examsubjectexamid, 'examtype' => $examtype]);
+    // } 
+    else {
+        // Load theo kì thi và môn thi
+        $subjectdata = $DB->get_records_sql($sql . " WHERE esx.id = :examsubjectexamid AND e.type = :examtype AND e.id = :examid", ['examsubjectexamid' => $examsubjectexamid, 'examtype' => $examtype, 'examid' => $examid]);
     }
 }
 foreach ($subjectdata as $subject) {

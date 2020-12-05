@@ -776,12 +776,12 @@ class course_renderer extends \core_course_renderer {
         $output = '';
         $output .= '<div class="all-tab-content col-xl-9 col-md-8 col-12">';
         $output .= '<ul class="nav nav-tabs tab-click multi-tab">';
-        $output .=  '<li class="nav-item active"><a class="nav-link" id="1">'.get_string('descriptioncourse','local_newsvnr').'</a></li>
-                     <li class="nav-item"><a class="nav-link" id="2">'.get_string('lesson','local_newsvnr').'</a></li>
-                     <li class="nav-item"><a class="nav-link" id="3">'.get_string('teachername','local_newsvnr').'</a></li>';
+        $output .=  '<li class="nav-item active"><a class="nav-link" data-key="descriptioncourse">'.get_string('descriptioncourse','local_newsvnr').'</a></li>
+                     <li class="nav-item"><a class="nav-link" data-key="lesson">'.get_string('lesson','local_newsvnr').'</a></li>
+                     <li class="nav-item"><a class="nav-link" data-key="teachername">'.get_string('teachername','local_newsvnr').'</a></li>';
         $output .= '</ul>';
         $output .= '<div class="tab-content">';
-        $output .= ' <div id="tab1" class="tab-pane in active">';
+        $output .= ' <div data="descriptioncourse" class="tab-pane in active">';
         $output .= '<div class="count-module">';
         $output .= get_string('startdate','local_newsvnr').': '. convertunixtime('l, d-m-Y,',$course->startdate,'Asia/Ho_Chi_Minh').'<br>';
         if($course->enddate > 0) {
@@ -789,7 +789,7 @@ class course_renderer extends \core_course_renderer {
         }
         $output .= '<p>'.$course->summary.'</p>';
         $output .= '</div></div>';
-        $output .= '<div id="tab2" class="tab-pane">';
+        $output .= '<div data="lesson" class="tab-pane">';
         for ($section = $startfrom; $section <= $end; $section++) {
             $currentsection = $modinfo->get_section_info($section);
             if($currentsection == null || $currentsection->visible != 1) {
@@ -817,7 +817,7 @@ class course_renderer extends \core_course_renderer {
             $output .= '</div>';
         }
         $output .= '</div>'; 
-        $output .= '<div id="tab3" class="tab-pane">';
+        $output .= '<div data="teachername" class="tab-pane">';
         //Láy thông tin giáo viên
         if(is_array($teachers)) {
             foreach ($teachers as $teacher) {

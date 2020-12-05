@@ -292,12 +292,12 @@ if ($node && $post->get_id() != $discussion->get_first_post_id()) {
 }
 
 $PAGE->set_title("$course->shortname: " . format_string($discussion->get_name()));
-$PAGE->set_heading($course->fullname);
-$PAGE->set_button(forum_search_form($course));
+$PAGE->set_heading($course->fullname .' : '. format_string($discussion->get_name()));
+// $PAGE->set_button(forum_search_form($course));
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(format_string($forum->get_name()), 2);
-echo $OUTPUT->heading(format_string($discussion->get_name()), 3, 'discussionname');
+// echo $OUTPUT->heading(format_string($forum->get_name()), 2);
+// echo $OUTPUT->heading(format_string($discussion->get_name()), 3, 'discussionname');
 
 $rendererfactory = mod_forum\local\container::get_renderer_factory();
 $discussionrenderer = $rendererfactory->get_discussion_renderer($forum, $discussion, $displaymode);

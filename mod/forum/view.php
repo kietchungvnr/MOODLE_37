@@ -80,7 +80,7 @@ $PAGE->set_context($forum->get_context());
 $PAGE->set_title($forum->get_name());
 $PAGE->add_body_class('forumtype-' . $forum->get_type());
 $PAGE->set_heading($course->fullname);
-$PAGE->set_button(forum_search_form($course, $search));
+// $PAGE->set_button(forum_search_form($course, $search));
 
 if (empty($cm->visible) && !has_capability('moodle/course:viewhiddenactivities', $forum->get_context())) {
     redirect(
