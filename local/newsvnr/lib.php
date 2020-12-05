@@ -1956,6 +1956,18 @@ function get_link_folder($folder,&$output = '',$stt = 0) {
     }
     return $output;
 }
+// Lấy điểm tổng kết của học viên
+function get_finalgrade_student($userid,$courseid) {
+    global $DB;
+    $get_grade = $DB->get_record_sql("
+                    SELECT CONCAT(u.firstname, ' ', u.lastname) AS fullname, cccc.userid, CONVERT(DECIMAL(10,2),cccc.gradefinal) AS gradefinal, RANK() OVER (ORDER BY cccc.gradefinal DESC) AS rank
+                    FROM mdl_course_completion_criteria ccc
+                        JOIN mdl_course_completion_crit_compl cccc ON ccc.id = cccc.criteriaid AND ccc.course = cccc.course
+                        JOIN mdl_user u ON cccc.userid = u.id
+                    WHERE ccc.criteriatype = 6 AND cccc.course =:courseid AND u.id =:userid
+                    ORDER BY cccc.gradefinal DESC", ['courseid' => $courseid, 'userid' => $userid]);
+    return $get_grade;
+}
 
 function local_newsvnr_extend_navigation($navigation) {
     $newsurl = new moodle_url('/local/newsvnr/index.php');

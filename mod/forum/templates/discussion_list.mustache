@@ -81,7 +81,7 @@
                 <thead>
                     <tr>
                         <th scope="col">&nbsp;</th>
-                        <th scope="col" class="p-l-0">{{#str}}discussion, mod_forum{{/str}}</th>
+                        <th scope="col" class="p-l-0">{{#forum.check.isnew}}{{#str}}alert,local_newsvnr{{/str}}{{/forum.check.isnew}}{{^forum.check.isnew}}{{#str}}discussion, mod_forum{{/str}}{{/forum.check.isnew}}</th>
                         <th scope="col" class="author">{{#str}}startedby, mod_forum{{/str}}</th>
                         {{#forum.state.groupmode}}
                             <th scope="col" class="group">{{#str}}group{{/str}}</th>
