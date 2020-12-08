@@ -399,6 +399,7 @@ class course_renderer extends \core_course_renderer {
         //Custom by Vũ: Thêm xem danh sách yêu cầu mở  khoá học
         $courserqurl = new moodle_url('/course/listcourserq.php', array());
         // $output .= $this->container_start('buttons');
+        $output .= '<div class="row"><div class="col-xl-3 col-lg-4 col-md-4 menu-tree-course"><div>';
         if ($coursecat->is_uservisible()) {
             $context = get_category_or_system_context($coursecat->id);
             if (has_capability('moodle/course:create', $context)) {
@@ -428,7 +429,6 @@ class course_renderer extends \core_course_renderer {
         // $output .= $this->coursecat_tree($chelper, $coursecat);
        
         $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent FROM mdl_course_categories cc JOIN mdl_course c ON cc.id = c.category OR cc.parent = c.category WHERE cc.visible = 1');
-        $output .= '<div class="row"><div class="col-xl-3 col-lg-4 col-md-4 menu-tree-course"><div class="border">';
         $output .= $this->menucoursecategory($categories);
         $output .= '</div></div>';
         $output .= '<div class="col-xl-9 col-lg-8 col-md-8 position-relative">';
@@ -453,7 +453,7 @@ class course_renderer extends \core_course_renderer {
         $output .= '<input name="teacher" type="text" class="courses_search_input" id="teacher" placeholder="'.get_string('teachernames','local_newsvnr').'" value="">';
         $output .= '</div>';
         $output .= '<div class="col-xl-3 col-6 pl-1">';
-        $output .= '<button id="courses_search_button" class="ml-auto w-100"><i class="fa fa-search mr-1"></i>'.get_string('search','local_newsvnr').'</button>';
+        $output .= '<button id="courses_search_button" class="search-button ml-auto w-100"><i class="fa fa-search mr-1"></i>'.get_string('search','local_newsvnr').'</button>';
         $output .= '</div>';
         $output .= '</div>';
         $output .= '</div>';
@@ -463,7 +463,6 @@ class course_renderer extends \core_course_renderer {
         global $DB,$USER;
         $role = $DB->get_records_sql('SELECT ra.roleid FROM {role_assignments} ra JOIN {user} u ON u.id = ra.userid WHERE u.id =:userid GROUP BY ra.roleid',['userid' => $USER->id]);
         $output  = '';
-        $output .= '<div class="row pt-2"><div class="col-12 col-md-6 col-lg-6 col-xl-4">';
         $output .= '<select class="form-control" id="course-filter">';
         $output .= '<option value="allcourse">'.get_string('filtercourseall','local_newsvnr').'</option>';
         $output .= '<option value="coursepopular">'.get_string('filtercoursepopular','local_newsvnr').'</option>';
@@ -476,7 +475,6 @@ class course_renderer extends \core_course_renderer {
             }
         }
         $output .= '</select>';
-        $output .= '</div></div>';
         return $output;
     }
     public function menucoursecategory($menus, $id_parent = 0, &$output = '', $stt = 0) {

@@ -1919,6 +1919,9 @@ function mimetype2Img($mimetype) {
     } elseif ($typeresource == 'pdf') {
         $img = html_writer::img($OUTPUT->image_url('f/pdf-24'),'',['class' => 'pr-1']);
     }
+    else {
+        $img = '';
+    }
     return $img;
 }
 // lấy url module loại module resource (pdf,word,exel...)
