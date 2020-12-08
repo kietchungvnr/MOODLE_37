@@ -136,9 +136,7 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 		})
 	}
 	var init = function() {
-		$('.nav-link[data-key="courseinfo"]').click(function(){
-			initGrid();
-		})
+		initGrid();
 		$('#course_search_dashboard').click(function() {
             var datestartpicker = $("#coursedatestart").val();
             var datestart = parseInt((new Date(datestartpicker).getTime() / 1000).toFixed(0));

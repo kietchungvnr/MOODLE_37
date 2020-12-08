@@ -133,7 +133,12 @@ var id = $('.new-detail-chat').attr('data');
 $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussionid='+id);
 {{/js}}
 <script type="text/javascript">
-
+    function setPositionWindow(gridname,top) {
+        var windowheight = $(window).scrollTop();
+        $(gridname).closest(".k-window").css({
+            top: windowheight + top  
+        });
+    }
     function getSelectRow(gridname) {
         var myGrid = $(gridname).getKendoGrid();
         var selectedRows = myGrid.select();

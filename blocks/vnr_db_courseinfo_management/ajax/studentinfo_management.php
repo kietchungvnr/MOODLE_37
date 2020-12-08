@@ -51,15 +51,14 @@ $sql = "SELECT *, (SELECT COUNT(DISTINCT u.id)
                     FROM mdl_user u
                         JOIN mdl_role_assignments ra ON ra.userid = u.id $wheresql
                 ) AS total
-        FROM (SELECT ROW_NUMBER() OVER (ORDER BY u.id) AS RowNum,u.id AS userid,CONCAT(u.firstname,' ',u.lastname) as name
+        FROM (SELECT ROW_NUMBER() OVER (ORDER BY u.id) AS RowNum,u.id AS userid,CONCAT(u.firstname,' ',u.lastname) as name,u.usercode
                 FROM mdl_user u
                     JOIN mdl_role_assignments ra ON ra.userid = u.id
-                $wheresql GROUP BY u.id,CONCAT(u.firstname,' ',u.lastname)
+                $wheresql GROUP BY u.id,CONCAT(u.firstname,' ',u.lastname),u.usercode
                 ) AS Mydata
         ORDER BY $ordersql";
 
 $get_list = $DB->get_records_sql($sql);
-// var_dump($get_list);
 foreach ($get_list as $value) {
     $enrolledcourse = get_list_course_by_student($value->userid);
     $listcourse     = get_list_course_by_teacher($value->userid);
@@ -75,7 +74,8 @@ foreach ($get_list as $value) {
     $obj->useravatar     = $useravatar;
     $obj->href           = $CFG->wwwroot . '/user/profile.php?id=' . $value->userid;
     $obj->number         = $value->rownum;
-    $obj->studentcode    = $value->userid;
+    $obj->usercode       = ($value->usercode) ? $value->usercode : "-";
+    $obj->userid         = $value->userid;
     $obj->name           = $value->name;
     $obj->total          = $value->total;
     $obj->coursejoin     = count($listcourse);
