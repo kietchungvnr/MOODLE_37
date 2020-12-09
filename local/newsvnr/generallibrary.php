@@ -37,6 +37,7 @@ $strbtnrole = get_string('btnrole', 'local_newsvnr');
 $strgenerallibrary = get_string('generallibrary', 'local_newsvnr');
 $strrolepermissions = get_string('rolepermissions', 'local_newsvnr');
 $strlistsharefile = get_string('listsharefile', 'local_newsvnr');
+$strmanagerolesuser = get_string('managerolesuser', 'local_newsvnr');
 
 $PAGE->set_url($url);
 $PAGE->set_context(context_system::instance());
@@ -96,7 +97,7 @@ if(is_siteadmin()) {
     echo '  <li class="nav-item " data-key="rolepermissions">
             <a class="nav-link" href="#rolepermissions" data-toggle="tab">'.$strrolepermissions.'</a>
         </li><li class="nav-item " data-key="rolepermissionsmanage">
-            <a class="nav-link" href="#rolepermissionsmanage" data-toggle="tab">Quản lý quyền người dùng</a></li>';
+            <a class="nav-link" href="#rolepermissionsmanage" data-toggle="tab">'.$strmanagerolesuser.'</a></li>';
 }
 
 echo '</ul>';

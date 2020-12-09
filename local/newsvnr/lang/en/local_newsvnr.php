@@ -483,3 +483,7 @@ $string['checkdateend'] = "End date must be greater than or equal to start date"
 $string['gl_listuser'] = 'List of authorized users';
 $string['gl_viewlistuser'] = 'User';
 $string['gl_empty_listuser'] = 'No users have been authorized';
+$string['list'] = 'List';
+$string['noquizforsubjectexam'] = 'There are no exam questions for this subject!';
+$string['requiredselectsubjectexam'] = 'Please select exam subjects';
+$string['managerolesuser'] = 'Manage roles user';

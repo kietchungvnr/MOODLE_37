@@ -483,3 +483,7 @@ $string['checkdateend'] = "Ngày kết thúc phải lớn hơn hoặc bằng ng�
 $string['gl_listuser'] = 'Danh sách người dùng đã phân quyền';
 $string['gl_viewlistuser'] = 'Người dùng';
 $string['gl_empty_listuser'] = 'Chưa có người dùng nào được phân quyền';
+$string['list'] = 'Danh sách';
+$string['noquizforsubjectexam'] = 'Không có đề thi cho môn này!';
+$string['requiredselectsubjectexam'] = 'Vui lòng chọn môn thi';
+$string['managerolesuser'] = 'Quản lý quyền người dùng';
