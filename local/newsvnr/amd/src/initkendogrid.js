@@ -145,7 +145,7 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
             groupable: false,
             //sortable: true,
             resizable: true,
-            selectable: "multiple",
+            // selectable: "multiple",
             //dataBound: gridConfig.dataBound,
             //height: 520,
             toolbar: gridConfig.toolbar,

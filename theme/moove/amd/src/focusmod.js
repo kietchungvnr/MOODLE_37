@@ -62,14 +62,15 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         }
     });
     $('.nav-link.prev').click(function() {
-        $temp = $('.card-header.level2 a.active').parents('div').prev();
-        $href = $temp.children('a').attr('href');
-        $(this).attr('href', $href);
+        debugger
+        var temp = $('.card-header.level2 a.active').parents('div').prev();
+        var href = temp.children('a').attr('href');
+        $(this).attr('href', href);
     })
     $('.nav-link.next').click(function() {
-        $temp = $('.card-header.level2 a.active').parents('div').next();
-        $href = $temp.children('a').attr('href');
-        $(this).attr('href', $href);
+        var temp = $('.card-header.level2 a.active').parents('div').next();
+        var href = temp.children('a').attr('href');
+        $(this).attr('href', href);
     })
     Str.get_strings(strings).then(function(s) {
 	    if ($('div.card-header.level1:first-child() a').text() == '') {

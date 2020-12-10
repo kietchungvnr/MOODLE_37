@@ -35,13 +35,11 @@ $pagesize = optional_param('pagesize', 10, PARAM_INT);
 $pagetake = optional_param('take', 0, PARAM_INT);
 $pageskip = optional_param('skip', 0, PARAM_INT);
 $q        = optional_param('q', '', PARAM_RAW);
-$userid   = optional_param('userid', '', PARAM_INT);
-$role     = optional_param('role', '', PARAM_INT);
 $data     = array();
 $odersql  = "";
-$wheresql = "WHERE ra.roleid=$role AND u.id = $userid";
+$wheresql = "WHERE ra.roleid=5 AND u.id = $USER->id";
 if ($q) {
-    $wheresql = "WHERE ra.roleid=$role AND u.id = $userid AND c.fullname like N'%$q%'";
+    $wheresql = "WHERE ra.roleid=5 AND u.id = $USER->id AND c.fullname like N'%$q%'";
 }
 if ($pagetake == 0) {
     $ordersql = "RowNum";
@@ -62,21 +60,22 @@ $sql = "SELECT *,(SELECT COUNT(DiSTINCT c.id)
                 JOIN mdl_course c ON e.courseid = c.id
                 JOIN mdl_role_assignments ra ON ra.userid = ue.userid
                 JOIN mdl_user u ON u.id = ra.userid
-                JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id 
+                JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id
                 LEFT JOIN mdl_course_completions cc ON cc.userid = c.id AND cc.course = c.id $wheresql) AS Mydata
         ORDER BY $ordersql";
 $get_list = $DB->get_records_sql($sql);
 foreach ($get_list as $value) {
-    $student          = $DB->get_record('user', ['id' => $userid]);
-    $get_grade        = get_finalgrade_student($userid, $value->id);
-    $obj              = new stdCLass();
-    $course           = $DB->get_record('course', ['id' => $value->id]);
-    $process          = round(\core_completion\progress::get_course_progress_percentage($course, $userid));
-    $obj->number      = $value->rownum;
-    $obj->studentcode = $userid;
-    $obj->studentname = $student->firstname . ' ' . $student->lastname;
-    $obj->coursename  = $value->fullname;
-    $obj->courseid    = $value->shortname;
+    $get_grade      = get_finalgrade_student($USER->id, $value->id);
+    $obj            = new stdCLass();
+    $course         = $DB->get_record('course', ['id' => $value->id]);
+    $process        = round(\core_completion\progress::get_course_progress_percentage($course, $USER->id));
+    $obj->href      = $CFG->wwwroot . '/course/view.php?id=' . $value->id;
+    $obj->rownum    = $value->rownum;
+    $obj->name      = $value->fullname;
+    $obj->courseid  = $value->shortname;
+    $obj->total     = $value->total;
+    $obj->startdate = convertunixtime('d/m/Y', $value->startdate, 'Asia/Ho_Chi_Minh');
+    $obj->enddate   = convertunixtime('d/m/Y', $value->enddate, 'Asia/Ho_Chi_Minh');
     if (!empty($get_grade)) {
         $obj->rank       = $get_grade->rank;
         $obj->gradefinal = $get_grade->gradefinal;
