@@ -48,7 +48,7 @@ if ($pagetake == 0) {
 } else {
     $ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
 }
-$sql = "SELECT *,(SELECT COUNT(c.id)
+$sql = "SELECT *,(SELECT COUNT(DiSTINCT c.id)
                     FROM mdl_user_enrolments ue
                         JOIN mdl_enrol e ON ue.enrolid = e.id
                         JOIN mdl_course c ON e.courseid = c.id
@@ -62,8 +62,8 @@ $sql = "SELECT *,(SELECT COUNT(c.id)
                 JOIN mdl_course c ON e.courseid = c.id
                 JOIN mdl_role_assignments ra ON ra.userid = ue.userid
                 JOIN mdl_user u ON u.id = ra.userid
-                JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id
-                LEFT JOIN mdl_course_completions cc ON cc.userid = c.id $wheresql) AS Mydata
+                JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id 
+                LEFT JOIN mdl_course_completions cc ON cc.userid = c.id AND cc.course = c.id $wheresql) AS Mydata
         ORDER BY $ordersql";
 $get_list = $DB->get_records_sql($sql);
 foreach ($get_list as $value) {

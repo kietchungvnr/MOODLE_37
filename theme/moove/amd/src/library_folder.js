@@ -16,6 +16,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], fu
     var scriptshare = "/local/newsvnr/ajax/library_online/library_share_module.php?action=";
     Str.get_strings(strings).then(function(s) {
         $('#add-new-folder').click(function() {
+            $(this).addClass('not-allow');
             var foldername = $('.add-folder-popup #foldername').val();
             var parentid = $('.add-folder-popup #folderparent').attr('parentid');
             var folderdes = $('.add-folder-popup #folderdes').val();
@@ -38,7 +39,6 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], fu
                 return;
             }
             $.ajax(scriptfolder, settings).then(function(response) {
-                $('#add-popup-modal-folder').modal('hide');
                 var obj = $.parseJSON(response);
                 alertify.notify(obj.alert, 'success', 3);
                 location.reload();

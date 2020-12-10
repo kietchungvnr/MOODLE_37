@@ -78,7 +78,7 @@ class repository_upload extends repository {
      * @return object containing details of the file uploaded
      */
     public function process_upload($saveas_filename, $maxbytes, $types = '*', $savepath = '/', $itemid = 0,
-            $license = null, $author = '', $overwriteexisting = false, $areamaxbytes = FILE_AREA_MAX_BYTES_UNLIMITED, $filelibrary) {
+            $license = null, $author = '', $overwriteexisting = false, $areamaxbytes = FILE_AREA_MAX_BYTES_UNLIMITED, $filelibrary = '') {
         global $USER, $CFG;
 
         if ((is_array($types) and in_array('*', $types)) or $types == '*') {
