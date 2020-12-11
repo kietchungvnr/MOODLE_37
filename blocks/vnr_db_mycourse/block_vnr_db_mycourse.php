@@ -22,23 +22,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-class block_vnr_db_courseinfo_management extends block_base {
+class block_vnr_db_mycourse extends block_base {
     public function init() {
-        $this->title = get_string('pluginname', 'block_vnr_db_courseinfo_management');
+        $this->title = get_string('pluginname', 'block_vnr_db_mycourse');
     }
 
     public function get_content() {
         global $PAGE;
-        $PAGE->requires->js_call_amd('block_vnr_db_courseinfo_management/courseinfo_management', 'init');
-        $PAGE->requires->js_call_amd('block_vnr_db_courseinfo_management/studentinfo_management', 'init');
-        // $PAGE->requires->js_call_amd('block_vnr_db_courseinfo_management/studentinfo_incourse', 'init');
-        $PAGE->requires->js_call_amd('block_vnr_db_courseinfo_management/teacherinfo_management', 'init');
+        $PAGE->requires->js_call_amd('block_vnr_db_mycourse/studentinfo_incourse', 'init');
         $PAGE->requires->strings_for_js(array('emptydata','action','viewcourse'), 'local_newsvnr');
         if($this->content !== NULL) {
             return $this->content;
         }
-        $renderable = new \block_vnr_db_courseinfo_management\output\courseinfo_management_page();
-        $renderer = $this->page->get_renderer('block_vnr_db_courseinfo_management');
+        $renderable = new \block_vnr_db_mycourse\output\mycourse_page();
+        $renderer = $this->page->get_renderer('block_vnr_db_mycourse');
         if($renderer->render($renderable) !== '') {
             $this->content = new stdClass();
             $this->content->text = $renderer->render($renderable);

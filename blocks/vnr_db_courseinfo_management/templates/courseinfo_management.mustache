@@ -1,26 +1,22 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
 <ul class="nav-tabs nav multi-tab mb-3">
- 	<li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="studentinfoincourse">{{#str}}courseofstudent,block_vnr_db_courseinfo_management{{/str}}</a></li>
 {{#isadmin}}
-    <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="courseinfo">{{#str}}coursemanagement,block_vnr_db_courseinfo_management{{/str}}</a></li>
+    <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="courseinfo">{{#str}}coursemanagement,block_vnr_db_courseinfo_management{{/str}}</a></li>
  	<li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="studentinfo">{{#str}}studentmanagement,block_vnr_db_courseinfo_management{{/str}}</a></li>
  	<li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="teacherinfo">{{#str}}teachermanagement,block_vnr_db_courseinfo_management{{/str}}</a></li>
  	<li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="statistical">{{#str}}statistical,block_vnr_db_courseinfo_management{{/str}}</a></li>
 {{/isadmin}}
 </ul>
 <div class="tab-content">
-	<div data="studentinfoincourse" class="tab-pane active">
-		<div id="studentinfo_incourse"></div>
-	</div>
 	{{#isadmin}}
-	<div data="courseinfo" class="tab-pane">
+	<div data="courseinfo" class="tab-pane active">
 		<div class="exam_search_form">
 	      	<div class="row">
 	            <div class="col-xl-5 col-4 pl-2 pr-2 mt-2 tree-search">
-	                <input type="text" id="coursedatestart" value="" placeholder="{{#str}}timeopencourse,block_vnr_db_courseinfo_management{{/str}}">
+	                <input type="text" id="coursedatestart" onkeydown="return false;" value="" placeholder="{{#str}}timeopencourse,block_vnr_db_courseinfo_management{{/str}}">
 	            </div>
 	            <div class="col-xl-5 col-4 pl-2 pr-2 mt-2 tree-search">
-	                <input type="text" id="coursedateend" value="" placeholder="{{#str}}timeendcourse,block_vnr_db_courseinfo_management{{/str}}">
+	                <input type="text" id="coursedateend" onkeydown="return false;" value="" placeholder="{{#str}}timeendcourse,block_vnr_db_courseinfo_management{{/str}}">
 	            </div>
                 <div class="col-xl-2 col-4 pl-2 pr-2 tree-search mt-1">
                     <button id="course_search_dashboard" class="ml-auto w-100 search-button mt-1"><i class="fa fa-search mr-1"></i>{{#str}}searchcourse,block_vnr_db_courseinfo_management{{/str}}</button>

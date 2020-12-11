@@ -69,7 +69,7 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 			var columns = [
 				{
 					// hidden: true,
-	                field: "studentcode",
+	                field: "usercode",
 	                title: s[1],
 	                width: "80px"
 				},
@@ -95,9 +95,7 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 	                width: "100px"
 				},
 	            {
-	                template: function(e) {
-	                    return e.process;
-	                },
+	                field: "process",
 	                title: s[6],
 	                width: "150px"
 	            },
@@ -154,7 +152,7 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 		                width: "50px"
 					},
 					{
-		                field: "studentcode",
+		                field: "usercode",
 		                title: s[1],
 		                width: "120px"
 					},
@@ -200,7 +198,8 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 				        ],
 					})
 					function onOpen(e) {
-						initGridCourse(dataItem.studentcode);
+						initGridCourse(dataItem.userid);
+						setPositionWindow('#windowteacher',100);
 					}
 	                $('#windowteacher').data("kendoWindow").center().open();
 				}

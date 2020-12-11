@@ -56,7 +56,7 @@ $sql = "SELECT *,(SELECT COUNT(DiSTINCT c.id)
                         JOIN mdl_user u ON u.id = ra.userid
                         JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id
                         LEFT JOIN mdl_course_completions cc ON cc.userid = c.id $wheresql) AS total
-        FROM (SELECT ROW_NUMBER() OVER (ORDER BY c.id) AS RowNum,c.*,cc.timecompleted
+        FROM (SELECT ROW_NUMBER() OVER (ORDER BY c.id) AS RowNum,c.*,cc.timecompleted,u.usercode
               FROM mdl_user_enrolments ue
                 JOIN mdl_enrol e ON ue.enrolid = e.id
                 JOIN mdl_course c ON e.courseid = c.id
@@ -73,10 +73,11 @@ foreach ($get_list as $value) {
     $course           = $DB->get_record('course', ['id' => $value->id]);
     $process          = round(\core_completion\progress::get_course_progress_percentage($course, $userid));
     $obj->number      = $value->rownum;
-    $obj->studentcode = $userid;
+    $obj->usercode    = ($value->usercode) ? $value->usercode : "-";
     $obj->studentname = $student->firstname . ' ' . $student->lastname;
     $obj->coursename  = $value->fullname;
     $obj->courseid    = $value->shortname;
+    $obj->total       = $value->total;
     if (!empty($get_grade)) {
         $obj->rank       = $get_grade->rank;
         $obj->gradefinal = $get_grade->gradefinal;
@@ -84,7 +85,7 @@ foreach ($get_list as $value) {
         $obj->rank       = '-';
         $obj->gradefinal = '-';
     }
-    $obj->process = $process . '%';
+    $obj->process = ($role == 5) ? $process . '%' : "-";
     if ($value->timecompleted != null) {
         $obj->timecompleted = convertunixtime('d/m/Y', $value->timecompleted, 'Asia/Ho_Chi_Minh');
     } else {
