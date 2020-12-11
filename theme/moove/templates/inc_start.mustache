@@ -11,11 +11,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta name="referrer" content="no-referrer">
-    
 
 <style type="text/css">
-        
-        /*@import url(http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css);*/
+
 *:focus-within {
     outline: 0;
 }
@@ -35,11 +33,6 @@ a {
     border: 1px solid #e2e2e2;
 }*/
 
-.card:hover { 
-    -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
-    -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
-    box-shadow: 0 5px 10px rgba(0,0,0,.2);
-}
 .post-slide6:hover {
     -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
@@ -1315,7 +1308,7 @@ div.page-header-headings h2 {
     margin-bottom: 0;
 }
 #page-header .card-body {
-    margin-left: 10px;
+    margin-left: 0;
 }
 #page-course-view-topics .course-content .section .sectionname {
     text-align: left;
@@ -1596,10 +1589,10 @@ nav.navbar .navbar-brand .logo img {
 #nav-drawer.closed {
     display: none;
 }
-#page-navbar .breadcrumb li>* {
+/*#page-navbar .breadcrumb li>* {
     background-color: #d1eeff;
     border-color: #d1eeff;
-}
+}*/
 ul {
  padding:0;
  margin:0
@@ -1749,9 +1742,7 @@ li {
 
 nav.navbar {
     min-height: 48px;
-}
-.navbar {
-    max-height: 48px
+    height: 48px;
 }
 nav.navcourse {
     background: #3c8dbc;
@@ -1900,66 +1891,16 @@ nav.navbar ul.navbar-nav .popover-region .popover-region-toggle {
  .menu .enlaces a:hover {
      color: #696969;
 }
- 
- @media all and (max-width: 1366px) {
-     #header .menu {
-        position: fixed;
-        background: white;
-        z-index: 123;
-        height: 100%;
-        border-right: 1px solid #c8c1c1;
-        width: 0;
-        top: 45px;
-        color: white;
-        overflow-x: hidden;
-        transition: 0.4s;
-    }
-     #header .menu .logo {
-         display: flex;
-         flex-direction: row;
-         justify-content: space-between;
-         width: 100%;
-         align-items: flex-start;
-    }
-     #header .menu .logo img {
-         width: 50px;
-    }
-     #header .menu .logo .btn-menu {
-         display: inline-block;
-    }
-     #header .menu .enlaces a {
-         border-bottom: 1px solid #f3eaea;
-         font-weight: 600;
-         text-align: left;
-         padding: 0.5em 1em;
-         min-width: 300px;
-    }
-    #header .menu .enlaces a:last-child {
-         border-bottom: 0;
-    }
-     #header .menu .enlaces a:hover {
-         background-color: #6689e4;
-         color: #fff;
-    }
-    .moove-search-input .nav-link {
-        margin-right: 5px;
-    }   
-    nav.navbar ul.navbar-nav .popover-region {
-        margin-right: 5px;
-    }
-    nav.navbar ul.navbar-nav .lang-menu {
-        margin-right: 5px;
-    }
-}
+
  @media all and (max-width: 1300px) {
     .nav-draw {
         display: none;
     }
  }
-  @media all and (min-width: 1300px) {
+/*  @media all and (min-width: 1300px) {
     #btn-menu {
         display: none;
-    }
+    }*/
  }
  @media all and (max-width: 1300px) {
     #nav-course {
@@ -2093,9 +2034,6 @@ nav.navbar .moove-search-input {
     color:#fff !important;
 }
 @media screen and (max-width: 1380px) {
-    .usertext {
-        display: none;
-    }
     .text-langmenu {
         display: none;
     }
@@ -2437,9 +2375,9 @@ label {
     background: #1177d1;
 }
 /*menu-mobile*/
-#header .menu {
+/*#header .menu {
     display: none
-}
+}*/
 @media(max-width: 1300px){
     #header .menu {
         display:block;
@@ -3160,6 +3098,12 @@ table#categoryquestions tr {
     margin-bottom:0!important;
 }
 @media(max-width: 600px) {
+    body #page-wrapper {
+        padding: 0 15px;
+    }
+    body#page-my-index #page-wrapper {
+        padding: 0;
+    }
     #page-badges-view .collection {
         width: 600px;
     }
@@ -3249,7 +3193,7 @@ table#categoryquestions tr {
     }
     nav.navbar {
         min-height: 0;
-        height: 45px;
+        height: 47px;
     }
     #page-header .d-flex.flex-wrap {
         display: none !important;
@@ -3824,9 +3768,6 @@ h4.responsehistoryheader {
     padding-top: 15px;
     margin-left: -10px;
 }
-.pagelayout-course #page-header .d-flex.pt-1.pb-1 {
-    padding-left: 3px;
-}
 .format-topics .course-content ul.topics li.section .content {
     border-bottom:1px solid #999292a3;
     padding-bottom: 15px;
@@ -3845,6 +3786,8 @@ h1, .h1, h2, .h2, .path-calendar .maincalendar .calendar-controls .current, h3, 
 }
 .avatar.current img.userpicture {
     margin-right: 0 !important;
+    width: 30px;
+    height: 30px;
 }
 .moove-search-input.nav-link {
     display: none;
@@ -3872,28 +3815,11 @@ h1, .h1, h2, .h2, .path-calendar .maincalendar .calendar-controls .current, h3, 
     align-items: center;
 }
 .focusmod #focus-mod {
-    margin-left: 10px;
     height:60px;
     border-radius: 0;
     width: 110px;
     font-weight: bold;
 }
-/*.pagelayout-incourse #focus-mod,
-.pagelayout-course #focus-mod {
-    position: fixed;
-    bottom: 10px;
-    right: 30px;
-    width: 40px;
-    height: 40px;
-    display: block;
-    z-index: 1000;
-    background:#2871b5d4;
-    cursor: pointer;
-    border-radius: 35px;
-}
-#focus-mod {
-    display: none;
-}*/
 @media(max-width: 950px) {
     #focus-mod {
         display: none !important;
@@ -3994,7 +3920,7 @@ li.nav-item.border-left {
 }
 .navbar.focusmod {
     display: none;
-    padding:0; 
+    padding:0 !important; 
     min-height: 60px;
 }
 body.focusmod .navbar.focusmod {
@@ -5155,6 +5081,163 @@ input.apple-switch:checked:after {
 .menu-tree-course .singlebutton:nth-child(2) {
     margin-left: 0px
 }
+.search_form_fp {
+    border: 1px solid #ced4da;
+    height:35px;
+    border-radius: 25px;
+    width: 310px;
+}
+.search_form_fp .k-widget.k-autocomplete {
+    border: 0;
+    width: 265px;
+    background: transparent;
+    box-shadow: none;
+}
+.border-none {
+    border: 0 !important;
+}
+.slimScrollDiv {
+    position: relative;
+    overflow: hidden;
+    width: auto;
+}
+.fixed-sidebar-left .side-nav {
+    background: #2a3e4c;
+    border: none;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    border-radius: 0;
+    margin: 0;
+    backface-visibility: hidden;
+    margin-bottom: 50px;
+}
+body.slide-nav-toggle .fixed-sidebar-left ,
+body.sidebar-hover .fixed-sidebar-left{
+    width: 225px;
+    margin-left:0;
+}
+body .fixed-sidebar-left {
+    position: fixed;
+    top: 49px;
+    left: 0;
+    bottom: 0;
+    z-index: 100;
+    transition: all 0.4s ease;
+    overflow-x:scroll;
+    background: #2a3e4c;
+    height: 100%;
+}
+body.slide-nav-toggle .fixed-sidebar-left .side-nav li.navigation-header > i,
+body.sidebar-hover .fixed-sidebar-left .side-nav li.navigation-header > i {
+    display: none;
+}
+body.slide-nav-toggle .fixed-sidebar-left .side-nav li.navigation-header > span,
+body.sidebar-hover .fixed-sidebar-left .side-nav li.navigation-header > span {
+    display: block;
+}
+body .fixed-sidebar-left .side-nav li.navigation-header > i {
+    display: block;
+}
+body.slide-nav-toggle #page-wrapper {
+    margin-left: 225px;
+}
+body #page-wrapper {
+    margin-left: 44px;
+    transition: all 0.4s ease;
+}
+.fixed-sidebar-left .side-nav li.navigation-header > span,
+.fixed-sidebar-left .side-nav li.navigation-header > i {
+    font-size: 11px;
+    display: none;
+    text-transform: uppercase;
+    height: 30px;
+    font-weight: 500;
+    padding: 11px 15px;
+    font-size: 10px;
+    color: #878787;
+    font-weight: bold;
+}
+.fixed-sidebar-left hr.light-grey-hr {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 10px;
+}
+.fixed-sidebar-left .side-nav > li.menu-link {
+    padding: 7px 15px;
+    color: #fff;
+}
+.fixed-sidebar-left .side-nav > li.menu-link i{
+    width: 13px;
+}
+.fixed-sidebar-left .side-nav > li > a {
+    color: #fff;
+    width: 170px;
+    display: block;
+}
+.fixed-sidebar-left .side-nav > li.active > a {
+    color: #1177d1;
+    font-weight: bold;
+}
+.fixed-sidebar-left .side-nav > li.menu-link:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.fixed-top.navbar {
+    padding: .5rem 2rem .5rem .6rem; 
+}
+body.slide-nav-toggle .btn-menu-search,
+body.sidebar-hover .btn-menu-search {
+    margin-left: 30px;
+}
+.btn-menu-search {
+    transition: all 0.4s ease;
+}
+#course_search_form_fp {
+    height: 20px;
+    width: 265px;
+    margin-left: 5px;
+}
+.userbutton .usertext {
+    display: none;
+}
+@media (max-width: 1000px) {
+    .fixed-sidebar-left {
+        margin-left: -225px;
+        width: 225px;
+    }
+    .search_form_fp {
+        display: none;
+    }
+    .navbar-brand.has-logo {
+        display: none !important;
+    }
+    #page-wrapper {
+        margin-left: 0 !important;
+    }
+}
+@media (min-width: 1000px) { 
+    body .fixed-sidebar-left {
+        width: 44px;
+        margin-left: 0;
+    }
+}
+.content-menu-expand {
+    border: 0;
+    background: #2a3e4c;
+}
+.content-menu-expand li a {
+    font-size: 13px;
+    color: white;
+    white-space: normal;
+    margin-left: 10px;
+}
+.content-menu-expand li:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #878787;
+}
+#page-navbar .breadcrumb li:first-of-type>* {
+    padding-left: 2px;
+}
+
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />
@@ -5179,15 +5262,29 @@ input.apple-switch:checked:after {
 <body {{{ bodyattributes }}}>
 
     <a id="return-to-top" title="{{#str}}gotop, theme_moove{{/str}}" data-placement="left"><i class="fa fa-arrow-up"></i></a>
-    {{{output.menu_mobile_bottom}}}
     {{{output.test}}}
     <div class="modal123"></div>  
     <div class="all-header">
         {{>theme_moove/header}}
     </div>
     {{{output.menu_focus}}}
-    <div class="overflow-all"></div>
-    <div id="page-wrapper">
-      {{{ output.standard_top_of_body_html }}}
+
+<div class="fixed-sidebar-left">
+    <div class="slimScrollDiv">
+        <ul class="nav navbar-nav side-nav nicescroll-bar">
+            {{{output.right_sidebar_menu}}}
+            {{# flatnavigation }}
+                {{#showdivider}}
+                    <li><hr class="light-grey-hr mb-10"></li>
+                    <li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>{{#str}}admin,theme_moove{{/str}}</span></li>
+                    <li class="menu-link" data-key="{{key}}" id=''><a class ="nav-active" href="{{{action}}}"><i class="fa fa-cogs mr-3"></i>{{{text}}}</a></li>
+                {{/showdivider}}
+            
+            {{/ flatnavigation }}
+        </ul>
+    </div>
+</div>
+<div id="page-wrapper">
+  {{{ output.standard_top_of_body_html }}}
 
 

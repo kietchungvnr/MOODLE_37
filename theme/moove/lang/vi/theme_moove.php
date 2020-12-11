@@ -312,3 +312,6 @@ $string['last'] = 'Tới trang cuối';
 $string['search'] = 'Tìm kiếm';
 $string['page'] = 'trang';
 $string['examonline'] = 'Kỳ thi';
+$string['admin'] = 'Quản trị';
+$string['studentteacher'] = 'Học viên - Giáo viên';
+$string['main'] = 'Chung';

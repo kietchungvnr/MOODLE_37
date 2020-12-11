@@ -1685,7 +1685,7 @@ if($action == 'search_category') {
 }
 
 if($action == 'search_course') {
-	$sql = "SELECT c.fullname,cc.name FROM {course} c
+	$sql = "SELECT c.id,c.fullname,cc.name FROM {course} c
 			JOIN {course_categories} cc on c.category = cc.id
 			WHERE c.visible = 1";
 	$get_list = $DB->get_records_sql($sql);
@@ -1694,6 +1694,7 @@ if($action == 'search_course') {
 		$object = new stdclass;
 		$object->fullname = $value->fullname;
 		$object->name = $value->name;
+		$object->courseid = $value->id;
 		$data[] = $object;
 	}
 	echo json_encode($data,JSON_UNESCAPED_UNICODE);

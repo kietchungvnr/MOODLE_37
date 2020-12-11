@@ -262,7 +262,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             foreach ($listcourse as $item) 
             {   
                 $output .= '<li class="dropdown-item">';
-                $output .= '<a href="'.$courselink . $item->id.'">' . $item->fullname . ' </a>';
+                $output .= '<a title="'. $item->fullname .'" href="'.$courselink . $item->id.'"><i class="fa fa-graduation-cap mr-2" aria-hidden="true"></i>' . $item->fullname . ' </a>';
                 $output .= '</li>';
             }
 
@@ -282,7 +282,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             {   
                 $output .= '<li class="dropdown-item">';
 
-                $output .= '<a href="'.$courselink . $item->id.'">' . $item->fullname . ' </a>';
+                $output .= '<a title="'. $item->fullname .'" href="'.$courselink . $item->id.'"><i class="fa fa-graduation-cap mr-2" aria-hidden="true"></i>' . $item->fullname . ' </a>';
                 
                 $output .= '</li>';
             }
@@ -347,6 +347,47 @@ class core_renderer extends \theme_boost\output\core_renderer {
         return $output;
     }
 
+    public function right_sidebar_menu() {
+        global $CFG;
+        $output = '';
+        $theme = theme_config::load('moove');
+        $home = $CFG->wwwroot;
+        $dashboard = $CFG->wwwroot . '/my/';
+        $library = $CFG->wwwroot . '/library.php';
+        $filelibrary = $CFG->wwwroot . '/local/newsvnr/generallibrary.php';
+        $examonline = $CFG->wwwroot . '/examonline.php';
+        $course = $CFG->wwwroot . '/course/index.php';
+        $news = $CFG->wwwroot . '/local/newsvnr/index.php';
+        $forum = $CFG->wwwroot . '/local/newsvnr/forum.php';
+        $calendar = $CFG->wwwroot . '/calendar/view.php?view=month';
+        $files = $CFG->wwwroot . '/user/files.php';
+        // Danh mục chính
+        $output .= '<li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>'.get_string('main','theme_moove').'</span></li>';
+        if(isset($theme->settings->displayhome) && $theme->settings->displayhome == 1){
+            $output .= '<li class="menu-link"><a href="'.$home .'"><i class="fa fa-home mr-3"></i>'. get_string('home', 'theme_moove') .'</a></li>';
+        }
+        $output .= '<li class="menu-link"><a href="'.$dashboard .'"><i class="fa fa-line-chart mr-3"></i>'. get_string('dashboard', 'theme_moove') .'</a></li>';
+        $output .= '<li class="menu-link"><a href="'.$library .'"><i class="fa fa-book mr-3"></i>'. get_string('library', 'theme_moove') .'</a></li>';
+        $output .= '<li class="menu-link"><a href="'.$news .'"><i class="fa fa-newspaper-o mr-3"></i>'. get_string('news', 'theme_moove') .'</a></li>';
+        $output .= '<li class="menu-link"><a href="'.$forum .'"><i class="fa fa-users mr-3"></i>'. get_string('forum', 'theme_moove') .'</a></li>';
+        $output .= '<li class="menu-link"><a href="'.$calendar .'"><i class="fa fa-calendar mr-3" aria-hidden="true"></i>'. get_string('calendar', 'theme_moove') .'</a></li>';
+        $output .= '<li class="menu-link"><a href="'.$examonline .'"><i class="fa fa-pencil-square mr-3" aria-hidden="true"></i>'. get_string('examonline', 'theme_moove') .'</a></li>';
+        $output .= '<li class="menu-link"><a href="'.$filelibrary .'"><i class="fa fa-folder-open mr-3"></i>'. get_string('filelibrary', 'theme_moove') .'</a></li>';
+        $output .= '<li class="menu-link"><a href="'.$files .'"><i class="fa fa-file mr-3"></i>'. get_string('privatedata', 'theme_moove') .'</a></li>';
+        $output .= '<li><hr class="light-grey-hr mb-10"></li>';
+        // Danh mục học viên - giáo viên
+        $output .= '<li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>'.get_string('studentteacher','theme_moove').'</span></li>';
+        $output .= '<li class="menu-link"><a href="'.$course .'"><i class="fa fa-university mr-3" aria-hidden="true"></i>'. get_string('course', 'theme_moove') .'</a></li>';
+        if($this->nav_coursebystudent() != '') {
+            $output .= '<li class="menu-link d-flex align-items-center click-menu-expand" id="studentcourse"><a href="javascript:"><i class="fa fa-graduation-cap mr-3" aria-hidden="true"></i>My course</a><i class="fa fa-angle-right rotate-icon float-right pl-3 pr-3"></i></li>';
+            $output .= '<ul class="dropdown-menu content-menu-expand studentcourse" role="menu" id="drop-course-by-student">'.$this->nav_coursebystudent().'</ul>';
+        }
+        if($this->nav_coursebyteacher() != '') {
+            $output .= '<li class="menu-link d-flex align-items-center click-menu-expand" id="teachercourse"><a href="javascript:"><i class="fa fa-graduation-cap mr-3" aria-hidden="true"></i>My teaching course</a><i class="fa fa-angle-right rotate-icon float-right pl-3 pr-3"></i></li>';
+            $output .= '<ul class="dropdown-menu content-menu-expand teachercourse" role="menu" id="drop-course-by-student">'.$this->nav_coursebyteacher().'</ul>';
+        }
+        return $output;
+    }
     /**
      * Renders the lang menu
      *
@@ -1114,18 +1155,13 @@ class core_renderer extends \theme_boost\output\core_renderer {
 
         return $output;
     }
-    public function menu_mobile_bottom() 
-    {
-        global $CFG;
+    public function course_search_form_fp_kendo() {
         $output = '';
-        $output .= '<div class="toolbar">';
-        $output .= '<ul>';
-        $output .= '<li><a href="'.$CFG->wwwroot.'/my"><i class="fa fa-home" aria-hidden="true"></i></a></li>';
-        $output .= '<li><a href="'.$CFG->wwwroot.'/calendar/view.php?view=month"><i class="fa fa-calendar" aria-hidden="true"></i></a></li>';
-        $output .= '<li><a href="'.$CFG->wwwroot.'/course/index.php"><i class="fa fa-graduation-cap" aria-hidden="true"></i></a></li>';
-        $output .= '<li><a href="'.$CFG->wwwroot.'/user/files.php"><i class="fa fa-user" aria-hidden="true"></i></a></li>';
-        $output .= '</ul>';
-        $output  .= '</div>';
+        $searchurl = new moodle_url('/course/search.php');
+        $output .= '<form class="search_form_fp" action="'.$searchurl.'">';
+        $output .= '<input class="border-none" id="course_search_form_fp" placeholder="Search">';
+        $output .= '<i class="fa fa-search ml-2 mr-2 mt-2" aria-hidden="true"></i>';
+        $output .= '</form>';
         return $output;
     }
     public function get_js_moove()
@@ -1361,6 +1397,4 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output .= '</div>';//end tab-pane
         return $output;
     }
-
-
 }

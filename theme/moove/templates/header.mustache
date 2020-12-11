@@ -22,9 +22,8 @@
     Example context (json): {}
 }}
 <nav class="fixed-top navbar navbar-light navbar-expand moodle-has-zindex" menu>
-    <a href="javascript:;" class="btn-menu" id="btn-menu" style="margin-right:10px"><i class="icono fa fa-bars fa-2x text-gray" aria-hidden="true"></i></a>
-    
-    <a href="{{{ config.wwwroot }}}" class="navbar-brand {{# output.get_logo }}has-logo{{/ output.get_logo }}
+    <a href="javascript:;" class="btn-menu ml-2 mr-3 mt-2 mb-2" id="btn-menu"><i class="icono fa fa-bars fa-1x text-gray" aria-hidden="true"></i></a>
+    <a href="{{{ config.wwwroot }}}" class="navbar-brand d-none ml-3 {{# output.get_logo }}has-logo{{/ output.get_logo }}
         {{^ output.get_logo }}
             d-none d-sm-inline
         {{/ output.get_logo }}
@@ -38,75 +37,23 @@
             <span class="site-name d-none d-md-inline">{{{ sitename }}}</span>
         {{/ output.get_logo }}
     </a>
+    <div class="btn-menu-search d-flex">
+        {{{ output.course_search_form_fp_kendo }}}
+    </div>
     <div class="collapse show m-auto" id="nav-draw">
-    <ul class="nav navbar-nav nav-draw">
-        {{{output.nav_header}}}
-        {{# flatnavigation }}
-            {{#showdivider}}
-                <a class ="nav-active" href="{{{action}}}"><li class="metismenu" data-key="{{key}}" id=''>{{{text}}}</li></a>
-            {{/showdivider}}
-        
-        {{/ flatnavigation }}
-    </ul>
 
-</div>
+    </div>
     <ul class="nav navbar-nav">
-        <div class="d-none d-lg-block">
-            {{{ output.search_box }}}
-        </div>
-
-        <li class="nav-item lang-menu">
+        <li class="nav-item lang-menu mt-1">
             {{{ output.render_lang_menu }}}
         </li>
-
-        {{{ output.navbar_plugin_output }}}
-
-        {{{ output.user_menu }}}
+        <li class="mt-1">
+            {{{ output.navbar_plugin_output }}}
+            {{{ output.user_menu }}}
+        </li>
     </ul>
 </nav>
-<header id="header" style="margin-top: 52px;">
-    <nav class="menu">
-      <div class="enlaces" id="enlaces">
-        {{{output.nav_header}}}
-        {{# flatnavigation }}
-            {{#showdivider}}
-                <a class ="nav-active" href="{{{action}}}"><li class="metismenu" data-key="{{key}}" id=''>{{{text}}}</li></a>
-            {{/showdivider}}
-        
-        {{/ flatnavigation }}
-      </div>
-    </nav>            
+<header id="header" style="margin-top: 52px;">         
 </header>
 
-{{{ output.nav_course}}}
 
-{{#js}}
-    $(function(){
-    //menu responsive
-    //calcular ancho
-    var ancho = $(window).width(),
-        menu = $('#header .menu'),
-        btnMenu = $('#btn-menu'),
-        icono = $('#btn-menu .icono');
-        overflow = $('.overflow-all');
-
-        btnMenu.on('click', function(e){
-            icono.toggleClass('fa-bars');
-            icono.toggleClass('fa-times');
-            menu.toggleClass('width-60');
-            overflow.toggleClass('d-block');
-        });
-
-        overflow.click(function(e){
-            menu.removeClass('width-60');   
-            overflow.removeClass('d-block');
-            icono.toggleClass('fa-bars');
-            icono.toggleClass('fa-times');
-        })
-    });
-    $(function() {
-        $('[data-key=addblock]').click(function(e){
-            e.preventDefault();
-        });
-    });
-{{/js}}

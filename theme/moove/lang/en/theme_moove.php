@@ -314,3 +314,6 @@ $string['last'] = 'Go to the next last';
 $string['search'] = 'Search';
 $string['page'] = 'Page';
 $string['examonline'] = 'Exam';
+$string['admin'] = 'Admin';
+$string['studentteacher'] = 'Student - Teacher';
+$string['main'] = 'Main';
