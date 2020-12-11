@@ -41,7 +41,7 @@ class forum_page implements renderable, templatable {
         join mdl_forum_posts fp on fd.id = fp.discussion 
         join mdl_user u on fd.userid = u.id 
         join mdl_course_modules cm on fd.forum = cm.instance
-        where (ff.type IN('general','single','blog')) and fp.parent = 0 AND cm.module = 9 order by fp.created DESC";
+        where fp.parent = 0 AND cm.module = 9 order by fp.created DESC";
         $forumdata = $DB->get_recordset_sql($sql);
         $forumarr = array();
         if(empty($forumdata))

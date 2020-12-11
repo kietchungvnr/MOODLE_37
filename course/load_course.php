@@ -154,7 +154,7 @@ if (empty($getcourse)) {
         <strong>' . get_string('warning', 'local_newsvnr') . '!</strong>.' . get_string('nocourseload', 'local_newsvnr') . '</div>';
     die();
 } else {
-    echo '<div class="mt-3 result-course alert alert-success">' . get_string('resultsearch', 'local_newsvnr') . ' ' . count($countcourse) . '</div>';
+    echo '<div class="mt-2 pb-1 pt-1 result-course alert alert-success">' . get_string('resultsearch', 'local_newsvnr') . ' ' . count($countcourse) . '</div>';
 }
 
 $perpageresult = $perPage->getAllCourseNewsPageLinks(count($countcourse), $paginationlink);
@@ -183,7 +183,7 @@ foreach ($getcourse as $value) {
         $value->imageteacher = $arr->imgdefault;
     }
     echo
-    '<div class="col-6 col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 col-15 course-ajax-load">
+    '<div class="col-6 col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-2 col-15 course-ajax-load">
         <div class="post-slide6">
             <div class="post-img">
               ' . $value->courseimage . '
