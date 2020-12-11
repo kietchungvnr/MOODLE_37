@@ -68,4 +68,22 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'core/str
 	            folderid:folderid,
 	        }
 	    });
+	    var href = Config.wwwroot + '/course/view.php?id=';
+	    $("#course_search_form_fp").kendoAutoComplete({
+	        dataTextField: "fullname",
+	        filter: "contains",
+	        minLength: 3,
+	        template: '<a href="'+href+'#:courseid#">#: fullname #</a>',
+	        dataSource: {
+	            transport: {
+	                read: {
+	                    url: script+'search_course',
+	                    contentType: 'application/json; charset=utf-8',
+	                    type: 'GET',
+	                    dataType: 'json',
+	                    serverFiltering: true
+	               }
+	            }
+	        }
+	    });
 });
