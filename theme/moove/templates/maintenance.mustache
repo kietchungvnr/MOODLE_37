@@ -41,13 +41,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    {{^hasportal}}
-    <meta name="referrer" content="no-referrer">
-    {{/hasportal}}
+
     <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
 </head>
 
 <body {{{ bodyattributes }}}>
+{{> core/local/toast/wrapper}}
 
 <div id="page-wrapper">
 
@@ -56,13 +55,13 @@
     <div id="page" class="container card card-block">
 
         <div class="row">
-            <div class="col-xs-12 p-y-1">
+            <div class="col-12 py-3">
                 {{{ output.page_heading }}}
             </div>
         </div>
 
         <div id="page-content" class="row">
-            <section id="region-main" class="col-xs-12">
+            <section id="region-main" class="col-12" aria-label="{{#str}}content{{/str}}">
                 {{{ output.main_content }}}
             </section>
         </div>

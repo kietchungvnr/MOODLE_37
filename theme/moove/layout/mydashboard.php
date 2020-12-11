@@ -69,7 +69,8 @@ $templatecontext = [
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'is_siteadmin' => is_siteadmin(),
-    'hasportal' => $hasportal
+    'hasportal' => $hasportal, 
+    'canviewadmininfos' => false
 ];
 
 $themesettings = new \theme_moove\util\theme_settings();

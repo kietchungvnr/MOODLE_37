@@ -27,8 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $definitions = [
     'admininfos' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'ttl' => 3600, // One hour.
+        'mode' => cache_store::MODE_APPLICATION
     ],
     'fontawesomemooveiconmapping' => [
         'mode' => cache_store::MODE_APPLICATION,

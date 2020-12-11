@@ -16,8 +16,9 @@
 <style type="text/css">
         
         /*@import url(http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css);*/
-*:focus-within {
+*:focus {
     outline: 0;
+    box-shadow: none;
 }
 body {
     font-size: 14px;
@@ -25,22 +26,34 @@ body {
 a {
     outline: 0;
 }
-/*a {
-    color: #245a82;
-}*/
+
 #sidepreopen-control{
     z-index: 1;
 }
-/*#region-main-box .card {
-    border: 1px solid #e2e2e2;
-}*/
-
-.card:hover { 
+#sidepre-blocks {
+    padding: 1rem;
+    background-color: #e3eef5;
+    margin-bottom: 0;
+    box-shadow: unset;
+}
+.card {
+    border: none;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    background-color: #fff;
+}
+#page-my-index .small-box {
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+}
+/*.card:hover { 
     -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
     box-shadow: 0 5px 10px rgba(0,0,0,.2);
-}
-.post-slide6:hover {
+}*/
+/*.post-slide6:hover {
     -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
     box-shadow: 0 5px 10px rgba(0,0,0,.2);
@@ -49,12 +62,12 @@ a {
     -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
     box-shadow: 0 5px 10px rgba(0,0,0,.2);
-}
-#news-slider:hover {
+}*/
+/*#news-slider:hover {
     -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
     box-shadow: 0 5px 10px rgba(0,0,0,.2);  
-}
+}*/
 .owl-carousel.owl-drag .owl-item.center .item {
     background: rgb(25, 0, 255) ;
     transform: scale(1.1)
@@ -328,7 +341,7 @@ a {
 .post-slide6 .post-img {
     position: relative;
     overflow: hidden;
-    border-radius: 5px;
+    border-radius: 5px 5px 0 0;
 }
 
 .post-slide6 .post-img:before {
@@ -348,6 +361,7 @@ a {
 
 .post-slide6 .post-img img {
     width: 100%;
+    border-radius: 5px 5px 0 0;
     height: 140px;
     cursor: pointer;
 }
@@ -401,8 +415,9 @@ a {
 
 .post-slide6 .post-review {
     padding: 20px 20px 10px 20px;
+    border-radius: 0 0 5px 5px;
     position: relative;
-    height: 140px;
+    height: 130px;
 }
 
 .post-slide6 .icons {
@@ -1225,9 +1240,6 @@ div.dataTables_wrapper {
 .img-size {
     height: 250px;
 }
-.card {
-    border: none;
-}
 .modal-width {
     width: 95% !important;
 }
@@ -1796,7 +1808,7 @@ nav.navbar ul.navbar-nav .popover-region .popover-region-toggle .count-container
 #action-menu-2-menu.dropdown-menu {
     left: 6px !important;
 }
-#sidepre-blocks .card-title{
+.card-title{
     font-size: 15px;
     font-weight: bold;
 }
@@ -2197,9 +2209,9 @@ nav.navbar .moove-search-input {
 .questionname{
     width: 60%;
 }
-.custom-select {
+/*.custom-select {
     width: 100%;
-}
+}*/
 .categoryquestionscontainer {
     overflow-x: auto;
 }
@@ -3565,9 +3577,6 @@ tr.drag-samenode td {
         flex: unset;
     }
 }
-.post-slide6 .post-review {
-    height: 130px;
-}
 .col-md-3.col-sm-6.courseimage {
     height: 142px;
 }
@@ -3837,9 +3846,9 @@ h4.responsehistoryheader {
 .format-topics .course-content ul.topics li.section .content .sectionname a {
     color: #363535;
 }
-h1, .h1, h2, .h2, .path-calendar .maincalendar .calendar-controls .current, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+/*h1, .h1, h2, .h2, .path-calendar .maincalendar .calendar-controls .current, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
     color: #363535;
-}
+}*/
 #footer-rps a {
     color: #363535;
 }
@@ -4050,10 +4059,7 @@ body.focusmod #page-content {
      border-top-left-radius: 0;
      border-bottom-left-radius: 0;
 }
-#sidepre-blocks section.card {
-    margin-bottom: 0;
-    box-shadow: unset;
-}
+
 table thead th {
     background-color: #3c8dbc;
     color: white;
@@ -4088,10 +4094,6 @@ table#participants .fa-sort-asc ,
 }
 .forumpost .body-content-container {
     background: white;
-}
-#sidepre-blocks section.card {
-    margin-bottom: 0;
-    box-shadow: unset;
 }
 .badge-success {
     border-radius: 20px;
@@ -4457,9 +4459,6 @@ select#formactionid {
     width: 100%;
     background-color: #fafafa;
 }
-body {
-    overflow-x: hidden;
-}
 .btn-new-latest,.btn-new-course {
     padding-top: 5px;
 }
@@ -4736,40 +4735,20 @@ button[data-target="#add-popup-modal-module"] {
 .overflow-auto {
     overflow: auto;
 }
-
-.headerpopup {
-    margin-bottom: 0;
-    padding: 0.6rem 0;
-}
-.fp-pathbar .fp-path-folder:not(:first-child) {
-    margin-left: 0;
-}
-.fp-pathbar .fp-path-folder-name {
-    margin-left: 14px;
-}
-.fp-pathbar .fp-margin {
-    margin: 0 5px;
-}
-.fp-navbar {
-    padding: 5px 0;
-}
-.fp-navbar .fp-viewbar a {
-    margin-left: 5px !important;
-}
 .modal-iframe {
     width: 1300px;
 }
 #table-library td a {
     cursor: pointer;
 }
-#table-library td a .fa-download{
+#table-library td a .fa-download {
     color: #3c8dbc;
 }
 .headerpopup {
     margin-bottom: 0;
     padding: 0.6rem 0;
 }
-.fp-pathbar .fp-path-folder:not(:first-child) {
+#generallibrary-content .fp-pathbar .fp-path-folder:not(:first-child) {
     margin-left: 0;
 }
 .fp-pathbar .fp-path-folder-name {
@@ -4786,6 +4765,9 @@ button[data-target="#add-popup-modal-module"] {
 }
 .generaltable th {
     vertical-align: middle;
+}
+.fp-pathbar .fp-path-folder:(:first-child) {
+    margin-left: 0;
 }
 .region_main_settings_menu_proxy {
     display: none;
@@ -5155,6 +5137,23 @@ input.apple-switch:checked:after {
     border-radius: 50%;
 }
 
+.gl-delete-none {
+    display: none !important;
+}
+
+@media (max-width: 767.98px) {
+    body.drawer-open-left, body.drawer-open-right {
+        overflow-y: unset;
+    }
+}
+#page-my-index .bg-1, 
+#page-my-index .bg-2, 
+#page-my-index .bg-3, 
+#page-my-index .bg-4 {
+    background-color: transparent;
+}
+
+
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />
@@ -5177,6 +5176,8 @@ input.apple-switch:checked:after {
 {{{output.get_js_moove}}}
 </head>
 <body {{{ bodyattributes }}}>
+    
+    {{> core/local/toast/wrapper}}
 
     <a id="return-to-top" title="{{#str}}gotop, theme_moove{{/str}}" data-placement="left"><i class="fa fa-arrow-up"></i></a>
     {{{output.menu_mobile_bottom}}}

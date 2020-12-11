@@ -25,6 +25,7 @@
 namespace theme_moove\util;
 
 use core_competency\api as competency_api;
+use moodle_url;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -198,10 +199,12 @@ class extras {
                     }
                 }
 
+                $proficientcompetencypercentage = 0;
                 $competencycount = count($pclist);
+                if ($competencycount) {
+                    $proficientcompetencypercentage = ((float) $proficientcount / (float) $competencycount) * 100.0;
+                }
                 
-                $proficientcompetencypercentage = ((float) $proficientcount / (float) $competencycount) * 100.0;
-
                 $progressclass = '';
                 if ($proficientcompetencypercentage == 100) {
                     $progressclass = 'bg-success';

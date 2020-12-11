@@ -62,8 +62,7 @@ if (isloggedin()) {
     
     $bodyattributes = $OUTPUT->body_attributes($extraclasses);
     $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
-    // $PAGE->requires->jquery();
-    // $PAGE->requires->jquery_plugin('jquery');
+
     $context = context_course::instance(SITEID);
     $templatecontext = [
         'sitename' => format_string($SITE->shortname, true, ['context' => $context, "escape" => false]),

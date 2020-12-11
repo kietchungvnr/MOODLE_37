@@ -278,6 +278,22 @@ if ($ADMIN->fulltree) {
 
     $page->add($setting);
 
+    // Disable bottom footer.
+    $name = 'theme_moove/disablefrontpageloginbox';
+    $title = get_string('disablefrontpageloginbox', 'theme_moove');
+    $description = get_string('disablefrontpageloginboxdesc', 'theme_moove');
+    $setting = new admin_setting_configcheckbox($name, $title, $description, 0);
+    $page->add($setting);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    // Disable teachers from cards.
+    $name = 'theme_moove/disableteacherspic';
+    $title = get_string('disableteacherspic', 'theme_moove');
+    $description = get_string('disableteacherspicdesc', 'theme_moove');
+    $setting = new admin_setting_configcheckbox($name, $title, $description, 0);
+    $page->add($setting);
+
     // Headerimg file setting.
     $name = 'theme_moove/headerimg';
     $title = get_string('headerimg', 'theme_moove');

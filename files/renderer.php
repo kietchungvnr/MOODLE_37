@@ -137,17 +137,31 @@ class core_files_renderer extends plugin_renderer_base {
     }
 
     /**
+     * Custom by Vũ: Phân quyền cho xóa trong tài liệu hệ thống
      * Returns html for displaying one file manager
      *
      * @param form_filemanager $fm
      * @return string
      */
     protected function fm_print_generallayout($fm) {
+        global $CFG, $USER;
         $context = [
                 'client_id' => $fm->options->client_id,
                 'helpicon' => $this->help_icon('setmainfile', 'repository'),
-                'restrictions' => $this->fm_print_restrictions($fm)
+                'restrictions' => $this->fm_print_restrictions($fm),
         ];
+        $generallibraryurl = $CFG->wwwroot . '/local/newsvnr/generallibrary.php';
+        $getcurrenturl = "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]";
+        if($getcurrenturl === $generallibraryurl) {
+            $contextsystem = context_user::instance($USER->id);
+            if(has_capability('local/newsvnr:deletefilesystem', $contextsystem)) {
+                $deletefilesystem = '';
+            } else {
+                $deletefilesystem = 'gl-delete-none';
+            }
+            $context['deletefilesystem'] = $deletefilesystem;
+        }
+
         return $this->render_from_template('core/filemanager_page_generallayout', $context);
     }
 

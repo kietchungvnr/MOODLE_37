@@ -9786,8 +9786,7 @@ a.dropdown-toggle:focus,
 .moodle-dialogue-base .closebutton:focus,
 button.close.focus,
 button.close:focus {
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(17, 119, 209, 0.75); }
+  outline: 0; }
 
 .aabtn:focus:hover,
 .btn-link:focus:hover,

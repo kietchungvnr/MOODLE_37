@@ -50,6 +50,12 @@ $string['onlineusers'] = 'Người dùng trực tuyến(5 phút trước)';
 $string['showhideblocks'] = 'Hiện/ẩn khối';
 $string['privacy:metadata'] = 'Moove theme không lưu trữ bất kỳ dữ liệu cá nhân nào về bất kỳ người dùng nào.';
 $string['totalactivecourse'] = 'Tất cả các hoạt động/Tài nguyen';
+$string['prev_activity'] = 'Previous activity';
+$string['next_activity'] = 'Next activity';
+$string['notcalculatedyet'] = 'Not calculated yet';
+$string['calculatediskusagetask'] = 'Task to calculate the disk usage';
+$string['cachedef_admininfos'] = 'Site administrator dashboard infos cache definition';
+$string['cachedef_fontawesomemooveiconmapping'] = 'Theme icon font definition';
 
 // General settings tab.
 $string['generalsettings'] = 'Tổng quan';
@@ -143,6 +149,9 @@ $string['marketing4content'] = 'Nội dung Marketing4';
 $string['marketing4contentdesc'] = 'Nhập Nội dung Marketing4';
 $string['marketing4url'] = 'Marketing4 URL';
 $string['marketing4urldesc'] = 'Nhập Marketing4 URL';
+$string['disableteacherspic'] = 'Disable teachers picture';
+$string['disableteacherspicdesc'] = 'This setting hides the teachers\' pictures from the course cards.';
+
 
 $string['sliderenabled'] = 'Bật slider';
 $string['sliderenableddesc'] = 'Bật slider trên đầu trang chủ';
@@ -217,6 +226,8 @@ $string['youtube'] = 'Youtube URL';
 $string['youtubedesc'] = 'Nhập đường dẫn URL của Youtube. (i.e https://www.youtube.com/user/moodlehq)';
 $string['instagram'] = 'Instagram URL';
 $string['instagramdesc'] = 'Nhập đường dẫn URL của Instagram. (i.e https://www.instagram.com/moodlehq)';
+$string['whatsapp'] = 'Whatsapp number';
+$string['whatsappdesc'] = 'Enter your whatsapp number for contact.';
 $string['topfooterimg'] = 'hình ảnh Footer';
 $string['topfooterimgdesc'] = 'Đăng tải hình ảnh Footer ở đây nếu muốn thây thế hình ảnh mặc định. Khuyến khích kích thước là 1500px x 400px hoặc lớn hơn.';
 $string['disablebottomfooter'] = 'Tắt footer ở dưới';
@@ -232,6 +243,12 @@ $string['forumhtmlemailfooterdesc'] = 'Cấu hình email footer cho tin nhắn c
 $string['forumcustomtemplate'] = 'Dùng mẫu mail đẹp cho diễn đàn';
 $string['forumcustomtemplatedesc'] = 'Cho phép sử dụng mẫu đẹp khi gửi tin nhắn diễn đàn qua email. Nếu không được bật , định dạng chuẩn của thư diễn đàn sẽ được sử dụng.';
 
+$string['certificates'] = 'Certificates';
+$string['certificatestitle'] = 'My certificates';
+$string['subtitleallcertificates'] = 'Certificates from all courses';
+$string['subtitlecoursecertificates'] = 'Course certificates';
+$string['nohavecertificates'] = 'You no have certificates yet';
+$string['coursesections'] = 'Course sections';
 $string['coursesections'] = 'Course sections';
 
 // Mypublic page.
@@ -241,6 +258,36 @@ $string['details'] = 'Chi tiết';
 $string['startedon'] = 'Bắt đầu vào';
 $string['addcontact'] = 'Thêm liên hệ';
 $string['removecontact'] = 'Xóa liên hệ';
+
+// Theme settings.
+$string['themesettingstitle'] = 'Accessibility settings';
+$string['themesettingsfonttype'] = 'Font type';
+$string['themesettingsdefaultfont'] = 'Default font';
+$string['themesettingsdyslexicfont'] = 'Dyslexic font';
+$string['themesettingsenableaccessibilitytoolbar'] = 'Enable accessibility toolbar';
+$string['themesettinggsavedsuccessfully'] = 'Accessibility settings saved successfully';
+
+// Accessibility features.
+$string['accessibilityfontsize'] = 'Font size';
+$string['accessibilitydecreasefont'] = 'Decrease font size';
+$string['accessibilityresetfont'] = 'Reset font size';
+$string['accessibilityincreasefont'] = 'Increase font size';
+$string['accessibilitysitecolor'] = 'Site color';
+$string['accessibilityresetsitecolor'] = 'Reset site color';
+$string['accessibilitysitecolor2'] = 'Low contrast 1';
+$string['accessibilitysitecolor3'] = 'Low contrast 2';
+$string['accessibilitysitecolor4'] = 'High contrast';
+
+// Data privacy.
+$string['privacy:metadata:preference:accessibilitystyles_fontsizeclass'] = 'The user\'s preference for font size.';
+$string['privacy:metadata:preference:accessibilitystyles_sitecolorclass'] = 'The user\'s preference for site color.';
+$string['privacy:metadata:preference:thememoovesettings_fonttype'] = 'The user\'s preference for font type.';
+$string['privacy:metadata:preference:thememoovesettings_enableaccessibilitytoolbar'] = 'The user\'s preference for enable the accessibility toolbar.';
+
+$string['privacy:accessibilitystyles_fontsizeclass'] = 'The current preference for the font size is: {$a}.';
+$string['privacy:accessibilitystyles_sitecolorclass'] = 'The current preference for the site color is: {$a}.';
+$string['privacy:thememoovesettings_fonttype'] = 'The current preference for the font type is: {$a}.';
+$string['privacy:thememoovesettings_enableaccessibilitytoolbar'] = 'The current preference for enable accessibility toolbar is to show it.';
 
 // Footer
 $string['address'] = 'Địa chỉ';

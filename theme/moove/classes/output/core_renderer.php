@@ -414,7 +414,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         global $PAGE,$DB,$USER;
         // var_dump($USER->editing);die;
         $html = html_writer::start_div('row');
-        $html .= html_writer::start_div('col-xs-12 mt-2 mb-2');
+        $html .= html_writer::start_div('col-12 mt-2 mb-2');
         $teacherdbbutton = '';
         $studentdbbutton = '';
         $addblockbutton = '';
@@ -525,12 +525,17 @@ class core_renderer extends \theme_boost\output\core_renderer {
      * @return string an url
      */
     public function favicon() {
+        global $CFG;
+
         $theme = theme_config::load('moove');
 
         $favicon = $theme->setting_file_url('favicon', 'favicon');
 
         if (!empty(($favicon))) {
-            return $favicon;
+            $urlreplace = preg_replace('|^https?://|i', '//', $CFG->wwwroot);
+            $favicon = str_replace($urlreplace, '', $favicon);
+
+            return new moodle_url($favicon);
         }
 
         return parent::favicon();
@@ -1360,6 +1365,45 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output .= '</div>';//end row
         $output .= '</div>';//end tab-pane
         return $output;
+    }
+    
+    /**
+     * Returns HTML attributes to use within the body tag. This includes an ID and classes.
+     *
+     * @param string|array $additionalclasses Any additional classes to give the body tag,
+     *
+     * @return string
+     *
+     * @throws \coding_exception
+     *
+     * @since Moodle 2.5.1 2.6
+     */
+    public function body_attributes($additionalclasses = array()) {
+        $hasaccessibilitybar = get_user_preferences('thememoovesettings_enableaccessibilitytoolbar', '');
+        if ($hasaccessibilitybar) {
+            $additionalclasses[] = 'hasaccessibilitybar';
+
+            $currentfontsizeclass = get_user_preferences('accessibilitystyles_fontsizeclass', '');
+            if ($currentfontsizeclass) {
+                $additionalclasses[] = $currentfontsizeclass;
+            }
+
+            $currentsitecolorclass = get_user_preferences('accessibilitystyles_sitecolorclass', '');
+            if ($currentsitecolorclass) {
+                $additionalclasses[] = $currentsitecolorclass;
+            }
+        }
+
+        $fonttype = get_user_preferences('thememoovesettings_fonttype', '');
+        if ($fonttype) {
+            $additionalclasses[] = $fonttype;
+        }
+
+        if (!is_array($additionalclasses)) {
+            $additionalclasses = explode(' ', $additionalclasses);
+        }
+
+        return ' id="'. $this->body_id().'" class="'.$this->body_css_classes($additionalclasses).'"';
     }
 
 

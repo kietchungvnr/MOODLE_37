@@ -232,6 +232,11 @@ $string['forumhtmlemailfooterdesc'] = 'Configure the email footer for the forum 
 $string['forumcustomtemplate'] = 'Use a pretty template for forum mails';
 $string['forumcustomtemplatedesc'] = 'Enable that in order to use a pretty template when sending forum messages via email. If not enabled standard formatting of forum mails will be used.';
 
+$string['certificates'] = 'Certificates';
+$string['certificatestitle'] = 'My certificates';
+$string['subtitleallcertificates'] = 'Certificates from all courses';
+$string['subtitlecoursecertificates'] = 'Course certificates';
+$string['nohavecertificates'] = 'You no have certificates yet';
 $string['coursesections'] = 'Course sections';
 
 // Mypublic page.
@@ -241,6 +246,36 @@ $string['details'] = 'Details';
 $string['startedon'] = 'Started on';
 $string['addcontact'] = 'Add contact';
 $string['removecontact'] = 'Remove contact';
+
+// Theme settings.
+$string['themesettingstitle'] = 'Accessibility settings';
+$string['themesettingsfonttype'] = 'Font type';
+$string['themesettingsdefaultfont'] = 'Default font';
+$string['themesettingsdyslexicfont'] = 'Dyslexic font';
+$string['themesettingsenableaccessibilitytoolbar'] = 'Enable accessibility toolbar';
+$string['themesettinggsavedsuccessfully'] = 'Accessibility settings saved successfully';
+
+// Accessibility features.
+$string['accessibilityfontsize'] = 'Font size';
+$string['accessibilitydecreasefont'] = 'Decrease font size';
+$string['accessibilityresetfont'] = 'Reset font size';
+$string['accessibilityincreasefont'] = 'Increase font size';
+$string['accessibilitysitecolor'] = 'Site color';
+$string['accessibilityresetsitecolor'] = 'Reset site color';
+$string['accessibilitysitecolor2'] = 'Low contrast 1';
+$string['accessibilitysitecolor3'] = 'Low contrast 2';
+$string['accessibilitysitecolor4'] = 'High contrast';
+
+// Data privacy.
+$string['privacy:metadata:preference:accessibilitystyles_fontsizeclass'] = 'The user\'s preference for font size.';
+$string['privacy:metadata:preference:accessibilitystyles_sitecolorclass'] = 'The user\'s preference for site color.';
+$string['privacy:metadata:preference:thememoovesettings_fonttype'] = 'The user\'s preference for font type.';
+$string['privacy:metadata:preference:thememoovesettings_enableaccessibilitytoolbar'] = 'The user\'s preference for enable the accessibility toolbar.';
+
+$string['privacy:accessibilitystyles_fontsizeclass'] = 'The current preference for the font size is: {$a}.';
+$string['privacy:accessibilitystyles_sitecolorclass'] = 'The current preference for the site color is: {$a}.';
+$string['privacy:thememoovesettings_fonttype'] = 'The current preference for the font type is: {$a}.';
+$string['privacy:thememoovesettings_enableaccessibilitytoolbar'] = 'The current preference for enable accessibility toolbar is to show it.';
 
 // Footer
 $string['address'] = 'Address';
@@ -314,3 +349,13 @@ $string['last'] = 'Go to the next last';
 $string['search'] = 'Search';
 $string['page'] = 'Page';
 $string['examonline'] = 'Exam';
+$string['prev_activity'] = 'Previous activity';
+$string['next_activity'] = 'Next activity';
+$string['notcalculatedyet'] = 'Not calculated yet';
+$string['calculatediskusagetask'] = 'Task to calculate the disk usage';
+$string['cachedef_admininfos'] = 'Site administrator dashboard infos cache definition';
+$string['cachedef_fontawesomemooveiconmapping'] = 'Theme icon font definition';
+$string['disableteacherspic'] = 'Disable teachers picture';
+$string['disableteacherspicdesc'] = 'This setting hides the teachers\' pictures from the course cards.';
+$string['whatsapp'] = 'Whatsapp number';
+$string['whatsappdesc'] = 'Enter your whatsapp number for contact.';

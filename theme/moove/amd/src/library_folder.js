@@ -246,6 +246,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], fu
         })
         // Mở popup share module thư viện vào khóa học
         $('#table-library').on('click', 'a#share-module-library', function(e) {
+            debugger;
             $('#share-popup-modal-module').modal('show');
             var moduleid = $(this).attr('moduleid');
             $('#module-from-library').attr('moduleid', moduleid);
