@@ -4059,6 +4059,7 @@ class flat_navigation extends navigation_node_collection {
             $flat->set_showdivider(true, get_string('sitesettings'));
             $flat->key = 'sitesettings';
             $flat->icon = new pix_icon('t/preferences', '');
+            $flat->class = 'fa fa-cogs';
             $this->add($flat);
         }
 
@@ -4073,6 +4074,7 @@ class flat_navigation extends navigation_node_collection {
             $flat->set_showdivider(true, get_string('blocksaddedit'));
             $flat->key = 'addblock';
             $flat->icon = new pix_icon('i/addblock', '');
+            $flat->class = 'fa fa-plus-square fa-fw';
             $this->add($flat);
             $blocks = [];
             foreach ($addable as $block) {

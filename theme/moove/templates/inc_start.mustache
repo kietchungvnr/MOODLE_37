@@ -14,7 +14,8 @@
 
 <style type="text/css">
 
-*:focus-within {
+*:focus-within,
+*:focus {
     outline: 0;
     box-shadow: none;
 }
@@ -1583,7 +1584,7 @@ nav.navbar .navbar-brand .logo img {
 }
 
 #page.container-fluid {
-    padding: 0rem 1.6rem 0 1.4rem !important;
+    padding: 0rem 1.1rem 0 1.1rem !important;
 }
 .block-text-number {
     font-weight: bold;
@@ -1757,9 +1758,8 @@ li {
  }
 }
 
-nav.navbar {
-    min-height: 48px;
-    height: 48px;
+nav.navbar ul.navbar-nav .usermenu {
+    line-height: 94px;
 }
 nav.navcourse {
     background: #3c8dbc;
@@ -1778,9 +1778,7 @@ nav.navbar ul.navbar-nav .lang-menu .dropdown-menu {
     top: -9px;
     left: 0;
 }
-nav.navbar ul.navbar-nav .usermenu {
-    line-height: 85px;
-}
+
 nav.navbar ul.navbar-nav .popover-region .popover-region-container {
     top: 68px;
 }
@@ -1801,15 +1799,12 @@ nav.navbar ul.navbar-nav .popover-region .popover-region-toggle .count-container
 [data-region="blocks-column"] {
     top: 49px;
 }
-#action-menu-2-menu.dropdown-menu {
-    left: 6px !important;
-}
 .card-title{
     font-size: 15px;
     font-weight: bold;
 }
 .navbar-expand .navbar-nav .dropdown-menu-right {
-    top: 67px;
+    top: 72px;
 }
 .active-nav {
     color: blue !important;
@@ -1866,7 +1861,8 @@ legend {
 }
 nav.navbar ul.navbar-nav .popover-region .popover-region-toggle {
     outline: 0;
-    padding: 0.5rem 0.1rem;
+    padding: 0.5rem 0.3rem;
+    line-height: 76px !important;
 }
 
 .text-gray {
@@ -1890,9 +1886,14 @@ nav.navbar ul.navbar-nav .popover-region .popover-region-toggle {
      align-self: center;
      margin-right: 10px;
 }
- #header .menu .logo img {
+#header .menu .logo .btn-menu:hover {
+    border-radius: 50%
+    background-color: red;
+}
+#header .menu .logo img {
      vertical-align: top;
      width: 70px;
+}
 }
  .menu .enlaces {
      letter-spacing: 0.1em;
@@ -3208,10 +3209,7 @@ table#categoryquestions tr {
     p {
         margin-bottom: 0;
     }
-    nav.navbar {
-        min-height: 0;
-        height: 47px;
-    }
+
     #page-header .d-flex.flex-wrap {
         display: none !important;
     }
@@ -5165,6 +5163,7 @@ body #page-wrapper {
 }
 .fixed-sidebar-left .side-nav > li.menu-link {
     padding: 7px 15px;
+    cursor: pointer;
     color: #fff;
 }
 .fixed-sidebar-left .side-nav > li.menu-link i{
@@ -5238,7 +5237,19 @@ body.sidebar-hover .btn-menu-search {
 #page-navbar .breadcrumb li:first-of-type>* {
     padding-left: 2px;
 }
-
+@media (max-width: 480px) {
+    .navbar .popover-region .popover-region-container {
+        top: 48px !important;
+    }
+}
+.popover-region-toggle::before {
+    bottom: 23px;
+    right: 4px;
+}
+.popover-region-toggle::after {
+    bottom: 23px;
+    right: 5px;
+}
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />
@@ -5277,12 +5288,11 @@ body.sidebar-hover .btn-menu-search {
         <ul class="nav navbar-nav side-nav nicescroll-bar">
             {{{output.right_sidebar_menu}}}
             {{# flatnavigation }}
+                <li><hr class="light-grey-hr mb-10"></li>
+                <li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>{{#str}}admin,theme_moove{{/str}}</span></li>
                 {{#showdivider}}
-                    <li><hr class="light-grey-hr mb-10"></li>
-                    <li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>{{#str}}admin,theme_moove{{/str}}</span></li>
-                    <li class="menu-link" data-key="{{key}}" id=''><a class ="nav-active" href="{{{action}}}"><i class="fa fa-cogs mr-3"></i>{{{text}}}</a></li>
+                    <li class="menu-link" data-key="{{key}}" id=''><a class ="nav-active" href="{{{action}}}"><i class="{{{class}}} mr-3"></i>{{{text}}}</a></li>
                 {{/showdivider}}
-            
             {{/ flatnavigation }}
         </ul>
     </div>
