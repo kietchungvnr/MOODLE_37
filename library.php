@@ -88,6 +88,7 @@ $editing = $PAGE->user_is_editing();
 $PAGE->set_title(get_string('library','local_newsvnr'));
 $PAGE->set_heading(get_string('library','local_newsvnr'));
 $PAGE->requires->js_call_amd('theme_moove/kendo_approval_library','init');
+$PAGE->requires->js_call_amd('theme_moove/library_folder','init');
 $PAGE->requires->strings_for_js( array('action', 'emptydata'), 'local_newsvnr');
 $courserenderer = $PAGE->get_renderer('core', 'course');
 echo $OUTPUT->header();
