@@ -860,7 +860,7 @@ class completion_info {
         }
 
         $completionrules = $DB->get_record('course_modules_completion_rule', ['moduleid' => $cm->id]);
-        if($completionrules->completiontimespent > 0) {
+        if(isset($completionrules->completiontimespent) &&  $completionrules->completiontimespent > 0) {
             $completiontimer = $DB->get_record('course_modules_completion_timer', ['completionruleid' => $completionrules->id, 'userid' => $USER->id]);
             $completiontimespent = $completionrules->completiontimespent;
             $duration = $completiontimer->lastseentime - $completiontimer->starttime;

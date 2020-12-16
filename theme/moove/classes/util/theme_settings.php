@@ -38,6 +38,7 @@ use core_course_list_element;
 use DateTime;
 use context_system;
 use context_module;
+use completion_info;
 use core_competency\api as competency_api;
 
 defined('MOODLE_INTERNAL') || die();
@@ -845,5 +846,31 @@ class theme_settings {
         $templatecontext['forumdata'] = array_values($data);
         return $templatecontext;
 
+    }
+
+    // Get dữ liệu cho dashboard
+    
+    public function get_fullinfo_user() {
+        global $CFG, $USER, $OUTPUT, $PAGE;
+        require_once("$CFG->libdir/completionlib.php");
+
+        $obj = new stdClass;
+        $obj->fullname = fullname($USER);
+        $obj->userimg = $OUTPUT->user_picture($USER, array('size'=>35));
+        $obj->email = $USER->email;
+        $courses = enrol_get_all_users_courses($USER->id);
+        $count_course_comletion = 0;
+        foreach($courses as $course) {
+            $cinfo = new completion_info($course);
+            $iscomplete = $cinfo->is_course_complete($USER->id);
+            if($iscomplete == true) {
+                $count_course_comletion++;
+            }
+        }
+        $obj->coursestotal = count($courses);
+        $obj->completedcoures = $count_course_comletion;
+        $obj->progresscoures = count($courses) - $count_course_comletion;
+        $templatecontext['userinfo'] = $obj;
+        return $templatecontext;
     }
 }

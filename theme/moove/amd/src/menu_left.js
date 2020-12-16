@@ -5,6 +5,11 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         $('.click-menu-expand i').removeClass('active');
         $('body').toggleClass('slide-nav-toggle');
         $('.all-header .navbar-brand').toggleClass('d-none');
+        if($('body').hasClass('slide-nav-toggle')) {
+            $('#btn-menu i').removeClass('fa-align-right').addClass('fa-align-left');
+        } else {
+            $('#btn-menu i').removeClass('fa-align-left').addClass('fa-align-right');
+        }
     })
     $('.fixed-sidebar-left').hover(function() {
         $('body').addClass('sidebar-hover');

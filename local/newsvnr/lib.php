@@ -1,4 +1,4 @@
-<?php 
+<?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -103,14 +103,14 @@ function get_froums_coursenews_data_id($discussionid)
             FROM mdl_forum f 
                 JOIN mdl_forum_discussions d ON f.id=d.forum AND f.course=d.course 
                 JOIN mdl_forum_posts p ON d.id = p.discussion JOIN mdl_user u ON p.userid = u.id
-            WHERE f.type='news' AND p.parent = 0 AND d.id = ?"; 
+            WHERE f.type='news' AND p.parent = 0 AND d.id = ?";
     $forumdata = $DB->get_recordset_sql($sql,array($discussionid));
     $newspage = new \local_newsvnr\output\news_page();
     $forumarr = array();
     $course_id = 0;
     foreach ($forumdata as $key => $value) {
         $datauser = $DB->get_record_sql('SELECT * FROM {user} u WHERE u.id = :userid ',['userid' => $value->userid]);
-        $count_comment = get_count_comment_by_discussionid($value->discussionid);    
+        $count_comment = get_count_comment_by_discussionid($value->discussionid);
         $isimage = true;
         $forumstd = new stdClass();
         $image_data = get_all_image_of_discussion($value->firstpost);
@@ -138,7 +138,7 @@ function get_froums_coursenews_data_id($discussionid)
         $forumstd->content = format_text($forumstd->content2, $value->messageformat, $options, $course_id);
         $forumarr[] = $forumstd;
     }
-    return $forumarr;  
+    return $forumarr;
 }
 
 function get_comment_from_disccusion($id_discus) {
@@ -170,7 +170,7 @@ function get_comment_from_disccusion($id_discus) {
         if(is_siteadmin() || $comment->userid  == $userid) {
              $forumstd->label_delete = '<label class="delete" onclick="DeleteComment('. $comment->id .')" id="'. $comment->id .'">'.get_string('delete').'</label>';
         }
-        $i++;   
+        $i++;
         $id_comment = $comment->id;
         if(!empty($id_comment))
         {
@@ -206,7 +206,7 @@ function get_replies_from_comment($id_comment) {
                 JOIN mdl_local_newsvnr_comments lnc ON lnr.commentid = lnc.id
                 JOIN mdl_user u ON lnr.userid = u.id
             WHERE lnr.commentid = ?";
-    $data = $DB->get_records_sql($sql, array($id_comment));    
+    $data = $DB->get_records_sql($sql, array($id_comment));
     return $data;
 }
 
@@ -239,7 +239,7 @@ function append_comments_after_delete($id_discus, $offset, $limited) {
     return $data;
 }
 
-function get_course_id($discussionid) {   
+function get_course_id($discussionid) {
     global $DB;
     $sql = "
             SELECT fd.course AS course_id 
@@ -285,7 +285,7 @@ function get_forums_lq_data($course_id, $current_discussion) {
         $forumstd->timeago = converttime($file->timemodified);
         $forumstd->name = $file->name;
         if(!empty($count_comment))
-            $forumstd->countcomments = $count_comment->countcomments;            
+            $forumstd->countcomments = $count_comment->countcomments;
         else
             $forumstd->countcomments = 0;
         $forumstd->$key = true;
@@ -293,7 +293,7 @@ function get_forums_lq_data($course_id, $current_discussion) {
         $i++;
     }
     return $forumarr;
-}  
+}
 
 function forum_get_discussion_subscription_icon_newsvnr($forum, $discussionid, $returnurl = null, $includetext = false) {
     global $USER, $OUTPUT, $PAGE;
@@ -321,7 +321,7 @@ function forum_get_discussion_subscription_icon_newsvnr($forum, $discussionid, $
     } else {
         $output = html_writer::start_tag('i', array('class' => 'fa fa-rss-square','style' => 'color:black','aria-hidden' => 'true','aria-label' => get_string('clicktosubscribe', 'forum'),'aria-title' => get_string('clicktosubscribe', 'forum')));
         $output.= html_writer::end_tag('i');
-       
+
         return html_writer::link($subscriptionlink, $output, array(
                 'title' => get_string('clicktosubscribe', 'forum'),
                 'class' => 'discussiontoggle ',
@@ -337,7 +337,7 @@ function news_countviews($discussionid)
     global $DB;
     $query = "UPDATE {forum_discussions}
               SET countviews = countviews + 1 
-              WHERE id = :discussionid";                 
+              WHERE id = :discussionid";
     $params = array(
             'discussionid' => $discussionid
     );
@@ -416,7 +416,7 @@ function delete_orgcategory($orgcateid) {
     return $DB->delete_records('orgstructure_category',array('id' => $orgcateid));
 }
 /**
- * Thêm mới xóa sửa 1 phòng ban 
+ * Thêm mới xóa sửa 1 phòng ban
  * @param [object] $orgstructure [description]
  */
 function insert_orgstructure($orgstructure) {
@@ -470,9 +470,9 @@ function delete_orgposition($orgposition) {
     return $DB->delete_records('orgstructure_position',array('id' => $orgposition));
 }
 /**
- * Func tạo Treeview  
+ * Func tạo Treeview
  */
-function showMenuLi($menus, $table_name) 
+function showMenuLi($menus, $table_name)
 {
     switch ($table_name) {
         case 'mdl_orgstructure':
@@ -480,25 +480,25 @@ function showMenuLi($menus, $table_name)
             $arr = array();
                 foreach ($menus as $value) {
                     $arr['id'] = $value->id;
-                    $arr['text'] = $value->name; 
+                    $arr['text'] = $value->name;
                     $arr['parentid'] = $value->parentid;
                     $arr['encoded'] = false;
                     $arr['expanded'] = true;
                     $data[] = $arr;
                 }
-               
+
                foreach($data as $key => &$item) {
 
                    $itemsByReference[$item['id']] = &$item;
                    // Children array:
                    $itemsByReference[$item['id']]['items'] = array();
-                   // Empty data class (so that json_encode adds "data: {}" ) 
+                   // Empty data class (so that json_encode adds "data: {}" )
                 }
                 // Set items as children of the relevant parent item.
                 foreach($data as $key => &$item)
                    if($item['parentid'] && isset($itemsByReference[$item['parentid']]))
                       $itemsByReference [$item['parentid']]['items'][] = &$item;
-                 
+
                 // Remove items that were added to parents elsewhere:
                 foreach($data as $key => &$item) {
                    if($item['parentid'] && isset($itemsByReference[$item['parentid']]))
@@ -511,7 +511,7 @@ function showMenuLi($menus, $table_name)
             $arr = array();
             foreach ($menus as $value) {
                 $arr['id'] = $value->id;
-                $arr['text'] = $value->shortname; 
+                $arr['text'] = $value->shortname;
                 $arr['parentid'] = $value->parentid;
                 $arr['encoded'] = false;
                 // $arr['expanded'] = true;
@@ -523,7 +523,7 @@ function showMenuLi($menus, $table_name)
                $itemsByReference[$item['id']] = &$item;
                // Children array:
                $itemsByReference[$item['id']]['items'] = array();
-               // Empty data class (so that json_encode adds "data: {}" ) 
+               // Empty data class (so that json_encode adds "data: {}" )
             }
             // var_dump($data);die;
             // Set items as children of the relevant parent item.
@@ -538,12 +538,12 @@ function showMenuLi($menus, $table_name)
 
             }
             echo json_encode(array_values($data));
-            break;    
+            break;
         case 'mdl_course_categories':
             $arr = array();
             foreach ($menus as $value) {
                 $arr['id'] = $value->id;
-                $arr['text'] = $value->name; 
+                $arr['text'] = $value->name;
                 $arr['parent'] = $value->parent;
                 $arr['encoded'] = false;
 
@@ -555,7 +555,7 @@ function showMenuLi($menus, $table_name)
                $itemsByReference[$item['id']] = &$item;
                // Children array:
                $itemsByReference[$item['id']]['items'] = array();
-               // Empty data class (so that json_encode adds "data: {}" ) 
+               // Empty data class (so that json_encode adds "data: {}" )
             }
             // Set items as children of the relevant parent item.
             foreach($data as $key => &$item) {
@@ -569,11 +569,11 @@ function showMenuLi($menus, $table_name)
 
             }
             echo json_encode(array_values($data));
-            break;    
+            break;
         default:
             break;
     }
-       
+
 }
 /**
  * Lây tên chức danh từ id
@@ -870,10 +870,10 @@ function get_list_course_by_teacher($userid) {
                                 WHERE  ra.roleid=3 AND u.id = ?";
     $list_course_by_user_ex = $DB->get_records_sql($list_course_by_user_sql,[$userid]);
     if ($list_course_by_user_ex) {
-        foreach ($list_course_by_user_ex as $value) 
+        foreach ($list_course_by_user_ex as $value)
             $list_courseid[] = $value;
     }
-       
+
     return $list_courseid;
 }
 
@@ -897,10 +897,10 @@ function get_list_course_by_student($userid) {
                                 WHERE  ra.roleid=5 AND ue.status = 0 AND u.id = ? AND c.visible = 1";
     $list_course_by_user_ex = $DB->get_records_sql($list_course_by_user_sql,[$userid]);
     if ($list_course_by_user_ex) {
-        foreach ($list_course_by_user_ex as $value) 
+        foreach ($list_course_by_user_ex as $value)
             $list_courseid[] = $value;
     }
-       
+
     return $list_courseid;
 }
 
@@ -958,20 +958,20 @@ function get_enrol_method($courseid) {
     foreach($execute as $method) {
         array_push($methodarr, $method->enrol);
     }
-   
+
     if(in_array('guest', $methodarr)) {
-        return '<a href="'.$courseurl.'"><i class="fa fa-unlock-alt fa-fw " title="Guest access" aria-label="Guest access"></i>' . get_string('guest_enrol', 'local_newsvnr') . '</a>'; 
+        return '<a href="'.$courseurl.'"><i class="fa fa-unlock-alt fa-fw " title="Guest access" aria-label="Guest access"></i>' . get_string('guest_enrol', 'local_newsvnr') . '</a>';
     }
     if(in_array('self', $methodarr)) {
         return '<a href="'.$courseurl.'"><i class="fa fa-key fa-fw " title="Self enrolment" aria-label="Self enrolment"></i>' . get_string('self_enrol', 'local_newsvnr') . '</a>';
     }
     if(in_array('apply', $methodarr)) {
-        return '<a href="'.$courseurl.'">' . get_string('apply_enrol', 'local_newsvnr') . '</a>'; 
+        return '<a href="'.$courseurl.'">' . get_string('apply_enrol', 'local_newsvnr') . '</a>';
     }
     if(in_array('manual', $methodarr)) {
-        return '<a href="'.$courseurl.'" style="color:red"><i class="fa fa-lock fa-fw " title="Manual Access" aria-label="Manual Access"></i>' . get_string('manual_enrol', 'local_newsvnr') . '</a>'; 
+        return '<a href="'.$courseurl.'" style="color:red"><i class="fa fa-lock fa-fw " title="Manual Access" aria-label="Manual Access"></i>' . get_string('manual_enrol', 'local_newsvnr') . '</a>';
     }
-    
+
 }
 
 /**
@@ -1116,12 +1116,12 @@ function get_list_plan_template_by_positionid($positionid)
             WHERE ct.positionid = ?" ;
     $data = $DB->get_records_sql($query, array($positionid));
     $objectArr =  array();
-    foreach ($data as $value) {       
+    foreach ($data as $value) {
         $query_plans = "
                         SELECT count(cp.id) AS count 
                         FROM mdl_competency_plan cp 
                         WHERE cp.templateid = ?";
-        $count_plans = $DB->get_record_sql($query_plans, array($value->templateid)); 
+        $count_plans = $DB->get_record_sql($query_plans, array($value->templateid));
         $category_name = get_categoryname_by_contextid($value->contextid);
         $std = new stdClass();
         $std->positionid = $value->positionid;
@@ -1169,7 +1169,7 @@ function check_auth_api($username, $password) {
     if($findUser)
     {
         $checkAuthenticate = password_verify($password, $findUser->password);
-        return $checkAuthenticate; 
+        return $checkAuthenticate;
     }
 }
 
@@ -1680,7 +1680,7 @@ function converttime($time) {
             break;
         case (round($distance/2592000) > 1 && round($distance/2592000) < 12 ):
             $result = round($distance/2592000) .' '.get_string('monthago','local_newsvnr').'';
-            break;    
+            break;
         default:
             convertunixtime(' d-m-Y',$time,'Asia/Ho_Chi_Minh');
             break;
@@ -1713,7 +1713,7 @@ function convertTimeExam($time) {
     }
     return $result;
 }
-//Hàm chuyển mimetype qua text 
+//Hàm chuyển mimetype qua text
 function mime2ext($mime) {
     $mime_map = [
         'video/3gpp2'                                                               => '3g2',
@@ -1943,7 +1943,7 @@ function get_link_file($module) {
  */
 function get_link_folder($folder,&$output = '',$stt = 0) {
     global $DB;
-    if($folder->parent != 0) {  
+    if($folder->parent != 0) {
         $parentfolder = $DB->get_record_sql("SELECT lf.name,lf.id,lf.parent FROM {library_folder} lf WHERE lf.id = $folder->parent");
         $temp = $output;
         $output = '';
@@ -1971,35 +1971,35 @@ function get_finalgrade_student($userid,$courseid) {
     return $get_grade;
 }
 
-function local_newsvnr_extend_navigation($navigation) {
-    $newsurl = new moodle_url('/local/newsvnr/index.php');
-    $news = navigation_node::create(get_string('pagetitle', 'local_newsvnr'), $newsurl,navigation_node::TYPE_CUSTOM,'newspage',
-        'newspage',
-        new pix_icon('t/viewdetails','Tin tức'));
-    $news->showinflatnavigation = true;
-    $navigation->add_node($news,'1');
-    
-    $courseurl = new moodle_url('/local/newsvnr/course.php');
-    $course = navigation_node::create(get_string('coursetitle', 'local_newsvnr'), $courseurl,navigation_node::TYPE_CUSTOM,'coursepage',
-        'coursepage',
-        new pix_icon('t/viewdetails','Khóa học'));
-    $course->showinflatnavigation = true;
-    $navigation->add_node($course,'1');
+ function local_newsvnr_extend_navigation($navigation) {
+     // $newsurl = new moodle_url('/local/newsvnr/index.php');
+     // $news = navigation_node::create(get_string('pagetitle', 'local_newsvnr'), $newsurl,navigation_node::TYPE_CUSTOM,'newspage',
+     //     'newspage',
+     //     new pix_icon('t/viewdetails','Tin tức'));
+     // $news->showinflatnavigation = true;
+     // $navigation->add_node($news,'1');
 
-    $forumurl = new moodle_url('/local/newsvnr/forum.php');
-    $forum = navigation_node::create(get_string('forumtitle', 'local_newsvnr'), $forumurl,navigation_node::TYPE_CUSTOM,'forumpage',
-        'forumpage',
-        new pix_icon('t/viewdetails','Diễn đàn'));
-    $forum->showinflatnavigation = true;
-    $navigation->add_node($forum,'1');
+     // $courseurl = new moodle_url('/local/newsvnr/course.php');
+     // $course = navigation_node::create(get_string('coursetitle', 'local_newsvnr'), $courseurl,navigation_node::TYPE_CUSTOM,'coursepage',
+     //     'coursepage',
+     //     new pix_icon('t/viewdetails','Khóa học'));
+     // $course->showinflatnavigation = true;
+     // $navigation->add_node($course,'1');
+
+     // $forumurl = new moodle_url('/local/newsvnr/forum.php');
+     // $forum = navigation_node::create(get_string('forumtitle', 'local_newsvnr'), $forumurl,navigation_node::TYPE_CUSTOM,'forumpage',
+     //     'forumpage',
+     //     new pix_icon('t/viewdetails','Diễn đàn'));
+     // $forum->showinflatnavigation = true;
+     // $navigation->add_node($forum,'1');
 
 
-    $grabnodeurl = new moodle_url('/my');
-    $grab = navigation_node::create('grabnode', $grabnodeurl,navigation_node::TYPE_CUSTOM,'grabnode',
-        'grabnode',
-        new pix_icon('t/viewdetails','Rác'));
-    $grab->showinflatnavigation = true;
-    $navigation->add_node($grab,'users');
+     // $grabnodeurl = new moodle_url('/my');
+     // $grab = navigation_node::create('grabnode', $grabnodeurl,navigation_node::TYPE_CUSTOM,'grabnode',
+     //     'grabnode',
+     //     new pix_icon('t/viewdetails','Rác'));
+     // $grab->showinflatnavigation = true;
+     // $navigation->add_node($grab,'users');
 
 
 
@@ -2018,7 +2018,7 @@ function local_newsvnr_extend_navigation($navigation) {
     //         new pix_icon('t/viewdetails','Đề thi'));
     //     $questionbank->showinflatnavigation = true;
     //     $navigation->add_node($questionbank,'1');
-        
+
     //     $orgmanagerurl = new moodle_url('/local/newsvnr/orgmanager.php');
     //     $orgmanager = navigation_node::create(get_string('orgmanagertitle', 'local_newsvnr'), $orgmanagerurl,navigation_node::TYPE_CUSTOM,'mycohorts6',
     //         'mycohorts6',
@@ -2033,6 +2033,6 @@ function local_newsvnr_extend_navigation($navigation) {
     //     $orgmain->showinflatnavigation = true;
     //     $navigation->add_node($orgmain,'1');
     // }
- }
+  }
 
 

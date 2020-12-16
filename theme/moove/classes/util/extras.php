@@ -84,10 +84,10 @@ class extras {
             $course->link = $CFG->wwwroot."/course/view.php?id=".$course->id;
 
             // Summary.
-            $course->summary = strip_tags($chelper->get_course_formatted_summary(
-                $courseobj,
-                array('overflowdiv' => false, 'noclean' => false, 'para' => false)
-            ));
+            // $course->summary = strip_tags($chelper->get_course_formatted_summary(
+            //     $courseobj,
+            //     array('overflowdiv' => false, 'noclean' => false, 'para' => false)
+            // ));
 
             $course->courseimage = self::get_course_summary_image($courseobj, $course->link);
         }

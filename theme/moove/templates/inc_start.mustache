@@ -5101,7 +5101,7 @@ input.apple-switch:checked:after {
     width: auto;
 }
 .fixed-sidebar-left .side-nav {
-    background: #2a3e4c;
+    background: #f6fafb;
     border: none;
     height: 100%;
     width: 100%;
@@ -5124,7 +5124,7 @@ body .fixed-sidebar-left {
     z-index: 100;
     transition: all 0.4s ease;
     overflow-x:scroll;
-    background: #2a3e4c;
+    background: #f6fafb;
     height: 100%;
 }
 body.slide-nav-toggle .fixed-sidebar-left .side-nav li.navigation-header > i,
@@ -5170,7 +5170,7 @@ body #page-wrapper {
     width: 13px;
 }
 .fixed-sidebar-left .side-nav > li > a {
-    color: #fff;
+    color: #455a64;
     width: 170px;
     display: block;
 }
@@ -5222,11 +5222,11 @@ body.sidebar-hover .btn-menu-search {
 }
 .content-menu-expand {
     border: 0;
-    background: #2a3e4c;
+    background: #f6fafb;
 }
 .content-menu-expand li a {
     font-size: 13px;
-    color: white;
+    color: #455a64;
     white-space: normal;
     margin-left: 10px;
 }
@@ -5249,6 +5249,26 @@ body.sidebar-hover .btn-menu-search {
 .popover-region-toggle::after {
     bottom: 23px;
     right: 5px;
+}
+#teachercourse i,
+#studentcourse i {
+    color: #455a64;
+}
+.user-overview .db-avartar {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    vertical-align: bottom;
+    white-space: nowrap;
+    border-radius: 1000px;
+    float: left;
+}
+.user-overview .info p {
+    opacity: 0.8;
+}
+.list-inline-item img {
+    width: 24px;
+    height: 24px;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
@@ -5287,9 +5307,8 @@ body.sidebar-hover .btn-menu-search {
     <div class="slimScrollDiv">
         <ul class="nav navbar-nav side-nav nicescroll-bar">
             {{{output.right_sidebar_menu}}}
+            <li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>{{#str}}admin,theme_moove{{/str}}</span></li>
             {{# flatnavigation }}
-                <li><hr class="light-grey-hr mb-10"></li>
-                <li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>{{#str}}admin,theme_moove{{/str}}</span></li>
                 {{#showdivider}}
                     <li class="menu-link" data-key="{{key}}" id=''><a class ="nav-active" href="{{{action}}}"><i class="{{{class}}} mr-3"></i>{{{text}}}</a></li>
                 {{/showdivider}}

@@ -54,7 +54,8 @@ if(isset($_SERVER['HTTP_REFERER'])) {
 } else {
     $hasportal = false;
 }
-
+$PAGE->requires->js_call_amd('local_newsvnr/studentinfo', 'init');
+$PAGE->requires->strings_for_js(array('emptydata','action','viewcourse'), 'local_newsvnr');
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [
@@ -75,7 +76,7 @@ $templatecontext = [
 
 $themesettings = new \theme_moove\util\theme_settings();
 
-$templatecontext = array_merge($templatecontext, $themesettings->footer_items());
+$templatecontext = array_merge($templatecontext, $themesettings->footer_items(), $themesettings->get_fullinfo_user());
 
 if (is_siteadmin()) {
     global $DB;

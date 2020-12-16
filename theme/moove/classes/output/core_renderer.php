@@ -375,7 +375,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $output .= '<li class="menu-link"><a href="'.$examonline .'"><i class="fa fa-pencil-square mr-3" aria-hidden="true"></i>'. get_string('examonline', 'theme_moove') .'</a></li>';
             $output .= '<li class="menu-link"><a href="'.$filelibrary .'"><i class="fa fa-folder-open mr-3"></i>'. get_string('filelibrary', 'theme_moove') .'</a></li>';
             $output .= '<li class="menu-link"><a href="'.$files .'"><i class="fa fa-file mr-3"></i>'. get_string('privatedata', 'theme_moove') .'</a></li>';
-            $output .= '<li><hr class="light-grey-hr mb-10"></li>';
+            // $output .= '<li><hr class="light-grey-hr mb-10"></li>';
             // Danh mục học viên - giáo viên
             $output .= '<li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>'.get_string('studentteacher','theme_moove').'</span></li>';
             $output .= '<li class="menu-link"><a href="'.$course .'"><i class="fa fa-university mr-3" aria-hidden="true"></i>'. get_string('course', 'theme_moove') .'</a></li>';
