@@ -21,16 +21,9 @@
 
     Example context (json): {}
 }}
-
-
-
 <nav class="fixed-top navbar navbar-light navbar-expand moodle-has-zindex" menu>
-    <a href="javascript:;" class="btn-menu ml-1 mr-3 mt-2 mb-2" id="btn-menu"><i class="icono fa fa-align-right fa-1x text-gray" aria-hidden="true"></i></a>
-    <a href="{{{ config.wwwroot }}}" class="navbar-brand d-none ml-3 {{# output.get_logo }}has-logo{{/ output.get_logo }}
-        {{^ output.get_logo }}
-            d-none d-sm-inline
-        {{/ output.get_logo }}
-            ">
+    <a href="javascript:;" class="btn-menu ml-2 mr-3 mt-2 mb-2" id="btn-menu"><i class="icono fa fa-bars fa-1x text-gray" aria-hidden="true"></i></a>
+    <a href="{{{ config.wwwroot }}}" class="navbar-brand d-none ml-3 {{# output.get_logo }}has-logo{{/ output.get_logo }}">
         {{# output.get_logo }}
             <span class="logo d-sm-inline">
                 <img src="{{output.get_logo}}" alt="{{sitename}}">

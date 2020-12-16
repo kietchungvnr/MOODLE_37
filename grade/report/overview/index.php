@@ -150,6 +150,7 @@ if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
         // Display a standard page.
         if ($courseid == SITEID) {
             $PAGE->set_pagelayout('standard');
+            $PAGE->requires->js_call_amd('theme_moove/exam_grade_report','init');
             $header = get_string('grades', 'grades') . ' - ' . fullname($report->user);
             $PAGE->set_title($header);
             // $PAGE->set_heading(fullname($report->user));

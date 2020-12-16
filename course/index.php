@@ -64,6 +64,7 @@ $courserenderer = $PAGE->get_renderer('core', 'course');
 
 $PAGE->set_title($heading);
 $PAGE->set_heading($heading);
+$PAGE->requires->js_call_amd('theme_moove/course_category','init');
 $content = $courserenderer->course_category($categoryid);
 
 echo $OUTPUT->header();

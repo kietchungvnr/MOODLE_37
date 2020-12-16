@@ -45,6 +45,8 @@ $PAGE->requires->css('/local/newsvnr/css/style.css');
 $PAGE->requires->js('/local/newsvnr/js/trangChuTintuc.js', true);
 $PAGE->requires->js('/local/newsvnr/js/diendan1.js', true);
 $PAGE->requires->js('/local/newsvnr/js/pagination_coursenews.js');
+$PAGE->requires->js('/local/newsvnr/js/pagination_coursenews.js');
+$PAGE->requires->js_call_amd('theme_moove/news','init');
 $output = $PAGE->get_renderer('local_newsvnr');
 
 $page = new \local_newsvnr\output\news_page();
