@@ -1377,9 +1377,9 @@ div.page-header-headings h2 {
     text-align: left !important;
     padding-left: 10px
 }
-.course-content ul.ctopics li.section.main {
+/*.course-content ul.ctopics li.section.main {
     padding-bottom: 1rem;
-}
+}*/
 .course-content ul.ctopics li.tcsection {
     padding-bottom: 0.2rem;
 }
@@ -1862,7 +1862,7 @@ legend {
 nav.navbar ul.navbar-nav .popover-region .popover-region-toggle {
     outline: 0;
     padding: 0.5rem 0.3rem;
-    line-height: 76px !important;
+    font-size: 16px;
 }
 
 .text-gray {
@@ -3034,7 +3034,7 @@ table#categoryquestions tr {
     position: absolute;
     right: 0px;
     z-index: 1;
-    top: 2px;
+    top: 5px;
     padding:0 8px;
     background: #d1eeff;
     display: none;
@@ -3043,7 +3043,7 @@ table#categoryquestions tr {
     position: absolute;
     left: 0px;
     z-index: 1;
-    top: 2px;
+    top: 5px;
     padding:0 8px;
     display:none;
     background-color: #d1eeff;
@@ -3211,7 +3211,6 @@ table#categoryquestions tr {
         margin-bottom: 0;
     }
 
-    #page-header .d-flex.flex-wrap {
         display: none !important;
     }
     .pagelayout-course #sidepreopen-control {
@@ -3274,17 +3273,7 @@ table#categoryquestions tr {
     .mg-0-mobile {
         margin: 0 !important;
     }
-}
-@media(max-width: 500px){
-    .pagelayout-course .progress {
-        width: 30px !important;
-    }
-    .pagelayout-course .progress .progress-bar {
-        width: 100% !important;
-        background-color: white !important;
-        color: black;
-    }
-}   
+} 
 .calendarwrapper div.header select#menucourse {
     padding: 0.53rem 1.75rem .39rem .75rem;
 }
@@ -3414,9 +3403,8 @@ tr.drag-samenode td {
 }
 .progress.course {
     margin-bottom: 0;
-    float: right;
-    width: 250px;
-    height: 12px;
+    width: 350px;
+    height: 10px;
     margin-top: 4px;
     margin-right:5px;
     background:lightgray;
@@ -3424,11 +3412,8 @@ tr.drag-samenode td {
 .pagelayout-course #page-header .mr-auto {
     width: 100%;
 }
-.pagelayout-course #page-header .page-header-headings {
-    float: left;
-}
 .progress.course .progress-bar {
-    background-color: #1177d1;
+    background-color: green;
     font-size: 12px;
     font-weight: bold;
 }
@@ -3815,23 +3800,23 @@ h4.responsehistoryheader {
 
 #focus-mod i {
     margin: 0;
-    font-size: 19px;
+    font-size: 18px;
 }
 #focus-mod {
     background: #1177d1;
     cursor: pointer;
-    border-radius: 10px;
-    width: 105px;
+    border-radius: 5px;
+    width: auto;
     height: 30px;
     color: white;
-    padding: 2px 0 0 10px;
+    padding: 5px 5px 5px 10px;
     display: flex;
     align-items: center;
 }
 nav.focusmod #focus-mod {
     height:60px;
     border-radius: 0;
-    width: 110px;
+    width: 80px;
     font-weight: bold;
 }
 @media(max-width: 950px) {
@@ -5121,7 +5106,6 @@ input.apple-switch:checked:after {
     border-radius: 0;
     margin: 0;
     backface-visibility: hidden;
-    margin-bottom: 50px;
 }
 body.slide-nav-toggle .fixed-sidebar-left ,
 body.sidebar-hover .fixed-sidebar-left{
@@ -5273,6 +5257,7 @@ body.sidebar-hover .btn-menu-search {
 }
 .course-info-focus {
     padding-left: 15px;
+}
 @media (max-width: 480px) {
     .navbar .popover-region .popover-region-container {
         top: 48px !important;
@@ -5338,6 +5323,92 @@ body.sidebar-hover .btn-menu-search {
     background-color: #4285f4 !important;
     border: none;
 }
+.pagelayout-course #page-header .card {
+    background: white;
+    padding: 10px 15px;
+    margin-bottom: 5px;
+}
+.pagelayout-course #page-header .header-progress .text {
+    color: #808080cc;
+}
+.m-t-2.m-b-1.row {
+    display: none;
+}
+/*format view topcoll*/
+#page-course-view-topcoll .card-body.course {
+    padding: 0;
+}
+#page-course-view-topcoll .topcoll-display-instructions, 
+#page-course-view-topcoll #topcoll-display-instructions,
+#page-course-view-topcoll a.cps_centre,
+#page-course-view-topcoll .sectionhead .sectionname .cttoggle {
+    display: none !important;
+}
+#page-course-view-topcoll .sectionhead .sectionname {
+    text-align: left;
+    font-size: 14px !important;
+    font-weight: bold;
+    color: #595858;
+}
+#page-course-view-topcoll .sectionhead {
+    background: #d3d3d366;
+    border-radius: 0px;
+}
+#page-course-view-topcoll .sectionhead .the_toggle {
+    background: transparent;
+    padding-bottom: 0;
+}
+#page-course-view-topcoll  .course-content ul.ctopics li.section.main .content {
+    margin: 0;
+    padding-bottom: 0;
+}
+#page-course-view-topcoll .course-content ul.ctopics li.section.main .left {
+    padding: 5px 0 0px 10px;
+    font-weight: bold;
+    margin-top: 3px;
+}
+#page-course-view-topics .defaultuserpic {
+    width: 30px !important;
+    height: 30px !important;
+}
+#page-course-view-topcoll #toggles-all-closed {
+    display: none;
+}
+#page-course-view-topcoll .course-content ul.ctopics li.section .content .toggledsection {
+    min-height: 0px;
+}
+#page-course-view-topcoll .reportmodule {
+    display: flex;
+    justify-content: flex-end;
+}
+#page-course-view-topcoll .reportmodule img {
+    display: none;
+}
+#page-course-view-topcoll .countmodule {
+    padding: 0px 10px 5px 0px;
+    color: #808080ba;
+}
+#page-course-view-topcoll #toggle-all .content .sectionbody h4 span.tc-medium {
+    padding-right: 0;
+    background: transparent;
+    margin-right: 0;
+}
+.pagelayout-course .summary {
+    padding: 0 !important;
+}
+body.format-topcoll .ctopics .section {
+    margin: 0;
+}
+body.format-topcoll .course-content ul.ctopics li.section.main {
+    margin: 4px 1px 1px 1px;
+}
+i.expand-icon {
+    margin: 0 10px 10px 0;
+    transition: 0.4s;
+}
+i.expand-icon.active {
+    transform: rotate(180deg);
+}
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />
@@ -5369,7 +5440,6 @@ body.sidebar-hover .btn-menu-search {
     <div class="all-header">
         {{>theme_moove/header}}
     </div>
-    {{{output.menu_focus}}}
 
 <div class="fixed-sidebar-left">
     <div class="slimScrollDiv">

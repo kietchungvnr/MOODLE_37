@@ -1932,7 +1932,48 @@ function mime2ext($mime) {
 
     return isset($mime_map[$mime]) ? $mime_map[$mime] : false;
 }
-
+// Đếm , thống kê module 
+function count_module($course,$currentsection) {
+    global $DB,$OUTPUT;
+    $modinfo = get_fast_modinfo($course);
+    $output = array(
+        //lấy thông tin module
+        "activityinfo" => array(),
+        //Đếm số lượng module
+        "total" => array(),
+    );
+    $sectionmods = [];
+    $total = 0;
+    if(!empty($modinfo->sections[$currentsection->section])) { 
+        foreach ($modinfo->sections[$currentsection->section] as $cmid) {
+            $thismod = $modinfo->cms[$cmid];
+            $getmodules = $DB->get_records_sql('SELECT cm.id, cm.deletioninprogress FROM {course_modules} cm JOIN {course_sections} cs ON cm.section = cs.id WHERE cm.instance = :section AND cm.course = :courseid',['section' => $thismod->instance,'courseid' => $course->id]);
+            //Check điều kiện là là label hoặc module đã xóa
+            if ($thismod->modname == 'label' || $thismod->visible == 0) {
+                continue;
+            }
+            foreach($getmodules as $getmodule) {
+                if($getmodule->deletioninprogress != 0) {
+                    continue 2;
+                }    
+            }
+            if (isset($sectionmods[$thismod->modname])) {
+                $sectionmods[$thismod->modname]['name'] = $thismod->modplural;
+                $sectionmods[$thismod->modname]['count']++;
+            } else {
+                $sectionmods[$thismod->modname]['name'] = $thismod->modfullname;
+                $sectionmods[$thismod->modname]['count'] = 1;
+                $sectionmods[$thismod->modname]['image'] = $OUTPUT->image_url('icon', $thismod->modname);
+            }
+            $total++;
+        }
+    }
+    foreach($sectionmods as $mod) {
+        $output['activityinfo'][] = '<img class="mr-3" src="'.$mod['image'].'">'.$mod['count'].' '.$mod['name'];
+    }
+    $output['total'] = $total;
+    return $output;
+}
 // Chuyển mimetype thành hình ảnh
 function mimetype2Img($mimetype) {
     global $OUTPUT;

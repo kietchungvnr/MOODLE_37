@@ -102,13 +102,11 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output = '';
         $output .= '<nav class="fixed-top navbar moodle-has-zindex focusmod">';
         $output .= '<div class="d-flex menu-left">';
-        // $output .= '<div class="home-focus border-right"><a href="'.$CFG->wwwroot.'/my"><i class="fa fa-3x fa-home" aria-hidden="true"></i></a></div>';
         $output .= '<div class="course-info-focus"><div class="page-header-headings"><a href="'.$linkcourse.'">'.$COURSE->fullname.'</a></div>';
         $output .= '<div class="d-flex"><div class="progress course">';
         $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
                     aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div>'.$process.'%</div>';
         $output .= '</div></div>';
-        // $output .= '<div id="focus-mod" class="open-focusmod border-left border-right" data-placement="left"><i class="fa fa-external-link"></i><span class="ml-1 mr-1">'.get_string('zoomout','local_newsvnr').'</span></div>';
         $output .= '</div>';
 
         $output .= '<div class="menu-right"><ul class="d-flex">';
@@ -168,17 +166,35 @@ class core_renderer extends \theme_boost\output\core_renderer {
         return $output;
     }
     public function header_course() {
-        global $COURSE, $CFG, $OUTPUT, $PAGE;
+        global $COURSE, $CFG, $OUTPUT, $PAGE, $DB;
+        $theme_settings = new theme_settings();
         $process = round(\core_completion\progress::get_course_progress_percentage($COURSE));
+        $teacher = $theme_settings::role_courses_teacher($COURSE->id);
+        if(isset($teacher->id)) {
+            $teacherobj  = $DB->get_record('user', array('id' => $teacher->id));
+            $teacherimg = $OUTPUT->user_picture($teacherobj,['size' => 30]) . '<a target="_blank" href="'.$CFG->wwwroot.'/user/profile.php?id='.$teacher->id.'">'.$teacher->fullnamet.'</a>';
+        } else {
+            $teacherimg = $teacher->imgdefault . '<a href="javascript:">'.$teacher->fullnamet.'</a>';
+        }
+        $module = $DB->get_record('course_modules',['course' => $COURSE->id,'visible' => 1,'deletioninprogress' => 0],'count(*) as count');
+        $view = $DB->get_record('logstore_standard_log',['courseid' => $COURSE->id,'action' => 'viewed'],'count(*) as count');
+        $studentdata = $theme_settings::role_courses_teacher_slider($COURSE->id);
         $output = '';
-        $output .= '<div class="header-progress d-flex justify-content-between align-items-center"><div class="page-header-headings"><h2>'.$COURSE->fullname.'</h2></div>';
-        $output .= '<div class="d-flex float-right align-items-center">';
-        $output .= '<div class="progress course">';
+        $output .= '<div class="header-progress"><div class="page-header-headings"><h2>'.$COURSE->fullname.'</h2></div>';
+        $output .= '<div class="d-flex mt-1 mb-1 align-items-center justify-content-between"><div class="d-flex align-items-center flex-wrap">';
+        $output .= '<div class="teacherinfo mr-4">'.$teacherimg.'</div>';
+        $output .= '<div class="mr-4"><i class="fa fa-book mr-1" aria-hidden="true"></i><span class="font-bold">'.$module->count.'</span> <span class="text">'.get_string('lesson','local_newsvnr').'</span></div>';
+        $output .= '<div class="mr-4"><i class="fa fa-user mr-1" aria-hidden="true"></i><span class="font-bold">'.$studentdata->studentnumber.'</span> <span class="text">'.get_string('countstudent','local_newsvnr').'</span></div>';
+        $output .= '<div class="mr-4"><i class="fa fa-eye mr-1" aria-hidden="true"></i><span class="font-bold">'.$view->count.'</span> <span class="text">'.get_string('view','local_newsvnr').'</span></div>';
+        $output .= '<div class=""><span class="text">'.get_string('lastupdate','local_newsvnr').'</span> <span class="font-bold">'.converttime($COURSE->timemodified).'</span></div>';
+        $output .= '</div>';
+        $output .= '<div id="focus-mod" class="open-focusmod mr-2" data-placement="left"><span class="mr-2">'.get_string('startlearning','local_newsvnr').'</span><i class="fa fa-arrow-right" aria-hidden="true"></i></div>';
+        $output .= '</div>'; // end div d-flex
+        $output .= '<div class="d-flex align-items-center"><div class="progress course">';
         $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
-                    aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div class="pr-2">'.$process.'%</div>';
-        $output .= '<div id="focus-mod" class="open-focusmod mr-2" data-placement="left"><i class="fa fa-desktop"></i><span class="ml-2 mr-2">'.get_string('zoomin','local_newsvnr').'</span></div>';
-        $output .= '</div>';
-        $output .= '</div>';
+                    aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div>'.$process.'%</div>';
+       $output .=  '</div>'; // end div d-flex
+        $output .= '</div>'; // end div header-progress
         return $output;
     }
 
