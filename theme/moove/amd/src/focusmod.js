@@ -15,6 +15,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         var action = $(this).attr('action');
 
         if (fm == "focusmod") {
+            $('body').removeClass('focusmod');
             document.cookie = 'cookie=; max-Age=-1;path=/';
             $('.all-header,footer,#page-header').slideDown();
             $('#focus-mod i').removeClass('fa-compress');
@@ -22,6 +23,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             $('ul.course').css('display', 'flex');
             $('div#page-content').css('margin-top', '0px');
         } else {
+            $('body').addClass('focusmod');
             if (!$('#sidepre-blocks').hasClass('closed')) {
                 $('#sidepreopen-control').click();
             }
@@ -59,10 +61,10 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         if (this.href === path) {
             $(this).addClass('active');
             $(this).parents('div.dropdown-content-2').addClass('active');
+            $('.mid .nav-link.focusmod').html($(this).text() + '<i class="fa fa-angle-down rotate-icon ml-2"></i>');
         }
     });
     $('.nav-link.prev').click(function() {
-        debugger
         var temp = $('.card-header.level2 a.active').parents('div').prev();
         var href = temp.children('a').attr('href');
         $(this).attr('href', href);

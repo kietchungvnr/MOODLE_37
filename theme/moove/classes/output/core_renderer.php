@@ -102,7 +102,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output = '';
         $output .= '<nav class="fixed-top navbar moodle-has-zindex focusmod">';
         $output .= '<div class="d-flex menu-left">';
-        $output .= '<div class="home-focus border-right"><a href="'.$CFG->wwwroot.'/my"><i class="fa fa-3x fa-home" aria-hidden="true"></i></a></div>';
+        // $output .= '<div class="home-focus border-right"><a href="'.$CFG->wwwroot.'/my"><i class="fa fa-3x fa-home" aria-hidden="true"></i></a></div>';
         $output .= '<div class="course-info-focus"><div class="page-header-headings"><a href="'.$linkcourse.'">'.$COURSE->fullname.'</a></div>';
         $output .= '<div class="d-flex"><div class="progress course">';
         $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"

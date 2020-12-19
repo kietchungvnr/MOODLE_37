@@ -196,13 +196,6 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], fu
                     $('.k-animation-container').removeClass('d-none')
                 }
             })
-            $(".nav.multi-tab li a").click(function() {
-                var data = $(this).attr('data-key');
-                $(".nav.multi-tab li a").removeClass('active');
-                $(this).addClass('active');
-                $('.tab-content .tab-pane').hide();
-                $('.tab-content .tab-pane[data="' + data + '"]').fadeIn('fast');
-            });
             //
             function getSelectRow(gridname) {
                 var myGrid = $(gridname).getKendoGrid();

@@ -3801,6 +3801,7 @@ h4.responsehistoryheader {
     margin-right: 0 !important;
     width: 30px;
     height: 30px;
+    margin-left: 3px;
 }
 .moove-search-input.nav-link {
     display: none;
@@ -3827,7 +3828,7 @@ h4.responsehistoryheader {
     display: flex;
     align-items: center;
 }
-.focusmod #focus-mod {
+nav.focusmod #focus-mod {
     height:60px;
     border-radius: 0;
     width: 110px;
@@ -3886,6 +3887,13 @@ h4.responsehistoryheader {
     padding: 0;
     background-color: transparent;
 }
+.menu-right .card-header.level1 {
+    cursor: pointer;
+}
+.menu-right .card-header.level1 i.active {
+    transform: rotate(180deg);
+    transition: 0.5s;
+}
 .menu-right .nav-item.mid {
     width: 300px;
     text-align: center;
@@ -3932,15 +3940,6 @@ li.nav-item.border-left {
     display: none;
     padding:0 !important; 
     min-height: 60px;
-}
-body.focusmod .navbar.focusmod {
-    display: flex;
-}
-body.focusmod ul.course {
-    display: none;
-}
-body.focusmod #page-content {
-    margin-top:62px;
 }
 .home-focus {
     padding:10px 20px;
@@ -5060,6 +5059,22 @@ input.apple-switch:checked:after {
 .menu-tree-course .singlebutton:nth-child(2) {
     margin-left: 0px
 }
+.path-mod-forum :target>.forumpost:before {
+    display: none;
+}
+#page-header .card {
+    box-shadow: none;
+    background: transparent;
+}
+.menu-tree-course .singlebutton {
+    padding-bottom:5px;
+}
+.menu-tree-course .singlebutton:nth-child(1) {
+    margin-right: 5px
+}
+.menu-tree-course .singlebutton:nth-child(2) {
+    margin-left: 0px
+}
 
 .gl-delete-none {
     display: none !important;
@@ -5123,6 +5138,9 @@ body .fixed-sidebar-left {
     overflow-x:scroll;
     background: #f6fafb;
     height: 100%;
+}
+body.focusmod .fixed-sidebar-left {
+    top: 60px !important;
 }
 body.slide-nav-toggle .fixed-sidebar-left .side-nav li.navigation-header > i,
 body.sidebar-hover .fixed-sidebar-left .side-nav li.navigation-header > i {
@@ -5231,9 +5249,30 @@ body.sidebar-hover .btn-menu-search {
     background: rgba(255, 255, 255, 0.05);
     color: #878787;
 }
+/*side-map*/
 #page-navbar .breadcrumb li:first-of-type>* {
     padding-left: 2px;
 }
+#page-navbar .breadcrumb li>* {
+    padding: .4em 0em 0em 0.4em;
+    color: #1177d1;
+}
+#page-navbar .breadcrumb li .no-link {
+    background: transparent;
+    color: #363535;
+}
+#page-navbar .breadcrumb li::after {
+    border-left: 0;
+    display: initial;
+    content: "\203A";
+}
+#page-navbar .breadcrumb li::after, #page-navbar .breadcrumb li>*::after {
+    position: initial;
+    border-left-color: transparent !important;
+    font-weight: bold; 
+}
+.course-info-focus {
+    padding-left: 15px;
 @media (max-width: 480px) {
     .navbar .popover-region .popover-region-container {
         top: 48px !important;
