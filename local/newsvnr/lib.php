@@ -2039,6 +2039,112 @@ function get_finalgrade_student($userid,$courseid) {
                     ORDER BY cccc.gradefinal DESC", ['courseid' => $courseid, 'userid' => $userid]);
     return $get_grade;
 }
+// Lấy form check hoàn thành module trong khóa
+function get_course_section_cm_completion($course,&$completioninfo,$mod) {
+    global $CFG, $DB, $USER, $PAGE , $OUTPUT;
+    $output = '';
+    $istrackeduser = $completioninfo->is_tracked_user($USER->id);
+    $completion = $completioninfo->is_enabled($mod);
+    $isediting = $PAGE->user_is_editing();
+    if ($completion == COMPLETION_TRACKING_NONE) {
+        if ($isediting) {
+            $output .= html_writer::span('&nbsp;', 'filler');
+        }
+        return $output;
+    }
+    $completionicon = '';
+    if ($isediting || !$istrackeduser) {
+        switch ($completion) {
+            case COMPLETION_TRACKING_MANUAL :
+                $completionicon = 'manual-enabled'; break;
+            case COMPLETION_TRACKING_AUTOMATIC :
+                $completionicon = 'auto-enabled'; break;
+        }
+    } else {
+        $completiondata = $completioninfo->get_data($mod, true);
+        if ($completion == COMPLETION_TRACKING_MANUAL) {
+            switch($completiondata->completionstate) {
+                case COMPLETION_INCOMPLETE:
+                    $completionicon = 'manual-n' . ($completiondata->overrideby ? '-override' : '');
+                    break;
+                case COMPLETION_COMPLETE:
+                    $completionicon = 'manual-y' . ($completiondata->overrideby ? '-override' : '');
+                    break;
+            }
+        } else { // Automatic
+            switch($completiondata->completionstate) {
+                case COMPLETION_INCOMPLETE:
+                    $completionicon = 'auto-n' . ($completiondata->overrideby ? '-override' : '');
+                    break;
+                case COMPLETION_COMPLETE:
+                    $completionicon = 'auto-y' . ($completiondata->overrideby ? '-override' : '');
+                    break;
+                case COMPLETION_COMPLETE_PASS:
+                    $completionicon = 'auto-pass'; break;
+                case COMPLETION_COMPLETE_FAIL:
+                    $completionicon = 'auto-fail'; break;
+            }
+        }
+    }
+    if($completionicon) {
+        $formattedname = html_entity_decode($mod->get_formatted_name(), ENT_QUOTES, 'UTF-8');
+        if (!$isediting && $istrackeduser && $completiondata->overrideby) {
+            $args = new stdClass();
+            $args->modname = $formattedname;
+            $overridebyuser = \core_user::get_user($completiondata->overrideby, '*', MUST_EXIST);
+            $args->overrideuser = fullname($overridebyuser);
+            $imgalt = get_string('completion-alt-' . $completionicon, 'completion', $args);
+        } else {
+            $imgalt = get_string('completion-alt-' . $completionicon, 'completion', $formattedname);
+        }
+        if ($isediting || !$istrackeduser || !has_capability('moodle/course:togglecompletion', $mod->context)) {
+            // When editing, the icon is just an image.
+            $completionpixicon = new pix_icon('i/completion-'.$completionicon, $imgalt, '',
+                    array('title' => $imgalt, 'class' => 'iconsmall'));
+            $output .= html_writer::tag('span', $OUTPUT->render($completionpixicon),
+                    array('class' => 'autocompletion'));
+        } else if ($completion == COMPLETION_TRACKING_MANUAL) {
+            $newstate =
+                $completiondata->completionstate == COMPLETION_COMPLETE
+                ? COMPLETION_INCOMPLETE
+                : COMPLETION_COMPLETE;
+            // In manual mode the icon is a toggle form...
+
+            // If this completion state is used by the
+            // conditional activities system, we need to turn
+            // off the JS.
+            $extraclass = '';
+            if (!empty($CFG->enableavailability) &&
+                    core_availability\info::completion_value_used($course, $mod->id)) {
+                $extraclass = ' preventjs';
+            }
+            $output .= html_writer::start_tag('form', array('method' => 'post',
+                'action' => new moodle_url('/course/togglecompletion.php'),
+                'class' => 'togglecompletion'. $extraclass));
+            $output .= html_writer::start_tag('div');
+            $output .= html_writer::empty_tag('input', array(
+                'type' => 'hidden', 'name' => 'id', 'value' => $mod->id));
+            $output .= html_writer::empty_tag('input', array(
+                'type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()));
+            $output .= html_writer::empty_tag('input', array(
+                'type' => 'hidden', 'name' => 'modulename', 'value' => $formattedname));
+            $output .= html_writer::empty_tag('input', array(
+                'type' => 'hidden', 'name' => 'completionstate', 'value' => $newstate));
+            $output .= html_writer::tag('button',
+                $OUTPUT->pix_icon('i/completion-' . $completionicon, $imgalt),
+                    array('class' => 'btn btn-link', 'aria-live' => 'assertive'));
+            $output .= html_writer::end_tag('div');
+            $output .= html_writer::end_tag('form');
+        } else {
+            // In auto mode, the icon is just an image.
+            $completionpixicon = new pix_icon('i/completion-'.$completionicon, $imgalt, '',
+                    array('title' => $imgalt));
+            $output .= html_writer::tag('span', $OUTPUT->render($completionpixicon),
+                    array('class' => 'autocompletion'));
+        }
+    }
+    return $output;
+}
 
 // Lấy danh sách user dựa vào role trong 1 khóa học
 function get_listuser_in_course($courseid, $roleid = 5, $userid = 0) {
@@ -2072,68 +2178,8 @@ function get_listuser_in_course($courseid, $roleid = 5, $userid = 0) {
     return $data;
 }
 
- function local_newsvnr_extend_navigation($navigation) {
-     // $newsurl = new moodle_url('/local/newsvnr/index.php');
-     // $news = navigation_node::create(get_string('pagetitle', 'local_newsvnr'), $newsurl,navigation_node::TYPE_CUSTOM,'newspage',
-     //     'newspage',
-     //     new pix_icon('t/viewdetails','Tin tức'));
-     // $news->showinflatnavigation = true;
-     // $navigation->add_node($news,'1');
-
-     // $courseurl = new moodle_url('/local/newsvnr/course.php');
-     // $course = navigation_node::create(get_string('coursetitle', 'local_newsvnr'), $courseurl,navigation_node::TYPE_CUSTOM,'coursepage',
-     //     'coursepage',
-     //     new pix_icon('t/viewdetails','Khóa học'));
-     // $course->showinflatnavigation = true;
-     // $navigation->add_node($course,'1');
-
-     // $forumurl = new moodle_url('/local/newsvnr/forum.php');
-     // $forum = navigation_node::create(get_string('forumtitle', 'local_newsvnr'), $forumurl,navigation_node::TYPE_CUSTOM,'forumpage',
-     //     'forumpage',
-     //     new pix_icon('t/viewdetails','Diễn đàn'));
-     // $forum->showinflatnavigation = true;
-     // $navigation->add_node($forum,'1');
-
-
-     // $grabnodeurl = new moodle_url('/my');
-     // $grab = navigation_node::create('grabnode', $grabnodeurl,navigation_node::TYPE_CUSTOM,'grabnode',
-     //     'grabnode',
-     //     new pix_icon('t/viewdetails','Rác'));
-     // $grab->showinflatnavigation = true;
-     // $navigation->add_node($grab,'users');
-
-
-
-    // if(is_siteadmin())
-    // {
-    //     $orgcomp_positionurl = new moodle_url('/local/newsvnr/orgcomp_position.php');
-    //     $orgcomp_position = navigation_node::create(get_string('orgcomp_position', 'local_newsvnr'), $orgcomp_positionurl,navigation_node::TYPE_CUSTOM,'mycohorts5',
-    //         'mycohorts5',
-    //         new pix_icon('t/viewdetails','Lập kế hoạch'));
-    //     $orgcomp_position->showinflatnavigation = true;
-    //     $navigation->add_node($orgcomp_position,'1');
-
-    //     $questionbank_url = new moodle_url('/question/edit.php?courseid=1');
-    //     $questionbank = navigation_node::create(get_string('questionbank_title', 'local_newsvnr'), $questionbank_url,navigation_node::TYPE_CUSTOM,'mycohorts4',
-    //         'mycohorts4',
-    //         new pix_icon('t/viewdetails','Đề thi'));
-    //     $questionbank->showinflatnavigation = true;
-    //     $navigation->add_node($questionbank,'1');
-
-    //     $orgmanagerurl = new moodle_url('/local/newsvnr/orgmanager.php');
-    //     $orgmanager = navigation_node::create(get_string('orgmanagertitle', 'local_newsvnr'), $orgmanagerurl,navigation_node::TYPE_CUSTOM,'mycohorts6',
-    //         'mycohorts6',
-    //         new pix_icon('t/viewdetails','Trang quản lý phòng ban'));
-    //     $orgmanager->showinflatnavigation = true;
-    //     $navigation->add_node($orgmanager,'1');
-
-    //     $orgmainurl = new moodle_url('/local/newsvnr/orgmain.php');
-    //     $orgmain = navigation_node::create(get_string('orgmaintitle', 'local_newsvnr'), $orgmainurl,navigation_node::TYPE_CUSTOM,'mycohorts7',
-    //         'mycohorts7',
-    //         new pix_icon('t/viewdetails','Cơ cấu phòng ban'));
-    //     $orgmain->showinflatnavigation = true;
-    //     $navigation->add_node($orgmain,'1');
-    // }
-  }
+function local_newsvnr_extend_navigation($navigation) {
+    
+}
 
 

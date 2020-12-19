@@ -25,12 +25,12 @@
 {{#haschildren}}
 <div class="dropdown nav-item">
     <a class="dropdown-toggle nav-link" id="drop-down-{{uniqid}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
-        <i class="slicon-globe icon-langmenu"></i><span class="text-langmenu">{{text}}</span>
+        <img class="pb-2" width="25px" src="{{img}}"><span class="text-langmenu"></span>
     </a>
     <div class="dropdown-menu" aria-labelledby="drop-down-{{uniqid}}">
         {{#children}}
             {{^divider}}
-                <a class="dropdown-item" href="{{{url}}}" {{#title}}title="{{{title}}}"{{/title}}>{{text}}</a>
+                <a class="dropdown-item" href="{{{url}}}" {{#title}}title="{{{title}}}"{{/title}}>{{text}}<img width="25px" src="{{img}}"></a>
             {{/divider}}
             {{#divider}}
                 <div class="dropdown-divider"></div>

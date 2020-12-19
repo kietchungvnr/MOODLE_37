@@ -435,7 +435,7 @@ class course_renderer extends \core_course_renderer {
         $output .= '<div class="loading-page"></div>';
         $output .= $this->course_teacher_search_form();
         $output .= $this->course_filter();
-        $output .= '<div id="load-course">';
+        $output .= ($category) ? '<div id="load-course" category="'.$category.'">' : '<div id="load-course">' ;
         $output .= '</div></div></div>';
         return $output;
     }

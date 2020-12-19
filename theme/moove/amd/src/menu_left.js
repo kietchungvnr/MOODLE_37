@@ -42,4 +42,15 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         $('.tab-content .tab-pane').hide();
         $('.tab-content .tab-pane[data="' + data + '"]').fadeIn('fast');
     });
+    $(".search_form_fp i").click(function(){
+        var keyword = $('#course_search_form_fp').val();
+        var linksearch = Config.wwwroot + '/course/search.php?search=' + keyword ;
+        window.location.replace(linksearch);
+    })
+    $('#course_search_form_fp').keypress(function(e) {
+        if (event.which == 13) {
+            $(".search_form_fp i").click();
+        }
+    })
+
 });

@@ -40,6 +40,7 @@ use core_course_list_element;
 use context_module;
 use moodle_page;
 use single_button;
+use completion_info;
 use theme_moove\output\core\course_renderer;
 use theme_moove\util\theme_settings;
 defined('MOODLE_INTERNAL') || die;
@@ -96,6 +97,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
     }
     public function menu_focus(){
         global $COURSE, $CFG, $OUTPUT, $DB;
+        require_once($CFG->libdir.'/completionlib.php');
+        $completioninfo = new completion_info($COURSE);
         $allmodinfo = get_fast_modinfo($COURSE)->get_section_info_all();
         $process = round(\core_completion\progress::get_course_progress_percentage($COURSE));
         $linkcourse = $CFG->wwwroot.'/course/view.php?id='.$COURSE->id;
@@ -131,6 +134,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 $output .= '</div>';
                 $output .= '<div class="dropdown-content-2 '.$modinfo->id.'">';
                 foreach($modinfo->modinfo->cms as $cms) {
+                    $completionicon = get_course_section_cm_completion($COURSE,$completioninfo,$cms);
                     if($cms->section == $modinfo->id && $cms->visible == 1) {
                         $getmodules = $DB->get_records_sql('SELECT cm.id, cm.deletioninprogress FROM {course_modules} cm JOIN {course_sections} cs ON cm.section = cs.id WHERE cm.instance = :section AND cm.course = :courseid',['section' => $cms->instance,'courseid' => $COURSE->id]);
                         foreach($getmodules as $getmodule) {
@@ -141,20 +145,23 @@ class core_renderer extends \theme_boost\output\core_renderer {
                         
                         $url = $CFG->wwwroot . '/mod/' . $cms->modname . '/view.php?id=' . $cms->id;
                         $modname = $cms->name;
-                        $output .= '<div class="card-header level2">';
+                        $output .= '<div class="card-header level2 justify-content-between">';
+                        // $output .= '<div class="d-flex align-items-center">';
                         if($cms->modname == 'resource') {
                             $img = $OUTPUT->image_url($cms->icon);
                             $displayresource = $DB->get_field('resource', 'display', ['id' => $cms->instance]);
                             if($displayresource == RESOURCE_DISPLAY_GOOGLE_DOCS_POPUP) {
                                 $cm = $DB->get_field('course_modules', 'id', ['instance' => $cms->instance]);
-                                $output .= '<img  src="'.$img.'"><a onclick="showmodal('.$cm.', '.$cms->instance.')" href="javascript:;">'.$modname.'</a>';
+                                $output .= '<a onclick="showmodal('.$cm.', '.$cms->instance.')" href="javascript:;"><img  class="pr-2" src="'.$img.'">'.$modname.'</a>';
                             } else {
-                                $output .= '<img  src="'.$img.'"><a href="'.$url.'">'.$modname.'</a>';
+                                $output .= '<a href="'.$url.'"><img class="pr-2" src="'.$img.'">'.$modname.'</a>';
                             }
                         } else {
                             $img = $OUTPUT->image_url('icon', $cms->modname);
-                            $output .= '<img  src="'.$img.'"><a href="'.$url.'">'.$modname.'</a>';
+                            $output .= '<a href="'.$url.'"><img class="pr-2" src="'.$img.'">'.$modname.'</a>';
                         }
+                        // $output .= '</div>';
+                        $output .= '<div class="position-relative">'.$completionicon.'</div>';
                         $output .= '</div>';    
                     }
                 }
@@ -169,12 +176,25 @@ class core_renderer extends \theme_boost\output\core_renderer {
         global $COURSE, $CFG, $OUTPUT, $PAGE, $DB;
         $theme_settings = new theme_settings();
         $process = round(\core_completion\progress::get_course_progress_percentage($COURSE));
-        $teacher = $theme_settings::role_courses_teacher($COURSE->id);
-        if(isset($teacher->id)) {
-            $teacherobj  = $DB->get_record('user', array('id' => $teacher->id));
-            $teacherimg = $OUTPUT->user_picture($teacherobj,['size' => 30]) . '<a target="_blank" href="'.$CFG->wwwroot.'/user/profile.php?id='.$teacher->id.'">'.$teacher->fullnamet.'</a>';
-        } else {
-            $teacherimg = $teacher->imgdefault . '<a href="javascript:">'.$teacher->fullnamet.'</a>';
+        $teacher = $theme_settings::role_courses_all_teacher($COURSE->id);
+        $teacherimg = '';
+        if(is_array($teacher)) {
+            $teacherimg .= (count($teacher) > 1) ? '<div class="avatar-group">' : '';
+        }
+        foreach ($teacher as $value) {
+            if(isset($value->id)) {
+                $teacherobj = $DB->get_record('user', array('id' => $value->id));
+                $teacherimg .= '<span class="avatar" title="'.$value->fullnamet.'">'.$OUTPUT->user_picture($teacherobj,['size' => 30]).'</span>';
+                if(count($teacher) == 1) {
+                    $teacherimg .= '<a target="_blank" href="'.$CFG->wwwroot.'/user/profile.php?id='.$value->id.'">'.$value->fullnamet.'</a>';
+                }
+            } 
+        }
+        if(is_array($teacher)) {
+            $teacherimg .= (count($teacher) > 1) ? '</div>' : '';
+        }
+        if(isset($teacher->imgdefault)) {
+            $teacherimg = $teacher->imgdefault . '<a>'.$teacher->fullnamet.'</a>';
         }
         $module = $DB->get_record('course_modules',['course' => $COURSE->id,'visible' => 1,'deletioninprogress' => 0],'count(*) as count');
         $view = $DB->get_record('logstore_standard_log',['courseid' => $COURSE->id,'action' => 'viewed'],'count(*) as count');
@@ -416,6 +436,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
      * @return mixed
      */
     public function render_lang_menu() {
+        global $CFG;
         $langs = get_string_manager()->get_list_of_translations();
         $haslangmenu = $this->lang_menu() != '';
         $menu = new custom_menu;
@@ -423,6 +444,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             if ($haslangmenu) {
                 $strlang = get_string('language');
                 $currentlang = current_language();
+                $templang = $currentlang;
                 if (isset($langs[$currentlang])) {
                     $currentlang = $langs[$currentlang];
                 } else {
@@ -435,6 +457,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 foreach ($menu->get_children() as $item) {
                     $context = $item->export_for_template($this);
                 }
+                $context->img = ($templang == 'vi') ? $CFG->wwwroot.'/theme/moove/pix/vi_lang.png' : $CFG->wwwroot.'/theme/moove/pix/en_lang.png' ;
+                $context->children[0]->img =  $CFG->wwwroot.'/theme/moove/pix/en_lang.png';
+                $context->children[1]->img =  $CFG->wwwroot.'/theme/moove/pix/vi_lang.png';
                 if (isset($context)) {
                     return $this->render_from_template('theme_moove/lang_menu', $context);
                 }
@@ -1184,11 +1209,10 @@ class core_renderer extends \theme_boost\output\core_renderer {
     }
     public function course_search_form_fp_kendo() {
         $output = '';
-        $searchurl = new moodle_url('/course/search.php');
-        $output .= '<form class="search_form_fp" action="'.$searchurl.'">';
-        $output .= '<input class="border-none" id="course_search_form_fp" placeholder="'.get_string('wanttosearchyourcourse', 'theme_moove').'">';
+        $output .= '<div class="search_form_fp">';
+        $output .= '<input class="border-none" id="course_search_form_fp" placeholder="Search">';
         $output .= '<i class="fa fa-search ml-2 mr-2 mt-2" aria-hidden="true"></i>';
-        $output .= '</form>';
+        $output .= '</div>';
         return $output;
     }
     public function get_js_moove()
