@@ -54,8 +54,10 @@ if(isset($_SERVER['HTTP_REFERER'])) {
 } else {
     $hasportal = false;
 }
-$PAGE->requires->js_call_amd('local_newsvnr/studentinfo', 'init');
+
+// $PAGE->requires->js_call_amd('local_newsvnr/studentinfo', 'init');
 $PAGE->requires->strings_for_js(array('emptydata','action','viewcourse'), 'local_newsvnr');
+$PAGE->requires->strings_for_js(array('coursestartdate','courseenddate','studenttotal', 'studentcode', 'coursename', 'coursemodules', 'status', 'coursecompletion', 'listuser'), 'theme_moove');
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [

@@ -878,6 +878,34 @@ function get_list_course_by_teacher($userid) {
 }
 
 /**
+ * Lấy danh sách khóa học full thông tin của giáo viên
+ * @param  [type] $userid [description]
+ * @return [array] $list_courseid [description]
+ */
+function get_list_courseinfo_by_teacher($userid)
+{
+    global $DB;
+    $list_courseid = [];
+    $list_course_by_user_sql = "
+                                SELECT DISTINCT c.*
+                                FROM mdl_role_assignments AS ra
+                                    JOIN mdl_user AS u ON u.id= ra.userid
+                                    JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
+                                    JOIN mdl_enrol AS e ON e.id=ue.enrolid
+                                    JOIN mdl_course AS c ON c.id=e.courseid
+                                    JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
+                                    JOIN mdl_role AS r ON r.id= ra.roleid
+                                WHERE  ra.roleid=3 AND u.id = ?";
+    $list_course_by_user_ex = $DB->get_records_sql($list_course_by_user_sql, [$userid]);
+    if ($list_course_by_user_ex) {
+        foreach ($list_course_by_user_ex as $value)
+            $list_courseid[] = $value;
+    }
+
+    return $list_courseid;
+}
+
+/**
  * Lấy danh sách khóa học của học viên
  * @param  [type] $userid [description]
  * @return [array] $list_courseid [description]
@@ -1969,6 +1997,38 @@ function get_finalgrade_student($userid,$courseid) {
                     WHERE ccc.criteriatype = 6 AND cccc.course =:courseid AND u.id =:userid
                     ORDER BY cccc.gradefinal DESC", ['courseid' => $courseid, 'userid' => $userid]);
     return $get_grade;
+}
+
+// Lấy danh sách user dựa vào role trong 1 khóa học
+function get_listuser_in_course($courseid, $roleid = 5, $userid = 0) {
+    global $DB;
+    $params = [];
+    if(!$courseid) {
+
+    }
+    $params['courseid'] = $courseid;
+
+    $wheresql = "WHERE c.id = :courseid AND enr.roleid = :roleid";
+
+    if($userid > 2) {
+        $wheresql .= " AND u.id = userid";
+        $params['userid'] = $userid;
+    }
+    $params['roleid'] = $roleid;
+
+
+    $sql = "SELECT u.*, CONCAT(u.firstname, ' ', u.lastname) userfullname, r.shortname rolename 
+            FROM mdl_role_assignments ra
+                JOIN mdl_user u ON ra.userid = u.id
+                JOIN mdl_user_enrolments ue ON u.id = ue.userid 
+                JOIN mdl_enrol enr ON ue.enrolid = enr.id
+                JOIN mdl_course c ON enr.courseid = c.id
+                JOIN mdl_context ct ON ct.id = ra.contextid AND ct.instanceid = c.id
+                JOIN mdl_role r ON ra.roleid = r.id
+            WHERE c.id = :courseid
+                 AND r.id = :roleid";
+    $data = $DB->get_records_sql($sql, $params);
+    return $data;
 }
 
  function local_newsvnr_extend_navigation($navigation) {
