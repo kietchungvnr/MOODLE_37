@@ -494,3 +494,4 @@ $string['examtimevalidate'] = "Thời gian bắt đầu và kết thúc bài thi
 $string['view'] = "Lượt xem";
 $string['lastupdate'] = "Lần cập nhật cuối:";
 $string['startlearning'] = "Vào học";
+$string['introcourse'] = "Giới thiệu khóa";
