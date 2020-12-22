@@ -147,7 +147,7 @@ switch ($action) {
 			// $obj->comp = competency_api::count_competencies_in_course($course->id);
 			$coursecompletionurl = $CFG->wwwroot . '/course/completion.php?id=' . $course->id;
 			$obj->coursecompletion = '<a href="'.$coursecompletionurl.'" target="_blank">' . $DB->count_records('course_completion_criteria', ['course' => $course->id]) . '</a>';
-			$obj->coursemodules = $DB->count_records('course_modules', ['course' => $course->id]);
+			$obj->coursemodules = '<a href="javascript:;" onclick="viewModuleDetail('.$course->id.')">'.$DB->count_records('course_modules', ['course' => $course->id]).'</a>';
 			if($course->startdate > time()) {
 				$obj->status = '<span class="db-teaacher-course-status bg-green">Kế hoạch</span>';
 			} else if($course->startdate <= time()) {
@@ -222,6 +222,71 @@ switch ($action) {
 		}
 		echo json_encode($data, JSON_UNESCAPED_UNICODE);
 		die;
+	case 'module_chart':
+		$courseid     = optional_param('courseid', '', PARAM_INT);
+		$response = new stdClass;
+		$series_sql = "SELECT m.name, c.fullname,COUNT(module) AS module 
+				FROM mdl_course_modules cm 
+					LEFT JOIN mdl_modules m ON cm.module = m.id 
+					LEFT JOIN mdl_course c on c.id = cm.course
+				WHERE cm.course = :courseid 
+				GROUP BY m.name, c.fullname";
+		
+		$data = $DB->get_records_sql($series_sql, ['courseid' => $courseid]);
+		$categories = $temp_series =  $series = $modules = $drilldownc = $temp_drilldown = [];
+		$course = "";
+		foreach ($data as $key => $value) {
+			if($course == "") {
+				$course = $value->fullname;
+			}
+			if(!in_array($value->name, $categories)) {
+				$categories[] = ucfirst($value->name);
+ 			}
+ 			$obj = new stdClass;
+			$obj->name = ucfirst($value->name);
+			$obj->y = (int)$value->module;
+			$obj->drilldown = ucfirst($value->name);
+			$temp_series[] = $obj;
+			// Lấy dữ liệu drilldown cho module
+			$modulename = $value->name;
+			$drilldown_sql = "SELECT *
+							FROM (SELECT mn.id, mn.name
+									FROM mdl_course_modules cm 
+										JOIN mdl_modules m ON cm.module = m.id
+										JOIN mdl_$modulename mn ON cm.instance = mn.id
+									WHERE m.name = :modulename AND cm.course = :courseid
+								) Mydata";
+			$modules_detail = $DB->get_records_sql($drilldown_sql, ['modulename' => $modulename, 'courseid' => $courseid]);
+			$obj_drilldown = new stdclass;
+			$obj_drilldown->name = ucfirst($value->name);
+			$obj_drilldown->id = ucfirst($value->name);
+			$temp_drilldown = [];
+			$count_module = [];
+			foreach($modules_detail as $drilldown) {
+				// if(!in_array($drilldown->name, $count_module)) {
+				// 	$count_module[] = $dri
+				// }
+				$temp_drilldown[] = [$drilldown->name, 0];
+				foreach($temp_drilldown as $key => $temp) {
+					if($drilldown->name == $temp[0])
+						$temp_drilldown[$key][1] = $temp_drilldown[$key][1] + 1;
+				}
+			}
+			$obj_drilldown->data = $temp_drilldown;
+			$drilldownc[] = $obj_drilldown;
+		}
+		$obj = new stdclass;
+		$obj->name = "Modules";
+		$obj->colorByPoint = true;
+		$obj->data = $temp_series;
+		$series[] = $obj;
+		$response->course = $course;
+		$response->series = $series;
+		$response->drilldown = $drilldownc;
+		$response->categories = $categories;
+		echo json_encode($response,JSON_UNESCAPED_UNICODE);
+		die;
+
 	case 'get_listcourse':
 		$userid = $USER->id;
 		$data = [];

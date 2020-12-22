@@ -849,7 +849,6 @@ class theme_settings {
     }
 
     // Get dữ liệu cho dashboard
-    
     public function get_fullinfo_user() {
         global $CFG, $USER, $OUTPUT, $PAGE;
         require_once("$CFG->libdir/completionlib.php");
@@ -873,4 +872,27 @@ class theme_settings {
         $templatecontext['userinfo'] = $obj;
         return $templatecontext;
     }
+
+    // get dữ liệu cho dashboard giáo viên: thông báo và khóa học không có content
+    public function get_data_dashboard_teacher() {
+      global $DB, $USER;
+      $sql = "SELECT c.fullname, COUNT(cm.module) module
+                                  FROM mdl_role_assignments AS ra
+                                      JOIN mdl_user AS u ON u.id= ra.userid
+                                      JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
+                                      JOIN mdl_enrol AS e ON e.id=ue.enrolid
+                                      JOIN mdl_course AS c ON c.id=e.courseid
+                                      JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
+                                      JOIN mdl_role AS r ON r.id= ra.roleid
+                                      JOIN mdl_course_modules cm ON cm.course = c.id
+                                  WHERE  ra.roleid = 3 AND u.id = :userid 
+                                  GROUP BY c.fullname
+                                  HAVING COUNT(cm.module) <= 1";
+      $data = $DB->get_records_sql($sql, ['userid' => $USER->id]);
+      $obj = new stdClass;
+      $obj->course_empty = count($data);
+      $templatecontext['numbercourseempty'] = $obj;
+      return $templatecontext;
+    }
+
 }

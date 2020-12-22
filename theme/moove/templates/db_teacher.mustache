@@ -1,10 +1,54 @@
-<div class="card">
+<div class="row">
+	<div class="col-lg-9">
+		<div class="card">
     <div class="card-body">
         <div class="mb-2"><h5 class="card-title d-inline">Khóa giảng của tôi</h5></div>
+       
         <div id="list-course-grid"></div>
+         <div id="view-sutdent-detail">
+        	<div id="sutdent-detail-grid"></div>
+        </div>
+        <div id="view-module-detail">
+        	<div id="module-detail-chart"></div>
+        </div>
     
-        <div class="mt-2"><h5 class="card-title d-inline">Báo cáo tương tác</h5></div>
-        <div class="row mb-2">
+        
+    </div>
+</div>
+	</div>
+	<div class="col-lg-3">
+		
+<div class="card">
+    <div class="card-body">
+    		<h5 class="card-title d-inline">Nhắc nhở mới, chưa xem</h5>
+    		<div>
+    			<span class="text-primary">0</span>
+    			<span class="pull-right"><i class="fa fa-bell text-primary" title="Toggle notifications menu"></i></span>
+    			</div>
+    			<span><a href="javascript:;">Xem chi tiết</a></span>
+
+    	</div>
+    </div>
+    <div class="card mt-3">
+    <div class="card-body">
+    		<h5 class="card-title d-inline">Khóa học chưa soạn nội dung</h5>
+    		<div>
+    			
+    				<span class="text-primary">{{#numbercourseempty}}{{course_empty}}{{/numbercourseempty}}</span>
+    			
+    			<span class="pull-right"><i class="fa fa-graduation-cap text-primary" title="Toggle notifications menu"></i></span>
+    			</div>
+    			<span><a href="javascript:;">Xem chi tiết</a></span>
+    	</div>
+    </div>
+	</div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title d-inline">Báo cáo tương tác</h5>
+
+    	<div class="row mb-2">
         	<div class="col-md-4 mt-2">
         		<input id="list-course">
         	</div>
@@ -16,11 +60,10 @@
         	</div>
         </div>
         <div id="report-chart"></div>
-        <div id="view-sutdent-detail">
-        	<div id="sutdent-detail-grid"></div>
-        </div>
+       
+
+    	</div>
     </div>
-</div>
 <script type="text/javascript">
 	
 	$('#button-group').on('click', 'button', function(e) {
@@ -57,7 +100,7 @@
 
     // show popup hiện detail list user trong khóa học
     const viewStudentDetail = function(courseId) {
-    	require(['jquery', 'core/config', 'core/str', 'alertjs', 'local_newsvnr/initkendogrid'], ($, Config, Str, alertify, kendo) => {
+    	require(['jquery', 'core/config', 'core/str', 'alertjs', 'local_newsvnr/initkendoexam'], ($, Config, Str, alertify, kendo) => {
     		var dialog = $('#view-sutdent-detail');
     		var gridStudentDetail = $('#sutdent-detail-grid');
     		var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api.php';
@@ -214,6 +257,118 @@
     	});
     }
 
+    var lastColor;
+    function getRandColor(same, darkness) {
+        //6 levels of brightness from 0 to 5, 0 being the darkest
+        var rgb = [];
+        if(same && lastColor) {
+            rgb = lastColor;
+        } else {
+            rgb = [Math.random() * 256, Math.random() * 256, Math.random() * 256];
+        }
+        var mix = [darkness * 51, darkness * 51, darkness * 51]; //51 => 255/5
+        var mixedrgb = [rgb[0] + mix[0], rgb[1] + mix[1], rgb[2] + mix[2]].map(function (x) {
+            return Math.round(x / 2.0)
+        })
+        lastColor = rgb;
+        return "rgb(" + mixedrgb.join(",") + ")";
+    }
+
+    // Show popup chart tài nguyên và hoạt động
+    const viewModuleDetail = function(courseId) {
+
+    	require(['jquery', 'core/config', 'core/str', 'alertjs', 'highcharts', 'highcharts/modules/exporting', 'highcharts/modules/accessibility', 'highcharts/modules/drilldown'], ($, Config, Str, alertify, Highcharts, ExportingModule, AccessibilityModule, DrilldownModule) => {
+    		var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api.php';
+    		var dialog = $('#view-module-detail');
+    		var chart = 'module-detail-chart';
+    		var settings = {
+				type : 'GET',
+	        	dataType: "json",
+	            contentType: 'application/json; charset=utf-8',
+	            data: {
+	            	action: 'module_chart',
+	            	courseid: courseId
+	            }
+    		}
+    		$.ajax(script, settings)
+    		.then(function(resp) {
+    			// resp.series[0].color = getRandColor(false, 5);  
+    			Highcharts.chart({
+				    chart: {
+				        type: 'column',
+				        renderTo: chart,
+				        events: {
+					    	drilldown: function(e) {
+					        	this.options.legend["enabled"] = true; //legend shows
+					      	}
+					    },
+				    },
+				    title: {
+				        text: 'Tài nguyên và hoạt động'
+				    },
+				    subtitle: {
+				        text: 'Khóa: ' + resp.course
+				    },
+				    accessibility: {
+				        announceNewData: {
+				            enabled: true
+				        }
+				    },
+				    xAxis: {
+				        type: 'category'
+				    },
+				    yAxis: {
+				        min: 0,
+				        title: {
+				            text: 'Số lượng'
+				        }
+				    },
+				    credits: {
+	                    enabled: false
+	                },
+				    legend: {
+				        enabled: true
+				    },
+				    plotOptions: {
+				    	column: {
+					      	dataLabels: {
+					        	enabled: false
+					      	},
+					      	showInLegend: true
+					    },
+				        series: {
+				            borderWidth: 0,
+				            dataLabels: {
+				                enabled: true,
+				                format: '{point.y}'
+				            }
+				        }
+				    },
+
+				    tooltip: {
+				        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+				        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
+				    },
+				    series: resp.series,
+				    drilldown: {
+        				series: resp.drilldown
+        			}
+				});
+    		});
+    		function onOpen(e) {
+    			// initStudentGrid();
+    			e.sender.center();
+    		}
+    		dialog.kendoWindow({
+	            width: "1000px",
+	            title: 'Phân bổ tài nguyên và hoạt động',
+	            modal: true,
+	            open: onOpen,
+	        });
+	        dialog.data('kendoWindow').open();
+    	})
+    }
+
 </script>
 {{#js}}
 
@@ -295,44 +450,48 @@ require(
             },
             field: "coursename",
             title: M.util.get_string('coursename', 'theme_moove'),
-            width: "200px"
+            width: "300px"
         }, {
             template: function(e) {
                 return e.studenttotal;
             },
             field: "studenttotal",
             title: M.util.get_string('studenttotal', 'theme_moove'),
-            width: "200px"
+            width: "80px"
         }, {
             field: "coursestartdate",
             title: M.util.get_string('coursestartdate', 'theme_moove'),
-            width: "200px"
+            width: "130px"
         }, {
             field: "courseenddate",
             title: M.util.get_string('courseenddate', 'theme_moove'),
-            width: "200px"
+            width: "130px"
         }, {
+        	template: function(e) {
+                return e.coursemodules;
+            },
             field: "coursemodules",
             title: M.util.get_string('coursemodules', 'theme_moove'),
-            width: "200px"
+            width: "120px"
         }, {
             template: function(e) {
                 return e.coursecompletion;
             },
             field: "coursecompletion",
             title: M.util.get_string('coursecompletion', 'theme_moove'),
-            width: "200px"
+            width: "120px"
         }, {
             template: function(e) {
                 return e.status;
             },
             field: "status",
             title: M.util.get_string('status', 'theme_moove'),
-            width: "200px"
+            width: "150px"
         }];
     kendoGridConfig.columns = listCourseColumns;
     kendoGridConfig.apiSettings = settingsListCourseGrid;
-    kendoGridConfig.toolbar = ["search"];
+    kendoGridConfig.toolbar = false;
+    kendoGridConfig.height = 350;
 	var gridData = kendo.initGrid(kendoGridConfig);
 	$(gridListCourse).kendoGrid(gridData);
 

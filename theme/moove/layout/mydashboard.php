@@ -78,7 +78,7 @@ $templatecontext = [
 
 $themesettings = new \theme_moove\util\theme_settings();
 
-$templatecontext = array_merge($templatecontext, $themesettings->footer_items(), $themesettings->get_fullinfo_user());
+$templatecontext = array_merge($templatecontext, $themesettings->footer_items(), $themesettings->get_fullinfo_user(), $themesettings->get_data_dashboard_teacher());
 
 if (is_siteadmin()) {
     global $DB;
