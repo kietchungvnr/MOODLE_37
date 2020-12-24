@@ -292,6 +292,7 @@ if ($bulkoperations) {
     //     'value' => get_string('deselectall')));
     // echo html_writer::end_tag('div');
     $displaylist = array();
+    $displaylist['#sendemail'] = 'Gửi email';
     if (!empty($CFG->messaging)) {
         $displaylist['#messageselect'] = get_string('messageselectadd');
     }
@@ -356,6 +357,8 @@ if ($bulkoperations) {
     $options->noteStateNames = note_get_state_names();
     $options->stateHelpIcon = $OUTPUT->help_icon('publishstate', 'notes');
     $PAGE->requires->js_call_amd('core_user/participants', 'init', [$options]);
+    $PAGE->requires->strings_for_js(
+                                array('sendemail', 'emailtype', 'emailtemplate', 'role', 'emailsubject', 'emailcontent', 'sendingsuccess', 'studentrole', 'teacherrole', 'pleasepickuser'), 'local_newsvnr');
 }
 
 echo '</div>';  // Userlist.

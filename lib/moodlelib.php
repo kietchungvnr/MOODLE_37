@@ -6069,7 +6069,7 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
 
     // Set word wrap.
     $mail->WordWrap = $wordwrapwidth;
-
+    $from->customheaders = "Content-Type: text/html; charset=ISO-8859-1\r\n";
     if (!empty($from->customheaders)) {
         // Add custom headers.
         if (is_array($from->customheaders)) {

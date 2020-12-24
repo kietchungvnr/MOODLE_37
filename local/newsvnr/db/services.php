@@ -85,8 +85,24 @@ $functions = array(
         'type' => 'read',
         'ajax' => true,
         'capabilities'=> '',
+    ),
+    'local_newsvnr_submit_create_email_template_form' => array(
+        'classname' => 'local_newsvnr_external',
+        'methodname' => 'submit_create_email_template_form',
+        'classpath' => 'local/newsvnr/externallib.php',
+        'description' => 'Create email template',
+        'type' => 'read',
+        'ajax' => true,
+        'capabilities'=> '',
+    ),
+    'local_newsvnr_submit_send_email_form' => array(
+        'classname' => 'local_newsvnr_external',
+        'methodname' => 'submit_send_email_form',
+        'classpath' => 'local/newsvnr/externallib.php',
+        'description' => 'Send email',
+        'type' => 'read',
+        'ajax' => true,
+        'capabilities'=> '',
     )
 
-
 );
-

@@ -22,8 +22,8 @@
  * @copyright  2017 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(['jquery', 'core/str', 'core/modal_factory', 'core/modal_events', 'core/templates', 'core/notification', 'core/ajax'],
-        function($, Str, ModalFactory, ModalEvents, Templates, Notification, Ajax) {
+define(['jquery', 'core/str', 'core/modal_factory', 'core/modal_events', 'core/templates', 'core/notification', 'core/ajax', 'core/fragment', 'kendo.all.min', 'alertjs', 'core/config'],
+        function($, Str, ModalFactory, ModalEvents, Templates, Notification, Ajax, Fragment, kendo, alertify, Config) {
 
     var SELECTORS = {
         BULKACTIONSELECT: "#formactionid",
@@ -77,6 +77,197 @@ define(['jquery', 'core/str', 'core/modal_factory', 'core/modal_events', 'core/t
      */
     Participants.prototype.stateHelpIcon = "";
 
+
+    function wait(ms) {
+      return new Promise(resolve => {
+        setTimeout(resolve, ms);
+      });
+    }
+
+    /**
+     * @method getBody
+     * @private
+     * @return {Promise}
+     */
+    Participants.prototype.getBody = function(formdata) {
+        if (typeof formdata === "undefined") {
+            formdata = {};
+        }
+        // Get the content of the modal.
+        var params = {jsonformdata: JSON.stringify(formdata)};
+        return Fragment.loadFragment('local_newsvnr', 'send_email_form', 1, params).catch(Notification.exception);
+    };
+    /**
+     * @method handleFormSubmissionResponse
+     * @private
+     * @return {Promise}
+     */
+    Participants.prototype.handleFormSubmissionResponse = function() {
+        this.modal.hide();
+        this.initKendo();
+        // We could trigger an event instead.
+        // Yuk.
+        Y.use('moodle-core-formchangechecker', function() {
+            M.core_formchangechecker.reset_form_dirty_state();
+        });
+        alertify.success(M.util.get_string('sendingsuccess', 'local_newsvnr'), 'success', 1);
+       
+    };
+
+    /**
+     * @method handleFormSubmissionFailure
+     * @private
+     * @return {Promise}
+     */
+    Participants.prototype.handleFormSubmissionFailure = function(data) {
+        // Oh noes! Epic fail :(
+        // Ah wait - this is normal. We need to re-display the form with errors!
+        this.modal.setBody(this.getBody(data));
+        wait(2000).then(resp => {
+            this.initKendo();
+        });
+
+
+    };
+
+    /**
+     * Private method
+     *
+     * @method submitFormAjax
+     * @private
+     * @param {Event} e Form submission event.
+     */
+    Participants.prototype.submitFormAjax = function(e) {
+        // We don't want to do a real form submission.
+        e.preventDefault();
+        // Convert all the form elements values to a serialised string.
+        var formData = this.modal.getRoot().find('form').serialize();
+        var ids = $('#list-userid').val();
+        var courseId = $('#enrolusersbutton-1 input[name=id]').val();
+        formData = formData + '&users=' + encodeURI(ids) + '&courseid=' + encodeURI(courseId);
+        // Now we can continue...
+        Ajax.call([{
+            methodname: 'local_newsvnr_submit_send_email_form',
+            args: {contextid: 1, jsonformdata: JSON.stringify(formData)},
+            done: this.handleFormSubmissionResponse.bind(this, formData),
+            fail: this.handleFormSubmissionFailure.bind(this, formData)
+        }]);
+    };
+
+    /**
+     * This triggers a form submission, so that any mform elements can do final tricks before the form submission is processed.
+     *
+     * @method submitForm
+     * @param {Event} e Form submission event.
+     * @private
+     */
+    Participants.prototype.submitForm = function(e) {
+        e.preventDefault();
+        this.modal.getRoot().find('form').submit();
+    };
+
+    Participants.prototype.initKendo = function(modal) {
+        var script = Config.wwwroot + '/local/newsvnr/ajax/email/emailmanagement.php';
+        var settingsEmailType = {
+            type: 'GET',
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            data: {
+                action: 'get_emailtype',
+            }
+        }
+        $.ajax(script, settingsEmailType)
+        .then(function(resp) {
+            $('#email-type').kendoDropDownList({
+                dataSource: resp,
+                dataTextField: "text",
+                dataValueField: "value",
+                change: function(e) {
+                    var value = this.value();
+                    var settingsTemplate = {
+                        type: 'GET',
+                        dataType: "json",
+                        contentType: 'application/json; charset=utf-8',
+                        data: {
+                            action: 'get_emailcontent',
+                            templateid : value
+                        }
+                    }
+                    $.ajax(script, settingsTemplate)
+                    .then(function(template) {
+                        $('#id_subject').val(template.subject);
+                        $('#id_content_editoreditable').html(template.content);
+                        $('#id_content_editoreditable').focus();
+                    });
+                }
+            });
+            // $('#user-role').kendoDropDownList({
+            //     dataSource: [{
+            //         value: "5",
+            //         text: M.util.get_string('studentrole', 'local_newsvnr')
+            //     }, {
+            //         value: "3",
+            //         text: M.util.get_string('teacherrole', 'local_newsvnr')
+            //     }],
+            //     dataTextField: "text",
+            //     dataValueField: "value",
+            //     change: function(e) {
+            //         var value = this.value();
+            //     }
+            // });
+        });
+        
+    }
+
+    Participants.prototype.showSendEmail = function(ids) {
+
+        return $.when(
+            ModalFactory.create({
+                type: ModalFactory.types.SAVE_CANCEL,
+                title: M.util.get_string('sendemail', 'local_newsvnr'),
+                body: this.getBody()
+            }),
+        ).then(function(modal, title) {
+            // Keep a reference to the modal.
+            this.modal = modal;
+
+            this.modal.setSaveButtonText(M.util.get_string('sendemail', 'local_newsvnr'));
+            // Forms are big, we want a big modal.
+            this.modal.setLarge();
+
+            // We want to reset the form every time it is opened.
+            this.modal.getRoot().on(ModalEvents.hidden, function() {
+                this.modal.getRoot().remove();
+            }.bind(this));
+
+            // We want to hide the submit buttons every time it is opened.
+            this.modal.getRoot().on(ModalEvents.shown, function() {
+                var idsHtml = '<input class="d-none" id="list-userid" value="' + ids + '">';
+                this.modal.getRoot().append(idsHtml);
+                this.modal.getRoot().append('<style>[data-fieldtype=submit] { display: none ! important; }</style>');
+            }.bind(this));
+
+            // this.modal.getRoot().on(ModalEvents.save, this.submitSendEmail.bind(this, 'OK'));
+            this.modal.getRoot().on(ModalEvents.save, this.submitForm.bind(this));
+            // We also catch the form submit event and use it to submit the form with ajax.
+            this.modal.getRoot().on('submit', 'form', this.submitFormAjax.bind(this));
+
+            this.modal.show();
+
+            return this.modal;
+        }.bind(this));
+    };
+
+    Participants.prototype.submitSendEmail = function(users) {
+        return alert(users);
+    }
+
+
+    function dropdownlist_change(e) {
+      var value = this.value();
+      // Use the value of the widget
+    }
+
     /**
      * Private method
      *
@@ -95,9 +286,20 @@ define(['jquery', 'core/str', 'core/modal_factory', 'core/modal_events', 'core/t
                     var id = name.replace('user', '');
                     ids.push(id);
                 });
-
+                if(ids.length < 1) {
+                    alertify.warning(M.util.get_string('pleasepickuser', 'local_newsvnr'), 'warning', 3);
+                    $(SELECTORS.BULKACTIONSELECT + ' option[value=""]').prop('selected', 'selected');
+                    return;
+                }
                 if (action == '#messageselect') {
                     this.showSendMessage(ids).fail(Notification.exception);
+                } else if (action =='#sendemail') {
+                    this.showSendEmail(ids).then(modal => {
+                        wait(2000).then(wait => {
+                            this.initKendo(modal);
+                        });
+                    });
+
                 } else if (action == '#addgroupnote') {
                     this.showAddNote(ids).fail(Notification.exception);
                 }

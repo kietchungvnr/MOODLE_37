@@ -1084,6 +1084,75 @@ function local_newsvnr_output_fragment_new_orgstructure_form($args) {
     return $o;
 }
 
+function local_newsvnr_output_fragment_create_email_template_form($args) {
+    global $CFG, $SITE, $DB;
+    require_once $CFG->dirroot . '/user/sendemail_form.php';
+    $args = (object) $args;
+    $context = $args->context;
+    $o = '';
+    $formdata = [];
+    if (!empty($args->jsonformdata)) {
+        $serialiseddata = json_decode($args->jsonformdata);
+    }
+    $editoroptions = array('maxfiles' => EDITOR_UNLIMITED_FILES,
+    'maxbytes' => $SITE->maxbytes, 'context' => context_system::instance());
+    $get_template = $DB->get_record('email_template', ['id' => $serialiseddata->templateid]);
+    $email_template = new stdClass;
+    $email_template->id = $serialiseddata->templateid;
+    $email_template->subject = $get_template->subject;
+    $email_template->content = $get_template->content;
+    $email_template = file_prepare_standard_editor($email_template, 'content', $editoroptions,
+            context_system::instance(), 'email', 'content', null);
+    $mform = new sendemail_form(null,array('email_template' => $email_template),'post','', null, true, $formdata);
+    $mform->set_data($email_template);
+    // Used to set the courseid.
+ 
+    if (!empty($args->jsonformdata)) {
+        // If we were passed non-empty form data we want the mform to call validation functions and show errors.
+        $mform->is_validated();
+    }
+ 
+    ob_start();
+    $mform->display();
+    $o .= ob_get_contents();
+    ob_end_clean();
+ 
+    return $o;
+}
+
+function local_newsvnr_output_fragment_send_email_form($args) {
+    global $CFG, $OUTPUT, $SITE;
+    require_once $CFG->dirroot . '/user/sendemail_form.php';
+    $args = (object) $args;
+    $context = $args->context;
+    $o = '';
+    $formdata = [];
+    if (!empty($args->jsonformdata)) {
+        $serialiseddata = json_decode($args->jsonformdata);
+        parse_str($serialiseddata, $formdata);
+    }
+    $editoroptions = array('maxfiles' => EDITOR_UNLIMITED_FILES,
+    'maxbytes' => $SITE->maxbytes, 'context' => context_system::instance());
+    $email = new stdClass;
+    $email = file_prepare_standard_editor($email, 'emailcontent', $editoroptions,
+            context_system::instance(), 'email', 'emailcontent', null);
+    $mform = new sendemail_form(null,array('eamil' => $email),'post','', null, true, $formdata);
+    $mform->set_data($email);
+    // Used to set the courseid.
+ 
+    if (!empty($args->jsonformdata)) {
+        // If we were passed non-empty form data we want the mform to call validation functions and show errors.
+        $mform->is_validated();
+    }
+ 
+    ob_start();
+    echo $OUTPUT->render_from_template('core_user/manage_sendemail', $context = []);
+    $mform->display();
+    $o .= ob_get_contents();
+    ob_end_clean();
+ 
+    return $o;
+}
 /** - end call modal cho orgmanager - **/
 /* Năng lực theo vị trí  */
 function get_list_orgstructure() {
