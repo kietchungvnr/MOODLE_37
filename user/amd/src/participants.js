@@ -110,7 +110,9 @@ define(['jquery', 'core/str', 'core/modal_factory', 'core/modal_events', 'core/t
         Y.use('moodle-core-formchangechecker', function() {
             M.core_formchangechecker.reset_form_dirty_state();
         });
+        $('body').removeClass('loading');
         alertify.success(M.util.get_string('sendingsuccess', 'local_newsvnr'), 'success', 1);
+
        
     };
 
@@ -140,6 +142,7 @@ define(['jquery', 'core/str', 'core/modal_factory', 'core/modal_events', 'core/t
     Participants.prototype.submitFormAjax = function(e) {
         // We don't want to do a real form submission.
         e.preventDefault();
+        $('body').addClass('loading');
         // Convert all the form elements values to a serialised string.
         var formData = this.modal.getRoot().find('form').serialize();
         var ids = $('#list-userid').val();
@@ -247,7 +250,6 @@ define(['jquery', 'core/str', 'core/modal_factory', 'core/modal_events', 'core/t
                 this.modal.getRoot().append('<style>[data-fieldtype=submit] { display: none ! important; }</style>');
             }.bind(this));
 
-            // this.modal.getRoot().on(ModalEvents.save, this.submitSendEmail.bind(this, 'OK'));
             this.modal.getRoot().on(ModalEvents.save, this.submitForm.bind(this));
             // We also catch the form submit event and use it to submit the form with ajax.
             this.modal.getRoot().on('submit', 'form', this.submitFormAjax.bind(this));
@@ -257,16 +259,6 @@ define(['jquery', 'core/str', 'core/modal_factory', 'core/modal_events', 'core/t
             return this.modal;
         }.bind(this));
     };
-
-    Participants.prototype.submitSendEmail = function(users) {
-        return alert(users);
-    }
-
-
-    function dropdownlist_change(e) {
-      var value = this.value();
-      // Use the value of the widget
-    }
 
     /**
      * Private method

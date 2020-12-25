@@ -329,3 +329,22 @@ CREATE TABLE mdl_exam_quiz
 	usermodified BIGINT NOT NULL,
 )
 --- *** Kết thúc script cho bản build version '28112020' ***--
+--- *** Script cho bản build version '19122020 - VNS' *** ---
+-- Thêm bảng cấu hình email template
+CREATE TABLE mdl_email_template
+(
+	id BIGINT NOT NULL IDENTITY(1, 1),
+	name NVARCHAR(200) NOT NULL DEFAULT (N''),
+	code NVARCHAR(50) NOT NULL DEFAULT (N''),
+	[description] NVARCHAR(500) NULL,
+	[emailtype] NVARCHAR(100) NOT NULL,
+	[subject] [nvarchar](max) NULL,
+	[subjectformat] [smallint] NOT NULL DEFAULT ((0)),
+	[content] [nvarchar](max) NULL,
+	[contentformat] [smallint] NOT NULL DEFAULT ((0)),
+	[timecreated] BIGINT NULL,
+	[timemodified] BIGINT NULL,
+	usercreate BIGINT NOT NULL,
+	usermodified BIGINT NOT NULL,
+)
+--- *** Kết thúc script cho bản build version '19122020' ***--
