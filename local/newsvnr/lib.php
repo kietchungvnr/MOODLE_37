@@ -27,6 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 // require_once($CFG->dirroot.'/local/newsvnr/classes/output/news_page.php');
 require_once($CFG->libdir.'/filelib.php');
+use theme_moove\util\theme_settings;
 
 /**
  * Lấy danh sách các bài đăng tin tức chung do quản trị viên đăng
@@ -2036,6 +2037,45 @@ function get_finalgrade_student($userid,$courseid) {
                     ORDER BY cccc.gradefinal DESC", ['courseid' => $courseid, 'userid' => $userid]);
     return $get_grade;
 }
+// // Xếp hạng học viên trong khóa
+function get_rank_student_incourse($courseid,$userid) {
+    $theme_settings = new theme_settings();
+    $listrank = [];
+    $liststudent = get_listuser_in_course($courseid);
+    foreach ($liststudent as $value) {
+        $arrgrade = [];
+        $grade = get_finalgrade_student($value->id,$courseid);
+        $arrgrade[] = ($grade != null) ? $grade->gradefinal : 0;
+        $arrgrade[] = $value->id;
+        $data[] = $arrgrade;
+    }
+    rsort($data);
+    $rank = 1;
+    $prev_rank = $rank;
+    for($x = 0; $x < count($data); $x++) {
+        if ($x==0) {
+            $temp = [$data[$x][1] => get_string('rank','local_newsvnr').' '.($rank)];
+        }
+        elseif ($data[$x][0] != $data[$x-1][0]) {
+            $rank++;
+            $prev_rank = $rank;
+            $temp = [$data[$x][1] => get_string('rank','local_newsvnr').' '.($rank)];
+        }
+        else {
+            $temp = [$data[$x][1] => get_string('rank','local_newsvnr').' '.($prev_rank)];
+        }
+        array_push($listrank,$temp);
+    }
+    foreach ($listrank as $list) {
+        foreach ($list as $key => $value) {
+            if($key == $userid) {
+                $rank = $value;
+                break;
+            };
+        }
+    }
+    return $rank;
+}
 // Lấy form check hoàn thành module trong khóa
 function get_course_section_cm_completion($course,&$completioninfo,$mod) {
     global $CFG, $DB, $USER, $PAGE , $OUTPUT;
@@ -2142,7 +2182,46 @@ function get_course_section_cm_completion($course,&$completioninfo,$mod) {
     }
     return $output;
 }
+// Diểm trung bình
+function get_course_grade_avg($courseid) {
+   global $CFG, $DB;
 
+   require_once $CFG->dirroot . '/grade/lib.php';
+   require_once $CFG->dirroot . '/grade/report/grader/lib.php';
+   require_once $CFG->libdir  . '/gradelib.php';
+
+   $course = $DB->get_record('course', ['id' => $courseid]);
+   $page = 0;
+   $sortitemid = 0;
+   $context = context_course::instance($course->id);
+   $displayaverages = true;
+   $gpr = new grade_plugin_return(
+       array(
+           'type' => 'report',
+           'plugin' => 'grader',
+           'course' => $course,
+           'page' => $page
+       )
+   );
+   
+   $report = new grade_report_grader($course->id, $gpr, $context, $page, $sortitemid);
+   $report->load_users();
+   $report->load_final_grades();
+   $data = $report->get_right_rows($displayaverages);
+   $lastitem = end($data);
+   $count = count($lastitem->cells);
+   $grade_avg = explode(' ', $lastitem->cells[$count - 1]->text)[0];
+   return $grade_avg;
+}
+// Lấy điểm các module trong khóa 
+function get_grade_module_incourse($courseid,$userid) {
+    global $DB;
+    $listgrade = $DB->get_records_sql('SELECT gi.id,gi.itemname,gg.finalgrade,gi.grademax FROM mdl_grade_grades gg
+                                                    JOIN mdl_grade_items gi ON gg.itemid = gi.id
+                                                WHERE gg.userid = :userid AND gi.courseid = :courseid AND rawgrade IS NOT NULL', ['userid' => $userid, 'courseid' => $courseid]);
+    return $listgrade;
+
+}
 // Lấy danh sách user dựa vào role trong 1 khóa học
 function get_listuser_in_course($courseid, $roleid = 5, $userid = 0) {
     global $DB;

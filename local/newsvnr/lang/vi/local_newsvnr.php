@@ -495,3 +495,4 @@ $string['view'] = "Lượt xem";
 $string['lastupdate'] = "Lần cập nhật cuối:";
 $string['startlearning'] = "Vào học";
 $string['introcourse'] = "Giới thiệu khóa";
+$string['rank'] = "Hạng";

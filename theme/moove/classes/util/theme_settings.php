@@ -850,13 +850,30 @@ class theme_settings {
 
     // Get dữ liệu cho dashboard
     public function get_fullinfo_user() {
-        global $CFG, $USER, $OUTPUT, $PAGE;
+        global $CFG, $USER, $OUTPUT, $PAGE, $DB;
         require_once("$CFG->libdir/completionlib.php");
-
         $obj = new stdClass;
         $obj->fullname = fullname($USER);
+        $obj->usercode = $USER->usercode;
         $obj->userimg = $OUTPUT->user_picture($USER, array('size'=>35));
+        $obj->userimgbig = $OUTPUT->user_picture($USER, array('size'=>80));
+        $obj->userlink = $CFG->wwwroot . '/user/profile.php?id='.$USER->id ;
         $obj->email = $USER->email;
+        // Kỳ thi 
+        $exam = $DB->get_records('exam_user',['userid' => $USER->id]);
+        $obj->exam = count($exam);
+        // Huy hiệu cá nhân 
+        $badge = $DB->get_records('badge_issued',['userid' => $USER->id]);
+        $obj->badge = count($badge);
+        // lỘ trình học
+        $competency_plan = $DB->get_records_sql('SELECT * FROM mdl_competency_plan WHERE templateid IS NULL AND userid =:userid',['userid' => $USER->id]);
+        $obj->competency_plan = count($competency_plan);
+        // lấy danh sách năng lực
+        $competency = $DB->get_records_sql('SELECT * FROM {competency_usercomp} WHERE status=0 AND reviewerid IS NOT NULL AND proficiency=1 AND grade IS NOT NULL AND userid =:userid',['userid' => $USER->id]);
+        $obj->competency = count($competency);
+        // lấy số bài post diễn đàn
+        $forumpost = $DB->get_records('forum_posts',['parent' => 0,'userid' => $USER->id]);
+        $obj->forumpost = count($forumpost);
         $courses = enrol_get_all_users_courses($USER->id);
         $count_course_comletion = 0;
         foreach($courses as $course) {

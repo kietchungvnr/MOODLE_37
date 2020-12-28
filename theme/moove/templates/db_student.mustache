@@ -1,0 +1,523 @@
+<div class="db-student">
+{{#userinfo}}
+<div class="row">
+	<div class="col-md-6 mt-3">
+		<div class="card">
+			<div class="card-body" style="height: 242px;">
+				<h5 class="card-title d-inline">Thông tin học viên</h5>
+				<hr>
+				<div class="row">
+					<div class="col-md-3">
+						<div class="d-flex justify-content-center">
+							{{{userimgbig}}}
+						</div>
+						<div class="text-center mt-2"><a href="{{{userlink}}}" target="_blank">Xem chi tiết</a></div>
+					</div>
+					<div class="col-md-5">
+						<div class="d-flex"><p class="grey mr-1">Họ và tên: </p><p class="text-title">{{{fullname}}}</p></div>
+						<div class="d-flex"><p class="grey mr-1">Mã học viên: </p><p class="text-title">{{{usercode}}}</p></div>
+						<div class="d-flex"><p class="grey mr-1">Email: </p><p class="text-title">{{{email}}}</p></div>
+					</div>
+					<div class="col-md-4">
+						<div class="d-flex"><p class="grey mr-1">Từ điển năng lực:</p><p class="text-title">{{{competency}}}</p></div>
+						<div class="d-flex"><p class="grey mr-1">Bài viết diễn đàn:</p><p class="text-title">{{{forumpost}}}</p></div>
+						<div class="d-flex"><p class="grey mr-1">Số giờ truy cập:</p></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="row">
+			<div class="col-md-6 mt-3">
+				<div class="card card-studentrp-db card-student-mycourse">
+					<div class="card-body">
+						<div class="d-flex justify-content-between">
+							<div>
+								<div class="mb-2">Khóa học của tôi</div>
+								<div class="font-title mb-1">{{{coursestotal}}}</div>
+								<a href="javascript:;" class="viewdetairp" action="viewcourse">Xem chi tiết</a>
+							</div>
+							<div>
+								<i class="fa fa-graduation-cap" style="font-size: 40px"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 mt-3">
+				<div class="card card-studentrp-db card-student-badge">
+					<div class="card-body">
+						<div class="d-flex justify-content-between">
+							<div>
+								<div class="mb-2">Huy hiệu của tôi</div>
+								<div class="font-title mb-1">{{{badge}}}</div>
+								<a href="javascript:;" class="viewdetairp" action="viewbadge">Xem chi tiết</a>
+							</div>
+							<div>
+								<i class="fa fa-graduation-cap" style="font-size: 40px"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 mt-3">
+				<div class="card card-studentrp-db card-student-progress">
+					<div class="card-body">
+						<div class="d-flex justify-content-between">
+							<div>
+								<div class="mb-2">Lộ trình cá nhân</div>
+								<div class="font-title mb-1">{{{competency_plan}}}</div>
+								<a href="javascript:;" class="viewdetairp" action="viewcompetencyplan">Xem chi tiết</a>
+							</div>
+							<div>
+								<i class="fa fa-graduation-cap" style="font-size: 40px"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 mt-3">
+				<div class="card card-studentrp-db card-student-exam">
+					<div class="card-body">
+						<div class="d-flex justify-content-between">
+							<div>
+								<div class="mb-2">Kỳ thi</div>
+								<div class="font-title mb-1">{{{exam}}}</div>
+								<a href="javascript:;" class="viewdetairp" action="viewexam">Xem chi tiết</a>
+							</div>
+							<div>
+								<i class="fa fa-trophy mr-2" style="font-size: 40px"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="viewDetailReport">
+			<div id="loaddetailrp"></div>
+			<div class="loading-page"></div>
+		</div>
+	</div>
+</div>
+{{/userinfo}}
+<div class="row mt-3">
+	<div class="col-md-9">
+		 <div class="card">
+		 	<div class="card-body">
+		 		<h5 class="card-title d-inline">Kết quả học tập</h5>
+		 		<hr>
+		    	<div id="quizchart"></div>
+		    	<div id="moduledetail-kendo"></div>
+	    	</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title d-inline">Tiến độ học tập</h5>
+				<hr>
+				<div id="progresschart"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row mt-3">
+	<div class="col-md-7">
+		 <div class="card">
+		 	<div class="card-body">
+		 		<h5 class="card-title d-inline">Khóa học đang tham gia</h5>
+				<hr>
+		 		<div id="mycourse-kendo"></div>
+		 	</div>
+		 </div>
+	</div>
+	<div class="col-md-5">
+		 <div class="card">
+		 	<div class="card-body">
+		        <ul class="nav-tabs nav multi-tab mb-3">
+			        <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="homework">Bài tập về nhà</a></li>
+	             	<li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="quiz">Bài kiểm tra</a></li>
+		   		</ul>
+   				<div class="tab-content">
+					<div data="homework" class="tab-pane active">
+				 		<div id="myhomework-kendo"></div>
+					</div>
+					<div data="quiz" class="tab-pane">
+						<div id="myquiz-kendo"></div>
+					</div>
+		 	</div>
+		 </div>
+	</div>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+    const closeKendo = () => {
+        require(['jquery', 'core/config', 'local_newsvnr/initkendogrid'], ($, config, kendo) => {
+           	$("#moduledetail-kendo").empty();   
+        });
+    };
+</script>
+{{#js}}
+require.config({
+    packages: [{
+        name: 'highcharts',
+        main: 'highcharts'
+    }],
+    paths: {
+        // Change this to your server if you do not wish to use our CDN.
+        highcharts: 'https://code.highcharts.com',
+        jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr"
+    }
+});
+require(
+		[
+			'highcharts',
+	        'highcharts/modules/exporting',
+	        'highcharts/modules/accessibility',
+        	'highcharts/modules/drilldown',
+        	'jquery', 
+        	'core/config', 
+        	'local_newsvnr/initkendogrid', 
+        	'alertjs', 
+        	'core/str'
+       ], function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, Config, kendo, alertify, Str) {
+var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api_student.php';
+var quizchart = '#quizchart';
+var progress = '#progresschart';
+var gridmodule= '#moduledetail-kendo';
+var gridcourse = '#mycourse-kendo';
+var gridhomework = '#myhomework-kendo';
+var gridquiz = '#myquiz-kendo';
+{{! window xem chi tiết thống kê}}
+$('.db-student .viewdetairp').click(function() {
+	$('.loading-page').addClass('active');
+	$('#viewDetailReport').data("kendoWindow").center().open();
+	var scriptrp = Config.wwwroot + '/local/newsvnr/ajax/dashboard/studentreport_viewdetail.php';
+	var action = $(this).attr('action')
+	var settings = {
+		type: 'GET',
+        processData : true,
+        datatype: 'json',
+        data : {
+            action : action
+        }
+	}
+	$.ajax(scriptrp,settings).then(function(resp) {
+		var obj = $.parseJSON(resp);
+		$('#loaddetailrp').hide().html(obj.result).fadeIn('fast');
+		$('#loaddetailrp').prepend(obj.title);
+		$('.loading-page').removeClass('active');
+	})
+})
+$('#viewDetailReport').kendoWindow({
+    width: "1200px",
+    title: '',
+    visible: false,
+    open: onOpen,
+    actions: [
+        "Minimize",
+        "Maximize",
+        "Close"
+    ],
+})
+function onOpen(e) {
+	setPositionWindow('#viewDetailReport',100);
+}
+{{! Kendo xem chi tiết điểm của module  }}
+var initKendoModule = function(courseid) {
+	var kendoConfig = {};
+		var settings = {			
+			url: script,
+			type : 'GET',
+        	dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            data : {
+            	courseid : courseid,
+            	action : 'moduledetail'
+        	}
+		};
+		var columns = [
+			{
+				template: function(e) {
+					return e.name
+				},
+                field: "name",
+                title: 'Hoạt động tài nguyên',
+                width: "150px"
+			},
+			{
+                field: "finalgrade",
+                title: 'Điểm của bạn',
+                width: "120px"
+			},
+			{
+                field: "finalgrade",
+                title: 'Điểm trung bình tổng',
+                width: "120px"
+			},
+			{
+                field: "timeclose",
+                title: 'Ngày hết hạn',
+                width: "150px"
+			}
+		];
+		var toolbar = false;
+		kendoConfig.selectable = false;
+		kendoConfig.toolbar = toolbar;
+		kendoConfig.columns = columns;
+		kendoConfig.apiSettings = settings;
+		var gridData = kendo.initGrid(kendoConfig);
+		$(gridmodule).kendoGrid(gridData);
+}
+{{! Kendo xem ds khóa học đã tham gia  }}
+var initKendoMycourse = function() {
+	var kendoConfig = {};
+		var settings = {			
+			url: script,
+			type : 'GET',
+        	dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            data : {
+            	action : 'mycourse'
+        	}
+		};
+		var columns = [
+			{
+				template: function(e) {
+					return e.coursename
+				},
+                field: "coursename",
+                title: 'Khóa học',
+                width: "180px"
+			},
+			{
+				template: function(e) {
+					return e.process
+				},
+                field: "process",
+                title: 'Tiến trình học',
+                width: "150px"
+			},
+			{
+                field: "gradefinal",
+                title: 'Điểm',
+                width: "80px"
+			},
+			{
+                field: 'timestart',
+                title: 'Ngày vào khóa',
+                width: "120px"
+			},
+			{
+                field: 'timecompleted',
+                title: 'Ngày hoàn thành',
+                width: "120px"
+			}
+		];
+		var toolbar = false;
+		kendoConfig.selectable = false;
+		kendoConfig.toolbar = toolbar;
+		kendoConfig.columns = columns;
+		kendoConfig.apiSettings = settings;
+		var gridData = kendo.initGrid(kendoConfig);
+		$(gridcourse).kendoGrid(gridData);
+}
+{{! Kendo bài tập về nhà }}
+var initKendoHomework = function() {
+	var kendoConfig = {};
+		var settings = {			
+			url: script,
+			type : 'GET',
+        	dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            data : {
+            	action : 'homework'
+        	}
+		};
+		var columns = [
+			{
+                field: "name",
+                title: 'Tên bài tập',
+                width: "150px"
+			},
+			{
+                field: 'grade',
+                title: 'Điểm',
+                width: "80px"
+			},
+			{
+                field: 'timedue',
+                title: 'Ngày đến hạn',
+                width: "120px"
+			}
+		];
+		var toolbar = false;
+		kendoConfig.selectable = false;
+		kendoConfig.toolbar = toolbar;
+		kendoConfig.columns = columns;
+		kendoConfig.apiSettings = settings;
+		var gridData = kendo.initGrid(kendoConfig);
+		$(gridhomework).kendoGrid(gridData);
+}
+{{! Kendo quiz }}
+var initKendoQuiz = function() {
+	var kendoConfig = {};
+		var settings = {			
+			url: script,
+			type : 'GET',
+        	dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            data : {
+            	action : 'myquiz'
+        	}
+		};
+		var columns = [
+			{
+                field: "name",
+                title: 'Tên bài tập',
+                width: "150px"
+			},
+			{
+                field: 'grade',
+                title: 'Điểm',
+                width: "80px"
+			},
+			{
+                field: 'timedue',
+                title: 'Ngày đến hạn',
+                width: "120px"
+			}
+		];
+		var toolbar = false;
+		kendoConfig.selectable = false;
+		kendoConfig.toolbar = toolbar;
+		kendoConfig.columns = columns;
+		kendoConfig.apiSettings = settings;
+		var gridData = kendo.initGrid(kendoConfig);
+		$(gridquiz).kendoGrid(gridData);
+}
+{{! Chart cột hiện thông tin điểm  }}
+$.getJSON(script + '?action=quizchart',function(data) {
+	// Create the chart
+	Highcharts.chart('quizchart', {
+	  	chart: {
+		    type: 'column',
+		    renderTo: quizchart,
+		    height:300,
+          	events: {
+		        drilldown: function(e) {
+		           	initKendoModule(e.point.drilldown);
+					$("#moduledetail-kendo .k-grid-header").prepend("<div class='gridTitle'><span>Xem chi tiết điểm khóa "+e.point.name+"</span><i onclick='closeKendo()' class='fa fa-times float-right' id='closekendo' aria-hidden='true'></i></div>");
+		        }
+		    }
+		},
+	  	title: {
+	    	text: ''
+	  	},
+	    tooltip: {
+	        pointFormat: '<span style="color:{point.color}">Điểm</span> :<b>{point.y:.1f}</b><br/><span>{point.rank}</span>'
+	    },
+		lang: {
+			drillUpText: '< Back'
+		},
+	  	accessibility: {
+	    	announceNewData: {
+	      	enabled: true
+	    	}
+	  	},
+	  	yAxis: {
+  		  	title: {
+		    	text: ''
+		  	},
+	    	max: 10
+	  	},
+	  	legend: {
+	    	enabled: false
+	  	},
+	  	plotOptions: {
+		    series: {
+	        	pointWidth: 40,
+		      	borderWidth: 0,
+		      	dataLabels: {
+				        enabled: true,
+				        format: '{point.y:.1f}',
+				        colors: ['white']
+		      		}
+		    	}
+	  	},
+	  	colors: ['rgb(29, 127, 179)'],
+	  	series: [
+	    {
+	      	name: "Điểm trung bình",
+	      	colorByPoint: false,
+	      	data: data.avggrade
+	    },
+	    {
+	        type: 'spline',
+	        name: 'Course grade average',
+	        data: data.avggradecourse,
+	        color: '#f98d21',
+	        marker: {
+	            lineWidth: 3,
+	            lineColor: '#f98d21',
+	            fillColor: '#f98d21'
+	        }
+        }
+	  	],
+	});
+});	
+{{! chart tròn hiện thị quá trình học }}
+$.getJSON(script + '?action=piechart',function(data) {
+	Highcharts.chart('progresschart', {
+	    chart: {
+	        plotBackgroundColor: null,
+	        plotBorderWidth: null,
+	        plotShadow: false,
+	        type: 'pie',
+	        height:300
+	    },
+	    title: {
+	        text: ''
+	    },
+	    tooltip: {
+	    	headerFormat: '',
+	        pointFormat: '<b style="color: {point.color}">Khóa học {point.name}</b><br>{point.course}'
+	    },
+	    accessibility: {
+	        point: {
+	            valueSuffix: '%'
+	        }
+	    },
+	    plotOptions: {
+	        pie: {
+	            allowPointSelect: true,
+	            cursor: 'pointer',
+	            colors: ['#e93e08','#428bca'],
+	            dataLabels: {
+	                enabled: true,
+	             	format: '{point.percentage:.1f} %',
+	                distance: -50,
+	                color: 'black',
+	             	filter: {
+	                    property: 'percentage',
+	                    operator: '>',
+	                    value: 4
+	                }
+	            },
+	            showInLegend: true
+	        }
+	    },
+	    series: [{
+	        name: 'Khóa học',
+	        colorByPoint: true,
+	        data: data
+	    }]
+	});
+})
+initKendoMycourse();
+initKendoHomework();
+initKendoQuiz();
+})
+{{/js}}

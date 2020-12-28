@@ -5531,6 +5531,83 @@ nav.navbar ul.navbar-nav .popover-region .popover-region-toggle {
 nav.navbar ul.navbar-nav .usermenu {
     line-height: 0;
 }
+.icon-success,.icon-fail {
+    height: 35px;
+}
+.gridTitle {
+    background: #3c80bc;
+    color: white;
+    padding: 8px 18px;
+}
+.gridTitle i {
+    cursor: pointer;
+}
+.card-studentrp-db {
+    height: 113px;
+    color: white;
+}
+.card-studentrp-db a {
+    color: white;
+}
+.card-student-mycourse {
+    background: #f39c12;
+}
+.card-student-exam {
+    background: #00c0ef;
+}
+.card-student-badge {
+    background: #dd4b39;
+}
+.card-student-progress {
+    background: #00a65a;
+}
+.highcharts-credits {
+    display: none;
+}
+.grey {
+    color: grey;
+}
+.text-title {
+    color: #455a64;
+    font-weight: bold
+}
+.font-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+.db-student .k-grid td {
+    padding: 5px 1.286em !important;
+}
+.db-student .k-grid-content {
+    height: 200px;
+}
+.course-list .course-list-img img {
+    width: 200px;
+    height: 140px;
+}
+#loaddetailrp .courseimage {
+    height: 100px;
+}
+#loaddetailrp .courseimage img {
+    height: 100px;
+    width: 100%;
+}
+#loaddetailrp {
+    max-height: 600px;
+}
+#viewDetailReport {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+#loaddetailrp .progress-circle:before {
+    left: .4rem;
+    right: .4rem;
+    top: .4rem;
+    bottom: .4rem
+}
+#loaddetailrp .badges li {
+    text-align: left;
+}
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />
@@ -5567,9 +5644,10 @@ nav.navbar ul.navbar-nav .usermenu {
     <div class="slimScrollDiv">
         <ul class="nav navbar-nav side-nav nicescroll-bar">
             {{{output.right_sidebar_menu}}}
-            <li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>{{#str}}admin,theme_moove{{/str}}</span></li>
+
             {{# flatnavigation }}
                 {{#showdivider}}
+                    <li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>{{#str}}admin,theme_moove{{/str}}</span></li>
                     <li class="menu-link" data-key="{{key}}" id=''><a class ="nav-active" href="{{{action}}}"><i class="{{{class}}} mr-3"></i>{{{text}}}</a></li>
                 {{/showdivider}}
             {{/ flatnavigation }}

@@ -495,3 +495,4 @@ $string['view'] = "View";
 $string['lastupdate'] = "Last update:";
 $string['startlearning'] = "Start learning";
 $string['introcourse'] = "Course introduce";
+$string['rank'] = "Rank";
