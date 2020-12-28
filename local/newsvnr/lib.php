@@ -858,7 +858,7 @@ function get_list_course_by_teacher($userid) {
     global $DB;
     $list_courseid = [];
     $list_course_by_user_sql = "
-                                SELECT DISTINCT c.fullname,c.id,c.shortname
+                                SELECT c.fullname,c.id,c.shortname
                                 FROM mdl_role_assignments AS ra
                                     JOIN mdl_user AS u ON u.id= ra.userid
                                     JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
@@ -866,7 +866,6 @@ function get_list_course_by_teacher($userid) {
                                     JOIN mdl_course AS c ON c.id=e.courseid
                                     JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
                                     JOIN mdl_role AS r ON r.id= ra.roleid
-                                
                                 WHERE  ra.roleid=3 AND u.id = ?";
     $list_course_by_user_ex = $DB->get_records_sql($list_course_by_user_sql,[$userid]);
     if ($list_course_by_user_ex) {
@@ -887,7 +886,7 @@ function get_list_courseinfo_by_teacher($userid)
     global $DB;
     $list_courseid = [];
     $list_course_by_user_sql = "
-                                SELECT DISTINCT c.*
+                                SELECT c.*
                                 FROM mdl_role_assignments AS ra
                                     JOIN mdl_user AS u ON u.id= ra.userid
                                     JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
@@ -914,7 +913,7 @@ function get_list_course_by_student($userid) {
     global $DB;
     $list_courseid = [];
     $list_course_by_user_sql = "
-                                SELECT DISTINCT c.fullname,c.id,c.shortname, c.required
+                                SELECT c.fullname,c.id,c.shortname, c.required
                                 FROM mdl_role_assignments AS ra
                                     JOIN mdl_user AS u ON u.id= ra.userid
                                     JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
@@ -940,17 +939,15 @@ function get_list_course_by_student($userid) {
 function get_list_courseid_by_teacher($userid) {
     global $DB;
     $list_course_by_user_sql = "
-                                SELECT DISTINCT c.fullname,c.id
+                                SELECT c.fullname,c.id
                                 FROM mdl_role_assignments AS ra
-                                    JOIN mdl_user AS u ON u.id= ra.userid
-                                    JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
-                                    JOIN mdl_enrol AS e ON e.id=ue.enrolid
-                                    JOIN mdl_course AS c ON c.id=e.courseid
-                                    JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
-                                    JOIN mdl_role AS r ON r.id= ra.roleid
-                                    JOIN mdl_course_modules cm ON c.id = cm.course
-                                    JOIN mdl_course_modules_completion cmc ON cm.id = cmc.coursemoduleid
-                                WHERE  ra.roleid=3 AND u.id = ? AND c.visible = 1";
+                                    JOIN mdl_user u ON ra.userid = u.id
+                                    JOIN mdl_user_enrolments ue ON u.id = ue.userid 
+                                    JOIN mdl_enrol enr ON ue.enrolid = enr.id
+                                    JOIN mdl_course c ON enr.courseid = c.id
+                                    JOIN mdl_context ct ON ct.id = ra.contextid AND ct.instanceid = c.id
+                                    JOIN mdl_role r ON ra.roleid = r.id
+                                WHERE  ra.roleid=3 AND u.id = ?";
     $list_course_by_user_ex = $DB->get_records_sql($list_course_by_user_sql,[$userid]);
     $list_courseid = array();
      if (!empty($list_course_by_user_ex)) {
@@ -2176,6 +2173,39 @@ function get_listuser_in_course($courseid, $roleid = 5, $userid = 0) {
                  AND r.id = :roleid";
     $data = $DB->get_records_sql($sql, $params);
     return $data;
+}
+
+// Lấy điểm trung bình của khóa học
+function get_course_grade_avg($courseid) {
+    global $CFG, $DB, $USER;
+
+    require_once $CFG->dirroot . '/grade/lib.php';
+    require_once $CFG->dirroot . '/grade/report/grader/lib.php';
+    require_once $CFG->libdir  . '/gradelib.php';
+
+    $course = $DB->get_record('course', ['id' => $courseid]);
+    $page = 0;
+    $sortitemid = 0;
+    $context = context_course::instance($course->id);
+    $displayaverages = true;
+    $gpr = new grade_plugin_return(
+        array(
+            'type' => 'report',
+            'plugin' => 'grader',
+            'course' => $course,
+            'page' => $page
+        )
+    );
+    // var_dump($USER);die;
+    $USER->gradeediting = [$courseid];
+    $report = new grade_report_grader($course->id, $gpr, $context, $page, $sortitemid);
+    $report->load_users();
+    $report->load_final_grades();
+    $data = $report->get_right_rows($displayaverages);
+    $lastitem = end($data);
+    $count = count($lastitem->cells);
+    $grade_avg = explode(' ', $lastitem->cells[$count - 1]->text)[0];
+    return $grade_avg;
 }
 
 function local_newsvnr_extend_navigation($navigation) {

@@ -1194,12 +1194,12 @@ if($action == "joincourse_chart") {
 if($action == "viewcount_chart_vp") {
 	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
 	$params = [];
-	if($courseid) {
-		$wheresql = "courseid = ? and c.startdate >= lsl.timecreated";
+	if ($courseid) {
+		$wheresql = "courseid = ? and lsl.action = 'viewed'";
 		$params = [$courseid];
 	} else {
 		$srt_courseid = get_list_courseid_by_teacher($USER->id);
-		$wheresql = "courseid IN($srt_courseid) AND c.startdate >= lsl.timecreated";
+		$wheresql = "courseid IN($srt_courseid) AND lsl.action = 'viewed'";
 	}
 	$sql = "SELECT COUNT(lsl.id) as vc,lsl.courseid, c.fullname
 			FROM mdl_logstore_standard_log lsl
@@ -1230,11 +1230,11 @@ if($action == "viewcount_chart") {
 	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
 	$params = [];
 	if($courseid) {
-		$wheresql = "courseid = ? and c.startdate >= lsl.timecreated";
+		$wheresql = "courseid = ? and lsl.action = 'viewed'";
 		$params = [$courseid];
 	} else {
 		$srt_courseid = get_list_courseid_by_teacher($USER->id);
-		$wheresql = "courseid IN($srt_courseid) AND c.startdate >= lsl.timecreated";
+		$wheresql = "courseid IN($srt_courseid) AND lsl.action = 'viewed'";
 	}
 	$sql = "SELECT COUNT(lsl.id) AS vc,lsl.courseid, c.fullname
 			FROM mdl_logstore_standard_log lsl

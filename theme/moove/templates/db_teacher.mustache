@@ -1,69 +1,253 @@
-<div class="row">
-	<div class="col-lg-9">
-		<div class="card">
-    <div class="card-body">
-        <div class="mb-2"><h5 class="card-title d-inline">Khóa giảng của tôi</h5></div>
-       
-        <div id="list-course-grid"></div>
-         <div id="view-sutdent-detail">
-        	<div id="sutdent-detail-grid"></div>
+<div class="row mb-3">
+    <div class="col-lg-3">
+        <div class="card teacher-bg-1">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="mb-2">
+                            Khóa giảng của tôi
+                        </div>
+                        <div class="font-title mb-1">
+                            0
+                        </div>
+                        <a>
+                            Xem chi tiết
+                        </a>
+                    </div>
+                    <div>
+                        <i class="fa fa-graduation-cap db-icon-font-size">
+                        </i>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div id="view-module-detail">
-        	<div id="module-detail-chart"></div>
+    </div>
+    <div class="col-lg-3">
+        <div class="card teacher-bg-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="mb-2">
+                            Học viên
+                        </div>
+                        <div class="font-title mb-1">
+                            0
+                        </div>
+                        <a>
+                            Xem chi tiết
+                        </a>
+                    </div>
+                    <div>
+                        <i class="fa fa-graduation-cap db-icon-font-size">
+                        </i>
+                    </div>
+                </div>
+            </div>
         </div>
-    
-        
+    </div>
+    <div class="col-lg-3">
+        <div class="card teacher-bg-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="mb-2">
+                            Tài nguyên/Hoạt động
+                        </div>
+                        <div class="font-title mb-1">
+                            0
+                        </div>
+                        <a>
+                            Xem chi tiết
+                        </a>
+                    </div>
+                    <div>
+                        <i class="fa fa-graduation-cap db-icon-font-size">
+                        </i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="card teacher-bg-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="mb-2">
+                            Kỳ thi
+                        </div>
+                        <div class="font-title mb-1">
+                            0
+                        </div>
+                        <a>
+                            Xem chi tiết
+                        </a>
+                    </div>
+                    <div>
+                        <i class="fa fa-graduation-cap db-icon-font-size">
+                        </i>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-	</div>
-	<div class="col-lg-3">
-		
-<div class="card">
-    <div class="card-body">
-    		<h5 class="card-title d-inline">Nhắc nhở mới, chưa xem</h5>
-    		<div>
-    			<span class="text-primary">0</span>
-    			<span class="pull-right"><i class="fa fa-bell text-primary" title="Toggle notifications menu"></i></span>
-    			</div>
-    			<span><a href="javascript:;">Xem chi tiết</a></span>
-
-    	</div>
+<div class="row mb-3">
+    <div class="col-lg-9">
+        <div class="card">
+            <div class="card-body">
+            	<div class="row">
+                    <div class="col-lg-8"><h5 class="card-title d-inline">
+                        Tổng quan khóa học
+                    </h5></div>
+                    <div class="col-lg-4">
+                    	<div id="chart-type"></div>
+                    </div>
+                </div>
+                <div id="overview-chart">
+                </div>
+                <hr/>
+                <div id="overview-info">
+                	<div class="d-flex justify-content-around" id="info-number">
+                		<span class="font-weight-bold" id="course-total">0</span>
+                		<span class="font-weight-bold" id="learner-total">0</span>
+                	</div>
+                	<div class="d-flex justify-content-around" id="title-number">
+                		<span>Tổng khóa học</span>
+                		<span>Tổng học viên</span>
+                	</div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card mt-3">
-    <div class="card-body">
-    		<h5 class="card-title d-inline">Khóa học chưa soạn nội dung</h5>
-    		<div>
-    			
-    				<span class="text-primary">{{#numbercourseempty}}{{course_empty}}{{/numbercourseempty}}</span>
-    			
-    			<span class="pull-right"><i class="fa fa-graduation-cap text-primary" title="Toggle notifications menu"></i></span>
-    			</div>
-    			<span><a href="javascript:;">Xem chi tiết</a></span>
-    	</div>
+    <div class="col-lg-3">
+        <div class="card">
+            <div class="card-body">
+            	<div class="mb-2">
+                    <div class="mb-2">
+                    	<h5 class="card-title d-inline">
+                        Tiến độ hoàn thành
+                    	</h5>
+                    </div>
+                    <div id="list-course-teacher"></div>
+                </div>
+                <div id="progress-chart"></div>
+                <div id="overview-course">
+	                <div class="db-teacher-hr">
+	                	<span>Học viên hoàn thành</span>
+	                	<span class="pull-right font-weight-bold" id="course-finish">0</span>
+	                </div>
+	                <div class="db-teacher-hr">
+	                	<span>Học viên đang học</span>
+	                	<span class="pull-right font-weight-bold" id="course-unfinish">0</span>
+	                </div>
+	                <div class="db-teacher-hr border-0">
+	                	<span>Điểm trung bình tổng</span>
+	                	<span class="pull-right font-weight-bold" id="course-grade-avg">0</span>
+	                </div>
+            	</div>
+            </div>
+        </div>
     </div>
-	</div>
+</div>
+<div class="row">
+    <div class="col-lg-9">
+        <div class="card">
+            <div class="card-body">
+                <div class="mb-2">
+                    <h5 class="card-title d-inline">
+                        Khóa giảng của tôi
+                    </h5>
+                </div>
+                <div id="list-course-grid">
+                </div>
+                <div id="view-sutdent-detail">
+                    <div id="sutdent-detail-grid">
+                    </div>
+                </div>
+                <div id="view-module-detail">
+                    <div id="module-detail-chart">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="card">
+            <div class="card-body">
+            	<div class="d-flex justify-content-between">
+                    <div>
+                        <div class="mb-2">
+                            Nhắc nhở mới, chưa xem
+                        </div>
+                        <div class="font-title mb-1">
+                            0
+                        </div>
+                        <a>
+                            Xem chi tiết
+                        </a>
+                    </div>
+                    <div>
+                        <i class="fa fa-graduation-cap db-icon-font-size">
+                        </i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-body">
+            	<div class="d-flex justify-content-between">
+	            	<div>
+	                    <div class="mb-2">
+	                        Khóa học chưa soạn nội dung
+	                    </div>
+	                    <div class="font-title mb-1">
+	                        {{#numbercourseempty}}{{course_empty}}{{/numbercourseempty}}
+	                    </div>
+	                    <a>
+	                        Xem chi tiết
+	                    </a>
+	                </div>
+	                <div>
+	                    <i class="fa fa-graduation-cap db-icon-font-size">
+	                    </i>
+	                </div>
+            	</div>
+        	</div>
+        </div>
+    </div>
 </div>
 
 <div class="card mt-3">
     <div class="card-body">
-        <h5 class="card-title d-inline">Báo cáo tương tác</h5>
-
-    	<div class="row mb-2">
-        	<div class="col-md-4 mt-2">
-        		<input id="list-course">
-        	</div>
-        	<div class="col-md-8 d-flex mt-2" id="button-group">
-        		<button id="access_view" class="btn btn-secondary" style="border-radius: .25rem 0 0 0;" onclick="getChart('access_view')">Xem truy cập</button>
-        		<button id="grade_view" class="btn btn-secondary" style="border-radius: 0;" onclick="getChart('grade_view')">Xem điểm số</button>
-        		<button id="assignment_view" class="btn btn-secondary" style="border-radius: 0;" onclick="getChart('assignment_view')">Xem bài tập</button>
-        		<button id="quiz_view" class="btn btn-secondary" style="border-radius: 0 .25rem .25rem 0;" onclick="getChart('quiz_view')">Xem bài kiểm tra</button>
-        	</div>
+        <h5 class="card-title d-inline">
+            Báo cáo tương tác
+        </h5>
+        <hr/>
+        <div class="row mb-2">
+            <div class="col-md-4 mt-2">
+                <input id="list-course">
+                </input>
+            </div>
+            <div class="col-md-8 d-flex mt-2" id="button-group">
+                <button class="btn btn-secondary" id="access_view" onclick="getChart('access_view')" style="border-radius: .25rem 0 0 0;">
+                    Xem truy cập
+                </button>
+                <button class="btn btn-secondary" id="grade_view" onclick="getChart('grade_view')" style="border-radius: 0;">
+                    Xem điểm số
+                </button>
+                <button class="btn btn-secondary" id="assignment_view" onclick="getChart('assignment_view')" style="border-radius: 0;">
+                    Xem bài tập
+                </button>
+                <button class="btn btn-secondary" id="quiz_view" onclick="getChart('quiz_view')" style="border-radius: 0 .25rem .25rem 0;">
+                    Xem bài kiểm tra
+                </button>
+            </div>
         </div>
-        <div id="report-chart"></div>
-       
-
-    	</div>
+        <div id="report-chart">
+        </div>
     </div>
+</div>
 <script type="text/javascript">
 	
 	$('#button-group').on('click', 'button', function(e) {
@@ -175,30 +359,9 @@
 					var columns = [
 						{
 							// hidden: true,
-			                field: "usercode",
-			                title: s[1],
-			                width: "80px"
-						},
-						{
-							// hidden: true,
 			                field: "studentname",
 			                title: s[2],
 			                width: "120px"
-						},
-						{
-			                field: "courseid",
-			                title: s[3],
-			                width: "80px"
-						},
-						{
-			                field: "coursename",
-			                title: s[4],
-			                width: "150px"
-						},
-						{
-			                field: "timecompleted",
-			                title: s[5],
-			                width: "100px"
 						},
 			            {
 			            	field: 'process', 
@@ -207,16 +370,16 @@
 			                width: "150px"	
 			            },
 			            {
-			                field: "gradefinal",
-			                title: s[7],
-			                width: "50px"
-			            },
-			            {
 			                field: "rank",
 			                title: s[8],
 			                width: "50px"
 			            },
-			            {	
+			            {
+			                field: "timecompleted",
+			                title: s[5],
+			                width: "100px"
+						},
+						{	
 			            	template: function(e) {
 			            		return e.status;
 			            	},
@@ -383,34 +546,187 @@ require.config({
         jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr"
     }
 });
-
 require(
-		[
-			'highcharts',
-	        'highcharts/modules/exporting',
-	        'highcharts/modules/accessibility',
-        	'highcharts/modules/drilldown',
-        	'jquery', 
-        	'core/config', 
-        	'local_newsvnr/initkendoexam', 
-        	'local_newsvnr/initkendocontrolservices', 
-        	'alertjs', 
-        	'core/str'
-       ], function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, Config, kendo, kendoService, alertify, Str) {
+	[
+		'highcharts', 
+		'highcharts/modules/exporting', 
+		'highcharts/modules/accessibility', 
+		'highcharts/modules/drilldown', 
+		'jquery', 
+		'core/config', 
+		'local_newsvnr/initkendoexam', 
+		'local_newsvnr/initkendocontrolservices', 
+		'alertjs', 
+		'core/str', 
+		'core/notification'
+	],
+function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, Config, kendo, kendoService, alertify, Str, Notification) {
     "use strict";
-	var gridListCourse = '#list-course-grid';
-	var reportChart = 'report-chart';
-	var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api.php';
-	// Set lại dataSource cho kendoControl
-    var newDataSource = function(settings) {
-        return new kendoControl.data.DataSource({
-            transport: {
-                read: settings,
+
+    var gridListCourse = '#list-course-grid';
+    var reportChart = 'report-chart';
+    var overviewChart = 'overview-chart';
+    var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api.php';
+
+    // Get dataSource cho grid khóa giảng của tôi
+    var kendoGridConfig = {};
+    var settingsListCourseGrid = {
+        url: script,
+        type: 'GET',
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        data: {
+            action: 'listcourse_grid',
+        }
+    };
+    var listCourseColumns = [
+    	{
+	        template: function(e) {
+	            return e.coursename;
+	        },
+	        field: "coursename",
+	        title: M.util.get_string('coursename', 'theme_moove'),
+	        width: "300px"
+	    }, {
+	        template: function(e) {
+	            return e.studenttotal;
+	        },
+	        field: "studenttotal",
+	        title: M.util.get_string('studenttotal', 'theme_moove'),
+	        width: "80px"
+	    }, {
+	        field: "coursestartdate",
+	        title: M.util.get_string('coursestartdate', 'theme_moove'),
+	        width: "130px"
+	    }, {
+	        field: "courseenddate",
+	        title: M.util.get_string('courseenddate', 'theme_moove'),
+	        width: "130px"
+	    }, {
+	        template: function(e) {
+	            return e.coursemodules;
+	        },
+	        field: "coursemodules",
+	        title: M.util.get_string('coursemodules', 'theme_moove'),
+	        width: "120px"
+	    }, {
+	        template: function(e) {
+	            return e.coursecompletion;
+	        },
+	        field: "coursecompletion",
+	        title: M.util.get_string('coursecompletion', 'theme_moove'),
+	        width: "120px"
+	    }, {
+	        template: function(e) {
+	            return e.status;
+	        },
+	        field: "status",
+	        title: M.util.get_string('status', 'theme_moove'),
+	        width: "150px"
+    }];
+    kendoGridConfig.columns = listCourseColumns;
+    kendoGridConfig.apiSettings = settingsListCourseGrid;
+    kendoGridConfig.toolbar = false;
+    kendoGridConfig.height = 350;
+    var gridData = kendo.initGrid(kendoGridConfig);
+    $(gridListCourse).kendoGrid(gridData);
+
+    // Get list khóa học cho chart báo cáo tương tác
+    var kendoDropDownConfig = {};
+    var dropDownSettings = {
+        url: script,
+        data: {
+            action: 'get_listcourse'
+        }
+    }
+    kendoDropDownConfig.apiSettings = dropDownSettings;
+    kendoDropDownConfig.value = "courseid";
+    var initDropDownList = kendoService.initDropDownList(kendoDropDownConfig);
+    $('#list-course').kendoDropDownList(initDropDownList);
+
+    // Get list khóa học cho chart tiến trình học tập
+    var dropDownCourseSettings = {
+        url: script,
+        type:"POST",
+        dataType:"json",
+        processData:true,
+        contenttype:"application/json",
+        data: {
+            action: 'get_listcourse'
+        }
+    }
+    var onChangeListCourse = function(courseId) {
+    	var settings = {
+    		type:"GET",
+	        dataType:"json",
+	        processData:true,
+	        contenttype:"application/json",
+	        data: {
+	            action: 'get_list_completion_course',
+	            courseid: courseId
+	        }
+    	}
+    	$.ajax(script, settings)
+    	.then(function(resp) {
+    		if(resp.series) {
+        		Highcharts.chart('progress-chart', {
+	        		chart: {
+				        type: 'pie',
+				        height: 250
+				    },
+				    tooltip: {
+				        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				    },
+				    accessibility: {
+				        point: {
+				            valueSuffix: '%'
+				        }
+				    },
+				    plotOptions: {
+				        pie: {
+				            allowPointSelect: true,
+				            cursor: 'pointer',
+				            dataLabels: {
+				                enabled: false
+				            },
+				            innerSize: '90%',
+				            showInLegend: false
+				        }
+				    },
+			        title: {
+			        	text: resp.title,
+			            useHTML: true,
+			            verticalAlign: 'middle',
+			        },
+			        credits: {
+                        enabled: false
+                    },
+				    series: [resp.series]
+				});
+				$('#overview-course').removeClass('d-none');
+				$('#course-finish').html(resp.studentfinish);
+				$('#course-unfinish').html(resp.studentunfinish);
+				$('#course-grade-avg').html(resp.gradeavg);
+			} else {
+				$('#progress-chart').html('<div class="alert alert-danger rounded text-center">'+ resp +'</div>')
+				$('#overview-course').addClass('d-none');
+			}
+    	});
+	}
+    $('#list-course-teacher').kendoDropDownList({
+    	dataTextField: "name",
+        dataValueField: "courseid",
+        change: function(e) {
+        	var courseId = this.value();
+        	onChangeListCourse(courseId);
+    	},
+        dataSource: {
+    		transport: {
+                read: dropDownCourseSettings,
                 parameterMap: function(options, operation) {
                     if (operation == "read") {
                         if (options["filter"]) {
-                            if (options["filter"]["filters"][0])
-                                options["q"] = options["filter"]["filters"][0].value;
+                            if (options["filter"]["filters"][0]) options["q"] = options["filter"]["filters"][0].value;
                         }
                         return options;
                     }
@@ -431,321 +747,301 @@ require(
             pageSize: 30,
             serverPaging: true,
             serverFiltering: true
-        });
-    };
-    var kendoGridConfig = {};
-    var settingsListCourseGrid = {
-        url: script,
+        },
+        dataBound: function() {
+            this.trigger("change");
+        }
+	});
+
+	//Render chart khi chọn loại chart (Tổng quan khóa học)
+    var initOverViewChart = function(typeChart) {
+    	var scriptOverView = Config.wwwroot + '/local/newsvnr/restfulapi/webservice.php';
+    	if(typeChart == 1) {
+
+    	} else if(typeChart == 2) {
+    		var settings = {
+		            type: 'GET',
+		            data: {
+		                "action":"viewcount_chart"
+		            },
+		            processData: true,
+		            contentType: "application/json"
+		    };
+		    $.ajax(scriptOverView, settings)
+		    .then(function(response) {
+
+		        if (response.error) {
+		            Notification.addNotification({
+		                message: response.error,
+		                type: "error"
+		            });
+		        } else {
+		            var strings = [{
+		                    key: 'nodatatable',
+		                    component: 'local_newsvnr'
+		                }, {
+		                    key: 'views',
+		                    component: 'theme_moove'
+		                }, {
+		                    key: 'viewscourselow',
+		                    component: 'theme_moove'
+		                }];
+		        Str.get_strings(strings).then(function(s) {
+		            var list_coursename = response.list_coursename;
+		            var list_viewcount = response.list_viewcount;
+		                // Create a chart.
+		            Highcharts.chart(overviewChart, {
+		                chart: {
+		                        type: 'line',
+		                        height: 307
+		                    },
+		                    title: {
+		                        text: ''
+		                    },
+		                    subtitle: {
+		                        text: ''
+		                    }, 
+		                    xAxis: {
+		                        categories: list_coursename
+		                    },
+		                    yAxis: {
+		                        title: {
+		                            text: s[1]
+		                        }
+		                    },
+		                    credits: {
+		                        enabled: false
+		                    },
+		                    plotOptions: {
+		                        line: {
+		                            dataLabels: {
+		                                enabled: true
+		                            },
+		                            enableMouseTracking: true
+		                        }
+		                    },
+		                    series: [{
+		                        name: s[2],
+		                        data: list_viewcount,
+		                        color: '#1120f3'
+		                }]
+		            });
+		                    
+		        });
+
+		        }
+		        return;
+		    }).fail(Notification.exception);
+    	} else if(typeChart == 3) {
+    		var settings = {
+                type: 'GET',
+                data: {
+                    "action":"coursecomp_chart"
+                },
+                processData: true,
+                contentType: "application/json"
+            };
+	        $.ajax(scriptOverView, settings)
+	        .then(function(response) {
+	            if (response.error) {
+	                Notification.addNotification({
+	                    message: response.error,
+	                    type: "error"
+	                });
+	            } else {
+	                var strings = [{
+	                    key: 'nodatatable',
+	                    component: 'local_newsvnr'
+	                }, {
+	                    key: 'numberstudent',
+	                    component: 'theme_moove'
+	                }, {
+	                    key: 'totalstudent',
+	                    component: 'theme_moove'
+	                }, {
+	                    key: 'numbercompletedcourse',
+	                    component: 'theme_moove'
+	                }];
+	                Str.get_strings(strings).then(function(s) {
+	                    var list_coursename = response.list_coursename;
+	                    var list_enroll = response.list_enroll;
+	                    var list_completion_course = response.list_completion_course;
+	                    // Create a chart.
+	                    Highcharts.chart(overviewChart, {
+	                    chart: {
+	                        type: 'column',
+	                        height: 307
+	                    },
+	                    title: {
+	                        text: ''
+	                    },
+	                    subtitle: {
+	                        text: ''
+	                    },
+	                    credits: {
+	                        enabled: false
+	                    },
+	                    xAxis: {
+	                        categories: list_coursename,
+	                        crosshair: true
+	                    },
+	                    yAxis: {
+	                        min: 0,
+	                        title: {
+	                            text: s[1]
+	                        }
+	                    },
+	                    tooltip: {
+	                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+	                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+	                            '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+	                        footerFormat: '</table>',
+	                        shared: true,
+	                        useHTML: true
+	                    },
+	                    plotOptions: {
+	                        column: {
+	                            pointPadding: 0.2,
+	                            borderWidth: 0
+	                        }
+	                    },
+	                    series: [{
+	                        name: s[2],
+	                        data: list_enroll,
+	                        color: '#223dc4'
+
+	                    }, {
+	                        name: s[3],
+	                        data: list_completion_course,
+	                        color: '#f24012'
+
+	                    }]
+	                });
+	                        
+	            });
+	        }
+	        return;
+	        }).fail(Notification.exception);
+    	} else if(typeChart == 4) {
+    		var settings = {
+		        type: 'GET',
+		        data: {
+		            "action":"joincourse_chart"
+		        },
+		        processData: true,
+		        contentType: "application/json"
+		    };
+		    $.ajax(scriptOverView, settings)
+		    .then(function(response) {
+		        if (response.error) {
+		            Notification.addNotification({
+		                message: response.error,
+		                type: "error"
+		            });
+		        } else {
+		            var strings = [{
+		                key: 'nodatatable',
+		                component: 'local_newsvnr'
+		            }, {
+		                key: 'numberstudent',
+		                component: 'theme_moove'
+		            }, {
+		                key: 'newenrollstudent',
+		                component: 'theme_moove'
+		            }];
+		            Str.get_strings(strings).then(function(s) {
+		                var list_coursename = response.list_coursename;
+		                var list_joincourse = response.list_joincourse;
+
+		                // Create a chart.
+		                Highcharts.chart(overviewChart, {
+		                    chart: {
+		                        type: 'line',
+		                        height: 307
+		                    },
+		                    title: {
+		                        text: ''
+		                    },
+		                    subtitle: {
+		                        text: ''
+		                    }, 
+		                    xAxis: {
+		                        categories: list_coursename
+		                    },
+		                    yAxis: {
+		                        title: {
+		                            text: s[1]
+		                        }
+		                    },
+		                    credits: {
+		                        enabled: false
+		                    },
+		                    plotOptions: {
+		                        line: {
+		                            dataLabels: {
+		                                enabled: true
+		                            },
+		                            enableMouseTracking: true
+		                        }
+		                    },
+		                    series: [{
+		                        name: s[2],
+		                        data: list_joincourse,
+		                        color: '#ef4914'
+		                    }]
+		                });
+		                    
+		            });
+
+		        }
+		        return;
+		    }).fail(Notification.exception);
+   	 	}
+	}
+
+    $('#chart-type').kendoDropDownList({
+    	dataTextField: "text",
+        dataValueField: "value",
+        change: function(e) {
+        	var typeChart = this.value();
+        	initOverViewChart(typeChart);
+    	},
+        dataSource: [
+        	{
+        		value: 1,
+        		text: 'Điểm trung bình khóa học'
+        	}, {
+        		value: 2,
+        		text: 'Lượt truy cập khóa học'
+        	}, {
+        		value: 3,
+        		text: 'Lượt hoàn thành khóa học'
+        	}, {
+        		value: 4,
+        		text: 'Lượt ghi danh khóa học'
+        	}
+        ]
+	})
+
+	var settingsLearnerTotal = {
+		url: script,
         type: 'GET',
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
         data: {
-            action: 'listcourse_grid',
+            action: 'learner_total',
         }
-    };
-    var listCourseColumns = [
-        {
-            template: function(e) {
-                return e.coursename;
-            },
-            field: "coursename",
-            title: M.util.get_string('coursename', 'theme_moove'),
-            width: "300px"
-        }, {
-            template: function(e) {
-                return e.studenttotal;
-            },
-            field: "studenttotal",
-            title: M.util.get_string('studenttotal', 'theme_moove'),
-            width: "80px"
-        }, {
-            field: "coursestartdate",
-            title: M.util.get_string('coursestartdate', 'theme_moove'),
-            width: "130px"
-        }, {
-            field: "courseenddate",
-            title: M.util.get_string('courseenddate', 'theme_moove'),
-            width: "130px"
-        }, {
-        	template: function(e) {
-                return e.coursemodules;
-            },
-            field: "coursemodules",
-            title: M.util.get_string('coursemodules', 'theme_moove'),
-            width: "120px"
-        }, {
-            template: function(e) {
-                return e.coursecompletion;
-            },
-            field: "coursecompletion",
-            title: M.util.get_string('coursecompletion', 'theme_moove'),
-            width: "120px"
-        }, {
-            template: function(e) {
-                return e.status;
-            },
-            field: "status",
-            title: M.util.get_string('status', 'theme_moove'),
-            width: "150px"
-        }];
-    kendoGridConfig.columns = listCourseColumns;
-    kendoGridConfig.apiSettings = settingsListCourseGrid;
-    kendoGridConfig.toolbar = false;
-    kendoGridConfig.height = 350;
-	var gridData = kendo.initGrid(kendoGridConfig);
-	$(gridListCourse).kendoGrid(gridData);
-
-
-	function parseObjToString(obj) {
-            var array = $.map(obj, function(value) {
-                return [value];
-            });
-            return array;
-        }
-
-	var kendoDropDownConfig = {};
-
-	var dropDownSettings = {
-		url: script,
-		data: {
-			action: 'get_listcourse'
-		}
 	}
+	$.ajax(script, settingsLearnerTotal)
+	.then(function(resp) {
+		$('#learner-total').html(resp.learnernumber);
+		$('#course-total').html(resp.coursenumber);
+	});
 
-	kendoDropDownConfig.apiSettings = dropDownSettings;
-	kendoDropDownConfig.value = "courseid";
-	var initDropDownList = kendoService.initDropDownList(kendoDropDownConfig);
-	$('#list-course').kendoDropDownList(initDropDownList);
+	initOverViewChart(2);
 
-	var chart;
-	var prepareInit;
-	
-	
-	var initChart = function(typeChart) {
-		console.log(typeChart)
-		var reportChartSettings = {
-			type:"POST",
-	        dataType:"json",
-	        processData:true,
-	        contenttype:"application/json",
-	        data: {
-	        	action: typeChart
-	    	}
-		}
-		switch(typeChart) {
-  			case "access_view":
-  				
-				$.ajax(script, reportChartSettings)
-				.then(function(resp) {
-					var groups = [];
-			        var courseid = "150";
-			        var coursename = "Course: Đào tạo hội nhập";
-					var geral = resp.statistics;
-			        var nome = "";
-			        var arrayofcontents = [];
-			        var nraccess_vet = [];
-			        var nrntaccess_vet = [];
-			        $.each(groups, function(index, group) {
-			            group.numberofaccesses = [];
-			            group.numberofnoaccess = [];
-			            group.studentswithaccess = [];
-			            group.studentswithnoaccess = [];
-			            group.material = [];
-			        });
-			        $.each(geral, function(index, value) {
-			            arrayofcontents.push(value.material);
-			            //default series value
-			            nraccess_vet.push(value.numberofaccesses);
-			            nrntaccess_vet.push(value.numberofnoaccess);
-			            $.each(groups, function(ind, group) {
-			                if (group.material[index] === undefined)
-			                    group.material[index] = value.material;
-			                if (value.numberofaccesses > 0) {
-			                    $.each(value.studentswithaccess, function(i, student) {
-			                        if (group.studentswithaccess[index] === undefined)
-			                            group.studentswithaccess[index] = [];
-			                        if (group.numberofaccesses[index] === undefined)
-			                            group.numberofaccesses[index] = 0;
-			                        if (group.members.indexOf(student.userid) != -1) {
-			                            group.numberofaccesses[index] += 1;
-			                            group.studentswithaccess[index].push(value.studentswithaccess[i]);
-			                        }
-			                    });
 
-			                } else {
-			                    if (group.studentswithaccess[index] === undefined)
-			                        group.studentswithaccess[index] = [];
-			                    if (group.numberofaccesses[index] === undefined)
-			                        group.numberofaccesses[index] = 0;
-			                }
-			                if (value.numberofnoaccess > 0) {
-			                    $.each(value.studentswithnoaccess, function(j, student) {
-			                        if (group.studentswithnoaccess[index] === undefined)
-			                            group.studentswithnoaccess[index] = [];
-			                        if (group.numberofnoaccess[index] === undefined)
-			                            group.numberofnoaccess[index] = 0;
-			                        if (group.members.indexOf(student.userid) != -1) {
-			                            group.numberofnoaccess[index] += 1;
-			                            group.studentswithnoaccess[index].push(value.studentswithnoaccess[j]);
-			                        }
-			                    });
-			                } else {
-			                    if (group.studentswithnoaccess[index] === undefined)
-			                        group.studentswithnoaccess[index] = [];
-			                    if (group.numberofnoaccess[index] === undefined)
-			                        group.numberofnoaccess[index] = 0;
-			                }
-			            });
-			        });
-			        debugger
-					prepareInit = {
-						chart: {
-	                        type: 'bar',
-	                        zoomType: 'x',
-	                        panning: true,
-	                        panKey: 'shift',
-	                        renderTo: reportChart
-	                    },
-	                    title: {
-	                        text: ' Distribution of access to contents (resources, urls and pages)'
-	                    },
-	                    subtitle: {
-	                        text: ' Course: Đào tạo Hội Nhập<br>Begin date: Thứ Ba, 16 Tháng Sáu 2020, 12:00 SA'
-	                    },
-	                    xAxis: {
-	                        minRange: 1,
-	                        categories: arrayofcontents,
-	                        title: {
-	                            text: 'Contents'
-	                        },
-		        
-		                    plotBands: [
-			                    resp.plot
-			                ]
-		                },
-		                    
-		                yAxis: {
-		                    min: 0,
-		                    maxPadding: 0.1,
-		                    minTickInterval: 1,
-		                    title: {
-		                        text: 'Number of students',
-		                        align: 'high'
-		                    },
-		                    labels: {
-		                        overflow: 'justify'
-		                    }
-		                },
-		                
-		                tooltip: {
-		                    valueSuffix: ' Students'
-		                },
-		                
-		                plotOptions: {
-		                    series: {
-		                        cursor: 'pointer',
-		                        point: {
-		                            events: {
-		                                click: function() {
-		                                }
-		                            }
-		                        }
-		                    },
-		    
-		                    bar: {
-		                        dataLabels: {
-		                            useHTML: this,
-		                            enabled: true
-		                        }
-		                    }
-		                },
-		                legend: {
-		                    layout: 'vertical',
-		                    align: 'right',
-		                    verticalAlign: 'top',
-		                    x: -40,
-		                    y: 5,
-		                    floating: true,
-		                    borderWidth: 1,
-		                    backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor || '#FFFFFF'),
-		                    shadow: true
-		                },
-		                credits: {
-		                    enabled: false
-		                },
-		                series: [{
-		                    name: 'Access',
-		                    data: nraccess_vet,
-		                    color: '#82FA58'
-		                }, {
-		                    name: 'No access',
-		                    data: nrntaccess_vet,
-		                    color: '#FE2E2E'
-		                }]
-					}
-					chart = new Highcharts.Chart(prepareInit);
-				});
-    			break;
-    		case "grade_view":
-    			$.ajax(script, reportChartSettings)
-    			.then(function(resp) {
-    				console.log(resp)
-    				debugger;
-		    		prepareInit = {
-						chart: {
-					        type: 'bar',
-					        renderTo: reportChart
-					    },
-					    title: {
-					        text: 'Historic World Population by Region'
-					    },
-					    subtitle: {
-					    },
-					    xAxis: {
-					        categories: resp.usersname,
-					        scrollbar: {
-					            enabled: true
-					        },
-					    },
-					    yAxis: {
-					        min: 0,
-					        title: {
-					            text: 'Point',
-					            align: 'high'
-					        },
-					        labels: {
-					            overflow: 'justify'
-					        },
 
-					    },
-					   
-					    plotOptions: {
-					        bar: {
-					            dataLabels: {
-					                enabled: true
-					            }
-					        }
-					    },
-					   
-					    credits: {
-					        enabled: false
-					    },
-					    series: resp.modulesdata
-					}
-					chart = new Highcharts.Chart(prepareInit);
-    			});
-    			break;
-    		case "assignment_view":
-    			break;
-    		case "quiz_view":
-    			break;
-	  		default:
-	  			break
-		}
-	}	
-
-	
 });
-
 
 {{/js}}

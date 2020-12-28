@@ -118,7 +118,6 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
             dataSource: newDatasourceGrid(gridConfig),
             persistSelection: true,
             groupable: false,
-            selectable: "multiple",
             //sortable: true,
             resizable: true,
             //dataBound: gridConfig.dataBound,

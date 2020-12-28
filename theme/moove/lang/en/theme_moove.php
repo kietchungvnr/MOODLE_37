@@ -394,3 +394,13 @@ $string['status'] = "Status";
 $string['coursemodules'] = "Course module";
 $string['coursename'] = "Course name";
 $string['listuser'] = "List user";
+//Dashbaord giáo viên
+$string['views'] = 'Số lượt ghé thăm';
+$string['viewscourselow'] = 'Số lượt xem khóa học';
+$string['numberstudent'] = 'Số lượng học viên';
+$string['newenrollstudent'] = 'Học viên mới tham gia lớp học';
+$string['numberstudent'] = 'Số lượng học viên';
+$string['totalstudent'] = 'Tổng số học viên';
+$string['numbercompletedcourse'] = 'Số học viên hoàn thành khóa học';
+$string['avgscore'] = 'Điểm trung bình';
+$string['score'] = 'Điểm';
