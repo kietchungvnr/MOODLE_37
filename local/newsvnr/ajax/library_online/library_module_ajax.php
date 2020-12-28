@@ -78,7 +78,7 @@ if (!empty($modulebyfolder)) {
                 $typeresource = mime2ext($module->minetype);
                 $img          = mimetype2Img($module->minetype);
             } else {
-                $img = '<img title="' . $module->moduletype . '" class="pr-1" src="' . $OUTPUT->image_url('icon', $module->moduletype) . '">';
+                $img = '<img title="' . $module->moduletype . '" class="pr-1 img-module" src="' . $OUTPUT->image_url('icon', $module->moduletype) . '">';
                 $url = $CFG->wwwroot . '/mod/' . $module->moduletype . '/view.php?id=' . $module->id;
             }
             $output .= '<tr>';

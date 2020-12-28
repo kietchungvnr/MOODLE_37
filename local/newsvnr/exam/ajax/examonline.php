@@ -146,7 +146,7 @@ foreach ($subjectdata as $subject) {
         $countquestion = $DB->get_record_sql("SELECT COUNT(qs.id) as count FROM {quiz} q
                                                 JOIN {quiz_slots} qs ON qs.quizid = q.id
                                                 WHERE q.id = :quizid", ['quizid' => $quiz->quizid]);
-        $img = '<img title="quiz" class="pr-2" src="' . $OUTPUT->image_url('icon', 'quiz') . '">';
+        $img = '<img title="quiz" class="pr-2 img-module" src="' . $OUTPUT->image_url('icon', 'quiz') . '">';
         $url = $CFG->wwwroot . '/mod/quiz/view.php?id=' . $quiz->coursemoduleid;
         $output .= '<div class="pl-3 pt-2 pb-2 module-quiz-online">';
         $output .= '<div class="">' . $img . '' . $quiz->name . '<a class="float-right mr-2" href="' . $url . '" target="_blank">' . get_string('enterexam', 'local_newsvnr') . '</a></div>';

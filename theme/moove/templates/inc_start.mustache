@@ -1771,29 +1771,27 @@ nav.navcourse {
     color: #fff;
 }
 nav.navbar ul.navbar-nav .lang-menu .dropdown-menu {
-    top: 65px;
+    top: 61px;
     left: -128px;
     box-shadow: 0px 8px 16px 0px rgb(0 0 0 / 16%);
     border: 0;
 }
 #page-site-index nav.navbar ul.navbar-nav .lang-menu .dropdown-menu {
-    top: -9px;
-    left: 0;
+    right: 5px;
 }
-
 nav.navbar ul.navbar-nav .popover-region .popover-region-container {
-    top: 68px;
+    top: 36px;
+    right: -10px;   
     border-radius: 8px 8px 0 0;
     box-shadow: 0 50px 100px rgba(50,50,93,.1), 0 15px 35px rgba(50,50,93,.15), 0 5px 15px rgba(0,0,0,.1);
     border: 0 solid rgba(0,0,0,.15);
-}
 }
 nav.navbar .moove-search-input .search-input-form .close-search {
     top: -10px;
     right: 15px;
 }
 nav.navbar .moove-search-input .search-input-form .form-control {
-    padding: 13px 40px 13px 20px
+    padding: 13px 40px 13px 20px;
 }
 nav.navbar ul.navbar-nav .popover-region .popover-region-toggle .count-container {
     top: 19px;
@@ -1810,7 +1808,7 @@ nav.navbar ul.navbar-nav .popover-region .popover-region-toggle .count-container
     font-weight: bold;
 }
 .navbar-expand .navbar-nav .dropdown-menu-right {
-    top: 69px;
+    top: 40px;
     border-radius: 8px;
     box-shadow: 0 50px 100px rgba(50,50,93,.1), 0 15px 35px rgba(50,50,93,.15), 0 5px 15px rgba(0,0,0,.1);
     border: 0 solid rgba(0,0,0,.15)
@@ -3188,7 +3186,7 @@ table#categoryquestions tr {
     .calendarwrapper div.header  .mr-1 {
         display: none;
     }
-    #page-user-files #page-header,#page-grade-report-overview-index #page-header {
+    #page-user-files #page-header .page-context-header,#page-grade-report-overview-index #page-header {
         display: none;
     }
     #page-course-view-multitopic .sections, #page-course-view-onetopic .sections {
@@ -3404,6 +3402,7 @@ tr.drag-samenode td {
 .pagelayout-course .badge.badge-info {
     background-color: red;
     color: white;
+    border-radius: 3px;
 }
 .icon {
     margin-right: 10px ;
@@ -5003,6 +5002,7 @@ input.apple-switch:checked:after {
 }
 #page-header .card {
     box-shadow: none;
+    border:none !important;
     background: transparent;
 }
 .menu-tree-course .singlebutton {
@@ -5039,6 +5039,9 @@ input.apple-switch:checked:after {
     body.drawer-open-left, body.drawer-open-right {
         overflow-y: unset;
     }
+    #page-navbar {
+        display: none;
+    }
 }
 #page-my-index .bg-1, 
 #page-my-index .bg-2, 
@@ -5068,7 +5071,6 @@ input.apple-switch:checked:after {
     width: auto;
 }
 .fixed-sidebar-left .side-nav {
-    background: #f6fafb;
     border: none;
     height: 100%;
     width: 100%;
@@ -5090,7 +5092,7 @@ body .fixed-sidebar-left {
     z-index: 100;
     transition: all 0.4s ease;
     overflow-x:scroll;
-    background: #f6fafb;
+    background: #2d5b7c;
     height: 100%;
 }
 body.focusmod .fixed-sidebar-left {
@@ -5139,7 +5141,7 @@ body #page-wrapper {
     width: 13px;
 }
 .fixed-sidebar-left .side-nav > li > a {
-    color: #455a64;
+    color: white;
     width: 170px;
     display: block;
 }
@@ -5191,11 +5193,11 @@ body.sidebar-hover .btn-menu-search {
 }
 .content-menu-expand {
     border: 0;
-    background: #f6fafb;
+    background: transparent;
 }
 .content-menu-expand li a {
     font-size: 13px;
-    color: #455a64;
+    color: #fff;
     white-space: normal;
     margin-left: 10px;
 }
@@ -5235,16 +5237,12 @@ body.sidebar-hover .btn-menu-search {
     }
 }
 .popover-region-toggle::before {
-    bottom: 23px;
+    bottom: -4px;
     right: 4px;
 }
 .popover-region-toggle::after {
-    bottom: 23px;
+    bottom: -4px;
     right: 5px;
-}
-#teachercourse i,
-#studentcourse i {
-    color: #455a64;
 }
 .user-overview .db-avartar {
     position: relative;
@@ -5416,6 +5414,7 @@ nav.focusmod .card-header.level2 .ajaxworking {
   border-radius: 50%;
   overflow: hidden;
   width: 30px;
+  height: 30px;
 }
 
 .avatar-group .avatar:not(:last-child) {
@@ -5452,10 +5451,10 @@ nav.navbar ul.navbar-nav .lang-menu .dropdown-item {
 .nav-tabs.course {
    display: flex;
    border-bottom: 0;
-   background-color: #ecf3f7;
+   background-color: #e3eef5;
 }
 .nav-tabs.course .nav-item {
-   background-color: #ecf3f7;
+   background-color: #e3eef5;
 }
 .nav-tabs.course .nav-item {
    margin-bottom: 0px;
@@ -5512,6 +5511,25 @@ nav.navbar ul.navbar-nav .lang-menu .dropdown-item {
 .db-teacher-hr {
     border-bottom: 1px solid #DADDE1;
     padding: 5px 0;
+#nav-drawer { 
+    padding: 0;
+    padding-bottom: 0;
+}
+.img-module {
+    /*width: 28px;*/
+    height: 24px;
+}
+.page-context-header {
+    padding: 0;
+}
+.message-app {
+    background-color: #f7f7f7;
+}
+nav.navbar ul.navbar-nav .popover-region .popover-region-toggle {
+    line-height: 0;
+}
+nav.navbar ul.navbar-nav .usermenu {
+    line-height: 0;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />

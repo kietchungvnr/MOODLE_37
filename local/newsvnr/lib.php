@@ -1976,13 +1976,13 @@ function mimetype2Img($mimetype) {
     global $OUTPUT;
     $typeresource = mime2ext($mimetype);
     if ($typeresource == 'xls' || $typeresource == 'xlsx' || $typeresource == 'xlsm') {
-        $img = html_writer::img($OUTPUT->image_url('f/spreadsheet-24'),'',['class' => 'pr-1']);
+        $img = html_writer::img($OUTPUT->image_url('f/spreadsheet-24'),'',['class' => 'pr-1 img-module']);
     } elseif ($typeresource == 'ppt') {
-        $img = html_writer::img($OUTPUT->image_url('f/powerpoint-24'),'',['class' => 'pr-1']);
+        $img = html_writer::img($OUTPUT->image_url('f/powerpoint-24'),'',['class' => 'pr-1 img-module']);
     } elseif ($typeresource == 'docx' || $typeresource == 'doc' || $typeresource == 'docm') {
-        $img = html_writer::img($OUTPUT->image_url('f/document-24'),'',['class' => 'pr-1']);
+        $img = html_writer::img($OUTPUT->image_url('f/document-24'),'',['class' => 'pr-1 img-module']);
     } elseif ($typeresource == 'pdf') {
-        $img = html_writer::img($OUTPUT->image_url('f/pdf-24'),'',['class' => 'pr-1']);
+        $img = html_writer::img($OUTPUT->image_url('f/pdf-24'),'',['class' => 'pr-1 img-module']);
     }
     else {
         $img = '';

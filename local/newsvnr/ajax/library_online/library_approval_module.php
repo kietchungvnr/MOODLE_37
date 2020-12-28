@@ -74,10 +74,10 @@ foreach ($get_list as $value) {
     } else {
         $url = $CFG->wwwroot . '/mod/' . $value->moduletype . '/view.php?id=' . $value->coursemoduleid;
         if ($value->moduletype == "url") {
-            $nameimg = html_writer::link($url, html_writer::img($OUTPUT->image_url('icon', $value->moduletype), $value->moduletype, ['class' => 'pr-1']) . $value->name,
+            $nameimg = html_writer::link($url, html_writer::img($OUTPUT->image_url('icon', $value->moduletype), $value->moduletype, ['class' => 'pr-1 img-module']) . $value->name,
                 array('target' => '_blank'));
         } else {
-            $nameimg = html_writer::link('javascript:void(0)', html_writer::img($OUTPUT->image_url('icon', $value->moduletype), $value->moduletype, ['class' => 'pr-1']) . $value->name,
+            $nameimg = html_writer::link('javascript:void(0)', html_writer::img($OUTPUT->image_url('icon', $value->moduletype), $value->moduletype, ['class' => 'pr-1 img-module']) . $value->name,
                 array('onclick' => 'iFrameLibrary(\'' . $url . '\',\'' . $value->moduletype . '\')'));
         }
 

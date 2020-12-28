@@ -138,8 +138,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
                     if($cms->section == $modinfo->id && $cms->visible == 1) {
                         $getmodules = $DB->get_records_sql('SELECT cm.id, cm.deletioninprogress FROM {course_modules} cm JOIN {course_sections} cs ON cm.section = cs.id WHERE cm.instance = :section AND cm.course = :courseid',['section' => $cms->instance,'courseid' => $COURSE->id]);
                         foreach($getmodules as $getmodule) {
-                            if($getmodule->deletioninprogress != 0) {
-                                continue;
+                            if($getmodule->deletioninprogress == 1) {
+                                continue 2;
                             }    
                         }
                         
@@ -152,13 +152,13 @@ class core_renderer extends \theme_boost\output\core_renderer {
                             $displayresource = $DB->get_field('resource', 'display', ['id' => $cms->instance]);
                             if($displayresource == RESOURCE_DISPLAY_GOOGLE_DOCS_POPUP) {
                                 $cm = $DB->get_field('course_modules', 'id', ['instance' => $cms->instance]);
-                                $output .= '<a onclick="showmodal('.$cm.', '.$cms->instance.')" href="javascript:;"><img  class="pr-2" src="'.$img.'">'.$modname.'</a>';
+                                $output .= '<a onclick="showmodal('.$cm.', '.$cms->instance.')" href="javascript:;"><img  class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
                             } else {
-                                $output .= '<a href="'.$url.'"><img class="pr-2" src="'.$img.'">'.$modname.'</a>';
+                                $output .= '<a href="'.$url.'"><img class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
                             }
                         } else {
                             $img = $OUTPUT->image_url('icon', $cms->modname);
-                            $output .= '<a href="'.$url.'"><img class="pr-2" src="'.$img.'">'.$modname.'</a>';
+                            $output .= '<a href="'.$url.'"><img class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
                         }
                         // $output .= '</div>';
                         $output .= '<div class="position-relative">'.$completionicon.'</div>';
@@ -1354,32 +1354,32 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
         foreach ($moduletypes as $keymodule => $moduletype) {
             if($keymodule != 'resource') {
-                $moduleimg = html_writer::img($OUTPUT->image_url('icon', $keymodule), $keymodule, ['class' => 'pr-2']);
+                $moduleimg = html_writer::img($OUTPUT->image_url('icon', $keymodule), $keymodule, ['class' => 'pr-2 img-module']);
                 $output .= '<div class="module-count" onclick="filterModule(\''.$keymodule.'\','.$folderid.')">' . $moduleimg . '(' . $moduletype . ')</div>';
             } else {
                 foreach ($resources as $keyresource => $resource) {
                     if(in_array($keyresource, $allowmodule)) {
                         $count = $resource;
                         if($keyresource == 'pdf') {
-                            $moduleimg = html_writer::img($OUTPUT->image_url('f/pdf-24'), 'Pdf', ['class' => 'pr-2']);
+                            $moduleimg = html_writer::img($OUTPUT->image_url('f/pdf-24'), 'Pdf', ['class' => 'pr-2 img-module']);
                             $keyfilter = 'pdf';
                         }
                         if($keyresource == 'xlsx' || $keyresource == 'xls') {
                             if(isset($resources['xlsx']) && isset($resources['xls'])) {
                                 $count = $resources['xlsx'] + $resources['xls'];
                             }
-                            $moduleimg = html_writer::img($OUTPUT->image_url('f/spreadsheet-24'), 'exel', ['class' => 'pr-2']);
+                            $moduleimg = html_writer::img($OUTPUT->image_url('f/spreadsheet-24'), 'exel', ['class' => 'pr-2 img-module']);
                             $keyfilter = 'excel';
                         }
                         if($keyresource == 'ppt') {
-                            $moduleimg = html_writer::img($OUTPUT->image_url('f/powerpoint-24'), 'Ppt', ['class' => 'pr-2']);
+                            $moduleimg = html_writer::img($OUTPUT->image_url('f/powerpoint-24'), 'Ppt', ['class' => 'pr-2 img-module']);
                             $keyfilter = 'powerpoint';
                         }
                         if($keyresource == 'docx' || $keyresource == 'doc') {
                             if(isset($resources['doc']) && isset($resources['docx'])) {
                                 $count = $resources['doc'] + $resources['docx'];
                             }
-                            $moduleimg = html_writer::img($OUTPUT->image_url('f/document-24'), 'Word', ['class' => 'pr-2']);
+                            $moduleimg = html_writer::img($OUTPUT->image_url('f/document-24'), 'Word', ['class' => 'pr-2 img-module']);
                             $keyfilter = 'word';
                         }
                         if (($keyresource == 'doc' && isset($resources['docx'])) || ($keyresource == 'xls' && isset($resources['xlsx']))) {
