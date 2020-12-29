@@ -1,17 +1,18 @@
 <div class="row mb-3">
     <div class="col-lg-3">
-        <div class="card teacher-bg-1">
+        <div class="card text-white teacher-bg-1">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="mb-2">
-                            Khóa giảng của tôi
+                            {{#str}} owncourses, theme_moove{{/str}}
                         </div>
                         <div class="font-title mb-1">
-                            0
+                            {{#teacherinfo}}{{{coursestotal}}}{{/teacherinfo}}
+                            {{^teacherinfo}}0{{/teacherinfo}}
                         </div>
-                        <a>
-                            Xem chi tiết
+                        <a class="cl-cursor" data-action="viewcourse">
+                            {{#str}} viewdetail, theme_moove {{/str}}
                         </a>
                     </div>
                     <div>
@@ -23,18 +24,19 @@
         </div>
     </div>
     <div class="col-lg-3">
-        <div class="card teacher-bg-2">
+        <div class="card text-white teacher-bg-2">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="mb-2">
-                            Học viên
+                            {{#str}} student, theme_moove{{/str}}
                         </div>
                         <div class="font-title mb-1">
-                            0
+                            {{#teacherinfo}}{{{studenttotal}}}{{/teacherinfo}}
+                            {{^teacherinfo}}0{{/teacherinfo}}
                         </div>
-                        <a>
-                            Xem chi tiết
+                        <a class="cl-cursor" data-action="viewstudent">
+                            {{#str}} viewdetail, theme_moove {{/str}}
                         </a>
                     </div>
                     <div>
@@ -46,18 +48,19 @@
         </div>
     </div>
     <div class="col-lg-3">
-        <div class="card teacher-bg-3">
+        <div class="card text-white teacher-bg-3">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="mb-2">
-                            Tài nguyên/Hoạt động
+                            {{#str}} listmodule, theme_moove{{/str}}
                         </div>
                         <div class="font-title mb-1">
-                            0
+                            {{#teacherinfo}}{{{moduletotal}}}{{/teacherinfo}}
+                            {{^teacherinfo}}0{{/teacherinfo}}
                         </div>
-                        <a>
-                            Xem chi tiết
+                        <a class="cl-cursor" data-action="viewmodule">
+                            {{#str}} viewdetail, theme_moove {{/str}}
                         </a>
                     </div>
                     <div>
@@ -69,18 +72,19 @@
         </div>
     </div>
     <div class="col-lg-3">
-        <div class="card teacher-bg-4">
+        <div class="card text-white teacher-bg-4">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="mb-2">
-                            Kỳ thi
+                            {{#str}} exam, theme_moove{{/str}}
                         </div>
                         <div class="font-title mb-1">
-                            0
+                            {{#teacherinfo}}{{{examtotal}}}{{/teacherinfo}}
+                            {{^teacherinfo}}0{{/teacherinfo}}
                         </div>
-                        <a>
-                            Xem chi tiết
+                        <a class="cl-cursor" data-action="viewexam">
+                            {{#str}} viewdetail, theme_moove {{/str}}
                         </a>
                     </div>
                     <div>
@@ -98,7 +102,7 @@
             <div class="card-body">
             	<div class="row">
                     <div class="col-lg-8"><h5 class="card-title d-inline">
-                        Tổng quan khóa học
+                        {{#str}} courseoverview, theme_moove{{/str}}
                     </h5></div>
                     <div class="col-lg-4">
                     	<div id="chart-type"></div>
@@ -109,12 +113,14 @@
                 <hr/>
                 <div id="overview-info">
                 	<div class="d-flex justify-content-around" id="info-number">
-                		<span class="font-weight-bold" id="course-total">0</span>
-                		<span class="font-weight-bold" id="learner-total">0</span>
+                		<span class="font-weight-bold" id="course-total">{{#teacherinfo}}{{{coursestotal}}}{{/teacherinfo}}
+                            {{^teacherinfo}}0{{/teacherinfo}}</span>
+                		<span class="font-weight-bold" id="learner-total">{{#teacherinfo}}{{{studenttotal}}}{{/teacherinfo}}
+                            {{^teacherinfo}}0{{/teacherinfo}}</span>
                 	</div>
                 	<div class="d-flex justify-content-around" id="title-number">
-                		<span>Tổng khóa học</span>
-                		<span>Tổng học viên</span>
+                		<span>{{#str}} coursetotal, theme_moove{{/str}}</span>
+                		<span>{{#str}} learnertotal, theme_moove{{/str}}</span>
                 	</div>
                 </div>
             </div>
@@ -126,7 +132,7 @@
             	<div class="mb-2">
                     <div class="mb-2">
                     	<h5 class="card-title d-inline">
-                        Tiến độ hoàn thành
+                        {{#str}} completeprogress, theme_moove{{/str}}
                     	</h5>
                     </div>
                     <div id="list-course-teacher"></div>
@@ -134,15 +140,15 @@
                 <div id="progress-chart"></div>
                 <div id="overview-course">
 	                <div class="db-teacher-hr">
-	                	<span>Học viên hoàn thành</span>
+	                	<span>{{#str}} studentcompleted, theme_moove{{/str}}</span>
 	                	<span class="pull-right font-weight-bold" id="course-finish">0</span>
 	                </div>
 	                <div class="db-teacher-hr">
-	                	<span>Học viên đang học</span>
+	                	<span>{{#str}} studentstudying, theme_moove{{/str}}</span>
 	                	<span class="pull-right font-weight-bold" id="course-unfinish">0</span>
 	                </div>
 	                <div class="db-teacher-hr border-0">
-	                	<span>Điểm trung bình tổng</span>
+	                	<span>{{#str}} courseavg, theme_moove{{/str}}</span>
 	                	<span class="pull-right font-weight-bold" id="course-grade-avg">0</span>
 	                </div>
             	</div>
@@ -156,8 +162,9 @@
             <div class="card-body">
                 <div class="mb-2">
                     <h5 class="card-title d-inline">
-                        Khóa giảng của tôi
+                        {{#str}} owncourses, theme_moove{{/str}}
                     </h5>
+                    <hr/>
                 </div>
                 <div id="list-course-grid">
                 </div>
@@ -178,14 +185,11 @@
             	<div class="d-flex justify-content-between">
                     <div>
                         <div class="mb-2">
-                            Nhắc nhở mới, chưa xem
+                            {{#str}} notifynoseen, theme_moove{{/str}}
                         </div>
                         <div class="font-title mb-1">
                             0
                         </div>
-                        <a>
-                            Xem chi tiết
-                        </a>
                     </div>
                     <div>
                         <i class="fa fa-graduation-cap db-icon-font-size">
@@ -199,14 +203,11 @@
             	<div class="d-flex justify-content-between">
 	            	<div>
 	                    <div class="mb-2">
-	                        Khóa học chưa soạn nội dung
+	                        {{#str}} coursenocontent, theme_moove{{/str}}
 	                    </div>
 	                    <div class="font-title mb-1">
-	                        {{#numbercourseempty}}{{course_empty}}{{/numbercourseempty}}
+	                        {{#teacherinfo}}{{courseemptytotal}}{{/teacherinfo}}
 	                    </div>
-	                    <a>
-	                        Xem chi tiết
-	                    </a>
 	                </div>
 	                <div>
 	                    <i class="fa fa-graduation-cap db-icon-font-size">
@@ -221,7 +222,7 @@
 <div class="card mt-3">
     <div class="card-body">
         <h5 class="card-title d-inline">
-            Báo cáo tương tác
+            {{#str}} interactivereport, theme_moove{{/str}}
         </h5>
         <hr/>
         <div class="row mb-2">
@@ -231,22 +232,26 @@
             </div>
             <div class="col-md-8 d-flex mt-2" id="button-group">
                 <button class="btn btn-secondary" id="access_view" onclick="getChart('access_view')" style="border-radius: .25rem 0 0 0;">
-                    Xem truy cập
+                    {{#str}} viewaccess, theme_moove{{/str}}
                 </button>
                 <button class="btn btn-secondary" id="grade_view" onclick="getChart('grade_view')" style="border-radius: 0;">
-                    Xem điểm số
+                    {{#str}} viewgrade, theme_moove{{/str}}
                 </button>
                 <button class="btn btn-secondary" id="assignment_view" onclick="getChart('assignment_view')" style="border-radius: 0;">
-                    Xem bài tập
+                    {{#str}} viewassignment, theme_moove{{/str}}
                 </button>
                 <button class="btn btn-secondary" id="quiz_view" onclick="getChart('quiz_view')" style="border-radius: 0 .25rem .25rem 0;">
-                    Xem bài kiểm tra
+                    {{#str}} viewquiz, theme_moove{{/str}}
                 </button>
             </div>
         </div>
         <div id="report-chart">
         </div>
     </div>
+</div>
+<div id="viewTeacherDetailReport">
+    <div id="content-detail"></div>
+    <div class="loading-page"></div>
 </div>
 <script type="text/javascript">
 	
@@ -259,7 +264,7 @@
         require(['jquery', 'core/config', 'alertjs'], ($, Config, alertify) => {
        		var courseid = $('#list-course').val();
        		if(courseid == "") {
-       			alertify.warning('Chưa chọn khóa học', 'warning', 2);
+       			alertify.warning(M.util.get_string('notyetselectcourse', 'theme_moove'), 'warning', 2);
        			setTimeout(function() {
        				var unActiveElement = "#button-group" + " #" + typeChart;
        				$(unActiveElement).removeClass('active');
@@ -357,8 +362,10 @@
 			            }
 					};
 					var columns = [
-						{
-							// hidden: true,
+						{   
+                            template: function(e) {
+                                return e.studentname;
+                            },
 			                field: "studentname",
 			                title: s[2],
 			                width: "120px"
@@ -467,10 +474,10 @@
 					    },
 				    },
 				    title: {
-				        text: 'Tài nguyên và hoạt động'
+				        text: M.util.get_string('listmodule', 'theme_moove')
 				    },
 				    subtitle: {
-				        text: 'Khóa: ' + resp.course
+				        text: M.util.get_string('course', 'theme_moove') + ': ' + resp.course
 				    },
 				    accessibility: {
 				        announceNewData: {
@@ -483,7 +490,7 @@
 				    yAxis: {
 				        min: 0,
 				        title: {
-				            text: 'Số lượng'
+				            text: M.util.get_string('number', 'theme_moove')
 				        }
 				    },
 				    credits: {
@@ -524,7 +531,7 @@
     		}
     		dialog.kendoWindow({
 	            width: "1000px",
-	            title: 'Phân bổ tài nguyên và hoạt động',
+	            title: M.util.get_string('moduleallocation', 'theme_moove'),
 	            modal: true,
 	            open: onOpen,
 	        });
@@ -757,81 +764,153 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
     var initOverViewChart = function(typeChart) {
     	var scriptOverView = Config.wwwroot + '/local/newsvnr/restfulapi/webservice.php';
     	if(typeChart == 1) {
+            var settings = {
+                type: 'GET',
+                data: {
+                    "action":"viewcount_chart"
+                },
+                processData: true,
+                contentType: "application/json"
+            };
+            $.ajax(scriptOverView, settings)
+            .then(function(response) {
 
+                if (response.error) {
+                    Notification.addNotification({
+                        message: response.error,
+                        type: "error"
+                    });
+                } else {
+                    var strings = [{
+                            key: 'nodatatable',
+                            component: 'local_newsvnr'
+                        }, {
+                            key: 'views',
+                            component: 'theme_moove'
+                        }, {
+                            key: 'viewscourselow',
+                            component: 'theme_moove'
+                        }];
+                Str.get_strings(strings).then(function(s) {
+                    var list_coursename = response.list_coursename;
+                    var list_viewcount = response.list_viewcount;
+                        // Create a chart.
+                    Highcharts.chart(overviewChart, {
+                        chart: {
+                                type: 'line',
+                                height: 307
+                            },
+                            title: {
+                                text: ''
+                            },
+                            subtitle: {
+                                text: ''
+                            }, 
+                            xAxis: {
+                                categories: list_coursename
+                            },
+                            yAxis: {
+                                title: {
+                                    text: s[1]
+                                }
+                            },
+                            credits: {
+                                enabled: false
+                            },
+                            plotOptions: {
+                                line: {
+                                    dataLabels: {
+                                        enabled: true
+                                    },
+                                    enableMouseTracking: true
+                                }
+                            },
+                            series: [{
+                                name: s[2],
+                                data: list_viewcount,
+                                color: '#1120f3'
+                        }]
+                    });
+                            
+                });
+
+                }
+                return;
+            }).fail(Notification.exception);
     	} else if(typeChart == 2) {
     		var settings = {
-		            type: 'GET',
-		            data: {
-		                "action":"viewcount_chart"
-		            },
-		            processData: true,
-		            contentType: "application/json"
-		    };
-		    $.ajax(scriptOverView, settings)
-		    .then(function(response) {
+                type: 'GET',
+                data: {
+                    "action":"joincourse_chart"
+                },
+                processData: true,
+                contentType: "application/json"
+            };
+            $.ajax(scriptOverView, settings)
+            .then(function(response) {
+                if (response.error) {
+                    Notification.addNotification({
+                        message: response.error,
+                        type: "error"
+                    });
+                } else {
+                    var strings = [{
+                        key: 'nodatatable',
+                        component: 'local_newsvnr'
+                    }, {
+                        key: 'numberstudent',
+                        component: 'theme_moove'
+                    }, {
+                        key: 'newenrollstudent',
+                        component: 'theme_moove'
+                    }];
+                    Str.get_strings(strings).then(function(s) {
+                        var list_coursename = response.list_coursename;
+                        var list_joincourse = response.list_joincourse;
 
-		        if (response.error) {
-		            Notification.addNotification({
-		                message: response.error,
-		                type: "error"
-		            });
-		        } else {
-		            var strings = [{
-		                    key: 'nodatatable',
-		                    component: 'local_newsvnr'
-		                }, {
-		                    key: 'views',
-		                    component: 'theme_moove'
-		                }, {
-		                    key: 'viewscourselow',
-		                    component: 'theme_moove'
-		                }];
-		        Str.get_strings(strings).then(function(s) {
-		            var list_coursename = response.list_coursename;
-		            var list_viewcount = response.list_viewcount;
-		                // Create a chart.
-		            Highcharts.chart(overviewChart, {
-		                chart: {
-		                        type: 'line',
-		                        height: 307
-		                    },
-		                    title: {
-		                        text: ''
-		                    },
-		                    subtitle: {
-		                        text: ''
-		                    }, 
-		                    xAxis: {
-		                        categories: list_coursename
-		                    },
-		                    yAxis: {
-		                        title: {
-		                            text: s[1]
-		                        }
-		                    },
-		                    credits: {
-		                        enabled: false
-		                    },
-		                    plotOptions: {
-		                        line: {
-		                            dataLabels: {
-		                                enabled: true
-		                            },
-		                            enableMouseTracking: true
-		                        }
-		                    },
-		                    series: [{
-		                        name: s[2],
-		                        data: list_viewcount,
-		                        color: '#1120f3'
-		                }]
-		            });
-		                    
-		        });
+                        // Create a chart.
+                        Highcharts.chart(overviewChart, {
+                            chart: {
+                                type: 'line',
+                                height: 307
+                            },
+                            title: {
+                                text: ''
+                            },
+                            subtitle: {
+                                text: ''
+                            }, 
+                            xAxis: {
+                                categories: list_coursename
+                            },
+                            yAxis: {
+                                title: {
+                                    text: s[1]
+                                }
+                            },
+                            credits: {
+                                enabled: false
+                            },
+                            plotOptions: {
+                                line: {
+                                    dataLabels: {
+                                        enabled: true
+                                    },
+                                    enableMouseTracking: true
+                                }
+                            },
+                            series: [{
+                                name: s[2],
+                                data: list_joincourse,
+                                color: '#ef4914'
+                            }]
+                        });
+                            
+                    });
 
-		        }
-		        return;
-		    }).fail(Notification.exception);
+                }
+                return;
+            }).fail(Notification.exception);
     	} else if(typeChart == 3) {
     		var settings = {
                 type: 'GET',
@@ -924,78 +1003,70 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
 	        }).fail(Notification.exception);
     	} else if(typeChart == 4) {
     		var settings = {
-		        type: 'GET',
-		        data: {
-		            "action":"joincourse_chart"
-		        },
-		        processData: true,
-		        contentType: "application/json"
-		    };
-		    $.ajax(scriptOverView, settings)
-		    .then(function(response) {
-		        if (response.error) {
-		            Notification.addNotification({
-		                message: response.error,
-		                type: "error"
-		            });
-		        } else {
-		            var strings = [{
-		                key: 'nodatatable',
-		                component: 'local_newsvnr'
-		            }, {
-		                key: 'numberstudent',
-		                component: 'theme_moove'
-		            }, {
-		                key: 'newenrollstudent',
-		                component: 'theme_moove'
-		            }];
-		            Str.get_strings(strings).then(function(s) {
-		                var list_coursename = response.list_coursename;
-		                var list_joincourse = response.list_joincourse;
+                type: 'GET',
+                data: {
+                    "action":"courseavg_chart"
+                },
+                processData: true,
+                contentType: "application/json"
+            };
+            $.ajax(scriptOverView, settings)
+            .then(function(response) {
+                if (response.error) {
+                    Notification.addNotification({
+                        message: response.error,
+                        type: "error"
+                    });
+                } else {
+                    Highcharts.chart(overviewChart, {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        
+                        xAxis: {
+                            categories: response.categories,
+                            crosshair: true
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: M.util.get_string('score', 'theme_moove')
+                            }
+                        },
+                        tooltip: {
+                            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                                '<td style="padding:0"><b>{point.y:.2f}</b></td></tr>',
+                            footerFormat: '</table>',
+                            shared: true,
+                            useHTML: true
+                        },
+                        plotOptions: {
+                            series: {
+                                pointWidth: 40
+                            },
+                            column: {
+                                pointPadding: 0.2,
+                                borderWidth: 0
+                            }
+                        },
+                        legend: {
+                            enabled: false
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        series: [{
+                            name: M.util.get_string('score', 'theme_moove'),
+                            data: response.series
 
-		                // Create a chart.
-		                Highcharts.chart(overviewChart, {
-		                    chart: {
-		                        type: 'line',
-		                        height: 307
-		                    },
-		                    title: {
-		                        text: ''
-		                    },
-		                    subtitle: {
-		                        text: ''
-		                    }, 
-		                    xAxis: {
-		                        categories: list_coursename
-		                    },
-		                    yAxis: {
-		                        title: {
-		                            text: s[1]
-		                        }
-		                    },
-		                    credits: {
-		                        enabled: false
-		                    },
-		                    plotOptions: {
-		                        line: {
-		                            dataLabels: {
-		                                enabled: true
-		                            },
-		                            enableMouseTracking: true
-		                        }
-		                    },
-		                    series: [{
-		                        name: s[2],
-		                        data: list_joincourse,
-		                        color: '#ef4914'
-		                    }]
-		                });
-		                    
-		            });
-
-		        }
-		        return;
-		    }).fail(Notification.exception);
+                        }]
+                    });
+                }
+            });
    	 	}
 	}
 
@@ -1006,41 +1077,196 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
         	var typeChart = this.value();
         	initOverViewChart(typeChart);
     	},
+        dataBound: function() {
+            this.trigger("change");
+        },
         dataSource: [
         	{
         		value: 1,
-        		text: 'Điểm trung bình khóa học'
+        		text: M.util.get_string('access', 'theme_moove')
         	}, {
         		value: 2,
-        		text: 'Lượt truy cập khóa học'
+        		text: M.util.get_string('enrollcourse', 'theme_moove')
         	}, {
         		value: 3,
-        		text: 'Lượt hoàn thành khóa học'
+        		text: M.util.get_string('coursecompleted', 'theme_moove')
         	}, {
         		value: 4,
-        		text: 'Lượt ghi danh khóa học'
+        		text: M.util.get_string('coursegradeavg', 'theme_moove')
         	}
         ]
 	})
 
-	var settingsLearnerTotal = {
-		url: script,
-        type: 'GET',
-        dataType: "json",
-        contentType: 'application/json; charset=utf-8',
-        data: {
-            action: 'learner_total',
+    //Hàm init popup kendo
+    function openPopup(elementId, title) {
+        $(elementId).kendoWindow({
+            width: "1200px",
+            title: title,
+            visible: false,
+            open: onOpen,
+            actions: [
+                "Minimize",
+                "Maximize",
+                "Close"
+            ],
+        })
+        $(elementId).data("kendoWindow").title(title);
+        $(elementId).data("kendoWindow").center().open();
+    }
+    function onOpen(e) {
+        setPositionWindow('#viewTeacherDetailReport',100);
+    }
+
+    //Xem chi tiết khóa giảng
+    $('[data-action=viewcourse]').click(function() {
+        $('.loading-page').addClass('active');
+        openPopup('#viewTeacherDetailReport', M.util.get_string('owncourses', 'theme_moove'));
+        var scriptrp = Config.wwwroot + '/local/newsvnr/ajax/dashboard/teacherreport_viewdetail.php';
+        var action = $(this).attr('data-action')
+        var settings = {
+            type: 'GET',
+            processData : true,
+            datatype: 'json',
+            data : {
+                action : action
+            }
         }
-	}
-	$.ajax(script, settingsLearnerTotal)
-	.then(function(resp) {
-		$('#learner-total').html(resp.learnernumber);
-		$('#course-total').html(resp.coursenumber);
-	});
+        $.ajax(scriptrp,settings).then(function(resp) {
+            var obj = $.parseJSON(resp);
+            $('#content-detail').hide().html(obj.result).fadeIn('fast');
+            $('#content-detail').prepend(obj.title);
+            $('.loading-page').removeClass('active');
+        })
+    })
 
-	initOverViewChart(2);
+    //Xem chi tiết tất cả học viên của giáo viên
+    $('[data-action=viewstudent]').click(function() {
+        $('.loading-page').addClass('active');
+        var kendoGridConfig = {};
+        var scriptrp = Config.wwwroot + '/local/newsvnr/ajax/dashboard/teacherreport_viewdetail.php';
+        var action = $(this).attr('data-action')
+        var settings = {
+            url: scriptrp,
+            type: 'GET',
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            data: {
+                action : action
+            }
+        }
+        var viewStudentColumns = [
+            {
+                template: function(e) {
+                    return e.name;
+                },
+                field: "name",
+                title: M.util.get_string('studentname', 'theme_moove'),
+                width: "200px"
+            }, {
+                field: "usercode",
+                title: M.util.get_string('code', 'local_newsvnr'),
+                width: "100px"
+            }, {
+                field: "email",
+                title: M.util.get_string('email', 'local_newsvnr'),
+                width: "130px"
+            }, {
+                field: "phone",
+                title: M.util.get_string('phone', 'theme_moove'),
+                width: "130px"
+            }, {
+                field: "timecreated",
+                title: M.util.get_string('datecreated', 'local_newsvnr'),
+                width: "130px"
+            }, {
+                field: "lastaccess",
+                title: M.util.get_string('lastaccess', 'theme_moove'),
+                width: "250px"
+            },
+        ];
+        kendoGridConfig.columns = viewStudentColumns;
+        kendoGridConfig.apiSettings = settings;
+        kendoGridConfig.height = 500;
+        openPopup('#viewTeacherDetailReport', M.util.get_string('listuser', 'theme_moove'));
+        var gridStudentData = kendo.initGrid(kendoGridConfig);
+        $('#content-detail').html('');
+        $('#content-detail').kendoGrid(gridStudentData);
+        $('.loading-page').removeClass('active');
+      
 
+    })
+    
+    //Xem chi tiêt module(activity, resource..)
+    $('[data-action=viewmodule]').click(function() {
+        $('.loading-page').addClass('active');
+        var kendoGridConfig = {};
+        var scriptrp = Config.wwwroot + '/local/newsvnr/ajax/dashboard/teacherreport_viewdetail.php';
+        var action = $(this).attr('data-action')
+        var settings = {
+            url: scriptrp,
+            type: 'GET',
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            data: {
+                action : action
+            }
+        }
+        var viewModuleColumns = [
+            {
+                template: function(e) {
+                    return e.modulename;
+                },
+                field: "modulename",
+                title: M.util.get_string('modulename', 'theme_moove'),
+                width: "200px"
+            }, {
+                field: "moduletype",
+                title: M.util.get_string('moduletype', 'theme_moove'),
+                width: "130px"
+            }, {
+                template: function(e) {
+                    return e.coursename;
+                },
+                field: "coursename",
+                title: M.util.get_string('coursename', 'theme_moove'),
+                width: "200px"
+            }, {
+                field: "timecreated",
+                title: M.util.get_string('datecreated', 'local_newsvnr'),
+                width: "130px"
+            }, 
+        ];
+        kendoGridConfig.columns = viewModuleColumns;
+        kendoGridConfig.apiSettings = settings;
+        kendoGridConfig.toolbar = false;
+        kendoGridConfig.height = 500;
+        openPopup('#viewTeacherDetailReport', M.util.get_string('listmodule', 'theme_moove'));
+        var gridModuleData = kendo.initGrid(kendoGridConfig);
+        $('#content-detail').html('');
+        $('#content-detail').kendoGrid(gridModuleData);
+        $('.loading-page').removeClass('active');
+    })
 
+    //Xem chi tiết kỳ thi
+    $('[data-action=viewexam]').click(function() {
+        $('.loading-page').addClass('active');
+        openPopup('#viewTeacherDetailReport', M.util.get_string('exam', 'theme_moove'));
+        var scriptrp = Config.wwwroot + '/local/newsvnr/ajax/dashboard/teacherreport_viewdetail.php';
+        var action = $(this).attr('data-action')
+        var settings = {
+            type: 'GET',
+            processData : true,
+            datatype: 'json',
+            data : {
+                action : action
+            }
+        }
+        $.ajax(scriptrp,settings).then(function(resp) {
+            var obj = $.parseJSON(resp);
+            $('#content-detail').hide().html(obj.result).fadeIn('fast');
+            $('.loading-page').removeClass('active');
+        })
+    })
 
 });
 

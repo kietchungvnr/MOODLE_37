@@ -56,8 +56,8 @@ if(isset($_SERVER['HTTP_REFERER'])) {
 }
 
 // $PAGE->requires->js_call_amd('local_newsvnr/studentinfo', 'init');
-$PAGE->requires->strings_for_js(array('emptydata','action','viewcourse'), 'local_newsvnr');
-$PAGE->requires->strings_for_js(array('coursestartdate','courseenddate','studenttotal', 'studentcode', 'coursename', 'coursemodules', 'status', 'coursecompletion', 'listuser'), 'theme_moove');
+$PAGE->requires->strings_for_js(array('emptydata','action','viewcourse', 'code', 'email', 'datecreated'), 'local_newsvnr');
+$PAGE->requires->strings_for_js(array('coursestartdate','courseenddate','studenttotal', 'studentcode', 'coursename', 'coursemodules', 'status', 'coursecompletion', 'listuser', 'owncourses', 'viewdetail', 'studentname', 'lastaccess', 'phone', 'notyetselectcourse', 'listmodule', 'course', 'number', 'moduleallocation', 'coursegradeavg', 'access', 'coursecompleted', 'enrollcourse', 'modulename', 'exam', 'moduletype', 'score'), 'theme_moove');
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [

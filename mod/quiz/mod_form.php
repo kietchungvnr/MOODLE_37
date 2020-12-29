@@ -524,7 +524,7 @@ class mod_quiz_mod_form extends moodleform_mod {
             if($data['timeopen'] != 0 && $data['timeclose'] != 0 && $data['timeopen'] < $exam->datestart || $data['timeclose'] > $exam->dateend ) {
                 $errors['timeclose'] = get_string('examtimevalidate','local_newsvnr').'( '.convertunixtime('d/m/Y',$exam->datestart,'Asia/Ho_Chi_Minh').' - '.convertunixtime('d/m/Y',$exam->dateend,'Asia/Ho_Chi_Minh').' )';
             }
-        } elseif ($courseid->course == 1) {
+        } elseif (isset($courseid->course) && $courseid->course == 1) {
             $exam = $DB->get_record_sql("SELECT ex.* FROM mdl_exam ex 
                                             JOIN mdl_exam_subject_exam ese on ese.examid = ex.id
                                             JOIN mdl_exam_quiz q ON q.subjectexamid = ese.id

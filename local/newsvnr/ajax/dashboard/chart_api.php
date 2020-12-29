@@ -135,8 +135,7 @@ switch ($action) {
             $obj                  = new stdClass;
             $coursenameurl        = $CFG->wwwroot . '/course/view.php?id=' . $course->id;
             $obj->coursename      = '<a href="' . $coursenameurl . '" target="_blank">' . $course->fullname . '</a>';
-            $coursecontext        = context_course::instance($course->id, IGNORE_MISSING);
-            $studenttotal         = '<a href="javascript:;" onclick="viewStudentDetail(' . $course->id . ')">' . count_enrolled_users($coursecontext) . '</a>';
+            $studenttotal         = '<a href="javascript:;" onclick="viewStudentDetail(' . $course->id . ')">' . count(get_listuser_in_course($course->id)) . '</a>';
             $obj->studenttotal    = $studenttotal;
             $obj->coursestartdate = convertunixtime('d/m/Y', $course->startdate);
             $obj->courseenddate   = convertunixtime('d/m/Y', $course->enddate);
@@ -146,9 +145,9 @@ switch ($action) {
             $obj->coursemodules    = '<a href="javascript:;" onclick="viewModuleDetail(' . $course->id . ')">' . $DB->count_records('course_modules', ['course' => $course->id]) . '</a>';
             if ($course->startdate > time()) {
                 $obj->status = '<span class="badge badge-warning p-2 rounded">Kế hoạch</span>';
-            } else if ($course->startdate <= time()) {
+            } else if ($course->enddate <= time()) {
                 $obj->status = '<span class="badge badge-danger p-2 rounded">Kết thúc</span>';
-            } else if ($course->startdate > time() && $course->enddate <= time()) {
+            } else if ($course->startdate <= time() && $course->enddate > time()) {
                 $obj->status = '<span class="badge badge-success p-2 rounded">Đang thực hiện</span>';
             }
             $obj->total = $course->total;
@@ -178,7 +177,7 @@ switch ($action) {
 		                        JOIN mdl_user u ON u.id = ra.userid
 		                        JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id
 		                        LEFT JOIN mdl_course_completions cc ON cc.userid = c.id $wheresql) AS total
-		        FROM (SELECT ROW_NUMBER() OVER (ORDER BY c.id) AS RowNum,c.*,cc.timecompleted,u.usercode, u.id userid, CONCAT(u.firstname, ' ', u.lastname) studentname
+		        FROM (SELECT ROW_NUMBER() OVER (ORDER BY c.id) AS RowNum,c.*,cc.timecompleted,u.usercode, u.id userid
 		              FROM mdl_user_enrolments ue
 		                JOIN mdl_enrol e ON ue.enrolid = e.id
 		                JOIN mdl_course c ON e.courseid = c.id
@@ -195,7 +194,8 @@ switch ($action) {
             $process          = round(\core_completion\progress::get_course_progress_percentage($course, $value->userid));
             $obj->number      = $value->rownum;
             $obj->usercode    = ($value->usercode) ? $value->usercode : "-";
-            $obj->studentname = $value->studentname;
+            $userinfo = $DB->get_record('user', ['id' => $value->userid]);
+            $obj->studentname = $OUTPUT->user_picture($userinfo, array('size'=>35)) . fullname($userinfo);
             $obj->coursename  = $value->fullname;
             $obj->courseid    = $value->shortname;
             $obj->total       = $value->total;
@@ -399,7 +399,7 @@ switch ($action) {
             $obj                      = new stdClass();
             $obj->studentunfinish     = $i;
             $obj->studentfinish       = count($list_user) - $i;
-            $obj->gradeavg            = $gradeavg = get_course_grade_avg($courseid);
+            $obj->gradeavg            = round(get_course_grade_avg($courseid)[0]->courseavg, 2);
             $studentunfinish_percent  = ($obj->studentunfinish * 100) / $i;
             $studentfinish_percent    = ($obj->studentfinish * 100) / $i;
             $obj->title               = "<div class='position-relative'><p class='m-0 text-center text-dark' style='font-size:30px'>" . ($obj->studentfinish * 100) / $i . "%</p><span style='font-size:14px; color:#AFAFAF'>Tiến trình</span></div>";
@@ -413,24 +413,8 @@ switch ($action) {
             echo json_encode('Không có dữ liệu hiện thị!', JSON_UNESCAPED_UNICODE);
         }
         die;
-    case 'learner_total':
-    	require_once $CFG->libdir . '/enrollib.php';
-    	$courses = get_list_courseinfo_by_teacher($USER->id);
-    	$course_total = count($courses);
-    	$learner_total = 0;
-    	foreach($courses as $course) {
-    		$coursecontext = context_course::instance($course->id, IGNORE_MISSING);
-    		$learner_total = $learner_total + count_enrolled_users($coursecontext);
-    	}
-    	$obj = new stdClass;
-    	$obj->coursenumber = $course_total;
-    	$obj->learnernumber = $learner_total;
-    	echo json_encode($obj, JSON_UNESCAPED_UNICODE);
-        die;
     case 'get_avg':
-        $gradeavg = get_course_grade_avg(542);
-        echo $gradeavg;
-    	die;
+        print_r(get_course_grade_avg(150, false));die;
     default:
         # code...
         break;

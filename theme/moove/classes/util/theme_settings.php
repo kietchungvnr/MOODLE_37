@@ -893,7 +893,8 @@ class theme_settings {
     // get dữ liệu cho dashboard giáo viên: thông báo và khóa học không có content
     public function get_data_dashboard_teacher() {
       global $DB, $USER;
-      $sql = "SELECT c.fullname, COUNT(cm.module) module
+      $obj = new stdClass;
+      $courseemptytotalsql = "SELECT c.fullname, COUNT(cm.module) module
                                   FROM mdl_role_assignments AS ra
                                       JOIN mdl_user AS u ON u.id= ra.userid
                                       JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
@@ -905,10 +906,39 @@ class theme_settings {
                                   WHERE  ra.roleid = 3 AND u.id = :userid 
                                   GROUP BY c.fullname
                                   HAVING COUNT(cm.module) <= 1";
-      $data = $DB->get_records_sql($sql, ['userid' => $USER->id]);
-      $obj = new stdClass;
-      $obj->course_empty = count($data);
-      $templatecontext['numbercourseempty'] = $obj;
+      $courseemptytotal = $DB->get_records_sql($courseemptytotalsql, ['userid' => $USER->id]);
+      $obj->courseemptytotal = count($courseemptytotal);
+
+
+      $strcourseid = get_list_courseid_by_teacher($USER->id);
+      $courses     = explode(',', $strcourseid);
+      $obj->coursestotal = count($courses);
+      $studenttotal = 0;
+      foreach ($courses as $course) {
+          $studenttotalsql = "
+                  SELECT COUNT(u.id) as numberstudent
+                  FROM mdl_role_assignments ra
+                      JOIN mdl_user u ON ra.userid = u.id
+                      JOIN mdl_user_enrolments ue ON u.id = ue.userid 
+                      JOIN mdl_enrol enr ON ue.enrolid = enr.id
+                      JOIN mdl_course c ON enr.courseid = c.id
+                      JOIN mdl_context ct ON ct.id = ra.contextid AND ct.instanceid = c.id
+                      JOIN mdl_role r ON ra.roleid = r.id
+                  WHERE ra.roleid= 5 AND c.id = :courseid";
+          $listuser = array_values($DB->get_records_sql($studenttotalsql, ['courseid' => $course]));
+          $studenttotal = $studenttotal + $listuser[0]->numberstudent;
+      }
+      $obj->studenttotal = $studenttotal;
+
+      $examtotal = $DB->get_records('exam_user',['userid' => $USER->id]);
+      $obj->examtotal = count($examtotal);
+
+      $moduletotal = $DB->get_record_sql("SELECT COUNT(id) moduletotal
+                                          FROM mdl_logstore_standard_log
+                                          WHERE userid = :userid AND action = 'created' AND target = 'course_module'", ['userid' => $USER->id]);
+      $obj->moduletotal = $moduletotal->moduletotal;
+
+      $templatecontext['teacherinfo'] = $obj;
       return $templatecontext;
     }
 

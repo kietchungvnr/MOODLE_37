@@ -114,8 +114,6 @@ foreach ($get_list as $value) {
 }
 echo json_encode($data, JSON_UNESCAPED_UNICODE);
 die;
-$userid = required_param('id', PARAM_INT);
-
         
 
         // $view->header[] = get_string('userdedication', 'block_dedication', $OUTPUT->user_picture($USER, array('courseid' => $course->id)) . fullname($USER));

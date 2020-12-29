@@ -2236,6 +2236,7 @@ function get_course_grade_avg($courseid, $courseavg = true) {
     $sortitemid = 0;
     $context = context_course::instance($course->id);
     $displayaverages = true;
+    $USER->gradeediting[$courseid] = $courseid;
     $gpr = new grade_plugin_return(
         array(
             'type' => 'report',

@@ -1547,6 +1547,21 @@ if($action == 'joincourse_grid') {
 	echo json_encode($data,JSON_UNESCAPED_UNICODE);
 }
 
+// Get dữ liệu cho điểm trung bình khóa học
+if($action == "courseavg_chart") {
+	$courses = get_list_courseinfo_by_teacher($USER->id);
+	$series = [];
+	$categories = [];
+   	foreach($courses as $course) {
+   		$categories[] = $DB->get_field('course_categories', 'name', ['id' => $course->category]);
+   		$series[] = round(get_course_grade_avg($course->id)[0]->courseavg, 3);
+   	}
+   	$response = new stdClass();
+   	$response->categories = $categories;
+   	$response->series = $series;
+	echo json_encode($response,JSON_UNESCAPED_UNICODE);
+}
+
 // -- End Get dữ liệu cho blocks chart -- \\
 
 //Get dữ liệu cho grid api_managerment
