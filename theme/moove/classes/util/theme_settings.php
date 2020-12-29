@@ -875,6 +875,7 @@ class theme_settings {
         $forumpost = $DB->get_records('forum_posts',['parent' => 0,'userid' => $USER->id]);
         $obj->forumpost = count($forumpost);
         $courses = enrol_get_all_users_courses($USER->id);
+        $listcourse = get_list_course_by_student($USER->id);
         $count_course_comletion = 0;
         foreach($courses as $course) {
             $cinfo = new completion_info($course);
@@ -883,13 +884,12 @@ class theme_settings {
                 $count_course_comletion++;
             }
         }
-        $obj->coursestotal = count($courses);
+        $obj->coursestotal = count($listcourse);
         $obj->completedcoures = $count_course_comletion;
         $obj->progresscoures = count($courses) - $count_course_comletion;
         $templatecontext['userinfo'] = $obj;
         return $templatecontext;
     }
-
     // get dữ liệu cho dashboard giáo viên: thông báo và khóa học không có content
     public function get_data_dashboard_teacher() {
       global $DB, $USER;

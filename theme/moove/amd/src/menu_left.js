@@ -35,12 +35,13 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             $(this).parent('li').addClass('active');
         }
     });
-    $(".nav.multi-tab li a").click(function() {
+    $(".nav.multi-tab").on('click','li a',function() {
+        var tab = $(this).parent().parent('ul').attr('tab');
         var data = $(this).attr('data-key');
-        $(".nav.multi-tab li a").removeClass('active');
+        $(".nav.multi-tab[tab="+tab+"] li a").removeClass('active');
         $(this).addClass('active');
-        $('.tab-content .tab-pane').hide();
-        $('.tab-content .tab-pane[data="' + data + '"]').fadeIn('fast');
+        $('.tab-content[tab='+tab+'] .tab-pane').hide();
+        $('.tab-content[tab='+tab+'] .tab-pane[data="' + data + '"]').fadeIn('fast');
     });
     $(".search_form_fp i").click(function(){
         var keyword = $('#course_search_form_fp').val();
@@ -52,5 +53,4 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             $(".search_form_fp i").click();
         }
     })
-
 });

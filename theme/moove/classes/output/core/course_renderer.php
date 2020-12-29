@@ -773,13 +773,13 @@ class course_renderer extends \core_course_renderer {
         $end = count($modinfo->sections);
         $output = '';
         $output .= '<div class="all-tab-content col-xl-9 col-md-8 col-12">';
-        $output .= '<ul class="nav nav-tabs tab-click multi-tab">';
+        $output .= '<ul class="nav nav-tabs tab-click multi-tab" tab="enrolcourse">';
         $output .= '<li class="nav-item"><a class="nav-link active" data-key="courseintro">'.get_string('introcourse','local_newsvnr').'</a></li>
                     <li class="nav-item "><a class="nav-link" data-key="descriptioncourse">'.get_string('descriptioncourse','local_newsvnr').'</a></li>
                     <li class="nav-item"><a class="nav-link" data-key="lesson">'.get_string('lesson','local_newsvnr').'</a></li>
                     <li class="nav-item"><a class="nav-link" data-key="teachername">'.get_string('teachername','local_newsvnr').'</a></li>';
         $output .= '</ul>';
-        $output .= '<div class="tab-content">';
+        $output .= '<div class="tab-content" tab="enrolcourse">';
         // Giới thiệu khóa học
         $output .= ' <div data="courseintro" class="tab-pane in active">';
         $output .= '<div class="count-module">';

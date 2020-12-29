@@ -129,6 +129,20 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
             }
             eventArr.push(objEventDelete);
         }
+        if (gridConfig.joinCourseEvent != undefined) {
+            var funcViewCourseInfoPopup = function(e) {
+                e.preventDefault();
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                gridConfig.joinCourseEvent(dataItem);
+            }
+            var objEventJoinCourse = {
+                click: funcViewCourseInfoPopup,
+                text: 'Vào học',
+                name: 'Vào học',
+                iconClass: 'fa fa-sign-out',
+            }
+            eventArr.push(objEventJoinCourse);
+        }
         if(eventArr.length > 0) {
             gridConfig.columns.push({
                 title: M.util.get_string('action', 'local_newsvnr'),

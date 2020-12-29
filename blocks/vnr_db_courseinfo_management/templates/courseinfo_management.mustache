@@ -1,5 +1,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
-<ul class="nav-tabs nav multi-tab mb-3">
+<ul class="nav-tabs nav multi-tab mb-3" tab="courseinfo">
 {{#isadmin}}
     <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="courseinfo">{{#str}}coursemanagement,block_vnr_db_courseinfo_management{{/str}}</a></li>
  	<li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="studentinfo">{{#str}}studentmanagement,block_vnr_db_courseinfo_management{{/str}}</a></li>
@@ -7,7 +7,7 @@
  	<li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="statistical">{{#str}}statistical,block_vnr_db_courseinfo_management{{/str}}</a></li>
 {{/isadmin}}
 </ul>
-<div class="tab-content">
+<div class="tab-content" tab="courseinfo">
 	{{#isadmin}}
 	<div data="courseinfo" class="tab-pane active">
 		<div class="exam_search_form">

@@ -1794,8 +1794,8 @@ nav.navbar .moove-search-input .search-input-form .form-control {
     padding: 13px 40px 13px 20px;
 }
 nav.navbar ul.navbar-nav .popover-region .popover-region-toggle .count-container {
-    top: 19px;
-    right: -6px;
+    top: -4px;
+    right: 0;
 }
 .message-app.drawer {
     top: 52px;
@@ -1873,7 +1873,7 @@ legend {
 }
 nav.navbar ul.navbar-nav .popover-region .popover-region-toggle {
     outline: 0;
-    padding: 0.5rem 0.3rem;
+    padding: 0.5rem 0.5rem;
     font-size: 16px;
 }
 
@@ -3775,7 +3775,7 @@ h4.responsehistoryheader {
     cursor: pointer;
     border-radius: 5px;
     width: auto;
-    height: 30px;
+    height: 35px;
     color: white;
     padding: 5px 5px 5px 10px;
     display: flex;
@@ -5584,10 +5584,10 @@ nav.navbar ul.navbar-nav .usermenu {
     height: 140px;
 }
 #loaddetailrp .courseimage {
-    height: 100px;
+    height: 80px;
 }
 #loaddetailrp .courseimage img {
-    height: 100px;
+    height: 80px;
     width: 100%;
 }
 #loaddetailrp {
@@ -5605,6 +5605,19 @@ nav.navbar ul.navbar-nav .usermenu {
 }
 #loaddetailrp .badges li {
     text-align: left;
+}
+#loaddetailrp .progress-circle {
+    height: 4rem;
+    width: 4rem;
+}
+.k-window-titlebar {
+    background: transparent !important;
+}
+.k-window-actions .k-icon {
+    color: #455a64 !important;
+}
+.db-student {
+    padding: 0 6px;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
@@ -5645,6 +5658,7 @@ nav.navbar ul.navbar-nav .usermenu {
 
             {{# flatnavigation }}
                 {{#showdivider}}
+                    <li><hr class="light-grey-hr mb-10"></li>
                     <li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>{{#str}}admin,theme_moove{{/str}}</span></li>
                     <li class="menu-link" data-key="{{key}}" id=''><a class ="nav-active" href="{{{action}}}"><i class="{{{class}}} mr-3"></i>{{{text}}}</a></li>
                 {{/showdivider}}

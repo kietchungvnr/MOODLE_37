@@ -1,42 +1,42 @@
 <div class="db-student">
 {{#userinfo}}
 <div class="row">
-	<div class="col-md-6 mt-3">
-		<div class="card">
-			<div class="card-body" style="height: 242px;">
-				<h5 class="card-title d-inline">Thông tin học viên</h5>
+	<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-3">
+		<div class="card h-100">
+			<div class="card-body">
+				<h5 class="card-title d-inline">{{#str}}infostudent,local_newsvnr{{/str}}</h5>
 				<hr>
 				<div class="row">
-					<div class="col-md-3">
+					<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
 						<div class="d-flex justify-content-center">
 							{{{userimgbig}}}
 						</div>
-						<div class="text-center mt-2"><a href="{{{userlink}}}" target="_blank">Xem chi tiết</a></div>
+						<div class="text-center mt-2"><a href="{{{userlink}}}" target="_blank">{{#str}}viewdetail,local_newsvnr{{/str}}</a></div>
 					</div>
-					<div class="col-md-5">
-						<div class="d-flex"><p class="grey mr-1">Họ và tên: </p><p class="text-title">{{{fullname}}}</p></div>
-						<div class="d-flex"><p class="grey mr-1">Mã học viên: </p><p class="text-title">{{{usercode}}}</p></div>
+					<div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+						<div class="d-flex"><p class="grey mr-1">{{#str}}fullnamelastname,local_newsvnr{{/str}}</p><p class="text-title">{{{fullname}}}</p></div>
+						<div class="d-flex"><p class="grey mr-1">{{#str}}studentcode,local_newsvnr{{/str}}</p><p class="text-title">{{{usercode}}}</p></div>
 						<div class="d-flex"><p class="grey mr-1">Email: </p><p class="text-title">{{{email}}}</p></div>
 					</div>
-					<div class="col-md-4">
-						<div class="d-flex"><p class="grey mr-1">Từ điển năng lực:</p><p class="text-title">{{{competency}}}</p></div>
-						<div class="d-flex"><p class="grey mr-1">Bài viết diễn đàn:</p><p class="text-title">{{{forumpost}}}</p></div>
-						<div class="d-flex"><p class="grey mr-1">Số giờ truy cập:</p></div>
+					<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+						<div class="d-flex"><p class="grey mr-1">{{#str}}competency,local_newsvnr{{/str}}: </p><p class="text-title">{{{competency}}}</p></div>
+						<div class="d-flex"><p class="grey mr-1">{{#str}}forumpost,local_newsvnr{{/str}}</p><p class="text-title">{{{forumpost}}}</p></div>
+						<div class="d-flex"><p class="grey mr-1">{{#str}}timeaccess,local_newsvnr{{/str}}</p></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="col-md-6">
+	<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
 		<div class="row">
 			<div class="col-md-6 mt-3">
 				<div class="card card-studentrp-db card-student-mycourse">
 					<div class="card-body">
 						<div class="d-flex justify-content-between">
 							<div>
-								<div class="mb-2">Khóa học của tôi</div>
+								<div class="mb-2">{{#str}}mycourses,local_newsvnr{{/str}}</div>
 								<div class="font-title mb-1">{{{coursestotal}}}</div>
-								<a href="javascript:;" class="viewdetairp" action="viewcourse">Xem chi tiết</a>
+								<a href="javascript:;" class="viewdetairp" action="viewcourse">{{#str}}viewdetail,local_newsvnr{{/str}}</a>
 							</div>
 							<div>
 								<i class="fa fa-graduation-cap" style="font-size: 40px"></i>
@@ -50,9 +50,9 @@
 					<div class="card-body">
 						<div class="d-flex justify-content-between">
 							<div>
-								<div class="mb-2">Huy hiệu của tôi</div>
+								<div class="mb-2">{{#str}}badge,local_newsvnr{{/str}}</div>
 								<div class="font-title mb-1">{{{badge}}}</div>
-								<a href="javascript:;" class="viewdetairp" action="viewbadge">Xem chi tiết</a>
+								<a href="javascript:;" class="viewdetairp" action="viewbadge">{{#str}}viewdetail,local_newsvnr{{/str}}</a>
 							</div>
 							<div>
 								<i class="fa fa-graduation-cap" style="font-size: 40px"></i>
@@ -66,9 +66,9 @@
 					<div class="card-body">
 						<div class="d-flex justify-content-between">
 							<div>
-								<div class="mb-2">Lộ trình cá nhân</div>
+								<div class="mb-2">{{#str}}competency,local_newsvnr{{/str}}</div>
 								<div class="font-title mb-1">{{{competency_plan}}}</div>
-								<a href="javascript:;" class="viewdetairp" action="viewcompetencyplan">Xem chi tiết</a>
+								<a href="javascript:;" class="viewdetairp" action="viewcompetencyplan">{{#str}}viewdetail,local_newsvnr{{/str}}</a>
 							</div>
 							<div>
 								<i class="fa fa-graduation-cap" style="font-size: 40px"></i>
@@ -82,9 +82,9 @@
 					<div class="card-body">
 						<div class="d-flex justify-content-between">
 							<div>
-								<div class="mb-2">Kỳ thi</div>
+								<div class="mb-2">{{#str}}exam,local_newsvnr{{/str}}</div>
 								<div class="font-title mb-1">{{{exam}}}</div>
-								<a href="javascript:;" class="viewdetairp" action="viewexam">Xem chi tiết</a>
+								<a href="javascript:;" class="viewdetairp" action="viewexam">{{#str}}viewdetail,local_newsvnr{{/str}}</a>
 							</div>
 							<div>
 								<i class="fa fa-trophy mr-2" style="font-size: 40px"></i>
@@ -94,7 +94,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="viewDetailReport">
+		<div id="viewDetailReport" class="pt-1">
 			<div id="loaddetailrp"></div>
 			<div class="loading-page"></div>
 		</div>
@@ -102,20 +102,19 @@
 </div>
 {{/userinfo}}
 <div class="row mt-3">
-	<div class="col-md-9">
+	<div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
 		 <div class="card">
 		 	<div class="card-body">
-		 		<h5 class="card-title d-inline">Kết quả học tập</h5>
-		 		<hr>
-		    	<div id="quizchart"></div>
+		 		<h5 class="card-title d-inline">{{#str}}gradereport,local_newsvnr{{/str}}</h5>
+		    	<div id="quizchart" class="mt-3"></div>
 		    	<div id="moduledetail-kendo"></div>
 	    	</div>
 		</div>
 	</div>
-	<div class="col-md-3">
+	<div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
 		<div class="card">
 			<div class="card-body">
-				<h5 class="card-title d-inline">Tiến độ học tập</h5>
+				<h5 class="card-title d-inline">{{#str}}learningprocess,local_newsvnr{{/str}}</h5>
 				<hr>
 				<div id="progresschart"></div>
 			</div>
@@ -123,30 +122,30 @@
 	</div>
 </div>
 <div class="row mt-3">
-	<div class="col-md-7">
+	<div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
 		 <div class="card">
 		 	<div class="card-body">
-		 		<h5 class="card-title d-inline">Khóa học đang tham gia</h5>
+		 		<h5 class="card-title d-inline">{{#str}}coursejoin,local_newsvnr{{/str}}</h5>
 				<hr>
 		 		<div id="mycourse-kendo"></div>
 		 	</div>
 		 </div>
 	</div>
-	<div class="col-md-5">
+	<div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
 		 <div class="card">
 		 	<div class="card-body">
-		        <ul class="nav-tabs nav multi-tab mb-3">
-			        <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="homework">Bài tập về nhà</a></li>
-	             	<li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="quiz">Bài kiểm tra</a></li>
+		        <ul class="nav-tabs nav multi-tab mb-3" tab="quizkendo">
+    	        	<li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="quiz">{{#str}}test,local_newsvnr{{/str}}</a></li>
+			        <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="homework">{{#str}}homework,local_newsvnr{{/str}}</a></li>
 		   		</ul>
-   				<div class="tab-content">
-					<div data="homework" class="tab-pane active">
-				 		<div id="myhomework-kendo"></div>
-					</div>
-					<div data="quiz" class="tab-pane">
+   				<div class="tab-content" tab="quizkendo">
+					<div data="quiz" class="tab-pane active">
 						<div id="myquiz-kendo"></div>
 					</div>
-		 	</div>
+					<div data="homework" class="tab-pane">
+				 		<div id="myhomework-kendo"></div>
+					</div>
+		 		</div>
 		 </div>
 	</div>
 </div>
@@ -158,6 +157,14 @@
            	$("#moduledetail-kendo").empty();   
         });
     };
+    const tabClick = (data,tab) => {
+    	require(['jquery', 'core/config'], ($, config) => {
+	        $(".nav.multi-tab[tab="+tab+"] li a").removeClass('active');
+	        $(".nav.multi-tab[tab="+tab+"] li a[data="+data+"]").addClass('active');
+	        $('.tab-content[tab='+tab+'] .tab-pane').hide();
+	        $('.tab-content[tab='+tab+'] .tab-pane[data="' + data + '"]').fadeIn('fast');
+	    })
+	}
 </script>
 {{#js}}
 require.config({
@@ -207,7 +214,7 @@ $('.db-student .viewdetairp').click(function() {
 	$.ajax(scriptrp,settings).then(function(resp) {
 		var obj = $.parseJSON(resp);
 		$('#loaddetailrp').hide().html(obj.result).fadeIn('fast');
-		$('#loaddetailrp').prepend(obj.title);
+		$('.k-window-title').html(obj.title);
 		$('.loading-page').removeClass('active');
 	})
 })
@@ -253,7 +260,7 @@ var initKendoModule = function(courseid) {
                 width: "120px"
 			},
 			{
-                field: "finalgrade",
+                field: "finalgradecourse",
                 title: 'Điểm trung bình tổng',
                 width: "120px"
 			},
@@ -303,17 +310,17 @@ var initKendoMycourse = function() {
 			{
                 field: "gradefinal",
                 title: 'Điểm',
-                width: "80px"
+                width: "50px"
 			},
 			{
                 field: 'timestart',
                 title: 'Ngày vào khóa',
-                width: "120px"
+                width: "110px"
 			},
 			{
                 field: 'timecompleted',
                 title: 'Ngày hoàn thành',
-                width: "120px"
+                width: "110px"
 			}
 		];
 		var toolbar = false;
@@ -321,6 +328,9 @@ var initKendoMycourse = function() {
 		kendoConfig.toolbar = toolbar;
 		kendoConfig.columns = columns;
 		kendoConfig.apiSettings = settings;
+		kendoConfig.joinCourseEvent = function(dataItem) {
+			window.open(Config.wwwroot + '/course/view.php?id='+dataItem.courseid,'_blank');
+		}
 		var gridData = kendo.initGrid(kendoConfig);
 		$(gridcourse).kendoGrid(gridData);
 }
@@ -338,6 +348,9 @@ var initKendoHomework = function() {
 		};
 		var columns = [
 			{
+				template: function(e) {
+					return e.name
+				},
                 field: "name",
                 title: 'Tên bài tập',
                 width: "150px"
@@ -375,6 +388,9 @@ var initKendoQuiz = function() {
 		};
 		var columns = [
 			{
+				template: function(e) {
+					return e.name
+				},
                 field: "name",
                 title: 'Tên bài tập',
                 width: "150px"
@@ -405,7 +421,7 @@ $.getJSON(script + '?action=quizchart',function(data) {
 	  	chart: {
 		    type: 'column',
 		    renderTo: quizchart,
-		    height:300,
+		    height:316,
           	events: {
 		        drilldown: function(e) {
 		           	initKendoModule(e.point.drilldown);
@@ -416,8 +432,10 @@ $.getJSON(script + '?action=quizchart',function(data) {
 	  	title: {
 	    	text: ''
 	  	},
+
 	    tooltip: {
-	        pointFormat: '<span style="color:{point.color}">Điểm</span> :<b>{point.y:.1f}</b><br/><span>{point.rank}</span>'
+	    	shared: true,
+	        pointFormat: '<span style="color:{point.color}">Điểm của bạn</span> :<b>{point.y:.1f}</b><br/><span>{point.rank}</span><br>',
 	    },
 		lang: {
 			drillUpText: '< Back'
@@ -427,6 +445,9 @@ $.getJSON(script + '?action=quizchart',function(data) {
 	      	enabled: true
 	    	}
 	  	},
+  	    xAxis: {
+		    type: 'category'
+	    },
 	  	yAxis: {
   		  	title: {
 		    	text: ''
@@ -434,7 +455,7 @@ $.getJSON(script + '?action=quizchart',function(data) {
 	    	max: 10
 	  	},
 	  	legend: {
-	    	enabled: false
+	    	enabled: true
 	  	},
 	  	plotOptions: {
 		    series: {
@@ -443,21 +464,29 @@ $.getJSON(script + '?action=quizchart',function(data) {
 		      	dataLabels: {
 				        enabled: true,
 				        format: '{point.y:.1f}',
-				        colors: ['white']
+				        colors: 'black',
+				        style: {
+				        	textOutline: 0
+				    	}
 		      		}
-		    	}
+		    	},
 	  	},
 	  	colors: ['rgb(29, 127, 179)'],
 	  	series: [
 	    {
-	      	name: "Điểm trung bình",
+	      	name: "Điểm của bạn",
 	      	colorByPoint: false,
 	      	data: data.avggrade
 	    },
 	    {
+	    	name: "Điểm trung bình khóa",
 	        type: 'spline',
-	        name: 'Course grade average',
 	        data: data.avggradecourse,
+    	    tooltip: {
+				headerFormat: '',
+			    pointFormat: '<span style="color:{point.color}">Điểm TB khóa học</span>:<b>{point.y}</b><br/>'
+			},
+	        categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas'],
 	        color: '#f98d21',
 	        marker: {
 	            lineWidth: 3,
@@ -499,12 +528,15 @@ $.getJSON(script + '?action=piechart',function(data) {
 	                enabled: true,
 	             	format: '{point.percentage:.1f} %',
 	                distance: -50,
-	                color: 'black',
+	                color: 'white',
 	             	filter: {
 	                    property: 'percentage',
 	                    operator: '>',
-	                    value: 4
-	                }
+	                    value: 4,
+	                },
+                    style: {
+			        	textOutline: 0,
+			    	}
 	            },
 	            showInLegend: true
 	        }
