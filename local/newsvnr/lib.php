@@ -2182,37 +2182,6 @@ function get_course_section_cm_completion($course,&$completioninfo,$mod) {
     }
     return $output;
 }
-// Diểm trung bình
-function get_course_grade_avg($courseid) {
-   global $CFG, $DB;
-
-   require_once $CFG->dirroot . '/grade/lib.php';
-   require_once $CFG->dirroot . '/grade/report/grader/lib.php';
-   require_once $CFG->libdir  . '/gradelib.php';
-
-   $course = $DB->get_record('course', ['id' => $courseid]);
-   $page = 0;
-   $sortitemid = 0;
-   $context = context_course::instance($course->id);
-   $displayaverages = true;
-   $gpr = new grade_plugin_return(
-       array(
-           'type' => 'report',
-           'plugin' => 'grader',
-           'course' => $course,
-           'page' => $page
-       )
-   );
-   
-   $report = new grade_report_grader($course->id, $gpr, $context, $page, $sortitemid);
-   $report->load_users();
-   $report->load_final_grades();
-   $data = $report->get_right_rows($displayaverages);
-   $lastitem = end($data);
-   $count = count($lastitem->cells);
-   $grade_avg = explode(' ', $lastitem->cells[$count - 1]->text)[0];
-   return $grade_avg;
-}
 // Lấy điểm các module trong khóa 
 function get_grade_module_incourse($courseid,$userid) {
     global $DB;
@@ -2255,7 +2224,7 @@ function get_listuser_in_course($courseid, $roleid = 5, $userid = 0) {
 }
 
 // Lấy điểm trung bình của khóa học
-function get_course_grade_avg($courseid) {
+function get_course_grade_avg($courseid, $courseavg = true) {
     global $CFG, $DB, $USER;
 
     require_once $CFG->dirroot . '/grade/lib.php';
@@ -2275,16 +2244,37 @@ function get_course_grade_avg($courseid) {
             'page' => $page
         )
     );
-    // var_dump($USER);die;
-    $USER->gradeediting = [$courseid];
     $report = new grade_report_grader($course->id, $gpr, $context, $page, $sortitemid);
     $report->load_users();
     $report->load_final_grades();
+    $report->canviewhidden = true;
     $data = $report->get_right_rows($displayaverages);
     $lastitem = end($data);
     $count = count($lastitem->cells);
-    $grade_avg = explode(' ', $lastitem->cells[$count - 1]->text)[0];
-    return $grade_avg;
+    $grades = [];
+    if($courseavg == false) {
+        $modules = array_values($DB->get_records('grade_items', ['courseid' => $courseid]));
+        foreach($modules as $keymodule => $module) {
+            if($module->itemtype == 'course' && $module->calculation != null) {
+                $grade_avg = new stdClass;
+                $grade_avg->avg = 'Course AVG';
+                $grade_avg->courseavg = explode(' ', $lastitem->cells[$count - 1]->text)[0];
+                $grades[] = $grade_avg;
+                continue;
+            }
+            $grade_avg = new stdClass;
+            $grade_avg->modulename = $module->itemname;
+            $grade_avg->moduletype = $module->itemtype;
+            $grade_avg->moduleavg = explode(' ', $lastitem->cells[$keymodule - 1]->text)[0];
+            $grades[] = $grade_avg;
+        }
+    } else {
+        $grade_avg = new stdClass;
+        $grade_avg->avg = 'Course AVG';
+        $grade_avg->courseavg = explode(' ', $lastitem->cells[$count - 1]->text)[0];
+        $grades[] = $grade_avg;
+    }
+    return $grades;
 }
 
 function local_newsvnr_extend_navigation($navigation) {
