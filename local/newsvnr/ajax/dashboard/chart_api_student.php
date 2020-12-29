@@ -157,7 +157,8 @@ switch ($action) {
             $obj          = new stdClass();
             $href         = $CFG->wwwroot . '/mod/quiz/view.php?id=' . $value->moduleid;
             $obj->name    = ($value->finalgrade) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="icon-success mr-2"><a href="' . $href . '" target="_blank">' . $value->name . '</a>' : '<a href="' . $href . '" target="_blank">' . $value->name . '</a></div>';
-            $obj->grade   = ($value->finalgrade) ? $value->finalgrade : '-';
+            $finalgrade = floor($value->finalgrade, 2);
+            $obj->grade   = $finalgrade ? $finalgrade : '-';
             $obj->timedue = convertunixtime('d/m/Y', $value->timeclose, 'Asia/Ho_Chi_Minh');
             $obj->total   = count($myquiz);
             $data[]       = $obj;

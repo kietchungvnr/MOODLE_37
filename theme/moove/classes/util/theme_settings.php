@@ -40,6 +40,8 @@ use context_system;
 use context_module;
 use completion_info;
 use core_competency\api as competency_api;
+use block_dedication_manager;
+use block_dedication_utils;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -850,8 +852,11 @@ class theme_settings {
 
     // Get dữ liệu cho dashboard
     public function get_fullinfo_user() {
-        global $CFG, $USER, $OUTPUT, $PAGE, $DB;
-        require_once("$CFG->libdir/completionlib.php");
+        global $CFG, $USER, $OUTPUT, $DB, $COURSE;
+
+        require_once $CFG->libdir . '/completionlib.php';
+        require_once $CFG->dirroot . '/blocks/dedication/dedication_lib.php';
+
         $obj = new stdClass;
         $obj->fullname = fullname($USER);
         $obj->usercode = $USER->usercode;
@@ -877,13 +882,24 @@ class theme_settings {
         $courses = enrol_get_all_users_courses($USER->id);
         $listcourse = get_list_course_by_student($USER->id);
         $count_course_comletion = 0;
+        $timespenttotal = 0;
+        array_merge($courses, (array)$COURSE);
         foreach($courses as $course) {
             $cinfo = new completion_info($course);
             $iscomplete = $cinfo->is_course_complete($USER->id);
             if($iscomplete == true) {
                 $count_course_comletion++;
             }
+
+            // Số giờ truy cập của user
+            $dm = new block_dedication_manager($course, $course->startdate, time(), 3600);
+            $rows = $dm->get_user_dedication($USER);
+            foreach ($rows as $index => $row) {
+                $timespenttotal += $row->dedicationtime;
+            }
         }
+
+        $obj->timespent = block_dedication_utils::format_dedication($timespenttotal);
         $obj->coursestotal = count($listcourse);
         $obj->completedcoures = $count_course_comletion;
         $obj->progresscoures = count($courses) - $count_course_comletion;
@@ -894,6 +910,8 @@ class theme_settings {
     public function get_data_dashboard_teacher() {
       global $DB, $USER;
       $obj = new stdClass;
+
+      // Khóa học chưa có content
       $courseemptytotalsql = "SELECT c.fullname, COUNT(cm.module) module
                                   FROM mdl_role_assignments AS ra
                                       JOIN mdl_user AS u ON u.id= ra.userid
@@ -909,7 +927,7 @@ class theme_settings {
       $courseemptytotal = $DB->get_records_sql($courseemptytotalsql, ['userid' => $USER->id]);
       $obj->courseemptytotal = count($courseemptytotal);
 
-
+      // Tổng học viên các khóa học của giáo viên
       $strcourseid = get_list_courseid_by_teacher($USER->id);
       $courses     = explode(',', $strcourseid);
       $obj->coursestotal = count($courses);
@@ -930,9 +948,11 @@ class theme_settings {
       }
       $obj->studenttotal = $studenttotal;
 
-      $examtotal = $DB->get_records('exam_user',['userid' => $USER->id]);
+      // Các kỳ thi của giáo viên
+      $examtotal = $DB->get_records('exam_user',['userid' => $USER->id, 'roleid' => 4]);
       $obj->examtotal = count($examtotal);
 
+      // Tổng module giáo viên đã upload trên các khóa của giáo viên đó
       $moduletotal = $DB->get_record_sql("SELECT COUNT(id) moduletotal
                                           FROM mdl_logstore_standard_log
                                           WHERE userid = :userid AND action = 'created' AND target = 'course_module'", ['userid' => $USER->id]);

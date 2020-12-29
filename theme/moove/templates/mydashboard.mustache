@@ -60,14 +60,16 @@
         {{#is_siteadmin}}
             {{>theme_moove/mydashboard_admin}}
         {{/is_siteadmin}}
-        {{>theme_moove/db_student}}
-        {{^is_siteadmin}}
-            <div class="admininfos">
-                {{{ output.mydashboard_user_header }}}
-                {{>theme_moove/db_teacher}}
-            </div>
-        {{/is_siteadmin}}
+        {{!#is_teacher}}
+            {{>theme_moove/db_teacher}}
+        {{!/is_teacher}}
+        {{!^is_teacher}}
+            {{>theme_moove/db_student}}
+        {{!/is_teacher}}
 
+        <div class="admininfos">
+            {{{ output.mydashboard_user_header }}}
+        </div>
         <div id="page-content" class="row pb-3 d-print-block">
             <div id="region-main-box" class="col-12">
                 {{#hasregionmainsettingsmenu}}

@@ -70,7 +70,7 @@ foreach ($get_list as $value) {
     if (!is_enrolled(context_course::instance($value->id), $USER)) {
         print_error('usernotincourse');
     }
-    $dm = new block_dedication_manager($DB->get_record('course', ['id' => $value->id]), $value->startdate, time(), 3600);
+    $dm = new block_dedication_manager($DB->get_record('course', ['id' => $value->id]), $value->timecreated, time(), 3600);
     // get timespent cho user
     $totaldedication = 0;
     $rows = $dm->get_user_dedication($USER);

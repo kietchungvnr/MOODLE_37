@@ -1,10 +1,10 @@
 <div class="row mb-3">
-    <div class="col-lg-3">
+    <div class="col-md-6 col-lg-3 mt-3">
         <div class="card text-white teacher-bg-1">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <div class="mb-2">
+                        <div class="mb-2 font-weight-bold">
                             {{#str}} owncourses, theme_moove{{/str}}
                         </div>
                         <div class="font-title mb-1">
@@ -23,12 +23,12 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-3">
+    <div class="col-md-6 col-lg-3 mt-3">
         <div class="card text-white teacher-bg-2">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <div class="mb-2">
+                        <div class="mb-2 font-weight-bold">
                             {{#str}} student, theme_moove{{/str}}
                         </div>
                         <div class="font-title mb-1">
@@ -40,19 +40,18 @@
                         </a>
                     </div>
                     <div>
-                        <i class="fa fa-graduation-cap db-icon-font-size">
-                        </i>
+                        <img src="/./theme/moove/pix/user.svg" class="db-icon">
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-3">
+    <div class="col-md-6 col-lg-3 mt-3">
         <div class="card text-white teacher-bg-3">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <div class="mb-2">
+                        <div class="mb-2 font-weight-bold">
                             {{#str}} listmodule, theme_moove{{/str}}
                         </div>
                         <div class="font-title mb-1">
@@ -64,19 +63,18 @@
                         </a>
                     </div>
                     <div>
-                        <i class="fa fa-graduation-cap db-icon-font-size">
-                        </i>
+                        <img src="/./theme/moove/pix/statistics.svg" class="db-icon">
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-3">
+    <div class="col-md-6 col-lg-3 mt-3">
         <div class="card text-white teacher-bg-4">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <div class="mb-2">
+                        <div class="mb-2 font-weight-bold">
                             {{#str}} exam, theme_moove{{/str}}
                         </div>
                         <div class="font-title mb-1">
@@ -88,8 +86,7 @@
                         </a>
                     </div>
                     <div>
-                        <i class="fa fa-graduation-cap db-icon-font-size">
-                        </i>
+                        <img src="/./theme/moove/pix/prize.svg" class="db-icon">
                     </div>
                 </div>
             </div>
@@ -140,15 +137,15 @@
                 <div id="progress-chart"></div>
                 <div id="overview-course">
 	                <div class="db-teacher-hr">
-	                	<span>{{#str}} studentcompleted, theme_moove{{/str}}</span>
+	                	<span><i class="fa fa-square mr-1" style="color: #1FB350" aria-hidden="true"></i>{{#str}} studentcompleted, theme_moove{{/str}}</span>
 	                	<span class="pull-right font-weight-bold" id="course-finish">0</span>
 	                </div>
 	                <div class="db-teacher-hr">
-	                	<span>{{#str}} studentstudying, theme_moove{{/str}}</span>
+	                	<span><i class="fa fa-square mr-1" style="color: #dd4b39" aria-hidden="true"></i>{{#str}} studentstudying, theme_moove{{/str}}</span>
 	                	<span class="pull-right font-weight-bold" id="course-unfinish">0</span>
 	                </div>
 	                <div class="db-teacher-hr border-0">
-	                	<span>{{#str}} courseavg, theme_moove{{/str}}</span>
+	                	<span><i class="fa fa-square mr-1" style="color: #3f54b7" aria-hidden="true"></i>{{#str}} courseavg, theme_moove{{/str}}</span>
 	                	<span class="pull-right font-weight-bold" id="course-grade-avg">0</span>
 	                </div>
             	</div>
@@ -185,14 +182,14 @@
             	<div class="d-flex justify-content-between">
                     <div>
                         <div class="mb-2">
-                            {{#str}} notifynoseen, theme_moove{{/str}}
+                            <h5 class="card-title d-inline">{{#str}} notifynoseen, theme_moove{{/str}}</h5>
                         </div>
                         <div class="font-title mb-1">
                             0
                         </div>
                     </div>
                     <div>
-                        <i class="fa fa-graduation-cap db-icon-font-size">
+                        <i class="fa fa-bell db-icon-font-size text-primary" style="position: relative;right: 8px;">
                         </i>
                     </div>
                 </div>
@@ -203,14 +200,14 @@
             	<div class="d-flex justify-content-between">
 	            	<div>
 	                    <div class="mb-2">
-	                        {{#str}} coursenocontent, theme_moove{{/str}}
+	                        <h5 class="card-title d-inline">{{#str}} coursenocontent, theme_moove{{/str}}</h5>
 	                    </div>
 	                    <div class="font-title mb-1">
 	                        {{#teacherinfo}}{{courseemptytotal}}{{/teacherinfo}}
 	                    </div>
 	                </div>
 	                <div>
-	                    <i class="fa fa-graduation-cap db-icon-font-size">
+	                    <i class="fa fa-graduation-cap db-icon-font-size text-primary">
 	                    </i>
 	                </div>
             	</div>
@@ -292,7 +289,7 @@
     	require(['jquery', 'core/config', 'core/str', 'alertjs', 'local_newsvnr/initkendoexam'], ($, Config, Str, alertify, kendo) => {
     		var dialog = $('#view-sutdent-detail');
     		var gridStudentDetail = $('#sutdent-detail-grid');
-    		var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api.php';
+    		var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api_teacher.php';
     		var initStudentGrid = function() {
     			var kendoConfig = {};
     			var strings = [
@@ -347,7 +344,11 @@
 			    	{
 			            key: 'status',
 			            component: 'theme_moove'
-			    	}
+			    	},
+                    {
+                        key: 'spenttimetotal',
+                        component: 'theme_moove'
+                    }
 			    ];
     			Str.get_strings(strings).then(function(s) {
 					var settings = {			
@@ -375,7 +376,12 @@
 			            	template:"<div class='d-flex participants-collum'><div class='progress course'><div class='progress-bar' role='progressbar' aria-valuenow='#: process #' aria-valuemin='0' aria-valuemax='100' style='width:#: process #'></div></div><div>#: process #</div></div></div>",
 			                title: s[6],
 			                width: "150px"	
-			            },
+			            }, 
+                        {
+                            field: "spenttime",
+                            title: s[13],
+                            width: "150px"
+                        },
 			            {
 			                field: "rank",
 			                title: s[8],
@@ -419,10 +425,15 @@
     		}
     		dialog.kendoWindow({
 	            width: "1000px",
-	            title: M.util.get_string('listuser', 'theme_moove'),
 	            modal: true,
 	            open: onOpen,
+                actions: [
+                    "Minimize",
+                    "Maximize",
+                    "Close"
+                ],
 	        });
+            dialog.data("kendoWindow").element.prev().find(".k-window-title").html('<h5 class="card-title d-inline">' + M.util.get_string('listuser', 'theme_moove') + '</h5>')
 	        dialog.data('kendoWindow').open();
     	});
     }
@@ -448,7 +459,7 @@
     const viewModuleDetail = function(courseId) {
 
     	require(['jquery', 'core/config', 'core/str', 'alertjs', 'highcharts', 'highcharts/modules/exporting', 'highcharts/modules/accessibility', 'highcharts/modules/drilldown'], ($, Config, Str, alertify, Highcharts, ExportingModule, AccessibilityModule, DrilldownModule) => {
-    		var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api.php';
+    		var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api_teacher.php';
     		var dialog = $('#view-module-detail');
     		var chart = 'module-detail-chart';
     		var settings = {
@@ -531,10 +542,15 @@
     		}
     		dialog.kendoWindow({
 	            width: "1000px",
-	            title: M.util.get_string('moduleallocation', 'theme_moove'),
 	            modal: true,
 	            open: onOpen,
+                actions: [
+                    "Minimize",
+                    "Maximize",
+                    "Close"
+                ],
 	        });
+            dialog.data("kendoWindow").element.prev().find(".k-window-title").html('<h5 class="card-title d-inline">' + M.util.get_string('moduleallocation', 'theme_moove') + '</h5>');
 	        dialog.data('kendoWindow').open();
     	})
     }
@@ -573,7 +589,7 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
     var gridListCourse = '#list-course-grid';
     var reportChart = 'report-chart';
     var overviewChart = 'overview-chart';
-    var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api.php';
+    var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api_teacher.php';
 
     // Get dataSource cho grid khóa giảng của tôi
     var kendoGridConfig = {};
@@ -1101,7 +1117,6 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
     function openPopup(elementId, title) {
         $(elementId).kendoWindow({
             width: "1200px",
-            title: title,
             visible: false,
             open: onOpen,
             actions: [
@@ -1110,7 +1125,7 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
                 "Close"
             ],
         })
-        $(elementId).data("kendoWindow").title(title);
+        $(elementId).data("kendoWindow").element.prev().find(".k-window-title").html('<h5 class="card-title d-inline">' + title + '</h5>');
         $(elementId).data("kendoWindow").center().open();
     }
     function onOpen(e) {
@@ -1263,6 +1278,7 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
         }
         $.ajax(scriptrp,settings).then(function(resp) {
             var obj = $.parseJSON(resp);
+            $('#content-detail').html();
             $('#content-detail').hide().html(obj.result).fadeIn('fast');
             $('.loading-page').removeClass('active');
         })

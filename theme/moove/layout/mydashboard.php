@@ -28,7 +28,7 @@ user_preference_allow_ajax_update('drawer-open-nav', PARAM_ALPHA);
 user_preference_allow_ajax_update('sidepre-open', PARAM_ALPHA);
 
 require_once($CFG->libdir . '/behat/lib.php');
-
+global $DB;
 if (isloggedin()) {
     $navdraweropen = (get_user_preferences('drawer-open-nav', 'true') == 'true');
     $draweropenright = (get_user_preferences('sidepre-open', 'true') == 'true');
@@ -54,6 +54,19 @@ if(isset($_SERVER['HTTP_REFERER'])) {
 } else {
     $hasportal = false;
 }
+$check_is_teacher = $DB->get_records_sql('SELECT COUNT(c.id) AS courses
+                            FROM mdl_role_assignments ra
+                                 JOIN mdl_user u ON ra.userid = u.id
+                                 JOIN mdl_user_enrolments ue ON u.id = ue.userid 
+                                 JOIN mdl_enrol enr ON ue.enrolid = enr.id
+                                 JOIN mdl_course c ON enr.courseid = c.id
+                                 JOIN mdl_context ct ON ct.id = ra.contextid AND ct.instanceid = c.id
+                            WHERE ra.roleid= 3 AND u.id = :userid', ['userid' => $USER->id]);
+if($check_is_teacher) {
+    $is_teacher = true;
+} else {
+    $is_teacher = false;
+}
 
 // $PAGE->requires->js_call_amd('local_newsvnr/studentinfo', 'init');
 $PAGE->requires->strings_for_js(array('emptydata','action','viewcourse', 'code', 'email', 'datecreated'), 'local_newsvnr');
@@ -72,6 +85,7 @@ $templatecontext = [
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'is_siteadmin' => is_siteadmin(),
+    'is_teacher' => $is_teacher,
     'hasportal' => $hasportal, 
     'canviewadmininfos' => false
 ];

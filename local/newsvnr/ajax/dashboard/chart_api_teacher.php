@@ -29,6 +29,7 @@ define('AJAX_SCRIPT', false);
 require_once __DIR__ . '/../../../../config.php';
 require_once $CFG->dirroot . '/local/newsvnr/lib.php';
 require_once $CFG->dirroot . '/blocks/analytics_graphs/lib.php';
+require_once $CFG->dirroot . '/blocks/dedication/dedication_lib.php';
 require_once $CFG->dirroot . '/course/lib.php';
 
 require_login();
@@ -72,7 +73,6 @@ switch ($action) {
             $gradeobj       = new stdClass;
             $gradeobj->name = $value->quizname;
             $gradeobj->y    = (int) $value->grade;
-            // $gradeobj->drilldown = $value->coursename;
             $grades[]            = $gradeobj;
             $gradeattempts       = new stdClass;
             $gradeattempts->name = $value->quizname;
@@ -144,11 +144,11 @@ switch ($action) {
             $obj->coursecompletion = '<a href="' . $coursecompletionurl . '" target="_blank">' . $DB->count_records('course_completion_criteria', ['course' => $course->id]) . '</a>';
             $obj->coursemodules    = '<a href="javascript:;" onclick="viewModuleDetail(' . $course->id . ')">' . $DB->count_records('course_modules', ['course' => $course->id]) . '</a>';
             if ($course->startdate > time()) {
-                $obj->status = '<span class="badge badge-warning p-2 rounded">Kế hoạch</span>';
+                $obj->status = '<span class="badge badge-warning p-2 rounded">'.get_string('plan', 'theme_moove').'</span>';
             } else if ($course->enddate <= time()) {
-                $obj->status = '<span class="badge badge-danger p-2 rounded">Kết thúc</span>';
+                $obj->status = '<span class="badge badge-danger p-2 rounded">'.get_string('finished', 'theme_moove').'</span>';
             } else if ($course->startdate <= time() && $course->enddate > time()) {
-                $obj->status = '<span class="badge badge-success p-2 rounded">Đang thực hiện</span>';
+                $obj->status = '<span class="badge badge-success p-2 rounded">'.get_string('progressing', 'theme_moove').'</span>';
             }
             $obj->total = $course->total;
             $data[]     = $obj;
@@ -198,6 +198,15 @@ switch ($action) {
             $obj->studentname = $OUTPUT->user_picture($userinfo, array('size'=>35)) . fullname($userinfo);
             $obj->coursename  = $value->fullname;
             $obj->courseid    = $value->shortname;
+            $timespenttotal = 0;
+            $dm = new block_dedication_manager($course, $course->startdate, time(), 3600);
+            $obj_user = new stdClass;
+            $obj_user->id = $value->userid;
+            $rows = $dm->get_user_dedication($obj_user);
+            foreach ($rows as $index => $row) {
+                $timespenttotal += $row->dedicationtime;
+            }
+            $obj->spenttime   = block_dedication_utils::format_dedication($timespenttotal);
             $obj->total       = $value->total;
             if (!empty($get_grade)) {
                 $obj->rank       = $get_grade->rank;
@@ -209,10 +218,10 @@ switch ($action) {
             $obj->process = ($role == 5) ? $process . '%' : "-";
             if ($value->timecompleted != null) {
                 $obj->timecompleted = convertunixtime('d/m/Y', $value->timecompleted, 'Asia/Ho_Chi_Minh');
-                $obj->status        = "<span class='badge badge-success rounded p-2'>Hoàn thành</span>";
+                $obj->status        = "<span class='badge badge-success rounded p-2'>".get_string('org_completed', 'local_newsvnr')."</span>";
             } else {
                 $obj->timecompleted = '-';
-                $obj->status        = "<span class='badge badge-danger rounded p-2'>Chưa hoàn thành</span>";
+                $obj->status        = "<span class='badge badge-danger rounded p-2'>".get_string('org_incomplete', 'local_newsvnr')."</span>";
             }
             $data[] = $obj;
         }
@@ -399,23 +408,20 @@ switch ($action) {
             $obj                      = new stdClass();
             $obj->studentunfinish     = $i;
             $obj->studentfinish       = count($list_user) - $i;
-            $obj->gradeavg            = round(get_course_grade_avg($courseid)[0]->courseavg, 2);
+            $obj->gradeavg            = get_course_grade_avg($courseid)[0]->courseavg;
             $studentunfinish_percent  = ($obj->studentunfinish * 100) / $i;
             $studentfinish_percent    = ($obj->studentfinish * 100) / $i;
-            $obj->title               = "<div class='position-relative'><p class='m-0 text-center text-dark' style='font-size:30px'>" . ($obj->studentfinish * 100) / $i . "%</p><span style='font-size:14px; color:#AFAFAF'>Tiến trình</span></div>";
+            $obj->title               = "<div class='position-relative'><p class='m-0 text-center text-dark' style='font-size:30px'>" . ($obj->studentfinish * 100) / $i . "%</p><span style='font-size:14px; color:#AFAFAF'>".get_string('progress', 'local_newsvnr')."</span></div>";
             $obj_series               = new stdClass;
-            $obj_series->name         = 'Tiến trình';
+            $obj_series->name         = get_string('progress', 'local_newsvnr');
             $obj_series->colorByPoint = true;
-            $obj_series->data         = [(object) ['name' => 'Hoàn thành', 'y' => $studentfinish_percent, 'color' => '#1DB34F'], ['name' => 'Chưa hoàn thành', 'y' => $studentunfinish_percent, 'color' => '#DD4B39']];
+            $obj_series->data         = [(object) ['name' => get_string('studentcompleted', 'theme_moove'), 'y' => $studentfinish_percent, 'color' => '#1DB34F'], ['name' => get_string('studentstudying', 'theme_moove'), 'y' => $studentunfinish_percent, 'color' => '#DD4B39']];
             $obj->series              = $obj_series;
             echo json_encode($obj, JSON_UNESCAPED_UNICODE);
         } else {
-            echo json_encode('Không có dữ liệu hiện thị!', JSON_UNESCAPED_UNICODE);
+            echo json_encode(get_string('nodata,', 'local_newsvnr'), JSON_UNESCAPED_UNICODE);
         }
         die;
-    case 'get_avg':
-        print_r(get_course_grade_avg(150, false));die;
     default:
-        # code...
         break;
 }
