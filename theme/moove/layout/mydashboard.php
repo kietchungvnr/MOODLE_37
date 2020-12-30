@@ -85,7 +85,7 @@ $templatecontext = [
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'is_siteadmin' => is_siteadmin(),
     'is_teacher' => $is_teacher,
-    'hasportal' => $hasportal, 
+    'hasportal' => $hasportal,
     'canviewadmininfos' => false
 ];
 
