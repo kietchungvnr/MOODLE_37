@@ -28,6 +28,18 @@ a {
 
 #sidepreopen-control{
     z-index: 1;
+    background-color: #4c89c1;
+    position: fixed;
+    right: -15px;
+    top: 50%;
+    color: #fff;
+    width: 37px;
+    height: 37px;
+    border-radius: 20px;
+    font-size: 15px;
+    padding: 10px 3px;
+    cursor: pointer;
+    display: flex;
 }
 #sidepre-blocks {
     padding: 1rem;
@@ -1758,7 +1770,7 @@ li {
  }
 }
 nav.navbar {
-    min-height: 48px;
+    min-height: 55px;
     height: 48px !important;
 }
 nav.navcourse {
@@ -3287,7 +3299,7 @@ table#categoryquestions tr {
     font-size: 20px;
 }
 header#header {
-    margin-top: 49px !important;
+    margin-top: 56px !important;
 }
 tr.drag-samenode td {
     border:1px solid #b7b0b07a;
@@ -5086,7 +5098,7 @@ body.sidebar-hover .fixed-sidebar-left{
 }
 body .fixed-sidebar-left {
     position: fixed;
-    top: 48px;
+    top: 55px;
     left: 0;
     bottom: 0;
     z-index: 100;
@@ -5654,6 +5666,42 @@ nav.navbar ul.navbar-nav .usermenu {
     width: 35px;
     text-align: center;
     height: 25px;
+}
+#page-my-index .card {
+    margin-left: -5px;
+    margin-right: -5px;
+}
+#page-my-index .k-grid tr td,
+#page-my-index .k-pivot-layout .k-grid tr td {
+    border-bottom-width: 0px;
+}
+.action-rightside-fixed {
+    position: fixed;
+    z-index: 9;
+    right: -193px;
+    top: 15%;
+}
+.action-rightside-fixed li {
+    display: block;
+    height: 30px;
+    line-height: 34px;
+    padding: 0px 5px;
+    background: #4c89c1;
+    color: #fff;
+    font-size: 10px;
+    margin-bottom: 2px;
+    transition: all .3s ease;
+    display: flex;
+    align-items: center;
+    border-radius: 8px 0 0 8px;
+    width: 215px;
+}
+.action-rightside-fixed li a{
+    color: white;
+}
+.action-rightside-fixed li:hover {
+    transform: translateX(-185px);
+}
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />

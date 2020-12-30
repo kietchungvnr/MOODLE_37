@@ -517,3 +517,16 @@ $string['coursefinish'] = "Course finished";
 $string['coursefinished'] = "Course finished";
 $string['courseopening'] = "Course opening";
 $string['coursefuture'] = "Course plan";
+$string['coursefuture'] = "Course plan";
+$string['activeresource'] = "Active resource";
+$string['yourgrade'] = "Your grade";
+$string['gradeavg'] = "Grade average";
+$string['timeclose'] = "Time close";
+$string['course'] = "Course";
+$string['grade'] = "Grade";
+$string['timeenrolcourse'] = "Time enrol course";
+$string['timefinishcourse'] = "Time finished";
+$string['assignmentname'] = "Assignment name";
+$string['back'] = "back";
+$string['gradeavgcourse'] = "Course grade average";
+

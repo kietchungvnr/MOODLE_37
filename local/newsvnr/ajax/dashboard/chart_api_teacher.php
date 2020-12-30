@@ -44,10 +44,10 @@ switch ($action) {
     case 'quiz_chart':
         $response = new stdClass;
         $sql      = "SELECT ROW_NUMBER() OVER (ORDER BY q.id) AS RowNum, q.id quizid, q.course, c.fullname coursename, q.name quizname, CONVERT(DECIMAL(10,2),qg.grade) grade
-				FROM mdl_quiz q
-					LEFT JOIN mdl_quiz_grades qg ON q.id = qg.quiz
-					LEFT JOIN mdl_course c ON q.course = c.id
-				WHERE qg.userid = :userid";
+                FROM mdl_quiz q
+                    LEFT JOIN mdl_quiz_grades qg ON q.id = qg.quiz
+                    LEFT JOIN mdl_course c ON q.course = c.id
+                WHERE qg.userid = :userid";
         $data            = $DB->get_records_sql($sql, ['userid' => 276]);
         $coursenames     = [];
         $grades          = [];
@@ -70,9 +70,9 @@ switch ($action) {
                 }
             }
 
-            $gradeobj       = new stdClass;
-            $gradeobj->name = $value->quizname;
-            $gradeobj->y    = (int) $value->grade;
+            $gradeobj            = new stdClass;
+            $gradeobj->name      = $value->quizname;
+            $gradeobj->y         = (int) $value->grade;
             $grades[]            = $gradeobj;
             $gradeattempts       = new stdClass;
             $gradeattempts->name = $value->quizname;
@@ -119,7 +119,7 @@ switch ($action) {
                                 JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
                                 JOIN mdl_role AS r ON r.id= ra.roleid
                             $wheresql) AS total
-				FROM (SELECT ROW_NUMBER() OVER (ORDER BY c.id) AS RowNum, c.*
+                FROM (SELECT ROW_NUMBER() OVER (ORDER BY c.id) AS RowNum, c.*
                         FROM mdl_role_assignments AS ra
                             JOIN mdl_user AS u ON u.id= ra.userid
                             JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
@@ -144,11 +144,11 @@ switch ($action) {
             $obj->coursecompletion = '<a href="' . $coursecompletionurl . '" target="_blank">' . $DB->count_records('course_completion_criteria', ['course' => $course->id]) . '</a>';
             $obj->coursemodules    = '<a href="javascript:;" onclick="viewModuleDetail(' . $course->id . ')">' . $DB->count_records('course_modules', ['course' => $course->id]) . '</a>';
             if ($course->startdate > time()) {
-                $obj->status = '<span class="badge badge-warning p-2 rounded">'.get_string('plan', 'theme_moove').'</span>';
+                $obj->status = '<span class="badge badge-warning p-2 rounded">' . get_string('plan', 'theme_moove') . '</span>';
             } else if ($course->enddate <= time()) {
-                $obj->status = '<span class="badge badge-danger p-2 rounded">'.get_string('finished', 'theme_moove').'</span>';
+                $obj->status = '<span class="badge badge-danger p-2 rounded">' . get_string('finished', 'theme_moove') . '</span>';
             } else if ($course->startdate <= time() && $course->enddate > time()) {
-                $obj->status = '<span class="badge badge-success p-2 rounded">'.get_string('progressing', 'theme_moove').'</span>';
+                $obj->status = '<span class="badge badge-success p-2 rounded">' . get_string('progressing', 'theme_moove') . '</span>';
             }
             $obj->total = $course->total;
             $data[]     = $obj;
@@ -170,22 +170,22 @@ switch ($action) {
             $ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
         }
         $sql = "SELECT *,(SELECT COUNT(u.id)
-		                    FROM mdl_user_enrolments ue
-		                        JOIN mdl_enrol e ON ue.enrolid = e.id
-		                        JOIN mdl_course c ON e.courseid = c.id
-		                        JOIN mdl_role_assignments ra ON ra.userid = ue.userid
-		                        JOIN mdl_user u ON u.id = ra.userid
-		                        JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id
-		                        LEFT JOIN mdl_course_completions cc ON cc.userid = c.id $wheresql) AS total
-		        FROM (SELECT ROW_NUMBER() OVER (ORDER BY c.id) AS RowNum,c.*,cc.timecompleted,u.usercode, u.id userid
-		              FROM mdl_user_enrolments ue
-		                JOIN mdl_enrol e ON ue.enrolid = e.id
-		                JOIN mdl_course c ON e.courseid = c.id
-		                JOIN mdl_role_assignments ra ON ra.userid = ue.userid
-		                JOIN mdl_user u ON u.id = ra.userid
-		                JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id
-		                LEFT JOIN mdl_course_completions cc ON cc.userid = c.id AND cc.course = c.id $wheresql) AS Mydata
-		        ORDER BY $ordersql";
+                            FROM mdl_user_enrolments ue
+                                JOIN mdl_enrol e ON ue.enrolid = e.id
+                                JOIN mdl_course c ON e.courseid = c.id
+                                JOIN mdl_role_assignments ra ON ra.userid = ue.userid
+                                JOIN mdl_user u ON u.id = ra.userid
+                                JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id
+                                LEFT JOIN mdl_course_completions cc ON cc.userid = c.id $wheresql) AS total
+                FROM (SELECT ROW_NUMBER() OVER (ORDER BY c.id) AS RowNum,c.*,cc.timecompleted,u.usercode, u.id userid
+                      FROM mdl_user_enrolments ue
+                        JOIN mdl_enrol e ON ue.enrolid = e.id
+                        JOIN mdl_course c ON e.courseid = c.id
+                        JOIN mdl_role_assignments ra ON ra.userid = ue.userid
+                        JOIN mdl_user u ON u.id = ra.userid
+                        JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id
+                        LEFT JOIN mdl_course_completions cc ON cc.userid = c.id AND cc.course = c.id $wheresql) AS Mydata
+                ORDER BY $ordersql";
         $get_list = $DB->get_records_sql($sql);
         foreach ($get_list as $value) {
             $get_grade        = get_finalgrade_student($value->userid, $value->id);
@@ -194,20 +194,20 @@ switch ($action) {
             $process          = round(\core_completion\progress::get_course_progress_percentage($course, $value->userid));
             $obj->number      = $value->rownum;
             $obj->usercode    = ($value->usercode) ? $value->usercode : "-";
-            $userinfo = $DB->get_record('user', ['id' => $value->userid]);
-            $obj->studentname = $OUTPUT->user_picture($userinfo, array('size'=>35)) . fullname($userinfo);
+            $userinfo         = $DB->get_record('user', ['id' => $value->userid]);
+            $obj->studentname = $OUTPUT->user_picture($userinfo, array('size' => 35)) . fullname($userinfo);
             $obj->coursename  = $value->fullname;
             $obj->courseid    = $value->shortname;
-            $timespenttotal = 0;
-            $dm = new block_dedication_manager($course, $course->startdate, time(), 3600);
-            $obj_user = new stdClass;
-            $obj_user->id = $value->userid;
-            $rows = $dm->get_user_dedication($obj_user);
+            $timespenttotal   = 0;
+            $dm               = new block_dedication_manager($course, $course->startdate, time(), 3600);
+            $obj_user         = new stdClass;
+            $obj_user->id     = $value->userid;
+            $rows             = $dm->get_user_dedication($obj_user);
             foreach ($rows as $index => $row) {
                 $timespenttotal += $row->dedicationtime;
             }
-            $obj->spenttime   = block_dedication_utils::format_dedication($timespenttotal);
-            $obj->total       = $value->total;
+            $obj->spenttime = block_dedication_utils::format_dedication($timespenttotal);
+            $obj->total     = $value->total;
             if (!empty($get_grade)) {
                 $obj->rank       = $get_grade->rank;
                 $obj->gradefinal = $get_grade->gradefinal;
@@ -218,10 +218,10 @@ switch ($action) {
             $obj->process = ($role == 5) ? $process . '%' : "-";
             if ($value->timecompleted != null) {
                 $obj->timecompleted = convertunixtime('d/m/Y', $value->timecompleted, 'Asia/Ho_Chi_Minh');
-                $obj->status        = "<span class='badge badge-success rounded p-2'>".get_string('org_completed', 'local_newsvnr')."</span>";
+                $obj->status        = "<span class='badge badge-success rounded p-2'>" . get_string('org_completed', 'local_newsvnr') . "</span>";
             } else {
                 $obj->timecompleted = '-';
-                $obj->status        = "<span class='badge badge-danger rounded p-2'>".get_string('org_incomplete', 'local_newsvnr')."</span>";
+                $obj->status        = "<span class='badge badge-danger rounded p-2'>" . get_string('org_incomplete', 'local_newsvnr') . "</span>";
             }
             $data[] = $obj;
         }
@@ -231,11 +231,11 @@ switch ($action) {
         $courseid   = optional_param('courseid', '', PARAM_INT);
         $response   = new stdClass;
         $series_sql = "SELECT m.name, c.fullname,COUNT(module) AS module
-				FROM mdl_course_modules cm
-					LEFT JOIN mdl_modules m ON cm.module = m.id
-					LEFT JOIN mdl_course c on c.id = cm.course
-				WHERE cm.course = :courseid
-				GROUP BY m.name, c.fullname";
+                FROM mdl_course_modules cm
+                    LEFT JOIN mdl_modules m ON cm.module = m.id
+                    LEFT JOIN mdl_course c on c.id = cm.course
+                WHERE cm.course = :courseid
+                GROUP BY m.name, c.fullname";
 
         $data       = $DB->get_records_sql($series_sql, ['courseid' => $courseid]);
         $categories = $temp_series = $series = $modules = $drilldownc = $temp_drilldown = [];
@@ -255,12 +255,12 @@ switch ($action) {
             // Lấy dữ liệu drilldown cho module
             $modulename    = $value->name;
             $drilldown_sql = "SELECT *
-							FROM (SELECT mn.id, mn.name
-									FROM mdl_course_modules cm
-										JOIN mdl_modules m ON cm.module = m.id
-										JOIN mdl_$modulename mn ON cm.instance = mn.id
-									WHERE m.name = :modulename AND cm.course = :courseid
-								) Mydata";
+                            FROM (SELECT mn.id, mn.name
+                                    FROM mdl_course_modules cm
+                                        JOIN mdl_modules m ON cm.module = m.id
+                                        JOIN mdl_$modulename mn ON cm.instance = mn.id
+                                    WHERE m.name = :modulename AND cm.course = :courseid
+                                ) Mydata";
             $modules_detail      = $DB->get_records_sql($drilldown_sql, ['modulename' => $modulename, 'courseid' => $courseid]);
             $obj_drilldown       = new stdclass;
             $obj_drilldown->name = ucfirst($value->name);
@@ -317,9 +317,9 @@ switch ($action) {
             $userid      = $user->id;
             $usersname[] = $user->userfullname;
             $grades_sql  = "SELECT *
-						FROM mdl_grade_grades gg
-							LEFT JOIN mdl_grade_items gi ON gg.itemid = gi.id
-						WHERE gi.courseid = :courseid AND gg.userid = :userid";
+                        FROM mdl_grade_grades gg
+                            LEFT JOIN mdl_grade_items gi ON gg.itemid = gi.id
+                        WHERE gi.courseid = :courseid AND gg.userid = :userid";
             $grades       = $DB->get_records_sql($grades_sql, ['courseid' => 150, 'userid' => $userid]);
             $count_module = 0;
             foreach ($grades as $grade) {
@@ -376,17 +376,17 @@ switch ($action) {
         die;
     case 'get_list_completion_course':
         $courseid  = optional_param('courseid', null, PARAM_INT);
-        $params    = $i    = $j    = $sum    = $max    = $min    = 0;
+        $params    = $i    = $max    = $min    = 0;
         $course    = $DB->get_record('course', ['id' => $courseid]);
         $cinfo     = new completion_info($course);
         $list_user = $DB->get_records_sql("SELECT u.*
-											FROM mdl_user_enrolments ue
-												JOIN mdl_enrol e ON ue.enrolid = e.id
-												JOIN mdl_course c ON e.courseid = c.id
-												JOIN mdl_role_assignments ra ON ra.userid = ue.userid
-												JOIN mdl_user u ON u.id = ra.userid
-												JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id
-											where ra.roleid=5 AND c.id =:courseid", ['courseid' => $course->id]);
+                                            FROM mdl_user_enrolments ue
+                                                JOIN mdl_enrol e ON ue.enrolid = e.id
+                                                JOIN mdl_course c ON e.courseid = c.id
+                                                JOIN mdl_role_assignments ra ON ra.userid = ue.userid
+                                                JOIN mdl_user u ON u.id = ra.userid
+                                                JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id
+                                            where ra.roleid=5 AND c.id =:courseid", ['courseid' => $course->id]);
         if ($list_user) {
             foreach ($list_user as $user) {
                 // Kiểm tra số học viên chưa hoàn thành khóa
@@ -396,7 +396,6 @@ switch ($action) {
                 }
                 $list_grade = get_finalgrade_student($user->id, $course->id);
                 if (!empty($list_grade)) {
-                    $sum = $list_grade->gradefinal + $sum;
                     $j++;
                     $max = max($max, $list_grade->gradefinal);
                     if ($min == 0) {
@@ -409,13 +408,12 @@ switch ($action) {
             $obj->studentunfinish     = $i;
             $obj->studentfinish       = count($list_user) - $i;
             $obj->gradeavg            = get_course_grade_avg($courseid)[0]->courseavg;
-            $studentunfinish_percent  = ($obj->studentunfinish * 100) / $i;
-            $studentfinish_percent    = ($obj->studentfinish * 100) / $i;
-            $obj->title               = "<div class='position-relative'><p class='m-0 text-center text-dark' style='font-size:30px'>" . ($obj->studentfinish * 100) / $i . "%</p><span style='font-size:14px; color:#AFAFAF'>".get_string('progress', 'local_newsvnr')."</span></div>";
+            $sum                      = $i + $obj->studentfinish;
+            $obj->title               = "<div class='position-relative'><p class='m-0 text-center text-dark' style='font-size:30px'>" . ($obj->studentfinish * 100) / $sum . "%</p><span style='font-size:14px; color:#AFAFAF'>" . get_string('progress', 'local_newsvnr') . "</span></div>";
             $obj_series               = new stdClass;
             $obj_series->name         = get_string('progress', 'local_newsvnr');
             $obj_series->colorByPoint = true;
-            $obj_series->data         = [(object) ['name' => get_string('studentcompleted', 'theme_moove'), 'y' => $studentfinish_percent, 'color' => '#1DB34F'], ['name' => get_string('studentstudying', 'theme_moove'), 'y' => $studentunfinish_percent, 'color' => '#DD4B39']];
+            $obj_series->data         = [(object) ['name' => get_string('studentcompleted', 'theme_moove'), 'y' => $obj->studentfinish, 'color' => '#1DB34F'], ['name' => get_string('studentstudying', 'theme_moove'), 'y' => $obj->studentunfinish, 'color' => '#DD4B39']];
             $obj->series              = $obj_series;
             echo json_encode($obj, JSON_UNESCAPED_UNICODE);
         } else {

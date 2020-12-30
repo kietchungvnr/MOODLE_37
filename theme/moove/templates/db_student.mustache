@@ -11,7 +11,7 @@
 						<div class="d-flex justify-content-center">
 							{{{userimgbig}}}
 						</div>
-						<div class="text-center mt-2"><a href="{{{userlink}}}" target="_blank">{{#str}}viewdetail,local_newsvnr{{/str}}</a></div>
+						<div class="text-center mt-2 mr-2"><a href="{{{userlink}}}" target="_blank">{{#str}}viewdetail,local_newsvnr{{/str}}</a></div>
 					</div>
 					<div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
 						<div class="d-flex"><p class="grey mr-1">{{#str}}fullnamelastname,local_newsvnr{{/str}}</p><p class="text-title">{{{fullname}}}</p></div>
@@ -101,8 +101,8 @@
 	</div>
 </div>
 {{/userinfo}}
-<div class="row mt-3">
-	<div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
+<div class="row">
+	<div class="col-lg-9 col-md-8 col-sm-12 col-xs-12 mt-3">
 		 <div class="card">
 		 	<div class="card-body">
 		 		<h5 class="card-title d-inline">{{#str}}gradereport,local_newsvnr{{/str}}</h5>
@@ -111,7 +111,7 @@
 	    	</div>
 		</div>
 	</div>
-	<div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+	<div class="col-lg-3 col-md-4 col-sm-12 col-xs-12 mt-3">
 		<div class="card">
 			<div class="card-body">
 				<h5 class="card-title d-inline">{{#str}}learningprocess,local_newsvnr{{/str}}</h5>
@@ -121,8 +121,8 @@
 		</div>
 	</div>
 </div>
-<div class="row mt-3">
-	<div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+<div class="row">
+	<div class="col-lg-7 col-md-7 col-sm-12 col-xs-12 mt-3">
 		 <div class="card">
 		 	<div class="card-body">
 		 		<h5 class="card-title d-inline">{{#str}}coursejoin,local_newsvnr{{/str}}</h5>
@@ -131,7 +131,7 @@
 		 	</div>
 		 </div>
 	</div>
-	<div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+	<div class="col-lg-5 col-md-5 col-sm-12 col-xs-12 mt-3">
 		 <div class="card">
 		 	<div class="card-body">
 		        <ul class="nav-tabs nav multi-tab mb-3" tab="quizkendo">
@@ -295,7 +295,7 @@ var initKendoMycourse = function() {
 				},
                 field: "coursename",
                 title: 'Khóa học',
-                width: "180px"
+                width: "170px"
 			},
 			{
 				template: function(e) {
@@ -303,7 +303,7 @@ var initKendoMycourse = function() {
 				},
                 field: "process",
                 title: 'Tiến trình học',
-                width: "150px"
+                width: "140px"
 			},
 			{
                 field: "gradefinal",
@@ -313,12 +313,12 @@ var initKendoMycourse = function() {
 			{
                 field: 'timestart',
                 title: 'Ngày vào khóa',
-                width: "110px"
+                width: "100px"
 			},
 			{
                 field: 'timecompleted',
                 title: 'Ngày hoàn thành',
-                width: "110px"
+                width: "100px"
 			}
 		];
 		var toolbar = false;

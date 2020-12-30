@@ -143,14 +143,14 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
     $url = new moodle_url("$CFG->wwwroot/my/index.php", $params);
     if (!$currentpage->userid) {
         // viewing a system page -- let the user customise it
-        $editstring = '<a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.get_string('updatemymoodleon').'</a>';
+        $editstring = '<li><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i><a href="'.$url.'" class="text-icon-dashboard">'.get_string('updatemymoodleon').'</a></li>';
     } else if (empty($edit)) {
         // $editstring = get_string('updatemymoodleon');
-        $editstring = '<a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.get_string('updatemymoodleon').'</a>';
+        $editstring = '<li><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i><a href="'.$url.'" class="text-icon-dashboard">'.get_string('updatemymoodleon').'</a></li>';
     } else {
-        $editstring = '<a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.get_string('updatemymoodleoff').'</a>';
+        $editstring = '<li><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i><a href="'.$url.'" class="text-icon-dashboard">'.get_string('updatemymoodleoff').'</a></li>';
         // $resetbutton = $OUTPUT->single_button($reseturl, $resetstring);
-        $resetbutton = '<a href="'.$reseturl.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.$resetstring.'</a>';
+        $resetbutton = '<li><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i><a href="'.$reseturl.'" class="text-icon-dashboard">'.$resetstring.'</a></li>';
         ;
     }
     if (!$currentpage->userid) {
@@ -159,7 +159,7 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
     
     $button = $editstring;
     if($resetbutton !== '') 
-        $PAGE->set_button($resetbutton .' | '. $button);
+        $PAGE->set_button($resetbutton .''. $button);
     else 
         $PAGE->set_button($button);
 

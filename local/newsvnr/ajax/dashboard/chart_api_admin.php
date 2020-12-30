@@ -30,17 +30,17 @@ require_once __DIR__ . '/../../../../config.php';
 require_once $CFG->dirroot . '/local/newsvnr/lib.php';
 $action = optional_param('action', null, PARAM_RAW);
 $PAGE->set_context(context_system::instance());
-$data = [];
+$data   = [];
 $output = '';
 require_login();
 
 switch ($action) {
     case 'coursestatus':
         require_once "{$CFG->libdir}/completionlib.php";
-        $currenttime = time();
-        $coursefinish = $DB->get_record_sql("SELECT COUNT(*) as count FROM {course} WHERE enddate < $currenttime AND enddate != 0");
+        $currenttime   = time();
+        $coursefinish  = $DB->get_record_sql("SELECT COUNT(*) as count FROM {course} WHERE enddate < $currenttime AND enddate != 0");
         $courseopening = $DB->get_record_sql("SELECT COUNT(*) as count FROM {course} WHERE (enddate > $currenttime OR enddate = 0) AND startdate < $currenttime");
-        $coursefuture = $DB->get_record_sql("SELECT COUNT(*) as count FROM {course} WHERE startdate > $currenttime");
+        $coursefuture  = $DB->get_record_sql("SELECT COUNT(*) as count FROM {course} WHERE startdate > $currenttime");
         $listcourse    = get_list_course_by_student($USER->id);
         $data[0]       = ['name' => get_string('coursefinished','local_newsvnr'), 'y' => (int) $coursefinish->count];
         $data[1]       = ['name' => get_string('courseopening','local_newsvnr'), 'y' => (int) $courseopening->count];
