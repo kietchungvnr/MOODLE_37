@@ -409,7 +409,7 @@ switch ($action) {
             $obj->studentfinish       = count($list_user) - $i;
             $obj->gradeavg            = get_course_grade_avg($courseid)[0]->courseavg;
             $sum                      = $i + $obj->studentfinish;
-            $obj->title               = "<div class='position-relative'><p class='m-0 text-center text-dark' style='font-size:30px'>" . ($obj->studentfinish * 100) / $sum . "%</p><span style='font-size:14px; color:#AFAFAF'>" . get_string('progress', 'local_newsvnr') . "</span></div>";
+            $obj->title               = "<div class='position-relative'><p class='m-0 text-center text-dark' style='font-size:30px'>" . round(($obj->studentfinish * 100) / $sum, 2) . "%</p><span style='font-size:14px; color:#AFAFAF'>" . get_string('progress', 'local_newsvnr') . "</span></div>";
             $obj_series               = new stdClass;
             $obj_series->name         = get_string('progress', 'local_newsvnr');
             $obj_series->colorByPoint = true;

@@ -349,6 +349,7 @@ function theme_moove_delete_menuitems_incourse(\flat_navigation $flatnav) {
         'mycourses_by_teacher_vnr',
         'grabnode',
         'newsvnr-sections',
+        'courseindexpage'
         // 'sitesettings'
 
         // 'coursehome',

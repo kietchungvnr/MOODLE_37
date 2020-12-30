@@ -288,7 +288,8 @@ class graph_submission {
                                             $("#" + nome_conteudo).dialog("open");
                                 }
                             }
-                        }
+                        },
+                        pointWidth: 40
                     }
                 },
                 bar: {

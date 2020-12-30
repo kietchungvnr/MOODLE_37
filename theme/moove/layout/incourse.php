@@ -60,7 +60,7 @@ if(isset($_SERVER['HTTP_REFERER'])) {
 } else {
     $hasportal = false;
 }
-if($_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
+if(isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
     $hasiframe = true;
 } else {
     $hasiframe = false;

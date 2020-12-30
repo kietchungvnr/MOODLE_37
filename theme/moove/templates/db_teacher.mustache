@@ -277,7 +277,7 @@
 				} else if(typeChart == 'grade_view') {
 					url = Config.wwwroot + '/blocks/analytics_graphs/grades_chart.php?id=' + courseid;
 				}
-				var iframe = '<iframe id="iframe" src="'+url+'" width="100%" height="768" frameBorder="0"></iframe>';
+				var iframe = '<iframe id="iframe" src="'+url+'" width="100%" height="600" frameBorder="0"></iframe>';
 	        	$('#report-chart').html(iframe);
        		}
 			
@@ -379,7 +379,7 @@
 			            }, 
                         {
                             field: "spenttime",
-                            title: s[13],
+                            title: s[13], 
                             width: "100px"
                         },
 			            {
@@ -996,6 +996,9 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
 	                        useHTML: true
 	                    },
 	                    plotOptions: {
+                            series: {
+                                pointWidth: 40
+                            },
 	                        column: {
 	                            pointPadding: 0.2,
 	                            borderWidth: 0
@@ -1037,7 +1040,8 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
                 } else {
                     Highcharts.chart(overviewChart, {
                         chart: {
-                            type: 'column'
+                            type: 'column',
+                            height: 307
                         },
                         title: {
                             text: ''

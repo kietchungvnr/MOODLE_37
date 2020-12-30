@@ -75,7 +75,10 @@ switch ($action) {
                             $min = min($min, $list_grade->gradefinal);
                         }
                     }
-                    $studentfinish_percent = count($list_user) - $i / $i;
+                    if($i == 0) 
+                        $studentfinish_percent = 0;
+                    else 
+                        $studentfinish_percent = round(count($list_user) - $i / $i);
                 } else {
                     $studentfinish_percent = 0;
                 }
@@ -89,12 +92,14 @@ switch ($action) {
                 $courselink  = $CFG->wwwroot . "/course/view.php?id=" . $value->id;
                 $process     = round(\core_completion\progress::get_course_progress_percentage($course, $USER->id));
                 $courseimage = $theme_settings::get_course_images($courseobj, $courselink);
+                $studenttotal = count($list_user);
                 $output .= '<div class="col-md-6 col-sm-12 pd-0">';
                 $output .= '<div class="card-body row">';
                 $output .= '<div class="col-md-3 col-sm-6 courseimage">' . $courseimage . '</div>';
                 $output .= '<div class="media-body col-md-9 col-sm-6">';
                 $output .= '<a class="font-bold" target="_blank" href="' . $courselink . '">' . $value->fullname . '</a><br>';
                 $output .= '<span class="grey">' . $category->name . '</span><br>';
+                $output .= '<span>' . get_string('countstudent', 'local_newsvnr'). ': '. $studenttotal . '</span><br>';
                 $output .= '<p>'.get_string('teachername', 'theme_moove').': ' . $teachername . '</p>';
                 $output .= '</div>'; // end col
                 $output .= '<div class="col-md-2 text-right">
@@ -234,7 +239,7 @@ switch ($action) {
                             $img = '<img title="quiz" class="pr-2 img-module" src="' . $OUTPUT->image_url('icon', 'quiz') . '">';
                             $url = $CFG->wwwroot . '/mod/quiz/view.php?id=' . $quiz->coursemoduleid;
                             $output .= '<div class="pl-3 pt-2 pb-2 module-quiz-online">';
-                            $output .= '<div class="">' . $img . '' . $quiz->name . '<a class="float-right mr-2" href="' . $url . '" target="_blank">' . get_string('enterexam', 'local_newsvnr') . '</a></div>';
+                            $output .= '<div class="">' . $img . '' . $quiz->name . '</a></div>';
                             $output .= '<div class="info-quiz d-flex ml-4">';
                             $output .= '<div class="detail-quiz"><i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>' . $countquestion->count . ' ' . get_string('question', 'local_newsvnr') . '</div>';
                             $output .= '<div class="detail-quiz"><i class="fa fa-clock-o mr-1" aria-hidden="true"></i>' . convertTimeExam($quiz->timelimit) . '</div>';

@@ -676,8 +676,6 @@ $event->trigger();
                         point: {
                             events: {
                                 click: function() {
-                                    debugger
-                                    console.log(this)
                                     var nome_conteudo = this.x + "-" + this.series.name.charAt(0);
                                     $(".div_nomes").dialog("close");
                                     var group_id = $("#group_select").val();
@@ -734,7 +732,6 @@ $event->trigger();
                     color: '#FE2E2E'
                 }]
             }
-            console.log(initChart)
             $('#container').highcharts(initChart);
         });
     </script>

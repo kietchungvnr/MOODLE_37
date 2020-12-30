@@ -101,7 +101,7 @@ if ($node) {
 }
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('participants'));
+// echo $OUTPUT->heading(get_string('participants'));
 
 $filterset = new \core_user\table\participants_filterset();
 $filterset->add_filter(new integer_filter('courseid', filter::JOINTYPE_DEFAULT, [(int)$course->id]));
