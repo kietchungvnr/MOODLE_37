@@ -510,4 +510,10 @@ $string['homework'] = "Bài tập về nhà";
 $string['badge'] = "Huy hiệu";
 $string['competencyplan'] = "Lộ trình cá nhân";
 $string['mycompetencyplan'] = "Lộ trình của tôi";
-
+$string['badge'] = "Huy hiệu";
+$string['modules'] = "Modules";
+$string['category'] = "Danh mục";
+$string['coursefinish'] = "Khóa đã hoàn thành";
+$string['coursefinished'] = "Khóa học đã kết thúc";
+$string['courseopening'] = "Khóa học đang thực hiện";
+$string['coursefuture'] = "Khóa học đang kế hoạch";

@@ -70,15 +70,15 @@ switch ($action) {
                                             ORDER BY $ordersql", ['userid' => $USER->id, 'courseid' => $courseid]);
         $i = 1;
         foreach ($listgrade as $value) {
-            $obj             = new stdClass();
-            $img             = '<img class="pr-2 img-module" src="' . $OUTPUT->image_url('icon', $value->itemmodule) . '">';
-            $obj->name       = ($value->finalgrade > $value->gradepass) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="icon-success mr-2">' . $img . '' . $value->itemname : '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconfail.png" class="icon-fail mr-2">' . $value->itemname;
-            $obj->finalgrade = $value->finalgrade;
-            $obj->finalgradecourse = (int) get_course_grade_avg($courseid,false)[$i]->moduleavg;
-            $obj->timeclose  = convertunixtime('d/m/Y', $value->timeclose, 'Asia/Ho_Chi_Minh');
-            $obj->total      = count($listgrade);
-            $data[]          = $obj;
-            $i ++;
+            $obj                   = new stdClass();
+            $img                   = '<img class="pr-2 img-module" src="' . $OUTPUT->image_url('icon', $value->itemmodule) . '">';
+            $obj->name             = ($value->finalgrade > $value->gradepass) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="icon-success mr-2">' . $img . '' . $value->itemname : '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconfail.png" class="icon-fail mr-2">' . $value->itemname;
+            $obj->finalgrade       = $value->finalgrade;
+            $obj->finalgradecourse = (int) get_course_grade_avg($courseid, false)[$i]->moduleavg;
+            $obj->timeclose        = convertunixtime('d/m/Y', $value->timeclose, 'Asia/Ho_Chi_Minh');
+            $obj->total            = count($listgrade);
+            $data[]                = $obj;
+            $i++;
         }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
@@ -177,13 +177,13 @@ switch ($action) {
             $iscomplete = $cinfo->is_course_complete($USER->id);
             if ($iscomplete == true) {
                 $i++;
-                $outputfinish .= $value->fullname . '<br>';
+                $outputfinish .= '- ' . $value->fullname . '<br>';
             } else {
-                $outputlearn .= $value->fullname . '<br>';
+                $outputlearn .= '- ' . $value->fullname . '<br>';
             }
         }
-        $data[0] = ['name' => 'Đã hoàn thành', 'y' => $i, 'course' => $outputfinish];
-        $data[1] = ['name' => 'Đang học', 'y' => (count($listcourse) - $i), 'course' => $outputlearn];
+        $data[0] = ['name' => get_string('coursefinish', 'local_newsvnr'), 'y' => $i, 'course' => $outputfinish];
+        $data[1] = ['name' => get_string('courselearning', 'local_newsvnr'), 'y' => (count($listcourse) - $i), 'course' => $outputlearn];
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     default:

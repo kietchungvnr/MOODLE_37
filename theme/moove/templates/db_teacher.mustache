@@ -664,6 +664,7 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
     }
     kendoDropDownConfig.apiSettings = dropDownSettings;
     kendoDropDownConfig.value = "courseid";
+    kendoDropDownConfig.optionLabel = M.util.get_string('choosecourse', 'local_newsvnr');
     var initDropDownList = kendoService.initDropDownList(kendoDropDownConfig);
     $('#list-course').kendoDropDownList(initDropDownList);
 

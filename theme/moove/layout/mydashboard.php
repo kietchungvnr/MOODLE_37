@@ -68,8 +68,7 @@ if($check_is_teacher) {
     $is_teacher = false;
 }
 
-// $PAGE->requires->js_call_amd('local_newsvnr/studentinfo', 'init');
-$PAGE->requires->strings_for_js(array('emptydata','action','viewcourse', 'code', 'email', 'datecreated'), 'local_newsvnr');
+$PAGE->requires->strings_for_js(array('emptydata','action','viewcourse', 'code', 'email', 'datecreated', 'choosecourse'), 'local_newsvnr');
 $PAGE->requires->strings_for_js(array('coursestartdate','courseenddate','studenttotal', 'studentcode', 'coursename', 'coursemodules', 'status', 'coursecompletion', 'listuser', 'owncourses', 'viewdetail', 'studentname', 'lastaccess', 'phone', 'notyetselectcourse', 'listmodule', 'course', 'number', 'moduleallocation', 'coursegradeavg', 'access', 'coursecompleted', 'enrollcourse', 'modulename', 'exam', 'moduletype', 'score'), 'theme_moove');
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
@@ -102,6 +101,8 @@ if (is_siteadmin()) {
     $totaldeletedusers = $DB->count_records('user', array('deleted' => 1));
     $totalactivecourse = $DB->count_records('course_modules', array('visible' => 1));
     $totalsuspendedusers = $DB->count_records('user', array('deleted' => 0, 'suspended' => 1));
+    $totalmodules = $DB->count_records('course_modules',['deletioninprogress' => 0]);
+    $totalcategories = $DB->count_records('course_categories',[]);
 
     // Get site total courses.
     $totalcourses = $DB->count_records('course') - 1;
@@ -133,7 +134,9 @@ if (is_siteadmin()) {
     $templatecontext['totalactiveusers'] = $totalactiveusers;
     $templatecontext['totalsuspendedusers'] = $totalsuspendedusers;
     $templatecontext['totalcourses'] = $totalcourses;
+    $templatecontext['totalmodules'] = $totalmodules;
     $templatecontext['onlineusers'] = $onlineusers;
+    $templatecontext['totalcategories'] = $totalcategories;
 }
 
 // Improve boost navigation.
