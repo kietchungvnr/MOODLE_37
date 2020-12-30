@@ -417,7 +417,7 @@ switch ($action) {
             $obj->series              = $obj_series;
             echo json_encode($obj, JSON_UNESCAPED_UNICODE);
         } else {
-            echo json_encode(get_string('nodata,', 'local_newsvnr'), JSON_UNESCAPED_UNICODE);
+            echo json_encode(get_string('nodata', 'local_newsvnr'), JSON_UNESCAPED_UNICODE);
         }
         die;
     default:

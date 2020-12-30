@@ -54,15 +54,16 @@ if(isset($_SERVER['HTTP_REFERER'])) {
 } else {
     $hasportal = false;
 }
-$check_is_teacher = $DB->get_records_sql('SELECT COUNT(c.id) AS courses
-                            FROM mdl_role_assignments ra
-                                 JOIN mdl_user u ON ra.userid = u.id
-                                 JOIN mdl_user_enrolments ue ON u.id = ue.userid 
-                                 JOIN mdl_enrol enr ON ue.enrolid = enr.id
-                                 JOIN mdl_course c ON enr.courseid = c.id
-                                 JOIN mdl_context ct ON ct.id = ra.contextid AND ct.instanceid = c.id
-                            WHERE ra.roleid= 3 AND u.id = :userid', ['userid' => $USER->id]);
-if($check_is_teacher) {
+$check_is_teacher = $DB->get_field_sql('SELECT COUNT(c.id) course
+                                            FROM  mdl_context ct
+                                                JOIN mdl_course c ON c.id = ct.instanceid
+                                            WHERE ct.contextlevel = 50 AND c.id <> 1
+                                            AND (EXISTS (SELECT 1 
+                                                             FROM mdl_role_assignments ra
+                                                             WHERE ra.contextid = ct.id 
+                                                                AND ra.roleid = 3 
+                                                                AND ra.userid = :userid))', ['userid' => $USER->id]);
+if($check_is_teacher != 0) {
     $is_teacher = true;
 } else {
     $is_teacher = false;
