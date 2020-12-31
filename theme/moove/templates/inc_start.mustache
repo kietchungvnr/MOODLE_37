@@ -43,9 +43,11 @@ a {
 }
 #sidepre-blocks {
     padding: 1rem;
-    background-color: #e3eef5;
+    /* background-color: #e3eef5; */
     margin-bottom: 0;
-    box-shadow: unset;
+    /* box-shadow: unset; */
+    box-shadow: 0px 8px 16px 0px rgb(0 0 0 / 16%);
+    border: 0;
 }
 .card {
     border: none;
@@ -3424,6 +3426,7 @@ tr.drag-samenode td {
 }
 #page-navbar .breadcrumb li>*{
     font-size: 12px;
+    background: transparent;
 }
 #page-navbar .breadcrumb li::after, #page-navbar .breadcrumb li>*::after {
     border: 14px solid transparent;
@@ -5615,7 +5618,7 @@ nav.navbar ul.navbar-nav .usermenu {
 }
 #loaddetailrp .courseimage img,
 #content-detail .courseimage img {
-    height: 100px;
+    height: 80px;
     width: 100%;
 }
 #loaddetailrp,
@@ -5705,6 +5708,23 @@ nav.navbar ul.navbar-nav .usermenu {
 .action-rightside-fixed li:hover {
     transform: translateX(-185px);
 }
+#page-my-index .progress-circle:before {
+    font-size: 1rem;
+}
+#page-my-index .highcharts-button.highcharts-drillup-button {
+    display: none;
+}
+#page-my-index .progress.course .progress-bar {
+    background: #0083ff;
+}
+#page-my-index .k-grid tbody .k-button {
+    padding: 8px 10px;
+    background: #0083ff;
+    color: white;
+}
+.header-button-group #message-user-button,
+.page-context-header .page-header-image  {
+    display: none;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />

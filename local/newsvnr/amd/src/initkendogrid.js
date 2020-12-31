@@ -137,9 +137,10 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
             }
             var objEventJoinCourse = {
                 click: funcViewCourseInfoPopup,
+                iconClass: 'fa fa-arrow-right mr-1',
                 text: 'Vào học',
                 name: 'Vào học',
-                iconClass: 'fa fa-sign-out',
+                title: 'Vào học',
             }
             eventArr.push(objEventJoinCourse);
         }

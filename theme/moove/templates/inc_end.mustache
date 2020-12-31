@@ -623,4 +623,32 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             });
         })
     }
+    ////phân trang khóa học///
+    const getCourse = (url) => {
+        require(['jquery', 'core/config'], ($, config) => {
+            $('.loading-page').addClass('active');
+            var id = $('.pagination').attr('category');
+            var teacher = $('#teacher').val();
+            var category = $('#category').val();
+            var course = $('#keyword').val();
+            var filter = $('#course-filter').val();
+            var settings = {
+                type:"GET",
+                processData:true,
+                data:{
+                    id:id,
+                    teacher : teacher,
+                    category : id,
+                    course : course,
+                    filter : filter,
+                },
+                contenttype:"application/json",
+            };
+            $.ajax(url,settings)
+            .then(function(response) {
+                $('#load-course').hide().html(response).fadeIn('fast');
+                $('.loading-page').removeClass('active');
+            })
+        });
+    };
 </script>

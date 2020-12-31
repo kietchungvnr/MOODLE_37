@@ -52,7 +52,7 @@ switch ($action) {
             $grade            = get_finalgrade_student($USER->id, $value->id);
             $obj->rank        = get_rank_student_incourse($value->id, $USER->id) . '/' . count($listuser);
             $obj->y           = ($grade != false) ? (int) $grade->gradefinal : 0;
-            $obj->drilldown   = $value->id;
+            $obj->id          = $value->id;
             $avggrade[]       = $obj;
             $avggradecourse[] = (int) get_course_grade_avg($value->id)[0]->courseavg;
         }
@@ -72,7 +72,7 @@ switch ($action) {
         foreach ($listgrade as $value) {
             $obj                   = new stdClass();
             $img                   = '<img class="pr-2 img-module" src="' . $OUTPUT->image_url('icon', $value->itemmodule) . '">';
-            $obj->name             = ($value->finalgrade > $value->gradepass) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="icon-success mr-2">' . $img . '' . $value->itemname : '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconfail.png" class="icon-fail mr-2">' . $value->itemname;
+            $obj->name             = ($value->finalgrade > $value->gradepass) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2">' . $img . '' . $value->itemname : '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconfail.png" class="img-module mr-2">' . $value->itemname;
             $obj->finalgrade       = $value->finalgrade;
             $obj->finalgradecourse = (int) get_course_grade_avg($courseid, false)[$i]->moduleavg;
             $obj->timeclose        = convertunixtime('d/m/Y', $value->timeclose, 'Asia/Ho_Chi_Minh');
@@ -109,15 +109,15 @@ switch ($action) {
             $process         = round(\core_completion\progress::get_course_progress_percentage($course, $USER->id));
             $obj->href       = $CFG->wwwroot . '/course/view.php?id=' . $value->id;
             $obj->total      = $value->total;
-            $obj->process    = '<div class="d-flex participants-collum"><div class="progress course"><div class="progress-bar" role="progressbar" aria-valuenow="' . $process . '" aria-valuemin="0" aria-valuemax="100" style="width:' . $process . '%"></div></div><div>' . $process . '%</div></div></div>';
+            $obj->process    = '<div class="d-flex participants-collum"><div class="progress course"><div class="progress-bar" role="progressbar" aria-valuenow="' . $process . '" aria-valuemin="0" aria-valuemax="100" style="width:' . $process . '%"></div></div><div></div></div></div>';
             $obj->gradefinal = (!empty($get_grade)) ? $get_grade->gradefinal : $obj->gradefinal = '-';
             $obj->timestart  = convertunixtime('d/m/Y', $value->timestart, 'Asia/Ho_Chi_Minh');
             if ($value->timecompleted != null) {
                 $obj->timecompleted = convertunixtime('d/m/Y', $value->timecompleted, 'Asia/Ho_Chi_Minh');
-                $obj->coursename    = '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="icon-success mr-2"><a href="' . $obj->href . '" target="_blank">' . $value->fullname . '</a>';
+                $obj->coursename    = '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2"><a href="' . $obj->href . '" target="_blank">' . $value->fullname . '</a>';
             } else {
                 $obj->timecompleted = '-';
-                $obj->coursename    = '<a href="' . $obj->href . '" target="_blank">' . $value->fullname . '</a>';
+                $obj->coursename    = '<img src="' . $CFG->wwwroot . '\theme\moove\pix\learnicon.png" class="img-module mr-2"><a href="' . $obj->href . '" target="_blank">' . $value->fullname . '</a>';
             }
             $data[] = $obj;
         }
@@ -131,7 +131,7 @@ switch ($action) {
         foreach ($listhomework as $value) {
             $obj = new stdClass();
             // $href         = $CFG->wwwroot . '/mod/quiz/view.php?id=' .
-            $obj->name    = ($value->grade) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="icon-success mr-2">' . $value->name : $value->name;
+            $obj->name    = ($value->grade) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2">' . $value->name : $value->name;
             $obj->grade   = ($value->grade) ? $value->grade : '-';
             $obj->timedue = $value->timedue;
             $obj->total   = count($listhomework);
@@ -156,9 +156,9 @@ switch ($action) {
         foreach ($myquiz as $value) {
             $obj          = new stdClass();
             $href         = $CFG->wwwroot . '/mod/quiz/view.php?id=' . $value->moduleid;
-            $obj->name    = ($value->finalgrade) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="icon-success mr-2"><a href="' . $href . '" target="_blank">' . $value->name . '</a>' : '<a href="' . $href . '" target="_blank">' . $value->name . '</a></div>';
-            $finalgrade = floor($value->finalgrade, 2);
-            $obj->grade   = $finalgrade ? $finalgrade : '-';
+            $obj->name    = ($value->finalgrade) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2"><a href="' . $href . '" target="_blank">' . $value->name . '</a>' : '<img src="' . $OUTPUT->image_url('icon', 'quiz') . '" class="img-module mr-2"><a href="' . $href . '" target="_blank">' . $value->name . '</a></div>';
+            $finalgrade   = number_format($value->finalgrade,1);
+            $obj->grade   = $value->finalgrade ? $finalgrade : '-';
             $obj->timedue = convertunixtime('d/m/Y', $value->timeclose, 'Asia/Ho_Chi_Minh');
             $obj->total   = count($myquiz);
             $data[]       = $obj;

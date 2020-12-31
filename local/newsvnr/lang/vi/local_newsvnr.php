@@ -529,3 +529,4 @@ $string['timefinishcourse'] = "Ngày hoàn thành";
 $string['assignmentname'] = "Tên bài tập";
 $string['back'] = "Trở lại";
 $string['gradeavgcourse'] = "Điểm trung bình khóa";
+$string['personalplan'] = "Lộ trình cá nhân";

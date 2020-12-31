@@ -253,7 +253,7 @@ require(
           },
           tooltip: {
             headerFormat: '',
-              pointFormat: '<b style="color: {point.color}">Khóa học {point.name}</b><br>{point.course}'
+              pointFormat: '<b style="color: {point.color}">{point.name}</b><br>{point.course}'
           },
           accessibility: {
               point: {
@@ -273,7 +273,6 @@ require(
                 }
           },
           series: [{
-              name: 'Khóa học',
               colorByPoint: true,
               data: data
           }]

@@ -56,11 +56,11 @@ switch ($action) {
                 $output .= '<div class="card-body row">';
                 $output .= '<div class="col-md-3 col-sm-6 courseimage">' . $courseimage . '</div>';
                 $output .= '<div class="media-body col-md-9 col-sm-6">';
-                $output .= '<a class="font-bold" target="_blank" href="' . $courselink . '">' . $value->fullname . '</a><br>';
-                $output .= '<span class="grey">' . $category->name . '</span><br>';
+                $output .= '<a class="font-bold mb-1" target="_blank" href="' . $courselink . '">' . $value->fullname . '</a><br>';
+                $output .= '<span class="grey mb-1">' . $category->name . '</span><br>';
                 $output .= '<p>Giáo viên: ' . $teachername . '</p>';
                 $output .= '</div>'; // end col
-                $output .= '<div class="col-md-2 text-right">
+                $output .= '<div class="col-md-2 text-left">
                                 <div class="progress-circle" data-progress="' . $process . '"></div>
                             </div>';
                 $output .= '</div>'; //end row
@@ -101,17 +101,16 @@ switch ($action) {
         $competencyenterprise = 'competencyenterprise';
         $tab                  = 'competency';
         $output .= '<ul class="nav-tabs nav multi-tab mb-3" tab="competency">';
-        $output .= '<li class="nav-item"><a href="javascript:void(0)" onclick="tabClick(\'' . $competencyplan . '\',\'' . $tab . '\')" class="nav-link active" data="competencyplan">Lộ trình cá nhân</a></li>';
-        // $output .= '<li class="nav-item"><a href="javascript:void(0)" onclick="tabClick(\'' . $competency . '\',\'' . $tab . '\')" class="nav-link" data="competency">Lộ trình được giao</a></li>';
-        // $output .= '<li class="nav-item"><a href="javascript:void(0)" onclick="tabClick(\'' . $competencyenterprise . '\',\'' . $tab . '\')" class="nav-link" data="competencyenterprise">Lộ trình dành cho doanh nghiệp</a></li>';
+        $output .= '<li class="nav-item"><a href="javascript:void(0)" onclick="tabClick(\'' . $competencyplan . '\',\'' . $tab . '\')" class="nav-link active" data="competencyplan">'.get_string('personalplan','local_newsvnr').'</a></li>';
         $output .= '</ul>';
         $competencyplans = \theme_moove\util\extras::get_user_competency_plans($USER);
-        $output .= '<div class="tab-content" tab="competency">';
+        $output .= '<div class="tab-content" tab="competency" id="personalplan">';
         $output .= '<div data="competencyplan" class="tab-pane active">';
+        $randomcolor = str_pad( dechex( mt_rand( 0, 255 ) ), 2, '0', STR_PAD_LEFT) . str_pad( dechex( mt_rand( 0, 255 ) ), 2, '0', STR_PAD_LEFT) . str_pad( dechex( mt_rand( 0, 255 ) ), 2, '0', STR_PAD_LEFT);
         if(!empty($competencyplans)) {
             foreach ($competencyplans as $value) {
                 $output .= '<div class="card">';
-                $output .= '<div class="card-body d-flex justify-content-between" style="border-left:3px solid #0083ff">';
+                $output .= '<div class="card-body d-flex justify-content-between pb-2 pt-2" style="border-left:3px solid #'.$randomcolor.'">';
                 $output .= '<div>';
                 $output .= '<h5 class="card-title">' . $value['name'] . '</h5>';
                 $duedate = $DB->get_field('competency_plan', 'duedate', ['id' => $value['id']]);
@@ -119,7 +118,7 @@ switch ($action) {
                 $output .= '<p class="card-text grey">'.get_string('deadline','local_newsvnr').': ' . $date . '</p>';
                 $output .= '</div>';
                 $output .= '<div class="text-right">
-                                <div class="progress-circle" data-progress="' . $value['proficientcompetencypercentage'] . '"></div>
+                                <div class="progress-circle" data-progress="' . round($value['proficientcompetencypercentage']) . '"></div>
                             </div>';
                 $output .= '</div>';
                 $output .= '</div>';
@@ -133,7 +132,7 @@ switch ($action) {
         $output .= '<div data="competencyenterprise" class="tab-pane"></div>';
         $output .= '</div>'; // end tab
         $data['result'] = $output;
-        $data['title'] = '<h5 class="card-title d-inline">'.get_string('mycompetencyplan','local_newsvnr').'</h5>';
+        $data['title'] = '';
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 'viewexam':
@@ -168,7 +167,7 @@ switch ($action) {
                                                                     WHERE q.id = :quizid", ['quizid' => $quiz->quizid]);
                         $img = '<img title="quiz" class="pr-2 img-module" src="' . $OUTPUT->image_url('icon', 'quiz') . '">';
                         $url = $CFG->wwwroot . '/mod/quiz/view.php?id=' . $quiz->coursemoduleid;
-                        $output .= '<div class="pl-3 pt-2 pb-2 module-quiz-online">';
+                        $output .= '<div class="pl-3 pt-2 pb-2 module-quiz-online mr-2">';
                         $output .= '<div class="">' . $img . '' . $quiz->name . '<a class="float-right mr-2" href="' . $url . '" target="_blank">' . get_string('enterexam', 'local_newsvnr') . '</a></div>';
                         $output .= '<div class="info-quiz d-flex ml-4">';
                         $output .= '<div class="detail-quiz"><i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>' . $countquestion->count . ' ' . get_string('question', 'local_newsvnr') . '</div>';

@@ -529,4 +529,4 @@ $string['timefinishcourse'] = "Time finished";
 $string['assignmentname'] = "Assignment name";
 $string['back'] = "back";
 $string['gradeavgcourse'] = "Course grade average";
-
+$string['personalplan'] = "Personal plan";

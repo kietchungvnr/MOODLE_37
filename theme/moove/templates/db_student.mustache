@@ -66,7 +66,7 @@
 					<div class="card-body">
 						<div class="d-flex justify-content-between">
 							<div>
-								<div class="mb-2 font-weight-bold">{{#str}}competency,local_newsvnr{{/str}}</div>
+								<div class="mb-2 font-weight-bold">{{#str}}personalplan,local_newsvnr{{/str}}</div>
 								<div class="font-title mb-1">{{{competency_plan}}}</div>
 								<a href="javascript:;" class="viewdetairp" action="viewcompetencyplan">{{#str}}viewdetail,local_newsvnr{{/str}}</a>
 							</div>
@@ -303,7 +303,7 @@ var initKendoMycourse = function() {
 				},
                 field: "process",
                 title: 'Tiến trình học',
-                width: "140px"
+                width: "100px"
 			},
 			{
                 field: "gradefinal",
@@ -414,60 +414,59 @@ var initKendoQuiz = function() {
 }
 {{! Chart cột hiện thông tin điểm  }}
 $.getJSON(script + '?action=quizchart',function(data) {
-	// Create the chart
+	{{! // Create the chart }}
 	Highcharts.chart('quizchart', {
 	  	chart: {
 		    type: 'column',
 		    renderTo: quizchart,
 		    height:316,
-          	events: {
-		        drilldown: function(e) {
-		           	initKendoModule(e.point.drilldown);
-					$("#moduledetail-kendo .k-grid-header").prepend("<div class='gridTitle'><span>Xem chi tiết điểm khóa "+e.point.name+"</span><i onclick='closeKendo()' class='fa fa-times float-right' id='closekendo' aria-hidden='true'></i></div>");
-		        }
-		    }
 		},
 	  	title: {
 	    	text: ''
 	  	},
 
 	    tooltip: {
+	    	useHTML: true,
 	    	shared: true,
-	        pointFormat: '<span style="color:{point.color}">Điểm của bạn</span> :<b>{point.y:.1f}</b><br/><span>{point.rank}</span><br>',
+	        pointFormat: '<span style="color:{point.color}"><i class="fa fa-circle" aria-hidden="true"></i> Điểm của bạn</span> :<b>{point.y:.1f}</b><br/><span>{point.rank}</span><br>',
 	    },
-		lang: {
-			drillUpText: '< Back'
-		},
-	  	accessibility: {
-	    	announceNewData: {
-	      	enabled: true
-	    	}
-	  	},
   	    xAxis: {
-		    type: 'category'
+		    type: 'category',
+            labels: {
+	            style: {
+	                color: 'black'
+	            }
+        	}
 	    },
 	  	yAxis: {
   		  	title: {
 		    	text: ''
 		  	},
-	    	max: 10
 	  	},
 	  	legend: {
 	    	enabled: true
 	  	},
 	  	plotOptions: {
 		    series: {
-	        	pointWidth: 40,
-		      	borderWidth: 0,
-		      	dataLabels: {
-				        enabled: true,
-				        format: '{point.y:.1f}',
-				        colors: 'black',
-				        style: {
-				        	textOutline: 0
-				    	}
-		      		}
-		    	},
+		    	point: {
+		    		events: {
+		    			click: function() {
+				           	initKendoModule(this.id);
+							$("#moduledetail-kendo .k-grid-header").prepend("<div class='gridTitle'><span>Xem chi tiết điểm khóa "+this.name+"</span><i onclick='closeKendo()' class='fa fa-times float-right' id='closekendo' aria-hidden='true'></i></div>");
+				    		}
+		    		}
+	    		},
+        	pointWidth: 40,
+	      	borderWidth: 0,
+	      	dataLabels: {
+			        enabled: true,
+			        format: '{point.y:.1f}',
+			        colors: 'black',
+			        style: {
+			        	textOutline: 0
+			    	}
+	      		}
+	    	},
 	  	},
 	  	colors: ['rgb(29, 127, 179)'],
 	  	series: [
@@ -481,10 +480,10 @@ $.getJSON(script + '?action=quizchart',function(data) {
 	        type: 'spline',
 	        data: data.avggradecourse,
     	    tooltip: {
+    	    	useHTML: true,
 				headerFormat: '',
-			    pointFormat: '<span style="color:{point.color}">Điểm TB khóa học</span>:<b>{point.y}</b><br/>'
+			    pointFormat: '<span style="color:{point.color}"><i class="fa fa-circle mr-1" aria-hidden="true"></i>Điểm TB khóa học</span>:<b>{point.y}</b><br/>'
 			},
-	        categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas'],
 	        color: '#f98d21',
 	        marker: {
 	            lineWidth: 3,
@@ -540,7 +539,6 @@ $.getJSON(script + '?action=piechart',function(data) {
 	        }
 	    },
 	    series: [{
-	        name: 'Khóa học',
 	        colorByPoint: true,
 	        data: data
 	    }]
