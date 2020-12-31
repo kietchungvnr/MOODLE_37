@@ -47,7 +47,6 @@ switch ($action) {
         if(!empty($listcourse)) {
             $output .= '<div class="row">';
             foreach ($listcourse as $value) {
-                $params    = $i    = $j    = $sum    = $max    = $min    = 0;
                 $cinfo     = new completion_info($value);
                 $list_user = $DB->get_records_sql("SELECT u.*
                                                     FROM mdl_user_enrolments ue
@@ -58,27 +57,22 @@ switch ($action) {
                                                         JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id
                                                     where ra.roleid=5 AND c.id =:courseid", ['courseid' => $value->id]);
                 if ($list_user) {
+                    $i = 0;
                     foreach ($list_user as $user) {
                         // Kiểm tra số học viên chưa hoàn thành khóa
                         $iscomplete = $cinfo->is_course_complete($user->id);
                         if ($iscomplete == false) {
                             $i++;
                         }
-                        $list_grade = get_finalgrade_student($user->id, $value->id);
-                        if (!empty($list_grade)) {
-                            $sum = $list_grade->gradefinal + $sum;
-                            $j++;
-                            $max = max($max, $list_grade->gradefinal);
-                            if ($min == 0) {
-                                $min = $list_grade->gradefinal;
-                            }
-                            $min = min($min, $list_grade->gradefinal);
-                        }
                     }
-                    if($i == 0) 
+                    
+                    if($i == 0) {
                         $studentfinish_percent = 0;
-                    else 
-                        $studentfinish_percent = round(count($list_user) - $i / $i);
+                    } else {
+                        $studentfinish = count($list_user) - $i;
+                        $sum = $i + $studentfinish;
+                        $studentfinish_percent = floor(($studentfinish * 100) / $sum);
+                    }
                 } else {
                     $studentfinish_percent = 0;
                 }
@@ -90,7 +84,7 @@ switch ($action) {
                                                                 JOIN {course_categories} ct on ct.id = c.category
                                                         WHERE c.id =:courseid", ['courseid' => $value->id]);
                 $courselink  = $CFG->wwwroot . "/course/view.php?id=" . $value->id;
-                $process     = round(\core_completion\progress::get_course_progress_percentage($course, $USER->id));
+                $proces     = round(\core_completion\progress::get_course_progress_percentage($course, $USER->id));
                 $courseimage = $theme_settings::get_course_images($courseobj, $courselink);
                 $studenttotal = count($list_user);
                 $output .= '<div class="col-md-6 col-sm-12 pd-0">';

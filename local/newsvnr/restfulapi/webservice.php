@@ -1166,23 +1166,27 @@ if($action == "joincourse_chart") {
 	$strdate_unix = strtotime($strdate);
 	$strtoday_unix = time();
 	$conditionsql = '';
-	$srt_courseid = get_list_courseid_by_teacher($USER->id);
-	if(!empty($strdate))
-		$conditionsql .= "and c.startdate >= $strdate_unix";
-	
-	$sql = "SELECT 
-			COUNT(e.id) as cid, 
-			e.courseid, c.fullname from mdl_enrol e right join mdl_user_enrolments ue on e.id = ue.enrolid
-			join mdl_course c on c.id = e.courseid 
-			where e.courseid In($srt_courseid) 
-			$conditionsql
-			group by e.courseid,c.fullname";
-	$record = $DB->get_records_sql($sql,[]);
+	$courses = get_list_courseinfo_by_teacher($USER->id);
 	$list_coursename = array();
    	$list_joincourse = array();
-   	foreach ($record as $value) {
-   		$list_coursename[] = $value->fullname;
-   		$list_joincourse[] = (int)$value->cid;
+	foreach($courses as $course) {
+		if(!empty($strdate))
+			$conditionsql .= "and c.startdate >= $strdate_unix";
+		
+		$sql = "SELECT COUNT(ra.roleid) studentnumber
+				FROM mdl_role_assignments ra JOIN mdl_context ct ON ra.contextid = ct.id
+					JOIN mdl_course c on c.id = ct.instanceid 
+				WHERE c.id = :courseid AND ct.contextlevel = 50 AND ra.roleid = 5
+				$conditionsql
+				GROUP BY c.fullname";
+		$record = $DB->get_field_sql($sql, ['courseid' => $course->id]);
+		if($record) {
+			$list_coursename[] = $course->fullname;
+	   		$list_joincourse[] = (int)$record;
+		} else {
+			$list_coursename[] = $course->fullname;
+	   		$list_joincourse[] = 0;
+		}
    	}
    	$response = new stdClass();
    	$response->list_coursename = $list_coursename;
@@ -1246,7 +1250,7 @@ if($action == "viewcount_chart") {
    	$list_viewcount = array();
    	foreach ($record as $value) {
    		$list_coursename[] = $value->fullname;
-   		$list_viewcount[] = (int)$value->vc;
+   		$list_viewcount[] = (int)$value->vc - 1;
    	}
    	$response = new stdClass();
    	$response->list_coursename = $list_coursename;
@@ -1553,7 +1557,7 @@ if($action == "courseavg_chart") {
 	$series = [];
 	$categories = [];
    	foreach($courses as $course) {
-   		$categories[] = $DB->get_field('course_categories', 'name', ['id' => $course->category]);
+   		$categories[] = $DB->get_field('course', 'fullname', ['id' => $course->id]);
    		$series[] = round(get_course_grade_avg($course->id)[0]->courseavg, 3);
    	}
    	$response = new stdClass();

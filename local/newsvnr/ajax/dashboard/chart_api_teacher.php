@@ -138,7 +138,11 @@ switch ($action) {
             $studenttotal         = '<a href="javascript:;" onclick="viewStudentDetail(' . $course->id . ')">' . count(get_listuser_in_course($course->id)) . '</a>';
             $obj->studenttotal    = $studenttotal;
             $obj->coursestartdate = convertunixtime('d/m/Y', $course->startdate);
-            $obj->courseenddate   = convertunixtime('d/m/Y', $course->enddate);
+            if($course->enddate == 0) {
+                $obj->courseenddate   = '-';
+            } else {
+                $obj->courseenddate   = convertunixtime('d/m/Y', $course->enddate);
+            }
             // $obj->comp = competency_api::count_competencies_in_course($course->id);
             $coursecompletionurl   = $CFG->wwwroot . '/course/completion.php?id=' . $course->id;
             $obj->coursecompletion = '<a href="' . $coursecompletionurl . '" target="_blank">' . $DB->count_records('course_completion_criteria', ['course' => $course->id]) . '</a>';
@@ -376,7 +380,7 @@ switch ($action) {
         die;
     case 'get_list_completion_course':
         $courseid  = optional_param('courseid', null, PARAM_INT);
-        $params    = $i    = $max    = $min    = 0;
+        $i    = $max    = $min    = 0;
         $course    = $DB->get_record('course', ['id' => $courseid]);
         $cinfo     = new completion_info($course);
         $list_user = $DB->get_records_sql("SELECT u.*
@@ -396,7 +400,6 @@ switch ($action) {
                 }
                 $list_grade = get_finalgrade_student($user->id, $course->id);
                 if (!empty($list_grade)) {
-                    $j++;
                     $max = max($max, $list_grade->gradefinal);
                     if ($min == 0) {
                         $min = $list_grade->gradefinal;
