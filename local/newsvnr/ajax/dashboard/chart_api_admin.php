@@ -51,12 +51,12 @@ switch ($action) {
         $strdate = isset($_GET['strdate']) ? $_GET['strdate'] : "";
         $strdate_unix = strtotime($strdate);
         $now = time();
-        $sevendaysago_unix = time() - (86400*6);
-        $sixdaysago_unix = time() - (86400*5);
-        $fivedaysago_unix = time() - (86400*4);
-        $fourndaysago_unix = time() - (86400*3);
-        $threedaysago_unix = time() - (86400*2);
-        $twodaysago_unix = time() - (86400*1);
+        $sevendaysago_unix = time() - (86400 * 6);
+        $sixdaysago_unix = time() - (86400 * 5);
+        $fivedaysago_unix = time() - (86400 * 4);
+        $fourndaysago_unix = time() - (86400 * 3);
+        $threedaysago_unix = time() - (86400 * 2);
+        $twodaysago_unix = time() - (86400 * 1);
         $onedaysago_unix = time() - 86400;
         $sevendaysago_date = convertunixtime('M Y, d', time() - (86400 * 6));
         $sixdaysago_date = convertunixtime('M Y, d', time() - (86400 * 5));
@@ -74,37 +74,46 @@ switch ($action) {
                                         WHERE [action] = 'loggedin'
                                         ");
         $series = array();
+        $temp_series = array();
         $categories = array();
         for($i = 1; $i <=7; $i++) {
             if ($i == 1) {
                 $unixdate = $onedaysago_unix;
+                $befor_unixdate = $now;
                 $date = $onedaysago_date;
             } elseif ($i == 2) {
                 $unixdate = $twodaysago_unix;
+                $befor_unixdate = $onedaysago_unix;
                 $date = $twodaysago_date;
             } elseif ($i == 3) {
                 $unixdate = $threedaysago_unix;
+                $befor_unixdate = $twodaysago_unix;
                 $date = $threedaysago_date;
             } elseif ($i == 4) {
                 $unixdate = $fourndaysago_unix;
+                $befor_unixdate = $threedaysago_unix;
                 $date = $fourdaysago_date;
             } elseif ($i == 5) {
                 $unixdate = $fivedaysago_unix;
+                $befor_unixdate = $fourndaysago_unix;
                 $date = $fivedaysago_date;
             } elseif ($i == 6) {
                 $unixdate = $sixdaysago_unix;
+                $befor_unixdate = $fivedaysago_unix;
                 $date = $sixdaysago_date;
             } elseif ($i == 7) {
                 $unixdate = $sevendaysago_unix;
+                $befor_unixdate = $sixdaysago_unix;
                 $date = $sevendaysago_date;
             }
-            $wheresql = "WHERE action = 'loggedin' AND (timecreated BETWEEN :unixdate AND :now)";
+            $wheresql = "WHERE action = 'loggedin' AND (timecreated BETWEEN :unixdate AND :beforunixdate)";
             $sql =  "
-                SELECT COUNT(id) log
-                FROM mdl_logstore_standard_log
-                $wheresql
-                ";
-            $get_log = $DB->get_field_sql($sql, ['now' => $now, 'unixdate' => $unixdate]);
+            SELECT COUNT(id) log
+            FROM mdl_logstore_standard_log
+            $wheresql
+            ";
+            $get_log = $DB->get_field_sql($sql, ['beforunixdate' => $befor_unixdate, 'unixdate' => $unixdate]);
+            
             $categories[] = $date;
             $series[] = (int)$get_log;
         }

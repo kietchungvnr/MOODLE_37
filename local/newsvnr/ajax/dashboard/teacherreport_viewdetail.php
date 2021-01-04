@@ -84,7 +84,6 @@ switch ($action) {
                                                                 JOIN {course_categories} ct on ct.id = c.category
                                                         WHERE c.id =:courseid", ['courseid' => $value->id]);
                 $courselink  = $CFG->wwwroot . "/course/view.php?id=" . $value->id;
-                $proces     = round(\core_completion\progress::get_course_progress_percentage($course, $USER->id));
                 $courseimage = $theme_settings::get_course_images($courseobj, $courselink);
                 $studenttotal = count($list_user);
                 $output .= '<div class="col-md-6 col-sm-12 pd-0">';

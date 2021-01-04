@@ -148,11 +148,13 @@ switch ($action) {
             $obj->coursecompletion = '<a href="' . $coursecompletionurl . '" target="_blank">' . $DB->count_records('course_completion_criteria', ['course' => $course->id]) . '</a>';
             $obj->coursemodules    = '<a href="javascript:;" onclick="viewModuleDetail(' . $course->id . ')">' . $DB->count_records('course_modules', ['course' => $course->id]) . '</a>';
             if ($course->startdate > time()) {
-                $obj->status = '<span class="badge badge-warning p-2 rounded">' . get_string('plan', 'theme_moove') . '</span>';
-            } else if ($course->enddate <= time()) {
-                $obj->status = '<span class="badge badge-danger p-2 rounded">' . get_string('finished', 'theme_moove') . '</span>';
+                $obj->status = '<span class="badge text-white teacher-bg-1 font-weight-bold rounded p-2">' . get_string('plan', 'theme_moove') . '</span>';
+            } else if ($course->enddate != 0 && $course->enddate <= time()) {
+                $obj->status = '<span class="badge text-white teacher-bg-2 font-weight-bold rounded p-2">' . get_string('finished', 'theme_moove') . '</span>';
             } else if ($course->startdate <= time() && $course->enddate > time()) {
-                $obj->status = '<span class="badge badge-success p-2 rounded">' . get_string('progressing', 'theme_moove') . '</span>';
+                $obj->status = '<span class="badge text-white teacher-bg-3 font-weight-bold rounded p-2">' . get_string('progressing', 'theme_moove') . '</span>';
+            } else {
+                $obj->status = '<span class="badge text-white teacher-bg-3 font-weight-bold rounded p-2">' . get_string('progressing', 'theme_moove') . '</span>';
             }
             $obj->total = $course->total;
             $data[]     = $obj;
