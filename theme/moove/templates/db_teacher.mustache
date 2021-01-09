@@ -1,3 +1,9 @@
+<style type="text/css">
+table thead th {
+    background-color: #fff;
+    color: black;
+}
+</style>
 <div class="row">
     <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12 mt-3">
         <div class="card text-white teacher-bg-1">
@@ -98,11 +104,19 @@
         <div class="card">
             <div class="card-body">
             	<div class="row">
-                    <div class="col-lg-8"><h5 class="card-title d-inline">
+                    <div class="col-lg-4"><h5 class="card-title d-inline">
                         {{#str}} courseoverview, theme_moove{{/str}}
                     </h5></div>
-                    <div class="col-lg-4 mb-1">
-                    	<div id="chart-type"></div>
+                    <div class="col-lg-8 mb-1">
+                        <div class="row">
+                            <div class="col-lg-7 form-inline">
+                                <input type="text" id="daterange" name="daterange" style="border-radius: 5px 0 0 5px;" class="form-control" placeholder="Lọc theo mốc thời gian..." value="" />
+                                <button class="btn btn-primary" style="border-radius: 0 5px 5px 0;padding: 7px;" id="clear-filter">Clear</button>
+                            </div>
+                            <div class="col-lg-5">
+                                <div id="chart-type"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div id="overview-chart">
@@ -228,7 +242,7 @@
                 </input>
             </div>
             <div class="col-md-8 d-flex mt-2" id="button-group">
-                <button class="btn btn-secondary" id="access_view" onclick="getChart('access_view')" style="border-radius: .25rem 0 0 0;">
+                <button class="btn btn-secondary" id="access_view" onclick="getChart('access_view')" style="border-radius: .25rem 0 0 .25rem;">
                     {{#str}} viewaccess, theme_moove{{/str}}
                 </button>
                 <button class="btn btn-secondary" id="grade_view" onclick="getChart('grade_view')" style="border-radius: 0;">
@@ -250,6 +264,7 @@
     <div id="content-detail"></div>
     <div class="loading-page"></div>
 </div>
+
 <script type="text/javascript">
 	
 	$('#button-group').on('click', 'button', function(e) {
@@ -519,6 +534,7 @@
 					    },
 				        series: {
 				            borderWidth: 0,
+                            pointWidth: 40,
 				            dataLabels: {
 				                enabled: true,
 				                format: '{point.y}'
@@ -566,7 +582,9 @@ require.config({
     paths: {
         // Change this to your server if you do not wish to use our CDN.
         highcharts: 'https://code.highcharts.com',
-        jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr"
+        jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr",
+        daterangepicker: "//cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min",
+        moment: "//cdn.jsdelivr.net/momentjs/latest/moment.min",
     }
 });
 require(
@@ -581,11 +599,13 @@ require(
 		'local_newsvnr/initkendocontrolservices', 
 		'alertjs', 
 		'core/str', 
-		'core/notification'
+		'core/notification',
+        'daterangepicker',
+        'moment'
 	],
-function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, Config, kendo, kendoService, alertify, Str, Notification) {
+function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, Config, kendo, kendoService, alertify, Str, Notification, daterangepicker, moment) {
     "use strict";
-
+    
     var gridListCourse = '#list-course-grid';
     var reportChart = 'report-chart';
     var overviewChart = 'overview-chart';
@@ -777,14 +797,25 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
         }
 	});
 
+    // Convert datetime to unix
+    function convertDateToUnix(datetime) {
+        var date = new Date(datetime).toUTCString();
+        var result = (new Date(date).getTime() / 1000);
+        return result;
+    }
+
 	//Render chart khi chọn loại chart (Tổng quan khóa học)
-    var initOverViewChart = function(typeChart) {
+    var initOverViewChart = function(typeChart, date) {
+        var filter = '';
+        if(date != undefined)
+            filter = date;
     	var scriptOverView = Config.wwwroot + '/local/newsvnr/restfulapi/webservice.php';
     	if(typeChart == 1) {
             var settings = {
                 type: 'GET',
                 data: {
-                    "action":"viewcount_chart"
+                    "action":"viewcount_chart",
+                    "date" : filter
                 },
                 processData: true,
                 contentType: "application/json"
@@ -858,7 +889,8 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
     		var settings = {
                 type: 'GET',
                 data: {
-                    "action":"joincourse_chart"
+                    "action":"joincourse_chart",
+                    "date" : filter
                 },
                 processData: true,
                 contentType: "application/json"
@@ -932,7 +964,8 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
     		var settings = {
                 type: 'GET',
                 data: {
-                    "action":"coursecomp_chart"
+                    "action":"coursecomp_chart",
+                    "date" : filter
                 },
                 processData: true,
                 contentType: "application/json"
@@ -1090,34 +1123,7 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
             });
    	 	}
 	}
-
-    $('#chart-type').kendoDropDownList({
-    	dataTextField: "text",
-        dataValueField: "value",
-        change: function(e) {
-        	var typeChart = this.value();
-        	initOverViewChart(typeChart);
-    	},
-        dataBound: function() {
-            this.trigger("change");
-        },
-        dataSource: [
-        	{
-        		value: 1,
-        		text: M.util.get_string('access', 'theme_moove')
-        	}, {
-        		value: 2,
-        		text: M.util.get_string('enrollcourse', 'theme_moove')
-        	}, {
-        		value: 3,
-        		text: M.util.get_string('coursecompleted', 'theme_moove')
-        	}, {
-        		value: 4,
-        		text: M.util.get_string('coursegradeavg', 'theme_moove')
-        	}
-        ]
-	})
-
+   
     //Hàm init popup kendo
     function openPopup(elementId, title) {
         $(elementId).kendoWindow({
@@ -1240,16 +1246,24 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
                 title: M.util.get_string('modulename', 'theme_moove'),
                 width: "200px"
             }, {
-                field: "moduletype",
-                title: M.util.get_string('moduletype', 'theme_moove'),
-                width: "130px"
-            }, {
                 template: function(e) {
                     return e.coursename;
                 },
                 field: "coursename",
                 title: M.util.get_string('coursename', 'theme_moove'),
                 width: "200px"
+            }, {
+                field: "moduletype",
+                title: M.util.get_string('moduletype', 'theme_moove'),
+                width: "130px"
+            }, {
+                field: "spenttime",
+                title: 'Số giờ xem',
+                width: "130px"
+            }, {
+                field: "modulerate",
+                title: 'Tỉ lệ hoàn thành',
+                width: "130px"
             }, {
                 field: "timecreated",
                 title: M.util.get_string('datecreated', 'local_newsvnr'),
@@ -1287,6 +1301,81 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
             $('#content-detail').hide().html(obj.result).fadeIn('fast');
             $('.loading-page').removeClass('active');
         })
+    })
+
+    // filter chart overview course
+    var start = moment().subtract(29, 'days');
+    var end = moment();
+
+    function cb(start, end) {
+        console.log(start, end);
+        $('#daterange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        var typeChart = $('#chart-type').data('kendoDropDownList').value();
+        var date = {
+            'start': convertDateToUnix(start._d),
+            'end': convertDateToUnix(end._d)
+        };
+        initOverViewChart(typeChart, JSON.stringify(date));
+    }
+    $('#daterange').daterangepicker({
+        locale: {
+            cancelLabel: 'Clear'
+        },
+        startDate: start,
+        endDate: end,
+        ranges: {
+           'Today': [moment(), moment()],
+           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+           'This Month': [moment().startOf('month'), moment().endOf('month')],
+           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, cb);
+
+    $('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
+        var typeChart = $('#chart-type').data('kendoDropDownList').value();
+        initOverViewChart(typeChart);
+    });
+    $('#clear-filter').click(function() {
+        var typeChart = $('#chart-type').data('kendoDropDownList').value();
+        $('input[name="daterange"]').val('');
+        initOverViewChart(typeChart);
+    })
+
+    // Run chart khi chọn chart
+    $('#chart-type').kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "value",
+        change: function(e) {
+            var typeChart = this.value();
+            var date = {
+                'start': convertDateToUnix(start._d),
+                'end': convertDateToUnix(end._d)
+            };
+            $('#daterange').data('daterangepicker').setStartDate(start);
+            $('#daterange').data('daterangepicker').setEndDate(end);
+            initOverViewChart(typeChart, JSON.stringify(date));
+        },
+        dataBound: function() {
+            this.trigger("change");
+        },
+        dataSource: [
+            {
+                value: 1,
+                text: M.util.get_string('access', 'theme_moove')
+            }, {
+                value: 2,
+                text: M.util.get_string('enrollcourse', 'theme_moove')
+            }, {
+                value: 3,
+                text: M.util.get_string('coursecompleted', 'theme_moove')
+            }, {
+                value: 4,
+                text: M.util.get_string('coursegradeavg', 'theme_moove')
+            }
+        ]
     })
 
 });

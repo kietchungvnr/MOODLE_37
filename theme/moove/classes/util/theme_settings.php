@@ -955,7 +955,7 @@ class theme_settings {
       // Tổng module giáo viên đã upload trên các khóa của giáo viên đó
       $moduletotal = $DB->get_record_sql("SELECT COUNT(id) moduletotal
                                           FROM mdl_logstore_standard_log
-                                          WHERE userid = :userid AND action = 'created' AND target = 'course_module'", ['userid' => $USER->id]);
+                                          WHERE userid = :userid AND action = 'created' AND target = 'course_module' AND courseid <> 1", ['userid' => $USER->id]);
       $obj->moduletotal = $moduletotal->moduletotal;
 
       $templatecontext['teacherinfo'] = $obj;

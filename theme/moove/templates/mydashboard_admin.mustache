@@ -1,3 +1,9 @@
+<style>
+#page-my-index .popover {
+    width: 250px;
+    height: 305px;
+}
+</style>
 <div class="admininfos">
     <div class="row">
       <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12 mt-3">
@@ -105,15 +111,15 @@
                <h5 class="card-title d-inline">{{#str}} remindcourse, theme_moove{{/str}}</h5><hr>
                <div class="admin-notice grey">
                  <span>{{#str}} coursenoteacher, theme_moove{{/str}}</span>
-                 <div class="admin-notice-icon cl-cursor" id="coursenoteacher" style="background: #2dce89;"><span>0</span></div>
+                 <div class="admin-notice-icon cl-cursor" data-popover="coursenoteacher" id="coursenoteacher" data-toggle="popover" title="{{#str}} coursenoteacher, theme_moove{{/str}}" style="background: #2dce89;"><span>0</span></div>
                </div>
                <div class="admin-notice grey">
                  <span>{{#str}} coursenostudent, theme_moove{{/str}}</span>
-                 <div class="admin-notice-icon cl-cursor" id="coursenostudent" style="background: #fb6746;"><span>0</span></div>
+                 <div class="admin-notice-icon cl-cursor" data-popover="coursenostudent" id="coursenostudent" ata-toggle="popover" title="{{#str}} coursenostudent, theme_moove{{/str}}" style="background: #fb6746;"><span>0</span></div>
                </div>
                <div class="admin-notice grey mb-3">
                  <span>{{#str}} courseempty, theme_moove{{/str}}</span>
-                 <div class="admin-notice-icon cl-cursor" id="courseempty" style="background: #11cdef;"><span>0</span></div>
+                 <div class="admin-notice-icon cl-cursor" data-popover="courseempty" id="courseempty" ata-toggle="popover" title="{{#str}} courseempty, theme_moove{{/str}}" style="background: #11cdef;"><span>0</span></div>
                </div>
                <h5 class="card-title d-inline mt-3">{{#str}} remindorther, theme_moove{{/str}}</h5><hr>
                <div class="admin-notice grey">
@@ -235,8 +241,9 @@ require(
     'core/config', 
     'local_newsvnr/initkendogrid', 
     'alertjs', 
-    'core/str'
-], function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, Config, kendo, alertify, Str) {
+    'core/str',
+    'core/templates'
+], function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, Config, kendo, alertify, Str, Templates) {
     {{! chart tròn hiện thị quá trình học }}
     var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api_admin.php';
     $.getJSON(script + '?action=coursestatus',function(data) {
@@ -348,5 +355,44 @@ require(
         }
         return;
     }).fail(Notification.exception);
+    var open = true;
+    var el;
+    $('[data-popover]').mouseenter(function(e) {
+        open = true;
+        el = $(this);
+        var event = $(this).attr('data-popover');
+        var data = {event: event};
+        Templates.render('theme_moove/popover', data)
+        .then(function(contenthtml, js) {
+            
+            el.popover({
+                content: contenthtml,
+                html: true,
+                placement: "left",
+            })
+            .on("mouseenter", function() {
+                var _this = this;
+                $(this).popover("show");
+                $(".popover").on("mouseleave", function() {
+                    $('#content').data('kendoDropDownList').close();
+                  $(_this).popover('hide');
+                });
+              }).on("mouseleave", function() {
+                var _this = this;
+                setTimeout(function() {
+                  if (!$(".popover:hover").length) {
+                    $('#content').data('kendoDropDownList').close();
+                    $(_this).popover("hide");
+                  }
+                }, 300);
+              });
+            if(open == true) {
+                el.popover('show');
+                open = false;
+            }
+            Templates.runTemplateJS(js);
+        }).fail(function(ex) {
+        })
+    });
 })
 {{/js}}

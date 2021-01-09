@@ -154,7 +154,7 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 					{
 		                field: "usercode",
 		                title: s[1],
-		                width: "120px"
+		                width: "80px"
 					},
 					{
 						template:function(e){
@@ -167,12 +167,12 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 					{
 					    field: "lastaccess",
 		                title: s[11],
-		                width: "150px"
+		                width: "250px"
 					},
 					{
 		                field: "enrolledcourse",
 		                title: s[9],
-		                width: "130px"
+		                width: "100px"
 					}
 				];
 				var toolbar = ["excel","search"];

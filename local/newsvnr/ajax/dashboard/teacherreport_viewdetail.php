@@ -171,14 +171,14 @@ switch ($action) {
         }
         $sql = "SELECT *, (SELECT COUNT(id) 
                             FROM mdl_logstore_standard_log
-                            WHERE userid = :userid1 AND action = 'created' AND target = 'course_module'
+                            WHERE userid = :userid1 AND action = 'created' AND target = 'course_module' AND courseid <> 1
                             ) total
                 FROM (SELECT ROW_NUMBER() OVER (ORDER BY lsl.courseid) RowNum, lsl.*, c.fullname, m.name moduletype, cm.instance moduleid, cm.id coursemoduleid
                         FROM mdl_logstore_standard_log  lsl
                             LEFT JOIN mdl_course c ON c.id = lsl.courseid
                             LEFT JOIN mdl_course_modules cm ON cm.id = lsl.contextinstanceid
                             LEFT JOIN mdl_modules m ON m.id = cm.module
-                        WHERE userid = :userid2 AND action = 'created' AND target = 'course_module'
+                        WHERE userid = :userid2 AND action = 'created' AND target = 'course_module' AND courseid <> 1
                      ) Mydata
                 ORDER BY $ordersql";
         $modules = $DB->get_records_sql($sql, ['userid1' => $USER->id, 'userid2' => $USER->id]);
@@ -193,6 +193,41 @@ switch ($action) {
                 $obj->coursename = $courseurl;
                 $obj->moduletype = ucfirst($module->moduletype);
                 $obj->timecreated = convertunixtime('d/m/Y', $module->timecreated, 'Asia/Ho_Chi_Minh');
+                $module_rate_completed = 'SELECT COUNT(cm.id) completed 
+                                            FROM mdl_course_modules_completion cmc
+                                                JOIN mdl_course_modules cm ON cm.id = cmc.coursemoduleid
+                                            WHERE cm.course = :courseid
+                                                AND cm.instance = :coursemoduleid
+                                                AND cmc.completionstate = 1';
+                $get_module_rate_completed = $DB->get_field_sql($module_rate_completed, ['courseid' => $module->courseid, 'coursemoduleid' => $module->coursemoduleid]);
+                $numberstudent = count(get_listuser_in_course($module->courseid));
+                $obj->modulerate = $get_module_rate_completed .'/'.$numberstudent;
+                $spenttimesql = "SELECT lsl.* 
+                                FROM mdl_logstore_standard_log lsl 
+                                    JOIN mdl_course_modules cm ON lsl.contextinstanceid = cm.id
+                                WHERE lsl.target = 'course_module' 
+                                    AND lsl.action = 'viewed' 
+                                    AND lsl.courseid = :courseid 
+                                    AND lsl.contextinstanceid = :coursemoduleid
+                                ORDER BY lsl.timecreated";
+                $spenttime = $DB->get_records_sql($spenttimesql, ['courseid' => $module->courseid, 'coursemoduleid' => $module->coursemoduleid]);
+                if ($spenttime) {
+                    $previouslog = array_shift($spenttime);
+                    $previouslogtime = $previouslog->timecreated;
+                    $sessionstart = $previouslog->timecreated;
+                    $dedication = 0;
+                    foreach ($spenttime as $log) {
+                        if (($log->timecreated - $previouslogtime) > 3600) {
+                            $dedication += $previouslogtime - $sessionstart;
+                            $sessionstart = $log->timecreated;
+                        }
+                        $previouslogtime = $log->timecreated;
+                    }
+                    $dedication += $previouslogtime - $sessionstart;
+                } else {
+                    $dedication = 0;
+                }
+                $obj->spenttime = format_dedication($dedication);
                 $obj->total = $module->total;
                 $data[] = $obj;
             }
@@ -231,8 +266,9 @@ switch ($action) {
                                                                     WHERE q.id = :quizid", ['quizid' => $quiz->quizid]);
                             $img = '<img title="quiz" class="pr-2 img-module" src="' . $OUTPUT->image_url('icon', 'quiz') . '">';
                             $url = $CFG->wwwroot . '/mod/quiz/view.php?id=' . $quiz->coursemoduleid;
+                            $quizurl = '<a href="'.$url.'" target="_blank">'.$quiz->name.'</a>';
                             $output .= '<div class="pl-3 pt-2 pb-2 module-quiz-online">';
-                            $output .= '<div class="">' . $img . '' . $quiz->name . '</a></div>';
+                            $output .= '<div class="">' . $img . '' . $quizurl . '</a></div>';
                             $output .= '<div class="info-quiz d-flex ml-4">';
                             $output .= '<div class="detail-quiz"><i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>' . $countquestion->count . ' ' . get_string('question', 'local_newsvnr') . '</div>';
                             $output .= '<div class="detail-quiz"><i class="fa fa-clock-o mr-1" aria-hidden="true"></i>' . convertTimeExam($quiz->timelimit) . '</div>';
@@ -253,3 +289,4 @@ switch ($action) {
     default:
         break;
 }
+die;

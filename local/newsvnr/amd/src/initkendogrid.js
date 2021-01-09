@@ -138,9 +138,8 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
             var objEventJoinCourse = {
                 click: funcViewCourseInfoPopup,
                 iconClass: 'fa fa-arrow-right mr-1',
-                text: 'Vào học',
-                name: 'Vào học',
-                title: 'Vào học',
+                text: M.util.get_string('startlearning', 'local_newsvnr'),
+                name: 'learning',
             }
             eventArr.push(objEventJoinCourse);
         }
@@ -148,7 +147,7 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
             gridConfig.columns.push({
                 title: M.util.get_string('action', 'local_newsvnr'),
                 command: eventArr,
-                width: 100
+                width: 150
             });
         }
         if(gridConfig.toolbar === undefined) {

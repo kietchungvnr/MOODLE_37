@@ -2278,6 +2278,100 @@ function get_course_grade_avg($courseid, $courseavg = true) {
     return $grades;
 }
 
+// Tính spent total modules trong course
+function get_spenttime_total_module($courseid, $coursemoduleid = 0, $userid = 0, $action = 'viewed') {
+    global $DB;
+    $params = [];
+    $wheresql = '';
+    if(!is_int($courseid)) {
+        throw new coding_exception('courseid not found!');
+    } else {
+        $params['courseid'] = $courseid;
+        $params['action'] = $action;
+    }
+    if($userid != 0) {
+        $wheresql .= 'AND lsl.userid = :userid';
+        $params['userid'] = $userid;
+    }
+    if(is_int($coursemoduleid) && $coursemoduleid != 0) {
+        $wheresql .= 'AND lsl.contextinstanceid = :coursemoduleid';
+        $params['coursemoduleid'] = $coursemoduleid;
+    } else {
+        throw new coding_exception('coursemoduleid not found!');
+    }
+    $sql = "SELECT lsl.* 
+            FROM mdl_logstore_standard_log lsl 
+                JOIN mdl_course_modules cm ON lsl.contextinstanceid = cm.id
+            WHERE lsl.target = 'course_module' 
+                AND lsl.action = :action 
+                AND lsl.courseid = :courseid 
+                $wheresql
+            ORDER BY lsl.timecreated";
+    $data = $DB->get_records_sql($sql, $params);
+    $timespent_modules = [];
+    foreach($data as $keymodule => $module) {
+        if(count($timespent_modules) == 0) {
+            $timespent_total = 0;
+            $timespent_modules[$module->contextinstanceid] = $timespent_total;
+        } else {
+            if($timespent_modules[$module->contextinstanceid] == $module->contextinstanceid) {
+                $previouslog = array_shift($logs);
+                $previouslogtime = $previouslog->time;
+                $sessionstart = $previouslog->time;
+                $dedication = 0;
+            }
+        }
+    }
+}
+
+// Đổi unixtime thành giờ phút giây
+function format_dedication($totalsecs) {
+    $totalsecs = abs($totalsecs);
+
+    $str = new stdClass();
+    $str->hour = get_string('hour');
+    $str->hours = get_string('hours');
+    $str->min = get_string('min');
+    $str->mins = get_string('mins');
+    $str->sec = get_string('sec');
+    $str->secs = get_string('secs');
+
+    $hours = floor($totalsecs / HOURSECS);
+    $remainder = $totalsecs - ($hours * HOURSECS);
+    $mins = floor($remainder / MINSECS);
+    $secs = round($remainder - ($mins * MINSECS), 2);
+
+    $ss = ($secs == 1) ? $str->sec : $str->secs;
+    $sm = ($mins == 1) ? $str->min : $str->mins;
+    $sh = ($hours == 1) ? $str->hour : $str->hours;
+
+    $ohours = '';
+    $omins = '';
+    $osecs = '';
+
+    if ($hours) {
+        $ohours = $hours . ' ' . $sh;
+    }
+    if ($mins) {
+        $omins = $mins . ' ' . $sm;
+    }
+    if ($secs) {
+        $osecs = $secs . ' ' . $ss;
+    }
+
+    if ($hours) {
+        return trim($ohours . ' ' . $omins);
+    }
+    if ($mins) {
+        return trim($omins . ' ' . $osecs);
+    }
+    if ($secs) {
+        return $osecs;
+    }
+    return '-';
+}
+
+
 function local_newsvnr_extend_navigation($navigation) {
     
 }

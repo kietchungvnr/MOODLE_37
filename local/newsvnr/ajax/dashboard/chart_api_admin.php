@@ -51,19 +51,19 @@ switch ($action) {
         $strdate = isset($_GET['strdate']) ? $_GET['strdate'] : "";
         $strdate_unix = strtotime($strdate);
         $now = time();
-        $sevendaysago_unix = time() - (86400 * 6);
-        $sixdaysago_unix = time() - (86400 * 5);
-        $fivedaysago_unix = time() - (86400 * 4);
-        $fourndaysago_unix = time() - (86400 * 3);
-        $threedaysago_unix = time() - (86400 * 2);
-        $twodaysago_unix = time() - (86400 * 1);
+        $sevendaysago_unix = time() - (86400 * 7);
+        $sixdaysago_unix = time() - (86400 * 6);
+        $fivedaysago_unix = time() - (86400 * 5);
+        $fourndaysago_unix = time() - (86400 * 4);
+        $threedaysago_unix = time() - (86400 * 3);
+        $twodaysago_unix = time() - (86400 * 2);
         $onedaysago_unix = time() - 86400;
-        $sevendaysago_date = convertunixtime('M Y, d', time() - (86400 * 6));
-        $sixdaysago_date = convertunixtime('M Y, d', time() - (86400 * 5));
-        $fivedaysago_date = convertunixtime('M Y, d', time() - (86400 * 4));
-        $fourdaysago_date = convertunixtime('M Y, d', time() - (86400 * 3));
-        $threedaysago_date = convertunixtime('M Y, d', time() - (86400 * 2));
-        $twodaysago_date = convertunixtime('M Y, d', time() - (86400 * 1));
+        $sevendaysago_date = convertunixtime('M Y, d', time() - (86400 * 6), 'Asia/Ho_Chi_Minh');
+        $sixdaysago_date = convertunixtime('M Y, d', time() - (86400 * 5), 'Asia/Ho_Chi_Minh');
+        $fivedaysago_date = convertunixtime('M Y, d', time() - (86400 * 4), 'Asia/Ho_Chi_Minh');
+        $fourdaysago_date = convertunixtime('M Y, d', time() - (86400 * 3), 'Asia/Ho_Chi_Minh');
+        $threedaysago_date = convertunixtime('M Y, d', time() - (86400 * 2), 'Asia/Ho_Chi_Minh');
+        $twodaysago_date = convertunixtime('M Y, d', time() - (86400 * 1), 'Asia/Ho_Chi_Minh');
         $onedaysago_date = convertunixtime('M Y, d', time());
 
         $i = 1;
@@ -140,10 +140,11 @@ switch ($action) {
         $coursenostudent = $DB->get_field_sql($sql, ['roleid' => 5]);
         $obj->coursenostudent = (int)$coursenostudent;
 
-        $courseemptysql = "SELECT c.fullname, COUNT(cm.module) module 
-							FROM mdl_course_modules cm RIGHT JOIN mdl_course c ON cm.course = c.id
-							GROUP BY c.fullname
-                            HAVING COUNT(cm.module) <= 1";
+        $courseemptysql = "SELECT c.id, c.fullname, COUNT(cm.module) module 
+                            FROM mdl_course_modules cm RIGHT JOIN mdl_course c ON cm.course = c.id
+                            GROUP BY c.id, c.fullname
+                            HAVING COUNT(cm.module) <= 1
+                            ORDER BY c.fullname";
         $courseempty = $DB->get_records_sql($courseemptysql);
         $obj->courseempty = count($courseempty);
 

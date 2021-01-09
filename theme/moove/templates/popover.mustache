@@ -1,0 +1,115 @@
+<div id="content"></div>
+{{#js}}
+require.config({
+    packages: [{
+        name: 'highcharts',
+        main: 'highcharts'
+    }],
+    paths: {
+        // Change this to your server if you do not wish to use our CDN.
+        highcharts: 'https://code.highcharts.com',
+        jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr"
+    }
+});
+require(
+[
+    'highcharts',
+    'highcharts/modules/exporting',
+    'highcharts/modules/accessibility',
+    'highcharts/modules/drilldown',
+    'jquery', 
+    'core/config', 
+    'kendo.all.min', 
+    'alertjs', 
+    'core/str',
+    'core/templates'
+], function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, Config, kendo, alertify, Str, Templates) {
+	var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/adminreport_viewdetail.php';
+	var kendoConfig = {};
+	var initElement = $('#content');
+	var kendoConfigDefault = {
+            apiSettings: {
+                type:"POST",
+                dataType:"json",
+                processData:true,
+                contenttype:"application/json"
+            }
+        }
+    var initDropDownList = function(kendoConfig) {
+        Object.assign(kendoConfig.apiSettings,kendoConfigDefault.apiSettings)
+        var courseUrl = Config.wwwroot + '/course/view.php?id=';
+        return {
+            dataTextField: "name",
+            dataValueField: kendoConfig.value,
+            dataSource: newDataSource(kendoConfig),
+            height: 200,
+            filter: "contains",
+            messages: {
+              noData: "empty"
+            },
+            template: '<span><a href="' + courseUrl + '#: value #" target="_blank" alt="#: name #" >#: name #</a></span>'
+        }
+    }
+	var newDataSource = function(kendoConfig) {        
+        return new kendo.data.DataSource({
+            transport: {
+                read: kendoConfig.apiSettings,
+                parameterMap: function(options, operation) {
+                    if (operation == "read") {
+                        if (options["filter"]) {
+                            if(options["filter"]["filters"][0])
+                                options["q"] = options["filter"]["filters"][0].value;
+                        }
+                        return options;
+                    }
+                }
+            },
+        });
+    };
+    if(initElement.data('kendoDropDownList')) {
+    	initElement.data('kendoDropDownList').destroy();
+	}
+	if({{#event}}{{{event}}}{{/event}} == coursenoteacher) {
+		var settings = {
+			url: script,
+			data: {
+				action: 'coursenoteacher'
+			}
+		}
+		kendoConfig.apiSettings = settings;
+		kendoConfig.value = 'value';
+		var initDropDownList = initDropDownList(kendoConfig);
+		initElement.kendoDropDownList(initDropDownList);
+		var dropDownList = initElement.data('kendoDropDownList');
+		dropDownList.open();
+	}
+	if({{#event}}{{{event}}}{{/event}} == coursenostudent) {
+		var settings = {
+			url: script,
+			data: {
+				action: 'coursenostudent'
+			}
+		}
+		kendoConfig.apiSettings = settings;
+		kendoConfig.value = 'value';
+		var initDropDownList = initDropDownList(kendoConfig);
+		initElement.kendoDropDownList(initDropDownList);
+		var dropDownList = initElement.data('kendoDropDownList');
+		dropDownList.open();
+	}
+	if({{#event}}{{{event}}}{{/event}} == courseempty) {
+		var settings = {
+			url: script,
+			data: {
+				action: 'courseempty'
+			}
+		}
+		kendoConfig.apiSettings = settings;
+		kendoConfig.value = 'value';
+		var initDropDownList = initDropDownList(kendoConfig);
+		initElement.kendoDropDownList(initDropDownList);
+		var dropDownList = initElement.data('kendoDropDownList');
+		dropDownList.open();
+	}
+})
+{{/js}}
