@@ -16,9 +16,9 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
 
         if (fm == "focusmod") {
             $('body').removeClass('focusmod');
+            window.location.replace(Config.wwwroot + '/course/view.php?id=150');
             document.cookie = 'cookie=; max-Age=-1;path=/';
             $('.all-header,footer,#page-header').slideDown();
-            $('#focus-mod i').removeClass('fa-compress');
             $('.navbar.focusmod').css('display', 'none');
             $('ul.course').css('display', 'flex');
             $('div#page-content').css('margin-top', '0px');
@@ -28,7 +28,6 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
                 $('#sidepreopen-control').click();
             }
             $('footer,.all-header,#page-header').slideUp();
-            $('#focus-mod i').addClass('fa-compress');
             $('.navbar.focusmod').css('display', 'flex');
             $('ul.course').css('display', 'none');
             $('#page-content').css('margin-top', '62px');

@@ -28,6 +28,7 @@ define('AJAX_SCRIPT', false);
 
 require_once __DIR__ . '/../../../config.php';
 require_once $CFG->dirroot . '/local/newsvnr/lib.php';
+require_once "{$CFG->libdir}/completionlib.php";
 require_login();
 $PAGE->set_context(context_system::instance());
 
@@ -60,6 +61,7 @@ $sql = "SELECT *, (SELECT COUNT(DISTINCT u.id)
 
 $get_list = $DB->get_records_sql($sql);
 foreach ($get_list as $value) {
+    $i = 0;
     $enrolledcourse = get_list_course_by_student($value->userid);
     $listcourse     = get_list_course_by_teacher($value->userid);
     $string         = get_string('lastsiteaccess');
@@ -71,15 +73,23 @@ foreach ($get_list as $value) {
     } else {
         $obj->lastaccess = get_string("never");
     }
-    $obj->useravatar     = $useravatar;
-    $obj->href           = $CFG->wwwroot . '/user/profile.php?id=' . $value->userid;
-    $obj->number         = $value->rownum;
-    $obj->usercode       = ($value->usercode) ? $value->usercode : "-";
-    $obj->userid         = $value->userid;
-    $obj->name           = $value->name;
-    $obj->total          = $value->total;
+    $obj->useravatar = $useravatar;
+    $obj->href       = $CFG->wwwroot . '/user/profile.php?id=' . $value->userid;
+    $obj->number     = $value->rownum;
+    $obj->usercode   = ($value->usercode) ? $value->usercode : "-";
+    $obj->userid     = $value->userid;
+    $obj->name       = $value->name;
+    $obj->total      = $value->total;
+    foreach ($enrolledcourse as $course) {
+        $course_object = $DB->get_record('course', ['id' => $course->id]);
+        $cinfo         = new completion_info($course_object);
+        $iscomplete    = $cinfo->is_course_complete($value->userid);
+        if($iscomplete == true) {
+            $i++;
+        }
+    }
     $obj->coursejoin     = count($listcourse);
-    $obj->enrolledcourse = count($enrolledcourse);
+    $obj->enrolledcourse = $i.' / '.count($enrolledcourse);
     $data[]              = $obj;
 }
 echo json_encode($data, JSON_UNESCAPED_UNICODE);

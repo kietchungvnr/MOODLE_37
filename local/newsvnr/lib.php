@@ -2371,6 +2371,23 @@ function format_dedication($totalsecs) {
     return '-';
 }
 
+// Lấy tỉ lệ hoàn thành module trong khóa 
+function get_course_complete_module_rate($courseid) {
+    global $DB;
+    $liststudent = get_listuser_in_course($courseid);
+    $sum = 0;
+    foreach ($liststudent as  $student) {
+        $studentmdfinish = $DB->get_record_sql('SELECT COUNT(*) as count
+                                                FROM mdl_course_modules_completion cmc
+                                                JOIN mdl_course_modules cm ON cm.id = cmc.coursemoduleid
+                                            WHERE cm.course = :courseid AND cmc.userid = :userid',['courseid' => $courseid,'userid' => $student->id]);
+        $allcoursemodule = $DB->get_record_sql('SELECT COUNT(*) as count FROM mdl_course_modules WHERE course =:courseid AND deletioninprogress = 0 AND visible = 1',['courseid' => $courseid]);
+        $ratestudentfinish = round(($studentmdfinish->count*100)/$allcoursemodule->count);
+        $sum = $sum + $ratestudentfinish;
+    }
+    $rate = round($sum/count($liststudent));
+    return $rate;
+}
 
 function local_newsvnr_extend_navigation($navigation) {
     

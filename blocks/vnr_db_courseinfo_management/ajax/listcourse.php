@@ -28,6 +28,7 @@ define('AJAX_SCRIPT', false);
 
 require_once __DIR__ . '/../../../config.php';
 require_once $CFG->dirroot . '/local/newsvnr/lib.php';
+require_once "{$CFG->libdir}/completionlib.php";
 require_login();
 $PAGE->set_context(context_system::instance());
 
@@ -62,7 +63,7 @@ $sql = "SELECT *,(SELECT COUNT(DiSTINCT c.id)
                 JOIN mdl_course c ON e.courseid = c.id
                 JOIN mdl_role_assignments ra ON ra.userid = ue.userid
                 JOIN mdl_user u ON u.id = ra.userid
-                JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id 
+                JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id
                 LEFT JOIN mdl_course_completions cc ON cc.userid = c.id AND cc.course = c.id $wheresql) AS Mydata
         ORDER BY $ordersql";
 $get_list = $DB->get_records_sql($sql);
@@ -70,26 +71,41 @@ foreach ($get_list as $value) {
     $student          = $DB->get_record('user', ['id' => $userid]);
     $get_grade        = get_finalgrade_student($userid, $value->id);
     $obj              = new stdCLass();
-    $course           = $DB->get_record('course', ['id' => $value->id]);
-    $process          = round(\core_completion\progress::get_course_progress_percentage($course, $userid));
     $obj->number      = $value->rownum;
     $obj->usercode    = ($value->usercode) ? $value->usercode : "-";
     $obj->studentname = $student->firstname . ' ' . $student->lastname;
     $obj->coursename  = $value->fullname;
     $obj->courseid    = $value->shortname;
     $obj->total       = $value->total;
-    if (!empty($get_grade)) {
-        $obj->rank       = $get_grade->rank;
-        $obj->gradefinal = $get_grade->gradefinal;
+    if ($role == 3) {
+        $finishmodulerate      = get_course_complete_module_rate($value->id);
+        $obj->finishmodulerate = ($finishmodulerate > 0) ? $finishmodulerate . '%' : '-';
+        $avggrade              = get_course_grade_avg($value->id)[0]->courseavg;
+        if (strlen(strstr($avggrade, '<')) <= 0) {
+            $obj->avggrade = $avggrade;
+        } else {
+            $obj->avggrade = '-';
+        }
     } else {
-        $obj->rank       = '-';
-        $obj->gradefinal = '-';
-    }
-    $obj->process = ($role == 5) ? $process . '%' : "-";
-    if ($value->timecompleted != null) {
-        $obj->timecompleted = convertunixtime('d/m/Y', $value->timecompleted, 'Asia/Ho_Chi_Minh');
-    } else {
-        $obj->timecompleted = '-';
+        $course        = $DB->get_record('course', ['id' => $value->id]);
+        $process       = round(\core_completion\progress::get_course_progress_percentage($course, $userid));
+        $course_object = $DB->get_record('course', ['id' => $value->id]);
+        $cinfo         = new completion_info($course_object);
+        $iscomplete    = $cinfo->is_course_complete($userid);
+        $obj->status   = ($iscomplete == false) ? '<span class="badge course-status-progress">' . get_string('progressing', 'local_newsvnr') . '</span>' : '<span class="badge course-status-finish">' . get_string('finished', 'local_newsvnr') . '</span>';
+        if ($value->timecompleted != null) {
+            $obj->timecompleted = convertunixtime('d/m/Y', $value->timecompleted, 'Asia/Ho_Chi_Minh');
+        } else {
+            $obj->timecompleted = '-';
+        }
+        $obj->process = $process . '%';
+        if (!empty($get_grade)) {
+            $obj->rank       = $get_grade->rank;
+            $obj->gradefinal = $get_grade->gradefinal;
+        } else {
+            $obj->rank       = '-';
+            $obj->gradefinal = '-';
+        }
     }
     $data[] = $obj;
 }

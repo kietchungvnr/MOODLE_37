@@ -106,9 +106,9 @@ switch ($action) {
         $competencyplans = \theme_moove\util\extras::get_user_competency_plans($USER);
         $output .= '<div class="tab-content" tab="competency" id="personalplan">';
         $output .= '<div data="competencyplan" class="tab-pane active">';
-        $randomcolor = str_pad( dechex( mt_rand( 0, 255 ) ), 2, '0', STR_PAD_LEFT) . str_pad( dechex( mt_rand( 0, 255 ) ), 2, '0', STR_PAD_LEFT) . str_pad( dechex( mt_rand( 0, 255 ) ), 2, '0', STR_PAD_LEFT);
         if(!empty($competencyplans)) {
             foreach ($competencyplans as $value) {
+                $randomcolor = str_pad( dechex( mt_rand( 0, 255 ) ), 2, '0', STR_PAD_LEFT) . str_pad( dechex( mt_rand( 0, 255 ) ), 2, '0', STR_PAD_LEFT) . str_pad( dechex( mt_rand( 0, 255 ) ), 2, '0', STR_PAD_LEFT);
                 $output .= '<div class="card">';
                 $output .= '<div class="card-body d-flex justify-content-between pb-2 pt-2" style="border-left:3px solid #'.$randomcolor.'">';
                 $output .= '<div>';
@@ -168,7 +168,7 @@ switch ($action) {
                         $img = '<img title="quiz" class="pr-2 img-module" src="' . $OUTPUT->image_url('icon', 'quiz') . '">';
                         $url = $CFG->wwwroot . '/mod/quiz/view.php?id=' . $quiz->coursemoduleid;
                         $output .= '<div class="pl-3 pt-2 pb-2 module-quiz-online mr-2">';
-                        $output .= '<div class="">' . $img . '' . $quiz->name . '<a class="float-right mr-2" href="' . $url . '" target="_blank">' . get_string('enterexam', 'local_newsvnr') . '</a></div>';
+                        $output .= '<div class=""><a class="text-default" target="_blank" href="'.$url.'">' . $img . '' . $quiz->name . '</a><a class="float-right mr-2" href="' . $url . '" target="_blank">' . get_string('enterexam', 'local_newsvnr') . '</a></div>';
                         $output .= '<div class="info-quiz d-flex ml-4">';
                         $output .= '<div class="detail-quiz"><i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>' . $countquestion->count . ' ' . get_string('question', 'local_newsvnr') . '</div>';
                         $output .= '<div class="detail-quiz"><i class="fa fa-clock-o mr-1" aria-hidden="true"></i>' . convertTimeExam($quiz->timelimit) . '</div>';

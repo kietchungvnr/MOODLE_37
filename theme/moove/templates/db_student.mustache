@@ -1,24 +1,24 @@
 <div class="db-student">
 {{#userinfo}}
 <div class="row">
-	<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-3">
+	<div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3">
 		<div class="card h-100">
 			<div class="card-body">
 				<h5 class="card-title d-inline">{{#str}}infostudent,local_newsvnr{{/str}}</h5>
 				<hr>
 				<div class="row">
-					<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+					<div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">
 						<div class="d-flex justify-content-center">
 							{{{userimgbig}}}
 						</div>
 						<div class="text-center mt-2 mr-2"><a href="{{{userlink}}}" target="_blank">{{#str}}viewdetail,local_newsvnr{{/str}}</a></div>
 					</div>
-					<div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+					<div class="col-xl-5 col-md-5 col-sm-12 col-xs-12">
 						<div class="d-flex"><p class="grey mr-1">{{#str}}fullnamelastname,local_newsvnr{{/str}}</p><p class="text-title">{{{fullname}}}</p></div>
 						<div class="d-flex"><p class="grey mr-1">{{#str}}studentcode,local_newsvnr{{/str}}</p><p class="text-title">{{{usercode}}}</p></div>
 						<div class="d-flex"><p class="grey mr-1">Email: </p><p class="text-title">{{{email}}}</p></div>
 					</div>
-					<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+					<div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
 						<div class="d-flex"><p class="grey mr-1">{{#str}}competency,local_newsvnr{{/str}}: </p><p class="text-title">{{{competency}}}</p></div>
 						<div class="d-flex"><p class="grey mr-1">{{#str}}forumpost,local_newsvnr{{/str}}</p><p class="text-title">{{{forumpost}}}</p></div>
 						<div class="d-flex"><p class="grey mr-1">{{#str}}timeaccess,local_newsvnr{{/str}}</p><p class="text-title">{{{timespent}}}</p></div>
@@ -27,7 +27,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+	<div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12">
 		<div class="row">
 			<div class="col-md-6 mt-3">
 				<div class="card card-studentrp-db card-student-mycourse">
@@ -222,8 +222,6 @@ $('#viewDetailReport').kendoWindow({
     visible: false,
     open: onOpen,
     actions: [
-        "Minimize",
-        "Maximize",
         "Close"
     ],
 })
@@ -249,22 +247,22 @@ var initKendoModule = function(courseid) {
 					return e.name
 				},
                 field: "name",
-                title: 'Hoạt động tài nguyên',
+                title: "{{#str}}activeresource,local_newsvnr{{/str}}",
                 width: "150px"
 			},
 			{
                 field: "finalgrade",
-                title: 'Điểm của bạn',
+                title: '{{#str}}yourgrade,local_newsvnr{{/str}}',
                 width: "120px"
 			},
 			{
                 field: "finalgradecourse",
-                title: 'Điểm trung bình tổng',
+                title: '{{#str}}gradeavgcourse,local_newsvnr{{/str}}',
                 width: "120px"
 			},
 			{
                 field: "timeclose",
-                title: 'Ngày hết hạn',
+                title: '{{#str}}timeclose,local_newsvnr{{/str}}',
                 width: "150px"
 			}
 		];
@@ -294,7 +292,7 @@ var initKendoMycourse = function() {
 					return e.coursename
 				},
                 field: "coursename",
-                title: 'Khóa học',
+                title: '{{#str}}course,local_newsvnr{{/str}}',
                 width: "170px"
 			},
 			{
@@ -302,22 +300,22 @@ var initKendoMycourse = function() {
 					return e.process
 				},
                 field: "process",
-                title: 'Tiến trình học',
+                title: '{{#str}}progress,local_newsvnr{{/str}}',
                 width: "100px"
 			},
 			{
                 field: "gradefinal",
-                title: 'Điểm',
+                title: '{{#str}}grade,local_newsvnr{{/str}}',
                 width: "50px"
 			},
 			{
                 field: 'timestart',
-                title: 'Ngày vào khóa',
+                title: '{{#str}}timeenrolcourse,local_newsvnr{{/str}}',
                 width: "100px"
 			},
 			{
                 field: 'timecompleted',
-                title: 'Ngày hoàn thành',
+                title: '{{#str}}timefinishcourse,local_newsvnr{{/str}}',
                 width: "100px"
 			}
 		];
@@ -350,17 +348,17 @@ var initKendoHomework = function() {
 					return e.name
 				},
                 field: "name",
-                title: 'Tên bài tập',
+                title: '{{#str}}assignmentname,local_newsvnr{{/str}}',
                 width: "150px"
 			},
 			{
                 field: 'grade',
-                title: 'Điểm',
+                title: '{{#str}}grade,local_newsvnr{{/str}}',
                 width: "80px"
 			},
 			{
                 field: 'timedue',
-                title: 'Ngày đến hạn',
+                title: '{{#str}}timeclose,local_newsvnr{{/str}}',
                 width: "120px"
 			}
 		];
@@ -390,17 +388,17 @@ var initKendoQuiz = function() {
 					return e.name
 				},
                 field: "name",
-                title: 'Tên bài tập',
+                title: '{{#str}}test,local_newsvnr{{/str}}',
                 width: "150px"
 			},
 			{
                 field: 'grade',
-                title: 'Điểm',
+                title: '{{#str}}grade,local_newsvnr{{/str}}',
                 width: "80px"
 			},
 			{
                 field: 'timedue',
-                title: 'Ngày đến hạn',
+                title: '{{#str}}timeclose,local_newsvnr{{/str}}',
                 width: "120px"
 			}
 		];
@@ -428,7 +426,7 @@ $.getJSON(script + '?action=quizchart',function(data) {
 	    tooltip: {
 	    	useHTML: true,
 	    	shared: true,
-	        pointFormat: '<span style="color:{point.color}"><i class="fa fa-circle" aria-hidden="true"></i> Điểm của bạn</span> :<b>{point.y:.1f}</b><br/><span>{point.rank}</span><br>',
+	        pointFormat: '<span style="color:{point.color}"><i class="fa fa-circle mr-1" aria-hidden="true"></i>{{#str}}yourgrade,local_newsvnr{{/str}}</span> :<b>{point.y:.1f}</b><br/><span>{point.rank}</span><br>',
 	    },
   	    xAxis: {
 		    type: 'category',
@@ -452,7 +450,7 @@ $.getJSON(script + '?action=quizchart',function(data) {
 		    		events: {
 		    			click: function() {
 				           	initKendoModule(this.id);
-							$("#moduledetail-kendo .k-grid-header").prepend("<div class='gridTitle'><span>Xem chi tiết điểm khóa "+this.name+"</span><i onclick='closeKendo()' class='fa fa-times float-right' id='closekendo' aria-hidden='true'></i></div>");
+							$("#moduledetail-kendo .k-grid-header").prepend("<div class='gridTitle'><span>{{#str}}viewdetailcoursegrade,local_newsvnr{{/str}} "+this.name+"</span><i onclick='closeKendo()' class='fa fa-times float-right' id='closekendo' aria-hidden='true'></i></div>");
 				    		}
 		    		}
 	    		},
@@ -471,18 +469,18 @@ $.getJSON(script + '?action=quizchart',function(data) {
 	  	colors: ['rgb(29, 127, 179)'],
 	  	series: [
 	    {
-	      	name: "Điểm của bạn",
+	      	name: "{{#str}}yourgrade,local_newsvnr{{/str}}",
 	      	colorByPoint: false,
 	      	data: data.avggrade
 	    },
 	    {
-	    	name: "Điểm trung bình khóa",
+	    	name: "{{#str}}gradeavgcourse,local_newsvnr{{/str}}",
 	        type: 'spline',
 	        data: data.avggradecourse,
     	    tooltip: {
     	    	useHTML: true,
 				headerFormat: '',
-			    pointFormat: '<span style="color:{point.color}"><i class="fa fa-circle mr-1" aria-hidden="true"></i>Điểm TB khóa học</span>:<b>{point.y}</b><br/>'
+			    pointFormat: '<span style="color:{point.color}"><i class="fa fa-circle mr-1" aria-hidden="true"></i>{{#str}}gradeavgcourse,local_newsvnr{{/str}}</span>:<b>{point.y}</b><br/>'
 			},
 	        color: '#f98d21',
 	        marker: {
@@ -509,7 +507,7 @@ $.getJSON(script + '?action=piechart',function(data) {
 	    },
 	    tooltip: {
 	    	headerFormat: '',
-	        pointFormat: '<b style="color: {point.color}">Khóa học {point.name}</b><br>{point.course}'
+	        pointFormat: '<b style="color: {point.color}">{point.name}</b><br>{point.course}'
 	    },
 	    accessibility: {
 	        point: {

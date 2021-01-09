@@ -871,7 +871,7 @@ class theme_settings {
         $badge = $DB->get_records('badge_issued',['userid' => $USER->id]);
         $obj->badge = count($badge);
         // lỘ trình học
-        $competency_plan = $DB->get_records_sql('SELECT * FROM mdl_competency_plan WHERE templateid IS NULL AND userid =:userid',['userid' => $USER->id]);
+        $competency_plan = $DB->get_records_sql('SELECT * FROM mdl_competency_plan WHERE userid =:userid',['userid' => $USER->id]);
         $obj->competency_plan = count($competency_plan);
         // lấy danh sách năng lực
         $competency = $DB->get_records_sql('SELECT * FROM {competency_usercomp} WHERE status=0 AND reviewerid IS NOT NULL AND proficiency=1 AND grade IS NOT NULL AND userid =:userid',['userid' => $USER->id]);
@@ -898,7 +898,6 @@ class theme_settings {
                 $timespenttotal += $row->dedicationtime;
             }
         }
-
         $obj->timespent = block_dedication_utils::format_dedication($timespenttotal);
         $obj->coursestotal = count($listcourse);
         $obj->completedcoures = $count_course_comletion;

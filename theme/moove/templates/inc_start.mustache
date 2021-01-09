@@ -5085,17 +5085,15 @@ input.apple-switch:checked:after {
 }
 .slimScrollDiv {
     position: relative;
-    overflow: hidden;
     width: auto;
 }
 .fixed-sidebar-left .side-nav {
     border: none;
-    height: 100%;
-    width: 100%;
     position: relative;
     border-radius: 0;
     margin: 0;
     backface-visibility: hidden;
+    margin-bottom: 70px;
 }
 body.slide-nav-toggle .fixed-sidebar-left ,
 body.sidebar-hover .fixed-sidebar-left{
@@ -5109,7 +5107,8 @@ body .fixed-sidebar-left {
     bottom: 0;
     z-index: 100;
     transition: all 0.4s ease;
-    overflow-x:scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
     background: #2d5b7c;
     height: 100%;
 }
@@ -5648,6 +5647,10 @@ nav.navbar ul.navbar-nav .usermenu {
 #page-my-index .k-window-titlebar {
     background: transparent !important;
 }
+#page-my-index .k-window-titlebar span{
+    color: #455a64;
+    font-weight: bold;
+}
 #page-my-index .k-window-actions .k-icon {
     color: #455a64 !important;
 }
@@ -5711,9 +5714,9 @@ nav.navbar ul.navbar-nav .usermenu {
 #page-my-index .progress-circle:before {
     font-size: 1rem;
 }
-#page-my-index .highcharts-button.highcharts-drillup-button {
+/*#page-my-index .highcharts-button.highcharts-drillup-button {
     display: none;
-}
+}*/
 #page-my-index .progress.course .progress-bar {
     background: #0083ff;
 }
@@ -5725,6 +5728,31 @@ nav.navbar ul.navbar-nav .usermenu {
 .header-button-group #message-user-button,
 .page-context-header .page-header-image  {
     display: none;
+}
+.course-status-progress {
+    background-color: #0083ff;
+    font-weight: bold;
+    color: white;
+    padding: .5rem;
+    border-radius: .25rem;
+    width: 65px;
+}
+.course-status-finish {
+    background-color: #00a65a;
+    font-weight: bold;
+    color: white;
+    padding: .5rem;
+    border-radius: .25rem;
+    width: 65px;
+}
+.k-grid tr.k-alt {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+.k-alt {
+    background-color: #dddddd73;
+}
+.text-default {
+    color: #363535;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />

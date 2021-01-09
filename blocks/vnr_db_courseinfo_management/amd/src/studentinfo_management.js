@@ -41,8 +41,8 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
             component: 'block_vnr_db_courseinfo_management'
     	},
     	{
-            key: 'enrolledcourse',
-            component: 'block_vnr_db_courseinfo_management'
+            key: 'coursefinish',
+            component: 'local_newsvnr'
     	},
     	{
             key: 'courselist',
@@ -51,6 +51,10 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
     	{
             key: 'lastaccess',
             component: 'block_vnr_db_courseinfo_management'
+    	},
+    	{
+            key: 'status',
+            component: 'local_newsvnr',
     	}
     ];
     var initGridCourse = function(userId) {
@@ -71,13 +75,13 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 					// hidden: true,
 	                field: "usercode",
 	                title: s[1],
-	                width: "80px"
+	                width: "70px"
 				},
 				{
 					// hidden: true,
 	                field: "studentname",
 	                title: s[2],
-	                width: "120px"
+	                width: "90px"
 				},
 				{
 	                field: "courseid",
@@ -92,13 +96,21 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 				{
 	                field: "timecompleted",
 	                title: s[5],
-	                width: "100px"
+	                width: "80px"
 				},
 	            {
 	            	field: 'process', 
 	            	template:"<div class='d-flex participants-collum'><div class='progress course'><div class='progress-bar' role='progressbar' aria-valuenow='#: process #' aria-valuemin='0' aria-valuemax='100' style='width:#: process #'></div></div><div>#: process #</div></div></div>",
 	                title: s[6],
-	                width: "150px"	
+	                width: "100px"	
+	            },
+	            {
+	            	template: function(e) {
+	            		return e.status;
+	            	},	
+	                field: "status",
+	                title: s[12],
+	                width: "80px"
 	            },
 	            {
 	                field: "gradefinal",
@@ -109,8 +121,7 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 	                field: "rank",
 	                title: s[8],
 	                width: "50px"
-	            },
-
+	            }
 			];
 			if($(gridListCourse).data("kendoGrid")) {
 				$(gridListCourse).data("kendoGrid").destroy();
