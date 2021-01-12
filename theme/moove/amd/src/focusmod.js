@@ -12,11 +12,10 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
     })
     $('.open-focusmod').bind('click', function() {
         var fm = getCookie('cookie');
-        var action = $(this).attr('action');
-
+        var course = $(this).attr('course');
         if (fm == "focusmod") {
             $('body').removeClass('focusmod');
-            window.location.replace(Config.wwwroot + '/course/view.php?id=150');
+            window.location.replace(Config.wwwroot + '/course/view.php?id='+course);
             document.cookie = 'cookie=; max-Age=-1;path=/';
             $('.all-header,footer,#page-header').slideDown();
             $('.navbar.focusmod').css('display', 'none');

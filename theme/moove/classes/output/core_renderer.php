@@ -116,7 +116,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output .= '<li class="nav-item border-left"><a class="nav-link focusmod prev"><i class="fa fa-angle-left mr-2"></i>'.get_string('prevmodule','theme_moove').'</a></li>
                     <li class="nav-item border-left mid"><a class="nav-link focusmod">'.get_string('coursedata','theme_moove').'<i class="fa fa-angle-down rotate-icon ml-2"></i></a></li>
                     <li class="nav-item border-left"><a class="nav-link focusmod next">'.get_string('nextmodule','theme_moove').'<i class="fa fa-angle-right ml-2"></i></a></li>';
-        $output .= '<div id="focus-mod" class="open-focusmod border-left border-right" data-placement="left"><i class="fa fa-external-link"></i><span class="ml-1 mr-1">'.get_string('zoomout','local_newsvnr').'</span></div>';
+        $output .= '<div id="focus-mod" course="'.$COURSE->id.'" class="open-focusmod border-left border-right" data-placement="left"><i class="fa fa-external-link"></i><span class="ml-1 mr-1">'.get_string('zoomout','local_newsvnr').'</span></div>';
         $output .= '<div class="dropdown-content">';
         foreach ($allmodinfo as $modinfo) {
             $sectioninfo = $DB->get_record_sql('SELECT * FROM {course_sections} WHERE id = :section', ['section' => $modinfo->id]);
