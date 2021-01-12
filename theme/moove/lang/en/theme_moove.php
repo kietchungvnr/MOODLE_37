@@ -446,3 +446,6 @@ $string['enrollrequest'] = 'Enroll request';
 $string['courselibraryrequest'] = 'Library request';
 $string['filelibraryrequest'] = 'File library request';
 $string['reviewcompetency'] = 'Review Competency request';
+$string['modulerate'] = 'Module rate completed';
+$string['spenttimemodule'] = 'Spent time';
+$string['showalldata'] = 'Show all data...';

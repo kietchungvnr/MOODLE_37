@@ -1,8 +1,18 @@
 <style type="text/css">
-table thead th {
-    background-color: #fff;
-    color: black;
-}
+    table thead th {
+        background-color: #fff;
+        color: black;
+    }
+    .date-select {
+        border: 1px solid #ccc;
+        width: auto;
+        background: #fff;
+        color: #1d3b4a;
+        cursor: pointer;
+        padding: 8px;
+        line-height: 18px;
+        border-radius: 4px 0 0 4px;
+    }
 </style>
 <div class="row">
     <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12 mt-3">
@@ -108,12 +118,14 @@ table thead th {
                         {{#str}} courseoverview, theme_moove{{/str}}
                     </h5></div>
                     <div class="col-lg-8 mb-1">
-                        <div class="row">
-                            <div class="col-lg-7 form-inline">
-                                <input type="text" id="daterange" name="daterange" style="border-radius: 5px 0 0 5px;" class="form-control" placeholder="Lọc theo mốc thời gian..." value="" />
-                                <button class="btn btn-primary" style="border-radius: 0 5px 5px 0;padding: 7px;" id="clear-filter">Clear</button>
+                        <div class="row d-flex justify-content-end mb-1">
+                            <div class="col-lg-auto">
+                                <div id="daterange" style="background: #f5f5f5; cursor: pointer; padding: 10px; width: 100%">
+                                    <i class="fa fa-calendar"></i>&nbsp;
+                                    <span></span> <i class="fa fa-caret-down"></i>
+                                </div>
                             </div>
-                            <div class="col-lg-5">
+                            <div class="col-lg-6 mb-1">
                                 <div id="chart-type"></div>
                             </div>
                         </div>
@@ -1262,7 +1274,7 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
                 width: "130px"
             }, {
                 field: "modulerate",
-                title: 'Tỉ lệ hoàn thành',
+                title: M.util.get_string('modulerate', 'theme_moove'),
                 width: "130px"
             }, {
                 field: "timecreated",
@@ -1308,8 +1320,7 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
     var end = moment();
 
     function cb(start, end) {
-        console.log(start, end);
-        $('#daterange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        $('#daterange span').html(start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY'));
         var typeChart = $('#chart-type').data('kendoDropDownList').value();
         var date = {
             'start': convertDateToUnix(start._d),
@@ -1333,8 +1344,8 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
         }
     }, cb);
 
-    $('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
-        $(this).val('');
+    $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
+        $('#daterange span').html(M.util.get_string('showalldata', 'theme_moove'));
         var typeChart = $('#chart-type').data('kendoDropDownList').value();
         initOverViewChart(typeChart);
     });
@@ -1354,8 +1365,7 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, C
                 'start': convertDateToUnix(start._d),
                 'end': convertDateToUnix(end._d)
             };
-            $('#daterange').data('daterangepicker').setStartDate(start);
-            $('#daterange').data('daterangepicker').setEndDate(end);
+            $('#daterange span').html(start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY'));
             initOverViewChart(typeChart, JSON.stringify(date));
         },
         dataBound: function() {

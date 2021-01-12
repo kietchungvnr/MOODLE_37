@@ -355,44 +355,50 @@ require(
         }
         return;
     }).fail(Notification.exception);
-    var open = true;
     var el;
-    $('[data-popover]').mouseenter(function(e) {
-        open = true;
+    $('[data-popover]').click(function(e) {
+        console.log($(".popover"))
         el = $(this);
         var event = $(this).attr('data-popover');
         var data = {event: event};
-        Templates.render('theme_moove/popover', data)
-        .then(function(contenthtml, js) {
-            
-            el.popover({
-                content: contenthtml,
-                html: true,
-                placement: "left",
-            })
-            .on("mouseenter", function() {
-                var _this = this;
-                $(this).popover("show");
-                $(".popover").on("mouseleave", function() {
-                    $('#content').data('kendoDropDownList').close();
-                  $(_this).popover('hide');
+        if(!$(".popover").length) {
+            Templates.render('theme_moove/popover', data)
+            .then(function(contenthtml, js) {
+                
+                el.popover({
+                    content: contenthtml,
+                    html: true,
+                    placement: "left",
+                })
+             
+                .on("mouseenter", function() {
+                    console.log('enter')
+                    var _this = this;
+                    $("body").on("click", function() {
+                        $('#content').data('kendoDropDownList').close();
+                        $(_this).popover('hide');
+                    });
+                }).on("mouseleave", function() {
+                    console.log('leave')
+                    var _this = this;
+                    // setTimeout(function() {
+                    if (!$(".popover:hover").length) {
+                        $('#content').data('kendoDropDownList').close();
+                        $(_this).popover("hide");
+                    }
+                    // }, 300);
+                }).on('mouseleave', 'popover', function() {
+                    var _this = this;
+                        $('#content').data('kendoDropDownList').close();
+                        $(_this).popover("hide");
                 });
-              }).on("mouseleave", function() {
-                var _this = this;
-                setTimeout(function() {
-                  if (!$(".popover:hover").length) {
-                    $('#content').data('kendoDropDownList').close();
-                    $(_this).popover("hide");
-                  }
-                }, 300);
-              });
-            if(open == true) {
-                el.popover('show');
-                open = false;
-            }
-            Templates.runTemplateJS(js);
-        }).fail(function(ex) {
-        })
+                el.popover("show");
+
+                Templates.runTemplateJS(js);
+                
+            }).fail(function(ex) {
+            })
+        }
     });
 })
 {{/js}}
