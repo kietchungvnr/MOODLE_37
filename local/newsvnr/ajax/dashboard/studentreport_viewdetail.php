@@ -61,7 +61,7 @@ switch ($action) {
                 $output .= '<p>Giáo viên: ' . $teachername . '</p>';
                 $output .= '</div>'; // end col
                 $output .= '<div class="col-md-2 text-left">
-                                <div class="progress-circle" data-progress="' . $process . '"></div>
+                                <div class="progress-circle custom" data-progress="' . $process . '"></div>
                             </div>';
                 $output .= '</div>'; //end row
                 $output .= '</div>'; //end col
@@ -110,7 +110,7 @@ switch ($action) {
             foreach ($competencyplans as $value) {
                 $randomcolor = str_pad( dechex( mt_rand( 0, 255 ) ), 2, '0', STR_PAD_LEFT) . str_pad( dechex( mt_rand( 0, 255 ) ), 2, '0', STR_PAD_LEFT) . str_pad( dechex( mt_rand( 0, 255 ) ), 2, '0', STR_PAD_LEFT);
                 $output .= '<div class="card">';
-                $output .= '<div class="card-body d-flex justify-content-between pb-2 pt-2" style="border-left:3px solid #'.$randomcolor.'">';
+                $output .= '<div class="card-body d-flex justify-content-between pb-0 pt-0 align-items-center" style="border-left:3px solid #'.$randomcolor.'">';
                 $output .= '<div>';
                 $output .= '<h5 class="card-title">' . $value['name'] . '</h5>';
                 $duedate = $DB->get_field('competency_plan', 'duedate', ['id' => $value['id']]);
@@ -118,7 +118,7 @@ switch ($action) {
                 $output .= '<p class="card-text grey">'.get_string('deadline','local_newsvnr').': ' . $date . '</p>';
                 $output .= '</div>';
                 $output .= '<div class="text-right">
-                                <div class="progress-circle" data-progress="' . round($value['proficientcompetencypercentage']) . '"></div>
+                                <div class="progress-circle custom" data-progress="' . round($value['proficientcompetencypercentage']) . '"></div>
                             </div>';
                 $output .= '</div>';
                 $output .= '</div>';

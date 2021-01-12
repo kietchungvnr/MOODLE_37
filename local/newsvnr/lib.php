@@ -1686,11 +1686,11 @@ function HTTPPost_EBM_return($url,$data) {
 //Đổi unixtime thành chữ
 function converttime($time) {
     $currenttime = time();
-    $distance = $currenttime - $time;
+    $distance = ((int)$currenttime - (int)$time) + 1;
     $result = '';
-    switch ($distance) {
-        case ($distance < 60 ):
-            $result = $distance . ' '.get_string('secondago','local_newsvnr').'';
+    switch ((int)$distance) {
+        case ($distance <= 60 ):
+            $result = get_string('justnow','local_newsvnr');
             break;
         case ($distance > 60 && $distance < 3600):
             $result = round($distance/60) .' '.get_string('minuteago','local_newsvnr').'';
@@ -1708,7 +1708,7 @@ function converttime($time) {
             $result = round($distance/2592000) .' '.get_string('monthago','local_newsvnr').'';
             break;
         default:
-            convertunixtime(' d-m-Y',$time,'Asia/Ho_Chi_Minh');
+            $result = convertunixtime(' d-m-Y',$time,'Asia/Ho_Chi_Minh');
             break;
     }
     return $result;
@@ -2389,6 +2389,59 @@ function get_course_complete_module_rate($courseid) {
     return $rate;
 }
 
+// Lấy huy hiệu của người dùng
+function get_user_badge($userid) {
+    global $CFG;
+    require_once $CFG->dirroot . '/badges/renderer.php';
+    $data = [];
+    $badges = badges_get_user_badges($userid, 0, null, null, null, true);
+    foreach ($badges as $badge) {
+        $obj = new stdClass;
+        $context  = ($badge->type == BADGE_TYPE_SITE) ? context_system::instance() : context_course::instance($badge->courseid);
+        $imageurl = moodle_url::make_pluginfile_url($context->id, 'badges', 'badgeimage', $badge->id, '/', 'f1', false);
+        $obj->name = $badge->name;
+        $obj->url = new moodle_url('/badges/badge.php', array('hash' => $badge->uniquehash));
+        $obj->image = html_writer::empty_tag('img', array('src' => $imageurl, 'class' => 'badge-image'));
+        $data[] = $obj;
+    }
+    return $data;
+}
+// course card info
+function get_coursecard_info($courseid) {
+    global $DB,$OUTPUT,$CFG;
+    $obj = new stdClass;
+    $course         = $DB->get_record('course',['id' => $courseid]);
+    $progress = round(\core_completion\progress::get_course_progress_percentage($course));
+    $theme_settings = new theme_settings();
+    $courseobj      = new \core_course_list_element($course);
+    $obj->link      = $CFG->wwwroot . "/course/view.php?id=" . $courseid;
+    $arr            = $theme_settings::role_courses_teacher_slider_block_course_recent($courseid);
+    $obj->fullnamet      = $arr->fullnamet;
+    $obj->countstudent   = $arr->studentnumber;
+    if($progress > 0) {
+        $obj->enrolmethod = '<div class="progress">
+                                 <div class="progress-bar" role="progressbar" aria-valuenow="' . $progress . '"
+                                    aria-valuemin="0" aria-valuemax="100" style="width:' . $progress . '%">
+                                    ' . $progress . '%
+                                 </div>
+                              </div>';
+    } else {
+        $obj->enrolmethod = get_enrol_method($courseid);
+    }
+    $obj->courseimage    = $theme_settings::get_course_images($courseobj, $obj->link);
+    $obj->fullname = $course->fullname;
+    if (isset($arr->id)) {
+        $stduser = new stdClass();
+        $userid  = $DB->get_records('user', array('id' => $arr->id));
+        foreach ($userid as $userdata) {
+            $stduser = (object) $userdata;
+        }
+        $obj->imageteacher = $OUTPUT->user_picture($stduser, array('size' => 72));
+    } else {
+        $obj->imageteacher = $arr->imgdefault;
+    }
+    return $obj;
+}
 function local_newsvnr_extend_navigation($navigation) {
     
 }

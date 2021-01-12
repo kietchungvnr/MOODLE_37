@@ -37,6 +37,10 @@ require_once($CFG->dirroot . '/my/lib.php');
 require_once($CFG->dirroot . '/user/profile/lib.php');
 require_once($CFG->dirroot . '/user/lib.php');
 require_once($CFG->libdir.'/filelib.php');
+require_once($CFG->dirroot .'/comment/lib.php');
+require_once($CFG->dirroot .'/blog/lib.php');
+require_once $CFG->dirroot . '/blog/locallib.php';
+
 
 $userid         = optional_param('id', 0, PARAM_INT);
 $edit           = optional_param('edit', null, PARAM_BOOL);    // Turn editing on and off.
@@ -193,7 +197,10 @@ if ($PAGE->user_allowed_editing()) {
 
 // Trigger a user profile viewed event.
 profile_view($user, $usercontext);
-
+if(isset($_SESSION['url'])) {
+    unset($_SESSION['url']);
+}
+$_SESSION['url'] = $_SERVER['REQUEST_URI'];
 // TODO WORK OUT WHERE THE NAV BAR IS!
 echo $OUTPUT->header();
 echo '<div class="userprofile">';
@@ -212,7 +219,7 @@ if ($user->description && !isset($hiddenfields['description'])) {
 }
 
 echo $OUTPUT->custom_block_region('content');
-
+$PAGE->requires->js_call_amd('theme_moove/profile','init');
 // Render custom blocks.
 $renderer = $PAGE->get_renderer('core_user', 'myprofile');
 $tree = core_user\output\myprofile\manager::build_tree($user, $currentuser);

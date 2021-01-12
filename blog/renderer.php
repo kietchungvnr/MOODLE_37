@@ -61,21 +61,36 @@ class core_blog_renderer extends plugin_renderer_base {
         $o .= $this->output->container_end();
 
         $o .= $this->output->container_start('topic starter header clearfix');
-
+        //Custom by Thắng : sửa lại html trang blog
         // Title.
         $titlelink = html_writer::link(new moodle_url('/blog/index.php',
                                                        array('entryid' => $entry->id)),
-                                                       format_string($entry->subject));
-        $o .= $this->output->container($titlelink, 'subject');
+                                                       format_string($entry->subject),array('class' => 'black font-bold'));
+        // $o .= $this->output->container($titlelink, 'subject');
+
 
         // Post by.
-        $by = new stdClass();
+        // $by = new stdClass();
         $fullname = fullname($entry->renderable->user, has_capability('moodle/site:viewfullnames', $syscontext));
         $userurlparams = array('id' => $entry->renderable->user->id, 'course' => $this->page->course->id);
-        $by->name = html_writer::link(new moodle_url('/user/view.php', $userurlparams), $fullname);
+        // $by->name = html_writer::link(new moodle_url('/user/view.php', $userurlparams), $fullname);
+        switch ($entry->publishstate) {
+            case 'draft':
+                $blogtype = '<i class="fa fa-circle fa-xs" aria-hidden="true"></i><i class="ml-2 fa fa-lock" aria-hidden="true"></i>';
+                break;
+            case 'site':
+                $blogtype = '<i class="fa fa-circle fa-xs" aria-hidden="true"></i><i class="ml-2 fa fa-users" aria-hidden="true"></i>';
+                break;
+            case 'public':
+                $blogtype = '<i class="fa fa-circle fa-xs" aria-hidden="true"></i><i class="ml-2 fa fa-globe" aria-hidden="true"></i>';
+                break;
+            default:
+                $blogtype = '';
+                break;
 
-        $by->date = userdate($entry->created);
-        $o .= $this->output->container(get_string('bynameondate', 'forum', $by), 'author');
+        }
+        $o .= $this->output->container(html_writer::link(new moodle_url('/user/view.php', $userurlparams), $fullname,array('class' => 'black')), 'subject');
+        $o .= $this->output->container(converttime($entry->created) .' '.$blogtype, 'grey d-flex align-items-center');
 
         // Adding external blog link.
         if (!empty($entry->renderable->externalblogtext)) {
@@ -85,38 +100,16 @@ class core_blog_renderer extends plugin_renderer_base {
         // Closing subject tag and header tag.
         $o .= $this->output->container_end();
         $o .= $this->output->container_end();
-
+        $o .= $titlelink;
         // Post content.
         $o .= $this->output->container_start('row maincontent clearfix');
 
         // Entry.
-        $o .= $this->output->container_start('no-overflow content ');
+        // $o .= $this->output->container_start('no-overflow');
 
         // Determine text for publish state.
-        switch ($entry->publishstate) {
-            case 'draft':
-                $blogtype = get_string('publishtonoone', 'blog');
-                break;
-            case 'site':
-                $blogtype = get_string('publishtosite', 'blog');
-                break;
-            case 'public':
-                $blogtype = get_string('publishtoworld', 'blog');
-                break;
-            default:
-                $blogtype = '';
-                break;
-
-        }
-        $o .= $this->output->container($blogtype, 'audience');
-
-        // Attachments.
-        $attachmentsoutputs = array();
-        if ($entry->renderable->attachments) {
-            foreach ($entry->renderable->attachments as $attachment) {
-                $o .= $this->render($attachment, false);
-            }
-        }
+        
+        // $o .= $this->output->container($blogtype, 'audience');
 
         // Body.
         $o .= format_text($entry->summary, $entry->summaryformat, array('overflowdiv' => true));
@@ -130,7 +123,13 @@ class core_blog_renderer extends plugin_renderer_base {
                 $o .= $this->output->container_end();
             }
         }
-
+        // Attachments.
+        $attachmentsoutputs = array();
+        if ($entry->renderable->attachments) {
+            foreach ($entry->renderable->attachments as $attachment) {
+                $o .= $this->render($attachment, false);
+            }
+        }
         // Links to tags.
         $o .= $this->output->tag_list(core_tag_tag::get_item_tags('core', 'post', $entry->id));
 
@@ -181,22 +180,22 @@ class core_blog_renderer extends plugin_renderer_base {
             if (empty($entry->uniquehash)) {
                 $o .= html_writer::link(new moodle_url('/blog/edit.php',
                                                         array('action' => 'edit', 'entryid' => $entry->id)),
-                                                        $stredit) . ' | ';
+                                                        $stredit,array('class' => 'mr-2 grey'));
             }
             $o .= html_writer::link(new moodle_url('/blog/edit.php',
                                                     array('action' => 'delete', 'entryid' => $entry->id)),
-                                                    $strdelete) . ' | ';
+                                                    $strdelete,array('class' => 'mr-2 grey'));
         }
 
         $entryurl = new moodle_url('/blog/index.php', array('entryid' => $entry->id));
-        $o .= html_writer::link($entryurl, get_string('permalink', 'blog'));
+        // $o .= html_writer::link($entryurl, get_string('permalink', 'blog'));
 
-        $o .= $this->output->container_end();
+        // $o .= $this->output->container_end();
 
         // Last modification.
-        if ($entry->created != $entry->lastmodified) {
-            $o .= $this->output->container(' [ '.get_string('modified').': '.userdate($entry->lastmodified).' ]');
-        }
+        // if ($entry->created != $entry->lastmodified) {
+        //     $o .= $this->output->container(' [ '.get_string('modified').': '.userdate($entry->lastmodified).' ]');
+        // }
 
         // Comments.
         if (!empty($entry->renderable->comment)) {
@@ -206,11 +205,11 @@ class core_blog_renderer extends plugin_renderer_base {
         $o .= $this->output->container_end();
 
         // Closing maincontent div.
-        $o .= $this->output->container('&nbsp;', 'side options');
+        // $o .= $this->output->container('&nbsp;', 'side options');
         $o .= $this->output->container_end();
 
         $o .= $this->output->container_end();
-
+        $o .= '<hr class="mt-1 mb-2">';
         return $o;
     }
 
@@ -230,7 +229,7 @@ class core_blog_renderer extends plugin_renderer_base {
         if (file_mimetype_in_typegroup($attachment->file->get_mimetype(), 'web_image')) {
             $attrs = array('src' => $attachment->url, 'alt' => '');
             $o = html_writer::empty_tag('img', $attrs);
-            $class = 'attachedimages';
+            $class = 'attachedimages mb-2';
         } else {
             $image = $this->output->pix_icon(file_file_icon($attachment->file),
                                              $attachment->filename,

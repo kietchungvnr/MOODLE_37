@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-global $DB;
+global $DB,$CFG;
 
 // Get the profile userid.
 $userid = optional_param('id', $USER->id, PARAM_INT);
@@ -62,7 +62,8 @@ if(isset($_SERVER['HTTP_REFERER'])) {
 } else {
     $hasportal = false;
 }
-
+$isadmin = (is_siteadmin()) ? true : false;
+$isuser = ($USER->id == $user->id) ? true : false;
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $context = context_course::instance(SITEID);
@@ -77,7 +78,9 @@ $templatecontext = [
     'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
-    'hasportal' => $hasportal
+    'hasportal' => $hasportal,
+    'isadmin' => $isadmin,
+    'isuser' => $isuser
 ];
 
 // Improve boost navigation.
@@ -90,14 +93,50 @@ $themesettings = new \theme_moove\util\theme_settings();
 $templatecontext = array_merge($templatecontext, $themesettings->footer_items());
 
 $usercourses = \theme_moove\util\extras::user_courses_with_progress($user);
-$templatecontext['hascourses'] = (count($usercourses)) ? true : false;
-$templatecontext['courses'] = array_values($usercourses);
-$templatecontext['user'] = $user;
- $templatecontext['user']->profilepicture = \theme_moove\util\extras::get_user_picture($user, 100);
+$PAGE->requires->strings_for_js(array(
+                'addcomment',
+                'comments',
+                'commentscount',
+                'commentsrequirelogin',
+                'deletecommentbyon'
+            ),
+            'moodle'
+        );
+$badges = get_user_badge($user->id);
+$arr = ['user' => $user->id];
+$bloglisting = new blog_listing($arr);
+$templatecontext['bloglist'] = $bloglisting->print_entries_blog($arr);
 
+//more info
+$templatecontext['totalcourse']= count($usercourses);
+$templatecontext['totalbadge']= count($badges);
+$templatecontext['totalblog'] = $DB->count_records('post',['module' => 'blog','userid' => $user->id]);
+$templatecontext['totalforumpost']= $DB->count_records('forum_posts',['parent' => 0,'userid' => $user->id]);
+$templatecontext['firstaccess'] = convertunixtime('d/m/Y', $user->firstaccess, 'Asia/Ho_Chi_Minh') . " (" . format_time(time() - $user->firstaccess) . ")";
+$templatecontext['lastaccess'] = convertunixtime('d/m/Y', $user->lastaccess, 'Asia/Ho_Chi_Minh') . " (" . format_time(time() - $user->lastaccess) . ")";
+$templatecontext['email'] = $user->email;
+$templatecontext['country'] = $user->country;
+$templatecontext['hascourses'] = (count($usercourses)) ? true : false;
+$templatecontext['hasblog'] = ($DB->count_records('post',['module' => 'blog','userid' => $user->id]) > 0) ? true : false;
+foreach ($usercourses as $value) {
+    $templatecontext['courses'][] = get_coursecard_info($value->id);
+}  
+$templatecontext['hasbadge'] = (count($badges)) ? true : false;
+$templatecontext['badges'] = array_values($badges);
+
+$templatecontext['user'] = $user;
+$templatecontext['user']->profilepicture = \theme_moove\util\extras::get_user_picture($user, 100);
 $competencyplans = \theme_moove\util\extras::get_user_competency_plans($user);
 $templatecontext['hascompetencyplans'] = (count($competencyplans)) ? true : false;
+$templatecontext['linkcompetencyplan'] = $CFG->wwwroot . '/admin/tool/lp/plans.php?userid=' . $user->id;
+$templatecontext['linkaddblog'] = $CFG->wwwroot . '/blog/edit.php?action=add&userid=' . $user->id;
+for($i = 0;$i < count($competencyplans);$i++) {
+    $duedate = $DB->get_field('competency_plan', 'duedate', ['id' => $competencyplans[$i]['id']]);
+    $competencyplans[$i]['duedate'] = ($duedate > 0) ? convertunixtime('l, d m Y, H:i A', $duedate, 'Asia/Ho_Chi_Minh') : get_string('nodatatable','local_newsvnr');
+}
 $templatecontext['competencyplans'] = $competencyplans;
+
+
 
 $templatecontext['headerbuttons'] = \theme_moove\util\extras::get_mypublic_headerbuttons($context, $user);
 

@@ -5107,7 +5107,7 @@ body .fixed-sidebar-left {
     bottom: 0;
     z-index: 100;
     transition: all 0.4s ease;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
     background: #2d5b7c;
     height: 100%;
@@ -5624,21 +5624,23 @@ nav.navbar ul.navbar-nav .usermenu {
 #content-detail {
     max-height: 600px;
 }
-#loaddetailrp .progress-circle:before,
-#content-detail .progress-circle:before {
-    left: .4rem;
-    right: .4rem;
-    top: .4rem;
-    bottom: .4rem
+.progress-circle.custom:before{
+    left: .3rem;
+    right: .3rem;
+    top: .3rem;
+    bottom: .3rem;
+    font-size: 14px;
 }
 #loaddetailrp .badges li {
     text-align: left;
 }
-#loaddetailrp .progress-circle,
-#content-detail .progress-circle {
-    height: 4rem;
-    width: 4rem;
+.progress-circle.custom {
+    height: 3.5rem;
+    width: 3.5rem;
 }
+/*.card.profile .tab-pane .card-body {
+    border-left:3px solid #00a65a;
+}*/
 #viewDetailReport,
 #viewTeacherDetailReport {
     overflow-x: hidden;
@@ -5677,8 +5679,8 @@ nav.navbar ul.navbar-nav .usermenu {
     height: 25px;
 }
 #page-my-index .card {
-    margin-left: -5px;
-    margin-right: -5px;
+    margin-left: -6px;
+    margin-right: -6px;
 }
 #page-my-index .k-grid tr td,
 #page-my-index .k-pivot-layout .k-grid tr td {
@@ -5710,9 +5712,6 @@ nav.navbar ul.navbar-nav .usermenu {
 }
 .action-rightside-fixed li:hover {
     transform: translateX(-185px);
-}
-#page-my-index .progress-circle:before {
-    font-size: 1rem;
 }
 /*#page-my-index .highcharts-button.highcharts-drillup-button {
     display: none;
@@ -5753,6 +5752,101 @@ nav.navbar ul.navbar-nav .usermenu {
 }
 .text-default {
     color: #363535;
+}
+.card.profile {
+    margin: 0 -5px;
+}
+.card.profile .button-profile a{
+    margin: 5px;
+    font-size: 12px;
+    padding: 5px;
+    width: 100%;
+    color: #1177d1;
+    background: #e3eef5;
+    border: none;
+}
+#page-user-profile .badges li {
+    text-align: left;
+    padding-top: 0;
+}
+.user-forum-post p,
+.user-blog-post p{
+    margin-bottom: 0;
+}
+.black {
+    color: black !important;
+}
+.blue {
+    color: #1177d1;
+}
+.user-forum-post .text_to_html {
+    font-size: 14px;
+    font-style: normal;
+}
+.text_to_html {
+    font-style: normal;
+}
+.comment-message {
+    display: flex;
+}
+.comment-message .picture {
+    float:none;
+    width: 40px;
+}
+.comment-message .picture img.userpicture {
+    width: 35px;
+    height: 35px;
+}
+.comment-message .no-overflow {
+    padding-top: 0;
+}
+.comment-area {
+    max-width: 100%;
+    padding: 0;
+}
+.comment-area textarea {
+    border: 1px solid #bdbdbd;
+    border-radius: 3px;
+    padding: 5px;
+    transition: all 0.3s ease;
+    border-radius: 25px;
+    height: 36px !important;
+    padding: 7px 15px;
+}
+.comment-area .fd a{
+    background-color: #4285f4;
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+}
+.user-blog-post .forumpost  {
+    padding: 0;
+    margin-bottom: 0px;
+}
+.comment-list li {
+    margin-bottom: 0;
+}
+.comment-delete {
+    top: 21px;
+    /*left: 130px;*/
+}
+.user-blog-post .attachedimages img {
+    max-width: 65%;
+    min-width: 330px;
+}
+.comment-list li {
+    margin: 2px 0;
+    padding: 0;
+}
+.comment-message .picture img.userpicture {
+    margin-left: 0;
+}
+.comment-delete i.icon {
+    margin-right: 0;
+}
+.user-blog-post .forumpost i.fa-circle {
+    font-size: 3px;
+    margin-left: 8px;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />

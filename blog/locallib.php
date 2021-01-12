@@ -787,7 +787,44 @@ class blog_listing {
             return;
         }
     }
+    // Custom by Thắng: Thêm hàm lấy blog
+    public function print_entries_blog() {
+        global $CFG, $USER, $DB, $OUTPUT, $PAGE;
+        $sitecontext = context_system::instance();
+        $html = '';
+        // Blog renderer.
+        $output = $PAGE->get_renderer('blog');
 
+        $page  = optional_param('blogpage', 0, PARAM_INT);
+        $limit = optional_param('limit', get_user_preferences('blogpagesize', 10), PARAM_INT);
+        $start = $page * $limit;
+
+        $entries = $this->get_entries($start, $limit);
+        $totalentries = $this->count_entries();
+        $pagingbar = new paging_bar($totalentries, $page, $limit, $this->get_baseurl());
+        $pagingbar->pagevar = 'blogpage';
+        $blogheaders = blog_get_headers();
+
+        $html .= $OUTPUT->render($pagingbar);
+
+        if ($entries) {
+            $count = 0;
+            foreach ($entries as $entry) {
+                $blogentry = new blog_entry(null, $entry);
+
+                // Get the required blog entry data to render it.
+                $blogentry->prepare_render();
+                $html .= $output->render($blogentry);
+
+                $count++;
+            }
+
+            $html .= $OUTPUT->render($pagingbar);
+
+
+            return $html;
+        }
+    }
     // Find the base url from $_GET variables, for print_paging_bar.
     public function get_baseurl() {
         $getcopy  = $_GET;

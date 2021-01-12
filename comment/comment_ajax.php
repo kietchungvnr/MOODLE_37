@@ -26,6 +26,7 @@ define('NO_DEBUG_DISPLAY', true);
 
 require_once('../config.php');
 require_once($CFG->dirroot . '/comment/lib.php');
+require_once $CFG->dirroot . '/local/newsvnr/lib.php';
 
 $contextid = optional_param('contextid', SYSCONTEXTID, PARAM_INT);
 $action    = optional_param('action', '', PARAM_ALPHA);

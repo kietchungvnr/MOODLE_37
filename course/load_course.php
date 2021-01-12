@@ -162,7 +162,7 @@ $perpageresult = $perPage->getAllCourseNewsPageLinks(count($countcourse), $pagin
 echo '<div class="row">';
 foreach ($getcourse as $value) {
     //Thêm các field còn thiếu trong khóa học
-    $value->progress     = 0;
+    $value->progress     = round(\core_completion\progress::get_course_progress_percentage($value));
     $courseid            = $value->id;
     $courseobj           = new \core_course_list_element($value);
     $value->link         = $CFG->wwwroot . "/course/view.php?id=" . $value->id;

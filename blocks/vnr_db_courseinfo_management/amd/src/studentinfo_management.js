@@ -100,7 +100,7 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 				},
 	            {
 	            	field: 'process', 
-	            	template:"<div class='d-flex participants-collum'><div class='progress course'><div class='progress-bar' role='progressbar' aria-valuenow='#: process #' aria-valuemin='0' aria-valuemax='100' style='width:#: process #'></div></div><div>#: process #</div></div></div>",
+	            	template:"<div class='d-flex participants-collum'><div class='progress course'><div class='progress-bar' role='progressbar' aria-valuenow='#: process #' aria-valuemin='0' aria-valuemax='100' style='width:#: process #'></div></div><div></div></div></div>",
 	                title: s[6],
 	                width: "100px"	
 	            },
