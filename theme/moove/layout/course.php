@@ -39,7 +39,7 @@ if (isloggedin()) {
 
 $blockshtml = $OUTPUT->blocks('side-pre');
 $hasblocks = strpos($blockshtml, 'data-block=') !== false;
-
+$check = theme_moove_layout_check();
 $extraclasses = [];
 if ($navdraweropen) {
     $extraclasses[] = 'drawer-open-left';
@@ -53,12 +53,6 @@ $coursepresentation = theme_moove_get_setting('coursepresentation');
 if ($coursepresentation == 2) {
     $extraclasses[] = 'coursepresentation-cover';
 }
-if(isset($_SERVER['HTTP_REFERER'])) {
-    $hasportal = true;
-} else {
-    $hasportal = false;
-}
-
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [
@@ -72,7 +66,9 @@ $templatecontext = [
     'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
-    'hasportal' => $hasportal
+    'hasportal' => $check->hasportal,
+    'hasfocusmod' => $check->hasfocusmod,
+    'hasopenmenu' => $check->hasopenmenu
 ];
 
 // var_dump($templatecontext['hasportal']);die;

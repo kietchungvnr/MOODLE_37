@@ -56,13 +56,7 @@ if ($navdraweropen) {
 if ($draweropenright && $hasblocks) {
     $extraclasses[] = 'drawer-open-right';
 }
-
-if(isset($_SERVER['HTTP_REFERER'])) {
-    $hasportal = true;
-} else {
-    $hasportal = false;
-}
-$isadmin = (is_siteadmin()) ? true : false;
+$check = theme_moove_layout_check();
 $isuser = ($USER->id == $user->id) ? true : false;
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
@@ -78,9 +72,10 @@ $templatecontext = [
     'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
-    'hasportal' => $hasportal,
-    'isadmin' => $isadmin,
-    'isuser' => $isuser
+    'hasportal' => $check->hasportal,
+    'isadmin' => $check->isadmin,
+    'isuser' => $isuser,
+    'hasopenmenu' => $check->hasopenmenu
 ];
 
 // Improve boost navigation.
@@ -118,6 +113,7 @@ $templatecontext['email'] = $user->email;
 $templatecontext['country'] = $user->country;
 $templatecontext['hascourses'] = (count($usercourses)) ? true : false;
 $templatecontext['hasblog'] = ($DB->count_records('post',['module' => 'blog','userid' => $user->id]) > 0) ? true : false;
+$templatecontext['editprofile'] = $CFG->wwwroot . '';
 foreach ($usercourses as $value) {
     $templatecontext['courses'][] = get_coursecard_info($value->id);
 }  

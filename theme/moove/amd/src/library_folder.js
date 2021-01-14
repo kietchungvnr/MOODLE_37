@@ -1,4 +1,4 @@
-define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], function($, Config, Str, Notification, alertify) {
+define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'kendo.all.min'], function($, Config, Str, Notification, alertify, kendo) {
     "use strict";
     var init = function() {
         var strings = [{

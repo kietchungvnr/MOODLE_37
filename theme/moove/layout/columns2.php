@@ -50,18 +50,7 @@ if ($navdraweropen) {
 if ($draweropenright && $hasblocks) {
     $extraclasses[] = 'drawer-open-right';
 }
-
-if(isset($_SERVER['HTTP_REFERER'])) {
-    $hasportal = true;
-} else {
-    $hasportal = false;
-}
-if($COURSE->id > 1 ){
-    $hascourse = true;
-}
-else {
-    $hascourse = false;
-}
+$check = theme_moove_layout_check();
 // var_dump($COURSE);die();
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
@@ -76,8 +65,9 @@ $templatecontext = [
     'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
-    'hasportal' => $hasportal,
-    'hascourse' => $hascourse
+    'hasportal' => $check->hasportal,
+    'hascourse' => $check->hascourse,
+    'hasopenmenu' => $check->hasopenmenu
 ];
 
 // Improve boost navigation.

@@ -33,11 +33,7 @@ $extraclasses = [];
 
 $themesettings = new \theme_moove\util\theme_settings();
 
-if(isset($_SERVER['HTTP_REFERER'])) {
-    $hasportal = true;
-} else {
-    $hasportal = false;
-}
+$check = theme_moove_layout_check();
 
 if (isloggedin()) {
     global $DB;
@@ -75,7 +71,8 @@ if (isloggedin()) {
         'draweropenright' => $draweropenright,
         'regionmainsettingsmenu' => $regionmainsettingsmenu,
         'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
-        'hasportal' => $hasportal
+        'hasportal' => $check->hasportal,
+        'hasopenmenu' => $check->hasopenmenu
     ];
 
     // Improve boost navigation.
@@ -160,7 +157,7 @@ if (isloggedin()) {
         'clientsfrontpage' => $clientsfrontpage,
         'disablefrontpageloginbox' => $disablefrontpageloginbox,
         'logintoken' => \core\session\manager::get_login_token(),
-        'hasportal' => $hasportal
+        'hasportal' => $check->hasportal
     ];
 
     $templatecontext = array_merge($templatecontext, $themesettings->footer_items(), $themesettings->marketing_items());

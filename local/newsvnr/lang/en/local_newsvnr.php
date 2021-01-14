@@ -544,3 +544,4 @@ $string['forum'] = "Forum";
 $string['intro'] = "Introduce";
 $string['addblog'] = "Add blog";
 $string['replypost'] = "Reply post";
+$string['myteachingcourses'] = "My teaching courses";

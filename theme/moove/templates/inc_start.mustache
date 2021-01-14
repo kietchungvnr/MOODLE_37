@@ -2739,27 +2739,26 @@ td[data-field="listbtn"] {
     }
 }
 /*menu theme*/
-.pagelayout-course .nav.nav-tabs .nav-link.active {
+.nav.nav-tabs .nav-link.active {
    font-weight: bold;
    border-bottom: 3px solid #1177d1;
    color: #1177d1 !important;
 }
-.pagelayout-course .nav.nav-tabs .nav-link:hover  {
+.nav.nav-tabs .nav-link:hover  {
    font-weight: bold;
    color: #1177d1;
+   background: transparent;
 }
-.pagelayout-course .nav.nav-tabs .nav-link {
+.nav.nav-tabs .nav-link {
     border: 0;
     background-color: transparent;
     color: black;
-    border-bottom:1px solid #cbd1d4;
 }
-/*.pagelayout-course .nav.nav-tabs .nav-item:hover a.nav-link {
+/*.nav.nav-tabs .nav-item:hover a.nav-link {
    color: white;
 }*/
-.pagelayout-course .nav.nav-tabs {
+.nav.nav-tabs {
     display: flex;
-    border-bottom:0;
 }
 [data-region="drawer"] {
     width: 100%;
@@ -3621,7 +3620,6 @@ nav.navbar .navbar-brand .logo img {
 }
 .text-date {
     color: #363535;
-    font-style: oblique;
     padding: 0!important ;
 }
 .new-latest-comment-info {
@@ -4024,12 +4022,6 @@ table#participants .fa-sort-asc ,
         margin-top: 62px;
     }
 {{/hasfocusmod}}
-/*cây danh mục*/
-/*li.list-subcategory a, li.list-subcategory .list-category a {
-    padding-left: 10px;
-    color: #191818;
-}*/
-
 .course-ajax-load {
     padding-left: 5px;
     padding-right: 5px;
@@ -5095,12 +5087,12 @@ input.apple-switch:checked:after {
     backface-visibility: hidden;
     margin-bottom: 70px;
 }
-body.slide-nav-toggle .fixed-sidebar-left ,
-body.sidebar-hover .fixed-sidebar-left{
+.slide-nav-toggle .fixed-sidebar-left ,
+.sidebar-hover .fixed-sidebar-left{
     width: 225px;
     margin-left:0;
 }
-body .fixed-sidebar-left {
+.fixed-sidebar-left {
     position: fixed;
     top: 55px;
     left: 0;
@@ -5112,24 +5104,21 @@ body .fixed-sidebar-left {
     background: #2d5b7c;
     height: 100%;
 }
-body.focusmod .fixed-sidebar-left {
+.focusmod .fixed-sidebar-left {
     top: 60px !important;
 }
-body.slide-nav-toggle .fixed-sidebar-left .side-nav li.navigation-header > i,
-body.sidebar-hover .fixed-sidebar-left .side-nav li.navigation-header > i {
+.slide-nav-toggle .fixed-sidebar-left .side-nav li.navigation-header > i,
+.sidebar-hover .fixed-sidebar-left .side-nav li.navigation-header > i {
     display: none;
 }
-body.slide-nav-toggle .fixed-sidebar-left .side-nav li.navigation-header > span,
-body.sidebar-hover .fixed-sidebar-left .side-nav li.navigation-header > span {
+.slide-nav-toggle .fixed-sidebar-left .side-nav li.navigation-header > span,
+.sidebar-hover .fixed-sidebar-left .side-nav li.navigation-header > span {
     display: block;
 }
-body .fixed-sidebar-left .side-nav li.navigation-header > i {
-    display: block;
-}
-body.slide-nav-toggle #page-wrapper {
+.slide-nav-toggle#page-wrapper {
     margin-left: 225px;
 }
-body #page-wrapper {
+#page-wrapper {
     margin-left: 44px;
     transition: all 0.4s ease;
 }
@@ -5144,6 +5133,9 @@ body #page-wrapper {
     font-size: 10px;
     color: #878787;
     font-weight: bold;
+}
+.fixed-sidebar-left .side-nav li.navigation-header > i {
+    display: block;
 }
 .fixed-sidebar-left hr.light-grey-hr {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -5755,15 +5747,17 @@ nav.navbar ul.navbar-nav .usermenu {
 }
 .card.profile {
     margin: 0 -5px;
+    z-index: 1;
 }
 .card.profile .button-profile a{
     margin: 5px;
-    font-size: 12px;
+    font-size: 13px;
     padding: 5px;
     width: 100%;
     color: #1177d1;
     background: #e3eef5;
     border: none;
+    text-align: center;
 }
 #page-user-profile .badges li {
     text-align: left;
@@ -5848,6 +5842,9 @@ nav.navbar ul.navbar-nav .usermenu {
     font-size: 3px;
     margin-left: 8px;
 }
+.card-footer {
+    background-color: #fff!important;
+}
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />
@@ -5875,27 +5872,29 @@ nav.navbar ul.navbar-nav .usermenu {
 
     <a id="return-to-top" title="{{#str}}gotop, theme_moove{{/str}}" data-placement="left"><i class="fa fa-arrow-up"></i></a>
     {{{output.test}}}
-    <div class="modal123"></div>  
-    <div class="all-header">
-        {{>theme_moove/header}}
-    </div>
+    <div class="modal123"></div>
+    {{# hasopenmenu}}<div class="check-menu slide-nav-toggle">{{/ hasopenmenu}}
+    {{^ hasopenmenu}}<div class="check-menu">{{/ hasopenmenu}}
+        <div class="all-header">
+            {{>theme_moove/header}}
+        </div>
 
-<div class="fixed-sidebar-left">
-    <div class="slimScrollDiv">
-        <ul class="nav navbar-nav side-nav nicescroll-bar">
-            {{{output.right_sidebar_menu}}}
-
-            {{# flatnavigation }}
-                {{#showdivider}}
-                    <li><hr class="light-grey-hr mb-10"></li>
-                    <li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>{{#str}}admin,theme_moove{{/str}}</span></li>
-                    <li class="menu-link" data-key="{{key}}" id=''><a class ="nav-active" href="{{{action}}}"><i class="{{{class}}} mr-3"></i>{{{text}}}</a></li>
-                {{/showdivider}}
-            {{/ flatnavigation }}
-        </ul>
-    </div>
-</div>
-<div id="page-wrapper">
+        <div class="fixed-sidebar-left">
+            <div class="slimScrollDiv">
+                <ul class="nav navbar-nav side-nav nicescroll-bar">
+                    {{{output.right_sidebar_menu}}}
+                    {{# flatnavigation }}
+                        {{#showdivider}}
+                            <li><hr class="light-grey-hr mb-10"></li>
+                            <li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>{{#str}}admin,theme_moove{{/str}}</span></li>
+                            <li class="menu-link" data-key="{{key}}" id=''><a class ="nav-active" href="{{{action}}}"><i class="{{{class}}} mr-3"></i>{{{text}}}</a></li>
+                        {{/showdivider}}
+                    {{/ flatnavigation }}
+                </ul>
+            </div>
+        </div>
+{{# hasopenmenu}}<div id="page-wrapper" class="slide-nav-toggle">{{/ hasopenmenu}}
+{{^ hasopenmenu}}<div id="page-wrapper">{{/ hasopenmenu}}
   {{{ output.standard_top_of_body_html }}}
 
 

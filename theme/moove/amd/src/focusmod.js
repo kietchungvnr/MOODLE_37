@@ -13,15 +13,19 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
     $('.open-focusmod').bind('click', function() {
         var fm = getCookie('cookie');
         var course = $(this).attr('course');
+        var url = Config.wwwroot + '/course/view.php?id='+course;
         if (fm == "focusmod") {
             $('body').removeClass('focusmod');
-            window.location.replace(Config.wwwroot + '/course/view.php?id='+course);
+            if(window.location.href != url) {
+                window.location.replace(url);
+            }
             document.cookie = 'cookie=; max-Age=-1;path=/';
             $('.all-header,footer,#page-header').slideDown();
             $('.navbar.focusmod').css('display', 'none');
             $('ul.course').css('display', 'flex');
             $('div#page-content').css('margin-top', '0px');
         } else {
+            // debugger
             $('body').addClass('focusmod');
             if (!$('#sidepre-blocks').hasClass('closed')) {
                 $('#sidepreopen-control').click();
@@ -98,27 +102,4 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             $(this).attr('target', '_blank');
         }
     })
-    // function cookie
-    function setCookie(cname, cvalue, exdays) {
-        var d = new Date();
-        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-        var expires = "expires=" + d.toUTCString();
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
-
-    function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }
 });

@@ -755,3 +755,15 @@ function theme_moove_buildnavnewsvnr_sitewide(\flat_navigation $flatnav) {
         $PAGE->requires->js_call_amd('core/addblockmodal', 'init', array($params));
     }
 }
+function theme_moove_layout_check() {
+    global $COURSE;
+    $object = new stdClass();
+    $object->hasportal = (isset($_SERVER['HTTP_REFERER'])) ? true : false;
+    $object->hasfocusmod = (isset($_COOKIE['cookie']) == 'focusmod') ? true : false;
+    $object->hasopenmenu = (isset($_COOKIE['menu']) == 'openmenu') ? true : false;
+    $object->hasiframe = (strpos($_SERVER['QUERY_STRING'],'iframe=true') !== false) ? true : false;
+    $object->hascourse = ($COURSE->id > 1) ? true : false;
+    $object->isadmin = (is_siteadmin()) ? true : false;
+    $object->settingexam = ($COURSE->id == 1) ? true : false;
+    return $object;
+}

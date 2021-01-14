@@ -544,3 +544,4 @@ $string['forum'] = "Diễn đàn";
 $string['intro'] = "Giới thiệu";
 $string['addblog'] = "Viết blog";
 $string['replypost'] = "Bình luận bài viết";
+$string['myteachingcourses'] = "Khóa giảng của tôi";

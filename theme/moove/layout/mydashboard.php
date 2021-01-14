@@ -48,12 +48,7 @@ if ($navdraweropen) {
 if ($draweropenright && $hasblocks) {
     $extraclasses[] = 'drawer-open-right';
 }
-
-if(isset($_SERVER['HTTP_REFERER'])) {
-    $hasportal = true;
-} else {
-    $hasportal = false;
-}
+$check = theme_moove_layout_check();
 $check_is_teacher = $DB->get_field_sql('SELECT COUNT(c.id) course
                                         FROM  mdl_context ct
                                             JOIN mdl_course c ON c.id = ct.instanceid
@@ -86,8 +81,9 @@ $templatecontext = [
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'is_siteadmin' => is_siteadmin(),
     'is_teacher' => $is_teacher,
-    'hasportal' => $hasportal,
-    'canviewadmininfos' => false
+    'hasportal' => $check->hasportal,
+    'canviewadmininfos' => false,
+    'hasopenmenu' => $check->hasopenmenu
 ];
 
 $themesettings = new \theme_moove\util\theme_settings();

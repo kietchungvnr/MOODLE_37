@@ -416,11 +416,11 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $output .= '<li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>'.get_string('studentteacher','theme_moove').'</span></li>';
             $output .= '<li class="menu-link"><a href="'.$course .'"><i class="fa fa-university mr-3" aria-hidden="true"></i>'. get_string('course', 'theme_moove') .'</a></li>';
             if($this->nav_coursebystudent() != '') {
-                $output .= '<li class="menu-link d-flex align-items-center click-menu-expand" id="studentcourse"><a href="javascript:"><i class="fa fa-graduation-cap mr-3" aria-hidden="true"></i>My course</a><i class="fa fa-angle-right rotate-icon float-right pl-3 pr-3"></i></li>';
+                $output .= '<li class="menu-link d-flex align-items-center click-menu-expand" id="studentcourse"><a href="javascript:"><i class="fa fa-graduation-cap mr-3" aria-hidden="true"></i>'.get_string('mycourses','local_newsvnr').'</a><i class="fa fa-angle-right rotate-icon float-right pl-3 pr-3"></i></li>';
                 $output .= '<ul class="dropdown-menu content-menu-expand studentcourse" role="menu" id="drop-course-by-student">'.$this->nav_coursebystudent().'</ul>';
             }
             if($this->nav_coursebyteacher() != '') {
-                $output .= '<li class="menu-link d-flex align-items-center click-menu-expand" id="teachercourse"><a href="javascript:"><i class="fa fa-graduation-cap mr-3" aria-hidden="true"></i>My teaching course</a><i class="fa fa-angle-right rotate-icon float-right pl-3 pr-3"></i></li>';
+                $output .= '<li class="menu-link d-flex align-items-center click-menu-expand" id="teachercourse"><a href="javascript:"><i class="fa fa-graduation-cap mr-3" aria-hidden="true"></i>'.get_string('myteachingcourses','local_newsvnr').'  </a><i class="fa fa-angle-right rotate-icon float-right pl-3 pr-3"></i></li>';
                 $output .= '<ul class="dropdown-menu content-menu-expand teachercourse" role="menu" id="drop-course-by-student">'.$this->nav_coursebyteacher().'</ul>';
             }
         } else {

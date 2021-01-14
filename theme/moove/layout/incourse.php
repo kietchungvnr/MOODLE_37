@@ -54,27 +54,7 @@ if (isset($PAGE->cm->modname) && in_array($PAGE->cm->modname, $moduleswithnavinb
     $draweropenright = true;
     $extraclasses[] = 'drawer-open-right';
 }
-
-if(isset($_SERVER['HTTP_REFERER'])) {
-    $hasportal = true;
-} else {
-    $hasportal = false;
-}
-if(isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
-    $hasiframe = true;
-} else {
-    $hasiframe = false;
-}
-if(isset($_COOKIE['cookie']) == 'focusmod' ) {
-    $hasfocusmod = true;
-} else {
-    $hasfocusmod = false;
-}
-if($COURSE->id == 1) {
-    $settingexam = true;
-} else {
-    $settingexam = false;
-}
+$check = theme_moove_layout_check();
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [
@@ -88,10 +68,11 @@ $templatecontext = [
     'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
-    'hasportal' => $hasportal,
-    'hasiframe' => $hasiframe,
-    'hasfocusmod' => $hasfocusmod,
-    'settingexam' => $settingexam
+    'hasportal' => $check->hasportal,
+    'hasiframe' => $check->hasiframe,
+    'hasfocusmod' => $check->hasfocusmod,
+    'settingexam' => $check->settingexam,
+    'hasopenmenu' => $check->hasopenmenu
 ];
 
 // Improve boost navigation.

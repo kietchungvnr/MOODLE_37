@@ -62,7 +62,7 @@
         <div id="region-main-box" class="col-12">
             <section id="region-main">
                 <div class="row">
-                    <div class="col-sm-12 col-md-4 col-xl-3 mt-3 profile-width" style="height: 300px">
+                    <div class="col-sm-12 col-md-4 col-xl-3 mt-3 profile-width">
                         <div class="card user-card profile position-fixed">
                             <div class="card-body">
                                 {{#user}}
@@ -97,6 +97,14 @@
                                             <span>
                                                 <i class="{{{icon}}}" aria-hidden="true" title="{{{title}}}" aria-label="{{{title}}}"></i>
                                                 <span class="header-button-title">{{{title}}}</span>
+                                            </span>
+                                        </a>
+                                    {{/headerbuttons}}
+                                    {{^headerbuttons}}
+                                        <a role="button" href="{{{url}}}">
+                                            <span>
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                <span class="header-button-title">Sửa thông tin</span>
                                             </span>
                                         </a>
                                     {{/headerbuttons}}
