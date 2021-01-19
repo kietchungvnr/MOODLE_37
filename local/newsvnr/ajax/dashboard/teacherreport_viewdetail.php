@@ -96,7 +96,7 @@ switch ($action) {
                 $output .= '<p>'.get_string('teachername', 'theme_moove').': ' . $teachername . '</p>';
                 $output .= '</div>'; // end col
                 $output .= '<div class="col-md-2 text-left">
-                                <div class="progress-circle" data-progress="' . $studentfinish_percent . '" title="'.get_string('courseprogress', 'theme_moove').'"></div>
+                                <div class="progress-circle custom" data-progress="' . $studentfinish_percent . '" title="'.get_string('courseprogress', 'theme_moove').'"></div>
                             </div>';
                 $output .= '</div>'; //end row
                 $output .= '</div>'; //end col

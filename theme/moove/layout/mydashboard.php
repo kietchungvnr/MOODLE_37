@@ -49,21 +49,6 @@ if ($draweropenright && $hasblocks) {
     $extraclasses[] = 'drawer-open-right';
 }
 $check = theme_moove_layout_check();
-$check_is_teacher = $DB->get_field_sql('SELECT COUNT(c.id) course
-                                        FROM  mdl_context ct
-                                            JOIN mdl_course c ON c.id = ct.instanceid
-                                        WHERE ct.contextlevel = 50 AND c.id <> 1
-                                        AND (EXISTS (SELECT 1 
-                                                     FROM mdl_role_assignments ra
-                                                     WHERE ra.contextid = ct.id 
-                                                        AND ra.roleid = 3 
-                                                        AND ra.userid = :userid))', ['userid' => $USER->id]);
-if($check_is_teacher != 0) {
-    $is_teacher = true;
-} else {
-    $is_teacher = false;
-}
-
 $PAGE->requires->strings_for_js(array('emptydata','action','viewcourse', 'code', 'email', 'datecreated', 'choosecourse', 'startlearning'), 'local_newsvnr');
 $PAGE->requires->strings_for_js(array('coursestartdate','courseenddate','studenttotal', 'studentcode', 'coursename', 'coursemodules', 'status', 'coursecompletion', 'listuser', 'owncourses', 'viewdetail', 'studentname', 'lastaccess', 'phone', 'notyetselectcourse', 'listmodule', 'course', 'number', 'moduleallocation', 'coursegradeavg', 'access', 'coursecompleted', 'enrollcourse', 'modulename', 'exam', 'moduletype', 'score', 'modulerate', 'spenttimemodule', 'showalldata'), 'theme_moove');
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
@@ -80,7 +65,7 @@ $templatecontext = [
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'is_siteadmin' => is_siteadmin(),
-    'is_teacher' => $is_teacher,
+    'is_teacher' => $check->is_teacher,
     'hasportal' => $check->hasportal,
     'canviewadmininfos' => false,
     'hasopenmenu' => $check->hasopenmenu
@@ -135,7 +120,6 @@ if (is_siteadmin()) {
     $templatecontext['onlineusers'] = $onlineusers;
     $templatecontext['totalcategories'] = $totalcategories;
 }
-
 // Improve boost navigation.
 theme_moove_extend_flat_navigation($PAGE->flatnav);
 

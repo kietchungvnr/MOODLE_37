@@ -2562,6 +2562,7 @@ img.userpicture {
 }
 #region-main {
     overflow: hidden !important;
+    border: 0;
 }
 #region-main #participationreport {
     overflow-x: auto;
@@ -2741,8 +2742,9 @@ td[data-field="listbtn"] {
 /*menu theme*/
 .nav.nav-tabs .nav-link.active {
    font-weight: bold;
-   border-bottom: 3px solid #1177d1;
+   border-bottom: 3px solid #1177d1 !important;
    color: #1177d1 !important;
+   background: transparent !important;
 }
 .nav.nav-tabs .nav-link:hover  {
    font-weight: bold;
@@ -2759,6 +2761,7 @@ td[data-field="listbtn"] {
 }*/
 .nav.nav-tabs {
     display: flex;
+    background: transparent !important;
 }
 [data-region="drawer"] {
     width: 100%;
@@ -5173,8 +5176,8 @@ input.apple-switch:checked:after {
 .fixed-top.navbar {
     padding: .5rem 2rem .5rem .6rem; 
 }
-body.slide-nav-toggle .btn-menu-search,
-body.sidebar-hover .btn-menu-search {
+.slide-nav-toggle .btn-menu-search,
+.sidebar-hover .btn-menu-search {
     margin-left: 30px;
 }
 .btn-menu-search {

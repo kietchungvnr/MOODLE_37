@@ -45,7 +45,7 @@ $output          = '';
 $allowmodule      = ['book', 'lesson', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt'];
 $paginationlink  = $CFG->wwwroot . '/local/newsvnr/ajax/library_online/library_module_ajax.php?folderid='.$folderid.'&search='.$search.'&page=';
 if ($searchtype == "searchcontent") {
-    $searchsql = "(CONCAT(rs.name,b.name) LIKE $strsearch OR lp.title LIKE $strsearch OR lp.contents LIKE $strsearch OR pa.intro LIKE $strsearch OR pa.content LIKE $strsearch OR ur.intro LIKE $strsearch)";
+    $searchsql = "(CONCAT(rs.name,b.name) LIKE $strsearch OR lp.title LIKE $strsearch OR lp.contents LIKE $strsearch OR pa.intro LIKE $strsearch OR pa.content LIKE $strsearch OR ur.intro LIKE $strsearch OR (bc.CONTENT LIKE $strsearch OR bc.title LIKE $strsearch))";
 } else {
     $searchsql = "CONCAT(rs.name,b.name,l.name,i.name,pa.name,ur.name) LIKE $strsearch";
 }
@@ -54,6 +54,7 @@ $sql = "SELECT DISTINCT lm.*,cm.id,CONCAT(rs.name,b.name,l.name,i.name,pa.name,u
                         JOIN mdl_course_modules cm on cm.id = lm.coursemoduleid 
                         LEFT JOIN mdl_resource rs on cm.instance = rs.id AND rs.course = 1
                         LEFT JOIN mdl_book b on cm.instance = b.id AND b.course = 1
+                        LEFT JOIN mdl_book_chapters bc on bc.bookid = b.id 
                         LEFT JOIN mdl_page pa on cm.instance = pa.id AND pa.course = 1
                         LEFT JOIN mdl_url ur on cm.instance = ur.id AND ur.course = 1
                         LEFT JOIN mdl_lesson l on cm.instance = l.id AND l.course = 1

@@ -23,7 +23,12 @@
 }}
 <nav class="fixed-top navbar navbar-light navbar-expand moodle-has-zindex" menu>
     <a href="javascript:;" class="btn-menu ml-2 mr-3 mt-2 mb-2" id="btn-menu"><i class="icono fa fa-align-right fa-1x text-gray" aria-hidden="true"></i></a>
-    <a href="{{{ config.wwwroot }}}" class="navbar-brand d-none ml-3 {{# output.get_logo }}has-logo{{/ output.get_logo }}">
+    {{# hasopenmenu}}
+        <a href="{{{ config.wwwroot }}}" class="navbar-brand ml-3 {{# output.get_logo }}has-logo{{/ output.get_logo }}">
+    {{/ hasopenmenu}}
+    {{^ hasopenmenu}}
+        <a href="{{{ config.wwwroot }}}" class="navbar-brand d-none ml-3 {{# output.get_logo }}has-logo{{/ output.get_logo }}">
+    {{/ hasopenmenu}}
         {{# output.get_logo }}
             <span class="logo d-sm-inline">
                 <img src="{{output.get_logo}}" alt="{{sitename}}">

@@ -26,16 +26,29 @@
 						   		{{/canedit}}
 						   		<div class="tab-content" tab="library">
     							<div data="library" class="tab-pane active">
-		                    
-			                    	<div class="d-flex justify-content-between">
-			                    	{{#canedit}}
-								        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-popup-modal-folder"><i class="fa fa-plus mr-2" aria-hidden="true"></i>{{#str}}addfolder, local_newsvnr{{/str}}</button>
-								    {{/canedit}}
-								    {{#canaddresource}}
-								    	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-popup-modal-module"><i class="fa fa-plus mr-2" aria-hidden="true"></i>{{#str}}addresource, local_newsvnr{{/str}}</button>
-									{{/canaddresource}}
+			                    	<div class="row">
+                                        <div class="col-12 col-md-3">
+        			                    	{{#canedit}}
+        								        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-popup-modal-folder"><i class="fa fa-plus mr-2" aria-hidden="true"></i>{{#str}}addfolder, local_newsvnr{{/str}}</button>
+        								    {{/canedit}}
+                                        </div>
+                                        <div class="col-12 col-md-9 pl-2 pr-3">
+                                            <div class="d-flex justify-content-between">
+                                                <div class="d-flex ml-1">
+                                                    <select class="form-control" id="filter_search_library">
+                                                      <option value="searchname">{{#str}}searchbyname, local_newsvnr{{/str}}</option>
+                                                      <option value="searchcontent">{{#str}}searchbycontent, local_newsvnr{{/str}}</option>
+                                                    </select>
+                                                    <div class="pl-0 pr-0 text-right float-right d-flex border" >
+                                                        <input id="searchlibrary" folderid="0" type="text" searchtype="searchname" placeholder=""><i class="fa fa-search library"></i>
+                                                    </div>
+                                                </div>
+                                                {{#canaddresource}}
+                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-popup-modal-module"><i class="fa fa-plus mr-2" aria-hidden="true"></i>{{#str}}addresource, local_newsvnr{{/str}}</button>
+                                                {{/canaddresource}}
+                                            </div>
+                                        </div>
 								    </div>
-		
 				                    <div class="row">
 				                        <div class="col-12 col-md-3 pl-2 pr-1">
 				                        	<div id="folder_library">
@@ -57,15 +70,7 @@
 				                       			<div class="top-library">
 				                       				<div id="header-library">
 				                       				</div>
-				    								<div class="d-flex justify-content-end mb-2">
-				                      					<select class="form-control" id="filter_search_library">
-														  <option value="searchname">{{#str}}searchbyname, local_newsvnr{{/str}}</option>
-														  <option value="searchcontent">{{#str}}searchbycontent, local_newsvnr{{/str}}</option>
-														</select>
-					                       				<div class="pl-0 pr-0 text-right float-right d-flex border" >
-													 		<input id="searchlibrary" folderid="0" type="text" searchtype="searchname" placeholder=""><i class="fa fa-search library"></i>
-													 	</div>
-													</div>
+	
 												</div>
 												<div class="overflow-auto">
 													<table class="table" >

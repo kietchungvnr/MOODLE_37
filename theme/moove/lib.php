@@ -756,7 +756,7 @@ function theme_moove_buildnavnewsvnr_sitewide(\flat_navigation $flatnav) {
     }
 }
 function theme_moove_layout_check() {
-    global $COURSE;
+    global $COURSE,$DB,$USER;
     $object = new stdClass();
     $object->hasportal = (isset($_SERVER['HTTP_REFERER'])) ? true : false;
     $object->hasfocusmod = (isset($_COOKIE['cookie']) == 'focusmod') ? true : false;
@@ -765,5 +765,25 @@ function theme_moove_layout_check() {
     $object->hascourse = ($COURSE->id > 1) ? true : false;
     $object->isadmin = (is_siteadmin()) ? true : false;
     $object->settingexam = ($COURSE->id == 1) ? true : false;
+    $check_is_teacher = $DB->get_field_sql('SELECT COUNT(c.id) course
+                                FROM  mdl_context ct
+                                    JOIN mdl_course c ON c.id = ct.instanceid
+                                WHERE ct.contextlevel = 50 AND c.id <> 1
+                                AND (EXISTS (SELECT 1 
+                                             FROM mdl_role_assignments ra
+                                             WHERE ra.contextid = ct.id 
+                                                AND ra.roleid = 3 
+                                                AND ra.userid = :userid))', ['userid' => $USER->id]);
+    $check_is_student = $DB->get_field_sql('SELECT COUNT(c.id) course
+                            FROM  mdl_context ct
+                                JOIN mdl_course c ON c.id = ct.instanceid
+                            WHERE ct.contextlevel = 50 AND c.id <> 1
+                            AND (EXISTS (SELECT 1 
+                                         FROM mdl_role_assignments ra
+                                         WHERE ra.contextid = ct.id 
+                                            AND ra.roleid = 5 
+                                            AND ra.userid = :userid))', ['userid' => $USER->id]);
+    $object->is_teacher = ($check_is_teacher != 0) ? true : false;
+    $object->is_student = ($check_is_student != 0) ? true : false;
     return $object;
 }

@@ -229,7 +229,7 @@ class core_blog_renderer extends plugin_renderer_base {
         if (file_mimetype_in_typegroup($attachment->file->get_mimetype(), 'web_image')) {
             $attrs = array('src' => $attachment->url, 'alt' => '');
             $o = html_writer::empty_tag('img', $attrs);
-            $class = 'attachedimages mb-2';
+            $class = 'attachedimages mb-2 mt-1';
         } else {
             $image = $this->output->pix_icon(file_file_icon($attachment->file),
                                              $attachment->filename,

@@ -167,17 +167,6 @@
 	}
 </script>
 {{#js}}
-require.config({
-    packages: [{
-        name: 'highcharts',
-        main: 'highcharts'
-    }],
-    paths: {
-        // Change this to your server if you do not wish to use our CDN.
-        highcharts: 'https://code.highcharts.com',
-        jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr"
-    }
-});
 require(
 		[
 			'highcharts',
@@ -521,7 +510,7 @@ $.getJSON(script + '?action=piechart',function(data) {
 	            colors: ['#e93e08','#428bca'],
 	            dataLabels: {
 	                enabled: true,
-	             	format: '{point.percentage:.1f} %',
+	             	format: '{point.percentage:.0f} %',
 	                distance: -50,
 	                color: 'white',
 	             	filter: {

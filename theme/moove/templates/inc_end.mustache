@@ -21,6 +21,17 @@
 </body>
 </html>
 {{#js}}
+require.config({
+    packages: [{
+        name: 'highcharts',
+        main: 'highcharts'
+    }],
+    paths: {
+        // Change this to your server if you do not wish to use our CDN.
+        highcharts: 'https://code.highcharts.com',
+        jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr"
+    }
+});
  require.config({
     paths: {
       "kendo.all.min": "//kendo.cdn.telerik.com/2020.3.915/js/kendo.all.min",
