@@ -145,6 +145,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                         
                         $url = $CFG->wwwroot . '/mod/' . $cms->modname . '/view.php?id=' . $cms->id;
                         $modname = $cms->name;
+                        $modtype = $cms->modname;
                         $output .= '<div class="card-header level2 justify-content-between">';
                         // $output .= '<div class="d-flex align-items-center">';
                         if($cms->modname == 'resource') {
@@ -154,11 +155,11 @@ class core_renderer extends \theme_boost\output\core_renderer {
                                 $cm = $DB->get_field('course_modules', 'id', ['instance' => $cms->instance]);
                                 $output .= '<a onclick="showmodal('.$cm.', '.$cms->instance.')" href="javascript:;"><img  class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
                             } else {
-                                $output .= '<a href="'.$url.'"><img class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
+                                $output .= '<a href="javascript:;" data-mod-type="'.$modtype.'" data-focusmode-url="'.$url.'"><img class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
                             }
                         } else {
                             $img = $OUTPUT->image_url('icon', $cms->modname);
-                            $output .= '<a href="'.$url.'"><img class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
+                            $output .= '<a href="javascript:;" data-mod-type="'.$modtype.'" data-focusmode-url="'.$url.'"><img class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
                         }
                         // $output .= '</div>';
                         $output .= '<div class="position-relative">'.$completionicon.'</div>';

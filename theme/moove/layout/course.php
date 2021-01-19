@@ -40,6 +40,11 @@ if (isloggedin()) {
 $blockshtml = $OUTPUT->blocks('side-pre');
 $hasblocks = strpos($blockshtml, 'data-block=') !== false;
 $check = theme_moove_layout_check();
+if(isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
+    $check->hasiframe = true;
+} else {
+    $check->hasiframe = false;
+}
 $extraclasses = [];
 if ($navdraweropen) {
     $extraclasses[] = 'drawer-open-left';
@@ -68,6 +73,7 @@ $templatecontext = [
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'hasportal' => $check->hasportal,
     'hasfocusmod' => $check->hasfocusmod,
+    'hasiframe' => $check->hasiframe,
     'hasopenmenu' => $check->hasopenmenu
 ];
 

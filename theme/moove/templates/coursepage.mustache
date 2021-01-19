@@ -53,59 +53,74 @@
         {{>theme_moove/portal_inc_start}}
     {{/hasportal}}
     {{^hasportal}}
-        {{>theme_moove/inc_start}}
+        {{^hasiframe}}
+            {{>theme_moove/inc_start}}
+        {{/hasiframe}}
+        {{#hasiframe}}
+            {{>theme_moove/focusmode_inc_start}}
+        {{/hasiframe}}
     {{/hasportal}}
-    {{{output.menu_focus}}}
+    {{^hasiframe}}
+        {{{output.menu_focus}}}
+    {{/hasiframe}}
     <div id="page" class="container-fluid">
         {{^hasportal}}
-            {{{ output.full_header }}}
+            {{^hasiframe}}
+                {{{ output.full_header }}}
+            {{/hasiframe}}
         {{/hasportal}}
         <div id="page-content" class="row">
             <div id="region-main-box" class="col-12">
-                {{#hasregionmainsettingsmenu}}
-                    <div id="region-main-settings-menu" class="d-print-none">
-                        <div> {{{ output.region_main_settings_menu }}} </div>
-                    </div>
-                {{/hasregionmainsettingsmenu}}
-                <section id="region-main">
-                    <div class="card">
-                              <div class="">
-                                {{> theme_moove/nav-drawer }}
-                                </div>
-                        <div class="card-body course">
-                            {{#hasdrawertoggle}}
-                            <div class="row">
-                          
-                                <div class="col-12">
-                                    {{#hasregionmainsettingsmenu}}
-                                        <div class="region_main_settings_menu_proxy"></div>
-                                    {{/hasregionmainsettingsmenu}}
-                                    {{{ output.course_content_header }}}
-                                    {{{ output.main_content }}}
-                                    {{{ output.activity_navigation }}}
-                                    {{{ output.course_content_footer }}}
-                                </div>
-                                 </div>
-                            {{/hasdrawertoggle}}
-                            {{^hasdrawertoggle}}
-                                {{#hasregionmainsettingsmenu}}
-                                <div class="region_main_settings_menu_proxy"></div>
-                            {{/hasregionmainsettingsmenu}}
-                            {{{ output.course_content_header }}}
-                            {{{ output.main_content }}}
-                            {{{ output.activity_navigation }}}
-                            {{{ output.course_content_footer }}}
-                            {{/hasdrawertoggle}}
+                {{^hasiframe}}
+                    {{#hasregionmainsettingsmenu}}
+                        <div id="region-main-settings-menu" class="d-print-none">
+                            <div> {{{ output.region_main_settings_menu }}} </div>
                         </div>
+                    {{/hasregionmainsettingsmenu}}
+                {{/hasiframe}}
+                <section id="region-main">
+                    <div class="loading-page"></div>
+                    <div class="card" id="course-content">
+                        {{#hasiframe}}
+                            <div class="card-body">
+                                <div id="mod-view">
+                                    <div class="alert alert-success mb-0"><strong>{{#str}}selectcoursedata, theme_moove{{/str}}</strong></div>
+                                </div>
+                                <div class="d-none">{{{ output.main_content }}}/div>
+                            </div>
+                        {{/hasiframe}}
+                        {{^hasiframe}}
+                            <div class="">
+                                {{> theme_moove/nav-drawer }}
+                            </div>
+                            <div class="card-body">
+                                {{#hasregionmainsettingsmenu}}
+                                    <div class="region_main_settings_menu_proxy"></div>
+                                {{/hasregionmainsettingsmenu}}
+                                {{{ output.course_content_header }}}
+                                {{{ output.main_content }}}
+                                {{{ output.activity_navigation }}}
+                                {{{ output.course_content_footer }}}
+                            </div>
+                        {{/hasiframe}}
+                        
                     </div>
+
+                    <div id="mod-view">
+                    </div>
+                    {{{ output.activity_navigation }}}
                 </section>
             </div>
         </div>
     </div>
-
     {{#hasportal}}
         {{>theme_moove/portal_inc_end}}
     {{/hasportal}}
     {{^hasportal}}
-        {{>theme_moove/inc_end}}
+        {{^hasiframe}}
+            {{>theme_moove/inc_end}}
+        {{/hasiframe}}
+        {{#hasiframe}}
+            {{>theme_moove/focusmode_inc_end}}
+        {{/hasiframe}}
     {{/hasportal}}

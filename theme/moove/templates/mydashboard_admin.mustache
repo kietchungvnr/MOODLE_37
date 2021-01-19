@@ -357,7 +357,6 @@ require(
     }).fail(Notification.exception);
     var el;
     $('[data-popover]').click(function(e) {
-        console.log($(".popover"))
         el = $(this);
         var event = $(this).attr('data-popover');
         var data = {event: event};
@@ -372,14 +371,14 @@ require(
                 })
              
                 .on("mouseenter", function() {
-                    console.log('enter')
+
                     var _this = this;
                     $("body").on("click", function() {
                         $('#content').data('kendoDropDownList').close();
                         $(_this).popover('hide');
                     });
                 }).on("mouseleave", function() {
-                    console.log('leave')
+                   
                     var _this = this;
                     // setTimeout(function() {
                     if (!$(".popover:hover").length) {

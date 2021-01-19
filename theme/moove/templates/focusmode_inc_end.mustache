@@ -1,0 +1,425 @@
+    {{#hasblocks}}
+        <i id="sidepreopen-control"
+            aria-expanded="{{#draweropenright}}true{{/draweropenright}}{{^draweropenright}}false{{/draweropenright}}"
+            aria-controls="sidepre-blocks"
+            data-action="toggle-drawer"
+            data-side="right"
+            data-preference="sidepre-open"
+            title="{{#str}} showhideblocks, theme_moove {{/str}}">
+        </i>
+
+        <section id="sidepre-blocks" data-region="blocks-column" class="hidden-print">
+            {{{ sidepreblocks }}}
+        </section>
+    {{/hasblocks}}
+
+    {{{ output.standard_after_main_region_html }}}
+
+    
+</div><!-- Ends .page-wrapper -->
+{{{ output.standard_end_of_body_html }}}
+</body>
+</html>
+{{#js}}
+ require.config({
+    paths: {
+      "kendo.all.min": "//kendo.cdn.telerik.com/2020.3.915/js/kendo.all.min",
+      "alertjs": "//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min",
+    }
+});
+require(['theme_boost/loader']);
+require(['theme_boost/drawer'], function(mod) {
+    mod.init();
+});
+
+require(['theme_moove/metismenu', 'jquery'], function(metisMenu, $) {
+
+    $(".metismenu").metisMenu();
+
+});
+
+require(['jquery', 'core/config'], function($, Config) {
+    var iconsearch = document.querySelector('.moove-search-input .slicon-magnifier');
+    var btnclosesearch = document.querySelector('.search-input-form .close-search');
+    var searchinputform = document.querySelector('.moove-search-input');
+    if (iconsearch) {
+
+        var togglesearchinputform = function() {
+            searchinputform.classList.toggle('expanded');
+        }
+
+        iconsearch.onclick = togglesearchinputform;
+        btnclosesearch.onclick = togglesearchinputform;
+    }
+    $('[data-region="drawer-toggle"]').click(function(){
+        setTimeout(function(){
+                $('#page').find('.dataTable[role="grid"][aria-describedby]').DataTable().columns.adjust().draw();
+
+        },500);
+       
+    });
+    var courseurl = '/course/view.php';
+    if($('[data-region="drawer"]')) {
+        $('[data-region="drawer"]').removeClass('closed');
+        $('[data-region="drawer"]').addClass('open');
+    }
+
+ 
+
+    {{! active menu }}
+    $(function(){
+        $("#nav-draw ul li").parent().filter(function(){
+            return this.href==location.href}
+        ).addClass('active-nav').siblings().removeClass('active-nav');
+        $("#enlaces li").parent().filter(function(){
+            return this.href==location.href}
+        ).addClass('active-nav').siblings().removeClass('active-nav');
+    });
+
+    // active UI câu hỏi trong bài kiểm tra quiz
+    if($('#responseform')) {
+        $('#responseform .content input').click(function() {
+            var questionId = $(this).attr('id');
+            var split = questionId.split(":");
+            var splitAgian = split[1].split("_");
+            var result = '#question-' + split[0].slice(1) + '-' + splitAgian[0];
+            for(var i = 1; i <= $('a.qnbutton').length; i++) {
+            var elment = 'a#quiznavbutton' + i;
+            if($(elment).attr('href') == '#') {
+                $(elment).addClass('answersaved').removeClass('notyetanswered');
+            } else if($(elment).attr('href') == result) {
+                $(elment).addClass('answersaved').removeClass('notyetanswered');
+            }
+        }
+
+        })
+        $('.qtype_multichoice_clearchoice').click(function() {
+            var elm = $(this).attr('id');
+            var splitElm = elm.split(":");
+            var splitElmAgian = splitElm[1].split("_");
+            var result = 'a#quiznavbutton' + splitElmAgian[0];
+            $(result).addClass('notyetanswered').removeClass('answersaved');
+        })
+    }
+    window.addEventListener("load", afterLoaded,true);
+      function afterLoaded(){
+        $('body').removeClass('loading');
+      }
+
+}); 
+
+
+require(['theme_moove/focusmod']);
+
+require(['theme_moove/course_menu']);
+
+require(['theme_moove/enrol_course']);
+
+require(['theme_moove/search_autocomplete']);
+
+require(['theme_moove/kendo_translate']);
+
+require(['theme_moove/menu_left']);
+
+var id = $('.new-detail-chat').attr('data');
+$('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussionid='+id);
+{{/js}}
+<script type="text/javascript">
+    // Xem file trực tiếp trên popup
+    var modalStore = {};
+    const showmodal = (cmid, instance) => {
+        require(["jquery", "core/modal_factory", "core/modal_events", "core/config", "core/templates", "core/notification"], function($, ModalFactory, ModalEvents,Config, Templates, Notification) {
+            "use strict";
+            const SHOW_RESOURCE = 1;
+            const COMPLETION_RESOURCE = 2;
+            const timeNow = Math.floor(Date.now() / 1000);
+
+            var script = Config.wwwroot + '/course/format/multitopic/ajax.php';
+            var settings = {
+                type: 'GET',
+                data: {
+                    "cmid": cmid,
+                    "instance": instance,
+                    "action" : SHOW_RESOURCE,
+                    "spenttime" : '',
+                },
+                processData: true,
+                contentType: "application/json"
+            };
+            
+            var loadingIconHtml;
+            var win = $(window);
+            var Selector = {
+                toggleCompletion: ".togglecompletion",
+                modal: ".modal",
+                modalDialog: ".modal-dialog",
+                modalBody: ".modal-body",
+                modalTitle: ".modal-title",
+                sectionMain: ".section.main",
+                pageContent: "#page-content",
+                regionMain: "#region-main",
+                completionState: "#completionstate_",
+                cmModalClose: ".embed_cm_modal .close",
+                cmModal: ".embed_cm_modal",
+                moodleMediaPlayer: ".mediaplugin_videojs",
+                urlModalLoadWarning: "#embed-url-error-msg-",
+                closeBtn: "button.close",
+                ACTIVITY: "li.activity",
+                URLACTIVITYPOPUPLINK: ".activity.modtype_url.urlpopup a",
+                newWindowButton: ".button_expand",
+                modalHeader: ".modal-header",
+                embedModuleButtons: ".embed-module-buttons"
+            };
+
+            var LaunchModalDataActions = {
+                launchResourceModal: "launch-tiles-resource-modal",
+                launchModuleModal: "launch-tiles-module-modal",
+                launchUrlModal: "launch-tiles-url-modal"
+            };
+            var body = $('body');
+            var resizeModal = function(modalRoot) {
+                modalRoot.find(Selector.modal).animate({"max-width": modalMinWidth()}, "fast");
+
+                var MODAL_MARGIN = 70;
+
+                // If the modal contains a Moodle mediaplayer div, remove the max width css rule which Moodle applies.
+                // Otherwise video will be 400px max wide.
+                // var mediaPlayer = $(Selector.moodleMediaPlayer);
+                // mediaPlayer.find("div").each(function(index, child) {
+                //     $(child).css("max-width", "");
+                // });
+                // if (mediaPlayer.length > 0) {
+                //     stopAllVideosOnDismiss(modalRoot);
+                // }
+
+                // If the activity contains an iframe (e.g. is a page with a YouTube video in it), ensure modal is big enough.
+                // Do this for every iframe in the course module.
+                modalRoot.find("iframe").each(function (index, iframe) {
+
+                    // Get the modal.
+                    var modal;
+                    // Boost calls the modal "modal dialog" so try this first.
+                    modal = modalRoot.find(Selector.modalDialog);
+
+                    // If no luck, try what Clean and Adaptable do instead.
+                    if (modal.length === 0) {
+                        modal = modalRoot.find(Selector.modal);
+                    }
+
+                    // Now check and adjust the width of the modal.
+                    var iframeWidth = Math.min($(iframe).width(), win.width());
+                    if (iframeWidth > modal.width() - MODAL_MARGIN) {
+                        modal.animate(
+                            {"max-width": Math.max(iframeWidth + MODAL_MARGIN, modalMinWidth())},
+                            "fast"
+                        );
+                        modalRoot.find(Selector.modal).animate(
+                            {"max-width": Math.max(iframeWidth + MODAL_MARGIN, modalMinWidth())},
+                            "fast"
+                        );
+                    }
+
+                    // Then the height of the modal body.
+                    var iframeHeight = Math.min($(iframe).height(), win.height());
+                    var modalBody = modalRoot.find(Selector.modalBody);
+                    if (iframeHeight > modalBody.height() - MODAL_MARGIN) {
+                        modalBody.animate({"min-height": Math.min(iframeHeight + MODAL_MARGIN, win.height())}, "fast");
+                    }
+
+                    // Align the iframe in the centre of the modal.
+                    // modalBody.css("text-align", "center");
+
+                    // stopAllVideosOnDismiss(modalRoot);
+                });
+            };
+            var modalMinWidth = function () {
+                return Math.min(win.width(), 1000);
+            };
+            // Init resource lên modal
+            var launchResourceModal = function(cmid) {
+                $.ajax(script, settings)
+                .then(function(resp) {
+                    body.addClass("loading");
+                    ModalFactory.create({
+                        type: ModalFactory.types.DEFAULT,
+                        title: resp.resourcename,
+                        body: loadingIconHtml
+                    })
+                    .done(function(modal) {
+                        modalStore[cmid] = modal;
+                        modal.setLarge();
+                        var pluginfileurl = resp.url;
+                        var hasCompleteion = resp.hascompletion;
+                        var modalRoot = $(modal.root);
+                        var completionTimeSpent = resp.completiontimespent;
+                        modalRoot.attr("data-cmid", cmid);
+                        var modalWidth = Math.round(win.width() * 0.9) + 30;
+                        var modalHeight = Math.round(win.height() * 0.9);
+                        var templateData = {
+                            pluginfileurl: pluginfileurl,
+                            id: cmid,
+                            cmid: cmid,
+                            width: modalWidth,
+                            height: modalHeight - 30,
+                            showDownload: 1,
+                            showNewWindow: 1,
+                        };
+                        var CSS = {
+                            modalBody : {
+                                "display" : "flex",
+                                "align-items" : "center",
+                                "justify-content" : "center"
+                            },
+                            modalTitle : {
+                                "-webkit-line-clamp": "1",
+                                "-webkit-box-orient": "vertical",
+                                "display":"-webkit-box",
+                                "overflow": "hidden",
+                                "text-overflow": "ellipsis",
+                                "font-weight": "600",
+                                "transition": "all 0.30s linear 0s",
+                                "line-height": "22px",
+                                "max-height": "44px",
+                            }
+                        };
+                        Templates.render("format_multitopic/viewoffice", templateData).done(function (html) {
+                            // Params tính thời gian hoàn thành module
+                            var settings = {
+                                    type: 'GET',
+                                    data: {
+                                        "cmid": cmid,
+                                        "instance": instance,
+                                        "action" : COMPLETION_RESOURCE,
+                                        "spenttime" : 0
+                                    },
+                                    processData: true,
+                                    contentType: "application/json"
+                                }
+                            var countShownModal = 0;
+                            // Load đường dẫn file và view trên modal(popup);
+                            // Reload 2s cho đến khi load thành công lên modal
+                            var timerId = setInterval(function() { 
+                                var iframe = document.getElementById("iFrame");
+                                try {
+                                    console.log(iframe.contentDocument.URL);
+                                    if(iframe.contentDocument.URL === "about:blank") {
+                                        iframe.src = iframe.src;
+                                    }
+                                } catch (e) {
+                                    if(e instanceof TypeError === true) {
+                                        body.removeClass("loading");
+                                        modal.show();
+                                        clearInterval(timerId);
+                                        modal.setBody(html);
+                                        modalRoot.find(Selector.modalBody).css(CSS.modalBody);
+                                        modalRoot.find(Selector.modalBody).addClass('p-0');
+                                        modalRoot.find(Selector.modalTitle).css(CSS.modalTitle);
+                                        modalRoot.find(Selector.modalBody).animate({"min-height": modalHeight}, "fast");
+                                        modalRoot.find(Selector.modal).animate({"max-width": modalWidth}, "fast");
+                                        modalRoot.find(Selector.modalDialog).animate({"max-width": modalWidth}, "fast");
+                                        modalRoot.find(Selector.modalBody).animate({"max-width": modalWidth}, "fast");
+                                        if(hasCompleteion == true) {
+                                            if(completionTimeSpent !== 'completed') {
+                                                var duration;
+                                                var display = document.querySelector('#time');
+                                                var valueDisplay = display.innerText;
+                                                var sc = valueDisplay.split(':'); 
+                                                modal.getRoot().on(ModalEvents.hidden, function() {
+                                                    display = document.querySelector('#time');
+                                                    valueDisplay = display.innerText;
+                                                    sc = valueDisplay.split(':');
+                                                    duration = ((+sc[0]) * 60 + (+sc[1])); 
+                                                    settings.data.spenttime = completionTimeSpent - duration;
+                                                    stopTimer();
+                                                    $.ajax(script, settings)
+                                                    .then(function(resp) {
+                                                    }).fail(Notification.exception);
+                                                });
+                                                modal.getRoot().on(ModalEvents.shown, function() {
+                                                    if(countShownModal == 0) {
+                                                        duration = completionTimeSpent;
+                                                        countShownModal++;
+                                                    } else {
+                                                        display = document.querySelector('#time');
+                                                        valueDisplay = display.innerText;
+                                                        sc = valueDisplay.split(':');
+                                                        duration = ((+sc[0]) * 60 + (+sc[1]));
+                                                    }
+                                                    settings.data.spenttime = duration;
+                                                    startTimer(duration, display, settings, true);
+
+                                                });
+                                            }
+                                        }
+                                        
+                                    } 
+                                }
+                            }, 3000);
+                        
+                        }).fail(Notification.exception);
+                        Templates.render("format_multitopic/embed_module_modal_header_btns", templateData).done(function (html) {
+                            modalRoot.find(Selector.modalHeader).append(html);
+                            modalRoot.find(Selector.closeBtn).detach().appendTo(modalRoot.find(Selector.embedModuleButtons));
+                        }).fail(Notification.exception);
+                        return true;
+                    });
+                });
+            }
+            var countDown;
+            // Bắt đầu tính thời gian hoàn thành module
+            var startTimer = function(duration, display, settings, start) {
+                try {
+                    if(!start)
+                        return;
+                    var timer = duration, minutes, seconds;
+                    var settings = settings;
+                    countDown = setInterval(function () {
+                        minutes = parseInt(timer / 60, 10)
+                        seconds = parseInt(timer % 60, 10);
+                        minutes = minutes < 10 ? "0" + minutes : minutes;
+                        seconds = seconds < 10 ? "0" + seconds : seconds;
+                        display.textContent = minutes + ":" + seconds;
+                        
+                        if (--timer < 0) {
+                            clearInterval(countDown);
+                            $.ajax(script, settings)
+                            .then(function(resp) {
+                                var cmid = settings.data.cmid;
+                                var completedicon = $('#module-' + cmid + ' .actions img').attr('src');
+                                var replaceicon = completedicon.replace('auto-n', 'auto-y')
+                                $('#module-' + cmid + ' .actions img').attr('src', replaceicon);
+                            }).fail(Notification.exception);
+                            return true;
+                        }    
+                    }, 1000);
+                } catch (e) {
+                    if(e instanceof TypeError === true) {
+                        return false;
+                    }
+                } 
+            }
+            // Pause thời gian hoàn thành module
+
+            var stopTimer = function() {
+                clearInterval(countDown);
+            }
+            var init = function(cmid) {
+                $(document).ready(function() {
+                    var modalSelectors = '[data-cmid="' + cmid + '"]';
+
+                    var pageContent = $(Selector.pageContent);
+                    if (pageContent.length === 0) {
+                        pageContent = $(Selector.regionMain);
+                    }
+                    var existingModal = modalStore[cmid];
+                    if (typeof existingModal === "object") {
+                        existingModal.show();
+                    } else {
+                        launchResourceModal(cmid)
+                    }
+                });
+            }
+            init(cmid);
+        });
+    }
+</script>

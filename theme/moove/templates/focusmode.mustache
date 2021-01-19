@@ -60,9 +60,7 @@
             {{>theme_moove/focusmode_inc_start}}
         {{/hasiframe}}
     {{/hasportal}}
-    {{^hasiframe}}
-        {{{output.menu_focus}}}
-    {{/hasiframe}}
+    {{{output.menu_focus}}} 
     <div id="page" class="container-fluid">
         {{^hasportal}}
             {{^hasiframe}}
@@ -77,30 +75,8 @@
                     </div>
                 {{/hasregionmainsettingsmenu}}
                 <section id="region-main">
-                    <div class="card">
-                        {{#hasiframe}}
-                        <div class="card-body">
-                            <div id="mod-view">{{{ output.main_content }}}</div>
-                        </div>
-                        {{/hasiframe}}
-                        {{^hasiframe}}
-                            <div class="">
-                                {{> theme_moove/nav-drawer }}
-                            </div>
-                            <div class="card-body">
-                                {{#hasregionmainsettingsmenu}}
-                                    <div class="region_main_settings_menu_proxy"></div>
-                                {{/hasregionmainsettingsmenu}}
-                                {{{ output.course_content_header }}}
-                                {{{ output.main_content }}}
-                                {{{ output.activity_navigation }}}
-                                {{{ output.course_content_footer }}}
-                                <div id="mod-view"></div>
-                            </div>
-                        {{/hasiframe}}
-                        
-                    </div>
-                    {{{ output.activity_navigation }}}
+                    <div class="d-none">{{{ output.main_content }}}</div>
+                    <div id="mod-view"></div>
                 </section>
             </div>
         </div>

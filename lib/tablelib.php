@@ -1701,14 +1701,17 @@ class flexible_table {
         echo $this->render_reset_button();
 
         // Do we need to print initial bars?
-        $this->print_initials_bar();
+        
+        // Custom by Vũ: Bỏ search chữ cái và phân trang 
+        // $this->print_initials_bar();
 
+        // Custom by Vũ: Bỏ phân trang 
         // Paging bar
-        if ($this->use_pages) {
-            $pagingbar = new paging_bar($this->totalrows, $this->currpage, $this->pagesize, $this->baseurl);
-            $pagingbar->pagevar = $this->request[TABLE_VAR_PAGE];
-            echo $OUTPUT->render($pagingbar);
-        }
+        // if ($this->use_pages) {
+        //     $pagingbar = new paging_bar($this->totalrows, $this->currpage, $this->pagesize, $this->baseurl);
+        //     $pagingbar->pagevar = $this->request[TABLE_VAR_PAGE];
+        //     echo $OUTPUT->render($pagingbar);
+        // }
 
         if (in_array(TABLE_P_TOP, $this->showdownloadbuttonsat)) {
             echo $this->download_buttons();

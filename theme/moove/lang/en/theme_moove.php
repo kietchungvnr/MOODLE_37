@@ -449,3 +449,4 @@ $string['reviewcompetency'] = 'Review Competency request';
 $string['modulerate'] = 'Module rate completed';
 $string['spenttimemodule'] = 'Spent time';
 $string['showalldata'] = 'Show all data...';
+$string['selectcoursedata'] = 'Select a lesson in course data!';

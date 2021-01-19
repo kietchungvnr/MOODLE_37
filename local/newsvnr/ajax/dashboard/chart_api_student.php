@@ -73,7 +73,7 @@ switch ($action) {
             $obj                   = new stdClass();
             $img                   = '<img class="pr-2 img-module" src="' . $OUTPUT->image_url('icon', $value->itemmodule) . '">';
             $obj->name             = ($value->finalgrade > $value->gradepass) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2">' . $img . '' . $value->itemname : '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconfail.png" class="img-module mr-2">' . $value->itemname;
-            $obj->finalgrade       = $value->finalgrade;
+            $obj->finalgrade       = round($value->finalgrade, 2);
             $obj->finalgradecourse = (int) get_course_grade_avg($courseid, false)[$i]->moduleavg;
             $obj->timeclose        = convertunixtime('d/m/Y', $value->timeclose, 'Asia/Ho_Chi_Minh');
             $obj->total            = count($listgrade);

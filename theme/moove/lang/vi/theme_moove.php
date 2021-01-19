@@ -449,3 +449,4 @@ $string['reviewcompetency'] = 'Yêu cầu đánh giá năng lực';
 $string['modulerate'] = 'Tỉ lệ hoàn thành';
 $string['spenttimemodule'] = 'Số giờ học';
 $string['showalldata'] = 'Hiện thị tất cả...';
+$string['selectcoursedata'] = 'Chọn bài học ở phần nội dung khóa học!';

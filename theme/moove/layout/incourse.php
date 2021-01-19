@@ -55,6 +55,11 @@ if (isset($PAGE->cm->modname) && in_array($PAGE->cm->modname, $moduleswithnavinb
     $extraclasses[] = 'drawer-open-right';
 }
 $check = theme_moove_layout_check();
+if(isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
+    $check->hasiframe = true;
+} else {
+    $check->hasiframe = false;
+}
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [

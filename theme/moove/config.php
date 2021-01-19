@@ -118,6 +118,13 @@ $THEME->layouts = [
         'defaultregion' => 'side-pre',
         'options' => array('nonavbar' => false, 'langmenu' => true),
     ),
+    // Part of course, typical for modules - default page layout if $cm specified in require_login().
+    'focusmode' => array(
+        'file' => 'focusmode.php',
+        'regions' => array('side-pre'),
+        'defaultregion' => 'side-pre',
+        'options' => array('nonavbar' => false, 'langmenu' => true),
+    ),
     // The site home page.
     'frontpage' => array(
         'file' => 'frontpage.php',

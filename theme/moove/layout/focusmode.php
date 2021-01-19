@@ -29,16 +29,14 @@ user_preference_allow_ajax_update('sidepre-open', PARAM_ALPHA);
 
 require_once($CFG->libdir . '/behat/lib.php');
 
-$hasdrawertoggle = false;
-$navdraweropen = false;
-$draweropenright = false;
-
 if (isloggedin()) {
-    $hasdrawertoggle = true;
-    $navdraweropen = (get_user_preferences('drawer-open-nav', 'true') == 'true');
+    $navdraweropen = (get_user_preferences('drawer-open-nav', 'true') == 'true'); 
     $draweropenright = (get_user_preferences('sidepre-open', 'true') == 'true');
+} else {
+    $navdraweropen = false;
+    $draweropenright = false;
 }
-global $COURSE;
+
 $blockshtml = $OUTPUT->blocks('side-pre');
 $hasblocks = strpos($blockshtml, 'data-block=') !== false;
 
@@ -50,11 +48,32 @@ if ($navdraweropen) {
 if ($draweropenright && $hasblocks) {
     $extraclasses[] = 'drawer-open-right';
 }
-$check = theme_moove_layout_check();
-if(isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
-    $check->hasiframe = true;
+
+$moduleswithnavinblocks = ['book'];
+if (isset($PAGE->cm->modname) && in_array($PAGE->cm->modname, $moduleswithnavinblocks)) {
+    $draweropenright = true;
+    $extraclasses[] = 'drawer-open-right';
+}
+
+if(isset($_SERVER['HTTP_REFERER'])) {
+    $hasportal = true;
 } else {
-    $check->hasiframe = false;
+    $hasportal = false;
+}
+if(isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
+    $hasiframe = true;
+} else {
+    $hasiframe = false;
+}
+if(isset($_COOKIE['cookie']) == 'focusmod' ) {
+    $hasfocusmod = true;
+} else {
+    $hasfocusmod = false;
+}
+if($COURSE->id == 1) {
+    $settingexam = true;
+} else {
+    $settingexam = false;
 }
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
@@ -69,19 +88,22 @@ $templatecontext = [
     'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
-    'hasportal' => $check->hasportal,
-    'hascourse' => $check->hascourse,
-    'hasiframe' => $check->hasiframe,
-    'hasopenmenu' => $check->hasopenmenu
+    'hasportal' => $hasportal,
+    'hasiframe' => $hasiframe,
+    'hasfocusmod' => $hasfocusmod,
+    'settingexam' => $settingexam
 ];
 
 // Improve boost navigation.
-theme_moove_extend_flat_navigation($PAGE->flatnav, 'default');
+theme_moove_extend_flat_navigation($PAGE->flatnav, 'incourse');
 
 $templatecontext['flatnavigation'] = $PAGE->flatnav;
 
 $themesettings = new \theme_moove\util\theme_settings();
 
 $templatecontext = array_merge($templatecontext, $themesettings->footer_items());
-
-echo $OUTPUT->render_from_template('theme_moove/columns2', $templatecontext);
+if (isset($PAGE->cm->modname)) {
+    echo $OUTPUT->render_from_template('theme_moove/focusmode', $templatecontext);
+} else {
+    echo $OUTPUT->render_from_template('theme_moove/focusmode', $templatecontext);
+}

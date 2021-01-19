@@ -605,6 +605,7 @@ require(
 		'highcharts/modules/exporting', 
 		'highcharts/modules/accessibility', 
 		'highcharts/modules/drilldown', 
+        'highcharts/modules/no-data-to-display', 
 		'jquery', 
 		'core/config', 
 		'local_newsvnr/initkendoexam', 
@@ -615,7 +616,7 @@ require(
         'daterangepicker',
         'moment'
 	],
-function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, Config, kendo, kendoService, alertify, Str, Notification, daterangepicker, moment) {
+function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, noData, $, Config, kendo, kendoService, alertify, Str, Notification, daterangepicker, moment) {
     "use strict";
     
     var gridListCourse = '#list-course-grid';
