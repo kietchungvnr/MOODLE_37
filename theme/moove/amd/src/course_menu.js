@@ -42,22 +42,4 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         $('#page-course-view-topcoll #toggles-all-opened').removeClass('d-none');
         $('#page-course-view-topcoll #toggles-all-opened').fadeIn('fast');
     })
-    $('#page-course-view-topcoll li.activity').each(function() {
-        if(!$(this).hasClass('resource')) {
-            $(this).find('.activityinstance a').addClass('focusmod');
-        }
-    })
-    $('#page-course-view-topcoll #section-1 .reportmodule i').addClass('active');
-    $('#page-course-view-topcoll .sectionhead.toggle').click(function() {
-        $(this).find('.reportmodule i').toggleClass('active');
-    });
-    $('#page-course-view-topcoll li.activity .activityinstance a.focusmod').click(function() {
-        setCookie('cookie', 'focusmod');
-    })
-    function setCookie(cname, cvalue, exdays) {
-        var d = new Date();
-        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-        var expires = "expires=" + d.toUTCString();
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
 });

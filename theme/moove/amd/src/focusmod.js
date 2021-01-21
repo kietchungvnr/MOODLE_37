@@ -11,40 +11,60 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         if (path.indexOf('course/view/') > 0) {
             $('#sidepreopen-control').click();
         }
-    })
-
+        
+    });
+  
     // Khỉ reload trang course view thì kiểm tra xem có chế độ focus đang được bật hay ko
     // Nếu có thì bỏ chế độ focus
-    var checkFm = getCookie('cookie');
-    if(checkFm == "focusmod") {
+    window.onbeforeunload = function(event)
+    {
         document.cookie = 'cookie=; max-Age=-1;path=/';
-        var courseId = $('#focus-mod').attr('course');
-        window.location.replace(Config.wwwroot + '/course/view.php?id='+courseId);
-    }
-
+    };
+    
     // Click vào chế độ focus mode
     $('.open-focusmod').bind('click', function() {
+        console.log('clicked')
         var fm = getCookie('cookie');
         var course = $(this).attr('course');
-        Str.get_string('selectcoursedata', 'theme_moove').then(function(s) {
-            $('[role="main"]').html('<div class="alert alert-success mb-0"><strong>'+s+'</strong></div>');
-        })
-        $('#region-main').css('margin-top', '20px');
-        $('#setting-context').removeClass('d-none');
-        $('#sidepreopen-control').removeClass('d-none');
+        if($('#mod-iframe').length <= 0) {
+            Str.get_string('selectcoursedata', 'theme_moove').then(function(s) {
+                $('#mod-view-coursepage').html('<div class="alert alert-success mb-0"><strong>'+s+'</strong></div>');
+            })
+        }
+        
+        $('#setting-context').addClass('d-none');
+        $('#sidepreopen-control').addClass('d-none');
         if (fm == "focusmod") {
+            /// Hiện các element khi thoát chế độ focusmode
             $('body').removeClass('focusmod');
-            window.location.replace(Config.wwwroot + '/course/view.php?id='+course);
+            $('#setting-context').removeClass('d-none');
+            $('#sidepreopen-control').removeClass('d-none');
+            $('.navbar.focusmod').removeClass('d-flex');
+            $('#course-main-content').removeClass('d-none');
+            $('#mod-view-coursepage').addClass('d-none');
+            $('#page-content').removeAttr("style");
+            $('#region-main-box').removeAttr("style");
+            $('#page.container-fluid').removeAttr("style");
+            $('#sidepreopen-control').removeClass('d-none');
+            $('#sidepre-blocks').removeClass('d-none');
+            $('ul.course').removeClass('d-none');
+            $('#region-main').removeAttr("style");
+            $('footer,.all-header,#page-header').slideDown();
             document.cookie = 'cookie=; max-Age=-1;path=/';
         } else {
+            /// Ẩn các element khi bật chế độ focusmode
             $('body').addClass('focusmod');
-            if (!$('#sidepre-blocks').hasClass('closed')) {
-                $('#sidepreopen-control').click();
-            }
             $('footer,.all-header,#page-header').slideUp();
-            $('.navbar.focusmod').css('display', 'flex');
-            $('ul.course').css('display', 'none');
-            $('#page-content').css('margin-top', '62px');
+            $('.navbar.focusmod').addClass('d-flex');
+            $('ul.course').addClass('d-none');
+            $('#course-main-content').addClass('d-none');
+            $('#mod-view-coursepage').removeClass('d-none');
+            $('#page-content').attr('style', 'margin-left:0;margin-right:0');
+            $('#region-main-box').attr('style', 'padding:0!important;margin-top:62px');
+            $('#page.container-fluid').attr('style', 'padding: 0!important');
+            $('#setting-context').addClass('d-none');
+            $('#sidepreopen-control').addClass('d-none');
+            $('#sidepre-blocks').addClass('d-none');
             setCookie('cookie', 'focusmod');
         }
     })
@@ -78,45 +98,53 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         }
     });
 
-    // Đổi coursedata dựa vào lần chọn bài học
-    $('.card-header.level2 a').each(function() {
-        var currentPath = $(this).attr('data-focusmode-url');
-        if (currentPath === path) {
-            $(this).addClass('active');
-            $(this).parents('div.dropdown-content-2').addClass('active');
-            $('.mid .nav-link.focusmod').html($(this).text() + '<i class="fa fa-angle-down rotate-icon ml-2"></i>');
-        }
-    });
-
     // Lùi bài học
     $('.nav-link.prev').click(function() {
         var temp = $('.card-header.level2 a.active').parents('div').prev();
-        var href = temp.children('a').attr('href');
-        $(this).attr('href', href);
+        temp.children('a').trigger('click');
     })
 
     // Tới bài học tiếp theo
     $('.nav-link.next').click(function() {
         var temp = $('.card-header.level2 a.active').parents('div').next();
-        var href = temp.children('a').attr('href');
-        $(this).attr('href', href);
+        temp.children('a').trigger('click');
+    })
+
+    // Trong khóa học click vào module sẽ auto chuyển sang chế độ focusmode
+    $('.course-content li.activity').bind('click', function(e) {
+        e.preventDefault();
+        var moduleId = $(this).attr('id').split('-')[1];
+        $('#focus-mod').click();
+        var element = "div.dropdown-content-2 a[module-id=" +moduleId+ "]";
+        setTimeout(function() {
+            $('#mod-view-coursepage').html('');
+            $(element).trigger('click');
+        }, 100);
+        
     })
 
     // Click vào chọn bài học
-    $('[data-focusmode-url]').click(function(e) {
+    $('div.dropdown-content-2 a').click(function(e) {
         var _this = $(this);
         var url = _this.attr('data-focusmode-url');
         var modType = _this.attr('data-mod-type');
 
-        $('[role=main]').addClass('d-none');
-        $('#course-content').addClass('d-none');
         $('#region-main .loading-page').addClass('active');
-        $('#page-content').attr('style', 'margin-left:0;margin-right:0');
-        $('#region-main-box').attr('style', 'padding:0!important;margin-top:40px');
-        $('#page.container-fluid').attr('style', 'padding: 0!important');
-        $('#setting-context').addClass('d-none');
-        $('#sidepreopen-control').addClass('d-none');
-        $('#sidepre-blocks').addClass('d-none');
+        $('div.dropdown-content-2 a').removeClass('active');
+        _this.addClass('active').siblings().removeClass('active');
+
+        $('.mid .nav-link.focusmod').html(_this.text() + '<i class="fa fa-angle-down rotate-icon ml-2"></i>');
+
+        $('.nav-link.next, .nav-link.prev').removeClass('disable');
+        // Kiểm tra ngoại lệ tiến lùi trong màn hình khóa học
+        if ($('.card-header.level2 a').hasClass('active')) {
+            if ($('.card-header.level2 a.active').parents('div.level2').is(':first-child')) {
+                $('.nav-link.prev').addClass('disable');
+            }
+            if ($('.card-header.level2 a.active').parents('div.level2').is(':last-child')) {
+                $('.nav-link.next').addClass('disable');
+            }
+        }
 
         if(modType == 'forum') {
             var iframe = '<iframe id="mod-iframe" src="'+url+'" width="100%" height="768" frameBorder="0"></iframe>';
@@ -124,7 +152,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             var iframe = '<iframe id="mod-iframe" src="'+url+'" onload="$(this).height($(this.contentWindow.document.body).find(\'#page-wrapper\').first().height());" width="100%" height="100%" frameBorder="0"></iframe>';
         }
 
-        $('#mod-view').html(iframe);
+        $('#mod-view-coursepage').html(iframe);
 
         // reload để resize height iframe
         $('#mod-iframe').on('load', function() {
@@ -161,16 +189,8 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         }
     })
 
-    // Kiểm tra ngoại lệ tiến lùi trong màn hình khóa học
-    if ($('.card-header.level2 a').hasClass('active')) {
-        if ($('.card-header.level2 a.active').parents('div.level2').is(':first-child')) {
-            $('.nav-link.prev').addClass('disable');
-        }
-        if ($('.card-header.level2 a.active').parents('div.level2').is(':last-child')) {
-            $('.nav-link.next').addClass('disable');
-        }
-    } else {
-        $('.nav-link.next,.nav-link.prev').addClass('disable');
+    if (!$('.card-header.level2 a').hasClass('active')) {
+        $('.nav-link.prev, .nav-link.next').addClass('disable');
     }
 
     $('.card-header.level2 a').each(function() {

@@ -83,7 +83,7 @@
                     <div class="card" id="course-content">
                         {{#hasiframe}}
                             <div class="card-body">
-                                <div id="mod-view">
+                                <div id="mod-view-coursepage">
                                     <div class="alert alert-success mb-0"><strong>{{#str}}selectcoursedata, theme_moove{{/str}}</strong></div>
                                 </div>
                                 <div class="d-none">{{{ output.main_content }}}/div>
@@ -93,7 +93,8 @@
                             <div class="">
                                 {{> theme_moove/nav-drawer }}
                             </div>
-                            <div class="card-body">
+                            
+                            <div class="card-body" id="course-main-content">
                                 {{#hasregionmainsettingsmenu}}
                                     <div class="region_main_settings_menu_proxy"></div>
                                 {{/hasregionmainsettingsmenu}}
@@ -105,8 +106,7 @@
                         {{/hasiframe}}
                         
                     </div>
-
-                    <div id="mod-view">
+                    <div id="mod-view-coursepage">
                     </div>
                     {{{ output.activity_navigation }}}
                 </section>
