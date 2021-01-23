@@ -14,4 +14,9 @@ $app->post('/ebm/quizes/testregister-create', local_newsvnr\api\controllers\ebm\
 //Tích hợp kì thi trong lớp
 $app->post('/ebm/quizes/exam-create', local_newsvnr\api\controllers\ebm\QuizController::class . ':create_and_update_exam');
 //Xóa kì thi trong hoặc kì thi đầu vào
-$app->post('/ebm/quizes/delete', local_newsvnr\api\controllers\ebm\QuizController::class . ':delete()');
+$app->post('/ebm/quizes/delete', local_newsvnr\api\controllers\ebm\QuizController::class . ':delete');
+// Tích hợp kì thi đầu vào
+$app->post('/ebm/exams/create', local_newsvnr\api\controllers\ebm\ExamController::class . ':create_and_update');
+$app->post('/ebm/exams/delete', local_newsvnr\api\controllers\ebm\ExamController::class . ':delete');
+$app->post('/ebm/exams/enrol-user', local_newsvnr\api\controllers\ebm\ExamController::class . ':enrol_exam_user');
+$app->post('/ebm/exams/unenrol-user', local_newsvnr\api\controllers\ebm\ExamController::class . ':unenrol_exam_user');

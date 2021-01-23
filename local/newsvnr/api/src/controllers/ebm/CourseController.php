@@ -3,6 +3,7 @@
 namespace local_newsvnr\api\controllers\ebm;
 
 use stdClass;
+use Exception;
 use local_newsvnr\api\controllers\BaseController as BaseController;
 
 defined('MOODLE_INTERNAL') || die;

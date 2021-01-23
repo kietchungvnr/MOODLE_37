@@ -704,6 +704,7 @@ function add_course_module($mod) {
 }
 
 /**
+ * Custom by Vũ: Thêm sectionname khi tạo section qua API - EBM
  * Creates a course section and adds it to the specified position
  *
  * @param int|stdClass $courseorid course id or course object
@@ -713,7 +714,7 @@ function add_course_module($mod) {
  * @param bool $skipcheck the check has already been made and we know that the section with this position does not exist
  * @return stdClass created section object
  */
-function course_create_section($courseorid, $position = 0, $skipcheck = false) {
+function course_create_section($courseorid, $position = 0, $skipcheck = false, $sectionname = null) {
     global $DB;
     $courseid = is_object($courseorid) ? $courseorid->id : $courseorid;
 
@@ -731,7 +732,7 @@ function course_create_section($courseorid, $position = 0, $skipcheck = false) {
     $cw->summary  = '';
     $cw->summaryformat = FORMAT_HTML;
     $cw->sequence = '';
-    $cw->name = null;
+    $cw->name = $sectionname;
     $cw->visible = 1;
     $cw->availability = null;
     $cw->timemodified = time();
@@ -757,14 +758,14 @@ function course_create_section($courseorid, $position = 0, $skipcheck = false) {
  * @param int|array $sections list of relative section numbers to create
  * @return bool if there were any sections created
  */
-function course_create_sections_if_missing($courseorid, $sections) {
+function course_create_sections_if_missing($courseorid, $sections, $sectionname = null) {
     if (!is_array($sections)) {
         $sections = array($sections);
     }
     $existing = array_keys(get_fast_modinfo($courseorid)->get_section_info_all());
     if ($newsections = array_diff($sections, $existing)) {
         foreach ($newsections as $sectionnum) {
-            course_create_section($courseorid, $sectionnum, true);
+            course_create_section($courseorid, $sectionnum, true, $sectionname);
         }
         return true;
     }
@@ -772,6 +773,7 @@ function course_create_sections_if_missing($courseorid, $sections) {
 }
 
 /**
+ * // Custom by Vũ: Tích hợp EBM cho phép tạo section kỳ thi trong lớp
  * Adds an existing module to the section
  *
  * Updates both tables {course_sections} and {course_modules}
@@ -789,7 +791,7 @@ function course_create_sections_if_missing($courseorid, $sections) {
  *     end of the section
  * @return int The course_sections ID where the module is inserted
  */
-function course_add_cm_to_section($courseorid, $cmid, $sectionnum, $beforemod = null) {
+function course_add_cm_to_section($courseorid, $cmid, $sectionnum, $beforemod = null, $sectionname = null) {
     global $DB, $COURSE;
     if (is_object($beforemod)) {
         $beforemod = $beforemod->id;
@@ -804,7 +806,7 @@ function course_add_cm_to_section($courseorid, $cmid, $sectionnum, $beforemod = 
             array('course' => $courseid, 'section' => $sectionnum), '*', IGNORE_MISSING);
     if (!$section) {
         // This function call requires modinfo.
-        course_create_sections_if_missing($courseorid, $sectionnum);
+        course_create_sections_if_missing($courseorid, $sectionnum, $sectionname);
         $section = $DB->get_record('course_sections',
                 array('course' => $courseid, 'section' => $sectionnum), '*', MUST_EXIST);
     }
@@ -3357,7 +3359,7 @@ function create_module($moduleinfo) {
 
     // Some additional checks (capability / existing instances).
     $course = $DB->get_record('course', array('id'=>$moduleinfo->course), '*', MUST_EXIST);
-    list($module, $context, $cw) = can_add_moduleinfo($course, $moduleinfo->modulename, $moduleinfo->section);
+    list($module, $context, $cw) = can_add_moduleinfo($course, $moduleinfo->modulename, $moduleinfo->section, $moduleinfo->sectionname);
 
     // Add the module.
     $moduleinfo->module = $module->id;
