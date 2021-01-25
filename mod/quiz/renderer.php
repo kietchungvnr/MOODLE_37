@@ -326,7 +326,6 @@ class mod_quiz_renderer extends plugin_renderer_base {
                     array('id' => 'user-picture', 'class' => 'clearfix'));
         }
         $output .= $panel->render_before_button_bits($this);
-
         $bcc = $panel->get_button_container_class();
         $output .= $panel->render_countdown_timer($this);
         // Custom by Thắng : đưa thời gian thi lên đầu
