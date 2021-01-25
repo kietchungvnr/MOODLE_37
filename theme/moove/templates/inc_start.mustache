@@ -3798,7 +3798,6 @@ h4.responsehistoryheader {
     height: 35px;
     color: white;
     padding: 5px 5px 5px 10px;
-    display: flex;
     align-items: center;
 }
 nav.focusmod #focus-mod {
@@ -4894,7 +4893,7 @@ input.apple-switch:checked:after {
     height: 30px;
     width: 40px;
     overflow: hidden;
-    margin: 0px 3px 8px 5px;
+    margin: 0px 5px 8px 5px;
     font-weight: bold;
     color: white;
     display: flex;
@@ -4929,10 +4928,11 @@ input.apple-switch:checked:after {
     background: transparent url(/theme/image.php/moove/theme/1605254876/mod/quiz/flag-on) 26px 0 no-repeat;
 }
 #page-mod-quiz-attempt #quiz-timer {
-    margin-top: -15px;
+    margin-top: -10px;
     text-align: center;
     font-size: 18px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #8080805c;
 }
 /*Trang review bài quiz */
 .path-mod-quiz #mod_quiz_navblock .qnbutton.correct {
@@ -4941,11 +4941,13 @@ input.apple-switch:checked:after {
 .path-mod-quiz #mod_quiz_navblock .qnbutton.correct .trafficlight {
     background: #7dc87d !important;
 }
-.path-mod-quiz #mod_quiz_navblock .qnbutton.incorrect {
+.path-mod-quiz #mod_quiz_navblock .qnbutton.incorrect,
+.path-mod-quiz #mod_quiz_navblock .qnbutton.notanswered {
     background: #d9534f !important;
 }
 .path-mod-quiz #mod_quiz_navblock .qnbutton.correct .thispageholder,
-.path-mod-quiz #mod_quiz_navblock .qnbutton.incorrect .thispageholder {
+.path-mod-quiz #mod_quiz_navblock .qnbutton.incorrect .thispageholder,
+.path-mod-quiz #mod_quiz_navblock .qnbutton.notanswered .thispageholder {
     border: none;
 }
 .que span.qno {
@@ -5101,7 +5103,7 @@ input.apple-switch:checked:after {
     top: 55px;
     left: 0;
     bottom: 0;
-    z-index: 100;
+    z-index: 1000;
     transition: all 0.4s ease;
     overflow-y: auto;
     overflow-x: hidden;
@@ -5313,12 +5315,11 @@ input.apple-switch:checked:after {
     background-color: #4285f4 !important;
     border: none;
 }
-.pagelayout-course #page-header .card {
+/*.pagelayout-course #page-header .card,
+.pagelayout-incourse #page-header .card {
     background: white;
-    padding: 10px 15px;
-    margin-bottom: 5px;
-    border-radius: 8px;
-}
+    margin: 2px 0px;
+}*/
 .pagelayout-course #page-header .header-progress .text {
     color: #808080cc;
 }
@@ -5857,6 +5858,78 @@ nav.navbar ul.navbar-nav .usermenu {
     border-radius: 8px !important;
     text-transform: capitalize !important;
 }
+.pagelayout-course .header-progress .open-focusmod {
+    display: flex;
+}
+.header-progress .open-focusmod {
+    display: none;
+}
+.header-progress {
+    padding: 10px 15px;
+    border-radius: 8px;
+    background: white;
+}
+#page-header .mr-auto {
+    width: 100%;
+}
+.k-widget.k-window.courseremind:before {
+    position: absolute;
+    content: '';
+    width: 0;
+    right: -16px;
+    border-style: solid;
+    border-color: transparent transparent transparent white;
+    line-height: 0px;
+    top: 84px;
+    border-width: 16px 0 16px 16px;
+    -webkit-filter: drop-shadow(1px 1px 2px rgba(0,0,0,.12));
+    filter: drop-shadow(1px 1px 2px rgba(0,0,0,.12));
+}
+.card.viewdetail {
+    background:white;
+}
+#mod_quiz_navblock #user-picture {
+    margin: 0 0 1.5em 0; 
+    display: flex;
+    align-items: center;
+}
+#page-navbar {
+    display: none;
+}
+.quiz-square,
+.flag-quiz-square {
+    width: 30px;
+    height: 20px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+.flag-quiz-square span {
+    position: absolute;
+    background:transparent url(/theme/image.php/moove/theme/1605254876/mod/quiz/flag-on) 18px 0 no-repeat;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 123;
+}
+#page-mod-quiz-review #mod_quiz_navblock .qnbutton.notanswered .trafficlight,
+#page-mod-quiz-review #mod_quiz_navblock .qnbutton.incorrect .trafficlight {
+    background-color: #d9534f;
+}
+.path-mod-quiz #mod_quiz_navblock .qnbutton.notanswered {
+    background-color: #d9534f;
+}
+/*.flag-quiz-square:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    
+}*/
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />
