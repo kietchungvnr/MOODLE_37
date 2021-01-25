@@ -23,13 +23,10 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
     
     // Click vào chế độ focus mode
     $('.open-focusmod').bind('click', function() {
-        console.log('clicked')
         var fm = getCookie('cookie');
         var course = $(this).attr('course');
         if($('#mod-iframe').length <= 0) {
-            Str.get_string('selectcoursedata', 'theme_moove').then(function(s) {
-                $('#mod-view-coursepage').html('<div class="alert alert-success mb-0"><strong>'+s+'</strong></div>');
-            })
+            $('#mod-view-coursepage').html('<div class="alert alert-success mb-0"><strong>'+ M.util.get_string('selectcoursedata', 'theme_moove') +'</strong></div>');
         }
         
         $('#setting-context').addClass('d-none');
@@ -45,16 +42,20 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             $('#page-content').removeAttr("style");
             $('#region-main-box').removeAttr("style");
             $('#page.container-fluid').removeAttr("style");
+            $('#page-wrapper').removeAttr("style");
             $('#sidepreopen-control').removeClass('d-none');
             $('#sidepre-blocks').removeClass('d-none');
             $('ul.course').removeClass('d-none');
             $('#region-main').removeAttr("style");
+            $('.fixed-sidebar-left').removeClass('d-none');
             $('footer,.all-header,#page-header').slideDown();
             document.cookie = 'cookie=; max-Age=-1;path=/';
         } else {
             /// Ẩn các element khi bật chế độ focusmode
             $('body').addClass('focusmod');
             $('footer,.all-header,#page-header').slideUp();
+            $('.fixed-sidebar-left').addClass('d-none');
+            $('#page-wrapper').css('margin-left', '0');
             $('.navbar.focusmod').addClass('d-flex');
             $('ul.course').addClass('d-none');
             $('#course-main-content').addClass('d-none');
@@ -65,6 +66,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             $('#setting-context').addClass('d-none');
             $('#sidepreopen-control').addClass('d-none');
             $('#sidepre-blocks').addClass('d-none');
+            
             setCookie('cookie', 'focusmod');
         }
     })
@@ -111,15 +113,15 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
     })
 
     // Trong khóa học click vào module sẽ auto chuyển sang chế độ focusmode
-    $('.course-content li.activity').bind('click', function(e) {
+    $('.course-content li.activity a.aalink').bind('click', function(e) {
         e.preventDefault();
-        var moduleId = $(this).attr('id').split('-')[1];
+        var moduleId = $(this).parents('li').attr('id').split('-')[1];
         $('#focus-mod').click();
         var element = "div.dropdown-content-2 a[module-id=" +moduleId+ "]";
+        $('#mod-view-coursepage').html('');
         setTimeout(function() {
-            $('#mod-view-coursepage').html('');
             $(element).trigger('click');
-        }, 100);
+        }, 500);
         
     })
 
@@ -158,7 +160,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         $('#mod-iframe').on('load', function() {
             setTimeout(function() {
                 try {
-                    if(modType == 'resource' || modType == 'forum') {
+                    if(modType == 'resource' || modType == 'forum' || modType == 'hvp') {
                         var vh = $('body').height() - 77;
                         $('#mod-iframe').height(vh);
                     }
