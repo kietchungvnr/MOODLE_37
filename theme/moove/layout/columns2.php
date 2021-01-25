@@ -70,8 +70,8 @@ $templatecontext = [
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'hasportal' => $check->hasportal,
-    'hascourse' => $check->hascourse,
-    'hasiframe' => $check->hasiframe,
+    'hasiframe' => $check->hasfocusmod,
+    'hasfocusmod' => $check->hasfocusmod,
     'hasopenmenu' => $check->hasopenmenu
 ];
 

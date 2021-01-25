@@ -85,15 +85,22 @@
                                 {{/hasiframe}}
                             {{/hasportal}}
                         {{/hascourse}}
+                        {{#hasiframe}}
                         <div class="card-body">
-                            {{#hasregionmainsettingsmenu}}
-                            <div class="region_main_settings_menu_proxy"></div>
-                            {{/hasregionmainsettingsmenu}}
-                            {{{ output.course_content_header }}}
-                            {{{ output.main_content }}}
-                            {{{ output.activity_navigation }}}
-                            {{{ output.course_content_footer }}}
+                            <div id="mod-view">{{{ output.main_content }}}</div>
                         </div>
+                        {{/hasiframe}}
+                        {{^hasiframe}}
+                            <div class="card-body">
+                                {{#hasregionmainsettingsmenu}}
+                                    <div class="region_main_settings_menu_proxy"></div>
+                                {{/hasregionmainsettingsmenu}}
+                                {{{ output.course_content_header }}}
+                                {{{ output.main_content }}}
+                                {{{ output.activity_navigation }}}
+                                {{{ output.course_content_footer }}}
+                            </div>
+                        {{/hasiframe}}
                     </div>
                 </section>
             </div>

@@ -20,12 +20,12 @@
 		                    <div class="card-body library">
 		                    	{{#canedit}}
         				        <ul class="nav-tabs nav multi-tab mb-3" tab="library">
-							        <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="library">{{#str}}library, local_newsvnr{{/str}}</a></li>
-					             	<li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="approvalmodule">{{#str}}approvalmodule, local_newsvnr{{/str}}</a></li>
+							        <li class="nav-item"><a href="#library" class="nav-link active" data-key="library">{{#str}}library, local_newsvnr{{/str}}</a></li>
+					             	<li class="nav-item"><a href="#approvalmodule" class="nav-link" data-key="approvalmodule">{{#str}}approvalmodule, local_newsvnr{{/str}}</a></li>
 						   		</ul>
 						   		{{/canedit}}
 						   		<div class="tab-content" tab="library">
-    							<div data="library" class="tab-pane active">
+    							<div data="library" id="library" class="tab-pane active">
 			                    	<div class="row">
                                         <div class="col-12 col-md-3">
         			                    	{{#canedit}}
@@ -96,7 +96,7 @@
 				                   </div>
 			               		</div>
 			               		{{#canapproval}}
-			               		<div data="approvalmodule" class="tab-pane">
+			               		<div data="approvalmodule" id="approvalmodule" class="tab-pane">
 			               			<div id="library-approval-module">
 			               			</div>
 			               			<div class="d-flex mt-3">
