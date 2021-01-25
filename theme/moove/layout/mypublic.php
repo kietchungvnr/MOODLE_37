@@ -73,7 +73,7 @@ $templatecontext = [
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'hasportal' => $check->hasportal,
-    'isadmin' => $check->isadmin,
+    'isadmin' => is_siteadmin(),
     'isuser' => $isuser,
     'hasopenmenu' => $check->hasopenmenu
 ];

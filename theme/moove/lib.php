@@ -756,34 +756,40 @@ function theme_moove_buildnavnewsvnr_sitewide(\flat_navigation $flatnav) {
     }
 }
 function theme_moove_layout_check() {
-    global $COURSE,$DB,$USER;
+    global $COURSE,$DB,$USER,$CFG;
+    require_once $CFG->dirroot . '/local/newsvnr/lib.php';
     $object = new stdClass();
     $object->hasportal = (isset($_SERVER['HTTP_REFERER'])) ? true : false;
     $object->hasfocusmod = (isset($_COOKIE['cookie']) == 'focusmod') ? true : false;
     $object->hasopenmenu = (isset($_COOKIE['menu']) == 'openmenu') ? true : false;
     $object->hasiframe = (strpos($_SERVER['QUERY_STRING'],'iframe=true') !== false) ? true : false;
     $object->hascourse = ($COURSE->id > 1) ? true : false;
-    $object->isadmin = (is_siteadmin()) ? true : false;
     $object->settingexam = ($COURSE->id == 1) ? true : false;
-    $check_is_teacher = $DB->get_field_sql('SELECT COUNT(c.id) course
-                                FROM  mdl_context ct
-                                    JOIN mdl_course c ON c.id = ct.instanceid
-                                WHERE ct.contextlevel = 50 AND c.id <> 1
-                                AND (EXISTS (SELECT 1 
-                                             FROM mdl_role_assignments ra
-                                             WHERE ra.contextid = ct.id 
-                                                AND ra.roleid = 3 
-                                                AND ra.userid = :userid))', ['userid' => $USER->id]);
-    $check_is_student = $DB->get_field_sql('SELECT COUNT(c.id) course
-                            FROM  mdl_context ct
-                                JOIN mdl_course c ON c.id = ct.instanceid
-                            WHERE ct.contextlevel = 50 AND c.id <> 1
-                            AND (EXISTS (SELECT 1 
-                                         FROM mdl_role_assignments ra
-                                         WHERE ra.contextid = ct.id 
-                                            AND ra.roleid = 5 
-                                            AND ra.userid = :userid))', ['userid' => $USER->id]);
-    $object->is_teacher = ($check_is_teacher != 0) ? true : false;
-    $object->is_student = ($check_is_student != 0) ? true : false;
+    $check_is_teacher = check_teacherrole($USER->id);
+    $check_is_student = check_studentrole($USER->id);
+    $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    $url_components = parse_url($url);
+    if(isset($url_components['query'])) {
+        parse_str($url_components['query'], $params); 
+        if (isset($params['teacher'])) {
+            $object->is_teacher = ($check_is_teacher != 0 && $params['teacher'] == 1) ? true : false;
+            $object->isadmin = false;
+            $object->is_student = false;
+        }
+        elseif (isset($params['student'])) { 
+            $object->is_student = ($check_is_student != 0 && $params['student'] == 1) ? true : false;
+            $object->isadmin = false;
+            $object->is_teacher = false;
+        }
+        else {
+            $object->isadmin = (is_siteadmin()) ? true : false;
+            $object->is_teacher = ($check_is_teacher != 0 && $object->isadmin != true) ? true : false; 
+            $object->is_student = ($check_is_student != 0 && $object->isadmin != true && $object->is_teacher != true) ? true : false;
+        }
+    } else {
+        $object->isadmin = (is_siteadmin()) ? true : false;
+        $object->is_teacher = ($check_is_teacher != 0 && $object->isadmin != true) ? true : false; 
+        $object->is_student = ($check_is_student != 0 && $object->isadmin != true && $object->is_teacher != true) ? true : false;
+    }
     return $object;
 }

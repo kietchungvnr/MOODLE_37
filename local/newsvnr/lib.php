@@ -2388,7 +2388,34 @@ function get_course_complete_module_rate($courseid) {
     $rate = round($sum/count($liststudent));
     return $rate;
 }
-
+// Kiểm tra vai trò giáo viên 
+function check_teacherrole($userid) {
+    global $DB;
+    $check_is_teacher = $DB->get_field_sql('SELECT COUNT(c.id) course
+                            FROM  mdl_context ct
+                                JOIN mdl_course c ON c.id = ct.instanceid
+                            WHERE ct.contextlevel = 50 AND c.id <> 1
+                            AND (EXISTS (SELECT 1 
+                                         FROM mdl_role_assignments ra
+                                         WHERE ra.contextid = ct.id 
+                                            AND ra.roleid = 3 
+                                            AND ra.userid = :userid))', ['userid' => $userid]);
+    return $check_is_teacher;
+}
+// Kiểm tra vai trò học viên
+function check_studentrole($userid) {
+    global $DB;
+    $check_is_student = $DB->get_field_sql('SELECT COUNT(c.id) course
+                            FROM  mdl_context ct
+                                JOIN mdl_course c ON c.id = ct.instanceid
+                            WHERE ct.contextlevel = 50 AND c.id <> 1
+                            AND (EXISTS (SELECT 1 
+                                         FROM mdl_role_assignments ra
+                                         WHERE ra.contextid = ct.id 
+                                            AND ra.roleid = 5 
+                                            AND ra.userid = :userid))', ['userid' => $userid]);
+    return $check_is_student;
+}
 // Lấy huy hiệu của người dùng
 function get_user_badge($userid) {
     global $CFG;

@@ -542,32 +542,35 @@ class core_renderer extends \theme_boost\output\core_renderer {
     public function mydashboard_user_header_custom() {
         global $PAGE,$DB,$USER;
         $html = '<ul>';
-        $teacherdbbutton = '';
-        $studentdbbutton = '';
+        $button = '';
         $addblockbutton = '';
         $pageheadingbutton = $this->page_heading_button();
+        $check = theme_moove_layout_check();
         if ($PAGE->user_is_editing() && $PAGE->user_can_edit_blocks() && ($PAGE->blocks->get_addable_blocks())) {
             $url = new moodle_url($PAGE->url, ['bui_addblock' => '', 'sesskey' => sesskey()]);
             $addblockbutton = '<li><i class="fa fa-empire text-icon-dashboard" aria-hidden="true"></i><a href="'.$url.'" class="metismenu text-icon-dashboard" data-key="addblock">'. get_string('addblock') .'</a></li>';
         }
         $roles = $DB->get_records_sql('SELECT DISTINCT roleid FROM {role_assignments} WHERE userid = ?',[$USER->id]);
         foreach($roles as $role) {
-            if($role->roleid == 3) {
-                $url = new moodle_url('/local/newsvnr/dashboard.php?view=teacher');
-                $teacherdbbutton = '<li><i class="fa fa-eye text-icon-dashboard" aria-hidden="true"></i><a href="'.$url.'" class="text-icon-dashboard">'. get_string('teacherdashboard', 'local_newsvnr') .'</a></li>';
-            } else if($role->roleid == 5) {
-                $url = new moodle_url('/local/newsvnr/dashboard.php?view=student');
-                $studentdbbutton = '<li><i class="fa fa-eye text-icon-dashboard" aria-hidden="true"></i><a href="'.$url.'" class="text-icon-dashboard">'. get_string('studentdashboard', 'local_newsvnr') .'</a></li>';
+            if($role->roleid == 3 && count($roles) > 1 && $check->is_teacher != true) {
+                $url = new moodle_url('/my/index.php?teacher=1');
+                $button .= '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-line-chart text-icon-dashboard mr-1" aria-hidden="true"></i>'. get_string('teacherdashboard', 'local_newsvnr') .'</a></li>';
+            } else if($role->roleid == 5 && count($roles) > 1 && $check->is_student != true) {
+                $url = new moodle_url('/my/index.php?student=1');
+                $button .= '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-line-chart text-icon-dashboard mr-1" aria-hidden="true"></i>'. get_string('studentdashboard', 'local_newsvnr') .'</a></li>';
+            } 
+            else if($role->roleid == 1 && count($roles) > 1 && $check->isadmin != true) {
+                $url = new moodle_url('/my/index.php');
+                $button .= '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-line-chart text-icon-dashboard mr-1" aria-hidden="true"></i>Dashboard admin</a></li>';
             }
         }
-        
         if (empty($PAGE->layout_options['nonavbar'])) {
             $html .= html_writer::start_div('clearfix w-100 pull-xs-left', array('id' => 'page-navbar'));
             $html .= html_writer::tag('div', $this->navbar(), array('class' => 'breadcrumb-nav'));
             $html .= html_writer::div($pageheadingbutton, 'breadcrumb-button');
             $html .= html_writer::end_div();
         } else if ($pageheadingbutton) {
-            $html .= html_writer::div($addblockbutton . $pageheadingbutton, 'action-rightside-fixed');
+            $html .= html_writer::div($addblockbutton . $pageheadingbutton . $button, 'action-rightside-fixed');
         }
         $html .= '</ul>';
         return $html;
