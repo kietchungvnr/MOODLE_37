@@ -55,6 +55,7 @@ if (isset($PAGE->cm->modname) && in_array($PAGE->cm->modname, $moduleswithnavinb
     $extraclasses[] = 'drawer-open-right';
 }
 $check = theme_moove_layout_check();
+$PAGE->requires->strings_for_js(array('selectcoursedata'), 'theme_moove');
 if(isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
     $check->hasiframe = true;
 } else {

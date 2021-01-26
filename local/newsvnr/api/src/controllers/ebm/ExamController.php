@@ -38,8 +38,10 @@ class ExamController extends BaseController {
         $this->validate = $this->validator->validate($this->request, [
             'examname' => $this->v::notEmpty()->notBlank(),
             'examcode' => $this->v::notEmpty()->notBlank(),
-            'quizname' => $this->v::notEmpty()->notBlank(),
-            'quizcode' => $this->v::notEmpty()->notBlank(),
+            // 'quizname' => $this->v::notEmpty()->notBlank(),
+            // 'quizcode' => $this->v::notEmpty()->notBlank(),
+            'quizopen' => $this->v::notEmpty()->notBlank(),
+            'quizclose' => $this->v::notEmpty()->notBlank(),
             'subjectname' => $this->v::notEmpty()->notBlank(),
             'subjectcode' => $this->v::notEmpty()->notBlank(),
             'subjectshortname' => $this->v::notEmpty()->notBlank()
@@ -53,8 +55,10 @@ class ExamController extends BaseController {
       	if ($this->validate->isValid()) {
 	    	$this->data->examname = $request->getParam('examname');
 	    	$this->data->examcode = $request->getParam('examcode');
-	    	$this->data->quizname = trim($request->getParam('quizname'));
-	    	$this->data->quizcode = trim($request->getParam('quizcode'));
+	    	// $this->data->quizname = trim($request->getParam('quizname'));
+	    	// $this->data->quizcode = trim($request->getParam('quizcode'));
+	    	$this->data->quizopen = $request->getParam('quizopen');
+	    	$this->data->quizclose = $request->getParam('quizclose');
 	    	$this->data->subjectname = $request->getParam('subjectname');
 		    $this->data->subjectcode = $request->getParam('subjectcode');
 		    $this->data->subjectshortname = $request->getParam('subjectshortname');
@@ -74,37 +78,7 @@ class ExamController extends BaseController {
         	$this->resp->data[] = $errors;
 	        return $response->withStatus(422)->withJson($this->resp);
 	    }
-	   	
-	    if($this->data->subjectcode) {
-	    	$subjectid = $DB->get_field('exam_subject', 'id', ['code' => $this->data->subjectcode]);
-	    	if(!$subjectid) {
-				// if($DB->record_exists('exam_subject', ['code' => $this->data->subjectcode])) {
-				// 	$this->resp->error = true;
-				// 	$this->resp->message['info'] = "Mã môn thi đã tồn tại";
-				// 	return $response->withStatus(200)->withJson($this->resp);
-				// }
-	    		$subject = new stdClass;
-		    	$subject->name = $this->data->subjectname;
-		    	$subject->code = $this->data->subjectcode;
-		    	$subject->shortname = $this->data->subjectshortname;
-		    	$subject->timecreated = time();
-		    	$subject->timemodified = time();
-		    	$subject->usercreate = $USER->id;
-		    	$subject->usermodified = $USER->id;
-		    	$subject->visible = 1;
-		    	$subject->description = '';
-		    	$subjectid = $DB->insert_record('exam_subject', $subject);
-	    	} else {
-	    		$subject = new stdClass;
-	    		$subject->id = $subjectid;
-		    	$subject->name = $this->data->subjectname;
-		    	$subject->code = $this->data->subjectcode;
-		    	$subject->shortname = $this->data->subjectshortname;
-		    	$subject->timemodified = time();
-		    	$subject->usermodified = $USER->id;
-		    	$subjectid = $DB->update_record('exam_subject', $subject);
-	    	}
-	    } 
+
 	    if($this->data->examcode) {
 	    	// tồn tại kì thi
     		$examid = $DB->get_field('exam', 'id', ['code' => $this->data->examcode]);
@@ -128,117 +102,161 @@ class ExamController extends BaseController {
 				$exam->code = $this->data->examcode;
 				$exam->timemodified = time();
 				$exam->usermodified = $USER->id;
-				$examid = $DB->update_record('exam', $exam);
+				$DB->update_record('exam', $exam);
 			}
 		}
-		if($this->data->quizcode) {
-			// Tạo đề thi cho môn thi
-			$quiz = new stdClass;
-			$quiz->name = $this->data->quizname;
-			$quiz->code = $this->data->quizcode;
-			$quiz->modulename = 'quiz';
-			$quiz->course = $SITE->id;
-			$quiz->grade = 10;
-			$quiz->sectionname = '';
-			$quiz->section = 1;
-			$quiz->visible = 1;
-			$quiz->quizpassword  = '';
-			$quiz->introeditor = ['text' => '', 'format' => '1', 'itemid' => '0'];
-			$quiz->timeclose = 0;
-			$quiz->timeopen = 0;
-			$quiz->shuffleanswers = 1;
-			$quiz->decimalpoints  = 2;
-			$quiz->grademethod  = 1;
-			$quiz->timelimit = 0;
-			$quiz->cmidnumber = '';
-			$quiz->graceperiod = 0;
-			$quiz->questiondecimalpoints  = -1;
-			$quiz->preferredbehaviour = 'deferredfeedback';
-			$quiz->overduehandling = 'autosubmit';
-			$quiz->completion = 2;
-			$quiz->completionusegrade = 1;
-			$quiz->attempts = 1;
-			$message = '';
-			if ($DB->record_exists('quiz', ['code' => $this->data->quizcode, 'name' => $this->data->quizname, 'course' => $SITE->id])) {
-				$quizid = $DB->get_field('quiz', 'id', ['course' => $SITE->id, 'name' => $quiz->name]);
-				$cm = get_coursemodule_from_instance('quiz', $quizid);
-				$quiz->coursemodule = $cm->id;
-				$modulequiz = update_module($quiz);
-				if ($modulequiz) {
-					$message .= 'Chỉnh sửa kì thi thành công, ';
-				}
-			} else {
+	   	
+	   	$subjectcodearr = explode(',', $this->data->subjectcode);
+	   	$subjectnamearr = explode(',', $this->data->subjectname);
+	   	
+	   	foreach ($subjectcodearr as $key => $subjectcode) {
+	    	$subjectid = $DB->get_field('exam_subject', 'id', ['code' => $subjectcode]);
+	    	if(!$subjectid) {
+				// if($DB->record_exists('exam_subject', ['code' => $this->data->subjectcode])) {
+				// 	$this->resp->er ror = true;
+				// 	$this->resp->message['info'] = "Mã môn thi đã tồn tại";
+				// 	return $response->withStatus(200)->withJson($this->resp);
+				// }
+	    		$subject = new stdClass;
+		    	$subject->name = $subjectnamearr[$key];
+		    	$subject->code = $subjectcode;
+		    	$subject->shortname = $subjectnamearr[$key];
+		    	$subject->timecreated = time();
+		    	$subject->timemodified = time();
+		    	$subject->usercreate = $USER->id;
+		    	$subject->usermodified = $USER->id;
+		    	$subject->visible = 1;
+		    	$subject->description = '';
+		    	$subjectid = $DB->insert_record('exam_subject', $subject);
+	    	} else {
+ 	    		$subject = new stdClass;
+	    		$subject->id = $subjectid;
+		    	$subject->name = $subjectnamearr[$key];
+		    	$subject->code = $subjectcode;
+		    	$subject->shortname = $subjectnamearr[$key];
+		    	$subject->timemodified = time();
+		    	$subject->usermodified = $USER->id;
+		    	$DB->update_record('exam_subject', $subject);
+	    	}
+	    	if($subjectid) {
+		    	// Tạo đề thi cho môn thi
+				$quiz = new stdClass;
+				$quiz->name = $this->data->examname . '_' . $subjectnamearr[$key];
+				$quiz->code = $this->data->examcode . '_' . $subjectcode;
+				$quiz->modulename = 'quiz';
+				$quiz->course = $SITE->id;
+				$quiz->grade = 10;
+				$quiz->sectionname = '';
+				$quiz->section = 1;
+				$quiz->visible = 1;
+				$quiz->quizpassword  = '';
+				$quiz->introeditor = ['text' => '', 'format' => '1', 'itemid' => '0'];
+				$quiz->timeclose = $this->data->quizclose;
+				$quiz->timeopen = $this->data->quizopen;
+				$quiz->shuffleanswers = 1;
+				$quiz->decimalpoints  = 2;
+				$quiz->grademethod  = 1;
+				$quiz->timelimit = 0;
 				$quiz->cmidnumber = '';
-				$modulequiz = create_module($quiz);
-				
-				if ($modulequiz) {
-					$message .= 'Tạo kì thi thành công';
+				$quiz->graceperiod = 0;
+				$quiz->questiondecimalpoints  = -1;
+				$quiz->preferredbehaviour = 'deferredfeedback';
+				$quiz->overduehandling = 'autosubmit';
+				$quiz->completion = 2;
+				$quiz->completionusegrade = 1;
+				$quiz->attempts = 1;
+				if ($DB->record_exists('quiz', ['code' => $quiz->code, 'course' => $SITE->id])) {
+					$quizid = $DB->get_field('quiz', 'id', ['course' => $SITE->id, 'code' => $quiz->code]);
+					$cm = get_coursemodule_from_instance('quiz', $quizid);
+					$quiz->coursemodule = $cm->id;
+					$modulequiz = update_module($quiz);
+				} else {
+					$quiz->cmidnumber = '';
+					$modulequiz = create_module($quiz);
 				}
-			}
-		}
-		if($modulequiz) {
-			$subjectexamid = $DB->get_field('exam_subject_exam', 'id', ['examid' => $examid, 'subjectid' => $subjectid]);
-			if(!$subjectexamid) {
-				$subjectexam = new stdClass;
-				$subjectexam->examid = $examid;
-				$subjectexam->subjectid = $subjectid;
-				$subjectexam->timecreated = time();
-				$subjectexam->timemodified = time();
-				$subjectexam->usercreate = $USER->id;
-				$subjectexam->usermodified = $USER->id;
-				$subjectexamid = $DB->insert_record('exam_subject_exam', $subjectexam);	
-			}
-			
-			$quizexamid = $DB->get_field('exam_quiz', 'id', ['coursemoduleid' => $modulequiz->coursemodule, 'subjectexamid' => $subjectexamid ]);
-			if(!$quizexamid) {
-				$quizexam = new stdClass;
-				$quizexam->coursemoduleid = $modulequiz->coursemodule;
-				$quizexam->subjectexamid = $subjectexamid;
-				$quizexam->timecreated = time();
-				$quizexam->timemodified = time();
-				$quizexam->usercreate = $USER->id;
-				$quizexam->usermodified = $USER->id;
-				$quizexamid = $DB->insert_record('exam_quiz', $quizexam);	
-			}
+				if($modulequiz) {
+					$subjectexamid = $DB->get_field('exam_subject_exam', 'id', ['examid' => $examid, 'subjectid' => $subjectid]);
+					if(!$subjectexamid) {
+						$subjectexam = new stdClass;
+						$subjectexam->examid = $examid;
+						$subjectexam->subjectid = $subjectid;
+						$subjectexam->timecreated = time();
+						$subjectexam->timemodified = time();
+						$subjectexam->usercreate = $USER->id;
+						$subjectexam->usermodified = $USER->id;
+						$subjectexamid = $DB->insert_record('exam_subject_exam', $subjectexam);	
+					} else {
+						$subjectexam = new stdClass;
+						$subjectexam->id = $subjectexamid;
+						$subjectexam->examid = $examid;
+						$subjectexam->subjectid = $subjectid;
+						$subjectexam->timemodified = time();
+						$subjectexam->usermodified = $USER->id;
+						$DB->update_record('exam_subject_exam', $subjectexam);	
 
-			if($this->data->studentcode) {
-				$userid = $DB->get_field('user', 'id', ['usercode' => $this->data->studentcode]);
-				if($userid) {
-					$examuser = new stdClass;
-					$examuser->examid = $examid;
-					$examuser->userid = $userid;
-					$examuser->enrolmethod = 'manual';
-					$examuser->roleid = 5;
-					$examuser->timecreated = time();
-					$examuser->timemodified = time();
-					$examuser->usercreate = $USER->id;
-					$examuser->usermodified = $USER->id;
-					$DB->insert_record('exam_user', $examuser);	
-				}
-			}
-			if($this->data->teachercode) {
-				$userid = $DB->get_field('user', 'id', ['usercode' => $this->data->teachercode]);
-				if($userid) {
-					$examuser = new stdClass;
-					$examuser->examid = $examid;
-					$examuser->userid = $userid;
-					$examuser->enrolmethod = 'manual';
-					$examuser->roleid = 4;
-					$examuser->timecreated = time();
-					$examuser->timemodified = time();
-					$examuser->usercreate = $USER->id;
-					$examuser->usermodified = $USER->id;
-					$DB->insert_record('exam_user', $examuser);	
-				}
-			}
+					}
+					
+					$quizexamid = $DB->get_field('exam_quiz', 'id', ['coursemoduleid' => $modulequiz->coursemodule, 'subjectexamid' => $subjectexamid ]);
+					if(!$quizexamid) {
+						$quizexam = new stdClass;
+						$quizexam->coursemoduleid = $modulequiz->coursemodule;
+						$quizexam->subjectexamid = $subjectexamid;
+						$quizexam->timecreated = time();
+						$quizexam->timemodified = time();
+						$quizexam->usercreate = $USER->id;
+						$quizexam->usermodified = $USER->id;
+						$quizexamid = $DB->insert_record('exam_quiz', $quizexam);	
+					} else {
+						$quizexam = new stdClass;
+						$quizexam->id = $quizexamid;
+						$quizexam->coursemoduleid = $modulequiz->coursemodule;
+						$quizexam->subjectexamid = $subjectexamid;
+						$quizexam->timemodified = time();
+						$quizexam->usermodified = $USER->id;
+						$DB->update_record('exam_quiz', $quizexam);	
+					}
 
-			$this->resp->error = false;
-			$this->resp->message['info'] = "Thêm mới hoặc chỉnh sửa thành công";	
-		} else {
-			$this->resp->error = true;
-			$this->resp->message['info'] = "Thêm mới hoặc chỉnh sửa không thành công";	
-		}
-	    
+					if($this->data->studentcode) {
+						$studentcodearr = explode(',', $this->data->studentcode);
+						foreach ($studentcodearr as $key => $studentcode) {
+							$userid = $DB->get_field('user', 'id', ['usercode' => $studentcode]);
+							if($userid) {
+								$examuser = new stdClass;
+								$examuser->examid = $examid;
+								$examuser->userid = $userid;
+								$examuser->enrolmethod = 'manual';
+								$examuser->roleid = 5;
+								$examuser->timecreated = time();
+								$examuser->timemodified = time();
+								$examuser->usercreate = $USER->id;
+								$examuser->usermodified = $USER->id;
+								$DB->insert_record('exam_user', $examuser);	
+							}
+						}
+					}
+					if($this->data->teachercode) {
+						$teachercodearr = explode(',', $this->data->teachercode);
+						foreach ($studentcodearr as $key => $studentcode) {
+							$userid = $DB->get_field('user', 'id', ['usercode' => $this->data->teachercode]);
+							if($userid) {
+								$examuser = new stdClass;
+								$examuser->examid = $examid;
+								$examuser->userid = $userid;
+								$examuser->enrolmethod = 'manual';
+								$examuser->roleid = 4;
+								$examuser->timecreated = time();
+								$examuser->timemodified = time();
+								$examuser->usercreate = $USER->id;
+								$examuser->usermodified = $USER->id;
+								$DB->insert_record('exam_user', $examuser);	
+							}
+						}
+					}
+				}
+	    	}
+	   	}
+	   	$this->resp->error = false;
+		$this->resp->message['info'] = "Thêm mới hoặc chỉnh sửa thành công";
 		return $response->withStatus(200)->withJson($this->resp);	
 		
 	}
