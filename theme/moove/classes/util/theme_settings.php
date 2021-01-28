@@ -960,5 +960,11 @@ class theme_settings {
       $templatecontext['teacherinfo'] = $obj;
       return $templatecontext;
     }
+    // chuyển đổi dashboard mới và cũ(3.7 và 3.9)
+    public function get_vnr_dashboard_config() {
+        $theme = theme_config::load('moove');
+        $templatecontext['switch_dashboard'] = $theme->settings->switch_dashboard;
+        return $templatecontext;
+    }
 
 }

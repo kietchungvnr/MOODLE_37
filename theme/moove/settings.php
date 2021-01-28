@@ -199,6 +199,14 @@ if ($ADMIN->fulltree) {
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
+    // Change dashboad new and old (3.7 and 3.9)
+    $name = 'theme_moove/switch_dashboard';
+    $title = get_string('switch_dashboard', 'theme_moove');
+    $description = get_string('switch_dashboarddesc', 'theme_moove');
+    $default = 0;
+    $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $page->add($setting);
+
     // Raw SCSS to include before the content.
     $setting = new admin_setting_scsscode('theme_moove/scsspre',
         get_string('rawscsspre', 'theme_moove'), get_string('rawscsspre_desc', 'theme_moove'), '', PARAM_RAW);

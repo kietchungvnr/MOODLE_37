@@ -450,3 +450,5 @@ $string['modulerate'] = 'Tỉ lệ hoàn thành';
 $string['spenttimemodule'] = 'Số giờ học';
 $string['showalldata'] = 'Hiện thị tất cả...';
 $string['selectcoursedata'] = 'Chọn bài học ở phần nội dung khóa học!';
+$string['switch_dashboard'] = 'Chuyển đổi dashboard cũ 3.7';
+$string['switch_dashboarddesc'] = 'Chuyển đổi dashboard giữa 2 giao diện cũ và mới ở version 3.7 và 3.9';

@@ -78,8 +78,12 @@ if ($action == "exam_category") {
                                                     JOIN mdl_exam_subject_exam ese ON ese.subjectid = es.id
                                                     JOIN mdl_exam e ON ese.examid = e.id
                                                 WHERE e.id = :examid AND e.visible = 1 AND es.visible = 1", ['examid' => $exam->id]);
+        if($DB->record_exists('exam_user', ['examid' => $exam->id, 'userid' => $USER->id, 'roleid' => 4]))
+            $cancreateexam = 'true';
+        else
+            $cancreateexam = 'false';
         foreach ($list_subject as $subject) {
-            $category_exam .= '<li class="list-subcategory subject-exam" data-examsujbectexam="' . $subject->examsubjectexam . '" id="' . $subject->id . '"><a>' . $subject->name . '</a></li>';
+            $category_exam .= '<li class="list-subcategory subject-exam" data-cancreate="'.$cancreateexam.'" data-examsujbectexam="' . $subject->examsubjectexam . '" id="' . $subject->id . '"><a>' . $subject->name . '</a></li>';
         }
         $category_exam .= '</ul>';
     }

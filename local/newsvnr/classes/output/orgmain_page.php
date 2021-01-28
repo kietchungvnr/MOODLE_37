@@ -61,7 +61,9 @@ class orgmain_page implements renderable, templatable {
     $event->timestart = time();
     $event->timeduration = 0;
      
-    calendar_event::create($event);
+    // calendar_event::create($event);
+    // 
+    // course_delete_module(61575);
 
     // $obj_calendar_event = new stdClass;
     // $obj_calendar_event->name = 'Kì thi test API 144';

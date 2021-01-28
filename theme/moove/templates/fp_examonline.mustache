@@ -1,67 +1,85 @@
 {{>theme_moove/inc_start}}
-<div id="page" class="container-fluid">
-	<div class="mt-2">
-    {{^hasportal}}
+<div class="container-fluid" id="page">
+    <div class="mt-2">
+        {{^hasportal}}
         {{{ output.full_header }}}
-    {{/hasportal}}
-	</div>
-    <div id="page-content" class="row">
-        <div id="region-main-box" class="col-12">
+        {{/hasportal}}
+    </div>
+    <div class="row" id="page-content">
+        <div class="col-12" id="region-main-box">
             {{#hasregionmainsettingsmenu}}
-                <div id="region-main-settings-menu" class="d-print-none">
-                    <div> {{{ output.region_main_settings_menu }}} </div>
+            <div class="d-print-none" id="region-main-settings-menu">
+                <div>
+                    {{{ output.region_main_settings_menu }}}
                 </div>
+            </div>
             {{/hasregionmainsettingsmenu}}
             <section id="region-main">
                 <div class="card">
                     <div class="card-body d-none">
                         {{{ output.main_content }}}
                     </div>
-                <div class="card-body">
-
-                	<div class="d-flex align-items-center justify-content-between">
-                      {{#canedit}}
-                       <div class="d-flex">
-          			        <a class="btn btn-default mr-2 d-none" target="_blank" id="add-quiz"><i class="fa fa-plus mr-2" aria-hidden="true"></i>{{#str}}createquiz, local_newsvnr{{/str}}</a>
-                        <a class="btn btn-default" target="_blank" href="course/admin.php?courseid=1"><i class="fa fa-university mr-2" aria-hidden="true"></i>{{#str}}questionbank, local_newsvnr{{/str}}</a>
-                      </div>
-                      {{/canedit}}
-      				      </div>
-                    <div class="row mg-0">
-                        <div class="col-12 col-md-3 pd-0 mt-1" id="menu-tree-exam">
-                            <div class="border overflow-hidden">
-                              <li class="list-category" id="exam-type">Danh sách kỳ thi bắt buộc</li>
-                              <ul id="examonline-category">
-                              </ul>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex">
+                                <a class="btn btn-default mr-2 d-none" id="add-quiz" target="_blank">
+                                    <i aria-hidden="true" class="fa fa-plus mr-2">
+                                    </i>
+                                    {{#str}}createquiz, local_newsvnr{{/str}}
+                                </a>
+                                {{#canedit}}
+                                <a class="btn btn-default" href="course/admin.php?courseid=1" target="_blank">
+                                    <i aria-hidden="true" class="fa fa-university mr-2">
+                                    </i>
+                                    {{#str}}questionbank, local_newsvnr{{/str}}
+                                </a>
+                                {{/canedit}}
                             </div>
                         </div>
-                        <div class="col-12 col-md-9 pr-0">
-                            <div class="exam_search_form">
-                                <div class="row">
-                                    <div class="col-xl-3 col-6 pl-2 pr-2 tree-search mt-1">
-                                        <div id="examname"></div>
-                                    </div>
-                                    <div class="col-xl-3 col-6 pl-2 pr-2 tree-search mt-1">
-                                        <input type="text" class="exam_search_input" id="examdate" placeholder="{{#str}}examdate, local_newsvnr{{/str}}" value="">
-                                    </div>
-                                    <div class="col-xl-3 col-6 pl-2 pr-2 tree-search mt-1">
-                                        <div id="subjectname"></div>
-                                    </div>
-                                    <div class="col-xl-3 col-6 pl-2 pr-2 tree-search mt-2">
-                                        <button id="exam_search_button" class="ml-auto w-100 search-button"><i class="fa fa-search mr-1"></i>{{#str}}search, local_newsvnr{{/str}}</button>
-                                    </div>
+                        <div class="row mg-0">
+                            <div class="col-12 col-md-3 pd-0 mt-1" id="menu-tree-exam">
+                                <div class="border overflow-hidden">
+                                    <li class="list-category" id="exam-type">
+                                        Danh sách kỳ thi bắt buộc
+                                    </li>
+                                    <ul id="examonline-category">
+                                    </ul>
                                 </div>
                             </div>
-                          <div class="loading-page"></div>
-                          <div id="table-exam">
-                          </div>
+                            <div class="col-12 col-md-9 pr-0">
+                                <div class="exam_search_form">
+                                    <div class="row">
+                                        <div class="col-xl-3 col-6 pl-2 pr-2 tree-search mt-1">
+                                            <div id="examname">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-3 col-6 pl-2 pr-2 tree-search mt-1">
+                                            <input class="exam_search_input" id="examdate" placeholder="{{#str}}examdate, local_newsvnr{{/str}}" type="text" value="">
+                                            </input>
+                                        </div>
+                                        <div class="col-xl-3 col-6 pl-2 pr-2 tree-search mt-1">
+                                            <div id="subjectname">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-3 col-6 pl-2 pr-2 tree-search mt-2">
+                                            <button class="ml-auto w-100 search-button" id="exam_search_button">
+                                                <i class="fa fa-search mr-1">
+                                                </i>
+                                                {{#str}}search, local_newsvnr{{/str}}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="loading-page">
+                                </div>
+                                <div id="table-exam">
+                                </div>
+                            </div>
                         </div>
-                  </div>
-               </div>
+                    </div>
                 </div>
             </section>
         </div>
     </div>
 </div>
- 
 {{>theme_moove/inc_end}}

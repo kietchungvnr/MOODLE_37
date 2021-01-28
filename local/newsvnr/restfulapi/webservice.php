@@ -1251,11 +1251,11 @@ if($action == "viewcount_chart") {
 	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
 	$params = [];
 	$wheresql = '';
+	$srt_courseid = get_list_courseid_by_teacher($USER->id);
 	if($courseid) {
 		$wheresql .= "lsl.courseid = :courseid AND lsl.action = 'viewed'";
 		$params['courseid'] = $courseid;
 	} else {
-		$srt_courseid = get_list_courseid_by_teacher($USER->id);
 		$wheresql = "courseid IN($srt_courseid) AND lsl.action = 'viewed'";
 	}
 	if($date != '') {
@@ -1271,11 +1271,22 @@ if($action == "viewcount_chart") {
 			GROUP BY lsl.courseid,c.fullname";
 	$record = $DB->get_records_sql($sql, $params);
 	$list_coursename = array();
-   	$list_viewcount = array();
+	$list_course_temp = array();
+	$list_viewcount = array();
    	foreach ($record as $value) {
+		$list_course_temp[] = $value->courseid;
    		$list_coursename[] = $value->fullname;
    		$list_viewcount[] = (int)$value->vc - 1;
-   	}
+	}
+
+	$list_course = explode(',', $srt_courseid);
+	$compare = array_diff($list_course, $list_course_temp);
+	if($compare) {
+		foreach($compare as $course) {
+			$list_coursename[] = $DB->get_field('course', 'fullanme', ['id' => $course]);
+			$list_viewcount[] = 0;
+		}
+	}
    	$response = new stdClass();
    	$response->list_coursename = $list_coursename;
    	$response->list_viewcount = $list_viewcount;

@@ -104,6 +104,73 @@ class ExamController extends BaseController {
 				$exam->usermodified = $USER->id;
 				$DB->update_record('exam', $exam);
 			}
+			if($this->data->studentcode) {
+				$studentcodearr = explode(',', $this->data->studentcode);
+				foreach ($studentcodearr as $key => $studentcode) {
+					$userid = $DB->get_field('user', 'id', ['usercode' => $studentcode]);
+					if($userid) {
+						$examuserid = $DB->get_field('exam_user', 'id',['examid' => $examid, 'userid' => $userid, 'roleid' => 5]);
+						if(!$examuserid) {
+							$examuser = new stdClass;
+							$examuser->examid = $examid;
+							$examuser->userid = $userid;
+							$examuser->enrolmethod = 'manual';
+							$examuser->roleid = 5;
+							$examuser->timecreated = time();
+							$examuser->timemodified = time();
+							$examuser->usercreate = $USER->id;
+							$examuser->usermodified = $USER->id;
+							$DB->insert_record('exam_user', $examuser);	
+						} else {
+							$examuser = new stdClass;
+							$examuser->id = $examuserid;
+							$examuser->examid = $examid;
+							$examuser->userid = $userid;
+							$examuser->enrolmethod = 'manual';
+							$examuser->roleid = 5;
+							$examuser->timemodified = time();
+							$examuser->usermodified = $USER->id;
+							$DB->update_record('exam_user', $examuser);	
+						}
+					} else {
+						continue;
+					}
+				}
+			}
+			if($this->data->teachercode) {
+				$teachercodearr = explode(',', $this->data->teachercode);
+				foreach ($teachercodearr as $key => $teachercode) {
+					$userid = $DB->get_field('user', 'id', ['usercode' => $teachercode]);
+					if($userid) {
+						$examuserid = $DB->get_field('exam_user', 'id',['examid' => $examid, 'userid' => $userid, 'roleid' => 4]);
+						if(!$examuserid) {
+							$examuser = new stdClass;
+							$examuser->examid = $examid;
+							$examuser->userid = $userid;
+							$examuser->enrolmethod = 'manual';
+							$examuser->roleid = 4;
+							$examuser->timecreated = time();
+							$examuser->timemodified = time();
+							$examuser->usercreate = $USER->id;
+							$examuser->usermodified = $USER->id;
+							$DB->insert_record('exam_user', $examuser);		
+						} else {
+							$examuser = new stdClass;
+							$examuser->id = $examuserid;
+							$examuser->examid = $examid;
+							$examuser->userid = $userid;
+							$examuser->enrolmethod = 'manual';
+							$examuser->roleid = 4;
+							$examuser->timemodified = time();
+							$examuser->usermodified = $USER->id;
+							$DB->update_record('exam_user', $examuser);	
+						}
+					} else {
+						continue;
+					}
+					
+				}
+			}
 		}
 	   	
 	   	$subjectcodearr = explode(',', $this->data->subjectcode);
@@ -112,11 +179,6 @@ class ExamController extends BaseController {
 	   	foreach ($subjectcodearr as $key => $subjectcode) {
 	    	$subjectid = $DB->get_field('exam_subject', 'id', ['code' => $subjectcode]);
 	    	if(!$subjectid) {
-				// if($DB->record_exists('exam_subject', ['code' => $this->data->subjectcode])) {
-				// 	$this->resp->er ror = true;
-				// 	$this->resp->message['info'] = "Mã môn thi đã tồn tại";
-				// 	return $response->withStatus(200)->withJson($this->resp);
-				// }
 	    		$subject = new stdClass;
 		    	$subject->name = $subjectnamearr[$key];
 		    	$subject->code = $subjectcode;
@@ -215,44 +277,8 @@ class ExamController extends BaseController {
 						$quizexam->usermodified = $USER->id;
 						$DB->update_record('exam_quiz', $quizexam);	
 					}
-
-					if($this->data->studentcode) {
-						$studentcodearr = explode(',', $this->data->studentcode);
-						foreach ($studentcodearr as $key => $studentcode) {
-							$userid = $DB->get_field('user', 'id', ['usercode' => $studentcode]);
-							if($userid) {
-								$examuser = new stdClass;
-								$examuser->examid = $examid;
-								$examuser->userid = $userid;
-								$examuser->enrolmethod = 'manual';
-								$examuser->roleid = 5;
-								$examuser->timecreated = time();
-								$examuser->timemodified = time();
-								$examuser->usercreate = $USER->id;
-								$examuser->usermodified = $USER->id;
-								$DB->insert_record('exam_user', $examuser);	
-							}
-						}
-					}
-					if($this->data->teachercode) {
-						$teachercodearr = explode(',', $this->data->teachercode);
-						foreach ($studentcodearr as $key => $studentcode) {
-							$userid = $DB->get_field('user', 'id', ['usercode' => $this->data->teachercode]);
-							if($userid) {
-								$examuser = new stdClass;
-								$examuser->examid = $examid;
-								$examuser->userid = $userid;
-								$examuser->enrolmethod = 'manual';
-								$examuser->roleid = 4;
-								$examuser->timecreated = time();
-								$examuser->timemodified = time();
-								$examuser->usercreate = $USER->id;
-								$examuser->usermodified = $USER->id;
-								$DB->insert_record('exam_user', $examuser);	
-							}
-						}
-					}
 				}
+
 	    	}
 	   	}
 	   	$this->resp->error = false;
@@ -281,45 +307,85 @@ class ExamController extends BaseController {
         	$this->resp->data[] = $errors;
 	        return $response->withStatus(422)->withJson($this->resp);
 		}
-
-		$exam = $DB->get_field('exam', 'id', ['code' => $this->data->examcode]);
-		if($exam) {
-			if($this->data->studentcode) {
-				$userid = $DB->get_field('user', 'id', ['usercode' => $this->data->studentcode]);
-				if($userid) {
-					$examuser = new stdClass;
-					$examuser->examid = $exam;
-					$examuser->userid = $userid;
-					$examuser->enrolmethod = 'manual';
-					$examuser->roleid = 5;
-					$examuser->timecreated = time();
-					$examuser->timemodified = time();
-					$examuser->usercreate = $USER->id;
-					$examuser->usermodified = $USER->id;
-					$DB->insert_record('exam_user', $examuser);	
+		$examarr = explode(',', $this->data->examcode);
+		foreach ($examarr as $key => $examcode) {
+			$exam = $DB->get_field('exam', 'id', ['code' => $examcode]);
+			if($exam) {
+				if($this->data->studentcode) {
+					$studentcodearr = explode(',', $this->data->studentcode);
+					foreach ($studentcodearr as $key => $studentcode) {
+						$userid = $DB->get_field('user', 'id', ['usercode' => $studentcode]);
+						if($userid) {
+							$examuserid = $DB->get_field('exam_user', 'id',['examid' => $exam, 'userid' => $userid, 'roleid' => 5]);
+							if(!$examuserid) {
+								$examuser = new stdClass;
+								$examuser->examid = $examid;
+								$examuser->userid = $userid;
+								$examuser->enrolmethod = 'manual';
+								$examuser->roleid = 5;
+								$examuser->timecreated = time();
+								$examuser->timemodified = time();
+								$examuser->usercreate = $USER->id;
+								$examuser->usermodified = $USER->id;
+								$DB->insert_record('exam_user', $examuser);	
+							} else {
+								$examuser = new stdClass;
+								$examuser->id = $examuserid;
+								$examuser->examid = $examid;
+								$examuser->userid = $userid;
+								$examuser->enrolmethod = 'manual';
+								$examuser->roleid = 5;
+								$examuser->timemodified = time();
+								$examuser->usermodified = $USER->id;
+								$DB->update_record('exam_user', $examuser);	
+							}
+						} else {
+							continue;
+						}
+					}
 				}
-			}
-			if($this->data->teachercode) {
-				$userid = $DB->get_field('user', 'id', ['usercode' => $this->data->teachercode]);
-				if($userid) {
-					$examuser = new stdClass;
-					$examuser->examid = $exam;
-					$examuser->userid = $userid;
-					$examuser->enrolmethod = 'manual';
-					$examuser->roleid = 4;
-					$examuser->timecreated = time();
-					$examuser->timemodified = time();
-					$examuser->usercreate = $USER->id;
-					$examuser->usermodified = $USER->id;
-					$DB->insert_record('exam_user', $examuser);	
+				if($this->data->teachercode) {
+					$teachercodearr = explode(',', $this->data->teachercode);
+					foreach ($teachercodearr as $key => $teachercode) {
+						$userid = $DB->get_field('user', 'id', ['usercode' => $teachercode]);
+						if($userid) {
+							$examuserid = $DB->get_field('exam_user', 'id',['examid' => $exam, 'userid' => $userid, 'roleid' => 4]);
+							if(!$examuserid) {
+								$examuser = new stdClass;
+								$examuser->examid = $examid;
+								$examuser->userid = $userid;
+								$examuser->enrolmethod = 'manual';
+								$examuser->roleid = 4;
+								$examuser->timecreated = time();
+								$examuser->timemodified = time();
+								$examuser->usercreate = $USER->id;
+								$examuser->usermodified = $USER->id;
+								$DB->insert_record('exam_user', $examuser);		
+							} else {
+								$examuser = new stdClass;
+								$examuser->id = $examuserid;
+								$examuser->examid = $examid;
+								$examuser->userid = $userid;
+								$examuser->enrolmethod = 'manual';
+								$examuser->roleid = 4;
+								$examuser->timemodified = time();
+								$examuser->usermodified = $USER->id;
+								$DB->update_record('exam_user', $examuser);	
+							}
+						} else {
+							continue;
+						}
+						
+					}
 				}
+				$this->resp->error = false;
+				$this->resp->message['info'] = "Thêm giáo viên hoặc học viên vào kỳ thi thành công!";
+			} else {
+				$this->resp->error = true;
+				$this->resp->message['info'] = "Không tìm thấy kỳ thi";
 			}
-			$this->resp->error = false;
-			$this->resp->message['info'] = "Thêm giáo viên hoặc học viên vào kỳ thi thành công!";
-		} else {
-			$this->resp->error = true;
-			$this->resp->message['info'] = "Không tìm thấy kỳ thi";
 		}
+
 		
 		return $response->withStatus(200)->withJson($this->resp);
 	}
@@ -327,11 +393,11 @@ class ExamController extends BaseController {
 	public function unenrol_exam_user($request, $response, $args) {
 		global $DB, $USER;
 		$this->validate = $this->validator->validate($this->request, [
-			'examid' => $this->v::notEmpty()->notBlank()
+			'examcode' => $this->v::notEmpty()->notBlank()
         ]);
 
 		if($this->validate->isValid()) {
-			$this->data->examid = $request->getParam('examid');
+			$this->data->examcode = $request->getParam('examcode');
 			$this->data->studentcode = $request->getParam('studentcode');
 			$this->data->teachercode = $request->getParam('teachercode');
 			if(!$this->data->studentcode && !$this->data->teachercode) {
@@ -345,70 +411,37 @@ class ExamController extends BaseController {
 	        return $response->withStatus(422)->withJson($this->resp);
 		}
 		
-		if($this->data->studentcode) {
-			$userid = $DB->get_field('user', 'id', ['usercode' => $this->data->studentcode]);
-			if($DB->record_exists('exam_user', ['examid' => $this->data->examid, 'userid' => $userid])) {
-				$DB->delete_record('exam_user', ['examid' => $this->data->examid, 'userid' => $userid]);
-			}
+		if($this->data->examcode) {
+			$examid = $DB->get_field('exam', 'id', ['code' => $this->data->examcode]);
+		} else {
+			$this->resp->error = true;
+			$this->resp->data['examcode'] = "Không tìm thấy kỳ thi!";
 		}
-		if($this->data->teachercode) {
-			$userid = $DB->get_field('user', 'id', ['usercode' => $this->data->teachercode]);
-			if($DB->record_exists('exam_user', ['examid' => $this->data->examid, 'userid' => $userid])) {
-				$DB->delete_record('exam_user', ['examid' => $this->data->examid, 'userid' => $userid]);
+		if(empty($this->resp->data)) {
+			if($this->data->studentcode) {
+				$studentcodearr = explode(',', $this->data->studentcode);
+				foreach ($studentcodearr as $key => $studentcode) {
+					$userid = $DB->get_field('user', 'id', ['usercode' => $studentcode]);
+					if($DB->record_exists('exam_user', ['examid' => $examid, 'userid' => $userid])) {
+						$DB->delete_records('exam_user', ['examid' => $examid, 'userid' => $userid]);
+					}
+				}
 			}
+			if($this->data->teachercode) {
+				$teachercodearr = explode(',', $this->data->studentcode);
+				foreach ($teachercodearr as $key => $teachercode) {
+					$userid = $DB->get_field('user', 'id', ['usercode' => $studentcode]);
+					if($DB->record_exists('exam_user', ['examid' => $examid, 'userid' => $userid])) {
+						$DB->delete_records('exam_user', ['examid' => $examid, 'userid' => $userid]);
+					}
+				}
+			}
+			$this->resp->error = false;
+			$this->resp->message['info'] = "Xóa giáo viên hoặc học viên khỏi kỳ thi thành công!";
 		}
-
-		$this->resp->error = false;
-		$this->resp->message['info'] = "Xóa giáo viên hoặc học viên khỏi kỳ thi thành công!";
 
 		return $response->withStatus(200)->withJson($this->resp);
 	}
-
-	// public function exam_score($request, $response, $args) {
-	// 	global $DB;
-	// 	$this->validate = $this->validator->validate($this->request, [
-	// 		'quizcode' => $this->v::notEmpty()->notBlank(),
-	// 		'subjectcode' => $this->v::notEmpty()->notBlank(),
-	// 		'examname' => $this->v::notEmpty()->notBlank(),
-	// 		'examcode' => $this->v::notEmpty()->notBlank(),
-	// 		'studentcode' => $this->v::notEmpty()->notBlank(),
-	// 		'examscore' => $this->v::notEmpty()->notBlank()
-	// 	]);
-	// 	if ($this->validate->isValid()) {
-	// 		$this->data->quizcode = $request->getParam('quizcode');
-	// 		$this->data->subjectcode = $request->getParam('subjectcode');
-	// 		$this->data->examname = $request->getParam('examname');
-	// 		$this->data->examcode = $request->getParam('examcode');
-	// 		$this->data->studentcode = $request->getParam('studentcode');
-	// 		$this->data->examscore = $request->getParam('examscore');
-	// 	} else {
-	// 		$errors = $this->validate->getErrors();
-	// 		$this->resp->error = true;
-	// 		$this->resp->data[] = $errors;
-	// 		return $response->withStatus(422)->withJson($this->resp);
-	// 	}
-
-	// 	$exam = $DB->get_field('exam', 'id', ['exam' => $this->data->examcode]);
-
-	// 	if($exam) {
-	// 		$quiz = $DB->get_field('quiz', 'id',['code' => $this->data->quizcode]);
-	// 		if($quiz) {
-	// 			$subject = $DB->get_field('quiz', 'id',['code' => $this->data->quizcode]);
-	// 		} else {
-	// 			$this->resp->error = true;
-	// 			$this->resp->message['info'] = 'Không tìm thấy đề thi';
-	// 		}
-	// 	} else {
-	// 		$this->resp->error = true;
-	// 		$this->resp->message['info'] = 'Không tìm thấy kỳ thi';
-	// 	}
-
-	
-	// 	$this->resp->error = false;
-	// 	$this->resp->message['info'] = get_string('delete_success', 'local_newsvnr');
-
-	// 	return $response->withStatus(200)->withJson($this->resp);
-	// }
 
 	public function delete($request, $response, $args) {
 		global $DB;
