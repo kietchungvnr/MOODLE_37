@@ -545,3 +545,12 @@ $string['intro'] = "Giới thiệu";
 $string['addblog'] = "Viết blog";
 $string['replypost'] = "Bình luận bài viết";
 $string['myteachingcourses'] = "Khóa giảng của tôi";
+$string['coursesection'] = "Section khóa học";
+$string['resource'] = "Tài nguyên";
+$string['add'] = "Thêm";
+
+$string['librarytocourse'] = "Đưa tài liệu từ thư viện vào khóa học";
+$string['defaultfolder'] = "Thư mục gốc";
+$string['folder'] = "Thư mục";
+$string['searchresourcename'] = "Tìm tên tài liệu";
+$string['searchcontentname'] = "Tìm kiếm nội dung tài liệu e-book,page,lesson";

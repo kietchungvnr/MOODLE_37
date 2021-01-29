@@ -2339,7 +2339,7 @@ div.submissionstatustable {
 .new-latest-box {
     overflow: hidden;
     height: 310px;
-    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    box-shadow: 0 5px 10px rgb(0 0 0 / 10%);
 }
 .new-latest-box .view-new {
     top: -15%;
@@ -4460,16 +4460,18 @@ body#page-enrol-index #region-main .generalbox#notice {
     display: none;
 }
 #folder_library {
-    border: 1px solid #dfd1d1;
-    margin: 5px;
+    border: 1px solid #e5dfdf;
     position: relative;
     font-size: 15px;
-    height: 650px;
+    max-height: 650px;
+    margin-top: 6px;
     min-height: 650px;
+    overflow-y:auto;
+    overflow-x: hidden;
 }
 #file_library {
-    margin: 5px;
-    border: 1px solid #dfd1d1;
+    margin-top:5px;
+    border: 1px solid #e5dfdf;
     padding: 5px 15px;
 }
 .popup-setting {
@@ -4492,7 +4494,6 @@ body#page-enrol-index #region-main .generalbox#notice {
     cursor: pointer;
 }
 #folder_library li.folder.active {
-    font-weight: bold;
     background: #bfb8b873;
 }
 .module-count {
@@ -4504,6 +4505,9 @@ body#page-enrol-index #region-main .generalbox#notice {
 }
 li.folder {
     padding: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 li.folder i.fa.fa-folder{
     margin-right: 5px;
@@ -4511,6 +4515,8 @@ li.folder i.fa.fa-folder{
 }
 li.folder a {
     color: #545759;
+    -webkit-line-clamp: 1;
+    text-overflow: ellipsis;
 }
 .tree-view-folder {
     background: gainsboro;
@@ -4570,25 +4576,6 @@ li.folder a {
 }
 #file_library table td {
     border-top: 0;
-}
-input#searchlibrary.k-input {
-    max-height: 30px;
-    width: -webkit-fill-available;
-}
-input#searchlibrary {
-    height: 35px !important;
-    border:0;
-}
-i.library {
-    height: 30px;
-    background: white;
-    padding: 10px;
-    cursor: pointer;
-}
-#file_library .k-autocomplete {
-    border-color: #fa807200;
-    box-shadow: none;
-    border: transparent;
 }
 button[data-target="#add-popup-modal-module"] {
     display: none;
@@ -5903,6 +5890,61 @@ nav.navbar ul.navbar-nav .usermenu {
 }
 #page-local-newsvnr-viewdetail .card-title {
     font-size: 18px;
+}
+.icon-plus {
+    width: 10px;
+    margin: 0px 8px 2px 0;
+    cursor: pointer;
+}
+.icon-folder {
+    width: 18px;
+    margin: 0px 5px 5px 0;
+}
+.tree-folder .folder.title {
+    background: #f5f5f5;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+.example input[type=text] {
+  padding: 5px 10px;
+  font-size: 17px;
+  border: 1px solid #2196F3;
+  float: left;
+  width: 80%;
+  box-sizing: border-box;
+}
+.example button {
+  float: left;
+  width: 20%;
+  padding: 5px;
+  background: #2196F3;
+  color: white;
+  font-size: 17px;
+  border: 1px solid #2196F3;
+  border-left: none;
+  cursor: pointer;
+}
+.example::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+.row-card {
+    margin-left: -8px;
+    margin-right: -8px;
+}
+.example input::placeholder {
+  font-size: 13px;
+  padding-left: 10px;
+  color:#80808075;
+}
+.full-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#page-library .content-expand {
+    padding-left: 22px !important;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />

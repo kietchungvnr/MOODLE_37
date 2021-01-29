@@ -45,7 +45,7 @@ $output          = '';
 $allowmodule      = ['book', 'lesson', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt'];
 $paginationlink  = $CFG->wwwroot . '/local/newsvnr/ajax/library_online/library_module_ajax.php?folderid='.$folderid.'&search='.$search.'&page=';
 if ($searchtype == "searchcontent") {
-    $searchsql = "(CONCAT(rs.name,b.name) LIKE $strsearch OR lp.title LIKE $strsearch OR lp.contents LIKE $strsearch OR pa.intro LIKE $strsearch OR pa.content LIKE $strsearch OR ur.intro LIKE $strsearch OR (bc.CONTENT LIKE $strsearch OR bc.title LIKE $strsearch))";
+    $searchsql = "(lp.title LIKE $strsearch OR lp.contents LIKE $strsearch OR pa.intro LIKE $strsearch OR pa.content LIKE $strsearch OR ur.externalurl LIKE $strsearch OR (bc.CONTENT LIKE $strsearch OR bc.title LIKE $strsearch))";
 } else {
     $searchsql = "CONCAT(rs.name,b.name,l.name,i.name,pa.name,ur.name) LIKE $strsearch";
 }

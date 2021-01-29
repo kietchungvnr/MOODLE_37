@@ -45,7 +45,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         $(".nav.multi-tab[tab="+tab+"] li a").removeClass('active');
         $(this).addClass('active');
         $('.tab-content[tab='+tab+'] .tab-pane').hide();
-        $('.tab-content[tab='+tab+'] .tab-pane[data="' + data + '"]').fadeIn('fast');
+        $('.tab-content[tab='+tab+'] .tab-pane[data="' + data + '"]').show();
     });
     $(".search_form_fp i").click(function(){
         var keyword = $('#course_search_form_fp').val();
