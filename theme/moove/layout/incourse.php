@@ -56,11 +56,11 @@ if (isset($PAGE->cm->modname) && in_array($PAGE->cm->modname, $moduleswithnavinb
 }
 $check = theme_moove_layout_check();
 $PAGE->requires->strings_for_js(array('selectcoursedata'), 'theme_moove');
-if(isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
-    $check->hasiframe = true;
-} else {
-    $check->hasiframe = false;
-}
+// if(isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
+//     $check->hasiframe = true;
+// } else {
+//     $check->hasiframe = false;
+// }
 
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();

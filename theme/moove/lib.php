@@ -759,7 +759,6 @@ function theme_moove_layout_check() {
     global $COURSE,$DB,$USER,$CFG;
     require_once $CFG->dirroot . '/local/newsvnr/lib.php';
     $object = new stdClass();
-    // var_dump($_SERVER);die;
     $referer = $_SERVER['HTTP_REFERER'];
     $referer_split = explode('/', $referer);
     if(isset($referer) && ($referer_split[2] == $_SERVER['HTTP_HOST'])) {
@@ -772,13 +771,7 @@ function theme_moove_layout_check() {
     $object->show_hide_focusmod = true;
     if(isset($referer) && ($referer_split[2] == $_SERVER['HTTP_HOST'])) {
         if($_COOKIE['cookie'] == 'focusmod') {
-            if (strpos($referer, '/mod/') == true || strpos($_SERVER['QUERY_STRING'], 'course=') == true || strpos($referer, 'course=') == true) {
-                // if(strpos($referer, 'course=') == true) {
-                //     $object->hasiframe = false;
-                // } else {
-                //     $object->hasiframe = true;
-                //     $object->show_hide_focusmod = false;
-                // }
+            if (strpos($referer, 'mod/') == true || strpos($_SERVER['QUERY_STRING'], 'course') == true || strpos($referer, 'course=') == true || strpos($_SERVER['SCRIPT_NAME'], 'mod/') == true) {
                 $object->hasiframe = true;
                 $object->show_hide_focusmod = false;
             } else {
@@ -787,18 +780,6 @@ function theme_moove_layout_check() {
         } else {
             $object->hasiframe = false;
         }
-        // if($_SERVER['SCRIPT_NAME'] == '/course/view.php' && $_COOKIE['cookie'] == 'focusmod') {
-        //     $object->hasiframe = true;
-        // } else {
-        //     if($_SERVER['SCRIPT_NAME'] == '/course/view.php')
-        //     if (isset($_COOKIE['cookie']) == 'focusmod') {
-        //         unset($_COOKIE['cookie']); 
-        //         setcookie('cookie', null, -1, '/'); 
-        //         $object->hasiframe = false;
-        //     } else {
-        //         $object->hasiframe = true;
-        //     }
-        // }
     } else {
         $object->hasiframe = false;
     }
@@ -808,7 +789,7 @@ function theme_moove_layout_check() {
     $object->settingexam = ($COURSE->id == 1) ? true : false;
     $check_is_teacher = check_teacherrole($USER->id);
     $check_is_student = check_studentrole($USER->id);
-    $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    $url = $_SERVER['REQUEST_SCHEME'] . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     $url_components = parse_url($url);
     if(isset($url_components['query'])) {
         parse_str($url_components['query'], $params); 
