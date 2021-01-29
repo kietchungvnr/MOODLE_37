@@ -105,16 +105,13 @@
 </div>
 
 {{#hasportal}}
-    {{>theme_moove/portal_inc_start}}
+    {{>theme_moove/portal_inc_end}}
 {{/hasportal}}
 {{^hasportal}}
     {{^hasiframe}}
-        {{>theme_moove/inc_start}}
+        {{>theme_moove/inc_end}}
     {{/hasiframe}}
     {{#hasiframe}}
-        {{>theme_moove/focusmode_inc_start}}
+        {{>theme_moove/focusmode_inc_end}}
     {{/hasiframe}}
-    {{#show_hide_focusmod}}
-        {{{output.menu_focus}}}
-    {{/show_hide_focusmod}}
 {{/hasportal}}

@@ -291,7 +291,7 @@ class course_edit_form extends moodleform {
 
         $mform->addElement('select', 'format', get_string('format'), $formcourseformats);
         $mform->addHelpButton('format', 'format');
-        $mform->setDefault('format', $courseconfig->format);
+        $mform->setDefault('format', 'topcoll');
 
         // Button to update format-specific options on format change (will be hidden by JavaScript).
         $mform->registerNoSubmitButton('updatecourseformat');
