@@ -48,7 +48,7 @@ module.exports = function(grunt) {
                 }],
                 options: {
                     report: "min",
-                    sourceMap: true
+                    sourceMap: false
                 }
             }
         },

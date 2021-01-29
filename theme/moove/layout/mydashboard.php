@@ -68,6 +68,7 @@ $templatecontext = [
     'is_teacher' => $check->is_teacher,
     'is_student' => $check->is_student,
     'hasportal' => $check->hasportal,
+    'hasiframe' => $check->hasiframe,
     'canviewadmininfos' => false,
     'hasopenmenu' => $check->hasopenmenu
 ];

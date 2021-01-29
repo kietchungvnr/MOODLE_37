@@ -136,6 +136,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 $output .= '</div>';
                 $output .= '<div class="dropdown-content-2 '.$modinfo->id.'">';
                 foreach($modinfo->modinfo->cms as $cms) {
+                    if($cms->modname == 'label')
+                        continue;
                     $completionicon = get_course_section_cm_completion($COURSE,$completioninfo,$cms);
                     if($cms->section == $modinfo->id && $cms->visible == 1) {
                         $getmodules = $DB->get_records_sql('SELECT cm.id, cm.deletioninprogress FROM {course_modules} cm JOIN {course_sections} cs ON cm.section = cs.id WHERE cm.instance = :section AND cm.course = :courseid',['section' => $cms->instance,'courseid' => $COURSE->id]);

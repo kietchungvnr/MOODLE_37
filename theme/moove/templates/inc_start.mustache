@@ -10,7 +10,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta name="referrer" content="no-referrer">
+    {{! <meta name="referrer" content="no-referrer"> }}
 
 <style type="text/css">
 
@@ -4009,22 +4009,6 @@ table#participants .fa-sort-asc ,
 .forumpost .body-content-container {
     background: white;
 }
-{{#hasfocusmod}}
-    ul.nav-tabs.course,
-    .all-header,
-    #page-header,
-    footer {
-        display: none;
-    }
-    .navbar.focusmod {
-        display: flex;
-        padding:0; 
-        min-height: 60px;
-    }
-    div#page-content {
-        margin-top: 62px;
-    }
-{{/hasfocusmod}}
 .course-ajax-load {
     padding-left: 5px;
     padding-right: 5px;
@@ -5953,13 +5937,16 @@ nav.navbar ul.navbar-nav .usermenu {
 </head>
 <body {{{ bodyattributes }}}>
     
-    {{> core/local/toast/wrapper}}
+{{> core/local/toast/wrapper}}
 
-    <a id="return-to-top" title="{{#str}}gotop, theme_moove{{/str}}" data-placement="left"><i class="fa fa-arrow-up"></i></a>
-    {{{output.test}}}
-    <div class="modal123"></div>
-    {{# hasopenmenu}}<div class="check-menu slide-nav-toggle">{{/ hasopenmenu}}
-    {{^ hasopenmenu}}<div class="check-menu">{{/ hasopenmenu}}
+<a id="return-to-top" title="{{#str}}gotop, theme_moove{{/str}}" data-placement="left"><i class="fa fa-arrow-up"></i></a>
+<div class="modal123"></div>
+{{# hasopenmenu}}
+    <div class="check-menu slide-nav-toggle">
+{{/ hasopenmenu}}
+{{^ hasopenmenu}}
+    <div class="check-menu">
+{{/ hasopenmenu}}
         <div class="all-header">
             {{>theme_moove/header}}
         </div>
@@ -5978,8 +5965,13 @@ nav.navbar ul.navbar-nav .usermenu {
                 </ul>
             </div>
         </div>
-{{# hasopenmenu}}<div id="page-wrapper" class="slide-nav-toggle">{{/ hasopenmenu}}
-{{^ hasopenmenu}}<div id="page-wrapper">{{/ hasopenmenu}}
-  {{{ output.standard_top_of_body_html }}}
+    </div>
+{{# hasopenmenu}}
+    <div id="page-wrapper" class="slide-nav-toggle">
+{{/ hasopenmenu}}
+{{^ hasopenmenu}}
+    <div id="page-wrapper">
+{{/ hasopenmenu}}
+{{{ output.standard_top_of_body_html }}}
 
 

@@ -61,6 +61,7 @@ if(isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 
 } else {
     $check->hasiframe = false;
 }
+
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [
@@ -75,7 +76,7 @@ $templatecontext = [
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'hasportal' => $check->hasportal,
-    'hasiframe' => $check->hasfocusmod,
+    'hasiframe' => $check->hasiframe,
     'hasfocusmod' => $check->hasfocusmod,
     'settingexam' => $check->settingexam,
     'hasopenmenu' => $check->hasopenmenu

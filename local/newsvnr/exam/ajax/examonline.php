@@ -28,7 +28,7 @@ define('AJAX_SCRIPT', false);
 
 require_once __DIR__ . '/../../../../config.php';
 require_once $CFG->dirroot . '/local/newsvnr/lib.php';
-// require_login();
+require_login();
 $PAGE->set_context(context_system::instance());
 $examid            = optional_param('examid', 0, PARAM_INT);
 $examname          = optional_param('examname', '', PARAM_TEXT);

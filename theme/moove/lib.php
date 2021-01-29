@@ -759,10 +759,51 @@ function theme_moove_layout_check() {
     global $COURSE,$DB,$USER,$CFG;
     require_once $CFG->dirroot . '/local/newsvnr/lib.php';
     $object = new stdClass();
-    $object->hasportal = (isset($_SERVER['HTTP_REFERER'])) ? true : false;
+    // var_dump($_SERVER);die;
+    $referer = $_SERVER['HTTP_REFERER'];
+    $referer_split = explode('/', $referer);
+    if(isset($referer) && ($referer_split[2] == $_SERVER['HTTP_HOST'])) {
+        $object->hasportal = false;
+    } elseif(isset($referer) && ($referer_split[2] != $_SERVER['HTTP_HOST'])) {
+        $object->hasportal = true;
+    } else {
+        $object->hasportal = false;
+    }
+    $object->show_hide_focusmod = true;
+    if(isset($referer) && ($referer_split[2] == $_SERVER['HTTP_HOST'])) {
+        if($_COOKIE['cookie'] == 'focusmod') {
+            if (strpos($referer, '/mod/') == true || strpos($_SERVER['QUERY_STRING'], 'course=') == true || strpos($referer, 'course=') == true) {
+                // if(strpos($referer, 'course=') == true) {
+                //     $object->hasiframe = false;
+                // } else {
+                //     $object->hasiframe = true;
+                //     $object->show_hide_focusmod = false;
+                // }
+                $object->hasiframe = true;
+                $object->show_hide_focusmod = false;
+            } else {
+                $object->hasiframe = false;
+            }
+        } else {
+            $object->hasiframe = false;
+        }
+        // if($_SERVER['SCRIPT_NAME'] == '/course/view.php' && $_COOKIE['cookie'] == 'focusmod') {
+        //     $object->hasiframe = true;
+        // } else {
+        //     if($_SERVER['SCRIPT_NAME'] == '/course/view.php')
+        //     if (isset($_COOKIE['cookie']) == 'focusmod') {
+        //         unset($_COOKIE['cookie']); 
+        //         setcookie('cookie', null, -1, '/'); 
+        //         $object->hasiframe = false;
+        //     } else {
+        //         $object->hasiframe = true;
+        //     }
+        // }
+    } else {
+        $object->hasiframe = false;
+    }
     $object->hasfocusmod = (isset($_COOKIE['cookie']) == 'focusmod') ? true : false;
     $object->hasopenmenu = (isset($_COOKIE['menu']) == 'openmenu') ? true : false;
-    $object->hasiframe = (strpos($_SERVER['QUERY_STRING'],'iframe=true') !== false) ? true : false;
     $object->hascourse = ($COURSE->id > 1) ? true : false;
     $object->settingexam = ($COURSE->id == 1) ? true : false;
     $check_is_teacher = check_teacherrole($USER->id);

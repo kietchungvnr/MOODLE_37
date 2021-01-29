@@ -72,6 +72,7 @@ if (isloggedin()) {
         'regionmainsettingsmenu' => $regionmainsettingsmenu,
         'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
         'hasportal' => $check->hasportal,
+        'hasiframe' => $check->hasiframe,
         'hasopenmenu' => $check->hasopenmenu
     ];
 

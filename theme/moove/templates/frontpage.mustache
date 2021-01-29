@@ -52,13 +52,20 @@
     {{>theme_moove/portal_inc_start}}
 {{/hasportal}}
 {{^hasportal}}
-    {{>theme_moove/inc_start}}
+    {{#hasiframe}}
+        {{>theme_moove/focusmode_inc_start}}
+    {{/hasiframe}}
+    {{^hasiframe}}
+        {{>theme_moove/inc_start}}
+    {{/hasiframe}}
 {{/hasportal}}
 {{>theme_moove/fp_slideshow}}
 <div id="page" class="container-fluid p-0">
 
     {{^hasportal}}
-        {{{ output.full_header }}}
+        {{^hasiframe}}
+            {{{ output.full_header }}}
+        {{/hasiframe}}
     {{/hasportal}}
     
     <div id="page-content" style="outline: none;">
@@ -95,5 +102,10 @@
     {{>theme_moove/portal_inc_end}}
 {{/hasportal}}
 {{^hasportal}}
-    {{>theme_moove/inc_end}}
+    {{^hasiframe}}
+        {{>theme_moove/inc_end}}
+    {{/hasiframe}}
+    {{#hasiframe}}
+        {{>theme_moove/focusmode_inc_end}}
+    {{/hasiframe}}
 {{/hasportal}}

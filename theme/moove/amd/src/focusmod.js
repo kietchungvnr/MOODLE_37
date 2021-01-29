@@ -14,13 +14,6 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         
     });
   
-    // Khỉ reload trang course view thì kiểm tra xem có chế độ focus đang được bật hay ko
-    // Nếu có thì bỏ chế độ focus
-    window.onbeforeunload = function(event)
-    {
-        document.cookie = 'cookie=; max-Age=-1;path=/';
-    };
-    
     // Click vào chế độ focus mode
     $('.open-focusmod').bind('click', function() {
         var fm = getCookie('cookie');
@@ -148,7 +141,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             }
         }
 
-        if(modType == 'forum') {
+        if(modType == 'forum' || modType == 'quiz') {
             var iframe = '<iframe id="mod-iframe" src="'+url+'" width="100%" height="768" frameBorder="0"></iframe>';
         } else {
             var iframe = '<iframe id="mod-iframe" src="'+url+'" onload="$(this).height($(this.contentWindow.document.body).find(\'#page-wrapper\').first().height());" width="100%" height="100%" frameBorder="0"></iframe>';
@@ -160,7 +153,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         $('#mod-iframe').on('load', function() {
             setTimeout(function() {
                 try {
-                    if(modType == 'resource' || modType == 'forum' || modType == 'hvp') {
+                    if(modType == 'resource' || modType == 'forum' || modType == 'hvp' || modType == 'quiz') {
                         var vh = $('body').height() - 77;
                         $('#mod-iframe').height(vh);
                     }

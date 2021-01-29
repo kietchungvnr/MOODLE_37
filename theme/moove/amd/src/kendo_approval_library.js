@@ -1,7 +1,7 @@
-define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertjs'], ($, Config, Str, kendo, alertify) => {
-	let gridName = '#library-approval-module';
-	let kendoConfig = {};
-	let script = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_approval_module.php';
+define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertjs'], function($, Config, Str, kendo, alertify) {
+	var gridName = '#library-approval-module';
+	var kendoConfig = {};
+	var script = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_approval_module.php';
     var strings = [
     	{
             key: 'type',

@@ -51,11 +51,11 @@ if ($draweropenright && $hasblocks) {
     $extraclasses[] = 'drawer-open-right';
 }
 $check = theme_moove_layout_check();
-if(isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
-    $check->hasiframe = true;
-} else {
-    $check->hasiframe = false;
-}
+// if(isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
+//     $check->hasiframe = true;
+// } else {
+//     $check->hasiframe = false;
+// }
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [
@@ -70,7 +70,7 @@ $templatecontext = [
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'hasportal' => $check->hasportal,
-    'hasiframe' => $check->hasfocusmod,
+    'hasiframe' => $check->hasiframe,
     'hasfocusmod' => $check->hasfocusmod,
     'hasopenmenu' => $check->hasopenmenu
 ];
