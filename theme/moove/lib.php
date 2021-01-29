@@ -759,8 +759,10 @@ function theme_moove_layout_check() {
     global $COURSE,$DB,$USER,$CFG;
     require_once $CFG->dirroot . '/local/newsvnr/lib.php';
     $object = new stdClass();
-    $referer = $_SERVER['HTTP_REFERER'];
-    $referer_split = explode('/', $referer);
+    if(isset($_SERVER['HTTP_REFERER'])) {
+        $referer = $_SERVER['HTTP_REFERER'];
+        $referer_split = explode('/', $referer);
+    }
     if(isset($referer) && ($referer_split[2] == $_SERVER['HTTP_HOST'])) {
         $object->hasportal = false;
     } elseif(isset($referer) && ($referer_split[2] != $_SERVER['HTTP_HOST'])) {
@@ -770,7 +772,7 @@ function theme_moove_layout_check() {
     }
     $object->show_hide_focusmod = true;
     if(isset($referer) && ($referer_split[2] == $_SERVER['HTTP_HOST'])) {
-        if($_COOKIE['cookie'] == 'focusmod') {
+        if(isset($_COOKIE['cookie']) && $_COOKIE['cookie'] == 'focusmod') {
             if (strpos($referer, 'mod/') == true || strpos($_SERVER['QUERY_STRING'], 'course') == true || strpos($referer, 'course=') == true || strpos($_SERVER['SCRIPT_NAME'], 'mod/') == true) {
                 $object->hasiframe = true;
                 $object->show_hide_focusmod = false;
