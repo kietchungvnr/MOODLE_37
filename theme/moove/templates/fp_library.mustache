@@ -18,54 +18,52 @@
                             {{{ output.main_content }}}
                         </div>
 		                    <div class="card-body library">
-		                    	{{#canedit}}
-        				        <ul class="nav-tabs nav multi-tab mb-3">
-							        <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="library">{{#str}}library, local_newsvnr{{/str}}</a></li>
-					             	<li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="approvalmodule">{{#str}}approvalmodule, local_newsvnr{{/str}}</a></li>
-						   		</ul>
-						   		{{/canedit}}
-						   		<div class="tab-content">
-    							<div data="library" class="tab-pane active">
-		                    
-			                    	<div class="d-flex justify-content-between">
-			                    	{{#canedit}}
-								        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-popup-modal-folder"><i class="fa fa-plus mr-2" aria-hidden="true"></i>{{#str}}addfolder, local_newsvnr{{/str}}</button>
-								    {{/canedit}}
-								    {{#canaddresource}}
-								    	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-popup-modal-module"><i class="fa fa-plus mr-2" aria-hidden="true"></i>{{#str}}addresource, local_newsvnr{{/str}}</button>
-									{{/canaddresource}}
-								    </div>
-		
-				                    <div class="row">
-				                        <div class="col-12 col-md-3 pl-2 pr-1">
+			                    <div class="row">
+			                        <div class="col-12 col-md-3">
+                                        <div class="row-card">
+                                            {{#canedit}}
+                                                <button type="button" class="btn btn-primary mb-2 approvalmodule"><i class="fa fa-check mr-2" aria-hidden="true"></i>{{#str}}approvalmodule, local_newsvnr{{/str}}</button>
+                                            {{/canedit}}
+                                            {{#canaddresource}}
+                                                <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#add-popup-modal-module"><i class="fa fa-plus mr-2" aria-hidden="true"></i>{{#str}}addresource, local_newsvnr{{/str}}</button>
+                                            {{/canaddresource}}
 				                        	<div id="folder_library">
 				                        		<div class="folder-tree-replace">
-				                       			{{{output.library_folder}}}
+				                       			  {{{output.library_folder_custom}}}
 				                       			</div>
 				                       			<!-- popup thêm thư mục mới -->
 				                       			{{#canedit}}
 			  									<div class="popup-setting">
 			  										<ul>
-
 			  										</ul>
 			  									</div> 
 			  									{{/canedit}}
 				                       		</div>
-				                       </div>
-				                       <div class="col-12 col-md-9 pl-1 pr-2">
+                                        </div>
+			                        </div>
+			                        <div class="col-12 col-md-9">
+                                        <div class="row-card">
+                                            <ul class="nav-tabs nav multi-tab" tab="searchlibrary">
+                                                <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="keywork">{{#str}}searchbyname, local_newsvnr{{/str}}</a></li>
+                                                <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="content">{{#str}}searchbycontent, local_newsvnr{{/str}}</a></li>
+                                            </ul>
+                                            <div class="tab-content" tab="searchlibrary">
+                                                <div data="keywork" class="tab-pane active">
+                                                    <div class="example mb-2" >
+                                                        <input class="searchlibrary" folderid="0" type="text" searchtype="searchname" placeholder="{{#str}}searchresourcename, local_newsvnr{{/str}}"><button class="library"><i class="fa fa-search"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div data="content" class="tab-pane">
+                                                    <div class="example mb-2" >
+                                                        <input class="searchlibrary" folderid="0" type="text" searchtype="searchcontent" placeholder="{{#str}}searchcontentname, local_newsvnr{{/str}}"><button class="library"><i class="fa fa-search library"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
 				                       		<div id="file_library">
 				                       			<div class="top-library">
 				                       				<div id="header-library">
 				                       				</div>
-				    								<div class="d-flex justify-content-end mb-2">
-				                      					<select class="form-control" id="filter_search_library">
-														  <option value="searchname">{{#str}}searchbyname, local_newsvnr{{/str}}</option>
-														  <option value="searchcontent">{{#str}}searchbycontent, local_newsvnr{{/str}}</option>
-														</select>
-					                       				<div class="pl-0 pr-0 text-right float-right d-flex border" >
-													 		<input id="searchlibrary" folderid="0" type="text" searchtype="searchname" placeholder=""><i class="fa fa-search library"></i>
-													 	</div>
-													</div>
+	
 												</div>
 												<div class="overflow-auto">
 													<table class="table" >
@@ -87,20 +85,18 @@
 												<div class="col-md-12 mb-2" id="pagination"></div>
 												<div class="alert-warning" role="alert"></div>
 				                       		</div>
-				                       </div>
-				                   </div>
-			               		</div>
-			               		{{#canapproval}}
-			               		<div data="approvalmodule" class="tab-pane">
+                                        </div>
+			                       </div>
+			                    </div>
+                                <div id="viewApprovalModule">
 			               			<div id="library-approval-module">
 			               			</div>
 			               			<div class="d-flex mt-3">
 								        <button type="button" class="btn btn-primary mr-2" id="delete-module-select"><i class="fa fa-trash mr-2" aria-hidden="true"></i>{{#str}}deletecheck, local_newsvnr{{/str}}</button>
 								    	<button type="button" class="btn btn-primary" id="approval-module-select"><i class="fa fa-check mr-2" aria-hidden="true"></i>{{#str}}approvalcheck, local_newsvnr{{/str}}</button>
 								   </div>
-			               		</div>
-			               		{{/canapproval}}
-			           		</div>
+                                </div>
+		               		</div>
                 		</div>
                     </div>
                 </section>
@@ -121,9 +117,15 @@
 						<label class="mb-1" for="email">{{#str}}foldername, local_newsvnr{{/str}}:</label>
 						<input autocomplete="off" class="form-control" id="foldername">
 					</div>
+                    <div class="form-check">
+                        <input class="form-check-input folderdefault" type="checkbox" value="" onchange="defaultFolder()" checked>
+                        <label class="form-check-label mb-2" for="folderdefault">
+                            {{#str}}defaultfolder, local_newsvnr{{/str}}
+                        </label>
+                    </div>
 					<div class="form-group">
 						<label class="mb-1" for="pwd">{{#str}}folderparent, local_newsvnr{{/str}}:</label>
-						<input autocomplete="off" data-role="tagsinput" class="form-control" id="folderparent" onclick="viewTree();">
+						<input autocomplete="off" data-role="tagsinput" class="form-control folderparent" onclick="viewTree();">
 						<div class="tree-view-folder">
 							{{{output.library_folder}}}
 						</div>
@@ -188,22 +190,225 @@
 			<!-- Modal content-->
 			<div class="modal-content">
 				<div class="modal-header">
-				    <h4 class="modal-title">Đưa tài liệu từ thư viện vào khóa học</h4>
+				    <h4 class="modal-title">{{#str}}librarytocourse, local_newsvnr{{/str}}</h4>
 				    <button type="button" class="close" data-dismiss="modal">&times;</button>
 				</div>
 				<div class="modal-body">
-					<p class="font-bold mb-1 mt-2">Tài nguyên</p>
+					<p class="font-bold mb-1 mt-2">{{#str}}resource, local_newsvnr{{/str}}</p>
         			<div class="w-100" id="module-from-library"></div>
-					<p class="font-bold mb-1 mt-2">Khóa học</p>
+					<p class="font-bold mb-1 mt-2">{{#str}}course, local_newsvnr{{/str}}</p>
         			<div class="w-100" id="course-share-input"></div>
-				 	<p class="font-bold mb-1 mt-2">Section Khóa học</p>
+				 	<p class="font-bold mb-1 mt-2">{{#str}}coursesection, local_newsvnr{{/str}}</p>
         			<div class="w-100" id="course-section-input"></div>
 				</div>
 				<div class="modal-footer">
-				    <button type="button" class="btn btn-primary" id="share-module-library">Thêm</button>
+				    <button type="button" class="btn btn-primary" id="share-module-library">{{#str}}add, local_newsvnr{{/str}}</button>
 				    <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancel-popup">{{#str}}cancel, local_newsvnr{{/str}}</button>
 				</div>
 			</div>
 		</div>
     </div>
 {{>theme_moove/inc_end}}
+<script type="text/javascript">
+    $('.folderparent').focus(function(e) {
+        $(this).blur();
+    });
+    // nhúng iframe mở module trang thư viện
+    const iFrameLibrary = (url,moduletype) => {
+        require(['jquery', 'core/config'], ($, config) => {
+            if(moduletype == 'resource') {
+                $('#modal-iframe-library iframe').replaceWith('<iframe height="800px" src="https://view.officeapps.live.com/op/embed.aspx?src='+url+'" width="100%"></iframe>');
+                $('#modal-iframe-library').modal();
+            } else {
+                $('#modal-iframe-library iframe').replaceWith('<iframe height="800px" src="'+url+'&iframe=true" width="100%"></iframe>');
+                $('#modal-iframe-library').modal();
+            }
+        })
+    }
+    //Cập nhật thư mục 
+    const updateFolder = (folderid) => {
+        require(['jquery', 'core/config', 'alertjs'], ($, Config, alertify) => {
+            var script = Config.wwwroot + "/local/newsvnr/ajax/library_online/library_folder_ajax.php";
+            var foldername = $('.edit-folder-popup #foldername').val();
+            var parentid = $('.edit-folder-popup .folderparent').attr('parentid');
+            var folderdes = $('.edit-folder-popup #folderdes').val();
+            var action =  $('#edit-folder-popup').attr('action');
+            var settings = {
+                type: "GET",
+                processData: true,
+                data: {
+                    foldername: foldername,
+                    folderid: folderid,
+                    parentid: parentid,
+                    folderdes: folderdes,
+                    action: action
+                },
+                contenttype: "application/json"
+            }
+            if(foldername == '') {
+                alertify.alert('Alert Title', 'Alert Message!');
+                return;
+            }
+            $.ajax(script, settings).then(function(response) {
+                $('#edit-popup-modal-folder').modal('hide');
+                var obj = $.parseJSON(response);
+                alertify.notify(obj.alert,'success',3);
+                location.reload();
+            })
+
+        });
+    };	
+    //Lấy thông tin thư mục cha thư viện trực tuyến
+    const getParentValue = (id,name) => {
+        require(['jquery', 'core/config'], ($, Config) => {
+            $(".folderdefault").prop("checked", false);
+            $('.tree-view-folder li').removeClass('active');
+            $('.tree-view-folder li.'+id).addClass('active');
+            $('.tree-view-folder .content-expand.'+id).slideToggle();
+            var link = get_link_folder(id,name)
+            $('input.folderparent').val(link);
+            $('input.folderparent').attr('parentid', id);
+        })
+    }
+        // Mở cây thư mục thư viện trực tuyến
+    const viewTree = () => {
+        require(['jquery', 'core/config'], ($, Config) => {
+            $('.tree-view-folder').slideDown();
+        })
+    }
+
+    // Xóa,ẩn hiện module trên thư viện 
+    const actionModule = (moduleid,action,folderid) => {
+        require(['jquery', 'core/config', 'alertjs' ], ($, Config,alertify) => {
+            var script = Config.wwwroot + "/local/newsvnr/ajax/library_online/library_approval_module_ajax.php";
+            var scriptmodule = Config.wwwroot + "/local/newsvnr/ajax/library_online/library_module_ajax.php?folderid="+folderid;
+            var settings = {
+                type: "GET",
+                processData: true,
+                data: {
+                    moduleid: moduleid, 
+                    action:action
+                },
+                contenttype: "application/json"
+            }
+            if(action == 'delete') {
+                alertify.confirm('{{#str}} alert, local_newsvnr {{/str}}', '{{#str}} deleteconfirm, local_newsvnr{{/str}}', 
+                    function() { 
+                        $('.loading-page').addClass('active');
+                        $.ajax(script, settings).then(function(response) {
+                            $.getJSON(scriptmodule, function(data) {
+                                $('#table-library').hide().html(data.result).fadeIn('fast');
+                                $('#header-library').replaceWith(data.header);
+                                $('#pagination').replaceWith(data.pagination);
+                            })
+                            $('.loading-page').removeClass('active');
+                            alertify.notify('{{#str}} delete , local_newsvnr{{/str}}','success',3);
+                        })
+                    },
+                    function() { return });
+            }
+            else {
+                $('.loading-page').addClass('active');
+                $.ajax(script, settings).then(function(response) {
+                    $.getJSON(scriptmodule, function(data) {
+                        $('#table-library').hide().html(data.result).fadeIn('fast');
+                        $('#header-library').replaceWith(data.header);
+                        $('#pagination').replaceWith(data.pagination);
+                        $('.loading-page').removeClass('active');
+                    })
+                })
+            }
+        })
+    }
+    // Lấy đường dẫn thư mục trong thư viện
+    function get_link_folder(id,name) { 
+        if(typeof id == 'undefined') {
+            return name;
+        } else {
+            var idparent = $('li.folder.'+id).parent('ul').prev('li').attr('id');
+            var val = $('li.folder.'+id).parent('ul').prev('li').first().text()
+            var name = val + ' / ' + name;
+            return get_link_folder(idparent,name);
+        }
+    }
+    // Xóa , sửa , thêm thư mục con (action popup)
+    const actionPopupLibrary = (folderid,foldername,action) => {
+        require(['jquery', 'core/config', 'alertjs'], ($, Config, alertify) => {
+            var script = Config.wwwroot + "/local/newsvnr/ajax/library_online/library_folder_ajax.php";
+            // Xử lý thêm thư mục con
+            if (action == 'addchildfolder') {
+                var val = get_link_folder(folderid, foldername);
+                $('input.folderparent').val(val);
+                $('input.folderparent').attr('parentid', folderid);
+                $('#add-popup-modal-folder').on('shown.bs.modal');
+                $(".folderdefault").prop("checked", false);
+                return;
+            }
+            var settings = {
+                type: "POST",
+                processData: true,
+                data: {
+                    folderid: folderid,
+                    foldername: foldername,
+                    action: action
+                },
+                contenttype: "application/json",
+            }
+            $.ajax(script, settings).then(function(response) {
+                var obj = $.parseJSON(response);
+                if(action == 'edit') {
+                    $('#edit-popup-modal-folder').replaceWith(obj.result);
+                    $('#edit-popup-modal-folder').modal('show');
+                } 
+                if(action == 'hide' || action == 'show') {
+                    $('.tree-folder li.folder.'+folderid).toggleClass('show');
+                    $('.tree-folder li.folder.'+folderid).toggleClass('hide');
+                    $('ul.'+folderid).toggleClass('hide');
+                    if(action == 'hide') {
+                        $('.tree-folder li.folder.'+folderid).append('<i class="fa fa-eye-slash" aria-hidden="true"></i>');
+                    } else {
+                        $('.tree-folder li.folder.'+folderid+' i.fa-eye-slash').remove();
+                    }
+                    alertify.notify(obj.alert,'success',3);
+                }
+                if(action == 'delete') {
+                    $('.tree-folder li.folder.'+folderid).remove();
+                    $('ul.'+folderid).remove();
+                    alertify.notify(obj.alert,'success',3);
+                }
+            })
+        })
+    }
+    // Lọc theo loại module thư viện
+    const filterModule = (moduletype,folderid) => {
+        require(['jquery', 'core/config'], ($, Config) => {
+            var script = Config.wwwroot + "/local/newsvnr/ajax/library_online/library_module_ajax.php";
+            $('.loading-page').addClass('active');
+            var settings = {
+                type: "GET",
+                processData: true,
+                data: {
+                    modulefilter: moduletype,
+                    folderid: folderid
+                },
+                contenttype: "application/json"
+            }
+            $.ajax(script, settings).then(function(response) {
+                var obj = $.parseJSON(response);
+                $('#header-library').replaceWith(obj.header);
+                $('#table-library').hide().html(obj.result).fadeIn('fast');
+                $('#pagination').replaceWith(obj.pagination);
+                $('.loading-page').removeClass('active');
+            })
+        })
+    }
+    // defaultFolder
+    const defaultFolder = () => {
+        require(['jquery', 'core/config'], ($, Config) => {
+            if($('.folderdefault').is(":checked")) {
+                $('.folderparent').val('');
+                $('.folderparent').attr('parentid','0');
+            } 
+        })
+    }
+</script>

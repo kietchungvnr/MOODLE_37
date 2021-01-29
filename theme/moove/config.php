@@ -85,7 +85,7 @@ $THEME->extrascsscallback = 'theme_moove_get_extra_scss';
 $THEME->prescsscallback = 'theme_moove_get_pre_scss';
 
 // Add a custom icon system to the theme.
-$THEME->iconsystem = '\theme_moove\util\icon_system';
+$THEME->iconsystem = \theme_moove\util\icon_system::class;
 
 $THEME->layouts = [
     // Most backwards compatible layout without the blocks - this is the layout used by default.
@@ -114,6 +114,13 @@ $THEME->layouts = [
     // Part of course, typical for modules - default page layout if $cm specified in require_login().
     'incourse' => array(
         'file' => 'incourse.php',
+        'regions' => array('side-pre'),
+        'defaultregion' => 'side-pre',
+        'options' => array('nonavbar' => false, 'langmenu' => true),
+    ),
+    // Part of course, typical for modules - default page layout if $cm specified in require_login().
+    'focusmode' => array(
+        'file' => 'focusmode.php',
         'regions' => array('side-pre'),
         'defaultregion' => 'side-pre',
         'options' => array('nonavbar' => false, 'langmenu' => true),

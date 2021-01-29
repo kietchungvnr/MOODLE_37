@@ -23,15 +23,11 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-if(isset($_SERVER['HTTP_REFERER'])) {
-    $hasportal = true;
-} else {
-    $hasportal = false;
-}
+$check = theme_moove_layout_check();
 $templatecontext = [
     'sitename' => format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), "escape" => false]),
     'output' => $OUTPUT,
-    'hasportal' => $hasportal
+    'hasportal' => $check->hasportal
 ];
 
 echo $OUTPUT->render_from_template('theme_moove/embedded', $templatecontext);

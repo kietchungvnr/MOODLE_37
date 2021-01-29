@@ -45,21 +45,22 @@ $output          = '';
 $allowmodule      = ['book', 'lesson', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt'];
 $paginationlink  = $CFG->wwwroot . '/local/newsvnr/ajax/library_online/library_module_ajax.php?folderid='.$folderid.'&search='.$search.'&page=';
 if ($searchtype == "searchcontent") {
-    $searchsql = "(CONCAT(rs.name,b.name) LIKE $strsearch OR lp.title LIKE $strsearch OR lp.contents LIKE $strsearch OR pa.intro LIKE $strsearch OR pa.content LIKE $strsearch OR ur.intro LIKE $strsearch)";
+    $searchsql = "(lp.title LIKE $strsearch OR lp.contents LIKE $strsearch OR pa.intro LIKE $strsearch OR pa.content LIKE $strsearch OR ur.externalurl LIKE $strsearch OR (bc.CONTENT LIKE $strsearch OR bc.title LIKE $strsearch))";
 } else {
     $searchsql = "CONCAT(rs.name,b.name,l.name,i.name,pa.name,ur.name) LIKE $strsearch";
 }
 $sql = "SELECT DISTINCT lm.*,cm.id,CONCAT(rs.name,b.name,l.name,i.name,pa.name,ur.name) AS name,cm.visible,CONCAT(u.firstname,' ', u.lastname) as fullnamet,cm.deletioninprogress,cm.instance
                     FROM mdl_library_module lm
-                        JOIN mdl_course_modules cm on cm.id = lm.coursemoduleid
-                        LEFT JOIN mdl_resource rs on cm.instance = rs.id
-                        LEFT JOIN mdl_book b on cm.instance = b.id
+                        JOIN mdl_course_modules cm on cm.id = lm.coursemoduleid 
+                        LEFT JOIN mdl_resource rs on cm.instance = rs.id AND rs.course = 1
+                        LEFT JOIN mdl_book b on cm.instance = b.id AND b.course = 1
+                        LEFT JOIN mdl_book_chapters bc on bc.bookid = b.id 
                         LEFT JOIN mdl_page pa on cm.instance = pa.id AND pa.course = 1
-                        LEFT JOIN mdl_url ur on cm.instance = ur.id
-                        LEFT JOIN mdl_lesson l on cm.instance = l.id
+                        LEFT JOIN mdl_url ur on cm.instance = ur.id AND ur.course = 1
+                        LEFT JOIN mdl_lesson l on cm.instance = l.id AND l.course = 1
                         LEFT JOIN mdl_lesson_pages lp on l.id = lp.lessonid
-                        LEFT JOIN mdl_imscp i on cm.instance = i.id
-                        JOIN mdl_user u on u.id = lm.userid
+                        LEFT JOIN mdl_imscp i on cm.instance = i.id AND i.course = 1
+                        JOIN mdl_user u on u.id = lm.userid 
                         JOIN mdl_library_folder lf on lf.id = lm.folderid
                     WHERE $searchsql AND lm.approval = 1 AND (lm.moduletype LIKE $strmodulefilter OR lm.minetype LIKE $strmodulefilter)";
 $start = $perPage->getStart($page);
@@ -78,7 +79,7 @@ if (!empty($modulebyfolder)) {
                 $typeresource = mime2ext($module->minetype);
                 $img          = mimetype2Img($module->minetype);
             } else {
-                $img = '<img title="' . $module->moduletype . '" class="pr-1" src="' . $OUTPUT->image_url('icon', $module->moduletype) . '">';
+                $img = '<img title="' . $module->moduletype . '" class="pr-1 img-module" src="' . $OUTPUT->image_url('icon', $module->moduletype) . '">';
                 $url = $CFG->wwwroot . '/mod/' . $module->moduletype . '/view.php?id=' . $module->id;
             }
             $output .= '<tr>';

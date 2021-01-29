@@ -1,4 +1,4 @@
-define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], function($, Config, Str, Notification, alertify) {
+define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'kendo.all.min'], function($, Config, Str, Notification, alertify, kendo) {
     "use strict";
     var init = function() {
         var strings = [{
@@ -19,7 +19,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], fu
             $('#add-new-folder').click(function() {
                 $(this).addClass('not-allow');
                 var foldername = $('.add-folder-popup #foldername').val();
-                var parentid = $('.add-folder-popup #folderparent').attr('parentid');
+                var parentid = $('.add-folder-popup .folderparent').attr('parentid');
                 var folderdes = $('.add-folder-popup #folderdes').val();
                 var folderid = $(this).attr('forderid');
                 var action = $(this).attr('action');
@@ -94,17 +94,21 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], fu
                 $('#add-popup-modal-folder textarea#folderdes').val('');
             });
             //Láy parameter folder id khi click vào cây thư mục
-            $('#folder_library li.folder').click(function() {
+            $('#folder_library a.folder-child').click(function() {
                 $('.alert-warning').text('');
                 $('.alert-warning').removeClass('alert');
                 $('.loading-page').addClass('active');
                 $('#folder_library li.folder').removeClass('active');
                 $('#folder_library li.folder').addClass('not-allow');
-                $(this).addClass('active');
+                $(this).parent('li').addClass('active');
                 var folderid = $(this).attr('id');
                 $('.add-module-popup input[name="selectmodule"]').attr('folderid', folderid);
-                $('#searchlibrary').attr('folderid', folderid);
-                $('button[data-target="#add-popup-modal-module"]').show();
+                $('.searchlibrary').attr('folderid', folderid);
+                if($(this).parent('li').hasClass('title')) {
+                    $('button[data-target="#add-popup-modal-module"]').hide();
+                } else {
+                    $('button[data-target="#add-popup-modal-module"]').show();
+                }
                 var settings = {
                     type: "GET",
                     processData: true,
@@ -141,10 +145,11 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], fu
                 })
             }
             // Search tài liệu thư viện
-            $("i.library").click(function() {
-                var folderid = $('#searchlibrary').attr('folderid');
-                var value = $('#searchlibrary').val().trim();
-                var searchtype = $('#searchlibrary').attr('searchtype');
+            $("button.library").click(function() {
+                $('.loading-page').addClass('active');
+                var folderid = $(this).prev('.searchlibrary').attr('folderid');
+                var value = $(this).prev('.searchlibrary').val().trim();
+                var searchtype = $(this).prev('.searchlibrary').attr('searchtype');
                 var settings = {
                     type: "GET",
                     processData: true,
@@ -157,6 +162,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], fu
                 }
                 $.ajax(scriptmodule, settings).then(function(response) {
                     var obj = $.parseJSON(response);
+                    $('.loading-page').removeClass('active');
                     $('#table-library tr').remove();
                     $('#table-library').append(obj.result);
                     $('#header-library').replaceWith(obj.header);
@@ -165,45 +171,40 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], fu
                 })
             })
             // search khi nhấn enter
-            $('#searchlibrary').keypress(function(e) {
-                if (event.which == 13) {
-                    $("i.library").click();
-                }
-            })
+            // $('.searchlibrary').keypress(function(e) {
+            //     if (event.which == 13) {
+            //         $("i.library").click();
+            //     }
+            // })
             // Trờ về dữ liệu cũ khi xóa hết giá trị search
-            $('#searchlibrary').keyup(function(e) {
-                var value = $('#searchlibrary').val().trim();
+            $('.searchlibrary').keyup(function(e) {
+                var value = $('.searchlibrary').val().trim();
                 if (e.keyCode == 8) {
                     if (value == '') {
-                        $("i.library").click();
+                        $(this).next("button.library").click();
                     }
                 }
             });
             // Kiểm tra cây có danh mục con hay không
-            $('li.click-expand').each(function() {
+            $('.icon-plus').click(function() {
                 var id = $(this).attr('id');
-                if ($('.content-expand.' + id).is(':empty')) {
-                    $(this).children('i.rotate-icon').remove();
-                }
-            })
-            // Chọn loại filter tìm kiếm
-            $('#filter_search_library').bind('change', function() {
-                var searchtype = $(this).val();
-                $('#searchlibrary').attr('searchtype', searchtype);
-                if (searchtype == "searchcontent") {
-                    $('.k-animation-container').addClass('d-none')
+                var iconplus = Config.wwwroot + '/theme/moove/pix/plus.png';
+                var iconminus = Config.wwwroot + '/theme/moove/pix/minus.png';
+                if($(this).attr('src') == iconplus) {
+                    $(this).attr('src',iconminus);
                 } else {
-                    $('.k-animation-container').removeClass('d-none')
+                    $(this).attr('src',iconplus);
                 }
+                $('.content-expand.' + id).slideToggle();
             })
-            $(".nav.multi-tab li a").click(function() {
-                var data = $(this).attr('data-key');
-                $(".nav.multi-tab li a").removeClass('active');
-                $(this).addClass('active');
-                $('.tab-content .tab-pane').hide();
-                $('.tab-content .tab-pane[data="' + data + '"]').fadeIn('fast');
-            });
-            //
+            // check thư mục gốc 
+            // $('#folderdefault').click(function() {
+            //     if(this.checked) {
+            //         $('.folderparent').val('');
+            //         $('.folderparent').attr('parentid','0');
+            //     } 
+            // })
+            ///////////////
             function getSelectRow(gridname) {
                 var myGrid = $(gridname).getKendoGrid();
                 var selectedRows = myGrid.select();
@@ -306,6 +307,24 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs"], fu
                     alertify.notify(response.success, 'success', 3);
                 })
             })
+            // Mở kendo window
+            $('.approvalmodule').click(function(){
+                var dialog = $('#viewApprovalModule').data("kendoWindow");
+                dialog.title('Duyệt tài nguyên');
+                dialog.center().open();
+            })
+            $('#viewApprovalModule').kendoWindow({
+                width: "1200px",
+                title: '',
+                visible: false,
+                open: onOpen,
+                actions: [
+                    "Close"
+                ],
+            })
+            function onOpen(e) {
+                setPositionWindow('#viewApprovalModule',100);
+            }            
         })
     }
     return {

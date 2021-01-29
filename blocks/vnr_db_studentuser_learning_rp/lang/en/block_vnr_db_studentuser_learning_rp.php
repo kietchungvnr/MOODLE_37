@@ -24,8 +24,8 @@
  */
 
 $string['pluginname'] = 'Learning management';
-$string['coursecompleted'] = 'Attending course';
-$string['coursenotcompleted'] = 'Completed course';
+$string['coursecompleted'] = 'Completed course';
+$string['coursenotcompleted'] = 'Attending course';
 $string['requiredcoursecompletedrate'] = 'Compulsory training courses completion rate';
 $string['coursecompletedbyuserplanrate'] = 'Training courses completion rate by position';
 $string['userplancompletedrate'] = 'Personal pathway completion rate';

@@ -680,7 +680,7 @@ class core_user {
         $fields['lastname'] = array('type' => PARAM_NOTAGS, 'null' => NULL_NOT_ALLOWED);
         $fields['surname'] = array('type' => PARAM_NOTAGS, 'null' => NULL_NOT_ALLOWED);
         $fields['email'] = array('type' => PARAM_RAW_TRIMMED, 'null' => NULL_NOT_ALLOWED);
-        $fields['emailstop'] = array('type' => PARAM_INT, 'null' => NULL_NOT_ALLOWED);
+        $fields['emailstop'] = array('type' => PARAM_INT, 'null' => NULL_NOT_ALLOWED, 'default' => 0);
         $fields['icq'] = array('type' => PARAM_NOTAGS, 'null' => NULL_NOT_ALLOWED);
         $fields['skype'] = array('type' => PARAM_NOTAGS, 'null' => NULL_ALLOWED);
         $fields['aim'] = array('type' => PARAM_NOTAGS, 'null' => NULL_NOT_ALLOWED);
@@ -986,11 +986,18 @@ class core_user {
                 global $USER;
                 return $USER->id == $user->id && has_capability('moodle/blog:view', context_system::instance());
             });
+        $preferences['user_home_page_preference'] = array('type' => PARAM_INT, 'null' => NULL_ALLOWED, 'default' => HOMEPAGE_MY,
+            'choices' => array(HOMEPAGE_SITE, HOMEPAGE_MY),
+            'permissioncallback' => function ($user, $preferencename) {
+                global $CFG;
+                return (!empty($CFG->defaulthomepage) && ($CFG->defaulthomepage == HOMEPAGE_USER));
+            }
+        );
 
         // Core components that may want to define their preferences.
         // List of core components implementing callback is hardcoded here for performance reasons.
         // TODO MDL-58184 cache list of core components implementing a function.
-        $corecomponents = ['core_message', 'core_calendar'];
+        $corecomponents = ['core_message', 'core_calendar', 'core_contentbank'];
         foreach ($corecomponents as $component) {
             if (($pluginpreferences = component_callback($component, 'user_preferences')) && is_array($pluginpreferences)) {
                 $preferences += $pluginpreferences;

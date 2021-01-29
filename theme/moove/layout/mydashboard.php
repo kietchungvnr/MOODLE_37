@@ -28,7 +28,7 @@ user_preference_allow_ajax_update('drawer-open-nav', PARAM_ALPHA);
 user_preference_allow_ajax_update('sidepre-open', PARAM_ALPHA);
 
 require_once($CFG->libdir . '/behat/lib.php');
-
+global $DB;
 if (isloggedin()) {
     $navdraweropen = (get_user_preferences('drawer-open-nav', 'true') == 'true');
     $draweropenright = (get_user_preferences('sidepre-open', 'true') == 'true');
@@ -48,13 +48,9 @@ if ($navdraweropen) {
 if ($draweropenright && $hasblocks) {
     $extraclasses[] = 'drawer-open-right';
 }
-
-if(isset($_SERVER['HTTP_REFERER'])) {
-    $hasportal = true;
-} else {
-    $hasportal = false;
-}
-
+$check = theme_moove_layout_check();
+$PAGE->requires->strings_for_js(array('emptydata','action','viewcourse', 'code', 'email', 'datecreated', 'choosecourse', 'startlearning'), 'local_newsvnr');
+$PAGE->requires->strings_for_js(array('coursestartdate','courseenddate','studenttotal', 'studentcode', 'coursename', 'coursemodules', 'status', 'coursecompletion', 'listuser', 'owncourses', 'viewdetail', 'studentname', 'lastaccess', 'phone', 'notyetselectcourse', 'listmodule', 'course', 'number', 'moduleallocation', 'coursegradeavg', 'access', 'coursecompleted', 'enrollcourse', 'modulename', 'exam', 'moduletype', 'score', 'modulerate', 'spenttimemodule', 'showalldata'), 'theme_moove');
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [
@@ -68,14 +64,18 @@ $templatecontext = [
     'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
-    'is_siteadmin' => is_siteadmin(),
-    'hasportal' => $hasportal
+    'is_siteadmin' => $check->isadmin,
+    'is_teacher' => $check->is_teacher,
+    'is_student' => $check->is_student,
+    'hasportal' => $check->hasportal,
+    'hasiframe' => $check->hasiframe,
+    'canviewadmininfos' => false,
+    'hasopenmenu' => $check->hasopenmenu
 ];
 
 $themesettings = new \theme_moove\util\theme_settings();
 
-$templatecontext = array_merge($templatecontext, $themesettings->footer_items());
-
+$templatecontext = array_merge($templatecontext, $themesettings->footer_items(), $themesettings->get_fullinfo_user(), $themesettings->get_data_dashboard_teacher(), $themesettings->get_vnr_dashboard_config());
 if (is_siteadmin()) {
     global $DB;
 
@@ -84,6 +84,8 @@ if (is_siteadmin()) {
     $totaldeletedusers = $DB->count_records('user', array('deleted' => 1));
     $totalactivecourse = $DB->count_records('course_modules', array('visible' => 1));
     $totalsuspendedusers = $DB->count_records('user', array('deleted' => 0, 'suspended' => 1));
+    $totalmodules = $DB->count_records('course_modules',['deletioninprogress' => 0]);
+    $totalcategories = $DB->count_records('course_categories',[]);
 
     // Get site total courses.
     $totalcourses = $DB->count_records('course') - 1;
@@ -115,9 +117,10 @@ if (is_siteadmin()) {
     $templatecontext['totalactiveusers'] = $totalactiveusers;
     $templatecontext['totalsuspendedusers'] = $totalsuspendedusers;
     $templatecontext['totalcourses'] = $totalcourses;
+    $templatecontext['totalmodules'] = $totalmodules;
     $templatecontext['onlineusers'] = $onlineusers;
+    $templatecontext['totalcategories'] = $totalcategories;
 }
-
 // Improve boost navigation.
 theme_moove_extend_flat_navigation($PAGE->flatnav);
 

@@ -136,21 +136,22 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
     }
     // Add button for editing page
     $params = array('edit' => !$edit);
-
+    // Custom by Thắng : làm dashboard cho nhiều vai trò
+    $currenturl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     $resetbutton = '';
     $resetstring = get_string('resetpage', 'my');
     $reseturl = new moodle_url("$CFG->wwwroot/my/index.php", array('edit' => 1, 'reset' => 1, 'sesskey'=>sesskey()));
-    $url = new moodle_url("$CFG->wwwroot/my/index.php", $params);
+    $url = new moodle_url($currenturl, $params);
     if (!$currentpage->userid) {
         // viewing a system page -- let the user customise it
-        $editstring = '<a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.get_string('updatemymoodleon').'</a>';
+        $editstring = '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.get_string('updatemymoodleon').'</a></li>';
     } else if (empty($edit)) {
         // $editstring = get_string('updatemymoodleon');
-        $editstring = '<a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.get_string('updatemymoodleon').'</a>';
+        $editstring = '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.get_string('updatemymoodleon').'</a></li>';
     } else {
-        $editstring = '<a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.get_string('updatemymoodleoff').'</a>';
+        $editstring = '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.get_string('updatemymoodleoff').'</a></li>';
         // $resetbutton = $OUTPUT->single_button($reseturl, $resetstring);
-        $resetbutton = '<a href="'.$reseturl.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.$resetstring.'</a>';
+        $resetbutton = '<li><a href="'.$reseturl.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.$resetstring.'</a></li>';
         ;
     }
     if (!$currentpage->userid) {
@@ -159,7 +160,7 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
     
     $button = $editstring;
     if($resetbutton !== '') 
-        $PAGE->set_button($resetbutton .' | '. $button);
+        $PAGE->set_button($resetbutton .''. $button);
     else 
         $PAGE->set_button($button);
 
@@ -168,6 +169,10 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
 }
 
 echo $OUTPUT->header();
+
+if (core_userfeedback::should_display_reminder()) {
+    core_userfeedback::print_reminder_block();
+}
 
 echo $OUTPUT->custom_block_region('content');
 

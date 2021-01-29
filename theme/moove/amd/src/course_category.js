@@ -1,6 +1,7 @@
 define(["jquery", "core/config", "core/str", "core/notification"], function($, Config, Str, Notification) {
     "use strict";
     var init = function() {
+        // load khóa học theo danh mục khóa
         $('.ajax-load').click(function() {
             $('.loading-page').addClass('active');
             $('li').removeClass('active');
@@ -21,6 +22,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
                 $('.loading-page').removeClass('active')
             });
         });
+        // tìm kiếm khóa học
         $('#courses_search_button').click(function() {
             $('.loading-page').addClass('active');
             var keyword = $('.courses_search_input[name="keyword"]').val().trim().split(' ').join('+');
@@ -33,7 +35,14 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
                 $('.loading-page').removeClass('active');
             });
         })
-        $('#load-course').load('/course/load_course.php');
+        // load khóa học mặc định
+        var categoryindex = $('#load-course').attr('category');
+        if(categoryindex !== undefined) {
+            $('#load-course').load('/course/load_course.php?id='+categoryindex);
+            $('#drop-course-category .list-category[data='+categoryindex+']').addClass('active');
+        } else {
+            $('#load-course').load('/course/load_course.php');
+        }
         $('.list-category').click(function() {
             var idlist = $(this).attr('data');
             $('.list-category[data=' + idlist + '] i').toggleClass('active');

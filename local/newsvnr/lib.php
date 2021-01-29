@@ -1,4 +1,4 @@
-<?php 
+<?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 // require_once($CFG->dirroot.'/local/newsvnr/classes/output/news_page.php');
 require_once($CFG->libdir.'/filelib.php');
+use theme_moove\util\theme_settings;
 
 /**
  * Lấy danh sách các bài đăng tin tức chung do quản trị viên đăng
@@ -103,14 +104,14 @@ function get_froums_coursenews_data_id($discussionid)
             FROM mdl_forum f 
                 JOIN mdl_forum_discussions d ON f.id=d.forum AND f.course=d.course 
                 JOIN mdl_forum_posts p ON d.id = p.discussion JOIN mdl_user u ON p.userid = u.id
-            WHERE f.type='news' AND p.parent = 0 AND d.id = ?"; 
+            WHERE f.type='news' AND p.parent = 0 AND d.id = ?";
     $forumdata = $DB->get_recordset_sql($sql,array($discussionid));
     $newspage = new \local_newsvnr\output\news_page();
     $forumarr = array();
     $course_id = 0;
     foreach ($forumdata as $key => $value) {
         $datauser = $DB->get_record_sql('SELECT * FROM {user} u WHERE u.id = :userid ',['userid' => $value->userid]);
-        $count_comment = get_count_comment_by_discussionid($value->discussionid);    
+        $count_comment = get_count_comment_by_discussionid($value->discussionid);
         $isimage = true;
         $forumstd = new stdClass();
         $image_data = get_all_image_of_discussion($value->firstpost);
@@ -138,7 +139,7 @@ function get_froums_coursenews_data_id($discussionid)
         $forumstd->content = format_text($forumstd->content2, $value->messageformat, $options, $course_id);
         $forumarr[] = $forumstd;
     }
-    return $forumarr;  
+    return $forumarr;
 }
 
 function get_comment_from_disccusion($id_discus) {
@@ -170,7 +171,7 @@ function get_comment_from_disccusion($id_discus) {
         if(is_siteadmin() || $comment->userid  == $userid) {
              $forumstd->label_delete = '<label class="delete" onclick="DeleteComment('. $comment->id .')" id="'. $comment->id .'">'.get_string('delete').'</label>';
         }
-        $i++;   
+        $i++;
         $id_comment = $comment->id;
         if(!empty($id_comment))
         {
@@ -206,7 +207,7 @@ function get_replies_from_comment($id_comment) {
                 JOIN mdl_local_newsvnr_comments lnc ON lnr.commentid = lnc.id
                 JOIN mdl_user u ON lnr.userid = u.id
             WHERE lnr.commentid = ?";
-    $data = $DB->get_records_sql($sql, array($id_comment));    
+    $data = $DB->get_records_sql($sql, array($id_comment));
     return $data;
 }
 
@@ -239,7 +240,7 @@ function append_comments_after_delete($id_discus, $offset, $limited) {
     return $data;
 }
 
-function get_course_id($discussionid) {   
+function get_course_id($discussionid) {
     global $DB;
     $sql = "
             SELECT fd.course AS course_id 
@@ -285,7 +286,7 @@ function get_forums_lq_data($course_id, $current_discussion) {
         $forumstd->timeago = converttime($file->timemodified);
         $forumstd->name = $file->name;
         if(!empty($count_comment))
-            $forumstd->countcomments = $count_comment->countcomments;            
+            $forumstd->countcomments = $count_comment->countcomments;
         else
             $forumstd->countcomments = 0;
         $forumstd->$key = true;
@@ -293,7 +294,7 @@ function get_forums_lq_data($course_id, $current_discussion) {
         $i++;
     }
     return $forumarr;
-}  
+}
 
 function forum_get_discussion_subscription_icon_newsvnr($forum, $discussionid, $returnurl = null, $includetext = false) {
     global $USER, $OUTPUT, $PAGE;
@@ -308,8 +309,7 @@ function forum_get_discussion_subscription_icon_newsvnr($forum, $discussionid, $
         'returnurl' => $returnurl,
     ));
     if ($subscriptionstatus) {
-        // Custom by Thắng : đổi icon subcribe diễn đàn
-        $output = html_writer::start_tag('i', array('class' => 'fa fa-bell','style' => 'color:#ff6a00','aria-hidden' => 'true','aria-label' => get_string('clicktounsubscribe', 'forum'),'aria-title' => get_string('clicktounsubscribe', 'forum')));
+        $output = html_writer::start_tag('i', array('class' => 'fa fa-rss-square','style' => 'color:#ff6a00','aria-hidden' => 'true','aria-label' => get_string('clicktounsubscribe', 'forum'),'aria-title' => get_string('clicktounsubscribe', 'forum')));
         $output.= html_writer::end_tag('i');
         return html_writer::link($subscriptionlink, $output, array(
                 'title' => get_string('clicktounsubscribe', 'forum'),
@@ -320,9 +320,9 @@ function forum_get_discussion_subscription_icon_newsvnr($forum, $discussionid, $
             ));
 
     } else {
-        $output = html_writer::start_tag('i', array('class' => 'fa fa-bell-slash','style' => 'color:black','aria-hidden' => 'true','aria-label' => get_string('clicktosubscribe', 'forum'),'aria-title' => get_string('clicktosubscribe', 'forum')));
+        $output = html_writer::start_tag('i', array('class' => 'fa fa-rss-square','style' => 'color:black','aria-hidden' => 'true','aria-label' => get_string('clicktosubscribe', 'forum'),'aria-title' => get_string('clicktosubscribe', 'forum')));
         $output.= html_writer::end_tag('i');
-       
+
         return html_writer::link($subscriptionlink, $output, array(
                 'title' => get_string('clicktosubscribe', 'forum'),
                 'class' => 'discussiontoggle ',
@@ -338,7 +338,7 @@ function news_countviews($discussionid)
     global $DB;
     $query = "UPDATE {forum_discussions}
               SET countviews = countviews + 1 
-              WHERE id = :discussionid";                 
+              WHERE id = :discussionid";
     $params = array(
             'discussionid' => $discussionid
     );
@@ -417,7 +417,7 @@ function delete_orgcategory($orgcateid) {
     return $DB->delete_records('orgstructure_category',array('id' => $orgcateid));
 }
 /**
- * Thêm mới xóa sửa 1 phòng ban 
+ * Thêm mới xóa sửa 1 phòng ban
  * @param [object] $orgstructure [description]
  */
 function insert_orgstructure($orgstructure) {
@@ -471,9 +471,9 @@ function delete_orgposition($orgposition) {
     return $DB->delete_records('orgstructure_position',array('id' => $orgposition));
 }
 /**
- * Func tạo Treeview  
+ * Func tạo Treeview
  */
-function showMenuLi($menus, $table_name) 
+function showMenuLi($menus, $table_name)
 {
     switch ($table_name) {
         case 'mdl_orgstructure':
@@ -481,25 +481,25 @@ function showMenuLi($menus, $table_name)
             $arr = array();
                 foreach ($menus as $value) {
                     $arr['id'] = $value->id;
-                    $arr['text'] = $value->name; 
+                    $arr['text'] = $value->name;
                     $arr['parentid'] = $value->parentid;
                     $arr['encoded'] = false;
                     $arr['expanded'] = true;
                     $data[] = $arr;
                 }
-               
+
                foreach($data as $key => &$item) {
 
                    $itemsByReference[$item['id']] = &$item;
                    // Children array:
                    $itemsByReference[$item['id']]['items'] = array();
-                   // Empty data class (so that json_encode adds "data: {}" ) 
+                   // Empty data class (so that json_encode adds "data: {}" )
                 }
                 // Set items as children of the relevant parent item.
                 foreach($data as $key => &$item)
                    if($item['parentid'] && isset($itemsByReference[$item['parentid']]))
                       $itemsByReference [$item['parentid']]['items'][] = &$item;
-                 
+
                 // Remove items that were added to parents elsewhere:
                 foreach($data as $key => &$item) {
                    if($item['parentid'] && isset($itemsByReference[$item['parentid']]))
@@ -512,7 +512,7 @@ function showMenuLi($menus, $table_name)
             $arr = array();
             foreach ($menus as $value) {
                 $arr['id'] = $value->id;
-                $arr['text'] = $value->shortname; 
+                $arr['text'] = $value->shortname;
                 $arr['parentid'] = $value->parentid;
                 $arr['encoded'] = false;
                 // $arr['expanded'] = true;
@@ -524,7 +524,7 @@ function showMenuLi($menus, $table_name)
                $itemsByReference[$item['id']] = &$item;
                // Children array:
                $itemsByReference[$item['id']]['items'] = array();
-               // Empty data class (so that json_encode adds "data: {}" ) 
+               // Empty data class (so that json_encode adds "data: {}" )
             }
             // var_dump($data);die;
             // Set items as children of the relevant parent item.
@@ -539,12 +539,12 @@ function showMenuLi($menus, $table_name)
 
             }
             echo json_encode(array_values($data));
-            break;    
+            break;
         case 'mdl_course_categories':
             $arr = array();
             foreach ($menus as $value) {
                 $arr['id'] = $value->id;
-                $arr['text'] = $value->name; 
+                $arr['text'] = $value->name;
                 $arr['parent'] = $value->parent;
                 $arr['encoded'] = false;
 
@@ -556,7 +556,7 @@ function showMenuLi($menus, $table_name)
                $itemsByReference[$item['id']] = &$item;
                // Children array:
                $itemsByReference[$item['id']]['items'] = array();
-               // Empty data class (so that json_encode adds "data: {}" ) 
+               // Empty data class (so that json_encode adds "data: {}" )
             }
             // Set items as children of the relevant parent item.
             foreach($data as $key => &$item) {
@@ -570,11 +570,11 @@ function showMenuLi($menus, $table_name)
 
             }
             echo json_encode(array_values($data));
-            break;    
+            break;
         default:
             break;
     }
-       
+
 }
 /**
  * Lây tên chức danh từ id
@@ -859,7 +859,7 @@ function get_list_course_by_teacher($userid) {
     global $DB;
     $list_courseid = [];
     $list_course_by_user_sql = "
-                                SELECT DISTINCT c.fullname,c.id,c.shortname
+                                SELECT c.fullname,c.id,c.shortname
                                 FROM mdl_role_assignments AS ra
                                     JOIN mdl_user AS u ON u.id= ra.userid
                                     JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
@@ -867,14 +867,41 @@ function get_list_course_by_teacher($userid) {
                                     JOIN mdl_course AS c ON c.id=e.courseid
                                     JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
                                     JOIN mdl_role AS r ON r.id= ra.roleid
-                                
                                 WHERE  ra.roleid=3 AND u.id = ?";
     $list_course_by_user_ex = $DB->get_records_sql($list_course_by_user_sql,[$userid]);
     if ($list_course_by_user_ex) {
-        foreach ($list_course_by_user_ex as $value) 
+        foreach ($list_course_by_user_ex as $value)
             $list_courseid[] = $value;
     }
-       
+
+    return $list_courseid;
+}
+
+/**
+ * Lấy danh sách khóa học full thông tin của giáo viên
+ * @param  [type] $userid [description]
+ * @return [array] $list_courseid [description]
+ */
+function get_list_courseinfo_by_teacher($userid)
+{
+    global $DB;
+    $list_courseid = [];
+    $list_course_by_user_sql = "
+                                SELECT c.*
+                                FROM mdl_role_assignments AS ra
+                                    JOIN mdl_user AS u ON u.id= ra.userid
+                                    JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
+                                    JOIN mdl_enrol AS e ON e.id=ue.enrolid
+                                    JOIN mdl_course AS c ON c.id=e.courseid
+                                    JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
+                                    JOIN mdl_role AS r ON r.id= ra.roleid
+                                WHERE  ra.roleid=3 AND u.id = ?";
+    $list_course_by_user_ex = $DB->get_records_sql($list_course_by_user_sql, [$userid]);
+    if ($list_course_by_user_ex) {
+        foreach ($list_course_by_user_ex as $value)
+            $list_courseid[] = $value;
+    }
+
     return $list_courseid;
 }
 
@@ -887,7 +914,7 @@ function get_list_course_by_student($userid) {
     global $DB;
     $list_courseid = [];
     $list_course_by_user_sql = "
-                                SELECT DISTINCT c.fullname,c.id,c.shortname, c.required
+                                SELECT c.fullname,c.id,c.shortname, c.required
                                 FROM mdl_role_assignments AS ra
                                     JOIN mdl_user AS u ON u.id= ra.userid
                                     JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
@@ -898,10 +925,10 @@ function get_list_course_by_student($userid) {
                                 WHERE  ra.roleid=5 AND ue.status = 0 AND u.id = ? AND c.visible = 1";
     $list_course_by_user_ex = $DB->get_records_sql($list_course_by_user_sql,[$userid]);
     if ($list_course_by_user_ex) {
-        foreach ($list_course_by_user_ex as $value) 
+        foreach ($list_course_by_user_ex as $value)
             $list_courseid[] = $value;
     }
-       
+
     return $list_courseid;
 }
 
@@ -913,17 +940,15 @@ function get_list_course_by_student($userid) {
 function get_list_courseid_by_teacher($userid) {
     global $DB;
     $list_course_by_user_sql = "
-                                SELECT DISTINCT c.fullname,c.id
+                                SELECT c.fullname,c.id
                                 FROM mdl_role_assignments AS ra
-                                    JOIN mdl_user AS u ON u.id= ra.userid
-                                    JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
-                                    JOIN mdl_enrol AS e ON e.id=ue.enrolid
-                                    JOIN mdl_course AS c ON c.id=e.courseid
-                                    JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
-                                    JOIN mdl_role AS r ON r.id= ra.roleid
-                                    JOIN mdl_course_modules cm ON c.id = cm.course
-                                    JOIN mdl_course_modules_completion cmc ON cm.id = cmc.coursemoduleid
-                                WHERE  ra.roleid=3 AND u.id = ? AND c.visible = 1";
+                                    JOIN mdl_user u ON ra.userid = u.id
+                                    JOIN mdl_user_enrolments ue ON u.id = ue.userid 
+                                    JOIN mdl_enrol enr ON ue.enrolid = enr.id
+                                    JOIN mdl_course c ON enr.courseid = c.id
+                                    JOIN mdl_context ct ON ct.id = ra.contextid AND ct.instanceid = c.id
+                                    JOIN mdl_role r ON ra.roleid = r.id
+                                WHERE  ra.roleid=3 AND u.id = ?";
     $list_course_by_user_ex = $DB->get_records_sql($list_course_by_user_sql,[$userid]);
     $list_courseid = array();
      if (!empty($list_course_by_user_ex)) {
@@ -959,20 +984,20 @@ function get_enrol_method($courseid) {
     foreach($execute as $method) {
         array_push($methodarr, $method->enrol);
     }
-   
+
     if(in_array('guest', $methodarr)) {
-        return '<a href="'.$courseurl.'"><i class="fa fa-unlock-alt fa-fw " title="Guest access" aria-label="Guest access"></i>' . get_string('guest_enrol', 'local_newsvnr') . '</a>'; 
+        return '<a href="'.$courseurl.'"><i class="fa fa-unlock-alt fa-fw " title="Guest access" aria-label="Guest access"></i>' . get_string('guest_enrol', 'local_newsvnr') . '</a>';
     }
     if(in_array('self', $methodarr)) {
         return '<a href="'.$courseurl.'"><i class="fa fa-key fa-fw " title="Self enrolment" aria-label="Self enrolment"></i>' . get_string('self_enrol', 'local_newsvnr') . '</a>';
     }
     if(in_array('apply', $methodarr)) {
-        return '<a href="'.$courseurl.'">' . get_string('apply_enrol', 'local_newsvnr') . '</a>'; 
+        return '<a href="'.$courseurl.'">' . get_string('apply_enrol', 'local_newsvnr') . '</a>';
     }
     if(in_array('manual', $methodarr)) {
-        return '<a href="'.$courseurl.'" style="color:red"><i class="fa fa-lock fa-fw " title="Manual Access" aria-label="Manual Access"></i>' . get_string('manual_enrol', 'local_newsvnr') . '</a>'; 
+        return '<a href="'.$courseurl.'" style="color:red"><i class="fa fa-lock fa-fw " title="Manual Access" aria-label="Manual Access"></i>' . get_string('manual_enrol', 'local_newsvnr') . '</a>';
     }
-    
+
 }
 
 /**
@@ -1117,12 +1142,12 @@ function get_list_plan_template_by_positionid($positionid)
             WHERE ct.positionid = ?" ;
     $data = $DB->get_records_sql($query, array($positionid));
     $objectArr =  array();
-    foreach ($data as $value) {       
+    foreach ($data as $value) {
         $query_plans = "
                         SELECT count(cp.id) AS count 
                         FROM mdl_competency_plan cp 
                         WHERE cp.templateid = ?";
-        $count_plans = $DB->get_record_sql($query_plans, array($value->templateid)); 
+        $count_plans = $DB->get_record_sql($query_plans, array($value->templateid));
         $category_name = get_categoryname_by_contextid($value->contextid);
         $std = new stdClass();
         $std->positionid = $value->positionid;
@@ -1170,7 +1195,7 @@ function check_auth_api($username, $password) {
     if($findUser)
     {
         $checkAuthenticate = password_verify($password, $findUser->password);
-        return $checkAuthenticate; 
+        return $checkAuthenticate;
     }
 }
 
@@ -1661,11 +1686,11 @@ function HTTPPost_EBM_return($url,$data) {
 //Đổi unixtime thành chữ
 function converttime($time) {
     $currenttime = time();
-    $distance = $currenttime - $time;
+    $distance = ((int)$currenttime - (int)$time) + 1;
     $result = '';
-    switch ($distance) {
-        case ($distance < 60 ):
-            $result = $distance . ' '.get_string('secondago','local_newsvnr').'';
+    switch ((int)$distance) {
+        case ($distance <= 60 ):
+            $result = get_string('justnow','local_newsvnr');
             break;
         case ($distance > 60 && $distance < 3600):
             $result = round($distance/60) .' '.get_string('minuteago','local_newsvnr').'';
@@ -1681,9 +1706,9 @@ function converttime($time) {
             break;
         case (round($distance/2592000) > 1 && round($distance/2592000) < 12 ):
             $result = round($distance/2592000) .' '.get_string('monthago','local_newsvnr').'';
-            break;    
+            break;
         default:
-            convertunixtime(' d-m-Y',$time,'Asia/Ho_Chi_Minh');
+            $result = convertunixtime(' d-m-Y',$time,'Asia/Ho_Chi_Minh');
             break;
     }
     return $result;
@@ -1714,7 +1739,7 @@ function convertTimeExam($time) {
     }
     return $result;
 }
-//Hàm chuyển mimetype qua text 
+//Hàm chuyển mimetype qua text
 function mime2ext($mime) {
     $mime_map = [
         'video/3gpp2'                                                               => '3g2',
@@ -1905,19 +1930,60 @@ function mime2ext($mime) {
 
     return isset($mime_map[$mime]) ? $mime_map[$mime] : false;
 }
-
+// Đếm , thống kê module 
+function count_module($course,$currentsection) {
+    global $DB,$OUTPUT;
+    $modinfo = get_fast_modinfo($course);
+    $output = array(
+        //lấy thông tin module
+        "activityinfo" => array(),
+        //Đếm số lượng module
+        "total" => array(),
+    );
+    $sectionmods = [];
+    $total = 0;
+    if(!empty($modinfo->sections[$currentsection->section])) { 
+        foreach ($modinfo->sections[$currentsection->section] as $cmid) {
+            $thismod = $modinfo->cms[$cmid];
+            $getmodules = $DB->get_records_sql('SELECT cm.id, cm.deletioninprogress FROM {course_modules} cm JOIN {course_sections} cs ON cm.section = cs.id WHERE cm.instance = :section AND cm.course = :courseid',['section' => $thismod->instance,'courseid' => $course->id]);
+            //Check điều kiện là là label hoặc module đã xóa
+            if ($thismod->modname == 'label' || $thismod->visible == 0) {
+                continue;
+            }
+            foreach($getmodules as $getmodule) {
+                if($getmodule->deletioninprogress != 0) {
+                    continue 2;
+                }    
+            }
+            if (isset($sectionmods[$thismod->modname])) {
+                $sectionmods[$thismod->modname]['name'] = $thismod->modplural;
+                $sectionmods[$thismod->modname]['count']++;
+            } else {
+                $sectionmods[$thismod->modname]['name'] = $thismod->modfullname;
+                $sectionmods[$thismod->modname]['count'] = 1;
+                $sectionmods[$thismod->modname]['image'] = $OUTPUT->image_url('icon', $thismod->modname);
+            }
+            $total++;
+        }
+    }
+    foreach($sectionmods as $mod) {
+        $output['activityinfo'][] = '<img class="mr-3" src="'.$mod['image'].'">'.$mod['count'].' '.$mod['name'];
+    }
+    $output['total'] = $total;
+    return $output;
+}
 // Chuyển mimetype thành hình ảnh
 function mimetype2Img($mimetype) {
     global $OUTPUT;
     $typeresource = mime2ext($mimetype);
     if ($typeresource == 'xls' || $typeresource == 'xlsx' || $typeresource == 'xlsm') {
-        $img = html_writer::img($OUTPUT->image_url('f/spreadsheet-24'),'',['class' => 'pr-1']);
+        $img = html_writer::img($OUTPUT->image_url('f/spreadsheet-24'),'',['class' => 'pr-1 img-module']);
     } elseif ($typeresource == 'ppt') {
-        $img = html_writer::img($OUTPUT->image_url('f/powerpoint-24'),'',['class' => 'pr-1']);
+        $img = html_writer::img($OUTPUT->image_url('f/powerpoint-24'),'',['class' => 'pr-1 img-module']);
     } elseif ($typeresource == 'docx' || $typeresource == 'doc' || $typeresource == 'docm') {
-        $img = html_writer::img($OUTPUT->image_url('f/document-24'),'',['class' => 'pr-1']);
+        $img = html_writer::img($OUTPUT->image_url('f/document-24'),'',['class' => 'pr-1 img-module']);
     } elseif ($typeresource == 'pdf') {
-        $img = html_writer::img($OUTPUT->image_url('f/pdf-24'),'',['class' => 'pr-1']);
+        $img = html_writer::img($OUTPUT->image_url('f/pdf-24'),'',['class' => 'pr-1 img-module']);
     }
     else {
         $img = '';
@@ -1944,7 +2010,7 @@ function get_link_file($module) {
  */
 function get_link_folder($folder,&$output = '',$stt = 0) {
     global $DB;
-    if($folder->parent != 0) {  
+    if($folder->parent != 0) {
         $parentfolder = $DB->get_record_sql("SELECT lf.name,lf.id,lf.parent FROM {library_folder} lf WHERE lf.id = $folder->parent");
         $temp = $output;
         $output = '';
@@ -1971,69 +2037,440 @@ function get_finalgrade_student($userid,$courseid) {
                     ORDER BY cccc.gradefinal DESC", ['courseid' => $courseid, 'userid' => $userid]);
     return $get_grade;
 }
+// // Xếp hạng học viên trong khóa
+function get_rank_student_incourse($courseid,$userid) {
+    $theme_settings = new theme_settings();
+    $listrank = [];
+    $liststudent = get_listuser_in_course($courseid);
+    foreach ($liststudent as $value) {
+        $arrgrade = [];
+        $grade = get_finalgrade_student($value->id,$courseid);
+        $arrgrade[] = ($grade != null) ? $grade->gradefinal : 0;
+        $arrgrade[] = $value->id;
+        $data[] = $arrgrade;
+    }
+    rsort($data);
+    $rank = 1;
+    $prev_rank = $rank;
+    for($x = 0; $x < count($data); $x++) {
+        if ($x==0) {
+            $temp = [$data[$x][1] => get_string('rank','local_newsvnr').' '.($rank)];
+        }
+        elseif ($data[$x][0] != $data[$x-1][0]) {
+            $rank++;
+            $prev_rank = $rank;
+            $temp = [$data[$x][1] => get_string('rank','local_newsvnr').' '.($rank)];
+        }
+        else {
+            $temp = [$data[$x][1] => get_string('rank','local_newsvnr').' '.($prev_rank)];
+        }
+        array_push($listrank,$temp);
+    }
+    foreach ($listrank as $list) {
+        foreach ($list as $key => $value) {
+            if($key == $userid) {
+                $rank = $value;
+                break;
+            };
+        }
+    }
+    return $rank;
+}
+// Lấy form check hoàn thành module trong khóa
+function get_course_section_cm_completion($course,&$completioninfo,$mod) {
+    global $CFG, $DB, $USER, $PAGE , $OUTPUT;
+    $output = '';
+    $istrackeduser = $completioninfo->is_tracked_user($USER->id);
+    $completion = $completioninfo->is_enabled($mod);
+    $isediting = $PAGE->user_is_editing();
+    if ($completion == COMPLETION_TRACKING_NONE) {
+        if ($isediting) {
+            $output .= html_writer::span('&nbsp;', 'filler');
+        }
+        return $output;
+    }
+    $completionicon = '';
+    if ($isediting || !$istrackeduser) {
+        switch ($completion) {
+            case COMPLETION_TRACKING_MANUAL :
+                $completionicon = 'manual-enabled'; break;
+            case COMPLETION_TRACKING_AUTOMATIC :
+                $completionicon = 'auto-enabled'; break;
+        }
+    } else {
+        $completiondata = $completioninfo->get_data($mod, true);
+        if ($completion == COMPLETION_TRACKING_MANUAL) {
+            switch($completiondata->completionstate) {
+                case COMPLETION_INCOMPLETE:
+                    $completionicon = 'manual-n' . ($completiondata->overrideby ? '-override' : '');
+                    break;
+                case COMPLETION_COMPLETE:
+                    $completionicon = 'manual-y' . ($completiondata->overrideby ? '-override' : '');
+                    break;
+            }
+        } else { // Automatic
+            switch($completiondata->completionstate) {
+                case COMPLETION_INCOMPLETE:
+                    $completionicon = 'auto-n' . ($completiondata->overrideby ? '-override' : '');
+                    break;
+                case COMPLETION_COMPLETE:
+                    $completionicon = 'auto-y' . ($completiondata->overrideby ? '-override' : '');
+                    break;
+                case COMPLETION_COMPLETE_PASS:
+                    $completionicon = 'auto-pass'; break;
+                case COMPLETION_COMPLETE_FAIL:
+                    $completionicon = 'auto-fail'; break;
+            }
+        }
+    }
+    if($completionicon) {
+        $formattedname = html_entity_decode($mod->get_formatted_name(), ENT_QUOTES, 'UTF-8');
+        if (!$isediting && $istrackeduser && $completiondata->overrideby) {
+            $args = new stdClass();
+            $args->modname = $formattedname;
+            $overridebyuser = \core_user::get_user($completiondata->overrideby, '*', MUST_EXIST);
+            $args->overrideuser = fullname($overridebyuser);
+            $imgalt = get_string('completion-alt-' . $completionicon, 'completion', $args);
+        } else {
+            $imgalt = get_string('completion-alt-' . $completionicon, 'completion', $formattedname);
+        }
+        if ($isediting || !$istrackeduser || !has_capability('moodle/course:togglecompletion', $mod->context)) {
+            // When editing, the icon is just an image.
+            $completionpixicon = new pix_icon('i/completion-'.$completionicon, $imgalt, '',
+                    array('title' => $imgalt, 'class' => 'iconsmall'));
+            $output .= html_writer::tag('span', $OUTPUT->render($completionpixicon),
+                    array('class' => 'autocompletion'));
+        } else if ($completion == COMPLETION_TRACKING_MANUAL) {
+            $newstate =
+                $completiondata->completionstate == COMPLETION_COMPLETE
+                ? COMPLETION_INCOMPLETE
+                : COMPLETION_COMPLETE;
+            // In manual mode the icon is a toggle form...
 
+            // If this completion state is used by the
+            // conditional activities system, we need to turn
+            // off the JS.
+            $extraclass = '';
+            if (!empty($CFG->enableavailability) &&
+                    core_availability\info::completion_value_used($course, $mod->id)) {
+                $extraclass = ' preventjs';
+            }
+            $output .= html_writer::start_tag('form', array('method' => 'post',
+                'action' => new moodle_url('/course/togglecompletion.php'),
+                'class' => 'togglecompletion'. $extraclass));
+            $output .= html_writer::start_tag('div');
+            $output .= html_writer::empty_tag('input', array(
+                'type' => 'hidden', 'name' => 'id', 'value' => $mod->id));
+            $output .= html_writer::empty_tag('input', array(
+                'type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()));
+            $output .= html_writer::empty_tag('input', array(
+                'type' => 'hidden', 'name' => 'modulename', 'value' => $formattedname));
+            $output .= html_writer::empty_tag('input', array(
+                'type' => 'hidden', 'name' => 'completionstate', 'value' => $newstate));
+            $output .= html_writer::tag('button',
+                $OUTPUT->pix_icon('i/completion-' . $completionicon, $imgalt),
+                    array('class' => 'btn btn-link', 'aria-live' => 'assertive'));
+            $output .= html_writer::end_tag('div');
+            $output .= html_writer::end_tag('form');
+        } else {
+            // In auto mode, the icon is just an image.
+            $completionpixicon = new pix_icon('i/completion-'.$completionicon, $imgalt, '',
+                    array('title' => $imgalt));
+            $output .= html_writer::tag('span', $OUTPUT->render($completionpixicon),
+                    array('class' => 'autocompletion'));
+        }
+    }
+    return $output;
+}
+// Lấy điểm các module trong khóa 
+function get_grade_module_incourse($courseid,$userid) {
+    global $DB;
+    $listgrade = $DB->get_records_sql('SELECT gi.id,gi.itemname,gg.finalgrade,gi.grademax FROM mdl_grade_grades gg
+                                                    JOIN mdl_grade_items gi ON gg.itemid = gi.id
+                                                WHERE gg.userid = :userid AND gi.courseid = :courseid AND rawgrade IS NOT NULL', ['userid' => $userid, 'courseid' => $courseid]);
+    return $listgrade;
+
+}
+// Lấy danh sách user dựa vào role trong 1 khóa học
+function get_listuser_in_course($courseid, $roleid = 5, $userid = 0) {
+    global $DB;
+    $params = [];
+    if(!$courseid) {
+
+    }
+    $params['courseid'] = $courseid;
+
+    $wheresql = "WHERE c.id = :courseid AND enr.roleid = :roleid";
+
+    if($userid > 2) {
+        $wheresql .= " AND u.id = userid";
+        $params['userid'] = $userid;
+    }
+    $params['roleid'] = $roleid;
+
+
+    $sql = "SELECT u.*, CONCAT(u.firstname, ' ', u.lastname) userfullname, r.shortname rolename 
+            FROM mdl_role_assignments ra
+                JOIN mdl_user u ON ra.userid = u.id
+                JOIN mdl_user_enrolments ue ON u.id = ue.userid 
+                JOIN mdl_enrol enr ON ue.enrolid = enr.id
+                JOIN mdl_course c ON enr.courseid = c.id
+                JOIN mdl_context ct ON ct.id = ra.contextid AND ct.instanceid = c.id
+                JOIN mdl_role r ON ra.roleid = r.id
+            WHERE c.id = :courseid
+                 AND r.id = :roleid";
+    $data = $DB->get_records_sql($sql, $params);
+    return $data;
+}
+
+// Lấy điểm trung bình của khóa học
+function get_course_grade_avg($courseid, $courseavg = true) {
+    global $CFG, $DB, $USER;
+
+    require_once $CFG->dirroot . '/grade/lib.php';
+    require_once $CFG->dirroot . '/grade/report/grader/lib.php';
+    require_once $CFG->libdir  . '/gradelib.php';
+
+    $course = $DB->get_record('course', ['id' => $courseid]);
+    $page = 0;
+    $sortitemid = 0;
+    $context = context_course::instance($course->id);
+    $displayaverages = true;
+    $USER->gradeediting[$courseid] = $courseid;
+    $gpr = new grade_plugin_return(
+        array(
+            'type' => 'report',
+            'plugin' => 'grader',
+            'course' => $course,
+            'page' => $page
+        )
+    );
+    $report = new grade_report_grader($course->id, $gpr, $context, $page, $sortitemid);
+    $report->load_users();
+    $report->load_final_grades();
+    $report->canviewhidden = true;
+    $data = $report->get_right_rows($displayaverages);
+    $lastitem = end($data);
+    $count = count($lastitem->cells);
+    $grades = [];
+    if($courseavg == false) {
+        $modules = array_values($DB->get_records('grade_items', ['courseid' => $courseid]));
+        foreach($modules as $keymodule => $module) {
+            if($module->itemtype == 'course' && $module->calculation != null) {
+                $grade_avg = new stdClass;
+                $grade_avg->avg = 'Course AVG';
+                $grade_avg->courseavg = explode(' ', $lastitem->cells[$count - 1]->text)[0];
+                $grades[] = $grade_avg;
+                continue;
+            }
+            $grade_avg = new stdClass;
+            $grade_avg->modulename = $module->itemname;
+            $grade_avg->moduletype = $module->itemtype;
+            $grade_avg->moduleavg = explode(' ', $lastitem->cells[$keymodule - 1]->text)[0];
+            $grades[] = $grade_avg;
+        }
+    } else {
+        $grade_avg = new stdClass;
+        $grade_avg->avg = 'Course AVG';
+        $grade_avg->courseavg = explode(' ', $lastitem->cells[$count - 1]->text)[0];
+        $grades[] = $grade_avg;
+    }
+    return $grades;
+}
+
+// Tính spent total modules trong course
+function get_spenttime_total_module($courseid, $coursemoduleid = 0, $userid = 0, $action = 'viewed') {
+    global $DB;
+    $params = [];
+    $wheresql = '';
+    if(!is_int($courseid)) {
+        throw new coding_exception('courseid not found!');
+    } else {
+        $params['courseid'] = $courseid;
+        $params['action'] = $action;
+    }
+    if($userid != 0) {
+        $wheresql .= 'AND lsl.userid = :userid';
+        $params['userid'] = $userid;
+    }
+    if(is_int($coursemoduleid) && $coursemoduleid != 0) {
+        $wheresql .= 'AND lsl.contextinstanceid = :coursemoduleid';
+        $params['coursemoduleid'] = $coursemoduleid;
+    } else {
+        throw new coding_exception('coursemoduleid not found!');
+    }
+    $sql = "SELECT lsl.* 
+            FROM mdl_logstore_standard_log lsl 
+                JOIN mdl_course_modules cm ON lsl.contextinstanceid = cm.id
+            WHERE lsl.target = 'course_module' 
+                AND lsl.action = :action 
+                AND lsl.courseid = :courseid 
+                $wheresql
+            ORDER BY lsl.timecreated";
+    $data = $DB->get_records_sql($sql, $params);
+    $timespent_modules = [];
+    foreach($data as $keymodule => $module) {
+        if(count($timespent_modules) == 0) {
+            $timespent_total = 0;
+            $timespent_modules[$module->contextinstanceid] = $timespent_total;
+        } else {
+            if($timespent_modules[$module->contextinstanceid] == $module->contextinstanceid) {
+                $previouslog = array_shift($logs);
+                $previouslogtime = $previouslog->time;
+                $sessionstart = $previouslog->time;
+                $dedication = 0;
+            }
+        }
+    }
+}
+
+// Đổi unixtime thành giờ phút giây
+function format_dedication($totalsecs) {
+    $totalsecs = abs($totalsecs);
+
+    $str = new stdClass();
+    $str->hour = get_string('hour');
+    $str->hours = get_string('hours');
+    $str->min = get_string('min');
+    $str->mins = get_string('mins');
+    $str->sec = get_string('sec');
+    $str->secs = get_string('secs');
+
+    $hours = floor($totalsecs / HOURSECS);
+    $remainder = $totalsecs - ($hours * HOURSECS);
+    $mins = floor($remainder / MINSECS);
+    $secs = round($remainder - ($mins * MINSECS), 2);
+
+    $ss = ($secs == 1) ? $str->sec : $str->secs;
+    $sm = ($mins == 1) ? $str->min : $str->mins;
+    $sh = ($hours == 1) ? $str->hour : $str->hours;
+
+    $ohours = '';
+    $omins = '';
+    $osecs = '';
+
+    if ($hours) {
+        $ohours = $hours . ' ' . $sh;
+    }
+    if ($mins) {
+        $omins = $mins . ' ' . $sm;
+    }
+    if ($secs) {
+        $osecs = $secs . ' ' . $ss;
+    }
+
+    if ($hours) {
+        return trim($ohours . ' ' . $omins);
+    }
+    if ($mins) {
+        return trim($omins . ' ' . $osecs);
+    }
+    if ($secs) {
+        return $osecs;
+    }
+    return '-';
+}
+
+// Lấy tỉ lệ hoàn thành module trong khóa 
+function get_course_complete_module_rate($courseid) {
+    global $DB;
+    $liststudent = get_listuser_in_course($courseid);
+    $sum = 0;
+    foreach ($liststudent as  $student) {
+        $studentmdfinish = $DB->get_record_sql('SELECT COUNT(*) as count
+                                                FROM mdl_course_modules_completion cmc
+                                                JOIN mdl_course_modules cm ON cm.id = cmc.coursemoduleid
+                                            WHERE cm.course = :courseid AND cmc.userid = :userid',['courseid' => $courseid,'userid' => $student->id]);
+        $allcoursemodule = $DB->get_record_sql('SELECT COUNT(*) as count FROM mdl_course_modules WHERE course =:courseid AND deletioninprogress = 0 AND visible = 1',['courseid' => $courseid]);
+        $ratestudentfinish = round(($studentmdfinish->count*100)/$allcoursemodule->count);
+        $sum = $sum + $ratestudentfinish;
+    }
+    $rate = round($sum/count($liststudent));
+    return $rate;
+}
+// Kiểm tra vai trò giáo viên 
+function check_teacherrole($userid) {
+    global $DB;
+    $check_is_teacher = $DB->get_field_sql('SELECT COUNT(c.id) course
+                            FROM  mdl_context ct
+                                JOIN mdl_course c ON c.id = ct.instanceid
+                            WHERE ct.contextlevel = 50 AND c.id <> 1
+                            AND (EXISTS (SELECT 1 
+                                         FROM mdl_role_assignments ra
+                                         WHERE ra.contextid = ct.id 
+                                            AND ra.roleid = 3 
+                                            AND ra.userid = :userid))', ['userid' => $userid]);
+    return $check_is_teacher;
+}
+// Kiểm tra vai trò học viên
+function check_studentrole($userid) {
+    global $DB;
+    $check_is_student = $DB->get_field_sql('SELECT COUNT(c.id) course
+                            FROM  mdl_context ct
+                                JOIN mdl_course c ON c.id = ct.instanceid
+                            WHERE ct.contextlevel = 50 AND c.id <> 1
+                            AND (EXISTS (SELECT 1 
+                                         FROM mdl_role_assignments ra
+                                         WHERE ra.contextid = ct.id 
+                                            AND ra.roleid = 5 
+                                            AND ra.userid = :userid))', ['userid' => $userid]);
+    return $check_is_student;
+}
+// Lấy huy hiệu của người dùng
+function get_user_badge($userid) {
+    global $CFG;
+    require_once $CFG->dirroot . '/badges/renderer.php';
+    $data = [];
+    $badges = badges_get_user_badges($userid, 0, null, null, null, true);
+    foreach ($badges as $badge) {
+        $obj = new stdClass;
+        $context  = ($badge->type == BADGE_TYPE_SITE) ? context_system::instance() : context_course::instance($badge->courseid);
+        $imageurl = moodle_url::make_pluginfile_url($context->id, 'badges', 'badgeimage', $badge->id, '/', 'f1', false);
+        $obj->name = $badge->name;
+        $obj->url = new moodle_url('/badges/badge.php', array('hash' => $badge->uniquehash));
+        $obj->image = html_writer::empty_tag('img', array('src' => $imageurl, 'class' => 'badge-image'));
+        $data[] = $obj;
+    }
+    return $data;
+}
+// course card info
+function get_coursecard_info($courseid) {
+    global $DB,$OUTPUT,$CFG;
+    $obj = new stdClass;
+    $course         = $DB->get_record('course',['id' => $courseid]);
+    $progress = round(\core_completion\progress::get_course_progress_percentage($course));
+    $theme_settings = new theme_settings();
+    $courseobj      = new \core_course_list_element($course);
+    $obj->link      = $CFG->wwwroot . "/course/view.php?id=" . $courseid;
+    $arr            = $theme_settings::role_courses_teacher_slider_block_course_recent($courseid);
+    $obj->fullnamet      = $arr->fullnamet;
+    $obj->countstudent   = $arr->studentnumber;
+    if($progress > 0) {
+        $obj->enrolmethod = '<div class="progress">
+                                 <div class="progress-bar" role="progressbar" aria-valuenow="' . $progress . '"
+                                    aria-valuemin="0" aria-valuemax="100" style="width:' . $progress . '%">
+                                    ' . $progress . '%
+                                 </div>
+                              </div>';
+    } else {
+        $obj->enrolmethod = get_enrol_method($courseid);
+    }
+    $obj->courseimage    = $theme_settings::get_course_images($courseobj, $obj->link);
+    $obj->fullname = $course->fullname;
+    if (isset($arr->id)) {
+        $stduser = new stdClass();
+        $userid  = $DB->get_records('user', array('id' => $arr->id));
+        foreach ($userid as $userdata) {
+            $stduser = (object) $userdata;
+        }
+        $obj->imageteacher = $OUTPUT->user_picture($stduser, array('size' => 72));
+    } else {
+        $obj->imageteacher = $arr->imgdefault;
+    }
+    return $obj;
+}
 function local_newsvnr_extend_navigation($navigation) {
-    $newsurl = new moodle_url('/local/newsvnr/index.php');
-    $news = navigation_node::create(get_string('pagetitle', 'local_newsvnr'), $newsurl,navigation_node::TYPE_CUSTOM,'newspage',
-        'newspage',
-        new pix_icon('t/viewdetails','Tin tức'));
-    $news->showinflatnavigation = true;
-    $navigation->add_node($news,'1');
     
-    $courseurl = new moodle_url('/local/newsvnr/course.php');
-    $course = navigation_node::create(get_string('coursetitle', 'local_newsvnr'), $courseurl,navigation_node::TYPE_CUSTOM,'coursepage',
-        'coursepage',
-        new pix_icon('t/viewdetails','Khóa học'));
-    $course->showinflatnavigation = true;
-    $navigation->add_node($course,'1');
-
-    $forumurl = new moodle_url('/local/newsvnr/forum.php');
-    $forum = navigation_node::create(get_string('forumtitle', 'local_newsvnr'), $forumurl,navigation_node::TYPE_CUSTOM,'forumpage',
-        'forumpage',
-        new pix_icon('t/viewdetails','Diễn đàn'));
-    $forum->showinflatnavigation = true;
-    $navigation->add_node($forum,'1');
-
-
-    $grabnodeurl = new moodle_url('/my');
-    $grab = navigation_node::create('grabnode', $grabnodeurl,navigation_node::TYPE_CUSTOM,'grabnode',
-        'grabnode',
-        new pix_icon('t/viewdetails','Rác'));
-    $grab->showinflatnavigation = true;
-    $navigation->add_node($grab,'users');
-
-
-
-    // if(is_siteadmin())
-    // {
-    //     $orgcomp_positionurl = new moodle_url('/local/newsvnr/orgcomp_position.php');
-    //     $orgcomp_position = navigation_node::create(get_string('orgcomp_position', 'local_newsvnr'), $orgcomp_positionurl,navigation_node::TYPE_CUSTOM,'mycohorts5',
-    //         'mycohorts5',
-    //         new pix_icon('t/viewdetails','Lập kế hoạch'));
-    //     $orgcomp_position->showinflatnavigation = true;
-    //     $navigation->add_node($orgcomp_position,'1');
-
-    //     $questionbank_url = new moodle_url('/question/edit.php?courseid=1');
-    //     $questionbank = navigation_node::create(get_string('questionbank_title', 'local_newsvnr'), $questionbank_url,navigation_node::TYPE_CUSTOM,'mycohorts4',
-    //         'mycohorts4',
-    //         new pix_icon('t/viewdetails','Đề thi'));
-    //     $questionbank->showinflatnavigation = true;
-    //     $navigation->add_node($questionbank,'1');
-        
-    //     $orgmanagerurl = new moodle_url('/local/newsvnr/orgmanager.php');
-    //     $orgmanager = navigation_node::create(get_string('orgmanagertitle', 'local_newsvnr'), $orgmanagerurl,navigation_node::TYPE_CUSTOM,'mycohorts6',
-    //         'mycohorts6',
-    //         new pix_icon('t/viewdetails','Trang quản lý phòng ban'));
-    //     $orgmanager->showinflatnavigation = true;
-    //     $navigation->add_node($orgmanager,'1');
-
-    //     $orgmainurl = new moodle_url('/local/newsvnr/orgmain.php');
-    //     $orgmain = navigation_node::create(get_string('orgmaintitle', 'local_newsvnr'), $orgmainurl,navigation_node::TYPE_CUSTOM,'mycohorts7',
-    //         'mycohorts7',
-    //         new pix_icon('t/viewdetails','Cơ cấu phòng ban'));
-    //     $orgmain->showinflatnavigation = true;
-    //     $navigation->add_node($orgmain,'1');
-    // }
- }
+}
 
 

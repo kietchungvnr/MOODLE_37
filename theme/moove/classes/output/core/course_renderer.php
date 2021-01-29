@@ -435,7 +435,7 @@ class course_renderer extends \core_course_renderer {
         $output .= '<div class="loading-page"></div>';
         $output .= $this->course_teacher_search_form();
         $output .= $this->course_filter();
-        $output .= '<div id="load-course">';
+        $output .= ($category) ? '<div id="load-course" category="'.$category.'">' : '<div id="load-course">' ;
         $output .= '</div></div></div>';
         return $output;
     }
@@ -773,18 +773,29 @@ class course_renderer extends \core_course_renderer {
         $end = count($modinfo->sections);
         $output = '';
         $output .= '<div class="all-tab-content col-xl-9 col-md-8 col-12">';
-        $output .= '<ul class="nav nav-tabs tab-click multi-tab">';
-        $output .=  '<li class="nav-item active"><a class="nav-link" data-key="descriptioncourse">'.get_string('descriptioncourse','local_newsvnr').'</a></li>
-                     <li class="nav-item"><a class="nav-link" data-key="lesson">'.get_string('lesson','local_newsvnr').'</a></li>
-                     <li class="nav-item"><a class="nav-link" data-key="teachername">'.get_string('teachername','local_newsvnr').'</a></li>';
+        $output .= '<ul class="nav nav-tabs tab-click multi-tab" tab="enrolcourse">';
+        $output .= '<li class="nav-item"><a class="nav-link active" data-key="courseintro">'.get_string('introcourse','local_newsvnr').'</a></li>
+                    <li class="nav-item "><a class="nav-link" data-key="descriptioncourse">'.get_string('descriptioncourse','local_newsvnr').'</a></li>
+                    <li class="nav-item"><a class="nav-link" data-key="lesson">'.get_string('lesson','local_newsvnr').'</a></li>
+                    <li class="nav-item"><a class="nav-link" data-key="teachername">'.get_string('teachername','local_newsvnr').'</a></li>';
         $output .= '</ul>';
-        $output .= '<div class="tab-content">';
-        $output .= ' <div data="descriptioncourse" class="tab-pane in active">';
+        $output .= '<div class="tab-content" tab="enrolcourse">';
+        // Giới thiệu khóa học
+        $output .= ' <div data="courseintro" class="tab-pane in active">';
         $output .= '<div class="count-module">';
         $output .= get_string('startdate','local_newsvnr').': '. convertunixtime('l, d-m-Y,',$course->startdate,'Asia/Ho_Chi_Minh').'<br>';
         if($course->enddate > 0) {
             $output .= get_string('enddate','local_newsvnr').': '. convertunixtime('l, d-m-Y,',$course->enddate,'Asia/Ho_Chi_Minh');
+        } else {
+            $output .= '-';
         }
+        $studentdata = $theme_settings::role_courses_teacher_slider($course->id);
+        $output .= '<div>'.get_string('totalstudent','local_newsvnr').' : '.$studentdata->studentnumber.'</div>';
+        $output .= '</div>';
+        $output .= '</div>';
+        // Mô tả khóa học
+        $output .= ' <div data="descriptioncourse" class="tab-pane">';
+        $output .= '<div class="count-module">';
         $output .= '<p>'.$course->summary.'</p>';
         $output .= '</div></div>';
         $output .= '<div data="lesson" class="tab-pane">';

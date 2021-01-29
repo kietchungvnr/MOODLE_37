@@ -294,7 +294,7 @@ class mod_quiz_renderer extends plugin_renderer_base {
             $this->initialise_timer($timerstartvalue, $ispreview);
         }
         // Custom by Thắng : Chỉnh sửa giao diện thời gian làm bài thi
-        return html_writer::tag('div', '<i class="fa fa-clock-o mr-2" aria-hidden="true"></i>' . html_writer::tag('span', '', array('id' => 'quiz-time-left')),
+        return html_writer::tag('div', html_writer::tag('span', '', array('id' => 'quiz-time-left')),
                 array('id' => 'quiz-timer', 'role' => 'timer',
                     'aria-atomic' => 'true', 'aria-relevant' => 'text'));
     }
@@ -302,7 +302,7 @@ class mod_quiz_renderer extends plugin_renderer_base {
     /**
      * Create a preview link
      *
-     * @param $url contains a url to the given page
+     * @param moodle_url $url contains a url to the given page
      */
     public function restart_preview_button($url) {
         return $this->single_button($url, get_string('startnewpreview', 'quiz'));
@@ -326,7 +326,6 @@ class mod_quiz_renderer extends plugin_renderer_base {
                     array('id' => 'user-picture', 'class' => 'clearfix'));
         }
         $output .= $panel->render_before_button_bits($this);
-
         $bcc = $panel->get_button_container_class();
         $output .= $panel->render_countdown_timer($this);
         // Custom by Thắng : đưa thời gian thi lên đầu
@@ -818,12 +817,15 @@ class mod_quiz_renderer extends plugin_renderer_base {
         global $CFG;
         $output = '';
 
-        if (!$viewobj->quizhasquestions) {
-            $output .= $this->no_questions_message($viewobj->canedit, $viewobj->editurl);
-        }
+        // Custom by Vũ: sửa giao diện các button
+        $output .= '<div class="d-flex justify-content-center mb-2">';
 
         $output .= $this->access_messages($viewobj->preventmessages);
-
+        if($viewobj->canedit) {
+            $output .= '<div class="mr-1">';
+            $output .= $this->single_button($viewobj->editurl, get_string('editquiz', 'quiz'), 'get');
+            $output .= '</div>';
+        }
         if ($viewobj->buttontext) {
             $output .= $this->start_attempt_button($viewobj->buttontext,
                     $viewobj->startattempturl, $viewobj->preflightcheckform,
@@ -834,6 +836,10 @@ class mod_quiz_renderer extends plugin_renderer_base {
             $output .= $this->single_button($viewobj->backtocourseurl,
                     get_string('backtocourse', 'quiz'), 'get',
                     array('class' => 'continuebutton'));
+        }
+        $output .= '</div>';
+        if (!$viewobj->quizhasquestions) {
+            $output .= $this->no_questions_message($viewobj->canedit, $viewobj->editurl);
         }
 
         return $output;
@@ -896,10 +902,6 @@ class mod_quiz_renderer extends plugin_renderer_base {
     public function no_questions_message($canedit, $editurl) {
         $output = '';
         $output .= $this->notification(get_string('noquestions', 'quiz'));
-        if ($canedit) {
-            $output .= $this->single_button($editurl, get_string('editquiz', 'quiz'), 'get');
-        }
-
         return $output;
     }
 

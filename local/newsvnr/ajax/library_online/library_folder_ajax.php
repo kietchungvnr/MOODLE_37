@@ -98,9 +98,9 @@ switch ($action) {
         $folder       = $DB->get_record_sql('SELECT * FROM {library_folder} WHERE id = :id', ['id' => $folderid]);
         $folderparent = $DB->get_record_sql('SELECT * FROM {library_folder} WHERE id = :parentid', ['parentid' => $folder->parent]);
         if ($folderparent == false) {
-            $input = '<input autocomplete="off" class="form-control" id="folderparent" onclick="viewTree()">';
+            $input = '<input autocomplete="off" class="form-control folderparent" onclick="viewTree()">';
         } else {
-            $input = '<input autocomplete="off" class="form-control" id="folderparent" onclick="viewTree()" parentid="' . $folderparent->id . '" value="' . $folderparent->name . '">';
+            $input = '<input autocomplete="off" class="form-control folderparent" onclick="viewTree()" parentid="' . $folderparent->id . '" value="' . $folderparent->name . '">';
         }
         $output = '<div class="modal fade modal-library" id="edit-popup-modal-folder" role="dialog">
                         <div class="modal-dialog">
@@ -111,9 +111,15 @@ switch ($action) {
                               <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body edit-folder-popup">
-                                 <div class="form-group ">
+                                <div class="form-group ">
                                   <label for="email">' . get_string('foldername', 'local_newsvnr') . ':</label>
                                   <input autocomplete="off" class="form-control" id="foldername" value="' . $folder->name . '">
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input folderdefault" type="checkbox" value="" onchange="defaultFolder()">
+                                    <label class="form-check-label mb-2" for="folderdefault">
+                                        '.get_string('defaultfolder', 'local_newsvnr').'
+                                    </label>
                                 </div>
                                 <div class="form-group">
                                   <label for="pwd">' . get_string('folderparent', 'local_newsvnr') . ':</label>

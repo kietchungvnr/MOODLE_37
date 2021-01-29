@@ -1,267 +1,275 @@
-{{!
-    This file is part of Moodle - http://moodle.org/
-
-    Moodle is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    Moodle is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-}}
-{{!
-    @template core/login
-
-    Moodle template for the login page.
-
-    Context variables required for this template:
-    * autofocusform: Auto focus on form ?,
-    * canloginasguest - Is guest login allowed?,
-    * canloginbyemail - Is login by email allowed?,
-    * cansignup - Signup allowed?,
-    * cookieshelpicon - cookies help icon details
-    * error - Any errors in the form?,
-    * forgotpasswordurl - Forgot password url,
-    * hasidentityproviders - Flag, set to true to hide identity providers,
-    * hasinstructions - Flag, set to true to show instructions,
-    * identityproviders - List of identiy providers,
-    * instructions - Instructions,
-    * instructionsformat - Format of instructions,
-    * loginurl - Login url,
-    * rememberusername - Remeber username?,
-    * signupurl - Signup url,
-    * cookieshelpiconformatted - Formatted html of cookies help icon,
-    * errorformatted - Formatted error,
-    * logourl - Flag, logo url,
-    * sitename - Name of site.
-
-    Example context (json):
-    {
-        "autofocusform": false,
-        "canloginasguest": "1",
-        "canloginbyemail": false,
-        "cansignup": true,
-        "cookieshelpicon": {
-            "heading": "Cookies must be enabled in your browser",
-            "text": "<div class=\"no-overflow\">Two cookies are used on this site. Both died..</div>",
-            "icon": {
-                "attributes": [
-                    {
-                        "name": "class",
-                        "value": "iconhelp"
-                    },
-                    {
-                        "name": "alt",
-                        "value": "Help with Cookies must be enabled in your browser"
-                    },
-                    {
-                        "name": "title",
-                        "value": "Help with Cookies must be enabled in your browser"
-                    },
-                    {
-                        "name": "src",
-                        "value": "http://localhost/stable_master/theme/image.php?theme=boost&component=core&image=help"
-                    }
-                ]
-            },
-            "linktext": null,
-            "title": "Help with Cookies must be enabled in your browser",
-            "url": "http://localhost/stable_master/help.php?component=core&identifier=cookiesenabled&lang=en",
-            "ltr": true
-        },
-        "error": "",
-        "forgotpasswordurl": "http://localhost/stable_master/login/forgot_password.php",
-        "hasidentityproviders": false,
-        "hasinstructions": true,
-        "identityproviders": [],
-        "instructions": "For full access to this site, you first need to create an account.",
-        "instructionsformat": "1",
-        "loginurl": "http://localhost/stable_master/login/index.php",
-        "rememberusername": true,
-        "signupurl": "http://localhost/stable_master/login/signup.php",
-        "cookieshelpiconformatted": "",
-        "errorformatted": "",
-        "logourl": false,
-        "sitename": "Beer & Chips"
+<style type="text/css">
+   @media (min-width: 480px) {
+   .d-sm-block {
+   display: block!important;
+   }        
+   }
+   @media (min-width: 992px) {
+   .d-lg-none {
+   display: none!important;
+   }        
+   }
+   @media screen and (max-width: 1023px) {
+   .page-brand-info {
+   display: none;
+   }        
+   }
+     @media screen and (max-width: 1023px) {
+   .text-white {
+    color: #455a64 !important;
+   }        
+   }
+   #page-login-index .page-brand-info, #page-login-signup .page-brand-info {
+   position: fixed;
+   left: 0;
+   top: 100px;
+   width: calc(100% - 500px);
+   padding: 75px;
+   }
+   #page-login-index .loginform, #page-login-index .signupform, #page-login-signup .loginform, #page-login-signup .signupform {
+   position: fixed;
+   right: 0;
+   top: 0;
+   background: white;
+   height: 100%;
+   width: 500px;
+   overflow-y: auto;
+   animation-name: slide-right;
+   animation-duration: 1s;
+   animation-timing-function: ease-out;
+   animation-fill-mode: both;
+   }
+   @media screen and (max-width: 1023px) {
+   .loginform, .signupform {
+   width: 100%!important;
+   }    
+   }
+   .card, #page-enrol-users #filterform, .que .history, .userprofile .profile_tree section, .groupinfobox, .well {
+   position: relative;
+   display: flex;
+   flex-direction: column;
+   min-width: 0;
+   word-wrap: break-word;
+   background-color: #fff;
+   -webkit-background-clip: border-box;
+   background-clip: border-box;
+   border-radius: .215rem;
+   }
+   .card-header:first-child {
+   border-radius: calc(.215rem - 1px) calc(.215rem - 1px) 0 0;
+   }
+   .row {
+   display: flex;
+   flex-wrap: wrap;
+   margin-right: -1.0715rem;
+   margin-left: -1.0715rem;
+   }
+   @media screen and (max-width: 600px) {
+   #page-login-index .login-profiles .col-sm-4 {
+   max-width: 33.33%;
+   flex-direction: column;
+   }    
+   }
+   @media (min-width: 480px) {
+   .col-sm-4 {
+   flex: 0 0 33.33333%;
+   max-width: 33.33333%;
+   }    
+   }
+   @media screen and (max-width: 600px) {
+   #page-login-index .login-profiles .profile-content a img {
+   width: 100%;
+   border-radius: 50%;
+   -webkit-box-shadow: 3px 2px 5px #252525;
+   box-shadow: 3px 2px 5px #252525;
+   }    
+   }
+   #page-login-index .login-profiles .profile-content a img {
+   width: 75%;
+   border-radius: 50%;
+   -webkit-box-shadow: 3px 2px 5px #252525;
+   box-shadow: 3px 2px 5px #252525;
+   border: 2px solid #632c2c;
+   -webkit-transition: all 250ms ease-in-out;
+   -o-transition: all 250ms ease-in-out;
+   transition: all 250ms ease-in-out;
+   }
+   .form-control, input[type="text"] {
+   display: block;
+   width: 100%;
+   padding: .429rem 1rem;
+   font-size: 1rem;
+   line-height: 1.57143;
+   color: #526069;
+   background-color: #fff;
+   -webkit-background-clip: padding-box;
+   background-clip: padding-box;
+   border: 1px solid #e4eaec;
+   border-radius: .215rem;
+   }
+   
+@-webkit-keyframes slide-right {
+    0% {
+        opacity: 0;
+        -webkit-transform: translate3d(100%,0,0);
+        -moz-transform: translate3d(100%,0,0);
+        -ms-transform: translate3d(100%,0,0);
+        -o-transform: translate3d(100%,0,0);
+        transform: translate3d(100%,0,0)
     }
-}}
 
-<div class="my-1 my-sm-5"></div>
+    100% {
+        opacity: 1;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0)
+    }
+}
 
-{{# logourl }}
-    <div class="row justify-content-center logo">
-        <img src="{{logourl}}" title="{{sitename}}" alt="{{sitename}}"/>
-    </div>
-{{/ logourl }}
+@-o-keyframes slide-right {
+    0% {
+        opacity: 0;
+        -webkit-transform: translate3d(100%,0,0);
+        -moz-transform: translate3d(100%,0,0);
+        -ms-transform: translate3d(100%,0,0);
+        -o-transform: translate3d(100%,0,0);
+        transform: translate3d(100%,0,0)
+    }
 
-<div class="row justify-content-center my-4">
-<div class="col-12 col-md-12 col-lg-8">
+    100% {
+        opacity: 1;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0)
+    }
+}
 
-{{#error}}
-    <div class="loginerrors">
-        <a href="#" id="loginerrormessage" class="accesshide">{{error}}</a>
-        <div class="alert alert-danger" role="alert">{{error}}</div>
-    </div>
-{{/error}}
+@keyframes slide-right {
+    0% {
+        opacity: 0;
+        -webkit-transform: translate3d(100%,0,0);
+        -moz-transform: translate3d(100%,0,0);
+        -ms-transform: translate3d(100%,0,0);
+        -o-transform: translate3d(100%,0,0);
+        transform: translate3d(100%,0,0)
+    }
 
-<div class="card loginpanel">
-    <div class="card-block">
-        {{#cansignup}}
-            <div class="sr-only">
-                <a href="{{signupurl}}">{{#str}} tocreatenewaccount {{/str}}</a>
-            </div>
-        {{/cansignup}}
-
-        <div class="row">
-            <div class="col-md-7 instructions">
-                <h2>{{sitename}}</h2>
-                <hr align="left" />
-
-                <div class="m-t-1">
-                    <i class="fa fa-check-circle-o"></i>
-                    {{#str}} cookiesenabled {{/str}}
-                    {{{cookieshelpiconformatted}}}
-                </div>
-
-                {{#canloginasguest}}
-                    <div class="m-t-2">
-                        <p><i class="fa fa-user-circle-o"></i> {{#str}}someallowguest{{/str}}</p>
-                        <form action="{{loginurl}}" method="post" id="guestlogin">
-                            <input type = "hidden" name = "logintoken" value = "{{logintoken}}">
-                            <input type="hidden" name="username" value="guest" />
-                            <input type="hidden" name="password" value="guest" />
-                            <button class="btn btn-secondary" type="submit">{{#str}}loginguest{{/str}}</button>
-                        </form>
-                    </div>
-                {{/canloginasguest}}
-
-                {{#hasidentityproviders}}
-                    <h3 class="m-t-1">{{#str}} potentialidps, auth {{/str}}</h3>
-                    <div class="potentialidplist" class="m-t-1">
-                        {{#identityproviders}}
-                            <div class="potentialidp">
-                                <a href="{{{url}}}" title={{#quote}}{{name}}{{/quote}} class="btn btn-secondary">
-                                    {{#iconurl}}
-                                        <img src="{{iconurl}}" alt="" width="24" height="24"/>
-                                    {{/iconurl}}
-                                    {{name}}
-                                </a>
-                            </div>
-                        {{/identityproviders}}
-                    </div>
-                {{/hasidentityproviders}}
-
-                {{^hasidentityproviders}}
-                    {{#hasinstructions}}
-                        <h3 class="m-t-1">{{#str}}firsttime{{/str}}</h3>
-                        <div>{{{instructions}}}</div>
-                    {{/hasinstructions}}
-                {{/hasidentityproviders}}
-            </div>
-
-            <div class="col-md-5 form">
-                <form action="{{loginurl}}" method="post" id="login">
-                    <input id="anchor" type="hidden" name="anchor" value="">
-                    <script>document.getElementById('anchor').value = location.hash;</script>
-                    <input type="hidden" name="logintoken" value="{{logintoken}}">
-
-                    <p class="welcome">{{#str}}login, theme_moove{{/str}}</p>
-
-                    <label for="username" class="sr-only">
+    100% {
+        opacity: 1;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0)
+    }
+}
+</style>
+<div class="row justify-content-center" id="yui_3_17_2_1_1598058773684_23">
+   <div class="page-brand-info">
+      
+   </div>
+   <div class="p-0 loginform" id="yui_3_17_2_1_1598058773684_22">
+      <div class="card" style="border: none; box-shadow: none;" id="yui_3_17_2_1_1598058773684_21">
+         <div class="card-block p-5" id="yui_3_17_2_1_1598058773684_20">
+            {{# logourl }}
+            <h2 class="card-header text-center bg-transparent mb-3 p-4"><img src="{{logourl}}" title="{{sitename}}" alt="{{sitename}}" class="img-fluid"/> </h2>
+            {{/ logourl }}
+           {{#error}}
+              <div class="loginerrors">
+                  <a href="#" id="loginerrormessage" class="accesshide">{{error}}</a>
+                  <div class="alert alert-danger" role="alert">{{error}}</div>
+              </div>
+            {{/error}}
+            <div class="card-body" id="yui_3_17_2_1_1598058773684_28">
+               <div class="row justify-content-md-center" id="yui_3_17_2_1_1598058773684_27">
+                  <div class="col-md-12" id="yui_3_17_2_1_1598058773684_26">
+                     <h3 class="mb-4" id="yui_3_17_2_1_1598058773684_25">{{#str}}login{{/str}}</h3>
+                     <form action="{{loginurl}}" method="post" id="login" class="signup-form">
+                        <input id="anchor" type="hidden" name="anchor" value="">
+                        <script>document.getElementById('anchor').value = location.hash;</script>
+                        <input type="hidden" name="logintoken" value="{{logintoken}}">
+                        <label for="username" class="sr-only">
                         {{^canloginbyemail}}
-                            {{#str}} username {{/str}}
+                        {{#str}} username {{/str}}
                         {{/canloginbyemail}}
                         {{#canloginbyemail}}
-                            {{#str}} usernameemail {{/str}}
+                        {{#str}} usernameemail {{/str}}
                         {{/canloginbyemail}}
-                    </label>
-                    <div class="input-group input-group-username">
-                        <span class="input-group-addon"><i class="fa fa-user-circle"></i></span>
-                        <input type="text" name="username" id="username"
-                            class="form-control"
-                            value="{{username}}"
-                            placeholder={{#quote}}{{^canloginbyemail}}{{#str}}username{{/str}}{{/canloginbyemail}}{{#canloginbyemail}}{{#str}}usernameemail{{/str}}{{/canloginbyemail}}{{/quote}}>
-                    </div>
-
-                    <label for="password" class="sr-only">{{#str}} password {{/str}}</label>
-                    <div class="input-group input-group-password">
-                        <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                        <input type="password" name="password" id="password" value=""
-                            class="form-control"
-                            placeholder={{#quote}}{{#str}}password{{/str}}{{/quote}}>
-                    </div>
-
-                    {{#rememberusername}}
-                        <div class="rememberpass m-t-1">
-                            <input type="checkbox" name="rememberusername" id="rememberusername" value="1" {{#username}}checked="checked"{{/username}} />
-                            <label for="rememberusername">{{#str}} rememberusername, admin {{/str}}</label>
+                        </label>
+                        <div class="input-group input-group-username mb-3">
+                           <input type="text" name="username" id="username"
+                              class="form-control"
+                              value="{{username}}"
+                              placeholder={{#quote}}{{^canloginbyemail}}{{#str}}username{{/str}}{{/canloginbyemail}}{{#canloginbyemail}}{{#str}}usernameemail{{/str}}{{/canloginbyemail}}{{/quote}}>
                         </div>
-                    {{/rememberusername}}
-
+                        <label for="password" class="sr-only">{{#str}} password {{/str}}</label>
+                        <div class="input-group input-group-password mb-3">
+                           <input type="password" name="password" id="password" value=""
+                              class="form-control"
+                              placeholder={{#quote}}{{#str}}password{{/str}}{{/quote}}>
+                        </div>
                     <button type="submit" class="btn btn-primary btn-block" id="loginbtn">{{#str}}login{{/str}}</button>
-                </form>
-
-                <div class="forgetpass m-t-1">
-                    <p><a href="{{forgotpasswordurl}}">{{#str}}forgotten{{/str}}</a></p>
-                </div>
-
-                {{#cansignup}}
-                    <form class="m-t-1" action="{{signupurl}}" method="get" id="signup">
-                        <button type="submit" class="btn btn-secondary">{{#str}}startsignup{{/str}}</button>
-                    </form>
-                {{/cansignup}}
+                     </form>
+                  </div>
+                  <div class="col-md-12" id="yui_3_17_2_1_1598233254846_22">
+                     <footer class="page-copyright py-4" id="yui_3_17_2_1_1598233254846_21">
+                        <p class="text-center" id="yui_3_17_2_1_1598233254846_20">Theo dõi chúng tôi</p>
+                        <div class="social text-center">
+                           <a href="#" class="btn btn-icon btn-round social-facebook p-0 mr-1"><img src="/theme/moove/pix/youtube.png"></i></a>
+                           <a href="#" class="btn btn-icon btn-round social-twitter p-0 mr-1"><img src="/theme/moove/pix/facebook.png"></i></a>
+                           <a href="#" class="btn btn-icon btn-round social-linkedin p-0 mr-1"><img src="/theme/moove/pix/linkedin.png"></i></a>
+                        </div>
+                     </footer>
+                  </div>
+               </div>
             </div>
-        </div>
-    </div>
+         </div>
+      </div>
+   </div>
 </div>
-</div>
-</div>
-
-
-{{#hasidentityproviders}}
-    {{#hasinstructions}}
-    <div class="row justify-content-center">
-    <div class="col-xl-8 push-xl-2 m-2-md col-sm-8 push-sm-2">
-    <div class="card instructionspanel">
-        <div class="card-block">
-            <div class="card-title">
-                <h2>{{#str}}firsttime{{/str}}</h2>
-            </div>
-            <div>
-            {{{instructions}}}
-            {{#cansignup}}
-                <form class="m-t-1" action="{{signupurl}}" method="get" id="signup">
-                    <button type="submit" class="btn btn-secondary">{{#str}}startsignup{{/str}}</button>
-                </form>
-            {{/cansignup}}
-            </div>
-        </div>
-    </div>
-    </div>
-    </div>
-    {{/hasinstructions}}
-{{/hasidentityproviders}}
-
-{{#js}}
-    {{#error}}
-        require(['jquery'], function($) {
-            $('#loginerrormessage').focus();
-        });
-    {{/error}}
-    {{^error}}
-        {{#autofocusform}}
-            require(['jquery'], function($) {
-                if ($('#username').val()) {
-                    $('#password').focus();
-                } else {
-                    $('#username').focus();
-                }
-            });
-        {{/autofocusform}}
-    {{/error}}
-{{/js}}
+<script type="text/javascript">
+   const submitform = (username, password) => {
+       var username = username;
+       var password = password;
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+       var intervalID = setInterval(function() {
+           if(document.getElementById('username').className != 'complete'){
+               var val = document.getElementById('username').value;
+               if(val.length == username.length){
+                   document.getElementById('username').classList.add("complete");
+                   if(document.getElementById('password').className != 'complete'){
+                       var val = document.getElementById('password').value;
+                       if(val.length == password.length){
+                           document.getElementById('password').classList.add("complete");
+                       }else{
+                           for(var i = 0; i < password.length; i++){
+                               if(val.length <= i){
+                                   document.getElementById('password').value = val + password.charAt(i);
+                                   return;
+                               }
+                           }
+                       }
+                   }
+                   var x = document.getElementsByClassName('signup-form');
+                   x[0].submit();
+                   clearInterval(intervalID);
+               }else{
+                   for(var i = 0; i < username.length; i++){
+                       if(val.length <= i){
+                           document.getElementById('username').value = val + username.charAt(i);
+                           return;
+                       }
+                   }
+               }
+           }
+           
+   
+       }, 100);
+   }
+   
+</script>

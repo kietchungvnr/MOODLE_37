@@ -349,6 +349,7 @@ function theme_moove_delete_menuitems_incourse(\flat_navigation $flatnav) {
         'mycourses_by_teacher_vnr',
         'grabnode',
         'newsvnr-sections',
+        'courseindexpage'
         // 'sitesettings'
 
         // 'coursehome',
@@ -753,4 +754,66 @@ function theme_moove_buildnavnewsvnr_sitewide(\flat_navigation $flatnav) {
         $params = array('blocks' => $blocks, 'url' => '?' . $url->get_query_string(false));
         $PAGE->requires->js_call_amd('core/addblockmodal', 'init', array($params));
     }
+}
+function theme_moove_layout_check() {
+    global $COURSE,$DB,$USER,$CFG;
+    require_once $CFG->dirroot . '/local/newsvnr/lib.php';
+    $object = new stdClass();
+    if(isset($_SERVER['HTTP_REFERER'])) {
+        $referer = $_SERVER['HTTP_REFERER'];
+        $referer_split = explode('/', $referer);
+    }
+    if(isset($referer) && ($referer_split[2] == $_SERVER['HTTP_HOST'])) {
+        $object->hasportal = false;
+    } elseif(isset($referer) && ($referer_split[2] != $_SERVER['HTTP_HOST'])) {
+        $object->hasportal = true;
+    } else {
+        $object->hasportal = false;
+    }
+    $object->show_hide_focusmod = true;
+    if(isset($referer) && ($referer_split[2] == $_SERVER['HTTP_HOST'])) {
+        if(isset($_COOKIE['cookie']) && $_COOKIE['cookie'] == 'focusmod') {
+            if (strpos($referer, 'mod/') == true || strpos($_SERVER['QUERY_STRING'], 'course') == true || strpos($referer, 'course=') == true || strpos($_SERVER['SCRIPT_NAME'], 'mod/') == true) {
+                $object->hasiframe = true;
+                $object->show_hide_focusmod = false;
+            } else {
+                $object->hasiframe = false;
+            }
+        } else {
+            $object->hasiframe = false;
+        }
+    } else {
+        $object->hasiframe = false;
+    }
+    $object->hasfocusmod = (isset($_COOKIE['cookie']) == 'focusmod') ? true : false;
+    $object->hasopenmenu = (isset($_COOKIE['menu']) == 'openmenu') ? true : false;
+    $object->hascourse = ($COURSE->id > 1) ? true : false;
+    $object->settingexam = ($COURSE->id == 1) ? true : false;
+    $check_is_teacher = check_teacherrole($USER->id);
+    $check_is_student = check_studentrole($USER->id);
+    $url = $_SERVER['REQUEST_SCHEME'] . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    $url_components = parse_url($url);
+    if(isset($url_components['query'])) {
+        parse_str($url_components['query'], $params); 
+        if (isset($params['teacher'])) {
+            $object->is_teacher = ($check_is_teacher != 0 && $params['teacher'] == 1) ? true : false;
+            $object->isadmin = false;
+            $object->is_student = false;
+        }
+        elseif (isset($params['student'])) { 
+            $object->is_student = ($check_is_student != 0 && $params['student'] == 1) ? true : false;
+            $object->isadmin = false;
+            $object->is_teacher = false;
+        }
+        else {
+            $object->isadmin = (is_siteadmin()) ? true : false;
+            $object->is_teacher = ($check_is_teacher != 0 && $object->isadmin != true) ? true : false; 
+            $object->is_student = ($check_is_student != 0 && $object->isadmin != true && $object->is_teacher != true) ? true : false;
+        }
+    } else {
+        $object->isadmin = (is_siteadmin()) ? true : false;
+        $object->is_teacher = ($check_is_teacher != 0 && $object->isadmin != true) ? true : false; 
+        $object->is_student = ($check_is_student != 0 && $object->isadmin != true && $object->is_teacher != true) ? true : false;
+    }
+    return $object;
 }

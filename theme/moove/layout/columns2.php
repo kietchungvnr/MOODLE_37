@@ -50,19 +50,12 @@ if ($navdraweropen) {
 if ($draweropenright && $hasblocks) {
     $extraclasses[] = 'drawer-open-right';
 }
-
-if(isset($_SERVER['HTTP_REFERER'])) {
-    $hasportal = true;
-} else {
-    $hasportal = false;
-}
-if($COURSE->id > 1 ){
-    $hascourse = true;
-}
-else {
-    $hascourse = false;
-}
-// var_dump($COURSE);die();
+$check = theme_moove_layout_check();
+// if(isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
+//     $check->hasiframe = true;
+// } else {
+//     $check->hasiframe = false;
+// }
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [
@@ -76,8 +69,10 @@ $templatecontext = [
     'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
-    'hasportal' => $hasportal,
-    'hascourse' => $hascourse
+    'hasportal' => $check->hasportal,
+    'hasiframe' => $check->hasiframe,
+    'hasfocusmod' => $check->hasfocusmod,
+    'hasopenmenu' => $check->hasopenmenu
 ];
 
 // Improve boost navigation.

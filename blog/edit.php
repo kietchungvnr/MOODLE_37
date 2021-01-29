@@ -219,7 +219,8 @@ $entry->action = $action;
 $blogeditform->set_data($entry);
 
 if ($blogeditform->is_cancelled()) {
-    redirect($returnurl);
+    // redirect($returnurl);
+    redirect($CFG->wwwroot . $_SESSION['url'] . '#blog');
 
 } else if ($data = $blogeditform->get_data()) {
 
@@ -241,8 +242,8 @@ if ($blogeditform->is_cancelled()) {
         default :
             print_error('invalidaction');
     }
-
-    redirect($returnurl);
+    redirect($CFG->wwwroot . $_SESSION['url'] .'#blog');
+    // redirect($returnurl);
 }
 
 

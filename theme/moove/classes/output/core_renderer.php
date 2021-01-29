@@ -40,6 +40,7 @@ use core_course_list_element;
 use context_module;
 use moodle_page;
 use single_button;
+use completion_info;
 use theme_moove\output\core\course_renderer;
 use theme_moove\util\theme_settings;
 defined('MOODLE_INTERNAL') || die;
@@ -82,7 +83,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $header->active = true;
         }
         $header->settingsmenu = $this->context_header_settings_menu();
-        if($PAGE->pagelayout == "course"){
+        // Custom by Thắng: giới hạn header khóa học với một số màn hình
+        $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        if(($PAGE->pagelayout == "course" || $PAGE->pagelayout == "incourse") && strpos($url,'mod') === false) {
             $header->contextheader = $this->header_course();
         }
         else {
@@ -96,26 +99,26 @@ class core_renderer extends \theme_boost\output\core_renderer {
     }
     public function menu_focus(){
         global $COURSE, $CFG, $OUTPUT, $DB;
+        require_once($CFG->libdir.'/completionlib.php');
+        $completioninfo = new completion_info($COURSE);
         $allmodinfo = get_fast_modinfo($COURSE)->get_section_info_all();
         $process = round(\core_completion\progress::get_course_progress_percentage($COURSE));
         $linkcourse = $CFG->wwwroot.'/course/view.php?id='.$COURSE->id;
         $output = '';
         $output .= '<nav class="fixed-top navbar moodle-has-zindex focusmod">';
         $output .= '<div class="d-flex menu-left">';
-        $output .= '<div class="home-focus border-right"><a href="'.$CFG->wwwroot.'/my"><i class="fa fa-3x fa-home" aria-hidden="true"></i></a></div>';
         $output .= '<div class="course-info-focus"><div class="page-header-headings"><a href="'.$linkcourse.'">'.$COURSE->fullname.'</a></div>';
         $output .= '<div class="d-flex"><div class="progress course">';
         $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
                     aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div>'.$process.'%</div>';
         $output .= '</div></div>';
-        // $output .= '<div id="focus-mod" class="open-focusmod border-left border-right" data-placement="left"><i class="fa fa-external-link"></i><span class="ml-1 mr-1">'.get_string('zoomout','local_newsvnr').'</span></div>';
         $output .= '</div>';
 
         $output .= '<div class="menu-right"><ul class="d-flex">';
         $output .= '<li class="nav-item border-left"><a class="nav-link focusmod prev"><i class="fa fa-angle-left mr-2"></i>'.get_string('prevmodule','theme_moove').'</a></li>
                     <li class="nav-item border-left mid"><a class="nav-link focusmod">'.get_string('coursedata','theme_moove').'<i class="fa fa-angle-down rotate-icon ml-2"></i></a></li>
                     <li class="nav-item border-left"><a class="nav-link focusmod next">'.get_string('nextmodule','theme_moove').'<i class="fa fa-angle-right ml-2"></i></a></li>';
-        $output .= '<div id="focus-mod" class="open-focusmod border-left border-right" data-placement="left"><i class="fa fa-external-link"></i><span class="ml-1 mr-1">'.get_string('zoomout','local_newsvnr').'</span></div>';
+        $output .= '<div id="focus-mod" course="'.$COURSE->id.'" class="d-flex open-focusmod border-left border-right" data-placement="left"><i class="fa fa-external-link"></i><span class="ml-1 mr-1">'.get_string('zoomout','local_newsvnr').'</span></div>';
         $output .= '<div class="dropdown-content">';
         foreach ($allmodinfo as $modinfo) {
             $sectioninfo = $DB->get_record_sql('SELECT * FROM {course_sections} WHERE id = :section', ['section' => $modinfo->id]);
@@ -133,30 +136,37 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 $output .= '</div>';
                 $output .= '<div class="dropdown-content-2 '.$modinfo->id.'">';
                 foreach($modinfo->modinfo->cms as $cms) {
+                    if($cms->modname == 'label')
+                        continue;
+                    $completionicon = get_course_section_cm_completion($COURSE,$completioninfo,$cms);
                     if($cms->section == $modinfo->id && $cms->visible == 1) {
                         $getmodules = $DB->get_records_sql('SELECT cm.id, cm.deletioninprogress FROM {course_modules} cm JOIN {course_sections} cs ON cm.section = cs.id WHERE cm.instance = :section AND cm.course = :courseid',['section' => $cms->instance,'courseid' => $COURSE->id]);
                         foreach($getmodules as $getmodule) {
-                            if($getmodule->deletioninprogress != 0) {
+                            if($getmodule->deletioninprogress == 1) {
                                 continue 2;
                             }    
                         }
                         
                         $url = $CFG->wwwroot . '/mod/' . $cms->modname . '/view.php?id=' . $cms->id;
                         $modname = $cms->name;
-                        $output .= '<div class="card-header level2">';
+                        $modtype = $cms->modname;
+                        $output .= '<div class="card-header level2 justify-content-between">';
+                        // $output .= '<div class="d-flex align-items-center">';
                         if($cms->modname == 'resource') {
                             $img = $OUTPUT->image_url($cms->icon);
                             $displayresource = $DB->get_field('resource', 'display', ['id' => $cms->instance]);
                             if($displayresource == RESOURCE_DISPLAY_GOOGLE_DOCS_POPUP) {
                                 $cm = $DB->get_field('course_modules', 'id', ['instance' => $cms->instance]);
-                                $output .= '<img  src="'.$img.'"><a onclick="showmodal('.$cm.', '.$cms->instance.')" href="javascript:;">'.$modname.'</a>';
+                                $output .= '<a onclick="showmodal('.$cm.', '.$cms->instance.')" href="javascript:;"><img  class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
                             } else {
-                                $output .= '<img  src="'.$img.'"><a href="'.$url.'">'.$modname.'</a>';
+                                $output .= '<a href="javascript:;" data-mod-type="'.$modtype.'" data-focusmode-url="'.$url.'" module-id="'.$cms->id.'"><img class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
                             }
                         } else {
                             $img = $OUTPUT->image_url('icon', $cms->modname);
-                            $output .= '<img  src="'.$img.'"><a href="'.$url.'">'.$modname.'</a>';
+                            $output .= '<a href="javascript:;" data-mod-type="'.$modtype.'" data-focusmode-url="'.$url.'" module-id="'.$cms->id.'"><img class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
                         }
+                        // $output .= '</div>';
+                        $output .= '<div class="position-relative">'.$completionicon.'</div>';
                         $output .= '</div>';    
                     }
                 }
@@ -168,17 +178,48 @@ class core_renderer extends \theme_boost\output\core_renderer {
         return $output;
     }
     public function header_course() {
-        global $COURSE, $CFG, $OUTPUT, $PAGE;
+        global $COURSE, $CFG, $OUTPUT, $PAGE, $DB;
+        $theme_settings = new theme_settings();
         $process = round(\core_completion\progress::get_course_progress_percentage($COURSE));
+        $teacher = $theme_settings::role_courses_all_teacher($COURSE->id);
+        $teacherimg = '';
+        if(is_array($teacher)) {
+            $teacherimg .= (count($teacher) > 1) ? '<div class="avatar-group">' : '';
+        }
+        foreach ($teacher as $value) {
+            if(isset($value->id)) {
+                $teacherobj = $DB->get_record('user', array('id' => $value->id));
+                $teacherimg .= '<span class="avatar" title="'.$value->fullnamet.'">'.$OUTPUT->user_picture($teacherobj,['size' => 30]).'</span>';
+                if(count($teacher) == 1) {
+                    $teacherimg .= '<a target="_blank" href="'.$CFG->wwwroot.'/user/profile.php?id='.$value->id.'">'.$value->fullnamet.'</a>';
+                }
+            } 
+        }
+        if(is_array($teacher)) {
+            $teacherimg .= (count($teacher) > 1) ? '</div>' : '';
+        }
+        if(isset($teacher->imgdefault)) {
+            $teacherimg = $teacher->imgdefault . '<a>'.$teacher->fullnamet.'</a>';
+        }
+        $module = $DB->get_record('course_modules',['course' => $COURSE->id,'visible' => 1,'deletioninprogress' => 0],'count(*) as count');
+        $view = $DB->get_record('logstore_standard_log',['courseid' => $COURSE->id,'action' => 'viewed'],'count(*) as count');
+        $studentdata = $theme_settings::role_courses_teacher_slider($COURSE->id);
         $output = '';
-        $output .= '<div class="header-progress d-flex justify-content-between align-items-center"><div class="page-header-headings"><h2>'.$COURSE->fullname.'</h2></div>';
-        $output .= '<div class="d-flex float-right align-items-center">';
-        $output .= '<div class="progress course">';
+        $output .= '<div class="header-progress"><div class="page-header-headings"><h2>'.$COURSE->fullname.'</h2></div>';
+        $output .= '<div class="d-flex mt-1 mb-1 align-items-center justify-content-between"><div class="d-flex align-items-center flex-wrap">';
+        $output .= '<div class="teacherinfo mr-4">'.$teacherimg.'</div>';
+        $output .= '<div class="mr-4"><i class="fa fa-book mr-1" aria-hidden="true"></i><span class="font-bold">'.$module->count.'</span> <span class="text">'.get_string('lesson','local_newsvnr').'</span></div>';
+        $output .= '<div class="mr-4"><i class="fa fa-user mr-1" aria-hidden="true"></i><span class="font-bold">'.$studentdata->studentnumber.'</span> <span class="text">'.get_string('countstudent','local_newsvnr').'</span></div>';
+        $output .= '<div class="mr-4"><i class="fa fa-eye mr-1" aria-hidden="true"></i><span class="font-bold">'.$view->count.'</span> <span class="text">'.get_string('view','local_newsvnr').'</span></div>';
+        $output .= '<div class=""><span class="text">'.get_string('lastupdate','local_newsvnr').'</span> <span class="font-bold">'.converttime($COURSE->timemodified).'</span></div>';
+        $output .= '</div>';
+        $output .= '<div id="focus-mod" class="open-focusmod mr-2" data-placement="left"><span class="mr-2">'.get_string('startlearning','local_newsvnr').'</span><i class="fa fa-arrow-right" aria-hidden="true"></i></div>';
+        $output .= '</div>'; // end div d-flex
+        $output .= '<div class="d-flex align-items-center"><div class="progress course">';
         $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
-                    aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div class="pr-2">'.$process.'%</div>';
-        $output .= '<div id="focus-mod" class="open-focusmod mr-2" data-placement="left"><i class="fa fa-desktop"></i><span class="ml-2 mr-2">'.get_string('zoomin','local_newsvnr').'</span></div>';
-        $output .= '</div>';
-        $output .= '</div>';
+                    aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div>'.$process.'%</div>';
+       $output .=  '</div>'; // end div d-flex
+        $output .= '</div>'; // end div header-progress
         return $output;
     }
 
@@ -350,41 +391,47 @@ class core_renderer extends \theme_boost\output\core_renderer {
     public function right_sidebar_menu() {
         global $CFG;
         $output = '';
-        $theme = theme_config::load('moove');
-        $home = $CFG->wwwroot;
-        $dashboard = $CFG->wwwroot . '/my/';
-        $library = $CFG->wwwroot . '/library.php';
-        $filelibrary = $CFG->wwwroot . '/local/newsvnr/generallibrary.php';
-        $examonline = $CFG->wwwroot . '/examonline.php';
-        $course = $CFG->wwwroot . '/course/index.php';
-        $news = $CFG->wwwroot . '/local/newsvnr/index.php';
-        $forum = $CFG->wwwroot . '/local/newsvnr/forum.php';
-        $calendar = $CFG->wwwroot . '/calendar/view.php?view=month';
-        $files = $CFG->wwwroot . '/user/files.php';
-        // Danh mục chính
-        $output .= '<li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>'.get_string('main','theme_moove').'</span></li>';
-        if(isset($theme->settings->displayhome) && $theme->settings->displayhome == 1){
-            $output .= '<li class="menu-link"><a href="'.$home .'"><i class="fa fa-home mr-3"></i>'. get_string('home', 'theme_moove') .'</a></li>';
-        }
-        $output .= '<li class="menu-link"><a href="'.$dashboard .'"><i class="fa fa-line-chart mr-3"></i>'. get_string('dashboard', 'theme_moove') .'</a></li>';
-        $output .= '<li class="menu-link"><a href="'.$library .'"><i class="fa fa-book mr-3"></i>'. get_string('library', 'theme_moove') .'</a></li>';
-        $output .= '<li class="menu-link"><a href="'.$news .'"><i class="fa fa-newspaper-o mr-3"></i>'. get_string('news', 'theme_moove') .'</a></li>';
-        $output .= '<li class="menu-link"><a href="'.$forum .'"><i class="fa fa-users mr-3"></i>'. get_string('forum', 'theme_moove') .'</a></li>';
-        $output .= '<li class="menu-link"><a href="'.$calendar .'"><i class="fa fa-calendar mr-3" aria-hidden="true"></i>'. get_string('calendar', 'theme_moove') .'</a></li>';
-        $output .= '<li class="menu-link"><a href="'.$examonline .'"><i class="fa fa-pencil-square mr-3" aria-hidden="true"></i>'. get_string('examonline', 'theme_moove') .'</a></li>';
-        $output .= '<li class="menu-link"><a href="'.$filelibrary .'"><i class="fa fa-folder-open mr-3"></i>'. get_string('filelibrary', 'theme_moove') .'</a></li>';
-        $output .= '<li class="menu-link"><a href="'.$files .'"><i class="fa fa-file mr-3"></i>'. get_string('privatedata', 'theme_moove') .'</a></li>';
-        $output .= '<li><hr class="light-grey-hr mb-10"></li>';
-        // Danh mục học viên - giáo viên
-        $output .= '<li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>'.get_string('studentteacher','theme_moove').'</span></li>';
-        $output .= '<li class="menu-link"><a href="'.$course .'"><i class="fa fa-university mr-3" aria-hidden="true"></i>'. get_string('course', 'theme_moove') .'</a></li>';
-        if($this->nav_coursebystudent() != '') {
-            $output .= '<li class="menu-link d-flex align-items-center click-menu-expand" id="studentcourse"><a href="javascript:"><i class="fa fa-graduation-cap mr-3" aria-hidden="true"></i>My course</a><i class="fa fa-angle-right rotate-icon float-right pl-3 pr-3"></i></li>';
-            $output .= '<ul class="dropdown-menu content-menu-expand studentcourse" role="menu" id="drop-course-by-student">'.$this->nav_coursebystudent().'</ul>';
-        }
-        if($this->nav_coursebyteacher() != '') {
-            $output .= '<li class="menu-link d-flex align-items-center click-menu-expand" id="teachercourse"><a href="javascript:"><i class="fa fa-graduation-cap mr-3" aria-hidden="true"></i>My teaching course</a><i class="fa fa-angle-right rotate-icon float-right pl-3 pr-3"></i></li>';
-            $output .= '<ul class="dropdown-menu content-menu-expand teachercourse" role="menu" id="drop-course-by-student">'.$this->nav_coursebyteacher().'</ul>';
+        if(isloggedin()) {
+            $theme = theme_config::load('moove');
+            $home = $CFG->wwwroot;
+            $dashboard = $CFG->wwwroot . '/my/';
+            $library = $CFG->wwwroot . '/library.php';
+            $filelibrary = $CFG->wwwroot . '/local/newsvnr/generallibrary.php';
+            $examonline = $CFG->wwwroot . '/examonline.php';
+            $course = $CFG->wwwroot . '/course/index.php';
+            $news = $CFG->wwwroot . '/local/newsvnr/index.php';
+            $forum = $CFG->wwwroot . '/local/newsvnr/forum.php';
+            $calendar = $CFG->wwwroot . '/calendar/view.php?view=month';
+            $files = $CFG->wwwroot . '/user/files.php';
+            // Danh mục chính
+            $output .= '<li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>'.get_string('main','theme_moove').'</span></li>';
+            if(isset($theme->settings->displayhome) && $theme->settings->displayhome == 1){
+                $output .= '<li class="menu-link"><a href="'.$home .'"><i class="fa fa-home mr-3"></i>'. get_string('home', 'theme_moove') .'</a></li>';
+            }
+            $output .= '<li class="menu-link"><a href="'.$dashboard .'"><i class="fa fa-line-chart mr-3"></i>'. get_string('dashboard', 'theme_moove') .'</a></li>';
+            $output .= '<li class="menu-link"><a href="'.$library .'"><i class="fa fa-book mr-3"></i>'. get_string('library', 'theme_moove') .'</a></li>';
+            $output .= '<li class="menu-link"><a href="'.$news .'"><i class="fa fa-newspaper-o mr-3"></i>'. get_string('news', 'theme_moove') .'</a></li>';
+            $output .= '<li class="menu-link"><a href="'.$forum .'"><i class="fa fa-users mr-3"></i>'. get_string('forum', 'theme_moove') .'</a></li>';
+            $output .= '<li class="menu-link"><a href="'.$calendar .'"><i class="fa fa-calendar mr-3" aria-hidden="true"></i>'. get_string('calendar', 'theme_moove') .'</a></li>';
+            $output .= '<li class="menu-link"><a href="'.$examonline .'"><i class="fa fa-pencil-square mr-3" aria-hidden="true"></i>'. get_string('examonline', 'theme_moove') .'</a></li>';
+            $output .= '<li class="menu-link"><a href="'.$filelibrary .'"><i class="fa fa-folder-open mr-3"></i>'. get_string('filelibrary', 'theme_moove') .'</a></li>';
+            $output .= '<li class="menu-link"><a href="'.$files .'"><i class="fa fa-file mr-3"></i>'. get_string('privatedata', 'theme_moove') .'</a></li>';
+            $output .= '<li><hr class="light-grey-hr mb-10"></li>';
+            // Danh mục học viên - giáo viên
+            $output .= '<li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>'.get_string('studentteacher','theme_moove').'</span></li>';
+            $output .= '<li class="menu-link"><a href="'.$course .'"><i class="fa fa-university mr-3" aria-hidden="true"></i>'. get_string('course', 'theme_moove') .'</a></li>';
+            if($this->nav_coursebystudent() != '') {
+                $output .= '<li class="menu-link d-flex align-items-center click-menu-expand" id="studentcourse"><a href="javascript:"><i class="fa fa-graduation-cap mr-3" aria-hidden="true"></i>'.get_string('mycourses','local_newsvnr').'</a><i class="fa fa-angle-right rotate-icon float-right pl-3 pr-3"></i></li>';
+                $output .= '<ul class="dropdown-menu content-menu-expand studentcourse" role="menu" id="drop-course-by-student">'.$this->nav_coursebystudent().'</ul>';
+            }
+            if($this->nav_coursebyteacher() != '') {
+                $output .= '<li class="menu-link d-flex align-items-center click-menu-expand" id="teachercourse"><a href="javascript:"><i class="fa fa-graduation-cap mr-3" aria-hidden="true"></i>'.get_string('myteachingcourses','local_newsvnr').'  </a><i class="fa fa-angle-right rotate-icon float-right pl-3 pr-3"></i></li>';
+                $output .= '<ul class="dropdown-menu content-menu-expand teachercourse" role="menu" id="drop-course-by-student">'.$this->nav_coursebyteacher().'</ul>';
+            }
+        } else {
+            $dashboard = $CFG->wwwroot . '/my/';
+            $output .= '<li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>'.get_string('main','theme_moove').'</span></li>';
+            $output .= '<li class="menu-link"><a href="'.$dashboard .'"><i class="fa fa-line-chart mr-3"></i>'. get_string('dashboard', 'theme_moove') .'</a></li>';
         }
         return $output;
     }
@@ -394,6 +441,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
      * @return mixed
      */
     public function render_lang_menu() {
+        global $CFG;
         $langs = get_string_manager()->get_list_of_translations();
         $haslangmenu = $this->lang_menu() != '';
         $menu = new custom_menu;
@@ -401,6 +449,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             if ($haslangmenu) {
                 $strlang = get_string('language');
                 $currentlang = current_language();
+                $templang = $currentlang;
                 if (isset($langs[$currentlang])) {
                     $currentlang = $langs[$currentlang];
                 } else {
@@ -413,6 +462,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 foreach ($menu->get_children() as $item) {
                     $context = $item->export_for_template($this);
                 }
+                $context->img = ($templang == 'vi') ? $CFG->wwwroot.'/theme/moove/pix/vi_lang.png' : $CFG->wwwroot.'/theme/moove/pix/en_lang.png' ;
+                $context->children[0]->img =  $CFG->wwwroot.'/theme/moove/pix/en_lang.png';
+                $context->children[1]->img =  $CFG->wwwroot.'/theme/moove/pix/vi_lang.png';
                 if (isset($context)) {
                     return $this->render_from_template('theme_moove/lang_menu', $context);
                 }
@@ -455,7 +507,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         global $PAGE,$DB,$USER;
         // var_dump($USER->editing);die;
         $html = html_writer::start_div('row');
-        $html .= html_writer::start_div('col-xs-12 mt-2 mb-2');
+        $html .= html_writer::start_div('col-12 mt-2 mb-2');
         $teacherdbbutton = '';
         $studentdbbutton = '';
         $addblockbutton = '';
@@ -488,6 +540,45 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $html .= html_writer::end_div(); // End .row.
         $html .= html_writer::end_div(); // End .col-xs-12.
 
+        return $html;
+    }
+
+    public function mydashboard_user_header_custom() {
+        global $PAGE,$DB,$USER;
+        $html = '<ul>';
+        $button = '';
+        $addblockbutton = '';
+        $pageheadingbutton = $this->page_heading_button();
+        $check = theme_moove_layout_check();
+        if ($PAGE->user_is_editing() && $PAGE->user_can_edit_blocks() && ($PAGE->blocks->get_addable_blocks())) {
+            $url = new moodle_url($PAGE->url, ['bui_addblock' => '', 'sesskey' => sesskey()]);
+            $addblockbutton = '<li><i class="fa fa-empire text-icon-dashboard" aria-hidden="true"></i><a href="'.$url.'" class="metismenu text-icon-dashboard" data-key="addblock">'. get_string('addblock') .'</a></li>';
+        }
+        $teacherrole = check_teacherrole($USER->id);
+        $studentrole = check_studentrole($USER->id);
+        if($teacherrole != 0 && $check->is_teacher != true) {
+            $url = new moodle_url('/my/index.php?teacher=1');
+            $button .= '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-line-chart text-icon-dashboard mr-1" aria-hidden="true"></i>'. get_string('teacherdashboard', 'local_newsvnr') .'</a></li>';
+        } 
+        if($studentrole != 0 && $check->is_student != true) {
+            $url = new moodle_url('/my/index.php?student=1');
+            $button .= '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-line-chart text-icon-dashboard mr-1" aria-hidden="true"></i>'. get_string('studentdashboard', 'local_newsvnr') .'</a></li>';
+        } 
+        if(is_siteadmin() && $check->isadmin != true) {
+            $url = new moodle_url('/my/index.php');
+            $button .= '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-line-chart text-icon-dashboard mr-1" aria-hidden="true"></i>Dashboard admin</a></li>';
+        }
+        if (empty($PAGE->layout_options['nonavbar'])) {
+            $html .= html_writer::start_div('clearfix w-100 pull-xs-left', array('id' => 'page-navbar'));
+            $html .= html_writer::tag('div', $this->navbar(), array('class' => 'breadcrumb-nav'));
+            $html .= html_writer::div($pageheadingbutton, 'breadcrumb-button');
+            $html .= html_writer::end_div();
+        } else if ($pageheadingbutton) {
+            $html .= html_writer::div($addblockbutton . $pageheadingbutton . $button, 'action-rightside-fixed');
+        } else {
+            $html .= html_writer::div($button, 'action-rightside-fixed');
+        }
+        $html .= '</ul>';
         return $html;
     }
 
@@ -566,12 +657,17 @@ class core_renderer extends \theme_boost\output\core_renderer {
      * @return string an url
      */
     public function favicon() {
+        global $CFG;
+
         $theme = theme_config::load('moove');
 
         $favicon = $theme->setting_file_url('favicon', 'favicon');
 
         if (!empty(($favicon))) {
-            return $favicon;
+            $urlreplace = preg_replace('|^https?://|i', '//', $CFG->wwwroot);
+            $favicon = str_replace($urlreplace, '', $favicon);
+
+            return new moodle_url($favicon);
         }
 
         return parent::favicon();
@@ -1157,11 +1253,10 @@ class core_renderer extends \theme_boost\output\core_renderer {
     }
     public function course_search_form_fp_kendo() {
         $output = '';
-        $searchurl = new moodle_url('/course/search.php');
-        $output .= '<form class="search_form_fp" action="'.$searchurl.'">';
+        $output .= '<div class="search_form_fp">';
         $output .= '<input class="border-none" id="course_search_form_fp" placeholder="Search">';
         $output .= '<i class="fa fa-search ml-2 mr-2 mt-2" aria-hidden="true"></i>';
-        $output .= '</form>';
+        $output .= '</div>';
         return $output;
     }
     public function get_js_moove()
@@ -1206,6 +1301,75 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
         return $count;
     }
+    public function folder_tree_custom($menus, $id_parent = 0, &$output = '', $stt = 0) {
+        global $DB, $CFG, $OUTPUT;
+        $menu_tmp = array();
+        foreach ($menus as $key => $item) {
+            if ((int) $item->parent == (int) $id_parent) {
+                $menu_tmp[] = $item;
+                unset($menus[$key]);
+            }
+        }
+        if ($menu_tmp) {   
+            if($stt == 0)
+                $output .= '<ul class="tree-folder" role="menu"><li class="folder full-flex pl-3 title"><a href="javascript:void(0)" class="folder-child" id="0">'.get_string('folder', 'local_newsvnr').'</a><button type="button" class="btn" data-toggle="modal" data-target="#add-popup-modal-folder"><i class="fa fa-plus-circle mr-2" aria-hidden="true"></i>'.get_string('addfolder', 'local_newsvnr').'</button></li>';
+            else {
+                if($id_parent == 0)
+                    $output .= '<ul class=" 0">';
+            }
+            foreach ($menu_tmp as $item) {
+                if($item->visible == 1 || ($item->visible == 0 && is_siteadmin())) {
+                    if($item->visible == 0) {
+                        $visible = 'hide';
+                        $iconhide = $OUTPUT->pix_icon('t/show', get_string('show'));
+                    }
+                    else {
+                        $visible = 'show';
+                        $iconhide = '';
+                    }
+                    $output .= '<li onclick="getParentValue('.$item->id.',\''.$item->name.'\')" class="pl-3 folder '.$item->id.' '.$visible.'" id="'.$item->id.'" allmodule="'.$OUTPUT->recursive_module_folder($item->id).'">';
+                    $getcategory = $DB->get_records_sql('SELECT * FROM {library_folder} WHERE parent = :id',[ 'id' => $item->id] );
+                    if(empty($getcategory)){
+                        $output .= '<a style="margin-left: 18px;"></a>';
+                    } else { $output .= '<img class="icon-plus" id="'.$item->id.'" src="'.$CFG->wwwroot.'/theme/moove/pix/plus.png">';}
+                    $output .= '<img class="icon-folder" src="'.$CFG->wwwroot.'/theme/moove/pix/folder2.png"><a class="folder-child mr-1" tabindex="-1" href="javascript:void(0)" id="'.$item->id.'"">' . $item->name . '</a>'.$iconhide.'';
+                    $output .= '</li>';
+                    $output .= '<ul class="content-expand '.$item->id.' pl-3 '.$visible.'" >';
+                    foreach($menus as $childkey => $childitem) {
+                        // Kiểm tra phần tử có con hay không?
+                        if($childitem->visible == 0) {
+                            $visible = 'hide';
+                            $iconhide = $OUTPUT->pix_icon('t/show', get_string('show'));
+                        } else {
+                            $visible = 'show';
+                            $iconhide = '';
+                        }
+                        if($childitem->parent == $item->id && ($childitem->visible == 1 || is_siteadmin())) {
+                            $getcategory_child = $DB->get_records_sql('SELECT * FROM {library_folder} WHERE parent = :id',[ 'id' => $childitem->id] );
+                            $output .= '<li onclick="getParentValue('.$childitem->id.',\''.$childitem->name.'\')" class="pl-3 folder '.$childitem->id.' '.$visible.'" id="'.$childitem->id.'" allmodule="'.$OUTPUT->recursive_module_folder($childitem->id).'">';
+                            if(empty($getcategory_child)) {
+                                $output .= '<a style="margin-left: 18px;"></a>';
+                            } else { $output .= '<img class="icon-plus" id="'.$childitem->id.'" src="'.$CFG->wwwroot.'/theme/moove/pix/plus.png">';}
+                            $output .= '<img class="icon-folder" src="'.$CFG->wwwroot.'/theme/moove/pix/folder2.png"><a class="folder-child mr-1" tabindex="-1" href="javascript:void(0)" id="'.$childitem->id.'">' . $childitem->name . '</a>'.$iconhide.'';
+                            $output .= '</li>';
+                            $output .= '<ul class="content-expand '.$childitem->id.' pl-3">';
+                            unset($menus[$childkey]);
+                            $this->folder_tree_custom($menus, $childitem->id, $output,++$stt);
+                            $output .= '</ul>';
+                        } 
+                    }
+                    $output .= '</ul>';
+                }
+            }
+            if($stt == 0)
+                $output .= '</ul>';
+            else {
+                if($id_parent == 0)
+                    $output .= '</ul>';
+            }
+        }
+        return $output;
+    }
     public function folder_tree($menus, $id_parent = 0, &$output = '', $stt = 0) {
         global $DB, $CFG, $OUTPUT;
         $menu_tmp = array();
@@ -1233,8 +1397,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
                         $iconhide = '';
                     }
                     $output .= '<li onclick="getParentValue('.$item->id.',\''.$item->name.'\')" class="click-expand pl-3 folder '.$item->id.' '.$visible.'" id="'.$item->id.'" allmodule="'.$OUTPUT->recursive_module_folder($item->id).'">';
-                    $output .= '<i class="fa fa-folder" aria-hidden="true"></i><a tabindex="-1" href="javascript:void(0)" class="mr-2" id="'.$item->id.'"">' . $item->name . '</a>'.$iconhide.'';
                     $getcategory = $DB->get_records_sql('SELECT * FROM {library_folder} WHERE parent = :id',[ 'id' => $item->id] );
+                    $output .= '<i class="fa fa-folder" aria-hidden="true"></i><a tabindex="-1" href="javascript:void(0)" class="mr-2" id="'.$item->id.'"">' . $item->name . '</a>'.$iconhide.'';
                     if(empty($getcategory)){
                         $output .= '</li>';
                     } else { $output .= '<i class="fa fa-angle-right rotate-icon float-right mr-2"></i></li>';}
@@ -1249,14 +1413,13 @@ class core_renderer extends \theme_boost\output\core_renderer {
                             $iconhide = '';
                         }
                         if($childitem->parent == $item->id && ($childitem->visible == 1 || is_siteadmin())) {
+                            $getcategory_child = $DB->get_records_sql('SELECT * FROM {library_folder} WHERE parent = :id',[ 'id' => $childitem->id] );
                             $output .= '<li onclick="getParentValue('.$childitem->id.',\''.$childitem->name.'\')" class="click-expand pl-3 folder '.$childitem->id.' '.$visible.'" id="'.$childitem->id.'" allmodule="'.$OUTPUT->recursive_module_folder($item->id).'">';
                             $output .= '<i class="fa fa-folder" aria-hidden="true"></i><a tabindex="-1" href="javascript:void(0)" class="mr-2" id="'.$childitem->id.'">' . $childitem->name . '</a>'.$iconhide.'';
-                            $getcategory_child = $DB->get_records_sql('SELECT * FROM {library_folder} WHERE parent = :id',[ 'id' => $childitem->id] );
                             if(empty($getcategory_child)){
                                 $output .= '</li>';
                             } else { $output .= '<i data="'.$item->id.'" class="fa fa-angle-right rotate-icon float-right mr-2"></i></li>';}
                             $output .= '<ul class="content-expand '.$childitem->id.' pl-3">';
-
                             unset($menus[$childkey]);
                             $this->folder_tree($menus, $childitem->id, $output,++$stt);
                             $output .= '</ul>';
@@ -1303,32 +1466,32 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
         foreach ($moduletypes as $keymodule => $moduletype) {
             if($keymodule != 'resource') {
-                $moduleimg = html_writer::img($OUTPUT->image_url('icon', $keymodule), $keymodule, ['class' => 'pr-2']);
-                $output .= '<div class="module-count" onclick="filterModule(\''.$keymodule.'\','.$folderid.')">' . $moduleimg . '(' . $moduletype . ')</div>';
+                $moduleimg = html_writer::img($OUTPUT->image_url('icon', $keymodule), $keymodule, ['class' => 'pr-2 img-module']);
+                $output .= '<div class="module-count" title="'.$keymodule.'" onclick="filterModule(\''.$keymodule.'\','.$folderid.')">' . $moduleimg . '(' . $moduletype . ')</div>';
             } else {
                 foreach ($resources as $keyresource => $resource) {
                     if(in_array($keyresource, $allowmodule)) {
                         $count = $resource;
                         if($keyresource == 'pdf') {
-                            $moduleimg = html_writer::img($OUTPUT->image_url('f/pdf-24'), 'Pdf', ['class' => 'pr-2']);
+                            $moduleimg = html_writer::img($OUTPUT->image_url('f/pdf-24'), 'Pdf', ['class' => 'pr-2 img-module']);
                             $keyfilter = 'pdf';
                         }
                         if($keyresource == 'xlsx' || $keyresource == 'xls') {
                             if(isset($resources['xlsx']) && isset($resources['xls'])) {
                                 $count = $resources['xlsx'] + $resources['xls'];
                             }
-                            $moduleimg = html_writer::img($OUTPUT->image_url('f/spreadsheet-24'), 'exel', ['class' => 'pr-2']);
+                            $moduleimg = html_writer::img($OUTPUT->image_url('f/spreadsheet-24'), 'exel', ['class' => 'pr-2 img-module']);
                             $keyfilter = 'excel';
                         }
                         if($keyresource == 'ppt') {
-                            $moduleimg = html_writer::img($OUTPUT->image_url('f/powerpoint-24'), 'Ppt', ['class' => 'pr-2']);
+                            $moduleimg = html_writer::img($OUTPUT->image_url('f/powerpoint-24'), 'Ppt', ['class' => 'pr-2 img-module']);
                             $keyfilter = 'powerpoint';
                         }
                         if($keyresource == 'docx' || $keyresource == 'doc') {
                             if(isset($resources['doc']) && isset($resources['docx'])) {
                                 $count = $resources['doc'] + $resources['docx'];
                             }
-                            $moduleimg = html_writer::img($OUTPUT->image_url('f/document-24'), 'Word', ['class' => 'pr-2']);
+                            $moduleimg = html_writer::img($OUTPUT->image_url('f/document-24'), 'Word', ['class' => 'pr-2 img-module']);
                             $keyfilter = 'word';
                         }
                         if (($keyresource == 'doc' && isset($resources['docx'])) || ($keyresource == 'xls' && isset($resources['xlsx']))) {
@@ -1337,12 +1500,18 @@ class core_renderer extends \theme_boost\output\core_renderer {
                         else {
 
                         }
-                        $output .= '<div class="module-count" onclick="filterModule(\''.$keyfilter.'\','.$folderid.')">' . $moduleimg . '(' . $count . ')</div>';
+                        $output .= '<div class="module-count" title="'.$keyresource.'" onclick="filterModule(\''.$keyfilter.'\','.$folderid.')">' . $moduleimg . '(' . $count . ')</div>';
                     }
                 }
             }
         }
         $output .= '</div>';
+        return $output;
+    }
+    public function library_folder_custom() {
+        global $DB;
+        $library = $DB->get_records_sql("SELECT * FROM {library_folder}");        
+        $output = $this->folder_tree_custom($library);
         return $output;
     }
     public function library_folder() {
@@ -1351,7 +1520,6 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output = $this->folder_tree($library);
         return $output;
     }
-
     public function grade_report_nav() {
         $output  = '';
         $output .= '<ul class="nav-tabs nav multi-tab mb-3">';
@@ -1397,4 +1565,45 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output .= '</div>';//end tab-pane
         return $output;
     }
+    
+    /**
+     * Returns HTML attributes to use within the body tag. This includes an ID and classes.
+     *
+     * @param string|array $additionalclasses Any additional classes to give the body tag,
+     *
+     * @return string
+     *
+     * @throws \coding_exception
+     *
+     * @since Moodle 2.5.1 2.6
+     */
+    public function body_attributes($additionalclasses = array()) {
+        $hasaccessibilitybar = get_user_preferences('thememoovesettings_enableaccessibilitytoolbar', '');
+        if ($hasaccessibilitybar) {
+            $additionalclasses[] = 'hasaccessibilitybar';
+
+            $currentfontsizeclass = get_user_preferences('accessibilitystyles_fontsizeclass', '');
+            if ($currentfontsizeclass) {
+                $additionalclasses[] = $currentfontsizeclass;
+            }
+
+            $currentsitecolorclass = get_user_preferences('accessibilitystyles_sitecolorclass', '');
+            if ($currentsitecolorclass) {
+                $additionalclasses[] = $currentsitecolorclass;
+            }
+        }
+
+        $fonttype = get_user_preferences('thememoovesettings_fonttype', '');
+        if ($fonttype) {
+            $additionalclasses[] = $fonttype;
+        }
+
+        if (!is_array($additionalclasses)) {
+            $additionalclasses = explode(' ', $additionalclasses);
+        }
+
+        return ' id="'. $this->body_id().'" class="'.$this->body_css_classes($additionalclasses).'"';
+    }
+
+
 }

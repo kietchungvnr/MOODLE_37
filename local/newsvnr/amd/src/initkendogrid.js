@@ -129,11 +129,25 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
             }
             eventArr.push(objEventDelete);
         }
+        if (gridConfig.joinCourseEvent != undefined) {
+            var funcViewCourseInfoPopup = function(e) {
+                e.preventDefault();
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                gridConfig.joinCourseEvent(dataItem);
+            }
+            var objEventJoinCourse = {
+                click: funcViewCourseInfoPopup,
+                iconClass: 'fa fa-arrow-right mr-1',
+                text: M.util.get_string('startlearning', 'local_newsvnr'),
+                name: 'learning',
+            }
+            eventArr.push(objEventJoinCourse);
+        }
         if(eventArr.length > 0) {
             gridConfig.columns.push({
                 title: M.util.get_string('action', 'local_newsvnr'),
                 command: eventArr,
-                width: 100
+                width: 150
             });
         }
         if(gridConfig.toolbar === undefined) {

@@ -219,15 +219,15 @@ class comment {
 
         // load template
         $this->template = html_writer::start_tag('div', array('class' => 'comment-message'));
-
+        $this->template .= html_writer::tag('span', '___picture___', array('class' => 'picture mr-2'));
         $this->template .= html_writer::start_tag('div', array('class' => 'comment-message-meta mr-3'));
-
-        $this->template .= html_writer::tag('span', '___picture___', array('class' => 'picture'));
-        $this->template .= html_writer::tag('span', '___name___', array('class' => 'user')) . ' - ';
-        $this->template .= html_writer::tag('span', '___time___', array('class' => 'time'));
-
-        $this->template .= html_writer::end_tag('div'); // .comment-message-meta
+        // $this->template .= html_writer::start_tag('div', array('class' => 'd-flex align-items-center'));
+        $this->template .= html_writer::tag('span', '___name___', array('class' => 'user font-14 font-bold mr-2'));
         $this->template .= html_writer::tag('div', '___content___', array('class' => 'text'));
+        // $this->template .= html_writer::end_tag('div'); // .comment-message-meta
+        $this->template .= html_writer::tag('div', '___time___', array('class' => 'time grey font-14'));
+        $this->template .= html_writer::end_tag('div'); // .comment-message-meta
+
 
         $this->template .= html_writer::end_tag('div'); // .comment-message
 
@@ -423,11 +423,12 @@ class comment {
      * @return string|void
      */
     public function output($return = true) {
-        global $PAGE, $OUTPUT;
+        global $PAGE, $OUTPUT, $DB, $USER;
         static $template_printed;
-
+        // Custom by Thắng : sửa lại template comment blog
         $this->initialise_javascript($PAGE);
-
+        $datauser = $DB->get_record('user', ['id' => $USER->id]);
+        $useravatar = $OUTPUT->user_picture($datauser);
         if (!empty(self::$nonjs)) {
             // return non js comments interface
             return $this->print_comments(self::$comment_page, $return, true);
@@ -503,7 +504,8 @@ class comment {
                 }
 
                 $html .= html_writer::start_tag('div', array('class' => 'comment-area'));
-                $html .= html_writer::start_tag('div', array('class' => 'db'));
+                $html .= html_writer::start_tag('div', array('class' => 'db d-flex mb-3 mt-1'));
+                $html .= $useravatar;
                 $html .= html_writer::tag('textarea', '', $textareaattrs);
                 $html .= html_writer::end_tag('div'); // .db
 
@@ -537,9 +539,10 @@ class comment {
      * Return matched comments
      *
      * @param  int $page
+     * @param  str $sortdirection sort direction, ASC or DESC
      * @return array
      */
-    public function get_comments($page = '') {
+    public function get_comments($page = '', $sortdirection = 'DESC') {
         global $DB, $CFG, $USER, $OUTPUT;
         if (!$this->can_view()) {
             return false;
@@ -557,6 +560,7 @@ class comment {
             $params['component'] = $component;
         }
 
+        $sortdirection = ($sortdirection === 'ASC') ? 'ASC' : 'DESC';
         $sql = "SELECT $ufields, c.id AS cid, c.content AS ccontent, c.format AS cformat, c.timecreated AS ctimecreated
                   FROM {comments} c
                   JOIN {user} u ON u.id = c.userid
@@ -564,7 +568,7 @@ class comment {
                        c.commentarea = :commentarea AND
                        c.itemid = :itemid AND
                        $componentwhere
-              ORDER BY c.timecreated DESC, c.id DESC";
+              ORDER BY c.timecreated $sortdirection, c.id $sortdirection";
         $params['contextid'] = $this->contextid;
         $params['commentarea'] = $this->commentarea;
         $params['itemid'] = $this->itemid;
@@ -582,7 +586,7 @@ class comment {
             $url = new moodle_url('/user/view.php', array('id'=>$u->id, 'course'=>$this->courseid));
             $c->profileurl = $url->out(false); // URL should not be escaped just yet.
             $c->fullname = fullname($u);
-            $c->time = userdate($c->timecreated, $c->strftimeformat);
+            $c->time = converttime($c->timecreated);
             $c->content = format_text($c->content, $c->format, $formatoptions);
             $c->avatar = $OUTPUT->user_picture($u, array('size'=>18));
             $c->userid = $u->id;
@@ -733,7 +737,7 @@ class comment {
                                                $commentlist);
                 $newcmt = $commentlist[0];
             }
-            $newcmt->time = userdate($newcmt->timecreated, $newcmt->strftimeformat);
+            $newcmt->time = converttime($newcmt->timecreated);
 
             // Trigger comment created event.
             if (core_component::is_core_subsystem($this->component)) {

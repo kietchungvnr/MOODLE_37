@@ -1,76 +1,405 @@
+<style>
+#page-my-index .popover {
+    width: 250px;
+    height: 305px;
+}
+</style>
 <div class="admininfos">
-    {{{ output.mydashboard_user_header }}}
+    <div class="row">
+      <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12 mt-3">
+        <div class="card card-studentrp-db card-student-mycourse">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div>
+                <div class="font-title mb-1">{{{totalactiveusers}}} / {{{totalsuspendedusers}}}</div>
+                <div class="mb-2">{{#str}}totalusers,theme_moove{{/str}}</div>
+              </div>
+              <div>
+                    <img src="/./theme/moove/pix/user.svg" class="db-icon">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12 mt-3">
+        <div class="card card-studentrp-db card-student-badge">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div>
+                <div class="font-title mb-1">{{{totalcourses}}}</div>
+                <div class="mb-2">{{#str}}totalcourses, theme_moove{{/str}}</div>
+              </div>
+              <div>
+                    <i class="fa fa-graduation-cap db-icon-font-size"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12 mt-3">
+        <div class="card card-studentrp-db card-student-progress">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div>
+                <div class="font-title mb-1">{{{totalmodules}}}</div>
+                <div class="mb-2">{{#str}}modules, local_newsvnr{{/str}}</div>
+              </div>
+              <div>
+                    <img src="/./theme/moove/pix/statistics.svg" class="db-icon">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12 mt-3">
+        <div class="card card-studentrp-db card-student-exam">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div>
+                <div class="font-title mb-1">{{{totalcategories}}}</div>
+                <div class="mb-2">{{#str}}category,local_newsvnr{{/str}}</div>
+              </div>
+              <div>
+                    <img src="/./theme/moove/pix/list.svg" class="db-icon">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-3">
+          <div class="card h-100">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-8"><h5 class="card-title d-inline">Thống kê lượt truy cập hệ thống</h5></div>
+                    <div class="col-lg-4 d-flex">
+                        <span id="last-access"></span>
+                    </div>
+                </div>
+                <hr>
+                <div id="access-chart"></div>
+            </div>
+          </div>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 mt-3">
+        <div class="card h-100">
+          <div class="card-body">
+              <h5 class="card-title d-inline">Thống kê trạng thái khóa học</h5>
+              <hr>
+              <div id="coursestatus-chart"></div>
+              <div id="coursestatus-overview">
+                  <div class="db-teacher-hr">
+                     <i class="fa fa-square mr-2" style="color:#ff6b6b" aria-hidden="true"></i><span class="grey">{{#str}} coursefinished, local_newsvnr{{/str}}</span>
+                     <span class="pull-right font-weight-bold grey" id="coursestatus-finish"></span>
+                  </div>
+                  <div class="db-teacher-hr ">
+                     <i class="fa fa-square mr-2" style="color:#48dbfb" aria-hidden="true"></i><span class="grey">{{#str}} courseopening, local_newsvnr{{/str}}</span>
+                     <span class="pull-right font-weight-bold grey" id="coursestatus-opening"></span>
+                  </div>
+                  <div class="db-teacher-hr border-0">
+                     <i class="fa fa-square mr-2" style="color:#feca57" aria-hidden="true"></i><span class="grey">{{#str}} coursefuture, local_newsvnr{{/str}}</span>
+                     <span class="pull-right font-weight-bold grey" id="coursestatus-plan"></span>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 mt-3">
+        <div class="card h-100" id="remindcourse">
+          <div class="card-body">
+               <h5 class="card-title d-inline">{{#str}} remindcourse, theme_moove{{/str}}</h5><hr>
+               <div class="admin-notice grey">
+                 <span>{{#str}} coursenoteacher, theme_moove{{/str}}</span>
+                 <div class="admin-notice-icon cl-cursor remindcourse" data="coursenoteacher" id="coursenoteacher" title="{{#str}} coursenoteacher, theme_moove{{/str}}" style="background: #2dce89;"><span>0</span></div>
+               </div>
+               <div class="admin-notice grey">
+                 <span>{{#str}} coursenostudent, theme_moove{{/str}}</span>
+                 <div class="admin-notice-icon cl-cursor remindcourse" data="coursenostudent" id="coursenostudent" title="{{#str}} coursenostudent, theme_moove{{/str}}" style="background: #fb6746;"><span>0</span></div>
+               </div>
+               <div class="admin-notice grey mb-3">
+                 <span>{{#str}} courseempty, theme_moove{{/str}}</span>
+                 <div class="admin-notice-icon cl-cursor remindcourse" data="courseempty" id="courseempty" title="{{#str}} courseempty, theme_moove{{/str}}" style="background: #11cdef;"><span>0</span></div>
+               </div>
+               <h5 class="card-title d-inline mt-3">{{#str}} remindorther, theme_moove{{/str}}</h5><hr>
+               <div class="admin-notice grey">
+                 <span>{{#str}} courserequests, theme_moove{{/str}}</span>
+                 <a href="/./course/pending.php" target="_blank"><div class="admin-notice-icon cl-cursor" id="courserequests" style="background: #f64a6c;"><span>0</span></div></a>
+               </div>
+               <div class="admin-notice grey">
+                 <span>{{#str}} enrollrequest, theme_moove{{/str}}</span>
+                 <a href="#" target="_blank"><div class="admin-notice-icon cl-cursor" id="enrollrequest" style="background: #2dce89;"><span>0</span></div></a>
+               </div>
+               <div class="admin-notice grey">
+                 <span>{{#str}} courselibraryrequest, theme_moove{{/str}}</span>
+                 <a href="/./library.php#approvalmodule" target="_blank"><div class="admin-notice-icon cl-cursor" id="courselibraryrequest" style="background: #fb6746;"><span>0</span></div></a>
+               </div>
+               <div class="admin-notice grey">
+                 <span>{{#str}} filelibraryrequest, theme_moove{{/str}}</span>
+                 <a href="/./local/newsvnr/generallibrary.php#requestaccecpt" target="_blank"><div class="admin-notice-icon cl-cursor" id="filelibraryrequest" style="background: #11cdef;"><span>0</span></div></a>
+               </div>
+               <div class="admin-notice grey">
+                 <span>{{#str}} reviewcompetency, theme_moove{{/str}}</span>
+                 <a href="/./blocks/lp/competencies_to_review.php" target="_blank"><div class="admin-notice-icon" id="reviewcompetency" style="background: #f64a6c;"><span>0</span></div></a>
+               </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row d-none" style="padding-right: 6px;padding-left: 6px;">
 
-    <div class="row" style="padding-right: 6px;
-    padding-left: 6px;">
+        <div class="col-md-3">
+              <!-- small box -->
+              <div class="small-box bg-1">
+                <div class="card">
+                <div class="card-body">
+                <div class="inner">
+                  <h3>{{{totalactiveusers}}} / {{{totalsuspendedusers}}}</h3>
 
-      <div class="col-md-3">
+                  <p>{{#str}}totalusers, theme_moove{{/str}}</p>
+                </div>
+                <div class="icon">
+                  <i class="slicon-people"></i>
+                </div>
+              </div>
+            </div>
+              </div>
+            </div>
+            <div class="col-md-3">
             <!-- small box -->
-            <div class="small-box bg-1">
+            <div class="small-box bg-2">
               <div class="card">
               <div class="card-body">
               <div class="inner">
-                <h3>{{{totalactiveusers}}} / {{{totalsuspendedusers}}}</h3>
+                <h3>{{{totalcourses}}}</h3>
 
-                <p>{{#str}}totalusers, theme_moove{{/str}}</p>
+                <p>{{#str}}totalcourses, theme_moove{{/str}}</p>
               </div>
               <div class="icon">
-                <i class="slicon-people"></i>
+                <i class="slicon-graduation"></i>
               </div>
             </div>
           </div>
             </div>
           </div>
           <div class="col-md-3">
-          <!-- small box -->
-          <div class="small-box bg-2">
-            <div class="card">
-            <div class="card-body">
-            <div class="inner">
-              <h3>{{{totalcourses}}}</h3>
+            <!-- small box -->
+            <div class="small-box bg-3">
+              <div class="card">
+              <div class="card-body">
+              <div class="inner">
+                <h3>{{{totalactivecourse}}}</h3>
 
-              <p>{{#str}}totalcourses, theme_moove{{/str}}</p>
+                <p>{{#str}}totalactivecourse, theme_moove{{/str}}</p>
+              </div>
+              <div class="icon">
+                <i class="slicon-puzzle"></i>
+              </div>
             </div>
-            <div class="icon">
-              <i class="slicon-graduation"></i>
+            </div>
             </div>
           </div>
-        </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <!-- small box -->
-          <div class="small-box bg-3">
-            <div class="card">
-            <div class="card-body">
-            <div class="inner">
-              <h3>{{{totalactivecourse}}}</h3>
+          <div class="col-md-3">
+            <!-- small box -->
+            <div class="small-box bg-4">
+              <div class="card">
+              <div class="card-body">
+              <div class="inner">
+                <h3>{{{onlineusers}}}</h3>
 
-              <p>{{#str}}totalactivecourse, theme_moove{{/str}}</p>
-            </div>
-            <div class="icon">
-              <i class="slicon-puzzle"></i>
-            </div>
-          </div>
-          </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <!-- small box -->
-          <div class="small-box bg-4">
-            <div class="card">
-            <div class="card-body">
-            <div class="inner">
-              <h3>{{{onlineusers}}}</h3>
-
-              <p>{{#str}}onlineusers, theme_moove{{/str}}</p>
-            </div>
-            <div class="icon">
-              <i class="fa fa-plug"></i>
+                <p>{{#str}}onlineusers, theme_moove{{/str}}</p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-plug"></i>
+              </div>
             </div>
           </div>
-        </div>
+            </div>
           </div>
-        </div>
+    </div>
+    <div id="viewRemindDetail" class="pt-1">
+      <div id="content"></div>
     </div>
 </div>
+{{#js}}
+require.config({
+    packages: [{
+        name: 'highcharts',
+        main: 'highcharts'
+    }],
+    paths: {
+        // Change this to your server if you do not wish to use our CDN.
+        highcharts: 'https://code.highcharts.com',
+        jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr"
+    }
+});
+require(
+[
+    'highcharts',
+    'highcharts/modules/exporting',
+    'highcharts/modules/accessibility',
+    'highcharts/modules/drilldown',
+    'jquery', 
+    'core/config', 
+    'local_newsvnr/initkendogrid', 
+    'alertjs', 
+    'core/str',
+    'core/templates',
+    'local_newsvnr/initkendocontrolservices'
+], function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, Config, kendo, alertify, Str, Templates, kendoService) {
+    {{! chart tròn hiện thị quá trình học }}
+    var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api_admin.php';
+    $.getJSON(script + '?action=coursestatus',function(data) {
+       Highcharts.chart('coursestatus-chart', {
+          chart: {
+             plotBackgroundColor: null,
+             plotBorderWidth: null,
+             plotShadow: false,
+             type: 'pie',
+             height:250
+          },
+          title: {
+             text: ''
+          },
+          tooltip: {
+            headerFormat: '',
+              pointFormat: '<b style="color: {point.color}">{point.name}</b><br>{point.course}'
+          },
+          accessibility: {
+              point: {
+                  valueSuffix: '%'
+              }
+          },
+          plotOptions: {
+             pie: {
+                   allowPointSelect: true,
+                   cursor: 'pointer',
+                   colors: ['#ff6b6b','#48dbfb','#feca57'],
+                   dataLabels: {
+                      enabled: false
+                   },
+                   innerSize: '50%',
+                   showInLegend: false
+                }
+          },
+          series: [{
+              colorByPoint: true,
+              data: data
+          }]
+       });
+       $('#coursestatus-finish').text(data[0].y);
+       $('#coursestatus-opening').text(data[1].y);
+       $('#coursestatus-plan').text(data[2].y);
+    })
+    {{! lấy dữ liệu nhắc nhở }}
+    $.getJSON(script + '?action=noticeadmin',function(response) {
+        $('#coursenoteacher').html(response.coursenoteacher);
+        $('#coursenostudent').html(response.coursenostudent);
+        $('#courseempty').html(response.courseempty);
+        $('#reviewcompetency').html(response.reviewcompetency);
+        $('#courselibraryrequest').html(response.courselibraryrequest);
+        $('#courserequests').html(response.courserequests);
+    });
+    var settings = {
+        type: 'GET',
+        data: {
+            "action":"access_site"
+        },
+        dataType: 'json',
+        processData: true,
+        contentType: "application/json"
+    };
+    $.ajax(script, settings)
+    .then(function(response) {
+        if (response.error) {
+            Notification.addNotification({
+                message: response.error,
+                type: "error"
+            });
+        } else {
+            $('#last-access').html(response.lastaccess);
+            // Create a chart.
+            Highcharts.chart('access-chart', {
+                chart: {
+                    type: 'line',
+                    height: 307
+                },
+                title: {
+                    text: ''
+                },
+                subtitle: {
+                    text: ''
+                }, 
+                xAxis: {
+                    categories: response.categories
+                },
+                yAxis: {
+                    title: {
+                        text: ''
+                    }
+                },
+                credits: {
+                    enabled: false
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: true
+                        },
+                        enableMouseTracking: true
+                    }
+                },
+                series: [{
+                    name: 'Lượt truy cập hệ thống',
+                    data: response.series,
+                    color: '#ef4914'
+                }]
+            });
+        }
+        return;
+    }).fail(Notification.exception);
+    {{! Kendo dropdown nhắc nhở khóa học 1 }}
+      var courseUrl = Config.wwwroot + '/course/view.php?id=';
+      $(".remindcourse").click(function(e){
+        e.stopPropagation();
+        var event = $(this).attr('data');
+        var title = $(this).attr('title');
+        var ps = $(this).position();
+        var winwidth = window.innerWidth;
+        var cardwidth = $('.card#remindcourse').width();
+        $('#viewRemindDetail').kendoWindow({
+          resizable: false,
+          title: title,
+          width: "350",
+          height: "280",
+          actions: [
+              "Close"
+          ],
+        });
+        var dialog = $('#viewRemindDetail').data("kendoWindow");
+        dialog.close();
+        var cardwidth = $(this).closest('.card-body').width()
+        $('#viewRemindDetail').closest(".k-window").css({left:e.pageX-390,top:e.pageY-100});
+        dialog.wrapper.addClass("courseremind");
+        dialog.open();
+        var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/adminreport_viewdetail.php';
+        var kendoConfig = {};
+        var apiSettings = {
+          url: script,
+          data: {
+            action: event
+          }
+        }
+        kendoConfig.template = '<span><a href="' + courseUrl + '#: value #" target="_blank" alt="#: name #" >#: name #</a></span>';
+        kendoConfig.apiSettings = apiSettings;
+        kendoConfig.value = 'value';
+        var initDropDownList = kendoService.initDropDownList(kendoConfig);
+        $("#content").kendoDropDownList(initDropDownList);
+        var dropDownList = $("#content").data('kendoDropDownList');
+        dropDownList.open();
+        $(".check-menu").click(function(){
+            dialog.close();
+        })
+    })
+})
+{{/js}}

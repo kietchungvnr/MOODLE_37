@@ -498,7 +498,16 @@ class completion_info {
      */
     public function clear_criteria() {
         global $DB;
-        $DB->delete_records('course_completion_criteria', array('course' => $this->course_id));
+
+        // Remove completion criteria records for the course itself, and any records that refer to the course.
+        $select = 'course = :course OR (criteriatype = :type AND courseinstance = :courseinstance)';
+        $params = [
+            'course' => $this->course_id,
+            'type' => COMPLETION_CRITERIA_TYPE_COURSE,
+            'courseinstance' => $this->course_id,
+        ];
+
+        $DB->delete_records_select('course_completion_criteria', $select, $params);
         $DB->delete_records('course_completion_aggr_methd', array('course' => $this->course_id));
 
         $this->delete_course_completion_data();
@@ -851,7 +860,7 @@ class completion_info {
         }
 
         $completionrules = $DB->get_record('course_modules_completion_rule', ['moduleid' => $cm->id]);
-        if($completionrules->completiontimespent > 0) {
+        if(isset($completionrules->completiontimespent) &&  $completionrules->completiontimespent > 0) {
             $completiontimer = $DB->get_record('course_modules_completion_timer', ['completionruleid' => $completionrules->id, 'userid' => $USER->id]);
             $completiontimespent = $completionrules->completiontimespent;
             $duration = $completiontimer->lastseentime - $completiontimer->starttime;

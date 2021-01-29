@@ -28,7 +28,7 @@ define('AJAX_SCRIPT', false);
 
 require_once __DIR__ . '/../../../../config.php';
 require_once $CFG->dirroot . '/local/newsvnr/lib.php';
-// require_login();
+require_login();
 $PAGE->set_context(context_system::instance());
 $examid            = optional_param('examid', 0, PARAM_INT);
 $examname          = optional_param('examname', '', PARAM_TEXT);
@@ -78,8 +78,12 @@ if ($action == "exam_category") {
                                                     JOIN mdl_exam_subject_exam ese ON ese.subjectid = es.id
                                                     JOIN mdl_exam e ON ese.examid = e.id
                                                 WHERE e.id = :examid AND e.visible = 1 AND es.visible = 1", ['examid' => $exam->id]);
+        if($DB->record_exists('exam_user', ['examid' => $exam->id, 'userid' => $USER->id, 'roleid' => 4]))
+            $cancreateexam = 'true';
+        else
+            $cancreateexam = 'false';
         foreach ($list_subject as $subject) {
-            $category_exam .= '<li class="list-subcategory subject-exam" data-examsujbectexam="' . $subject->examsubjectexam . '" id="' . $subject->id . '"><a>' . $subject->name . '</a></li>';
+            $category_exam .= '<li class="list-subcategory subject-exam" data-cancreate="'.$cancreateexam.'" data-examsujbectexam="' . $subject->examsubjectexam . '" id="' . $subject->id . '"><a>' . $subject->name . '</a></li>';
         }
         $category_exam .= '</ul>';
     }
@@ -146,10 +150,10 @@ foreach ($subjectdata as $subject) {
         $countquestion = $DB->get_record_sql("SELECT COUNT(qs.id) as count FROM {quiz} q
                                                 JOIN {quiz_slots} qs ON qs.quizid = q.id
                                                 WHERE q.id = :quizid", ['quizid' => $quiz->quizid]);
-        $img = '<img title="quiz" class="pr-2" src="' . $OUTPUT->image_url('icon', 'quiz') . '">';
+        $img = '<img title="quiz" class="pr-2 img-module" src="' . $OUTPUT->image_url('icon', 'quiz') . '">';
         $url = $CFG->wwwroot . '/mod/quiz/view.php?id=' . $quiz->coursemoduleid;
         $output .= '<div class="pl-3 pt-2 pb-2 module-quiz-online">';
-        $output .= '<div class="">' . $img . '' . $quiz->name . '<a class="float-right mr-2" href="' . $url . '" target="_blank">' . get_string('enterexam', 'local_newsvnr') . '</a></div>';
+        $output .= '<div class=""><a class="text-default" target="_blank" href="'.$url.'">' . $img . '' . $quiz->name . '</a><a class="float-right mr-2" href="' . $url . '" target="_blank">' . get_string('enterexam', 'local_newsvnr') . '</a></div>';
         $output .= '<div class="info-quiz d-flex ml-4">';
         $output .= '<div class="detail-quiz"><i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>' . $countquestion->count . ' ' . get_string('question', 'local_newsvnr') . '</div>';
         $output .= '<div class="detail-quiz"><i class="fa fa-clock-o mr-1" aria-hidden="true"></i>' . convertTimeExam($quiz->timelimit) . '</div>';

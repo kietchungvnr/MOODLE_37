@@ -268,7 +268,7 @@ if ($mform->is_cancelled()) {
                 $event->timestart = time();
                 $event->timesort = time();
                 $event->timemodified = time();
-                calendar_event::create($event);
+                calendar_event::create($event, false);
             }
         }
     } else {

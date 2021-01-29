@@ -51,6 +51,14 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
     	{
             key: 'lastaccess',
             component: 'block_vnr_db_courseinfo_management'
+    	},
+    	{
+            key: 'gradeavg',
+            component: 'local_newsvnr'
+    	},
+    	{
+            key: 'finishmodulerate',
+            component: 'local_newsvnr'
     	}
     ];
     var initGridCourse = function(userId) {
@@ -77,7 +85,7 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 					// hidden: true,
 	                field: "studentname",
 	                title: s[2],
-	                width: "120px"
+	                width: "100px"
 				},
 				{
 	                field: "courseid",
@@ -90,26 +98,15 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 	                width: "150px"
 				},
 				{
-	                field: "timecompleted",
-	                title: s[5],
+	                field: "avggrade",
+	                title: s[12],
 	                width: "100px"
 				},
-	            {
-	                field: "process",
-	                title: s[6],
-	                width: "150px"
-	            },
-	            {
-	                field: "gradefinal",
-	                title: s[7],
-	                width: "80px"
-	            },
-	            {
-	                field: "rank",
-	                title: s[8],
-	                width: "80px"
-	            },
-
+				{
+	                field: "finishmodulerate",
+	                title: s[13],
+	                width: "100px"
+				}
 			];
 			if($(gridListCourse).data("kendoGrid")) {
 				$(gridListCourse).data("kendoGrid").destroy();
@@ -154,7 +151,7 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 					{
 		                field: "usercode",
 		                title: s[1],
-		                width: "120px"
+		                width: "80px"
 					},
 					{
 						template:function(e){
@@ -167,12 +164,12 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 					{
 		                field: "lastaccess",
 		                title: s[11],
-		                width: "200px"
+		                width: "250px"
 					},
 					{
 		                field: "coursejoin",
 		                title: s[9],
-		                width: "200px"
+		                width: "100px"
 					}
 				];
 				var toolbar = ["excel","search"]

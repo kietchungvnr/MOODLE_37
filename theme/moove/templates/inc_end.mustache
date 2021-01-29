@@ -21,6 +21,17 @@
 </body>
 </html>
 {{#js}}
+require.config({
+    packages: [{
+        name: 'highcharts',
+        main: 'highcharts'
+    }],
+    paths: {
+        // Change this to your server if you do not wish to use our CDN.
+        highcharts: 'https://code.highcharts.com',
+        jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr"
+    }
+});
  require.config({
     paths: {
       "kendo.all.min": "//kendo.cdn.telerik.com/2020.3.915/js/kendo.all.min",
@@ -103,15 +114,15 @@ require(['jquery', 'core/config'], function($, Config) {
             $(result).addClass('notyetanswered').removeClass('answersaved');
         })
     }
+    window.addEventListener("load", afterLoaded,true);
+      function afterLoaded(){
+        $('body').removeClass('loading');
+      }
 
 }); 
-require(['theme_moove/library_folder']);
+
 
 require(['theme_moove/focusmod']);
-
-require(['theme_moove/course_category']);
-
-require(['theme_moove/menumobile_theme_course']);
 
 require(['theme_moove/course_menu']);
 
@@ -121,13 +132,7 @@ require(['theme_moove/search_autocomplete']);
 
 require(['theme_moove/kendo_translate']);
 
-require(['theme_moove/examonline']);
-
-require(['theme_moove/exam_grade_report']);
-
 require(['theme_moove/menu_left']);
-
-require(['local_newsvnr/news']);
 
 var id = $('.new-detail-chat').attr('data');
 $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussionid='+id);
@@ -445,34 +450,6 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             init(cmid);
         });
     }
-    ////phân trang khóa học///
-    const getCourse = (url) => {
-        require(['jquery', 'core/config'], ($, config) => {
-            $('.loading-page').addClass('active');
-            var id = $('.pagination').attr('category');
-            var teacher = $('#teacher').val();
-            var category = $('#category').val();
-            var course = $('#keyword').val();
-            var filter = $('#course-filter').val();
-            var settings = {
-                type:"GET",
-                processData:true,
-                data:{
-                    id:id,
-                    teacher : teacher,
-                    category : id,
-                    course : course,
-                    filter : filter,
-                },
-                contenttype:"application/json",
-            };
-            $.ajax(url,settings)
-            .then(function(response) {
-                $('#load-course').hide().html(response).fadeIn('fast');
-                $('.loading-page').removeClass('active');
-            })
-        });
-    };
     ////phân trang table thư viện điện tử///
     const nextPage = (url,place) => {
         require(['jquery', 'core/config'], ($, config) => {
@@ -491,19 +468,6 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             })
         });
     };
-    // nhúng iframe mở module trang thư viện
-    const iFrameLibrary = (url,moduletype) => {
-        require(['jquery', 'core/config'], ($, config) => {
-            if(moduletype == 'resource') {
-                $('#modal-iframe-library iframe').replaceWith('<iframe height="800px" src="https://view.officeapps.live.com/op/embed.aspx?src='+url+'" width="100%"></iframe>');
-                $('#modal-iframe-library').modal();
-            } else {
-                $('#modal-iframe-library iframe').replaceWith('<iframe height="800px" src="'+url+'&iframe=true" width="100%"></iframe>');
-                $('#modal-iframe-library').modal();
-            }
-        })
-    }
-
     const loadComment = (id) => {
         require(['jquery', 'core/config'], ($, Config) => {
             $('.loading-page').addClass('active');
@@ -599,183 +563,6 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             });
         });
     }
-
-    //Cập nhật thư mục 
-    const updateFolder = (folderid) => {
-        require(['jquery', 'core/config', 'alertjs'], ($, Config, alertify) => {
-            var script = Config.wwwroot + "/local/newsvnr/ajax/library_online/library_folder_ajax.php";
-            var foldername = $('.edit-folder-popup #foldername').val();
-            var parentid = $('.edit-folder-popup #folderparent').attr('parentid');
-            var folderdes = $('.edit-folder-popup #folderdes').val();
-            var action =  $('#edit-folder-popup').attr('action');
-            var settings = {
-                type: "GET",
-                processData: true,
-                data: {
-                    foldername: foldername,
-                    folderid: folderid,
-                    parentid: parentid,
-                    folderdes: folderdes,
-                    action: action
-                },
-                contenttype: "application/json"
-            }
-            if(foldername == '') {
-                alertify.alert('Alert Title', 'Alert Message!');
-                return;
-            }
-            $.ajax(script, settings).then(function(response) {
-                $('#edit-popup-modal-folder').modal('hide');
-                var obj = $.parseJSON(response);
-                alertify.notify(obj.alert,'success',3);
-                location.reload();
-            })
-
-        });
-    };
-    //Lấy thông tin thư mục cha thư viện trực tuyến
-    const getParentValue = (id,name) => {
-        require(['jquery', 'core/config'], ($, Config) => {
-            $('.tree-view-folder li').removeClass('active');
-            $('.tree-view-folder li.'+id).addClass('active');
-            $('.tree-view-folder .content-expand.'+id).slideToggle();
-            var link = get_link_folder(id,name)
-            $('input#folderparent').val(link);
-            $('input#folderparent').attr('parentid', id);
-        })
-    }
-    // Mở cây thư mục thư viện trực tuyến
-    const viewTree = () => {
-        require(['jquery', 'core/config'], ($, Config) => {
-            $('.tree-view-folder').slideDown();
-        })
-    }
-
-    // Xóa,ẩn hiện module trên thư viện 
-    const actionModule = (moduleid,action,folderid) => {
-        require(['jquery', 'core/config', 'alertjs' ], ($, Config,alertify) => {
-            var script = Config.wwwroot + "/local/newsvnr/ajax/library_online/library_approval_module_ajax.php";
-            var scriptmodule = Config.wwwroot + "/local/newsvnr/ajax/library_online/library_module_ajax.php?folderid="+folderid;
-            var settings = {
-                type: "GET",
-                processData: true,
-                data: {
-                    moduleid: moduleid, 
-                    action:action
-                },
-                contenttype: "application/json"
-            }
-            if(action == 'delete') {
-                alertify.confirm('{{#str}} alert, local_newsvnr {{/str}}', '{{#str}} deleteconfirm, local_newsvnr{{/str}}', 
-                    function() { 
-                        $('.loading-page').addClass('active');
-                        $.ajax(script, settings).then(function(response) {
-                            $.getJSON(scriptmodule, function(data) {
-                                $('#table-library').hide().html(data.result).fadeIn('fast');
-                                $('#header-library').replaceWith(data.header);
-                                $('#pagination').replaceWith(data.pagination);
-                            })
-                            $('.loading-page').removeClass('active');
-                            alertify.notify('{{#str}} delete , local_newsvnr{{/str}}','success',3);
-                        })
-                    },
-                    function() { return });
-            }
-            else {
-                $('.loading-page').addClass('active');
-                $.ajax(script, settings).then(function(response) {
-                    $.getJSON(scriptmodule, function(data) {
-                        $('#table-library').hide().html(data.result).fadeIn('fast');
-                        $('#header-library').replaceWith(data.header);
-                        $('#pagination').replaceWith(data.pagination);
-                        $('.loading-page').removeClass('active');
-                    })
-                })
-            }
-        })
-    }
-    // Lấy đường dẫn thư mục trong thư viện
-    function get_link_folder(id,name) { 
-        if(typeof id == 'undefined') {
-            return name;
-        } else {
-            var idparent = $('li.folder.'+id).parent('ul').prev('li').attr('id');
-            var val = $('li.folder.'+id).parent('ul').prev('li').first().text()
-            var name = val + ' / ' + name;
-            return get_link_folder(idparent,name);
-        }
-    }
-    // Xóa , sửa , thêm thư mục con (action popup)
-    const actionPopupLibrary = (folderid,foldername,action) => {
-        require(['jquery', 'core/config', 'alertjs'], ($, Config, alertify) => {
-            var script = Config.wwwroot + "/local/newsvnr/ajax/library_online/library_folder_ajax.php";
-            // Xử lý thêm thư mục con
-            if (action == 'addchildfolder') {
-                var val = get_link_folder(folderid, foldername);
-                $('input#folderparent').val(val);
-                $('input#folderparent').attr('parentid', folderid);
-                $('#add-popup-modal-folder').on('shown.bs.modal');
-                return;
-            }
-            var settings = {
-                type: "POST",
-                processData: true,
-                data: {
-                    folderid: folderid,
-                    foldername: foldername,
-                    action: action
-                },
-                contenttype: "application/json",
-            }
-            $.ajax(script, settings).then(function(response) {
-                var obj = $.parseJSON(response);
-                if(action == 'edit') {
-                    $('#edit-popup-modal-folder').replaceWith(obj.result);
-                    $('#edit-popup-modal-folder').modal('show');
-                } 
-                if(action == 'hide' || action == 'show') {
-                    $('.tree-folder li.folder.'+folderid).toggleClass('show');
-                    $('.tree-folder li.folder.'+folderid).toggleClass('hide');
-                    $('ul.'+folderid).toggleClass('hide');
-                    if(action == 'hide') {
-                        $('.tree-folder li.folder.'+folderid).append('<i class="fa fa-eye-slash" aria-hidden="true"></i>');
-                    } else {
-                        $('.tree-folder li.folder.'+folderid+' i.fa-eye-slash').remove();
-                    }
-                    alertify.notify(obj.alert,'success',3);
-                }
-                if(action == 'delete') {
-                    $('.tree-folder li.folder.'+folderid).remove();
-                    $('ul.'+folderid).remove();
-                    alertify.notify(obj.alert,'success',3);
-                }
-            })
-        })
-    }
-    // Lọc theo loại module thư viện
-    const filterModule = (moduletype,folderid) => {
-        require(['jquery', 'core/config'], ($, Config) => {
-            var script = Config.wwwroot + "/local/newsvnr/ajax/library_online/library_module_ajax.php";
-            $('.loading-page').addClass('active');
-            var settings = {
-                type: "GET",
-                processData: true,
-                data: {
-                    modulefilter: moduletype,
-                    folderid: folderid
-                },
-                contenttype: "application/json"
-            }
-            $.ajax(script, settings).then(function(response) {
-                var obj = $.parseJSON(response);
-                $('#header-library').replaceWith(obj.header);
-                $('#table-library').hide().html(obj.result).fadeIn('fast');
-                $('#pagination').replaceWith(obj.pagination);
-                $('.loading-page').removeClass('active');
-            })
-        })
-    }
-
     // Duyệt file trong trang tài nguyên hệ thống
     const acceptFileSelect = () => {
         require(['jquery', 'core/config', 'alertjs'], ($, Config, alertify) => {
@@ -846,5 +633,54 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
                 // alertify.success(resp.success, 'success', 3);
             });
         })
+    }
+    ////phân trang khóa học///
+    const getCourse = (url) => {
+        require(['jquery', 'core/config'], ($, config) => {
+            $('.loading-page').addClass('active');
+            var id = $('.pagination').attr('category');
+            var teacher = $('#teacher').val();
+            var category = $('#category').val();
+            var course = $('#keyword').val();
+            var filter = $('#course-filter').val();
+            var settings = {
+                type:"GET",
+                processData:true,
+                data:{
+                    id:id,
+                    teacher : teacher,
+                    category : id,
+                    course : course,
+                    filter : filter,
+                },
+                contenttype:"application/json",
+            };
+            $.ajax(url,settings)
+            .then(function(response) {
+                $('#load-course').hide().html(response).fadeIn('fast');
+                $('.loading-page').removeClass('active');
+            })
+        });
+    };
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
     }
 </script>

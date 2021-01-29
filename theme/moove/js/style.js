@@ -93,23 +93,20 @@
             // autoplay:true,
             autoplayTimeout: 10000,
             responsiveClass: true,
-           responsive: {
+            responsive: {
                 0: {
                     items: 1,
                 },
-                576: {
+                600: {
                     items: 2,
                 },
-                768: {
-                    items: 3,
-                },
-                992: {
+                1000: {
                     items: 4,
                 },
-                1200: {
+                1300: {
                     items: 5,
                 },
-                1350: {
+                1400: {
                     items: 6,
                 }
             }
@@ -122,23 +119,20 @@
             // autoplay:true,
             autoplayTimeout: 5000,
             responsiveClass: true,
-           responsive: {
+            responsive: {
                 0: {
                     items: 1,
                 },
-                576: {
+                600: {
                     items: 2,
                 },
-                768: {
-                    items: 3,
-                },
-                992: {
+                1000: {
                     items: 4,
                 },
-                1200: {
+                1300: {
                     items: 5,
                 },
-                1350: {
+                1400: {
                     items: 6,
                 }
             }
@@ -151,23 +145,20 @@
             // autoplay:true,
             autoplayTimeout: 5000,
             responsiveClass: true,
-           responsive: {
+            responsive: {
                 0: {
                     items: 1,
                 },
-                576: {
+                600: {
                     items: 2,
                 },
-                768: {
-                    items: 3,
-                },
-                992: {
+                1000: {
                     items: 4,
                 },
-                1200: {
+                1300: {
                     items: 5,
                 },
-                1350: {
+                1400: {
                     items: 6,
                 }
             }
@@ -202,23 +193,20 @@
             // autoplay:true,
             autoplayTimeout: 5000,
             responsiveClass: true,
-           responsive: {
+            responsive: {
                 0: {
                     items: 1,
                 },
-                576: {
+                600: {
                     items: 2,
                 },
-                768: {
-                    items: 3,
-                },
-                992: {
+                1000: {
                     items: 4,
                 },
-                1200: {
+                1300: {
                     items: 5,
                 },
-                1350: {
+                1400: {
                     items: 6,
                 }
             }
@@ -235,19 +223,16 @@
                 0: {
                     items: 1,
                 },
-                576: {
+                600: {
                     items: 2,
                 },
-                768: {
-                    items: 3,
-                },
-                992: {
+                1000: {
                     items: 4,
                 },
-                1200: {
+                1300: {
                     items: 5,
                 },
-                1350: {
+                1400: {
                     items: 6,
                 }
             }
@@ -260,23 +245,20 @@
             // autoplay:true,
             autoplayTimeout: 5000,
             responsiveClass: true,
-           responsive: {
+            responsive: {
                 0: {
                     items: 1,
                 },
-                576: {
+                600: {
                     items: 2,
                 },
-                768: {
-                    items: 3,
-                },
-                992: {
+                1000: {
                     items: 4,
                 },
-                1200: {
+                1300: {
                     items: 5,
                 },
-                1350: {
+                1400: {
                     items: 6,
                 }
             }
@@ -289,23 +271,20 @@
             // autoplay:true,
             autoplayTimeout: 5000,
             responsiveClass: true,
-           responsive: {
+            responsive: {
                 0: {
                     items: 1,
                 },
-                576: {
+                600: {
                     items: 2,
                 },
-                768: {
-                    items: 3,
-                },
-                992: {
+                1000: {
                     items: 4,
                 },
-                1200: {
+                1300: {
                     items: 5,
                 },
-                1350: {
+                1400: {
                     items: 6,
                 }
             }

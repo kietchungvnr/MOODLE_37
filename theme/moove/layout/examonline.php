@@ -35,11 +35,7 @@ $themesettings = new \theme_moove\util\theme_settings();
 
 $permit = new stdCLass();
 
-if(isset($_SERVER['HTTP_REFERER'])) {
-    $hasportal = true;
-} else {
-    $hasportal = false;
-}
+$check = theme_moove_layout_check();
 if(is_siteadmin()) {
     $permit->canedit = true;
 } else {
@@ -70,8 +66,9 @@ if (isloggedin()) {
         'hasdrawertoggle' => true,
         'regionmainsettingsmenu' => $regionmainsettingsmenu,
         'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
-        'hasportal' => $hasportal,
-        'canedit' => $permit->canedit
+        'hasportal' => $check->hasportal,
+        'canedit' => $permit->canedit,
+        'hasopenmenu' => $check->hasopenmenu
     ];
 
     // Improve boost navigation.
@@ -104,7 +101,7 @@ if (isloggedin()) {
         'hasdrawertoggle' => false,
         'cansignup' => $CFG->registerauth == 'email' || !empty($CFG->registerauth),
         'logintoken' => \core\session\manager::get_login_token(),
-        'hasportal' => $hasportal
+        'hasportal' => $check->hasportal
     ];
 
     $templatecontext = array_merge($templatecontext, $themesettings->footer_items());

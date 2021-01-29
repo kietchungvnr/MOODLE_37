@@ -294,7 +294,7 @@ switch ($action) {
 	case 'exam_delete':
 		$examid = optional_param('id', 0, PARAM_INT);
 		$DB->delete_records('exam_user', ['examid' => $examid]);
-		$examsubjectexamid = $DB->get_field('exam_subject_exam', 'id', ['examid' => $exam->id]);
+		$examsubjectexamid = $DB->get_field_sql('SELECT TOP 1 examid FROM {exam_subject_exam}', ['examid' => $examid]);
 		$DB->delete_records('exam_quiz', ['subjectexamid' => $examsubjectexamid]);
 		$DB->delete_records('exam_subject_exam', ['examid' => $examid]);
     	$DB->delete_records('exam', ['id' => $examid]);

@@ -61,14 +61,14 @@ class TokenController extends BaseController {
 			$this->resp->data['code'] = "Mã phòng ban '$check_orgstructure_by_code' đã tồn tại";
 
 		}
-		$orgstructureTypeData = find_orgstructure_category_by_name($categoryname);
+		$orgstructureTypeData = find_orgstructure_category_by_name($this->data->categoryname);
 		if(!$orgstructureTypeData) {
 			$categoryname = $this->data->categoryname;
 			$this->resp->error = true;
 			$this->resp->data['categoryname'] = "Loại phòng ban '$categoryname' không tồn tại" ;
 		}
 		// check xem co phong ban cha hop le k?
-		$parentData = find_orgstructure_parrentcode($parentcode);
+		$parentData = find_orgstructure_parrentcode($this->data->parentcode);
 		if(!$parentData) {
 			$parentcode = $this->data->parentcode;
 			$this->resp->error = true;
@@ -77,7 +77,7 @@ class TokenController extends BaseController {
 		if(empty($this->resp->data)) {
 			// phong ban lon nhat mac dinh parentid = 0
 			if($this->data->code == $this->data->parentcode)
-				$this->data->parentid = 0
+				$this->data->parentid = 0;
 			else
 				$this->data->parentid = $parentData->id;
 

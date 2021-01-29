@@ -1,0 +1,1394 @@
+<style type="text/css">
+    table thead th {
+        background-color: #fff;
+        color: black;
+    }
+    .date-select {
+        border: 1px solid #ccc;
+        width: auto;
+        background: #fff;
+        color: #1d3b4a;
+        cursor: pointer;
+        padding: 8px;
+        line-height: 18px;
+        border-radius: 4px 0 0 4px;
+    }
+</style>
+<div class="row">
+    <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12 mt-3">
+        <div class="card text-white teacher-bg-1">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="mb-2 font-weight-bold">
+                            {{#str}} owncourses, theme_moove{{/str}}
+                        </div>
+                        <div class="font-title mb-1">
+                            {{#teacherinfo}}{{{coursestotal}}}{{/teacherinfo}}
+                            {{^teacherinfo}}0{{/teacherinfo}}
+                        </div>
+                        <a class="cl-cursor" data-action="viewcourse">
+                            {{#str}} viewdetail, theme_moove {{/str}}
+                        </a>
+                    </div>
+                    <div>
+                        <i class="fa fa-graduation-cap db-icon-font-size">
+                        </i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12 mt-3">
+        <div class="card text-white teacher-bg-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="mb-2 font-weight-bold">
+                            {{#str}} student, theme_moove{{/str}}
+                        </div>
+                        <div class="font-title mb-1">
+                            {{#teacherinfo}}{{{studenttotal}}}{{/teacherinfo}}
+                            {{^teacherinfo}}0{{/teacherinfo}}
+                        </div>
+                        <a class="cl-cursor" data-action="viewstudent">
+                            {{#str}} viewdetail, theme_moove {{/str}}
+                        </a>
+                    </div>
+                    <div>
+                        <img src="/./theme/moove/pix/user.svg" class="db-icon">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12 mt-3">
+        <div class="card text-white teacher-bg-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="mb-2 font-weight-bold">
+                            {{#str}} listmodule, theme_moove{{/str}}
+                        </div>
+                        <div class="font-title mb-1">
+                            {{#teacherinfo}}{{{moduletotal}}}{{/teacherinfo}}
+                            {{^teacherinfo}}0{{/teacherinfo}}
+                        </div>
+                        <a class="cl-cursor" data-action="viewmodule">
+                            {{#str}} viewdetail, theme_moove {{/str}}
+                        </a>
+                    </div>
+                    <div>
+                        <img src="/./theme/moove/pix/statistics.svg" class="db-icon">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12 mt-3">
+        <div class="card text-white teacher-bg-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="mb-2 font-weight-bold">
+                            {{#str}} exam, theme_moove{{/str}}
+                        </div>
+                        <div class="font-title mb-1">
+                            {{#teacherinfo}}{{{examtotal}}}{{/teacherinfo}}
+                            {{^teacherinfo}}0{{/teacherinfo}}
+                        </div>
+                        <a class="cl-cursor" data-action="viewexam">
+                            {{#str}} viewdetail, theme_moove {{/str}}
+                        </a>
+                    </div>
+                    <div>
+                        <img src="/./theme/moove/pix/prize.svg" class="db-icon">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12 mt-3">
+        <div class="card">
+            <div class="card-body">
+            	<div class="row">
+                    <div class="col-lg-4"><h5 class="card-title d-inline">
+                        {{#str}} courseoverview, theme_moove{{/str}}
+                    </h5></div>
+                    <div class="col-lg-8 mb-1">
+                        <div class="row d-flex justify-content-end mb-1">
+                            <div class="col-lg-auto">
+                                <div id="daterange" style="background: #f5f5f5; cursor: pointer; padding: 10px; width: 100%">
+                                    <i class="fa fa-calendar"></i>&nbsp;
+                                    <span></span> <i class="fa fa-caret-down"></i>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mb-1">
+                                <div id="chart-type"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="overview-chart">
+                </div>
+                <hr/>
+                <div id="overview-info">
+                	<div class="d-flex justify-content-around" id="info-number">
+                		<span class="font-weight-bold" id="course-total">{{#teacherinfo}}{{{coursestotal}}}{{/teacherinfo}}
+                            {{^teacherinfo}}0{{/teacherinfo}}</span>
+                		<span class="font-weight-bold" id="learner-total">{{#teacherinfo}}{{{studenttotal}}}{{/teacherinfo}}
+                            {{^teacherinfo}}0{{/teacherinfo}}</span>
+                	</div>
+                	<div class="d-flex justify-content-around" id="title-number">
+                		<span>{{#str}} coursetotal, theme_moove{{/str}}</span>
+                		<span>{{#str}} learnertotal, theme_moove{{/str}}</span>
+                	</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12 mt-3">
+        <div class="card">
+            <div class="card-body">
+            	<div class="mb-2">
+                    <div class="mb-2">
+                    	<h5 class="card-title d-inline">
+                        {{#str}} completeprogress, theme_moove{{/str}}
+                    	</h5>
+                    </div>
+                    <div id="list-course-teacher"></div>
+                </div>
+                <div id="progress-chart"></div>
+                <div id="overview-course">
+	                <div class="db-teacher-hr">
+	                	<span class="grey"><i class="fa fa-square mr-2" style="color: #1FB350" aria-hidden="true"></i>{{#str}} studentcompleted, theme_moove{{/str}}</span>
+	                	<span class="pull-right font-weight-bold" id="course-finish">0</span>
+	                </div>
+	                <div class="db-teacher-hr">
+	                	<span class="grey"><i class="fa fa-square mr-2" style="color: #dd4b39" aria-hidden="true"></i>{{#str}} studentstudying, theme_moove{{/str}}</span>
+	                	<span class="pull-right font-weight-bold" id="course-unfinish">0</span>
+	                </div>
+	                <div class="db-teacher-hr border-0">
+	                	<span class="grey"><i class="fa fa-square mr-2" style="color: #3f54b7" aria-hidden="true"></i>{{#str}} courseavg, theme_moove{{/str}}</span>
+	                	<span class="pull-right font-weight-bold" id="course-grade-avg">0</span>
+	                </div>
+            	</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12 mt-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="mb-2">
+                    <h5 class="card-title d-inline">
+                        {{#str}} owncourses, theme_moove{{/str}}
+                    </h5>
+                    <hr/>
+                </div>
+                <div id="list-course-grid">
+                </div>
+                <div id="view-sutdent-detail">
+                    <div id="sutdent-detail-grid">
+                    </div>
+                </div>
+                <div id="view-module-detail">
+                    <div id="module-detail-chart">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12 mt-3">
+        <div class="card">
+            <div class="card-body">
+            	<div class="d-flex justify-content-between">
+                    <div>
+                        <div class="mb-2">
+                            <h5 class="card-title d-inline">{{#str}} notifynoseen, theme_moove{{/str}}</h5>
+                        </div>
+                        <div class="font-title mb-1">
+                            0
+                        </div>
+                    </div>
+                    <div>
+                        <i class="fa fa-bell db-icon-font-size text-primary" style="position: relative;right: 8px;">
+                        </i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-body">
+            	<div class="d-flex justify-content-between">
+	            	<div>
+	                    <div class="mb-2">
+	                        <h5 class="card-title d-inline">{{#str}} coursenocontent, theme_moove{{/str}}</h5>
+	                    </div>
+	                    <div class="font-title mb-1">
+	                        {{#teacherinfo}}{{courseemptytotal}}{{/teacherinfo}}
+	                    </div>
+	                </div>
+	                <div>
+	                    <i class="fa fa-graduation-cap db-icon-font-size text-primary">
+	                    </i>
+	                </div>
+            	</div>
+        	</div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title d-inline">
+            {{#str}} interactivereport, theme_moove{{/str}}
+        </h5>
+        <hr/>
+        <div class="row mb-2">
+            <div class="col-md-4 mt-2">
+                <input id="list-course">
+                </input>
+            </div>
+            <div class="col-md-8 d-flex mt-2" id="button-group">
+                <button class="btn btn-secondary" id="access_view" onclick="getChart('access_view')" style="border-radius: .25rem 0 0 .25rem;">
+                    {{#str}} viewaccess, theme_moove{{/str}}
+                </button>
+                <button class="btn btn-secondary" id="grade_view" onclick="getChart('grade_view')" style="border-radius: 0;">
+                    {{#str}} viewgrade, theme_moove{{/str}}
+                </button>
+                <button class="btn btn-secondary" id="assignment_view" onclick="getChart('assignment_view')" style="border-radius: 0;">
+                    {{#str}} viewassignment, theme_moove{{/str}}
+                </button>
+                <button class="btn btn-secondary" id="quiz_view" onclick="getChart('quiz_view')" style="border-radius: 0 .25rem .25rem 0;">
+                    {{#str}} viewquiz, theme_moove{{/str}}
+                </button>
+            </div>
+        </div>
+        <div id="report-chart">
+        </div>
+    </div>
+</div>
+<div id="viewTeacherDetailReport">
+    <div id="content-detail"></div>
+    <div class="loading-page"></div>
+</div>
+
+<script type="text/javascript">
+	
+	$('#button-group').on('click', 'button', function(e) {
+	    $(this).addClass('active').siblings().removeClass('active');
+	})
+	
+    // load chart cho iframe từ block analytics_graphs
+    const getChart = (typeChart) => {
+        require(['jquery', 'core/config', 'alertjs'], ($, Config, alertify) => {
+       		var courseid = $('#list-course').val();
+       		if(courseid == "") {
+       			alertify.warning(M.util.get_string('notyetselectcourse', 'theme_moove'), 'warning', 2);
+       			setTimeout(function() {
+       				var unActiveElement = "#button-group" + " #" + typeChart;
+       				$(unActiveElement).removeClass('active');
+       			}, 1000)
+       		} else {
+       			var url;
+				if(typeChart == 'assignment_view') {
+					url = Config.wwwroot + '/blocks/analytics_graphs/assign.php?id=' + courseid;
+				} else if(typeChart == 'quiz_view') {
+					url = Config.wwwroot + '/blocks/analytics_graphs/quiz.php?id=' + courseid;
+				} else if(typeChart == 'access_view') {
+					url = Config.wwwroot + '/blocks/analytics_graphs/graphresourcestartup.php?id=' + courseid;
+				} else if(typeChart == 'grade_view') {
+					url = Config.wwwroot + '/blocks/analytics_graphs/grades_chart.php?id=' + courseid;
+				}
+				var iframe = '<iframe id="iframe" src="'+url+'" width="100%" height="600" frameBorder="0"></iframe>';
+	        	$('#report-chart').html(iframe);
+       		}
+			
+		})
+    }
+
+    // show popup hiện detail list user trong khóa học
+    const viewStudentDetail = function(courseId) {
+    	require(['jquery', 'core/config', 'core/str', 'alertjs', 'local_newsvnr/initkendoexam'], ($, Config, Str, alertify, kendo) => {
+    		var dialog = $('#view-sutdent-detail');
+    		var gridStudentDetail = $('#sutdent-detail-grid');
+    		var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api_teacher.php';
+    		var initStudentGrid = function() {
+    			var kendoConfig = {};
+    			var strings = [
+			    	{
+			            key: 'number',
+			            component: 'block_vnr_db_courseinfo_management'
+			        },
+			        {
+			            key: 'studentcode',
+			            component: 'block_vnr_db_courseinfo_management'
+			        },
+			        {
+			            key: 'student',
+			            component: 'block_vnr_db_courseinfo_management'
+			        },
+			        {
+			            key: 'codecourse',
+			            component: 'local_newsvnr'
+			        },
+			        {
+			            key: 'coursename',
+			            component: 'local_newsvnr'
+			        },     
+			        {
+			            key: 'finishdate',
+			            component: 'block_vnr_db_courseinfo_management'
+			    	},
+			        {
+			            key: 'processfinish',
+			            component: 'block_vnr_db_courseinfo_management'
+			        },     
+			        {
+			            key: 'grade',
+			            component: 'block_vnr_db_courseinfo_management'
+			    	},
+			    	{
+			            key: 'rank',
+			            component: 'block_vnr_db_courseinfo_management'
+			    	},
+			    	{
+			            key: 'enrolledcourse',
+			            component: 'block_vnr_db_courseinfo_management'
+			    	},
+			    	{
+			            key: 'courselist',
+			            component: 'block_vnr_db_courseinfo_management'
+			    	},
+			    	{
+			            key: 'lastaccess',
+			            component: 'block_vnr_db_courseinfo_management'
+			    	},
+			    	{
+			            key: 'status',
+			            component: 'theme_moove'
+			    	},
+                    {
+                        key: 'spenttimetotal',
+                        component: 'theme_moove'
+                    }
+			    ];
+    			Str.get_strings(strings).then(function(s) {
+					var settings = {			
+						url: script,
+						type : 'GET',
+			        	dataType: "json",
+			            contentType: 'application/json; charset=utf-8',
+			            data: {
+			            	action: 'view_students_detail',
+			            	courseid: courseId,
+			            	role: 5
+			            }
+					};
+					var columns = [
+						{   
+                            template: function(e) {
+                                return e.studentname;
+                            },
+			                field: "studentname",
+			                title: s[2],
+			                width: "120px"
+						},
+			            {
+			            	field: 'process', 
+			            	template:"<div class='d-flex participants-collum'><div class='progress course'><div class='progress-bar' role='progressbar' aria-valuenow='#: process #' aria-valuemin='0' aria-valuemax='100' style='width:#: process #'></div></div><div>#: process #</div></div></div>",
+			                title: s[6],
+			                width: "150px"	
+			            }, 
+                        {
+                            field: "spenttime",
+                            title: s[13], 
+                            width: "100px"
+                        },
+			            {
+			                field: "rank",
+			                title: s[8],
+			                width: "100px"
+			            },
+			            {
+			                field: "timecompleted",
+			                title: s[5],
+			                width: "100px"
+						},
+						{	
+			            	template: function(e) {
+			            		return e.status;
+			            	},
+			                field: "status",
+			                title: s[12],
+			                width: "100px"
+			            },
+
+					];
+					if($(gridStudentDetail).data("kendoGrid")) {
+						$(gridStudentDetail).data("kendoGrid").destroy();
+					}
+					var toolbar = ["excel","search"]
+					var excel = { 
+						fileName: "studentinfo.xlsx",
+						allPages: true
+					}
+					kendoConfig.selectable = false;
+					kendoConfig.toolbar = toolbar;
+					kendoConfig.excel = excel;
+					kendoConfig.columns = columns;
+					kendoConfig.apiSettings = settings;
+					var gridData = kendo.initGrid(kendoConfig);
+					$(gridStudentDetail).kendoGrid(gridData);
+				})
+    		}
+    		function onOpen(e) {
+    			initStudentGrid();
+    			e.sender.center();
+    		}
+    		dialog.kendoWindow({
+	            width: "1200px",
+	            modal: true,
+	            open: onOpen,
+                actions: [
+                    "Minimize",
+                    "Maximize",
+                    "Close"
+                ],
+	        });
+            dialog.data("kendoWindow").element.prev().find(".k-window-title").html('<h5 class="card-title d-inline">' + M.util.get_string('listuser', 'theme_moove') + '</h5>')
+	        dialog.data('kendoWindow').open();
+    	});
+    }
+
+    var lastColor;
+    function getRandColor(same, darkness) {
+        //6 levels of brightness from 0 to 5, 0 being the darkest
+        var rgb = [];
+        if(same && lastColor) {
+            rgb = lastColor;
+        } else {
+            rgb = [Math.random() * 256, Math.random() * 256, Math.random() * 256];
+        }
+        var mix = [darkness * 51, darkness * 51, darkness * 51]; //51 => 255/5
+        var mixedrgb = [rgb[0] + mix[0], rgb[1] + mix[1], rgb[2] + mix[2]].map(function (x) {
+            return Math.round(x / 2.0)
+        })
+        lastColor = rgb;
+        return "rgb(" + mixedrgb.join(",") + ")";
+    }
+
+    // Show popup chart tài nguyên và hoạt động
+    const viewModuleDetail = function(courseId) {
+
+    	require(['jquery', 'core/config', 'core/str', 'alertjs', 'highcharts', 'highcharts/modules/exporting', 'highcharts/modules/accessibility', 'highcharts/modules/drilldown'], ($, Config, Str, alertify, Highcharts, ExportingModule, AccessibilityModule, DrilldownModule) => {
+    		var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api_teacher.php';
+    		var dialog = $('#view-module-detail');
+    		var chart = 'module-detail-chart';
+    		var settings = {
+				type : 'GET',
+	        	dataType: "json",
+	            contentType: 'application/json; charset=utf-8',
+	            data: {
+	            	action: 'module_chart',
+	            	courseid: courseId
+	            }
+    		}
+    		$.ajax(script, settings)
+    		.then(function(resp) {
+    			// resp.series[0].color = getRandColor(false, 5);  
+    			Highcharts.chart({
+				    chart: {
+				        type: 'column',
+				        renderTo: chart,
+				        events: {
+					    	drilldown: function(e) {
+					        	this.options.legend["enabled"] = true; //legend shows
+					      	}
+					    },
+				    },
+				    title: {
+				        text: M.util.get_string('listmodule', 'theme_moove')
+				    },
+				    subtitle: {
+				        text: M.util.get_string('course', 'theme_moove') + ': ' + resp.course
+				    },
+				    accessibility: {
+				        announceNewData: {
+				            enabled: true
+				        }
+				    },
+				    xAxis: {
+				        type: 'category'
+				    },
+				    yAxis: {
+				        min: 0,
+				        title: {
+				            text: M.util.get_string('number', 'theme_moove')
+				        }
+				    },
+				    credits: {
+	                    enabled: false
+	                },
+				    legend: {
+				        enabled: true
+				    },
+				    plotOptions: {
+				    	column: {
+					      	dataLabels: {
+					        	enabled: false
+					      	},
+					      	showInLegend: true
+					    },
+				        series: {
+				            borderWidth: 0,
+                            pointWidth: 40,
+				            dataLabels: {
+				                enabled: true,
+				                format: '{point.y}'
+				            }
+				        }
+				    },
+
+				    tooltip: {
+				        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+				        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
+				    },
+				    series: resp.series,
+				    drilldown: {
+        				series: resp.drilldown
+        			}
+				});
+    		});
+    		function onOpen(e) {
+    			// initStudentGrid();
+    			e.sender.center();
+    		}
+    		dialog.kendoWindow({
+	            width: "1200px",
+	            modal: true,
+	            open: onOpen,
+                actions: [
+                    "Minimize",
+                    "Maximize",
+                    "Close"
+                ],
+	        });
+            dialog.data("kendoWindow").element.prev().find(".k-window-title").html('<h5 class="card-title d-inline">' + M.util.get_string('moduleallocation', 'theme_moove') + '</h5>');
+	        dialog.data('kendoWindow').open();
+    	})
+    }
+
+</script>
+{{#js}}
+
+require.config({
+    packages: [{
+        name: 'highcharts',
+        main: 'highcharts'
+    }],
+    paths: {
+        // Change this to your server if you do not wish to use our CDN.
+        highcharts: 'https://code.highcharts.com',
+        jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr",
+        daterangepicker: "//cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min",
+        moment: "//cdn.jsdelivr.net/momentjs/latest/moment.min",
+    }
+});
+require(
+	[
+		'highcharts', 
+		'highcharts/modules/exporting', 
+		'highcharts/modules/accessibility', 
+		'highcharts/modules/drilldown', 
+        'highcharts/modules/no-data-to-display', 
+		'jquery', 
+		'core/config', 
+		'local_newsvnr/initkendoexam', 
+		'local_newsvnr/initkendocontrolservices', 
+		'alertjs', 
+		'core/str', 
+		'core/notification',
+        'daterangepicker',
+        'moment'
+	],
+function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, noData, $, Config, kendo, kendoService, alertify, Str, Notification, daterangepicker, moment) {
+    "use strict";
+    
+    var gridListCourse = '#list-course-grid';
+    var reportChart = 'report-chart';
+    var overviewChart = 'overview-chart';
+    var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api_teacher.php';
+
+    // Get dataSource cho grid khóa giảng của tôi
+    var kendoGridConfig = {};
+    var settingsListCourseGrid = {
+        url: script,
+        type: 'GET',
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        data: {
+            action: 'listcourse_grid',
+        }
+    };
+    var listCourseColumns = [
+    	{
+	        template: function(e) {
+	            return e.coursename;
+	        },
+	        field: "coursename",
+	        title: M.util.get_string('coursename', 'theme_moove'),
+	        width: "300px"
+	    }, {
+	        template: function(e) {
+	            return e.studenttotal;
+	        },
+	        field: "studenttotal",
+	        title: M.util.get_string('studenttotal', 'theme_moove'),
+	        width: "80px"
+	    }, {
+	        field: "coursestartdate",
+	        title: M.util.get_string('coursestartdate', 'theme_moove'),
+	        width: "130px"
+	    }, {
+	        field: "courseenddate",
+	        title: M.util.get_string('courseenddate', 'theme_moove'),
+	        width: "130px"
+	    }, {
+	        template: function(e) {
+	            return e.coursemodules;
+	        },
+	        field: "coursemodules",
+	        title: M.util.get_string('coursemodules', 'theme_moove'),
+	        width: "120px"
+	    }, {
+	        template: function(e) {
+	            return e.coursecompletion;
+	        },
+	        field: "coursecompletion",
+	        title: M.util.get_string('coursecompletion', 'theme_moove'),
+	        width: "120px"
+	    }, {
+	        template: function(e) {
+	            return e.status;
+	        },
+	        field: "status",
+	        title: M.util.get_string('status', 'theme_moove'),
+	        width: "150px"
+    }];
+    kendoGridConfig.columns = listCourseColumns;
+    kendoGridConfig.apiSettings = settingsListCourseGrid;
+    kendoGridConfig.toolbar = false;
+    kendoGridConfig.height = 350;
+    var gridData = kendo.initGrid(kendoGridConfig);
+    $(gridListCourse).kendoGrid(gridData);
+
+    // Get list khóa học cho chart báo cáo tương tác
+    var kendoDropDownConfig = {};
+    var dropDownSettings = {
+        url: script,
+        data: {
+            action: 'get_listcourse'
+        }
+    }
+    kendoDropDownConfig.apiSettings = dropDownSettings;
+    kendoDropDownConfig.value = "courseid";
+    kendoDropDownConfig.optionLabel = M.util.get_string('choosecourse', 'local_newsvnr');
+    var initDropDownList = kendoService.initDropDownList(kendoDropDownConfig);
+    $('#list-course').kendoDropDownList(initDropDownList);
+
+    // Get list khóa học cho chart tiến trình học tập
+    var dropDownCourseSettings = {
+        url: script,
+        type:"POST",
+        dataType:"json",
+        processData:true,
+        contenttype:"application/json",
+        data: {
+            action: 'get_listcourse'
+        }
+    }
+    var onChangeListCourse = function(courseId) {
+    	var settings = {
+    		type:"GET",
+	        dataType:"json",
+	        processData:true,
+	        contenttype:"application/json",
+	        data: {
+	            action: 'get_list_completion_course',
+	            courseid: courseId
+	        }
+    	}
+    	$.ajax(script, settings)
+    	.then(function(resp) {
+    		if(resp.series) {
+        		Highcharts.chart('progress-chart', {
+	        		chart: {
+				        type: 'pie',
+				        height: 250
+				    },
+				    tooltip: {
+				        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				    },
+				    accessibility: {
+				        point: {
+				            valueSuffix: '%'
+				        }
+				    },
+				    plotOptions: {
+				        pie: {
+				            allowPointSelect: true,
+				            cursor: 'pointer',
+				            dataLabels: {
+				                enabled: false
+				            },
+				            innerSize: '90%',
+				            showInLegend: false
+				        }
+				    },
+			        title: {
+			        	text: resp.title,
+			            useHTML: true,
+			            verticalAlign: 'middle',
+			        },
+			        credits: {
+                        enabled: false
+                    },
+				    series: [resp.series]
+				});
+				$('#overview-course').removeClass('d-none');
+				$('#course-finish').html(resp.studentfinish);
+				$('#course-unfinish').html(resp.studentunfinish);
+				$('#course-grade-avg').html(resp.gradeavg);
+			} else {
+				$('#progress-chart').html('<div class="alert alert-danger rounded text-center">'+ resp +'</div>')
+				$('#overview-course').addClass('d-none');
+			}
+    	});
+	}
+    $('#list-course-teacher').kendoDropDownList({
+    	dataTextField: "name",
+        dataValueField: "courseid",
+        change: function(e) {
+        	var courseId = this.value();
+        	onChangeListCourse(courseId);
+    	},
+        dataSource: {
+    		transport: {
+                read: dropDownCourseSettings,
+                parameterMap: function(options, operation) {
+                    if (operation == "read") {
+                        if (options["filter"]) {
+                            if (options["filter"]["filters"][0]) options["q"] = options["filter"]["filters"][0].value;
+                        }
+                        return options;
+                    }
+                }
+            },
+            schema: {
+                model: {
+                    fields: {
+                        id: {
+                            type: "number"
+                        },
+                        fullname: {
+                            type: "string"
+                        },
+                    }
+                }
+            },
+            pageSize: 30,
+            serverPaging: true,
+            serverFiltering: true
+        },
+        dataBound: function() {
+            this.trigger("change");
+        }
+	});
+
+    // Convert datetime to unix
+    function convertDateToUnix(datetime) {
+        var date = new Date(datetime).toUTCString();
+        var result = (new Date(date).getTime() / 1000);
+        return result;
+    }
+
+	//Render chart khi chọn loại chart (Tổng quan khóa học)
+    var initOverViewChart = function(typeChart, date) {
+        var filter = '';
+        if(date != undefined)
+            filter = date;
+    	var scriptOverView = Config.wwwroot + '/local/newsvnr/restfulapi/webservice.php';
+    	if(typeChart == 1) {
+            var settings = {
+                type: 'GET',
+                data: {
+                    "action":"viewcount_chart",
+                    "date" : filter
+                },
+                processData: true,
+                contentType: "application/json"
+            };
+            $.ajax(scriptOverView, settings)
+            .then(function(response) {
+
+                if (response.error) {
+                    Notification.addNotification({
+                        message: response.error,
+                        type: "error"
+                    });
+                } else {
+                    var strings = [{
+                            key: 'nodatatable',
+                            component: 'local_newsvnr'
+                        }, {
+                            key: 'views',
+                            component: 'theme_moove'
+                        }, {
+                            key: 'viewscourselow',
+                            component: 'theme_moove'
+                        }];
+                Str.get_strings(strings).then(function(s) {
+                    var list_coursename = response.list_coursename;
+                    var list_viewcount = response.list_viewcount;
+                        // Create a chart.
+                    Highcharts.chart(overviewChart, {
+                        chart: {
+                                type: 'line',
+                                height: 303
+                            },
+                            title: {
+                                text: ''
+                            },
+                            subtitle: {
+                                text: ''
+                            }, 
+                            xAxis: {
+                                categories: list_coursename
+                            },
+                            yAxis: {
+                                title: {
+                                    text: s[1]
+                                }
+                            },
+                            credits: {
+                                enabled: false
+                            },
+                            plotOptions: {
+                                line: {
+                                    dataLabels: {
+                                        enabled: true
+                                    },
+                                    enableMouseTracking: true
+                                }
+                            },
+                            series: [{
+                                name: s[2],
+                                data: list_viewcount,
+                                color: '#1120f3'
+                        }]
+                    });
+                            
+                });
+
+                }
+                return;
+            }).fail(Notification.exception);
+    	} else if(typeChart == 2) {
+    		var settings = {
+                type: 'GET',
+                data: {
+                    "action":"joincourse_chart",
+                    "date" : filter
+                },
+                processData: true,
+                contentType: "application/json"
+            };
+            $.ajax(scriptOverView, settings)
+            .then(function(response) {
+                if (response.error) {
+                    Notification.addNotification({
+                        message: response.error,
+                        type: "error"
+                    });
+                } else {
+                    var strings = [{
+                        key: 'nodatatable',
+                        component: 'local_newsvnr'
+                    }, {
+                        key: 'numberstudent',
+                        component: 'theme_moove'
+                    }, {
+                        key: 'newenrollstudent',
+                        component: 'theme_moove'
+                    }];
+                    Str.get_strings(strings).then(function(s) {
+                        var list_coursename = response.list_coursename;
+                        var list_joincourse = response.list_joincourse;
+
+                        // Create a chart.
+                        Highcharts.chart(overviewChart, {
+                            chart: {
+                                type: 'line',
+                                height: 303
+                            },
+                            title: {
+                                text: ''
+                            },
+                            subtitle: {
+                                text: ''
+                            }, 
+                            xAxis: {
+                                categories: list_coursename
+                            },
+                            yAxis: {
+                                title: {
+                                    text: s[1]
+                                }
+                            },
+                            credits: {
+                                enabled: false
+                            },
+                            plotOptions: {
+                                line: {
+                                    dataLabels: {
+                                        enabled: true
+                                    },
+                                    enableMouseTracking: true
+                                }
+                            },
+                            series: [{
+                                name: s[2],
+                                data: list_joincourse,
+                                color: '#ef4914'
+                            }]
+                        });
+                            
+                    });
+
+                }
+                return;
+            }).fail(Notification.exception);
+    	} else if(typeChart == 3) {
+    		var settings = {
+                type: 'GET',
+                data: {
+                    "action":"coursecomp_chart",
+                    "date" : filter
+                },
+                processData: true,
+                contentType: "application/json"
+            };
+	        $.ajax(scriptOverView, settings)
+	        .then(function(response) {
+	            if (response.error) {
+	                Notification.addNotification({
+	                    message: response.error,
+	                    type: "error"
+	                });
+	            } else {
+	                var strings = [{
+	                    key: 'nodatatable',
+	                    component: 'local_newsvnr'
+	                }, {
+	                    key: 'numberstudent',
+	                    component: 'theme_moove'
+	                }, {
+	                    key: 'totalstudent',
+	                    component: 'theme_moove'
+	                }, {
+	                    key: 'numbercompletedcourse',
+	                    component: 'theme_moove'
+	                }];
+	                Str.get_strings(strings).then(function(s) {
+	                    var list_coursename = response.list_coursename;
+	                    var list_enroll = response.list_enroll;
+	                    var list_completion_course = response.list_completion_course;
+	                    // Create a chart.
+	                    Highcharts.chart(overviewChart, {
+	                    chart: {
+	                        type: 'column',
+	                        height: 303
+	                    },
+	                    title: {
+	                        text: ''
+	                    },
+	                    subtitle: {
+	                        text: ''
+	                    },
+	                    credits: {
+	                        enabled: false
+	                    },
+	                    xAxis: {
+	                        categories: list_coursename,
+	                        crosshair: true
+	                    },
+	                    yAxis: {
+	                        min: 0,
+	                        title: {
+	                            text: s[1]
+	                        }
+	                    },
+	                    tooltip: {
+	                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+	                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+	                            '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+	                        footerFormat: '</table>',
+	                        shared: true,
+	                        useHTML: true
+	                    },
+	                    plotOptions: {
+                            series: {
+                                pointWidth: 40
+                            },
+	                        column: {
+	                            pointPadding: 0.2,
+	                            borderWidth: 0
+	                        }
+	                    },
+	                    series: [{
+	                        name: s[2],
+	                        data: list_enroll,
+	                        color: '#223dc4'
+
+	                    }, {
+	                        name: s[3],
+	                        data: list_completion_course,
+	                        color: '#f24012'
+
+	                    }]
+	                });
+	                        
+	            });
+	        }
+	        return;
+	        }).fail(Notification.exception);
+    	} else if(typeChart == 4) {
+    		var settings = {
+                type: 'GET',
+                data: {
+                    "action":"courseavg_chart"
+                },
+                processData: true,
+                contentType: "application/json"
+            };
+            $.ajax(scriptOverView, settings)
+            .then(function(response) {
+                if (response.error) {
+                    Notification.addNotification({
+                        message: response.error,
+                        type: "error"
+                    });
+                } else {
+                    Highcharts.chart(overviewChart, {
+                        chart: {
+                            type: 'column',
+                            height: 303
+                        },
+                        title: {
+                            text: ''
+                        },
+                        
+                        xAxis: {
+                            categories: response.categories,
+                            crosshair: true
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: M.util.get_string('score', 'theme_moove')
+                            }
+                        },
+                        tooltip: {
+                            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                                '<td style="padding:0"><b>{point.y:.2f}</b></td></tr>',
+                            footerFormat: '</table>',
+                            shared: true,
+                            useHTML: true
+                        },
+                        plotOptions: {
+                            series: {
+                                pointWidth: 40
+                            },
+                            column: {
+                                pointPadding: 0.2,
+                                borderWidth: 0
+                            }
+                        },
+                        legend: {
+                            enabled: false
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        series: [{
+                            name: M.util.get_string('score', 'theme_moove'),
+                            data: response.series
+
+                        }]
+                    });
+                }
+            });
+   	 	}
+	}
+   
+    //Hàm init popup kendo
+    function openPopup(elementId, title) {
+        $(elementId).kendoWindow({
+            width: "1200px",
+            visible: false,
+            open: onOpen,
+            actions: [
+                "Minimize",
+                "Maximize",
+                "Close"
+            ],
+        })
+        $(elementId).data("kendoWindow").element.prev().find(".k-window-title").html('<h5 class="card-title d-inline">' + title + '</h5>');
+        $(elementId).data("kendoWindow").center().open();
+    }
+    function onOpen(e) {
+        setPositionWindow('#viewTeacherDetailReport',100);
+    }
+
+    //Xem chi tiết khóa giảng
+    $('[data-action=viewcourse]').click(function() {
+        $('.loading-page').addClass('active');
+        openPopup('#viewTeacherDetailReport', M.util.get_string('owncourses', 'theme_moove'));
+        var scriptrp = Config.wwwroot + '/local/newsvnr/ajax/dashboard/teacherreport_viewdetail.php';
+        var action = $(this).attr('data-action')
+        var settings = {
+            type: 'GET',
+            processData : true,
+            datatype: 'json',
+            data : {
+                action : action
+            }
+        }
+        $.ajax(scriptrp,settings).then(function(resp) {
+            var obj = $.parseJSON(resp);
+            $('#content-detail').hide().html(obj.result).fadeIn('fast');
+            $('#content-detail').prepend(obj.title);
+            $('.loading-page').removeClass('active');
+        })
+    })
+
+    //Xem chi tiết tất cả học viên của giáo viên
+    $('[data-action=viewstudent]').click(function() {
+        $('.loading-page').addClass('active');
+        var kendoGridConfig = {};
+        var scriptrp = Config.wwwroot + '/local/newsvnr/ajax/dashboard/teacherreport_viewdetail.php';
+        var action = $(this).attr('data-action')
+        var settings = {
+            url: scriptrp,
+            type: 'GET',
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            data: {
+                action : action
+            }
+        }
+        var viewStudentColumns = [
+            {
+                template: function(e) {
+                    return e.name;
+                },
+                field: "name",
+                title: M.util.get_string('studentname', 'theme_moove'),
+                width: "200px"
+            }, {
+                field: "usercode",
+                title: M.util.get_string('code', 'local_newsvnr'),
+                width: "100px"
+            }, {
+                field: "email",
+                title: M.util.get_string('email', 'local_newsvnr'),
+                width: "130px"
+            }, {
+                field: "phone",
+                title: M.util.get_string('phone', 'theme_moove'),
+                width: "130px"
+            }, {
+                field: "timecreated",
+                title: M.util.get_string('datecreated', 'local_newsvnr'),
+                width: "130px"
+            }, {
+                field: "lastaccess",
+                title: M.util.get_string('lastaccess', 'theme_moove'),
+                width: "250px"
+            },
+        ];
+        kendoGridConfig.columns = viewStudentColumns;
+        kendoGridConfig.apiSettings = settings;
+        kendoGridConfig.height = 500;
+        openPopup('#viewTeacherDetailReport', M.util.get_string('listuser', 'theme_moove'));
+        var gridStudentData = kendo.initGrid(kendoGridConfig);
+        $('#content-detail').html('');
+        $('#content-detail').kendoGrid(gridStudentData);
+        $('.loading-page').removeClass('active');
+      
+
+    })
+    
+    //Xem chi tiêt module(activity, resource..)
+    $('[data-action=viewmodule]').click(function() {
+        $('.loading-page').addClass('active');
+        var kendoGridConfig = {};
+        var scriptrp = Config.wwwroot + '/local/newsvnr/ajax/dashboard/teacherreport_viewdetail.php';
+        var action = $(this).attr('data-action')
+        var settings = {
+            url: scriptrp,
+            type: 'GET',
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            data: {
+                action : action
+            }
+        }
+        var viewModuleColumns = [
+            {
+                template: function(e) {
+                    return e.modulename;
+                },
+                field: "modulename",
+                title: M.util.get_string('modulename', 'theme_moove'),
+                width: "200px"
+            }, {
+                template: function(e) {
+                    return e.coursename;
+                },
+                field: "coursename",
+                title: M.util.get_string('coursename', 'theme_moove'),
+                width: "200px"
+            }, {
+                field: "moduletype",
+                title: M.util.get_string('moduletype', 'theme_moove'),
+                width: "130px"
+            }, {
+                field: "spenttime",
+                title: 'Số giờ xem',
+                width: "130px"
+            }, {
+                field: "modulerate",
+                title: M.util.get_string('modulerate', 'theme_moove'),
+                width: "130px"
+            }, {
+                field: "timecreated",
+                title: M.util.get_string('datecreated', 'local_newsvnr'),
+                width: "130px"
+            }, 
+        ];
+        kendoGridConfig.columns = viewModuleColumns;
+        kendoGridConfig.apiSettings = settings;
+        kendoGridConfig.toolbar = false;
+        kendoGridConfig.height = 500;
+        openPopup('#viewTeacherDetailReport', M.util.get_string('listmodule', 'theme_moove'));
+        var gridModuleData = kendo.initGrid(kendoGridConfig);
+        $('#content-detail').html('');
+        $('#content-detail').kendoGrid(gridModuleData);
+        $('.loading-page').removeClass('active');
+    })
+
+    //Xem chi tiết kỳ thi
+    $('[data-action=viewexam]').click(function() {
+        $('.loading-page').addClass('active');
+        openPopup('#viewTeacherDetailReport', M.util.get_string('exam', 'theme_moove'));
+        var scriptrp = Config.wwwroot + '/local/newsvnr/ajax/dashboard/teacherreport_viewdetail.php';
+        var action = $(this).attr('data-action')
+        var settings = {
+            type: 'GET',
+            processData : true,
+            datatype: 'json',
+            data : {
+                action : action
+            }
+        }
+        $.ajax(scriptrp,settings).then(function(resp) {
+            var obj = $.parseJSON(resp);
+            $('#content-detail').html();
+            $('#content-detail').hide().html(obj.result).fadeIn('fast');
+            $('.loading-page').removeClass('active');
+        })
+    })
+
+    // filter chart overview course
+    var start = moment().subtract(29, 'days');
+    var end = moment();
+
+    function cb(start, end) {
+        $('#daterange span').html(start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY'));
+        var typeChart = $('#chart-type').data('kendoDropDownList').value();
+        var date = {
+            'start': convertDateToUnix(start._d),
+            'end': convertDateToUnix(end._d)
+        };
+        initOverViewChart(typeChart, JSON.stringify(date));
+    }
+    $('#daterange').daterangepicker({
+        locale: {
+            cancelLabel: 'Clear'
+        },
+        startDate: start,
+        endDate: end,
+        ranges: {
+           'Today': [moment(), moment()],
+           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+           'This Month': [moment().startOf('month'), moment().endOf('month')],
+           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, cb);
+
+    $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
+        $('#daterange span').html(M.util.get_string('showalldata', 'theme_moove'));
+        var typeChart = $('#chart-type').data('kendoDropDownList').value();
+        initOverViewChart(typeChart);
+    });
+    $('#clear-filter').click(function() {
+        var typeChart = $('#chart-type').data('kendoDropDownList').value();
+        $('input[name="daterange"]').val('');
+        initOverViewChart(typeChart);
+    })
+
+    // Run chart khi chọn chart
+    $('#chart-type').kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "value",
+        change: function(e) {
+            var typeChart = this.value();
+            var date = {
+                'start': convertDateToUnix(start._d),
+                'end': convertDateToUnix(end._d)
+            };
+            $('#daterange span').html(start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY'));
+            initOverViewChart(typeChart, JSON.stringify(date));
+        },
+        dataBound: function() {
+            this.trigger("change");
+        },
+        dataSource: [
+            {
+                value: 1,
+                text: M.util.get_string('access', 'theme_moove')
+            }, {
+                value: 2,
+                text: M.util.get_string('enrollcourse', 'theme_moove')
+            }, {
+                value: 3,
+                text: M.util.get_string('coursecompleted', 'theme_moove')
+            }, {
+                value: 4,
+                text: M.util.get_string('coursegradeavg', 'theme_moove')
+            }
+        ]
+    })
+
+});
+
+{{/js}}

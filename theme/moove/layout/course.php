@@ -39,7 +39,13 @@ if (isloggedin()) {
 
 $blockshtml = $OUTPUT->blocks('side-pre');
 $hasblocks = strpos($blockshtml, 'data-block=') !== false;
-
+$check = theme_moove_layout_check();
+$PAGE->requires->strings_for_js(array('selectcoursedata'), 'theme_moove');
+// if(isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
+//     $check->hasiframe = true;
+// } else {
+//     $check->hasiframe = false;
+// }
 $extraclasses = [];
 if ($navdraweropen) {
     $extraclasses[] = 'drawer-open-left';
@@ -52,16 +58,6 @@ if ($draweropenright && $hasblocks) {
 $coursepresentation = theme_moove_get_setting('coursepresentation');
 if ($coursepresentation == 2) {
     $extraclasses[] = 'coursepresentation-cover';
-}
-if(isset($_SERVER['HTTP_REFERER'])) {
-    $hasportal = true;
-} else {
-    $hasportal = false;
-}
-if(isset($_COOKIE['cookie']) == 'focusmod' ) {
-    $hasfocusmod = true;
-} else {
-    $hasfocusmod = false;
 }
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
@@ -76,8 +72,11 @@ $templatecontext = [
     'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
-    'hasportal' => $hasportal,
-    'hasfocusmod' => $hasfocusmod
+    'hasportal' => $check->hasportal,
+    'hasiframe' => $check->hasiframe,
+    'hasfocusmod' => $check->hasfocusmod,
+    'show_hide_focusmod' => $check->show_hide_focusmod,
+    'hasopenmenu' => $check->hasopenmenu
 ];
 
 // var_dump($templatecontext['hasportal']);die;

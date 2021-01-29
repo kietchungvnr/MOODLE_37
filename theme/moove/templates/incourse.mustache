@@ -49,39 +49,43 @@
         "hasregionmainsettingsmenu": false
     }
 }}  
-    {{#hasportal}}
-        {{>theme_moove/portal_inc_start}}
-    {{/hasportal}}
+{{#hasportal}}
+    {{>theme_moove/portal_inc_start}}
+{{/hasportal}}
+{{^hasportal}}
+    {{^hasiframe}}
+        {{>theme_moove/inc_start}}
+    {{/hasiframe}}
+    {{#hasiframe}}
+        {{>theme_moove/focusmode_inc_start}}
+    {{/hasiframe}}
+{{/hasportal}}
+<div id="page" class="container-fluid">
     {{^hasportal}}
         {{^hasiframe}}
-            {{>theme_moove/inc_start}}
-        {{/hasiframe}}
-        {{#hasiframe}}
-            {{>theme_moove/iframe_inc_start}}
+            {{{ output.full_header }}}
         {{/hasiframe}}
     {{/hasportal}}
-    <div id="page" class="container-fluid">
-        {{^hasportal}}
-            {{^hasiframe}}
-                {{{ output.full_header }}}
-            {{/hasiframe}}
-        {{/hasportal}}
-        <div id="page-content" class="row">
-            <div id="region-main-box" class="col-12">
-                {{#hasregionmainsettingsmenu}}
-                    <div id="region-main-settings-menu" class="d-print-none">
-                        <div> {{{ output.region_main_settings_menu }}} </div>
+    <div id="page-content" class="row">
+        <div id="region-main-box" class="col-12">
+            {{#hasregionmainsettingsmenu}}
+                <div id="region-main-settings-menu" class="d-print-none">
+                    <div> {{{ output.region_main_settings_menu }}} </div>
+                </div>
+            {{/hasregionmainsettingsmenu}}
+            <section id="region-main">
+                <div class="card">
+                    {{#hasiframe}}
+                    <div class="card-body">
+                        <div id="mod-view">{{{ output.main_content }}}</div>
                     </div>
-                {{/hasregionmainsettingsmenu}}
-                <section id="region-main">
-                    <div class="card">
-                        {{^hasiframe}}
-                            <div class="">
-                                {{> theme_moove/nav-drawer }}
-                            </div>
-                        {{/hasiframe}}
+                    {{/hasiframe}}
+                    {{^hasiframe}}
+                        <div class="">
+                            {{> theme_moove/nav-drawer }}
+                        </div>
                         <div class="card-body">
-                             {{#hasregionmainsettingsmenu}}
+                            {{#hasregionmainsettingsmenu}}
                                 <div class="region_main_settings_menu_proxy"></div>
                             {{/hasregionmainsettingsmenu}}
                             {{{ output.course_content_header }}}
@@ -89,19 +93,22 @@
                             {{{ output.activity_navigation }}}
                             {{{ output.course_content_footer }}}
                         </div>
-                    </div>
-                </section>
-            </div>
+                    {{/hasiframe}}
+                    
+                </div>
+                {{{ output.activity_navigation }}}
+            </section>
         </div>
     </div>
-    {{#hasportal}}
-        {{>theme_moove/portal_inc_end}}
-    {{/hasportal}}
-    {{^hasportal}}
-        {{^hasiframe}}
-            {{>theme_moove/inc_end}}
-        {{/hasiframe}}
-        {{#hasiframe}}
-            {{>theme_moove/iframe_inc_end}}
-        {{/hasiframe}}
-    {{/hasportal}}
+</div>
+{{#hasportal}}
+    {{>theme_moove/portal_inc_end}}
+{{/hasportal}}
+{{^hasportal}}
+    {{^hasiframe}}
+        {{>theme_moove/inc_end}}
+    {{/hasiframe}}
+    {{#hasiframe}}
+        {{>theme_moove/focusmode_inc_end}}
+    {{/hasiframe}}
+{{/hasportal}}

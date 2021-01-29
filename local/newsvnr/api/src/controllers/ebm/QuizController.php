@@ -3,6 +3,7 @@
 namespace local_newsvnr\api\controllers\ebm;
 
 use stdClass;
+use Exception;
 use local_newsvnr\api\controllers\BaseController as BaseController;
 
 defined('MOODLE_INTERNAL') || die;
@@ -106,7 +107,7 @@ class QuizController extends BaseController {
 	    $courses->shortname = $this->data->examcode;
 	    // $courses->coursesetup = $request->getParam('setupcode');
 		$courses->idnumber = '';
-		$courses->format = 'topics';
+		$courses->format = 'topcoll';
 		$courses->showgrades = 1;
 		$courses->numsections = 0;
 		$courses->newsitems = 10;
@@ -436,7 +437,6 @@ class QuizController extends BaseController {
 					$section = array_search($quizcode[1], $allsectionname);
 				}
 				course_create_sections_if_missing($course->id, $section, $quizcode[1]);
-				$message .= 'Chỉnh sửa khóa học thành công, ';
 				$quiznamearr = explode(',', $this->data->quizname);
 				// $quizcodearr = explode(',', $this->data->quizcode);
 				foreach($quiznamearr as $key => $quizname) {

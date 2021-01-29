@@ -20,7 +20,8 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
             messages: {
               noData: "empty"
             },
-            optionLabel: kendoConfig.optionLabel
+            optionLabel: kendoConfig.optionLabel,
+            template: kendoConfig.template
         }
     }
     var initSearchAutoComplete = function(kendoConfig) {

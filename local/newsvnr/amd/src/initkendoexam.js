@@ -7,6 +7,9 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
         if(gridConfig.toolbar === undefined) {
             gridConfig.toolbar = ["search"];
         }
+        if(gridConfig.height === undefined) {
+            gridConfig.height = "";
+        }
         var eventArr = [];
         if(gridConfig.editEvent != undefined) {
             gridConfig.columns.unshift({
@@ -115,11 +118,10 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
             dataSource: newDatasourceGrid(gridConfig),
             persistSelection: true,
             groupable: false,
-            selectable: "multiple",
             //sortable: true,
             resizable: true,
             //dataBound: gridConfig.dataBound,
-            // height: 450,
+            height: gridConfig.height,
             toolbar: gridConfig.toolbar,    
             search: {
                 fields: ["name"]

@@ -35,6 +35,7 @@ $_POST = json_decode(file_get_contents('php://input'), true);
 $action  = required_param('action',PARAM_RAW);
 $username  = optional_param('username','',PARAM_RAW);
 $password  = optional_param('password','',PARAM_RAW);
+$date = optional_param('date', '', PARAM_RAW);
 
 /**
  * API thêm, sửa loại phòng ban
@@ -989,7 +990,14 @@ if($action == "coursecomp_chart_vp") {
 }
 
 if($action == "coursecomp_chart") {
-
+	$params = [];
+	$wheresql = 'WHERE course = :courseid AND timecompleted IS NOT NULL ';
+	if ($date != '') {
+		$wheresql .= "AND timecompleted BETWEEN :start AND :end";
+		$date = json_decode($date);
+		$params['start'] = $date->start;
+		$params['end'] = $date->end;
+	}
 	$sql = '
 			SELECT c.id, c.fullname
 		        FROM mdl_role_assignments AS ra
@@ -1000,10 +1008,11 @@ if($action == "coursecomp_chart") {
 		        JOIN mdl_context AS ct ON ct.id = ra.contextid AND ct.instanceid = c.id
 		        JOIN mdl_role AS r ON r.id = ra.roleid
    			WHERE  ra.roleid=3 AND u.id = ?';
-   	$sql_compcourse = '
+   	$sql_compcourse = "
    			SELECT COUNT(*) AS completed_courses
 			FROM mdl_course_completions
-			WHERE course = ? AND timecompleted IS NOT NULL';
+			$wheresql
+			";
    	$record = $DB->get_records_sql($sql,[$USER->id]);
    	$list_coursename = array();
    	$list_enroll = array();
@@ -1012,7 +1021,8 @@ if($action == "coursecomp_chart") {
    		$coursecontext = context_course::instance($value->id, IGNORE_MISSING);
    		$list_coursename[] = $value->fullname;
    		$list_enroll[] = count_enrolled_users($coursecontext);
-   		$list_cc_data = $DB->get_record_sql($sql_compcourse,[$value->id]);
+		$params['courseid'] = $value->id;
+   		$list_cc_data = $DB->get_record_sql($sql_compcourse,$params);
    		$list_completion_course[] = $list_cc_data->completed_courses;
    	}
 
@@ -1165,24 +1175,35 @@ if($action == "joincourse_chart") {
 	$strdate = isset($_GET['strdate']) ? $_GET['strdate'] : "";
 	$strdate_unix = strtotime($strdate);
 	$strtoday_unix = time();
-	$conditionsql = '';
-	$srt_courseid = get_list_courseid_by_teacher($USER->id);
-	if(!empty($strdate))
-		$conditionsql .= "and c.startdate >= $strdate_unix";
-	
-	$sql = "SELECT 
-			COUNT(e.id) as cid, 
-			e.courseid, c.fullname from mdl_enrol e right join mdl_user_enrolments ue on e.id = ue.enrolid
-			join mdl_course c on c.id = e.courseid 
-			where e.courseid In($srt_courseid) 
-			$conditionsql
-			group by e.courseid,c.fullname";
-	$record = $DB->get_records_sql($sql,[]);
+	$wheresql = '';
+	$params = [];
+	if ($date != '') {
+		$wheresql .= "AND ra.timemodified BETWEEN :start AND :end";
+		$date = json_decode($date);
+		$params['start'] = $date->start;
+		$params['end'] = $date->end;
+	}
+	$courses = get_list_courseinfo_by_teacher($USER->id);
 	$list_coursename = array();
    	$list_joincourse = array();
-   	foreach ($record as $value) {
-   		$list_coursename[] = $value->fullname;
-   		$list_joincourse[] = (int)$value->cid;
+	foreach($courses as $course) {
+		$params['courseid'] = $course->id;
+		if(!empty($strdate))
+			$wheresql .= "and c.startdate >= $strdate_unix";
+		$sql = "SELECT COUNT(ra.roleid) studentnumber
+				FROM mdl_role_assignments ra JOIN mdl_context ct ON ra.contextid = ct.id
+					JOIN mdl_course c on c.id = ct.instanceid 
+				WHERE c.id = :courseid AND ct.contextlevel = 50 AND ra.roleid = 5
+				$wheresql
+				GROUP BY c.fullname";
+		$record = $DB->get_field_sql($sql, $params);
+		if($record) {
+			$list_coursename[] = $course->fullname;
+	   		$list_joincourse[] = (int)$record;
+		} else {
+			$list_coursename[] = $course->fullname;
+	   		$list_joincourse[] = 0;
+		}
    	}
    	$response = new stdClass();
    	$response->list_coursename = $list_coursename;
@@ -1194,12 +1215,12 @@ if($action == "joincourse_chart") {
 if($action == "viewcount_chart_vp") {
 	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
 	$params = [];
-	if($courseid) {
-		$wheresql = "courseid = ? and c.startdate >= lsl.timecreated";
+	if ($courseid) {
+		$wheresql = "courseid = ? and lsl.action = 'viewed'";
 		$params = [$courseid];
 	} else {
 		$srt_courseid = get_list_courseid_by_teacher($USER->id);
-		$wheresql = "courseid IN($srt_courseid) AND c.startdate >= lsl.timecreated";
+		$wheresql = "courseid IN($srt_courseid) AND lsl.action = 'viewed'";
 	}
 	$sql = "SELECT COUNT(lsl.id) as vc,lsl.courseid, c.fullname
 			FROM mdl_logstore_standard_log lsl
@@ -1229,25 +1250,43 @@ if($action == "viewcount_chart_vp") {
 if($action == "viewcount_chart") {
 	$courseid = isset($_GET['courseid']) ? $_GET['courseid'] : "";
 	$params = [];
+	$wheresql = '';
+	$srt_courseid = get_list_courseid_by_teacher($USER->id);
 	if($courseid) {
-		$wheresql = "courseid = ? and c.startdate >= lsl.timecreated";
-		$params = [$courseid];
+		$wheresql .= "lsl.courseid = :courseid AND lsl.action = 'viewed'";
+		$params['courseid'] = $courseid;
 	} else {
-		$srt_courseid = get_list_courseid_by_teacher($USER->id);
-		$wheresql = "courseid IN($srt_courseid) AND c.startdate >= lsl.timecreated";
+		$wheresql = "courseid IN($srt_courseid) AND lsl.action = 'viewed'";
+	}
+	if($date != '') {
+		$date = json_decode($date);
+		$wheresql .= "AND lsl.timecreated BETWEEN :start AND :end";
+		$params['start'] = $date->start;
+		$params['end'] = $date->end;
 	}
 	$sql = "SELECT COUNT(lsl.id) AS vc,lsl.courseid, c.fullname
 			FROM mdl_logstore_standard_log lsl
 			 	LEFT JOIN mdl_course c ON  lsl.courseid = c.id 
 			WHERE $wheresql
 			GROUP BY lsl.courseid,c.fullname";
-	$record = $DB->get_records_sql($sql,$params);
+	$record = $DB->get_records_sql($sql, $params);
 	$list_coursename = array();
-   	$list_viewcount = array();
+	$list_course_temp = array();
+	$list_viewcount = array();
    	foreach ($record as $value) {
+		$list_course_temp[] = $value->courseid;
    		$list_coursename[] = $value->fullname;
-   		$list_viewcount[] = (int)$value->vc;
-   	}
+   		$list_viewcount[] = (int)$value->vc - 1;
+	}
+
+	$list_course = explode(',', $srt_courseid);
+	$compare = array_diff($list_course, $list_course_temp);
+	if($compare) {
+		foreach($compare as $course) {
+			$list_coursename[] = $DB->get_field('course', 'fullanme', ['id' => $course]);
+			$list_viewcount[] = 0;
+		}
+	}
    	$response = new stdClass();
    	$response->list_coursename = $list_coursename;
    	$response->list_viewcount = $list_viewcount;
@@ -1293,26 +1332,26 @@ if($action == "gradereport_chart") {
 	$data = [];
 	if($record->grade_total != '0') {
 		$gradepass_obj = new stdClass;
-		$gradepass_obj->name = get_string('rp_completed', 'local_newsvnr');
+		$gradepass_obj->name = get_string('completed', 'local_newsvnr');
 		$gradepass_obj->y = round(($record->gradepass_total/$record->grade_total)*100, 2);
 		$gradefailed_obj = new stdClass;
-		$gradefailed_obj->name = get_string('rp_notcompleted', 'local_newsvnr');
+		$gradefailed_obj->name = get_string('notcompleted', 'local_newsvnr');
 		$gradefailed_obj->y = round(($record->gradefailed_total/$record->grade_total)*100, 2);
 		$gradeorther_obj = new stdClass;
-		$gradeorther_obj->name = get_string('rp_orthers', 'local_newsvnr');
+		$gradeorther_obj->name = get_string('orthers', 'local_newsvnr');
 		$gradeorther_obj->y = round((100 - ($gradepass_obj->y + $gradefailed_obj->y)), 2);
 		$data[] = $gradepass_obj;
 		$data[] = $gradefailed_obj;
 		$data[] = $gradeorther_obj;
 	} else {
 		$gradepass_obj = new stdClass;
-		$gradepass_obj->name = get_string('rp_completed', 'local_newsvnr');
+		$gradepass_obj->name = get_string('completed', 'local_newsvnr');
 		$gradepass_obj->y = 0;
 		$gradefailed_obj = new stdClass;
-		$gradefailed_obj->name = get_string('rp_notcompleted', 'local_newsvnr');
+		$gradefailed_obj->name = get_string('notcompleted', 'local_newsvnr');
 		$gradefailed_obj->y = 0;
 		$gradeorther_obj = new stdClass;
-		$gradeorther_obj->name = get_string('rp_orthers', 'local_newsvnr');
+		$gradeorther_obj->name = get_string('orthers', 'local_newsvnr');
 		$gradeorther_obj->y = 0;
 		$data[] = $gradepass_obj;
 		$data[] = $gradefailed_obj;
@@ -1344,13 +1383,11 @@ if($action == "gradereport_detail") {
 	} else {
 		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
 	}
-	if($completed_course_status == get_string('rp_completed', 'local_newsvnr')) {
+	if($completed_course_status == get_string('completed', 'local_newsvnr')) {
 		$where_subsql = "gg.finalgrade IS NOT NULL AND ccc.gradepass IS NOT NULL AND gi.itemtype = 'course' AND gg.finalgrade >= ccc.gradepass AND gi.courseid = ?";
-	} else if($completed_course_status == get_string('rp_notcompleted', 'local_newsvnr')) {
+	} else if($completed_course_status == "Không đạt") {
 		$where_subsql = "gg.finalgrade IS NOT NULL AND ccc.gradepass IS NOT NULL AND gi.itemtype = 'course' AND gg.finalgrade < ccc.gradepass AND gi.courseid = ?";
-	} else if($completed_course_status == get_string('rp_orthers', 'local_newsvnr')){
-		$where_subsql = "gg.finalgrade IS NULL AND gi.itemtype = 'course' AND gi.courseid = ?";
-	} else {
+	} else if($completed_course_status == "Khác"){
 		$where_subsql = "gg.finalgrade IS NULL AND gi.itemtype = 'course' AND gi.courseid = ?";
 	}
 	$sql = "
@@ -1382,12 +1419,12 @@ if($action == "gradereport_detail") {
 		$object = new stdclass;
 		$object->fullname = $value->fullname;
 		if($value->finalgrade >= $value->gradepass) {
-			$object->status = get_string('rp_completed', 'local_newsvnr');
+			$object->status = get_string('completed', 'local_newsvnr');
 		} else if($value->finalgrade < $value->gradepass) {
-			$object->status = get_string('rp_notcompleted', 'local_newsvnr');
+			$object->status = get_string('notcompleted', 'local_newsvnr');
 		}
 		if($value->finalgrade == null or $value->gradepass == null){
-			$object->status = get_string('rp_orthers', 'local_newsvnr');
+			$object->status = get_string('orthers', 'local_newsvnr');
 		}
 
 		$object->finalgrade = round($value->finalgrade,1);
@@ -1547,6 +1584,27 @@ if($action == 'joincourse_grid') {
 		$data[] = $object;		
 	}
 	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+}
+
+// Get dữ liệu cho điểm trung bình khóa học
+if($action == "courseavg_chart") {
+	$courses = get_list_courseinfo_by_teacher($USER->id);
+	$series = [];
+	$categories = [];
+   	foreach($courses as $course) {
+   		$categories[] = $DB->get_field('course', 'fullname', ['id' => $course->id]);
+   		$avg = get_course_grade_avg($course->id)[0]->courseavg;
+   		if(is_numeric(get_course_grade_avg($course->id)[0]->courseavg) == "") {
+   			$series[] = 0;
+   		} else {
+   			$series[] = (float)number_format(get_course_grade_avg($course->id)[0]->courseavg, 2);
+   		}
+   		
+   	}
+   	$response = new stdClass();
+   	$response->categories = $categories;
+   	$response->series = $series;
+	echo json_encode($response,JSON_UNESCAPED_UNICODE);
 }
 
 // -- End Get dữ liệu cho blocks chart -- \\

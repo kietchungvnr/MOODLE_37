@@ -38,7 +38,10 @@ use core_course_list_element;
 use DateTime;
 use context_system;
 use context_module;
+use completion_info;
 use core_competency\api as competency_api;
+use block_dedication_manager;
+use block_dedication_utils;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -60,15 +63,12 @@ class theme_settings {
         global $OUTPUT;
 
         $theme = theme_config::load('moove');
-        $templatecontext = [];
-        $sectionsettings = [
-          'displayhome', 'displaynews', 'displaycoursespopular', 'displaymycourses', 'displayforums'
-        ];
-        foreach ($sectionsettings as $setting) {
-          if (!empty($theme->settings->$setting)) {
-            $templatecontext[$setting] = $theme->settings->$setting;
-          }
-        }
+
+        $templatecontext['displaynews'] = $theme->settings->displaynews;
+        $templatecontext['displaycoursespopular'] = $theme->settings->displaycoursespopular;
+        $templatecontext['displaymycourses'] = $theme->settings->displaymycourses;
+        $templatecontext['displayforums'] = $theme->settings->displayforums;
+
         return $templatecontext;
     }
 
@@ -752,10 +752,10 @@ class theme_settings {
         global $OUTPUT,$DB,$CFG,$USER;
 
         $arr = array();
-        $sql = "SELECT p.id as postid, p.subject, LEFT(p.message, 500) as message, d.name,d.id,d.forum,d.course FROM {forum} as f
+        $sql = "SELECT p.subject, LEFT(p.message, 500) as message, d.name,d.id,d.forum,d.course,p.id as postid FROM {forum} as f
         LEFT JOIN  {forum_discussions} as d on f.id  = d.forum 
         INNER JOIN {forum_posts} as p on d.id = p.discussion
-        where f.type = ? and d.pinned= ?
+        where f.type = ? and d.pinned= ? 
         ";  
         $data = $DB->get_records_sql($sql,array('news',1));
         $templatecontext['sliderenabled'] = "1";
@@ -849,4 +849,122 @@ class theme_settings {
         return $templatecontext;
 
     }
+
+    // Get dữ liệu cho dashboard
+    public function get_fullinfo_user() {
+        global $CFG, $USER, $OUTPUT, $DB, $COURSE;
+
+        require_once $CFG->libdir . '/completionlib.php';
+        require_once $CFG->dirroot . '/blocks/dedication/dedication_lib.php';
+
+        $obj = new stdClass;
+        $obj->fullname = fullname($USER);
+        $obj->usercode = $USER->usercode;
+        $obj->userimg = $OUTPUT->user_picture($USER, array('size'=>35));
+        $obj->userimgbig = $OUTPUT->user_picture($USER, array('size'=>80));
+        $obj->userlink = $CFG->wwwroot . '/user/profile.php?id='.$USER->id ;
+        $obj->email = $USER->email;
+        // Kỳ thi 
+        $exam = $DB->get_records('exam_user',['userid' => $USER->id]);
+        $obj->exam = count($exam);
+        // Huy hiệu cá nhân 
+        $badge = $DB->get_records('badge_issued',['userid' => $USER->id]);
+        $obj->badge = count($badge);
+        // lỘ trình học
+        $competency_plan = $DB->get_records_sql('SELECT * FROM mdl_competency_plan WHERE userid =:userid',['userid' => $USER->id]);
+        $obj->competency_plan = count($competency_plan);
+        // lấy danh sách năng lực
+        $competency = $DB->get_records_sql('SELECT * FROM {competency_usercomp} WHERE status=0 AND reviewerid IS NOT NULL AND proficiency=1 AND grade IS NOT NULL AND userid =:userid',['userid' => $USER->id]);
+        $obj->competency = count($competency);
+        // lấy số bài post diễn đàn
+        $forumpost = $DB->get_records('forum_posts',['parent' => 0,'userid' => $USER->id]);
+        $obj->forumpost = count($forumpost);
+        $courses = enrol_get_all_users_courses($USER->id);
+        $listcourse = get_list_course_by_student($USER->id);
+        $count_course_comletion = 0;
+        $timespenttotal = 0;
+        array_merge($courses, (array)$COURSE);
+        foreach($courses as $course) {
+            $cinfo = new completion_info($course);
+            $iscomplete = $cinfo->is_course_complete($USER->id);
+            if($iscomplete == true) {
+                $count_course_comletion++;
+            }
+
+            // Số giờ truy cập của user
+            $dm = new block_dedication_manager($course, $course->startdate, time(), 3600);
+            $rows = $dm->get_user_dedication($USER);
+            foreach ($rows as $index => $row) {
+                $timespenttotal += $row->dedicationtime;
+            }
+        }
+        $obj->timespent = block_dedication_utils::format_dedication($timespenttotal);
+        $obj->coursestotal = count($listcourse);
+        $obj->completedcoures = $count_course_comletion;
+        $obj->progresscoures = count($courses) - $count_course_comletion;
+        $templatecontext['userinfo'] = $obj;
+        return $templatecontext;
+    }
+    // get dữ liệu cho dashboard giáo viên: thông báo và khóa học không có content
+    public function get_data_dashboard_teacher() {
+      global $DB, $USER;
+      $obj = new stdClass;
+
+      // Khóa học chưa có content
+      $courseemptytotalsql = "SELECT c.fullname, COUNT(cm.module) module
+                                  FROM mdl_role_assignments AS ra
+                                      JOIN mdl_user AS u ON u.id= ra.userid
+                                      JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
+                                      JOIN mdl_enrol AS e ON e.id=ue.enrolid
+                                      JOIN mdl_course AS c ON c.id=e.courseid
+                                      JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
+                                      JOIN mdl_role AS r ON r.id= ra.roleid
+                                      JOIN mdl_course_modules cm ON cm.course = c.id
+                                  WHERE  ra.roleid = 3 AND u.id = :userid 
+                                  GROUP BY c.fullname
+                                  HAVING COUNT(cm.module) <= 1";
+      $courseemptytotal = $DB->get_records_sql($courseemptytotalsql, ['userid' => $USER->id]);
+      $obj->courseemptytotal = count($courseemptytotal);
+
+      // Tổng học viên các khóa học của giáo viên
+      $strcourseid = get_list_courseid_by_teacher($USER->id);
+      $courses     = explode(',', $strcourseid);
+      $obj->coursestotal = count($courses);
+      $studenttotal = 0;
+      foreach ($courses as $course) {
+          $studenttotalsql = "
+                  SELECT COUNT(u.id) as numberstudent
+                  FROM mdl_role_assignments ra
+                      JOIN mdl_user u ON ra.userid = u.id
+                      JOIN mdl_user_enrolments ue ON u.id = ue.userid 
+                      JOIN mdl_enrol enr ON ue.enrolid = enr.id
+                      JOIN mdl_course c ON enr.courseid = c.id
+                      JOIN mdl_context ct ON ct.id = ra.contextid AND ct.instanceid = c.id
+                      JOIN mdl_role r ON ra.roleid = r.id
+                  WHERE ra.roleid= 5 AND c.id = :courseid";
+          $listuser = array_values($DB->get_records_sql($studenttotalsql, ['courseid' => $course]));
+          $studenttotal = $studenttotal + $listuser[0]->numberstudent;
+      }
+      $obj->studenttotal = $studenttotal;
+
+      // Các kỳ thi của giáo viên
+      $examtotal = $DB->get_records('exam_user',['userid' => $USER->id, 'roleid' => 4]);
+      $obj->examtotal = count($examtotal);
+
+      // Tổng module giáo viên đã upload trên các khóa của giáo viên đó
+      $moduletotal = $DB->get_record_sql("SELECT COUNT(id) moduletotal
+                                          FROM mdl_logstore_standard_log
+                                          WHERE userid = :userid AND action = 'created' AND target = 'course_module' AND courseid <> 1", ['userid' => $USER->id]);
+      $obj->moduletotal = $moduletotal->moduletotal;
+
+      $templatecontext['teacherinfo'] = $obj;
+      return $templatecontext;
+    }
+    // chuyển đổi dashboard mới và cũ(3.7 và 3.9)
+    public function get_vnr_dashboard_config() {
+        $theme = theme_config::load('moove');
+        $templatecontext['switch_dashboard'] = $theme->settings->switch_dashboard;
+        return $templatecontext;
+    }
+
 }

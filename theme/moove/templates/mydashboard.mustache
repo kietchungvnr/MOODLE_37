@@ -48,48 +48,70 @@
         "hasregionmainsettingsmenu": false
     }
 }}
-    {{#hasportal}}
-        {{>theme_moove/portal_inc_start}}
-    {{/hasportal}}
-    {{^hasportal}}
+{{#hasportal}}
+    {{>theme_moove/portal_inc_start}}
+{{/hasportal}}
+{{^hasportal}}
+    {{^hasiframe}}
         {{>theme_moove/inc_start}}
-    {{/hasportal}}
-
-    <div id="page" class="container-fluid">
-
-        {{#is_siteadmin}}
-            {{>theme_moove/mydashboard_admin}}
-        {{/is_siteadmin}}
-        {{^is_siteadmin}}
-            <div class="admininfos">
-                {{{ output.mydashboard_user_header }}}
-            </div>
-        {{/is_siteadmin}}
-
-        <div id="page-content" class="row">
-            <div id="region-main-box" class="col-xs-12">
-                {{#hasregionmainsettingsmenu}}
-                <div id="region-main-settings-menu" class="hidden-print">
-                    <div> {{{ output.region_main_settings_menu }}} </div>
-                </div>
-                {{/hasregionmainsettingsmenu}}
-                <section id="region-main">
-                        <div class="card-body p-2">
-                            {{#hasregionmainsettingsmenu}}
-                                <div class="region_main_settings_menu_proxy"></div>
-                            {{/hasregionmainsettingsmenu}}
-                            {{{ output.course_content_header }}}
-                            {{{ output.main_content }}}
-                            {{{ output.course_content_footer }}}
-                        </div>
-                </section>
-            </div>
-        </div>
+    {{/hasiframe}}
+    {{#hasiframe}}
+        {{>theme_moove/focusmode_inc_start}}
+    {{/hasiframe}}
+    {{#show_hide_focusmod}}
+        {{{output.menu_focus}}}
+    {{/show_hide_focusmod}}
+{{/hasportal}}
+<div id="page" class="container-fluid  d-print-block">
+    <div class="admininfos">
+        {{^hasportal}}
+            {{^hasiframe}}
+                {{{ output.mydashboard_user_header_custom }}}
+            {{/hasiframe}}
+        {{/hasportal}}
     </div>
 
-    {{#hasportal}}
-        {{>theme_moove/portal_inc_end}}
-    {{/hasportal}}
-    {{^hasportal}}
+    <div id="page-content" class="row d-print-block">
+        <div id="region-main-box" class="col-12">
+            {{#hasregionmainsettingsmenu}}
+            <div id="region-main-settings-menu" class="hidden-print">
+                <div> {{{ output.region_main_settings_menu }}} </div>
+            </div>
+            {{/hasregionmainsettingsmenu}}
+            <section id="region-main">
+                    <div class="card-body p-2">
+                        {{^switch_dashboard}}
+                            {{#is_siteadmin}}
+                                {{>theme_moove/mydashboard_admin}}
+                            {{/is_siteadmin}}
+                            {{#is_teacher}}
+                                {{>theme_moove/db_teacher}}
+                            {{/is_teacher}}
+                            {{#is_student}}
+                                {{>theme_moove/db_student}}
+                            {{/is_student}}
+                        {{/switch_dashboard}}
+                        <div class="mt-3"></div>
+                        {{#hasregionmainsettingsmenu}}
+                            <div class="region_main_settings_menu_proxy"></div>
+                        {{/hasregionmainsettingsmenu}}
+                        {{{ output.course_content_header }}}
+                        {{{ output.main_content }}}
+                        {{{ output.course_content_footer }}}
+                    </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+{{#hasportal}}
+    {{>theme_moove/portal_inc_end}}
+{{/hasportal}}
+{{^hasportal}}
+    {{^hasiframe}}
         {{>theme_moove/inc_end}}
-    {{/hasportal}}
+    {{/hasiframe}}
+    {{#hasiframe}}
+        {{>theme_moove/focusmode_inc_end}}
+    {{/hasiframe}}
+{{/hasportal}}

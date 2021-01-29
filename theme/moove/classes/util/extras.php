@@ -25,6 +25,7 @@
 namespace theme_moove\util;
 
 use core_competency\api as competency_api;
+use moodle_url;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -83,10 +84,10 @@ class extras {
             $course->link = $CFG->wwwroot."/course/view.php?id=".$course->id;
 
             // Summary.
-            $course->summary = strip_tags($chelper->get_course_formatted_summary(
-                $courseobj,
-                array('overflowdiv' => false, 'noclean' => false, 'para' => false)
-            ));
+            // $course->summary = strip_tags($chelper->get_course_formatted_summary(
+            //     $courseobj,
+            //     array('overflowdiv' => false, 'noclean' => false, 'para' => false)
+            // ));
 
             $course->courseimage = self::get_course_summary_image($courseobj, $course->link);
         }
@@ -198,10 +199,12 @@ class extras {
                     }
                 }
 
+                $proficientcompetencypercentage = 0;
                 $competencycount = count($pclist);
+                if ($competencycount) {
+                    $proficientcompetencypercentage = ((float) $proficientcount / (float) $competencycount) * 100.0;
+                }
                 
-                $proficientcompetencypercentage = ((float) $proficientcount / (float) $competencycount) * 100.0;
-
                 $progressclass = '';
                 if ($proficientcompetencypercentage == 100) {
                     $progressclass = 'bg-success';

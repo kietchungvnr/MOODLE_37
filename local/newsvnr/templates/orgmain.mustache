@@ -48,9 +48,11 @@ var list_users = document.getElementById("list_users");
 $("#orgstructuredetail").click(function(){
 	orgstructuredetail.classList.remove("btn-primary");
 	list_users.classList.add("btn-primary");
+	orgstructuredetail.classList.add("btn-secondary");
 });
 $("#list_users").click(function(){
 	list_users.classList.remove("btn-primary");
+	list_users.classList.add("btn-secondary");
 	orgstructuredetail.classList.add("btn-primary");
 });
 {{/js}}

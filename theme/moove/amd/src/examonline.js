@@ -107,10 +107,15 @@ define(["jquery", "core/config", 'kendo.all.min', "core/str", "core/notification
                 $('#menu-tree-exam li.subject-exam').removeClass('active');
                 $(this).addClass('active');
                 // Hiện và truyền tham số vào button tạo đề thi khi click vào môn thi
+                var cancreate = $(this).attr('data-cancreate');
                 var examsubjectexamid = $(this).attr('data-examsujbectexam');
                 var href = Config.wwwroot + '/course/modedit.php?add=quiz&type=&course=1&section=0&return=0&sr=0&examsubjectexamid=' + examsubjectexamid;
-                $('#add-quiz').attr('href', href);
-                $('#add-quiz').removeClass('d-none');
+                if(cancreate == 'true') {
+                    $('#add-quiz').attr('href', href);
+                    $('#add-quiz').removeClass('d-none');
+                } else {
+                    $('#add-quiz').addClass('d-none');
+                }
                 //////////////////////////////////////
                 var examtype = $('#exam-type').val();
                 var settings = {

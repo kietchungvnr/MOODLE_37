@@ -34,6 +34,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/course/format/renderer.php');
+require_once($CFG->dirroot . '/local/newsvnr/lib.php');
 require_once($CFG->dirroot . '/course/format/topcoll/lib.php');
 
 class format_topcoll_renderer extends format_section_renderer_base {
@@ -467,7 +468,6 @@ class format_topcoll_renderer extends format_section_renderer_base {
             $o .= html_writer::start_tag('span',
                 array('class' => $toggleclass, 'role' => 'button', 'aria-pressed' => $ariapressed)
             );
-
             if (empty($this->tcsettings)) {
                 $this->tcsettings = $this->courseformat->get_settings();
             }
@@ -482,10 +482,22 @@ class format_topcoll_renderer extends format_section_renderer_base {
             } else {
                 $o .= html_writer::tag('h3', $title); // Moodle H3's look bad on mobile / tablet with CT so use plain.
             }
-
             $o .= $this->section_availability($section);
 
             $o .= html_writer::end_tag('span');
+            // Custom by Thắng : thêm thống kê module ở mỗi section
+            $sectionmods = count_module($course,$section);
+            $o .= html_writer::start_tag('div',array('class' => 'reportmodule'));
+            if(empty($sectionmods['activityinfo'])) {
+                $o .= '<div class="countmodule mr-3">No module</div>';
+            } else {
+                foreach ($sectionmods['activityinfo'] as $value) {
+                    $o .= '<div class="countmodule">'.$value.'</div>';
+                }
+                $o .= '<i class="fa fa-angle-down rotate-icon expand-icon"></i>';
+            }
+            $o .= html_writer::end_tag('div');
+            // end custom 
             $o .= html_writer::end_tag('div');
 
             if ($this->tcsettings['showsectionsummary'] == 2) {
