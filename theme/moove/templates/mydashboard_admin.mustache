@@ -360,21 +360,28 @@ require(
     }).fail(Notification.exception);
     {{! Kendo dropdown nhắc nhở khóa học 1 }}
       var courseUrl = Config.wwwroot + '/course/view.php?id=';
-      $(".remindcourse").click(function(e) {
+      $(".remindcourse").click(function(e){
         e.stopPropagation();
         var event = $(this).attr('data');
         var title = $(this).attr('title');
         var ps = $(this).position();
         var winwidth = window.innerWidth;
         var cardwidth = $('.card#remindcourse').width();
-        $('#viewRemindDetail').kendoWindow();
+        $('#viewRemindDetail').kendoWindow({
+          resizable: false,
+          title: title,
+          width: "350",
+          height: "280",
+          actions: [
+              "Close"
+          ],
+        });
         var dialog = $('#viewRemindDetail').data("kendoWindow");
         dialog.close();
         var cardwidth = $(this).closest('.card-body').width()
         $('#viewRemindDetail').closest(".k-window").css({left:e.pageX-390,top:e.pageY-100});
         dialog.wrapper.addClass("courseremind");
         dialog.open();
-        dialog.title(title);
         var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/adminreport_viewdetail.php';
         var kendoConfig = {};
         var apiSettings = {
@@ -388,19 +395,11 @@ require(
         kendoConfig.value = 'value';
         var initDropDownList = kendoService.initDropDownList(kendoConfig);
         $("#content").kendoDropDownList(initDropDownList);
+        var dropDownList = $("#content").data('kendoDropDownList');
+        dropDownList.open();
         $(".check-menu").click(function(){
             dialog.close();
         })
-    })
-
-    $('#viewRemindDetail').kendoWindow({
-        width: "350",
-        height: "280",
-        title: '',
-        visible: false,
-        actions: [
-            "Close"
-        ],
     })
 })
 {{/js}}

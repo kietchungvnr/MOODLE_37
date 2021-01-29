@@ -104,7 +104,11 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
                 var folderid = $(this).attr('id');
                 $('.add-module-popup input[name="selectmodule"]').attr('folderid', folderid);
                 $('.searchlibrary').attr('folderid', folderid);
-                $('button[data-target="#add-popup-modal-module"]').show();
+                if($(this).parent('li').hasClass('title')) {
+                    $('button[data-target="#add-popup-modal-module"]').hide();
+                } else {
+                    $('button[data-target="#add-popup-modal-module"]').show();
+                }
                 var settings = {
                     type: "GET",
                     processData: true,

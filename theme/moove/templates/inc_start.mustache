@@ -2561,7 +2561,7 @@ img.userpicture {
     color: white;
 }
 #region-main {
-    overflow: hidden !important;
+    overflow: unset !important;
     border: 0;
 }
 #region-main #participationreport {
@@ -3691,7 +3691,7 @@ h4.responsehistoryheader {
     box-shadow:unset;
 }
 .block_vnr_db_studentuser_learning_rp .card-body.p-3 {
-    padding: 0.5rem !important;
+    padding: 0 !important;
 }
 .block_vnr_db_studentuser_topcourse .card-body.p-3 {
     padding: 0 !important;
@@ -4470,7 +4470,6 @@ body#page-enrol-index #region-main .generalbox#notice {
     overflow-x: hidden;
 }
 #file_library {
-    margin-top:5px;
     border: 1px solid #e5dfdf;
     padding: 5px 15px;
 }
@@ -4573,6 +4572,7 @@ li.folder a {
 #file_library table thead th {
     background-color: #f6f9fb;
     color: #36353b;
+    border-bottom: 1px solid #dee2e6;
 }
 #file_library table td {
     border-top: 0;
@@ -5945,6 +5945,35 @@ nav.navbar ul.navbar-nav .usermenu {
 }
 #page-library .content-expand {
     padding-left: 22px !important;
+}
+#page-course-view-topcoll .mod-indent-1 {
+    width: auto;
+}
+#page-library .nav.nav-tabs .nav-link.active {
+    background: whitesmoke !important;
+    color: black !important;
+    border-bottom: 0 !important;
+}
+.example {
+    padding: 11px 15px;
+    background: whitesmoke;
+}
+#page-library .nav.nav-tabs {
+    margin-top: 12px;
+}
+body.format-topcoll.editing ul.ctopics .section .activity .actions {
+    position: absolute;
+}
+body.format-topcoll.editing .course-content .right.side {
+    display: flex !important;
+    width: auto !important;
+    margin-right: 10px;
+}
+#page-question-edit .categoryquestionscontainer {
+    overflow-x: inherit;
+}
+.card-deck-inside {
+    height: 145px;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />

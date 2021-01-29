@@ -575,6 +575,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $html .= html_writer::end_div();
         } else if ($pageheadingbutton) {
             $html .= html_writer::div($addblockbutton . $pageheadingbutton . $button, 'action-rightside-fixed');
+        } else {
+            $html .= html_writer::div($button, 'action-rightside-fixed');
         }
         $html .= '</ul>';
         return $html;
@@ -1465,7 +1467,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         foreach ($moduletypes as $keymodule => $moduletype) {
             if($keymodule != 'resource') {
                 $moduleimg = html_writer::img($OUTPUT->image_url('icon', $keymodule), $keymodule, ['class' => 'pr-2 img-module']);
-                $output .= '<div class="module-count" onclick="filterModule(\''.$keymodule.'\','.$folderid.')">' . $moduleimg . '(' . $moduletype . ')</div>';
+                $output .= '<div class="module-count" title="'.$keymodule.'" onclick="filterModule(\''.$keymodule.'\','.$folderid.')">' . $moduleimg . '(' . $moduletype . ')</div>';
             } else {
                 foreach ($resources as $keyresource => $resource) {
                     if(in_array($keyresource, $allowmodule)) {
@@ -1498,7 +1500,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                         else {
 
                         }
-                        $output .= '<div class="module-count" onclick="filterModule(\''.$keyfilter.'\','.$folderid.')">' . $moduleimg . '(' . $count . ')</div>';
+                        $output .= '<div class="module-count" title="'.$keyresource.'" onclick="filterModule(\''.$keyfilter.'\','.$folderid.')">' . $moduleimg . '(' . $count . ')</div>';
                     }
                 }
             }

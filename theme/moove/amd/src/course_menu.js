@@ -16,7 +16,9 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
     if (path.indexOf('mod') > 0 || path.indexOf('backup') > 0 || path.indexOf('enrol') > 0) {
         $('#nav-drawer').remove();
     }
-    if ($('.nav-tabs.course li').hasClass('active')) {} else {
+    if ($('.nav-tabs.course li:not(:first-child)').hasClass('active')) {
+        $('.nav-tabs.course li:first').removeClass('active');
+    } else {
         if ($('.nav-tabs.course li:first').hasClass('active')) {} else {
             $('.nav-tabs.course li:first').addClass('active');
         }
