@@ -294,7 +294,7 @@ class mod_quiz_renderer extends plugin_renderer_base {
             $this->initialise_timer($timerstartvalue, $ispreview);
         }
         // Custom by Thắng : Chỉnh sửa giao diện thời gian làm bài thi
-        return html_writer::tag('div', '<i class="fa fa-clock-o mr-2" aria-hidden="true"></i>' . html_writer::tag('span', '', array('id' => 'quiz-time-left')),
+        return html_writer::tag('div', html_writer::tag('span', '', array('id' => 'quiz-time-left')),
                 array('id' => 'quiz-timer', 'role' => 'timer',
                     'aria-atomic' => 'true', 'aria-relevant' => 'text'));
     }

@@ -1590,7 +1590,7 @@ nav.navbar .navbar-brand .logo img {
         margin-right: 0px !important;
     }
     body#page-mod-quiz-attempt.drawer-open-right {
-        margin-right: 280px !important;
+        margin-right: 320px !important;
     }
     body.drawer-open-left {
         margin-left: 0px !important;
@@ -2891,11 +2891,8 @@ table.quizreviewsummary td.cell {
     min-width: 8em;
 }
 .que .content {
-    margin: 0px 0 0 1.5em;
+    margin: 0px 0 0 0.5em;
     width: 100%;
-}
-.que .formulation   {
-    border:1px solid #bce0ea;
 }
 .que .outcome {
     border:1px solid #efd1a7;
@@ -2938,6 +2935,8 @@ table.quizreviewsummary td.cell {
 }
 .que h3.no {
     font-weight: bold;
+    display: flex;
+    align-items: flex-start;
 }
 #page-mod-quiz-attempt .submitbtns, #page-mod-quiz-review .submitbtns {
     padding-top: 0;
@@ -3058,10 +3057,9 @@ table#categoryquestions tr {
         font-size: 13px;
         overflow-x: hidden;
     }
-/*    #page img {
-        width: 100%;
-        height: auto;
-    }*/
+    .ablock {
+        display: block !important;
+    }
     .course-content .nav-tabs li {
         display: none;
     }
@@ -3085,10 +3083,6 @@ table#categoryquestions tr {
     }
     .card-body.course {
         min-height: 80vh;
-    }
-    .que .content {
-        width: 72%;
-        margin: 0px 0 0 0.5em;
     }
     .que .info {
         width: 25%;
@@ -4862,7 +4856,7 @@ input.apple-switch:checked:after {
 /* trang làm bài quiz */
 .path-mod-quiz #mod_quiz_navblock .qnbutton {
     height: 30px;
-    width: 40px;
+    width: 38px;
     overflow: hidden;
     margin: 0px 5px 8px 5px;
     font-weight: bold;
@@ -4901,9 +4895,11 @@ input.apple-switch:checked:after {
 #page-mod-quiz-attempt #quiz-timer {
     margin-top: -10px;
     text-align: center;
-    font-size: 18px;
-    margin-bottom: 10px;
-    border: 1px solid #8080805c;
+    font-size: 25px;
+    border: 1px solid #d7dce1;
+    margin: 10px -20px;
+    color: #ef5454;
+    padding: 10px 0;
 }
 /*Trang review bài quiz */
 .path-mod-quiz #mod_quiz_navblock .qnbutton.correct {
@@ -5860,7 +5856,7 @@ nav.navbar ul.navbar-nav .usermenu {
     background:white;
 }
 #mod_quiz_navblock #user-picture {
-    margin: 0 0 1.5em 0; 
+    margin: 0 0 1em 0; 
     display: flex;
     align-items: center;
 }
@@ -5974,6 +5970,80 @@ body.format-topcoll.editing .course-content .right.side {
 }
 .card-deck-inside {
     height: 145px;
+}
+#page-mod-quiz-attempt #page-navbar {
+    display: none;
+}
+.que {
+    display: block;
+    background: white;
+    padding: 5px 10px;
+    margin: 0 auto 1.2em auto;
+    border-radius: 8px;
+}
+.que .info {
+    float: none;
+    height: auto;
+    border: 0;
+    margin-bottom: 0;
+    background: transparent;
+    width: auto;
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+    padding: 12px 5px 0 5px;
+    /*align-items: end;*/
+}
+.que .info>div {
+    margin-top: 0;
+}
+.que .qtext {
+    margin-bottom: 0;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    max-width: inherit;
+}
+.que .formulation {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin-bottom: 0;
+}
+#page-mod-quiz-attempt .card-body,
+#page-mod-quiz-review .card-body,
+#page-mod-quiz-summary #sidepre-blocks .card-body {
+    padding: 0 !important;
+}
+#page-mod-quiz-attempt #region-main .card,
+#page-mod-quiz-review #region-main .card {
+    background: transparent;
+}
+#page-mod-quiz-attempt #sidepre-blocks,
+#page-mod-quiz-review #sidepre-blocks,
+#page-mod-quiz-summary #sidepre-blocks {
+    background: white;
+    overflow: hidden;
+}
+.que span.qno {
+    background: #3c80bc;
+    border-radius: 50%;
+    padding: 10px 0;
+    color: white;
+    margin-right: 10px;
+    width: 40px;
+    text-align: center;
+    height: 40px;
+}
+.que.multichoice .ablock,
+.que.truefalse .ablock{
+    display: flex;
+}
+.que .formulation .qtext{
+    display: none;
+}
+.que.multichoice .ablock .prompt,
+.que.truefalse .ablock .prompt {
+    margin-right: 20px;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />

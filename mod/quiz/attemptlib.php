@@ -2799,6 +2799,7 @@ class quiz_attempt_nav_panel extends quiz_nav_panel_base {
     public function render_countdown_timer(mod_quiz_renderer $output) {
         $html  = '';
         $html .= html_writer::div($output->countdown_timer($this->attemptobj, time()));
+        $html .= '<div class="text-center"><p class="bold mb-2">Câu hỏi</p></div>';
         $html .= '<div style="padding:0 6px"><div class="d-flex"><div class="quiz-square" style="background: #4285f4;"></div><span>Câu hỏi đã trả lời</span></div>';
         $html .= '<div class="d-flex"><div class="flag-quiz-square" style="background: #d4cfcf;"><span></span></div><span>Câu hỏi đang cân nhắc</span></div>';
         $html .= '<div class="d-flex"><div class="quiz-square" style="background: #d4cfcf;"></div><span>Câu hỏi chưa trả lời</span></div></div>';

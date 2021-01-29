@@ -100,10 +100,10 @@ class core_question_renderer extends plugin_renderer_base {
 
         $output .= html_writer::tag('div',
                 $this->info($qa, $behaviouroutput, $qtoutput, $options, $number),
-                array('class' => 'info'));
+                array('class' => 'info clearfix'));
 
         $output .= html_writer::start_tag('div', array('class' => 'content'));
-
+        $output .= '<hr class="mt-0" style="margin-left:45px">';
         $output .= html_writer::tag('div',
                 $this->add_part_heading($qtoutput->formulation_heading(),
                     $this->formulation($qa, $behaviouroutput, $qtoutput, $options)),
@@ -141,11 +141,21 @@ class core_question_renderer extends plugin_renderer_base {
     protected function info(question_attempt $qa, qbehaviour_renderer $behaviouroutput,
             qtype_renderer $qtoutput, question_display_options $options, $number) {
         $output = '';
-        $output .= $this->number($number);
-        $output .= $this->status($qa, $behaviouroutput, $options);
-        $output .= $this->mark_summary($qa, $behaviouroutput, $options);
+        // Custom by Thắng : sửa giao diện làm bài thi ẩn bớt info
+        // $output .= $this->status($qa, $behaviouroutput, $options);
+        // $output .= $this->mark_summary($qa, $behaviouroutput, $options);
+        $output .= html_writer::start_div('pull-right d-flex ml-2');
         $output .= $this->question_flag($qa, $options->flags);
         $output .= $this->edit_question_link($qa, $options);
+        $output .= html_writer::end_div();
+        $output .= html_writer::start_div('d-flex');
+        $question = $qa->get_question();
+        $output .= $this->number($number);
+        $output .= html_writer::tag('div', $question->format_questiontext($qa),
+        array('class' => 'qtext'));
+        $output .= html_writer::end_div();
+  
+        
         return $output;
     }
 
@@ -163,8 +173,7 @@ class core_question_renderer extends plugin_renderer_base {
         if (trim($number) === 'i') {
             $numbertext = get_string('information', 'question');
         } else {
-            $numbertext = get_string('questionx', 'question',
-                    html_writer::tag('span', $number, array('class' => 'qno')));
+            $numbertext = html_writer::tag('span', $number, array('class' => 'qno'));
         }
         return html_writer::tag('h3', $numbertext, array('class' => 'no'));
     }
@@ -297,12 +306,11 @@ class core_question_renderer extends plugin_renderer_base {
                                 array('id' => $id . 'label', 'for' => $id . 'checkbox')) . "\n";
 
                 $divattributes = array(
-                    'class' => 'questionflag editable',
+                    'class' => 'questionflag editable mb-1',
                     'aria-atomic' => 'true',
                     'aria-relevant' => 'text',
                     'aria-live' => 'assertive',
                 );
-
                 break;
 
             default:
@@ -320,27 +328,27 @@ class core_question_renderer extends plugin_renderer_base {
      * @return string the img tag.
      */
     protected function get_flag_html($flagged, $id = '') {
-        if ($flagged) {
-            $icon = 'i/flagged';
-            $alt = get_string('flagged', 'question');
-            $label = get_string('clickunflag', 'question');
-        } else {
-            $icon = 'i/unflagged';
-            $alt = get_string('notflagged', 'question');
-            $label = get_string('clickflag', 'question');
-        }
-        $attributes = array(
-            'src' => $this->image_url($icon),
-            'alt' => $alt,
-            'class' => 'questionflagimage',
-        );
-        if ($id) {
-            $attributes['id'] = $id;
-        }
-        $img = html_writer::empty_tag('img', $attributes);
-        $img .= html_writer::span($label);
+        // if ($flagged) {
+        //     $icon = 'i/flagged';
+        //     $alt = get_string('flagged', 'question');
+        //     $label = get_string('clickunflag', 'question');
+        // } else {
+        //     $icon = 'i/unflagged';
+        //     $alt = get_string('notflagged', 'question');
+        //     $label = get_string('clickflag', 'question');
+        // }
+        // $attributes = array(
+        //     'src' => $this->image_url($icon),
+        //     'alt' => $alt,
+        //     'class' => 'questionflagimage',
+        // );
+        // if ($id) {
+        //     $attributes['id'] = $id;
+        // }
+        // $img = html_writer::empty_tag('img', $attributes);
+        // $img .= html_writer::span($label);
 
-        return $img;
+        // return $img;
     }
 
     protected function edit_question_link(question_attempt $qa,
@@ -357,10 +365,9 @@ class core_question_renderer extends plugin_renderer_base {
         }
         $params['id'] = $qa->get_question_id();
         $editurl = new moodle_url('/question/question.php', $params);
-
+        // Custom by Thắng : Sửa giao diện quiz ẩn bớt info
         return html_writer::tag('div', html_writer::link(
-                $editurl, $this->pix_icon('t/edit', get_string('edit'), '', array('class' => 'iconsmall')) .
-                get_string('editquestion', 'question')),
+                $editurl, '<i class="fa fa-pencil-square-o ml-3 fa-2x" aria-hidden="true"></i>'),
                 array('class' => 'editquestion'));
     }
 

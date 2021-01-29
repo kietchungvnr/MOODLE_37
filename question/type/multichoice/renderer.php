@@ -136,12 +136,13 @@ abstract class qtype_multichoice_renderer_base extends qtype_with_combined_feedb
         }
 
         $result = '';
-        $result .= html_writer::tag('div', $question->format_questiontext($qa),
-                array('class' => 'qtext'));
+        // Custom by Thắng : Chuyển tên câu hỏi lên trên header
+        // $result .= html_writer::tag('div', $question->format_questiontext($qa),
+        //         array('class' => 'qtext'));
 
         $result .= html_writer::start_tag('div', array('class' => 'ablock'));
         if ($question->showstandardinstruction == 1) {
-            $result .= html_writer::tag('div', $this->prompt(), array('class' => 'prompt'));
+            $result .= html_writer::tag('div', $this->prompt(), array('class' => 'prompt mt-1'));
         }
 
         $result .= html_writer::start_tag('div', array('class' => 'answer'));
@@ -151,9 +152,11 @@ abstract class qtype_multichoice_renderer_base extends qtype_with_combined_feedb
         }
         $result .= html_writer::end_tag('div'); // Answer.
 
+        $result .= html_writer::end_tag('div'); // Ablock.
+        
         $result .= $this->after_choices($qa, $options);
 
-        $result .= html_writer::end_tag('div'); // Ablock.
+        
 
         if ($qa->get_state() == question_state::$invalid) {
             $result .= html_writer::nonempty_tag('div',
@@ -306,9 +309,10 @@ class qtype_multichoice_single_renderer extends qtype_multichoice_renderer_base 
         }
         // Adds an hidden radio that will be checked to give the impression the choice has been cleared.
         $clearchoiceradio = html_writer::empty_tag('input', $clearchoiceradioattrs);
+        $clearchoiceradio .= '<i class="fa fa-trash mr-1" aria-hidden="true"></i>';
         $clearchoiceradio .= html_writer::link('', get_string('clearchoice', 'qtype_multichoice'),
             ['for' => $clearchoiceid, 'role' => 'button', 'tabindex' => $linktabindex,
-            'class' => 'btn btn-link ml-4 pl-1 mt-2']);
+            'class' => 'btn btn-link pl-1']);
 
         // Now wrap the radio and label inside a div.
         $result = html_writer::tag('div', $clearchoiceradio, ['id' => $clearchoicefieldname, 'class' => $cssclass]);
