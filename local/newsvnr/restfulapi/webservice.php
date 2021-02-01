@@ -1283,7 +1283,7 @@ if($action == "viewcount_chart") {
 	$compare = array_diff($list_course, $list_course_temp);
 	if($compare) {
 		foreach($compare as $course) {
-			$list_coursename[] = $DB->get_field('course', 'fullanme', ['id' => $course]);
+			$list_coursename[] = $DB->get_field('course', 'fullname', ['id' => $course]);
 			$list_viewcount[] = 0;
 		}
 	}
