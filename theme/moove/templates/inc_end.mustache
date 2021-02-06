@@ -88,7 +88,6 @@ require(['jquery', 'core/config'], function($, Config) {
     // active UI câu hỏi trong bài kiểm tra quiz
     if($('#responseform')) {
         $('#responseform .content input').click(function() {
-            debugger
             var quizheight = $(this).closest('div.que.multichoice').height();
             var x = $(this).closest('div.que.multichoice').offset();
             if($(this).closest('div.qtype_multichoice_clearchoice').hasClass('abcd')) {

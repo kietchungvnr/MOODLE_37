@@ -273,13 +273,12 @@
             $('input.folderparent').attr('parentid', id);
         })
     }
-        // Mở cây thư mục thư viện trực tuyến
+    // Mở cây thư mục thư viện trực tuyến
     const viewTree = () => {
         require(['jquery', 'core/config'], ($, Config) => {
             $('.tree-view-folder').slideDown();
         })
     }
-
     // Xóa,ẩn hiện module trên thư viện 
     const actionModule = (moduleid,action,folderid) => {
         require(['jquery', 'core/config', 'alertjs' ], ($, Config,alertify) => {

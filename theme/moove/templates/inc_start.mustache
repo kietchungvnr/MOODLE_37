@@ -3880,6 +3880,7 @@ nav.focusmod #focus-mod {
     color: #d4d4d4!important;
     background-color: #f9f9f9;
     cursor:auto;
+    pointer-events: none;
 }
 li.nav-item.border-left {
     width: 115px;
@@ -5041,6 +5042,7 @@ input.apple-switch:checked:after {
     height:35px;
     border-radius: 25px;
     width: 310px;
+    background: white;
 }
 .search_form_fp .k-widget.k-autocomplete {
     border: 0;
@@ -6075,9 +6077,11 @@ body.format-topcoll.editing .course-content .right.side {
 }
 #page-course-index-category .generalbox.info,
 #page-course-index-category .action-menu .dropdown-toggle {
-    display: none !IMPORTANT;
+    display: none !important;
 }
-
+.list-category.title {
+    overflow: hidden;
+}
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />

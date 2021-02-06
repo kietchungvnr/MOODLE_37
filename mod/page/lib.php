@@ -516,7 +516,9 @@ function page_view($page, $course, $cm, $context) {
     $event->add_record_snapshot('course', $course);
     $event->add_record_snapshot('page', $page);
     $event->trigger();
-
+    if(!isset($page->code)) {
+        $page->code = null;
+    }
     // Completion.
     $completion = new completion_info($course);
     // Custom by Vũ: Đẩy kết quả điểm danh(Tương đương hoàn thành module page) qua EBM

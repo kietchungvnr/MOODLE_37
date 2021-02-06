@@ -64,8 +64,6 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             $('#sidepreopen-control').addClass('d-none');
             $('#sidepre-blocks').addClass('d-none');
 
-            
-            
             setCookie('cookie', 'focusmod');
         }
     })
@@ -84,7 +82,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
     })
 
     // Xử dropdown khi click
-    $(".dropdown-content .card-header").click(function() {
+    $(".dropdown-content .card-header.level1").click(function() {
         var id = $(this).attr("id");
         $(".card-header#" + id + " .rotate-icon").toggleClass('active');
         $(".dropdown-content-2." + id).slideToggle('fast', 'swing');
@@ -101,32 +99,50 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
 
     // Lùi bài học
     $('.nav-link.prev').click(function() {
-        var temp = $('.card-header.level2 a.active').parents('div').prev();
-        temp.children('a').trigger('click');
+        var temp = $('.card-header.level2 a.active').parents('div.level2');
+        if(!temp.is(':first-child')) {
+            temp.prev().children('a').trigger('click');
+        }
+        else {
+            var section = $('.card-header.level2 a.active').closest('div.dropdown-content-2').prev();
+            if(section.length > 0) {
+                $(".card-header .rotate-icon").removeClass('active');
+                $(".dropdown-content-2").slideUp('fast', 'swing');
+                section.prev().prev().trigger('click');
+                section.prev().children('div:last-child').children('a').trigger('click');
+            }
+        }
     })
-
     // Tới bài học tiếp theo
     $('.nav-link.next').click(function() {
-        var temp = $('.card-header.level2 a.active').parents('div').next();
-        temp.children('a').trigger('click');
-    })
-
-    // Trong khóa học click vào module sẽ auto chuyển sang chế độ focusmode
-    $('.course-content li.activity .activityinstance').click(function(e) {
-        if($('.editing_move').length <= 0) {
-            e.preventDefault();
-            var moduleId = $(this).parents('li').attr('id').split('-')[1];
-            $('#focus-mod').click();
-            var element = "div.dropdown-content-2 a[module-id=" +moduleId+ "]";
-            $('#mod-view-coursepage').html('');
-            setTimeout(function() {
-                $(element).trigger('click');
-            }, 500);
+        var temp = $('.card-header.level2 a.active').parents('div.level2');
+        if(!temp.is(':last-child')) {
+            temp.next().children('a').trigger('click');
+        }
+        else {
+            var section = $('.card-header.level2 a.active').closest('div.dropdown-content-2').next();
+            if(section.length > 0) {
+                $(".card-header .rotate-icon").removeClass('active');
+                $(".dropdown-content-2").slideUp('fast', 'swing');
+                section.trigger('click');
+                section.next().children('div:first-child').children('a').trigger('click');
+            }
         }
     })
 
+    // Trong khóa học click vào module sẽ auto chuyển sang chế độ focusmode
+    $('.course-content li.activity a.aalink').bind('click', function(e) {
+        e.preventDefault();
+        var moduleId = $(this).parents('li').attr('id').split('-')[1];
+        $('#focus-mod').click();
+        var element = "div.dropdown-content-2 a[module-id=" +moduleId+ "]";
+        $('#mod-view-coursepage').html('');
+        setTimeout(function() {
+            $(element).trigger('click');
+        }, 500);
+    })
     // Click vào chọn bài học
-    $('div.dropdown-content-2 a').click(function(e) {
+    $('div.card-header.level2 a').click(function(e) {
         var _this = $(this);
         var url = _this.attr('data-focusmode-url');
         var modType = _this.attr('data-mod-type');
@@ -135,18 +151,17 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             setCookie('cookie', 'focusmod');
         }
         $('#region-main .loading-page').addClass('active');
-        $('div.dropdown-content-2 a').removeClass('active');
+        $('div.card-header.level2 a').removeClass('active');
         _this.addClass('active').siblings().removeClass('active');
-
         $('.mid .nav-link.focusmod').html(_this.text() + '<i class="fa fa-angle-down rotate-icon ml-2"></i>');
 
         $('.nav-link.next, .nav-link.prev').removeClass('disable');
         // Kiểm tra ngoại lệ tiến lùi trong màn hình khóa học
         if ($('.card-header.level2 a').hasClass('active')) {
-            if ($('.card-header.level2 a.active').parents('div.level2').is(':first-child')) {
+            if ($('.card-header.level2 a.active').parents().parents('div.dropdown-content-2').prev().is(':first-child') && $('.card-header.level2 a.active').parents('div.level2').is(':first-child')) {
                 $('.nav-link.prev').addClass('disable');
             }
-            if ($('.card-header.level2 a.active').parents('div.level2').is(':last-child')) {
+            if ($('.card-header.level2 a.active').parents().parents('div.dropdown-content-2').is(':last-child') && $('.card-header.level2 a.active').parents('div.level2').is(':last-child'))  {
                 $('.nav-link.next').addClass('disable');
             }
         }
@@ -211,23 +226,9 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
 	    }
 	})
 
-    // Nếu trong section không có content thì bị ẩn đi
-    $('div.card-header.level1').each(function() {
-        var idheader = $(this).attr('id');
-        if ($('.dropdown-content-2.' + idheader).is(':empty')) {
-            $(this).hide();
-        }
-    })
-
     if (!$('.card-header.level2 a').hasClass('active')) {
         $('.nav-link.prev, .nav-link.next').addClass('disable');
     }
-
-    $('.card-header.level2 a').each(function() {
-        if ($(this).attr('href').indexOf('/mod/url/') > 0) {
-            $(this).attr('target', '_blank');
-        }
-    })
     
     // function cookie
     function setCookie(cname, cvalue, exdays) {

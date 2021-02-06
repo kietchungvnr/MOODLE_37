@@ -14,7 +14,12 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'core/str
 	                    serverFiltering: true
 	               }
 	            }
-	        }
+	        },
+	        select: function(e) {
+	        	setTimeout(function() {
+	        		$('#courses_search_button').click()
+	        	},500);
+		    }
 	    });
 
 	    $("#keyword").kendoAutoComplete({
@@ -31,7 +36,12 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'core/str
 	                    serverFiltering: true
 	               }
 	            }
-	        }
+	        },
+	        select: function(e) {
+	        	setTimeout(function() {
+	        		$('#courses_search_button').click()
+	        	},500);
+		    }
 	    });
 
 	    $("#teacher").kendoAutoComplete({
@@ -48,7 +58,12 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'core/str
 	                    serverFiltering: true
 	               }
 	            }
-	        }
+	        },
+	        select: function(e) {
+	        	setTimeout(function() {
+	        		$('#courses_search_button').click()
+	        	},500);
+		    }
 	    });
 	    var href = Config.wwwroot + '/course/view.php?id=';
 	    $("#course_search_form_fp").kendoAutoComplete({
