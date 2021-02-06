@@ -105,7 +105,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $process = round(\core_completion\progress::get_course_progress_percentage($COURSE));
         $linkcourse = $CFG->wwwroot.'/course/view.php?id='.$COURSE->id;
         $output = '';
-        $output .= '<nav class="fixed-top navbar moodle-has-zindex focusmod">';
+        $output .= '<nav class="fixed-top navbar moodle-has-zindex focusmod" id="header-main">';
+        $output .= '<div class="loading-page"></div>';
         $output .= '<div class="d-flex menu-left">';
         $output .= '<div class="course-info-focus"><div class="page-header-headings"><a href="'.$linkcourse.'">'.$COURSE->fullname.'</a></div>';
         $output .= '<div class="d-flex"><div class="progress course">';

@@ -108,7 +108,7 @@ class CourseController extends BaseController {
 			
 			if(empty($this->resp->data)) {
 				$this->data->idnumber = '';
-				$this->data->format = 'topics';
+				$this->data->format = 'topcoll';
 				$this->data->showgrades = 1;
 				$this->data->numsections = 4;
 				$this->data->newsitems = 10;
@@ -161,7 +161,7 @@ class CourseController extends BaseController {
 	        }
 			if(empty($this->resp->data)) {
 				$this->data->idnumber = '';
-				$this->data->format = 'topics';
+				$this->data->format = 'topcoll';
 				$this->data->showgrades = 1;
 				$this->data->numsections = 4;
 				$this->data->newsitems = 10;
@@ -252,7 +252,7 @@ class CourseController extends BaseController {
 			
 			if(empty($this->resp->data)) {
 				$this->data->idnumber = '';
-				$this->data->format = 'topics';
+				$this->data->format = 'topcoll';
 				$this->data->showgrades = 1;
 				$this->data->numsections = 4;
 				$this->data->newsitems = 10;

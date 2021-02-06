@@ -8,25 +8,29 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
     var path = window.location.href;
 
     $(document).ready(function() {
-        if (path.indexOf('course/view/') > 0) {
-            $('#sidepreopen-control').click();
+        if (path.indexOf('/mod/quiz/attempt.php') > 0) {
+            $('nav.focusmod').addClass('testhoi');
         }
         
     });
   
     // Click vào chế độ focus mode
     $('.open-focusmod').bind('click', function() {
+        if($('body').hasClass('focusmod')) {
+            setCookie('cookie', 'focusmod');
+        }
         var fm = getCookie('cookie');
         var course = $(this).attr('course');
         if($('#mod-iframe').length <= 0) {
             $('#mod-view-coursepage').html('<div class="alert alert-success mb-0"><strong>'+ M.util.get_string('selectcoursedata', 'theme_moove') +'</strong></div>');
         }
-        
+
         $('#setting-context').addClass('d-none');
         $('#sidepreopen-control').addClass('d-none');
         if (fm == "focusmod") {
             /// Hiện các element khi thoát chế độ focusmode
             $('body').removeClass('focusmod');
+            $('#region-main .loading-page').removeClass('active');
             $('#setting-context').removeClass('d-none');
             $('#sidepreopen-control').removeClass('d-none');
             $('.navbar.focusmod').removeClass('d-flex');
@@ -59,6 +63,8 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             $('#setting-context').addClass('d-none');
             $('#sidepreopen-control').addClass('d-none');
             $('#sidepre-blocks').addClass('d-none');
+
+            
             
             setCookie('cookie', 'focusmod');
         }
@@ -106,16 +112,17 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
     })
 
     // Trong khóa học click vào module sẽ auto chuyển sang chế độ focusmode
-    $('.course-content li.activity a.aalink').bind('click', function(e) {
-        e.preventDefault();
-        var moduleId = $(this).parents('li').attr('id').split('-')[1];
-        $('#focus-mod').click();
-        var element = "div.dropdown-content-2 a[module-id=" +moduleId+ "]";
-        $('#mod-view-coursepage').html('');
-        setTimeout(function() {
-            $(element).trigger('click');
-        }, 500);
-        
+    $('.course-content li.activity .activityinstance').click(function(e) {
+        if($('.editing_move').length <= 0) {
+            e.preventDefault();
+            var moduleId = $(this).parents('li').attr('id').split('-')[1];
+            $('#focus-mod').click();
+            var element = "div.dropdown-content-2 a[module-id=" +moduleId+ "]";
+            $('#mod-view-coursepage').html('');
+            setTimeout(function() {
+                $(element).trigger('click');
+            }, 500);
+        }
     })
 
     // Click vào chọn bài học
@@ -124,6 +131,9 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         var url = _this.attr('data-focusmode-url');
         var modType = _this.attr('data-mod-type');
 
+        if($('body').hasClass('focusmod')) {
+            setCookie('cookie', 'focusmod');
+        }
         $('#region-main .loading-page').addClass('active');
         $('div.dropdown-content-2 a').removeClass('active');
         _this.addClass('active').siblings().removeClass('active');
@@ -156,6 +166,31 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
                     if(modType == 'resource' || modType == 'forum' || modType == 'hvp' || modType == 'quiz') {
                         var vh = $('body').height() - 77;
                         $('#mod-iframe').height(vh);
+                    }
+                    if(modType == 'quiz') {
+                        var iframe = document.getElementById("mod-iframe");
+                        var iframeModBody = iframe.contentWindow.document.querySelectorAll("body")[0]['id'];
+                        if(iframeModBody.includes('page-mod-quiz-attempt') == true || iframeModBody.includes('page-mod-quiz-summary') == true || iframeModBody.includes('page-mod-quiz-review') == true) {
+                            $('#header-quiz').removeAttr('style');
+                            if($('#back-focusmod').length == 0) {
+                                $('#header-main').attr('style', 'display: none!important');
+                                var quizHeader = $('nav.focusmod').eq(0);
+                                var quizName = $('div.dropdown-content-2 a.active').text();
+                                var moduleId = $('div.dropdown-content-2 a.active').attr('module-id');
+                                quizHeader.after('<nav class="fixed-top navbar moodle-has-zindex focusmod d-flex" id="header-quiz"><div class="loading-page"></div><span class="d-flex m-auto font-weight-bold" style="font-size:22px">'+quizName+'</span><span id="back-focusmod" class="cl-cursor" style="position: relative; right: 28px; background-color: #3c80bc; color: #fff; padding: 5px; border-radius: 15px;"><i class="fa fa-share" style="margin: 0 5px;position: relative;top: 1px;" aria-hidden="true"></i><span style="margin-right:5px">Quay lại</span></span></nav>');
+                                $('#header-main .loading-page').removeClass('active');
+                                $('#back-focusmod').bind('click', function(e) {
+                                    $('div.dropdown-content-2 a[module-id="'+moduleId+'"]').trigger('click');
+                                    $('#header-main').removeAttr('style');
+                                    $('#header-quiz').attr('style', 'display: none!important');
+                                });
+                            }
+                        } else {
+                            $('#header-main').removeAttr('style');
+                            if($('#header-quiz').length > 0) {
+                                $('#header-quiz').attr('style', 'display: none!important');
+                            }
+                        }
                     }
                     $('#region-main .loading-page').removeClass('active');
                 } catch (e) {

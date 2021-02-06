@@ -102,12 +102,11 @@ require(['jquery', 'core/config'], function($, Config) {
         })
     }
     window.addEventListener("load", afterLoaded,true);
-      function afterLoaded(){
-        $('body').removeClass('loading');
-      }
+        function afterLoaded(){
+            $('body').removeClass('loading');
+        }
 
 }); 
-require(['theme_moove/focusmod']);
 
 require(['theme_moove/course_menu']);
 
@@ -123,6 +122,16 @@ var id = $('.new-detail-chat').attr('data');
 $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussionid='+id);
 {{/js}}
 <script type="text/javascript">
+    function addPageLoading() {
+        $('body').addClass('loading');
+    }
+    document.onclick = addPageLoading();
+    $(window).on('load', function(){
+        $('body').removeClass('loading');
+        setTimeout(function () {
+            console.log('Page is loaded and 1 minute has passed');   
+        }, 60000);
+    });
     // Xem file trực tiếp trên popup
     var modalStore = {};
     const showmodal = (cmid, instance) => {
