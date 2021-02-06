@@ -740,18 +740,18 @@ abstract class question_flags {
         );
         $actionurl = $CFG->wwwroot . '/question/toggleflag.php';
         $flagtext = array(
-            0 => get_string('clickflag', 'question'),
-            1 => get_string('clickunflag', 'question')
+            0 => get_string('sign', 'local_newsvnr'),
+            1 => get_string('unsign', 'local_newsvnr')
         );
         $flagattributes = array(
             0 => array(
-                'src' => $OUTPUT->image_url('i/unflagged') . '',
+                'src' => $CFG->wwwroot .'/theme/moove/pix/uncheck.png' . '',
                 'title' => get_string('clicktoflag', 'question'),
                 'alt' => get_string('notflagged', 'question'),
               //  'text' => get_string('clickflag', 'question'),
             ),
             1 => array(
-                'src' => $OUTPUT->image_url('i/flagged') . '',
+                'src' => $CFG->wwwroot .'/theme/moove/pix/checkbox.png' . '',
                 'title' => get_string('clicktounflag', 'question'),
                 'alt' => get_string('flagged', 'question'),
                // 'text' => get_string('clickunflag', 'question'),

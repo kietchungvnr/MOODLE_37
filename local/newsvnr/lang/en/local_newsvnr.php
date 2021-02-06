@@ -553,3 +553,5 @@ $string['defaultfolder'] = "Default folder";
 $string['folder'] = "Folder";
 $string['searchresourcename'] = "Search resource name";
 $string['searchcontentname'] = "Search resource content e-book,page,lesson";
+$string['sign'] = "Sign";
+$string['unsign'] = "Unsign";

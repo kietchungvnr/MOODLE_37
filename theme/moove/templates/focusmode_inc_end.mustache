@@ -79,6 +79,9 @@ require(['jquery', 'core/config'], function($, Config) {
     // active UI câu hỏi trong bài kiểm tra quiz
     if($('#responseform')) {
         $('#responseform .content input').click(function() {
+            var quizheight = $(this).closest('div.que.multichoice').height();
+            var x = $(this).closest('div.que.multichoice').offset();
+            $("html, body").animate({ scrollTop: x.top + quizheight + 10}, 1000);
             var questionId = $(this).attr('id');
             var split = questionId.split(":");
             var splitAgian = split[1].split("_");
@@ -91,7 +94,6 @@ require(['jquery', 'core/config'], function($, Config) {
                 $(elment).addClass('answersaved').removeClass('notyetanswered');
             }
         }
-
         })
         $('.qtype_multichoice_clearchoice').click(function() {
             var elm = $(this).attr('id');

@@ -554,3 +554,5 @@ $string['defaultfolder'] = "Thư mục gốc";
 $string['folder'] = "Thư mục";
 $string['searchresourcename'] = "Tìm tên tài liệu";
 $string['searchcontentname'] = "Tìm kiếm nội dung tài liệu e-book,page,lesson";
+$string['sign'] = "Đánh dấu";
+$string['unsign'] = "Hủy đánh dấu";

@@ -78,7 +78,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
                 var setting = $('.popup-setting');
                 var y = $(this).position();
                 setting.css('top', y.top + 5);
-                setting.css('left', x - 35);
+                setting.css('left', x - 75);
                 $.ajax(scriptfolder, settings).then(function(response) {
                     var obj = $.parseJSON(response);
                     $.when($('.popup-setting ul').replaceWith(obj.setting)).then(setting.show());
@@ -170,12 +170,6 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
                     $('.alert-warning').replaceWith(obj.alert);
                 })
             })
-            // search khi nhấn enter
-            // $('.searchlibrary').keypress(function(e) {
-            //     if (event.which == 13) {
-            //         $("i.library").click();
-            //     }
-            // })
             // Trờ về dữ liệu cũ khi xóa hết giá trị search
             $('.searchlibrary').keyup(function(e) {
                 var value = $('.searchlibrary').val().trim();
@@ -197,13 +191,6 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
                 }
                 $('.content-expand.' + id).slideToggle();
             })
-            // check thư mục gốc 
-            // $('#folderdefault').click(function() {
-            //     if(this.checked) {
-            //         $('.folderparent').val('');
-            //         $('.folderparent').attr('parentid','0');
-            //     } 
-            // })
             ///////////////
             function getSelectRow(gridname) {
                 var myGrid = $(gridname).getKendoGrid();
@@ -324,7 +311,10 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
             })
             function onOpen(e) {
                 setPositionWindow('#viewApprovalModule',100);
-            }            
+            }
+            $('#modal-iframe-library').on('hidden.bs.modal', function () {
+                document.cookie = 'cookie=; max-Age=-1;path=/';
+            })            
         })
     }
     return {

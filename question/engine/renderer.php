@@ -367,8 +367,7 @@ class core_question_renderer extends plugin_renderer_base {
         $editurl = new moodle_url('/question/question.php', $params);
         // Custom by Thắng : Sửa giao diện quiz ẩn bớt info
         return html_writer::tag('div', html_writer::link(
-                $editurl, '<i class="fa fa-pencil-square-o ml-3 fa-2x" aria-hidden="true"></i>'),
-                array('class' => 'editquestion'));
+                $editurl, '<i class="fa fa-pencil-square-o ml-2 fa-2x" aria-hidden="true"></i>',array('target' => '_blank' )),array('class' => 'editquestion'));
     }
 
     /**

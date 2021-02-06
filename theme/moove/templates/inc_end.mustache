@@ -76,9 +76,6 @@ require(['jquery', 'core/config'], function($, Config) {
         $('[data-region="drawer"]').removeClass('closed');
         $('[data-region="drawer"]').addClass('open');
     }
-
- 
-
     {{! active menu }}
     $(function(){
         $("#nav-draw ul li").parent().filter(function(){
@@ -88,10 +85,17 @@ require(['jquery', 'core/config'], function($, Config) {
             return this.href==location.href}
         ).addClass('active-nav').siblings().removeClass('active-nav');
     });
-
     // active UI câu hỏi trong bài kiểm tra quiz
     if($('#responseform')) {
         $('#responseform .content input').click(function() {
+            debugger
+            var quizheight = $(this).closest('div.que.multichoice').height();
+            var x = $(this).closest('div.que.multichoice').offset();
+            if($(this).closest('div.qtype_multichoice_clearchoice').hasClass('abcd')) {
+                $("html, body").animate({ scrollTop: x.top + quizheight - 20}, 1000);
+            } else {
+                $("html, body").animate({ scrollTop: x.top + quizheight - 40}, 1000);
+            }
             var questionId = $(this).attr('id');
             var split = questionId.split(":");
             var splitAgian = split[1].split("_");
@@ -104,7 +108,6 @@ require(['jquery', 'core/config'], function($, Config) {
                 $(elment).addClass('answersaved').removeClass('notyetanswered');
             }
         }
-
         })
         $('.qtype_multichoice_clearchoice').click(function() {
             var elm = $(this).attr('id');

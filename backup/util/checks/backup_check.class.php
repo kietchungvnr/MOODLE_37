@@ -129,14 +129,17 @@ abstract class backup_check {
         // other modes will perform common checks only (backupxxxx capabilities in $typecapstocheck)
         switch ($mode) {
             case backup::MODE_IMPORT:
-                if (!has_capability('moodle/backup:backuptargetimport', $coursectx, $userid)) {
-                    $a = new stdclass();
-                    $a->userid = $userid;
-                    $a->courseid = $courseid;
-                    $a->capability = 'moodle/backup:backuptargetimport';
-                    throw new backup_controller_exception('backup_user_missing_capability', $a);
+                // Custom by Thắng : Cho gv tái sử dụng tài nguyên thư viện
+                if(($courseid != 1) && check_teacherrole($userid) == 0) {
+                    elseif (!has_capability('moodle/backup:backuptargetimport', $coursectx, $userid)) {
+                        $a = new stdclass();
+                        $a->userid = $userid;
+                        $a->courseid = $courseid;
+                        $a->capability = 'moodle/backup:backuptargetimport';
+                        throw new backup_controller_exception('backup_user_missing_capability', $a);
+                    }
+                    break;
                 }
-                break;
             // Common backup (general, automated...), let's check all the $typecapstocheck
             // capability => context pairs
             default:

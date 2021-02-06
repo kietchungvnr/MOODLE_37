@@ -103,8 +103,11 @@ if (!empty($modulebyfolder)) {
             $output .= '<td>' . convertunixtime('d/m/Y', $module->timecreated, 'Asia/Ho_Chi_Minh') . '</td>';
             $output .= '<td>' . $module->fullnamet . '</td>';
             $output .= '<td>';
-            if (is_siteadmin()) {
+            if(is_siteadmin() || check_teacherrole($USER->id) != 0) {
                 $output .= html_writer::link('javascript:void(0)','<i class="icon fa fa-share mr-2" aria-hidden="true"></i>',array('id' => 'share-module-library','moduleid' => $module->id));
+            }
+            if (is_siteadmin()) {
+
                 $output .= html_writer::link('javascript:void(0)', $OUTPUT->pix_icon('t/delete', get_string('delete')), array("onclick" => "actionModule($module->id,'delete',$folderid)"));
                 $output .= html_writer::link("/course/modedit.php?update=$module->id&return=0&sr=", $OUTPUT->pix_icon('t/edit', get_string('edit')));
 

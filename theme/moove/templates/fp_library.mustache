@@ -91,10 +91,12 @@
                                 <div id="viewApprovalModule">
 			               			<div id="library-approval-module">
 			               			</div>
+                                    {{#canedit}}
 			               			<div class="d-flex mt-3">
 								        <button type="button" class="btn btn-primary mr-2" id="delete-module-select"><i class="fa fa-trash mr-2" aria-hidden="true"></i>{{#str}}deletecheck, local_newsvnr{{/str}}</button>
 								    	<button type="button" class="btn btn-primary" id="approval-module-select"><i class="fa fa-check mr-2" aria-hidden="true"></i>{{#str}}approvalcheck, local_newsvnr{{/str}}</button>
 								   </div>
+                                   {{/canedit}}
                                 </div>
 		               		</div>
                 		</div>
@@ -216,6 +218,7 @@
     // nhúng iframe mở module trang thư viện
     const iFrameLibrary = (url,moduletype) => {
         require(['jquery', 'core/config'], ($, config) => {
+            setCookie('cookie', 'focusmod');
             if(moduletype == 'resource') {
                 $('#modal-iframe-library iframe').replaceWith('<iframe height="800px" src="https://view.officeapps.live.com/op/embed.aspx?src='+url+'" width="100%"></iframe>');
                 $('#modal-iframe-library').modal();

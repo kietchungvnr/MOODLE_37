@@ -42,7 +42,11 @@ $sectionid = optional_param('sectionid', 0, PARAM_INT);
 $data = [];
 switch ($action) {
     case 'filter_course':
-        $datacourse = $DB->get_records("course");
+        if (is_siteadmin()) {
+            $datacourse = $DB->get_records("course");
+        } elseif (check_teacherrole($USER->id) != 0) {
+            $datacourse = get_list_courseinfo_by_teacher($USER->id);
+        }
         foreach ($datacourse as $course) {
             $object           = new stdclass();
             $object->name     = $course->fullname;
@@ -51,7 +55,16 @@ switch ($action) {
         }
         break;
     case 'filter_course_section':
-        $datasection = $DB->get_records("course_sections");
+        $datasection = [];
+        if (is_siteadmin()) {
+            $datasection = $DB->get_records("course_sections");
+        } elseif (check_teacherrole($USER->id) != 0) {
+            $datacourse = get_list_courseinfo_by_teacher($USER->id);
+            foreach ($datacourse as $course) {
+                $temp = $DB->get_records("course_sections", ['course' => $course->id]);
+                $datasection = array_merge($temp, $datasection);
+            }
+        }
         foreach ($datasection as $section) {
             $object = new stdclass();
             if ($section->name != null) {
@@ -70,15 +83,15 @@ switch ($action) {
         break;
     case 'share_module':
         list($course, $cm) = get_course_and_cm_from_cmid($moduleid);
-        $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-        $newcm = new stdClass;
-        $newcm->id = $cm->id;
-        $newcm->modname = $cm->modname;
-        $newcm->name = $cm->name;
-        $newcm->section = $sectionid;
-        $newcm->course = $courseid;
-        $newcm = duplicate_module_library($course, $newcm);
-        $data['success'] = get_string('sharemodulesuccess', 'local_newsvnr');
+        $course            = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+        $newcm             = new stdClass;
+        $newcm->id         = $cm->id;
+        $newcm->modname    = $cm->modname;
+        $newcm->name       = $cm->name;
+        $newcm->section    = $sectionid;
+        $newcm->course     = $courseid;
+        $newcm             = duplicate_module_library($course, $newcm);
+        $data['success']   = get_string('sharemodulesuccess', 'local_newsvnr');
         // cache_helper::purge_all();
         break;
     default:
