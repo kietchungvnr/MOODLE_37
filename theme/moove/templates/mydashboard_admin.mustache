@@ -397,8 +397,9 @@ require(
         $("#content").kendoDropDownList(initDropDownList);
         var dropDownList = $("#content").data('kendoDropDownList');
         dropDownList.open();
-        $(".check-menu").click(function(){
-            dialog.close();
+        $("#page-wrapper").click(function(){
+          dialog.close();
+          dropDownList.close();
         })
     })
 })

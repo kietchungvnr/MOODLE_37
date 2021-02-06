@@ -2891,7 +2891,7 @@ table.quizreviewsummary td.cell {
     min-width: 8em;
 }
 .que .content {
-    margin: 0px 0 0 0.5em;
+    margin: 0 0 0 0;
     width: 100%;
 }
 .que .outcome {
@@ -3057,8 +3057,12 @@ table#categoryquestions tr {
         font-size: 13px;
         overflow-x: hidden;
     }
+    .qtype_multichoice_clearchoice {
+        margin-left: 0 !important;
+    }
     .ablock {
         display: block !important;
+        margin-left: 0 !important;
     }
     .course-content .nav-tabs li {
         display: none;
@@ -5022,9 +5026,12 @@ input.apple-switch:checked:after {
     body.drawer-open-left, body.drawer-open-right {
         overflow-y: unset;
     }
-   /* #page-navbar {
+    #page-navbar {
         display: none;
-    }*/
+    }
+    #page-course-view-topcoll .reportmodule {
+        display: none !important;
+    }
 }
 #page-my-index .bg-1, 
 #page-my-index .bg-2, 
@@ -5325,11 +5332,12 @@ input.apple-switch:checked:after {
     padding: 5px 0 0px 10px;
     font-weight: bold;
     margin-top: 3px;
+    display: block !important;
 }
-#page-course-view-topics .defaultuserpic {
+/*#page-course-view-topics .defaultuserpic {
     width: 30px !important;
     height: 30px !important;
-}
+}*/
 #page-course-view-topcoll #toggles-all-closed {
     display: none;
 }
@@ -5865,7 +5873,7 @@ nav.navbar ul.navbar-nav .usermenu {
     width: 30px;
     height: 20px;
     margin-right: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 13px;
     position: relative;
 }
 .flag-quiz-square span {
@@ -6038,12 +6046,28 @@ body.format-topcoll.editing .course-content .right.side {
 .que.truefalse .ablock{
     display: flex;
 }
+.content .ablock {
+    margin-left: 55px;
+}
 .que .formulation .qtext{
     display: none;
+}
+.que.essay .ablock {
+    margin-left: 0 !important;
 }
 .que.multichoice .ablock .prompt,
 .que.truefalse .ablock .prompt {
     margin-right: 20px;
+}
+.teacherinfo  .userpicture.defaultuserpic {
+    width: 30px;
+    height: 30px;
+}
+.qtype_multichoice_clearchoice {
+    margin-left: 55px;
+}
+.path-mod-quiz #mod_quiz_navblock h3.mod_quiz-section-heading {
+    padding: 0 5px 7px 5px;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
