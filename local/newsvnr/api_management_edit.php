@@ -103,7 +103,7 @@ if ($mform_edit->is_cancelled()){
       redirect($orgmanagerurl);
 } else if ($data = $mform_edit->get_data()) {
 
-      $orgcateupdate = (object)array('id' => $api->id, 'url' => $api->url, 'method' => $api->method, 'functionapi' =>$api->functionapi,'contenttype' =>$api->contenttype, 'description' => $api->description );
+      $orgcateupdate = (object)array('id' => $data->id, 'url' => $data->url, 'method' => $data->method, 'functionapi' =>$data->functionapi,'contenttype' =>$data->contenttype, 'description' => $data->description );
 
       foreach ($arr_apiheader as $key => $value) {
         $name = 'name_'.$key;

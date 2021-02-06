@@ -497,7 +497,7 @@ class course_renderer extends \core_course_renderer {
             foreach ($menu_tmp as $item) {
                 $output .= '<li class="list-category" data="'.$item->id.'">';
                 $output .= '<a  class="ajax-load" tabindex="-1" href="javascript:void(0)" id="'.$item->id.'"">' . $item->name . '</a>';
-                $getcategory = $DB->get_records_sql('SELECT * FROM {course_categories} WHERE parent = :id and coursecount > 0',[ 'id' => $item->id] );
+                $getcategory = $DB->get_records_sql('SELECT * FROM {course_categories} WHERE parent = :id',[ 'id' => $item->id] );
                 if(empty($getcategory)){
                     $output .= '</li>';
                     continue;
@@ -510,7 +510,7 @@ class course_renderer extends \core_course_renderer {
                     if($childitem->parent == $item->id) {
                         $output .= '<li class="list-subcategory" id="'.$childitem->id.'"">';
                         $output .= '<a  class="ajax-load" tabindex="-1" href="javascript:void(0)" id="'.$childitem->id.'">' . $childitem->name . ' </a>';
-                        $getcategory_child = $DB->get_records_sql('SELECT * FROM {course_categories} WHERE parent = :id and coursecount > 0',[ 'id' => $childitem->id] );
+                        $getcategory_child = $DB->get_records_sql('SELECT * FROM {course_categories} WHERE parent = :id',[ 'id' => $childitem->id] );
                         if(empty($getcategory_child)){
                             $output .= '</li>';
                             continue;
