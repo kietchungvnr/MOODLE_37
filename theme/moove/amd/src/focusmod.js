@@ -176,6 +176,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
 
         // reload để resize height iframe
         $('#mod-iframe').on('load', function() {
+            $('.dropdown-content').attr('style', 'display: none');
             setTimeout(function() {
                 try {
                     if(modType == 'resource' || modType == 'forum' || modType == 'hvp' || modType == 'quiz') {
