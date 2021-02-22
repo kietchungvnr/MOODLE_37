@@ -187,7 +187,7 @@
   		</div>
 	</div>
 	{{! popup chia sẻ module từ thư viện sang khóa học }}
-	<div class="modal modal-share-module" id="share-popup-modal-module">
+	<div class="modal modal-share-module modal-xl" id="share-popup-modal-module">
 		<div class="modal-dialog">
 			<!-- Modal content-->
 			<div class="modal-content">
@@ -219,13 +219,8 @@
     const iFrameLibrary = (url,moduletype) => {
         require(['jquery', 'core/config'], ($, config) => {
             setCookie('cookie', 'focusmod');
-            if(moduletype == 'resource') {
-                $('#modal-iframe-library iframe').replaceWith('<iframe height="800px" src="https://view.officeapps.live.com/op/embed.aspx?src='+url+'" width="100%"></iframe>');
-                $('#modal-iframe-library').modal();
-            } else {
-                $('#modal-iframe-library iframe').replaceWith('<iframe height="800px" src="'+url+'&iframe=true" width="100%"></iframe>');
-                $('#modal-iframe-library').modal();
-            }
+            $('#modal-iframe-library iframe').replaceWith('<iframe height="800px" src="'+url+'" width="100%"></iframe>');
+            $('#modal-iframe-library').modal();
         })
     }
     //Cập nhật thư mục 
