@@ -28,8 +28,7 @@ class block_vnr_db_studentuser_topcourse extends block_base {
     }
 
     function get_content() {
-        global $CFG, $USER, $DB, $OUTPUT;
-       
+        global $CFG, $USER;
         require_once($CFG->dirroot . '/local/newsvnr/lib.php');
         $renderable = new \block_vnr_db_studentuser_topcourse\output\studentuser_topcourse_page();
         $renderer = $this->page->get_renderer('block_vnr_db_studentuser_topcourse');
@@ -43,7 +42,6 @@ class block_vnr_db_studentuser_topcourse extends block_base {
         }
         $this->content->footer = '';
         return $this->content;
-       
     }
 
      public function applicable_formats() {

@@ -2029,12 +2029,10 @@ function get_link_folder($folder,&$output = '',$stt = 0) {
 function get_finalgrade_student($userid,$courseid) {
     global $DB;
     $get_grade = $DB->get_record_sql("
-                    SELECT CONCAT(u.firstname, ' ', u.lastname) AS fullname, cccc.userid, CONVERT(DECIMAL(10,2),cccc.gradefinal) AS gradefinal, RANK() OVER (ORDER BY cccc.gradefinal DESC) AS rank
-                    FROM mdl_course_completion_criteria ccc
-                        JOIN mdl_course_completion_crit_compl cccc ON ccc.id = cccc.criteriaid AND ccc.course = cccc.course
-                        JOIN mdl_user u ON cccc.userid = u.id
-                    WHERE ccc.criteriatype = 6 AND cccc.course =:courseid AND u.id =:userid
-                    ORDER BY cccc.gradefinal DESC", ['courseid' => $courseid, 'userid' => $userid]);
+                    SELECT gg.userid,gi.courseid, CONVERT(DECIMAL(10,1),gg.finalgrade) AS gradefinal, RANK() OVER (ORDER BY gg.finalgrade DESC) AS rank, CONCAT(u.lastname,' ',u.firstname) AS fullname 
+                    FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id
+                    WHERE gg.finalgrade is not NULL AND gi.itemmodule IS NULL AND gi.courseid = :courseid AND gg.userid = :userid
+                    ORDER BY gg.finalgrade DESC", ['courseid' => $courseid, 'userid' => $userid]);
     return $get_grade;
 }
 // // Xếp hạng học viên trong khóa

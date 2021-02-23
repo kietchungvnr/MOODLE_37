@@ -134,10 +134,10 @@ if(isset($_GET['action']) && $_GET['action'] == "get_list_topgrade") {
 	$courseid = $_GET['courseid'];
 	$get_rank = '';
 	$get_list_topgrade = $DB->get_records_sql("
-							SELECT CONCAT(u.firstname, ' ', u.lastname) AS fullname, cccc.userid, CONVERT(DECIMAL(10,2),cccc.gradefinal) AS gradefinal, RANK() OVER (ORDER BY cccc.gradefinal DESC) AS rank  
-							FROM mdl_course_completion_criteria ccc JOIN mdl_course_completion_crit_compl cccc ON ccc.id = cccc.criteriaid AND ccc.course = cccc.course JOIN mdl_user u ON cccc.userid = u.id  
-							WHERE ccc.criteriatype = 6 AND cccc.course = ?
-							ORDER BY cccc.gradefinal DESC", [$courseid]);
+							SELECT gg.userid,gi.courseid, CONVERT(DECIMAL(10,1),gg.finalgrade) AS gradefinal, RANK() OVER (ORDER BY gg.finalgrade DESC) AS rank, CONCAT(u.lastname,' ',u.firstname) AS fullname 
+							FROM mdl_grade_grades gg join mdl_grade_items gi ON gi.id=gg.itemid JOIN mdl_user u ON gg.userid = u.id
+							WHERE gg.finalgrade is not NULL AND gi.itemmodule IS NULL AND gi.courseid = ?
+							ORDER BY gg.finalgrade DESC", [$courseid]);
 	if($get_list_topgrade) {
 		foreach($get_list_topgrade as $value) {
 			if($value->userid == $USER->id) {
@@ -153,7 +153,7 @@ if(isset($_GET['action']) && $_GET['action'] == "get_list_topgrade") {
 	$data = [
 			'listtopgrade' => array_values($get_list_topgrade),
 			'haslisttopgrade' => $has_list_topgrade,
-			'rank' => $get_rank,
+			'rank' => (int)$get_rank,
 		];
 	echo json_encode($data, JSON_UNESCAPED_UNICODE);
 }

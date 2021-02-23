@@ -28,7 +28,7 @@
                                         <div class="align-items-center" id="gradelist"></div>
                                     {{/haslisttopgrade}}
                                     {{^haslisttopgrade}}
-                                        <div class="d-flex w-100 justify-content-center alert alert-info alert-block fade in ">{{#str}}noresult, block_vnr_db_studentuser_topcourse{{/str}}</div>
+                                        <div class="d-flex w-100 justify-content-center alert alert-info alert-block fade in" id="gradelist">{{#str}}noresult, block_vnr_db_studentuser_topcourse{{/str}}</div>
                                     {{/haslisttopgrade}}
                                     
                                 </div>
@@ -86,10 +86,10 @@ require(
                         }).fail(notification.exception);
                     } 
                     else {
-                        var html = '<div class="d-flex w-100 justify-content-center alert alert-info alert-block fade in ">' + s[0] + '</div>';
+                        var html = '<div class="d-flex w-100 justify-content-center alert alert-info alert-block fade in" id="gradelist">' + s[0] + '</div>';
+                        table.replaceWith(html);
                     }
-                    });
-                
+                });
             }).fail(notification.exception);
         }
         var courseid = $('#list_topgrade').val();
