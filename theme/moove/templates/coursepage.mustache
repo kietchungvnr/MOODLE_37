@@ -89,22 +89,34 @@
                             <div id="mod-view-coursepage">
                                 <div class="alert alert-success mb-0"><strong>{{#str}}selectcoursedata, theme_moove{{/str}}</strong></div>
                             </div>
-                            <div class="d-none">{{{ output.main_content }}}/div>
+                            <div class="d-none">{{{ output.main_content }}}</div>
                         </div>
                     {{/hasiframe}}
                     {{^hasiframe}}
                         <div class="">
                             {{> theme_moove/nav-drawer }}
                         </div>
-                        
-                        <div class="card-body" id="course-main-content">
-                            {{#hasregionmainsettingsmenu}}
-                                <div class="region_main_settings_menu_proxy"></div>
-                            {{/hasregionmainsettingsmenu}}
-                            {{{ output.course_content_header }}}
-                            {{{ output.main_content }}}
-                            {{{ output.activity_navigation }}}
-                            {{{ output.course_content_footer }}}
+                        <ul class="nav-tabs nav multi-tab mb-3 mb" tab="coursetab">
+                            <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="general">Chung</a></li>
+                            <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="participant">Thành viên</a></li>
+                        </ul>
+                        <div class="tab-content" tab="coursetab">
+                            <div data="general" class="tab-pane active">
+                                <div class="card-body" id="course-main-content">
+                                    {{#hasregionmainsettingsmenu}}
+                                        <div class="region_main_settings_menu_proxy"></div>
+                                    {{/hasregionmainsettingsmenu}}
+                                    {{{ output.course_content_header }}}
+                                    {{{ output.main_content }}}
+                                    {{{ output.activity_navigation }}}
+                                    {{{ output.course_content_footer }}}
+                                </div>
+                            </div>
+                            <div data="participant" class="tab-pane">
+                                <div class="card-body" id="course-main-content">
+                                    {{{output.participant_list}}}
+                                </div>
+                            </div>
                         </div>
                     {{/hasiframe}}
                     

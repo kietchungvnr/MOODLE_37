@@ -161,17 +161,17 @@ class format_topcoll extends format_base {
          * 'section_header()' as that gets called from 'format.php' when there is no entry for '$displaysetting' - confused?
          * I was, took ages to figure.
          */
-        if (($additional == true) && ($thesection->section != 0)) {
-            switch ($tcsettings['layoutelement']) {
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                    // The word 'Toggle'.
-                    $o .= '<div class="cttoggle"> - ' .get_string('topcolltoggle', 'format_topcoll') . '</div>';
-                    break;
-            }
-        }
+        // if (($additional == true) && ($thesection->section != 0)) {
+        //     switch ($tcsettings['layoutelement']) {
+        //         case 1:
+        //         case 2:
+        //         case 3:
+        //         case 4:
+        //             // The word 'Toggle'.
+        //             $o .= '<div class="cttoggle"> - ' .get_string('topcolltoggle', 'format_topcoll') . '</div>';
+        //             break;
+        //     }
+        // }
 
         return $o;
     }

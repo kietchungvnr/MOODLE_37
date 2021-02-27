@@ -394,6 +394,7 @@ class format_topcoll_renderer extends format_section_renderer_base {
      * @return string HTML to output.
      */
     protected function section_header($section, $course, $onsectionpage, $sectionreturn = null) {
+        global $CFG;
         $o = '';
 
         $sectionstyle = '';
@@ -425,65 +426,71 @@ class format_topcoll_renderer extends format_section_renderer_base {
             $liattributes['style'] = 'width: ' . $this->tccolumnwidth . '%;';
         }
         $o .= html_writer::start_tag('li', $liattributes);
-
-        if ((($this->mobiletheme === false) && ($this->tablettheme === false)) || ($this->userisediting)) {
-            $leftcontent = $this->section_left_content($section, $course, $onsectionpage);
-            $rightcontent = '';
-            if (($section->section != 0) && $this->userisediting && has_capability('moodle/course:update', $context)) {
-                $url = new moodle_url('/course/editsection.php', array('id' => $section->id, 'sr' => $sectionreturn));
-
-                $rightcontent .= html_writer::link($url,
-                    $this->output->pix_icon('t/edit', get_string('edit')),
-                        array('title' => get_string('editsection', 'format_topcoll'), 'class' => 'tceditsection'));
-            }
-            $rightcontent .= $this->section_right_content($section, $course, $onsectionpage);
-
-            if ($this->rtl) {
-                // Swap content.
-                $o .= html_writer::tag('div', $rightcontent, array('class' => 'right side'));
-                $o .= html_writer::tag('div', $leftcontent, array('class' => 'left side'));
+        // Custom by Thắng : Sửa template format
+        $leftbefore = "";
+        if($section->section != 0) {
+            if ((!($section->toggle === null)) && ($section->toggle == true)) {
+                $leftbefore = "";
             } else {
-                $o .= html_writer::tag('div', $leftcontent, array('class' => 'left side'));
-                $o .= html_writer::tag('div', $rightcontent, array('class' => 'right side'));
+                $leftbefore = "left-before";
             }
+        }
+        $leftcontent = $this->section_left_content($section, $course, $onsectionpage);
+        $rightcontent = '';
+        if (($section->section != 0) && $this->userisediting && has_capability('moodle/course:update', $context)) {
+            $url = new moodle_url('/course/editsection.php', array('id' => $section->id, 'sr' => $sectionreturn));
+
+            $rightcontent .= html_writer::link($url,
+                $this->output->pix_icon('t/edit', get_string('edit')),
+                    array('title' => get_string('editsection', 'format_topcoll'), 'class' => 'tceditsection'));
+        }
+        $rightcontent .= $this->section_right_content($section, $course, $onsectionpage);
+
+        if ($this->rtl) {
+            // Swap content.
+            $o .= html_writer::tag('div', $rightcontent, array('class' => 'right side'));
+            $o .= html_writer::tag('div', $leftcontent, array('class' => 'left side'));
+        } else {
+            $o .= html_writer::tag('div', $leftcontent, array('class' => 'left side '.$leftbefore.''));
+            $o .= html_writer::tag('div', $rightcontent, array('class' => 'right side'));
         }
         $o .= html_writer::start_tag('div', array('class' => 'content'));
 
         if (($onsectionpage == false) && ($section->section != 0)) {
-            $o .= html_writer::start_tag('div',
-                array('class' => 'sectionhead toggle toggle-'.$this->tcsettings['toggleiconset'],
-                'id' => 'toggle-'.$section->section, 'tabindex' => '0')
-            );
-
             if ((!($section->toggle === null)) && ($section->toggle == true)) {
                 $toggleclass = 'toggle_open';
                 $ariapressed = 'true';
                 $sectionclass = ' sectionopen';
+                $srcicon = $CFG->wwwroot.'/theme/moove/pix/close.png';
+                $active = 'active';
             } else {
                 $toggleclass = 'toggle_closed';
                 $ariapressed = 'false';
                 $sectionclass = '';
+                $srcicon = $CFG->wwwroot.'/theme/moove/pix/open.png';
+                $active = '';
             }
+            $o .= html_writer::start_tag('div',
+                array('class' => 'sectionhead '.$active.' toggle toggle-'.$this->tcsettings['toggleiconset'],
+                'id' => 'toggle-'.$section->section, 'tabindex' => '0')
+            );
+
             $toggleclass .= ' the_toggle ' . $this->tctoggleiconsize;
             $o .= html_writer::start_tag('span',
                 array('class' => $toggleclass, 'role' => 'button', 'aria-pressed' => $ariapressed)
             );
+            
             if (empty($this->tcsettings)) {
                 $this->tcsettings = $this->courseformat->get_settings();
             }
-
             if ($this->userisediting) {
                 $title = $this->section_title($section, $course);
             } else {
                 $title = $this->courseformat->get_topcoll_section_name($course, $section, true);
             }
-            if ((($this->mobiletheme === false) && ($this->tablettheme === false)) || ($this->userisediting)) {
-                $o .= $this->output->heading($title, 3, 'sectionname');
-            } else {
-                $o .= html_writer::tag('h3', $title); // Moodle H3's look bad on mobile / tablet with CT so use plain.
-            }
+            $o .= $this->output->heading($title, 3, 'sectionname');
             $o .= $this->section_availability($section);
-
+            $o .= html_writer::tag('div','<img src="'.$srcicon.'">',array('class' => 'icon-opensection-mb'));
             $o .= html_writer::end_tag('span');
             // Custom by Thắng : thêm thống kê module ở mỗi section
             $sectionmods = count_module($course,$section);

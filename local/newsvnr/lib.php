@@ -2198,16 +2198,16 @@ function get_listuser_in_course($courseid, $roleid = 5, $userid = 0) {
     }
     $params['courseid'] = $courseid;
 
-    $wheresql = "WHERE c.id = :courseid AND enr.roleid = :roleid";
+    $wheresql = "WHERE c.id = :courseid AND r.id = :roleid";
 
     if($userid > 2) {
-        $wheresql .= " AND u.id = userid";
+        $wheresql .= " AND u.id = :userid";
         $params['userid'] = $userid;
     }
     $params['roleid'] = $roleid;
 
 
-    $sql = "SELECT u.*, CONCAT(u.firstname, ' ', u.lastname) userfullname, r.shortname rolename 
+    $sql = "SELECT u.*, CONCAT(u.firstname, ' ', u.lastname) userfullname
             FROM mdl_role_assignments ra
                 JOIN mdl_user u ON ra.userid = u.id
                 JOIN mdl_user_enrolments ue ON u.id = ue.userid 
@@ -2215,12 +2215,10 @@ function get_listuser_in_course($courseid, $roleid = 5, $userid = 0) {
                 JOIN mdl_course c ON enr.courseid = c.id
                 JOIN mdl_context ct ON ct.id = ra.contextid AND ct.instanceid = c.id
                 JOIN mdl_role r ON ra.roleid = r.id
-            WHERE c.id = :courseid
-                 AND r.id = :roleid";
+            $wheresql";
     $data = $DB->get_records_sql($sql, $params);
     return $data;
 }
-
 // Lấy điểm trung bình của khóa học
 function get_course_grade_avg($courseid, $courseavg = true) {
     global $CFG, $DB, $USER;

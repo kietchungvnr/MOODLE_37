@@ -44,4 +44,20 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         $('#page-course-view-topcoll #toggles-all-opened').removeClass('d-none');
         $('#page-course-view-topcoll #toggles-all-opened').fadeIn('fast');
     })
+    $('.format-topcoll .sectionhead span.the_toggle').click(function() {
+        $(this).parent('.sectionhead').toggleClass('active');
+        if($(this).hasClass('toggle_closed')) {
+            $(this).children('.icon-opensection-mb').children('img').attr('src',Config.wwwroot + '/theme/moove/pix/close.png');
+        } else {
+            $(this).children('.icon-opensection-mb').children('img').attr('src',Config.wwwroot + '/theme/moove/pix/open.png');
+        }
+        $(this).closest('div.content').prev().prev().toggleClass('left-before');
+    })
+    $(window).resize(function() {
+        var width = $(window).width();
+        if(width > 576) {
+            $('.nav-tabs.multi-tab li:first-child a').click();
+        }
+    })
+    
 });

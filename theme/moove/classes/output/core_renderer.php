@@ -210,13 +210,13 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
         $module = $DB->get_record('course_modules',['course' => $COURSE->id,'visible' => 1,'deletioninprogress' => 0],'count(*) as count');
         $view = $DB->get_record('logstore_standard_log',['courseid' => $COURSE->id,'action' => 'viewed'],'count(*) as count');
-        $studentdata = $theme_settings::role_courses_teacher_slider($COURSE->id);
+        $studentdata = get_listuser_in_course($COURSE->id);
         $output = '';
         $output .= '<div class="header-progress"><div class="page-header-headings"><h2>'.$COURSE->fullname.'</h2></div>';
         $output .= '<div class="d-flex mt-1 mb-1 align-items-center justify-content-between"><div class="d-flex align-items-center flex-wrap">';
         $output .= '<div class="teacherinfo mr-4">'.$teacherimg.'</div>';
         $output .= '<div class="mr-4"><i class="fa fa-book mr-1" aria-hidden="true"></i><span class="font-bold">'.$module->count.'</span> <span class="text">'.get_string('lesson','local_newsvnr').'</span></div>';
-        $output .= '<div class="mr-4"><i class="fa fa-user mr-1" aria-hidden="true"></i><span class="font-bold">'.$studentdata->studentnumber.'</span> <span class="text">'.get_string('countstudent','local_newsvnr').'</span></div>';
+        $output .= '<div class="mr-4"><i class="fa fa-user mr-1" aria-hidden="true"></i><span class="font-bold">'.count($studentdata).'</span> <span class="text">'.get_string('countstudent','local_newsvnr').'</span></div>';
         $output .= '<div class="mr-4"><i class="fa fa-eye mr-1" aria-hidden="true"></i><span class="font-bold">'.$view->count.'</span> <span class="text">'.get_string('view','local_newsvnr').'</span></div>';
         $output .= '<div class=""><span class="text">'.get_string('lastupdate','local_newsvnr').'</span> <span class="font-bold">'.converttime($COURSE->timemodified).'</span></div>';
         $output .= '</div>';
@@ -1578,7 +1578,26 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output .= '</div>';//end tab-pane
         return $output;
     }
-    
+    public function participant_list() {
+        global $DB,$COURSE,$OUTPUT;
+        $liststudent = get_listuser_in_course($COURSE->id);
+        $listteacher = get_listuser_in_course($COURSE->id,3);
+        $temp = array_merge($listteacher,$liststudent);
+        $listalluser = array_unique($temp, SORT_REGULAR);
+        $output = '';
+        $output .= '<ul>';
+        foreach ($listalluser as $user) {
+            $userimage = $OUTPUT->user_picture($user, array('size' => 45));
+            $output .= '<li class="participant-list">';
+            $output .= $userimage;
+            $output .= '<div><p style="font-size:15px;">'.$user->userfullname.'</p>';
+            $output .= '<b class="mr-1">'.get_string('lastaccess','local_newsvnr').'</b>'.format_time(time() - $user->lastaccess).' ago</div>';
+            $output .= '</li>';
+            $output .= '<div class="participant-list-hr"></div>';
+        }
+        $output .= '</ul>';
+        return $output;
+    }
     /**
      * Returns HTML attributes to use within the body tag. This includes an ID and classes.
      *
