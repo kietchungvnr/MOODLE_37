@@ -1277,6 +1277,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output .= $PAGE->requires->js('/theme/moove/js/owl.carousel.js', true);
         $output .= $PAGE->requires->js('/theme/moove/js/iframeResizer.min.js', true);
         $output .= $PAGE->requires->js('/theme/moove/js/iframeResizer.contentWindow.min.js', true);
+        $output .= $PAGE->requires->js('/theme/moove/js/jquery.iframetracker.min.js', true);
         $output .= $PAGE->requires->js('/theme/moove/js/style.js', true);
        
         return $output;

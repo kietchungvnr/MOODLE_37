@@ -1,7 +1,7 @@
-define(["jquery", "core/config", "core/str", "core/notification"], function($, Config, Str, Notification, alertify) {
+define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/handle_cookie"], function($, Config, Str, Notification, Cookie) {
     "use strict";
     $('#btn-menu').click(function() {
-        var ck = getCookie('menu');
+        var ck = Cookie.getCookie('menu');
         $('.content-menu-expand').slideUp('fast');
         $('.click-menu-expand i').removeClass('active');
         $('.check-menu').toggleClass('slide-nav-toggle');
@@ -9,10 +9,10 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         $('#page-wrapper').toggleClass('slide-nav-toggle');
         if($('.check-menu').hasClass('slide-nav-toggle')) {
             $('#btn-menu i').removeClass('fa-align-right').addClass('fa-align-left');
-            setCookie('menu', 'openmenu');
+            Cookie.setCookie('menu', 'openmenu');
         } else {
             $('#btn-menu i').removeClass('fa-align-left').addClass('fa-align-right');
-            document.cookie = 'menu=; max-Age=-1;path=/';
+            document.Cookie = 'menu=; max-Age=-1;path=/';
         }
     })
     $('.fixed-sidebar-left').hover(function() {

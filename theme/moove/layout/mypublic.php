@@ -74,6 +74,7 @@ $templatecontext = [
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'hasportal' => $check->hasportal,
     'hasiframe' => $check->hasiframe,
+    'hasgeneraliframe' => $check->hasgeneraliframe,
     'isadmin' => is_siteadmin(),
     'isuser' => $isuser,
     'hasopenmenu' => $check->hasopenmenu

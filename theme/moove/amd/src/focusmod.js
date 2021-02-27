@@ -1,26 +1,27 @@
-define(["jquery", "core/config", "core/str", "core/notification"], function($, Config, Str, Notification) {
+require.config({
+    paths: {
+        // Change this to your server if you do not wish to use our CDN.
+        iframetracker: "//cdn.rawgit.com/vincepare/iframeTracker-jquery/master/dist/jquery.iframetracker"
+    }
+});
+define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/handle_cookie", 'iframetracker'], function($, Config, Str, Notification, Cookie, iframetracker) {
     "use strict";
     var strings = [{
         key: 'general',
         component: 'theme_moove'
     }];
-   
-    var path = window.location.href;
 
-    $(document).ready(function() {
-        if (path.indexOf('/mod/quiz/attempt.php') > 0) {
-            $('nav.focusmod').addClass('testhoi');
-        }
-        
-    });
-  
     // Click vào chế độ focus mode
     $('.open-focusmod').bind('click', function() {
         if($('body').hasClass('focusmod')) {
-            setCookie('cookie', 'focusmod');
+            Cookie.setCookie('cookie', 'focusmod');
         }
-        var fm = getCookie('cookie');
+        var fm = Cookie.getCookie('cookie');
+        var spa = Cookie.getCookie('spa');
         var course = $(this).attr('course');
+        if(spa == "true") {
+            document.cookie = 'spa=; max-Age=-1;path=/';
+        }
         if($('#mod-iframe').length <= 0) {
             $('#mod-view-coursepage').html('<div class="alert alert-success mb-0"><strong>'+ M.util.get_string('selectcoursedata', 'theme_moove') +'</strong></div>');
         }
@@ -64,13 +65,13 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             $('#sidepreopen-control').addClass('d-none');
             $('#sidepre-blocks').addClass('d-none');
 
-            setCookie('cookie', 'focusmod');
+            Cookie.setCookie('cookie', 'focusmod');
         }
     })
 
     // Resize windown nếu nhỏ hơn 1050 thì bỏ chức năng focus
     $(window).resize(function() {
-        var fm = getCookie('cookie')
+        var fm = Cookie.getCookie('cookie')
         var width = $(window).width();
         if (width <= 1050) {
             if (fm == "focusmod") {
@@ -131,16 +132,21 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
     })
 
     // Trong khóa học click vào module sẽ auto chuyển sang chế độ focusmode
-    $('.course-content li.activity a.aalink').bind('click', function(e) {
-        e.preventDefault();
-        var moduleId = $(this).parents('li').attr('id').split('-')[1];
-        $('#focus-mod').click();
-        var element = "div.dropdown-content-2 a[module-id=" +moduleId+ "]";
-        $('#mod-view-coursepage').html('');
-        setTimeout(function() {
-            $(element).trigger('click');
-        }, 500);
-    })
+    var getBaseUrl = Cookie.getCookie('baseUrl');
+    if(getBaseUrl.includes('course/view.php?id=')) {
+        $('.course-content li.activity a.aalink').bind('click', function(e) {
+            e.preventDefault();
+            console.log("clicked")
+            var moduleId = $(this).parents('li').attr('id').split('-')[1];
+            var element = "div.dropdown-content-2 a[module-id=" +moduleId+ "]";
+            $('#focus-mod').trigger('click');
+            $('#mod-view-coursepage').html('');
+            setTimeout(function() {
+                $(element).trigger('click');
+            }, 1000);
+        })    
+    }
+    
     // Click vào chọn bài học
     $('div.card-header.level2 a').click(function(e) {
         var _this = $(this);
@@ -148,7 +154,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         var modType = _this.attr('data-mod-type');
 
         if($('body').hasClass('focusmod')) {
-            setCookie('cookie', 'focusmod');
+            Cookie.setCookie('cookie', 'focusmod');
         }
         $('#region-main .loading-page').addClass('active');
         $('div.card-header.level2 a').removeClass('active');
@@ -166,12 +172,12 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             }
         }
 
-        if(modType == 'forum' || modType == 'quiz') {
-            var iframe = '<iframe id="mod-iframe" src="'+url+'" width="100%" height="768" frameBorder="0"></iframe>';
+        if(modType == 'resource') {
+            var iframe = '<iframe id="mod-iframe" src="'+url+'" height="768" frameBorder="0"></iframe>';
         } else {
-            var iframe = '<iframe id="mod-iframe" src="'+url+'" onload="$(this).height($(this.contentWindow.document.body).find(\'#page-wrapper\').first().height());" width="100%" height="100%" frameBorder="0"></iframe>';
+            var iframe = '<iframe id="mod-iframe" src="'+url+'" frameBorder="0"></iframe>';
         }
-
+        
         $('#mod-view-coursepage').html(iframe);
 
         // reload để resize height iframe
@@ -179,9 +185,23 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             $('.dropdown-content').attr('style', 'display: none');
             setTimeout(function() {
                 try {
-                    if(modType == 'resource' || modType == 'forum' || modType == 'hvp' || modType == 'quiz') {
-                        var vh = $('body').height() - 77;
+                    $('#mod-iframe').iframeTracker({
+                        blurCallback: function(event) {
+                            console.log(1)
+                            Cookie.setCookie('cookie', 'focusmod');
+                        },
+                        outCallback: function(element, event) {
+                            console.log(2)
+                            this._overId = null; // Reset hover iframe wrapper i
+                            document.cookie = 'cookie=; max-Age=-1;path=/';
+                        },
+                        _overId: null
+                    });
+                    if(modType == 'resource') {
+                        var vh = $('body').height();
                         $('#mod-iframe').height(vh);
+                    } else {
+                        const iframes = iFrameResize({ log: false }, '#mod-iframe');
                     }
                     if(modType == 'quiz') {
                         var iframe = document.getElementById("mod-iframe");
@@ -229,29 +249,5 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
 
     if (!$('.card-header.level2 a').hasClass('active')) {
         $('.nav-link.prev, .nav-link.next').addClass('disable');
-    }
-    
-    // function cookie
-    function setCookie(cname, cvalue, exdays) {
-        var d = new Date();
-        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-        var expires = "expires=" + d.toUTCString();
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
-
-    function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
     }
 });

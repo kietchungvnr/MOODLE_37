@@ -69,6 +69,7 @@ $templatecontext = [
     'is_student' => $check->is_student,
     'hasportal' => $check->hasportal,
     'hasiframe' => $check->hasiframe,
+    'hasgeneraliframe' => $check->hasgeneraliframe,
     'canviewadmininfos' => false,
     'hasopenmenu' => $check->hasopenmenu
 ];
@@ -126,4 +127,8 @@ theme_moove_extend_flat_navigation($PAGE->flatnav);
 
 $templatecontext['flatnavigation'] = $PAGE->flatnav;
 
-echo $OUTPUT->render_from_template('theme_moove/mydashboard', $templatecontext);
+if($check->hasgeneraliframe == "true") {
+    echo $OUTPUT->render_from_template('theme_moove/general_iframe_mydashboard', $templatecontext);
+} else {
+    echo $OUTPUT->render_from_template('theme_moove/mydashboard', $templatecontext);
+}

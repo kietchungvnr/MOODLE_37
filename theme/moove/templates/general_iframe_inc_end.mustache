@@ -5,10 +5,11 @@
             data-action="toggle-drawer"
             data-side="right"
             data-preference="sidepre-open"
+            class="d-none"
             title="{{#str}} showhideblocks, theme_moove {{/str}}">
         </i>
 
-        <section id="sidepre-blocks" data-region="blocks-column" class="hidden-print">
+        <section id="sidepre-blocks" data-region="blocks-column" class="hidden-print d-none">
             {{{ sidepreblocks }}}
         </section>
     {{/hasblocks}}
@@ -17,14 +18,30 @@
 
     
 </div><!-- Ends .page-wrapper -->
+
+
 {{{ output.standard_end_of_body_html }}}
+
 </body>
 </html>
 {{#js}}
+require.config({
+    packages: [{
+        name: 'highcharts',
+        main: 'highcharts'
+    }],
+    paths: {
+        // Change this to your server if you do not wish to use our CDN.
+        highcharts: 'https://code.highcharts.com',
+        jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr"
+    }
+});
  require.config({
     paths: {
       "kendo.all.min": "//kendo.cdn.telerik.com/2020.3.915/js/kendo.all.min",
+      "dttable": "/local/newsvnr/js/datatable.min",
       "alertjs": "//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min",
+      "validatefm" : "//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min",
     }
 });
 require(['theme_boost/loader']);
@@ -63,9 +80,6 @@ require(['jquery', 'core/config'], function($, Config) {
         $('[data-region="drawer"]').removeClass('closed');
         $('[data-region="drawer"]').addClass('open');
     }
-
- 
-
     {{! active menu }}
     $(function(){
         $("#nav-draw ul li").parent().filter(function(){
@@ -75,13 +89,16 @@ require(['jquery', 'core/config'], function($, Config) {
             return this.href==location.href}
         ).addClass('active-nav').siblings().removeClass('active-nav');
     });
-
     // active UI câu hỏi trong bài kiểm tra quiz
     if($('#responseform')) {
         $('#responseform .content input').click(function() {
             var quizheight = $(this).closest('div.que.multichoice').height();
             var x = $(this).closest('div.que.multichoice').offset();
-            $("html, body").animate({ scrollTop: x.top + quizheight + 10}, 1000);
+            if($(this).closest('div.qtype_multichoice_clearchoice').hasClass('abcd')) {
+                $("html, body").animate({ scrollTop: x.top + quizheight - 20}, 1000);
+            } else {
+                $("html, body").animate({ scrollTop: x.top + quizheight - 40}, 1000);
+            }
             var questionId = $(this).attr('id');
             var split = questionId.split(":");
             var splitAgian = split[1].split("_");
@@ -103,48 +120,10 @@ require(['jquery', 'core/config'], function($, Config) {
             $(result).addClass('notyetanswered').removeClass('answersaved');
         })
     }
-    window.addEventListener("load", afterLoaded,true);
-        function afterLoaded(){
-            $('body').removeClass('loading');
-        }
-
 }); 
-
-require(['theme_moove/course_menu']);
-
-require(['theme_moove/enrol_course']);
-
-require(['theme_moove/search_autocomplete']);
-
-require(['theme_moove/kendo_translate']);
-
-require(['theme_moove/menu_left']);
 
 require(['theme_moove/general']);
 
 var id = $('.new-detail-chat').attr('data');
 $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussionid='+id);
 {{/js}}
-<script type="text/javascript">
-    var setCookie = function(cname, cvalue, exdays) {
-        var d = new Date();
-        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-        var expires = "expires=" + d.toUTCString();
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
-    var getCookie = function(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }
-</script>

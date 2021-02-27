@@ -53,39 +53,47 @@
     {{>theme_moove/portal_inc_start}}
 {{/hasportal}}
 {{^hasportal}}
-    {{^hasiframe}}
+    {{^hasgeneraliframe}}
         {{>theme_moove/inc_start}}
-    {{/hasiframe}}
-    {{#hasiframe}}
-        {{>theme_moove/focusmode_inc_start}}
-    {{/hasiframe}}
+    {{/hasgeneraliframe}}
+    {{#hasgeneraliframe}}
+        {{>theme_moove/general_iframe_inc_start}}
+    {{/hasgeneraliframe}}
 {{/hasportal}}
 <div id="page" class="container-fluid">
-    {{^hasportal}}
-        {{^hasiframe}}
-            {{{ output.full_header }}}
-        {{/hasiframe}}
-    {{/hasportal}}
     <div id="page-content" class="row">
         <div id="region-main-box" class="col-12">
-            {{#hasregionmainsettingsmenu}}
-                <div id="region-main-settings-menu" class="d-print-none">
-                    <div> {{{ output.region_main_settings_menu }}} </div>
-                </div>
-            {{/hasregionmainsettingsmenu}}
+            {{^hasiframe}}
+                {{#hasregionmainsettingsmenu}}
+                    <div id="region-main-settings-menu" class="d-print-none">
+                        <div> {{{ output.region_main_settings_menu }}} </div>
+                    </div>
+                {{/hasregionmainsettingsmenu}}
+            {{/hasiframe}}
             <section id="region-main">
                 <div class="loading-page"></div>
-                <div class="card">
+                <div class="card" id="course-content">
                     {{#hasiframe}}
-                    <div class="card-body">
-                        <div id="mod-view">{{{ output.main_content }}}</div>
-                    </div>
+                        {{^hasgeneraliframe}}
+                            <div class="d-none">
+                                {{> theme_moove/nav-drawer }}
+                            </div>
+                        {{/hasgeneraliframe}}
+                        <div class="card-body">
+                            <div id="mod-view-coursepage">
+                                <div class="alert alert-success mb-0"><strong>{{#str}}selectcoursedata, theme_moove{{/str}}</strong></div>
+                            </div>
+                            <div class="d-none">{{{ output.main_content }}}/div>
+                        </div>
                     {{/hasiframe}}
                     {{^hasiframe}}
-                        <div class="">
-                            {{> theme_moove/nav-drawer }}
-                        </div>
-                        <div class="card-body">
+                        {{^hasgeneraliframe}}
+                            <div class="">
+                                {{> theme_moove/nav-drawer }}
+                            </div>
+                        {{/hasgeneraliframe}}
+                        
+                        <div class="card-body" id="course-main-content">
                             {{#hasregionmainsettingsmenu}}
                                 <div class="region_main_settings_menu_proxy"></div>
                             {{/hasregionmainsettingsmenu}}
@@ -97,9 +105,11 @@
                     {{/hasiframe}}
                     
                 </div>
-                {{{ output.activity_navigation }}}
+                <div id="mod-view-coursepage">
+                </div>
                 <div id="general-iframe-view-coursepage">
                 </div>
+                {{{ output.activity_navigation }}}
             </section>
         </div>
     </div>
@@ -108,10 +118,10 @@
     {{>theme_moove/portal_inc_end}}
 {{/hasportal}}
 {{^hasportal}}
-    {{^hasiframe}}
+    {{^hasgeneraliframe}}
         {{>theme_moove/inc_end}}
-    {{/hasiframe}}
-    {{#hasiframe}}
-        {{>theme_moove/focusmode_inc_end}}
-    {{/hasiframe}}
+    {{/hasgeneraliframe}}
+    {{#hasgeneraliframe}}
+        {{>theme_moove/general_iframe_inc_end}}
+    {{/hasgeneraliframe}}
 {{/hasportal}}

@@ -72,6 +72,7 @@ $templatecontext = [
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'hasportal' => $check->hasportal,
     'hasiframe' => $check->hasiframe,
+    'hasgeneraliframe' => $check->hasgeneraliframe,
     'hasfocusmod' => $check->hasfocusmod,
     'settingexam' => $check->settingexam,
     'hasopenmenu' => $check->hasopenmenu
@@ -86,7 +87,15 @@ $themesettings = new \theme_moove\util\theme_settings();
 
 $templatecontext = array_merge($templatecontext, $themesettings->footer_items());
 if (isset($PAGE->cm->modname)) {
-    echo $OUTPUT->render_from_template('theme_moove/incourse', $templatecontext);
+    if($check->hasgeneraliframe == "true") {
+        echo $OUTPUT->render_from_template('theme_moove/general_iframe_incourse', $templatecontext);
+    } else {
+        echo $OUTPUT->render_from_template('theme_moove/incourse', $templatecontext);
+    }
 } else {
-    echo $OUTPUT->render_from_template('theme_moove/incourse', $templatecontext);
+    if($check->hasgeneraliframe == "true") {
+        echo $OUTPUT->render_from_template('theme_moove/general_iframe_incourse', $templatecontext);
+    } else {
+        echo $OUTPUT->render_from_template('theme_moove/incourse', $templatecontext);
+    }
 }

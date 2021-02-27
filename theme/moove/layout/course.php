@@ -74,6 +74,7 @@ $templatecontext = [
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'hasportal' => $check->hasportal,
     'hasiframe' => $check->hasiframe,
+    'hasgeneraliframe' => $check->hasgeneraliframe,
     'hasfocusmod' => $check->hasfocusmod,
     'show_hide_focusmod' => $check->show_hide_focusmod,
     'hasopenmenu' => $check->hasopenmenu
@@ -90,7 +91,11 @@ $themesettings = new \theme_moove\util\theme_settings();
 
 $templatecontext = array_merge($templatecontext, $themesettings->footer_items());
 if (!$coursepresentation || $coursepresentation == 1) {
-    echo $OUTPUT->render_from_template('theme_moove/coursepage', $templatecontext);
+    if($check->hasgeneraliframe == "true") {
+        echo $OUTPUT->render_from_template('theme_moove/general_iframe_coursepage', $templatecontext);
+    } else {
+        echo $OUTPUT->render_from_template('theme_moove/coursepage', $templatecontext);
+    }
 } else if ($coursepresentation == 2) {
     echo $OUTPUT->render_from_template('theme_moove/course_cover', $templatecontext);
 }

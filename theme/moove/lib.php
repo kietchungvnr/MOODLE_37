@@ -755,6 +755,22 @@ function theme_moove_buildnavnewsvnr_sitewide(\flat_navigation $flatnav) {
         $PAGE->requires->js_call_amd('core/addblockmodal', 'init', array($params));
     }
 }
+
+function get_pathname_url($str) {
+    $spilit = explode('?', $str);
+    $spilit1 = explode('/', $spilit[0]);
+    unset($spilit1[0], $spilit1[1], $spilit1[2]);
+    $output = '/';
+    foreach(array_values($spilit1) as $key => $str) {
+        $output .= $str;
+        print_r($key, count($spilit1));
+        if(count($spilit1) > $key + 1) {
+            $output .= '/';
+        }
+    }
+    return $output;
+}
+
 function theme_moove_layout_check() {
     global $COURSE,$DB,$USER,$CFG;
     require_once $CFG->dirroot . '/local/newsvnr/lib.php';
@@ -763,6 +779,7 @@ function theme_moove_layout_check() {
         $referer = $_SERVER['HTTP_REFERER'];
         $referer_split = explode('/', $referer);
     }
+    // Xét layout cho nhúng LMS vào portal EBM
     if(isset($referer) && ($referer_split[2] == $_SERVER['HTTP_HOST'])) {
         $object->hasportal = false;
     } elseif(isset($referer) && ($referer_split[2] != $_SERVER['HTTP_HOST'])) {
@@ -770,6 +787,7 @@ function theme_moove_layout_check() {
     } else {
         $object->hasportal = false;
     }
+    // Xét layout cho chế độ focusmode
     $object->show_hide_focusmod = true;
     if(isset($referer) && ($referer_split[2] == $_SERVER['HTTP_HOST'])) {
         if(isset($_COOKIE['cookie']) && $_COOKIE['cookie'] == 'focusmod') {
@@ -784,6 +802,25 @@ function theme_moove_layout_check() {
         }
     } else {
         $object->hasiframe = false;
+    }
+    // Xét layout cho chế độ single page app
+    if(isset($referer) && $referer_split[2] == $_SERVER['HTTP_HOST']) {
+        if(isset($_COOKIE['spa']) && $_COOKIE['spa'] == 'true') {
+            // $referers = ['/course/view.php', '/user/index.php', '/badges/view.php', '/admin/tool/lp/coursecompetencies.php', '/grade/report/index.php', '/contentbank/index.php', '/grade/report/user/index.php'];
+            // if (in_array(get_pathname_url($referer), $referers)) {
+            //     $object->hasgeneraliframe = true;
+            //     // if(in_array($_SERVER['SCRIPT_NAME'], $referers) == false) {
+            //     //     $object->hasgeneraliframe = false;
+            //     // }
+            // } else {
+            //     $object->hasgeneraliframe = false;
+            // }
+             $object->hasgeneraliframe = true;
+        } else {
+            $object->hasgeneraliframe = false;
+        }
+    } else {
+        $object->hasgeneraliframe = false;
     }
     $object->hasfocusmod = (isset($_COOKIE['cookie']) == 'focusmod') ? true : false;
     $object->hasopenmenu = (isset($_COOKIE['menu']) == 'openmenu') ? true : false;

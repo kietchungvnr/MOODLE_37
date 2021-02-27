@@ -1598,7 +1598,7 @@ nav.navbar .navbar-brand .logo img {
 }
 
 #page.container-fluid {
-    padding: 0rem 1.5rem 0 1.5rem !important;
+    padding: 0 !important;
 }
 .block-text-number {
     font-weight: bold;
@@ -1666,7 +1666,6 @@ li {
 .footer-menu ul li a span {
     line-height: 20px;
     margin-left: 7px;
-    font-size: 14px;
     font-family: arial,verdana,helvetica,tahoma;
 }
 
@@ -1836,109 +1835,9 @@ nav.navbar ul.navbar-nav .popover-region .popover-region-toggle .count-container
 .active-nav {
     color: blue !important;
 }
-/*course app portal*/
 @media (max-width: 576px) {
     .widget-about .has-logo .d-sm-inline {
         display: inline!important;
-    }
-    #page-course-view-topcoll.pagelayout-course .nav-tabs.course li,
-    body.jsenabled#page-course-view-topcoll #toggle-all {
-        display: none;
-    }
-    #page-course-view-topcoll #page-wrapper {
-        padding: 0 !important;
-    }
-/*    #page-course-view-topcoll .card#course-content .card-body {
-        background: #f5f5f5;
-        padding: 0 !important;
-    }*/
-    body#page-course-view-topcoll {
-        background: #ffffff;
-    }
-    #page-course-view-topcoll.pagelayout-incourse .card-body {
-        background: #f5f5f5;
-    }
-    #page-header {
-        display: none;
-    }
-    #page-course-view-topcoll .sectionhead {
-        border: 1px solid #007bff;
-        background: white !important;
-    }
-    #page-course-view-topcoll .sectionhead .the_toggle {
-        position: relative;
-    }
-    #page-course-view-topcoll .sectionhead.active h3.sectionname {
-        color: white;
-    }
-    #page-course-view-topcoll .sectionhead.active {
-        border: 0;
-        background: linear-gradient(to right, #007BFF 0%, #B7D7F6 100%) !important;
-    }
-    #page-course-view-topcoll .course-content ul.ctopics li.section.main .left {
-        padding: 9px 5px 10px 5px !important;
-        color: white;
-        margin-top: 0 !important;
-        width: 45px;
-        margin-right: 10px;
-        border-radius: 8px 0 0 8px;
-        position: relative;
-    }
-    #page-course-view-topcoll .course-content ul.ctopics li.section.main .left-before {
-        background: #007bff;
-    }
-    #page-course-view-topcoll .course-content ul.ctopics li.section.main .left-before:before {
-        position: absolute;
-        content: '';
-        left: 40px;
-        right: 0;
-        top: 1px;
-        width: 12px;
-        height: 36px;
-        border-radius: 8px;
-        background: white;
-    }
-    #page-course-view-topcoll .course-content #section-0 .left.side{
-        display: none !important;
-    }
-    #page-course-view-topcoll .section.img-text {
-        margin: 5px -10px 5px -10px;
-        background: white;
-    }
-    #page-course-view-topcoll .section li.activity {
-        padding: .5em 0.8em;
-        position: relative;
-    }
-    #page-course-view-topcoll .section li.activity:before {
-        position: absolute;
-        content: '';
-        top: 0;
-        left: 53px;
-        right: 0;
-        bottom: 1px;
-        border-bottom: 1px solid #80808033;
-    }
-    body.format-topcoll .course-content ul.ctopics li.section.main {
-        margin: 4px 1px 6px 1px !important;
-    }
-    .icon-opensection-mb {
-        display: block !important;
-        position: absolute;
-        right: 7px;
-        top: 8px;
-        filter: contrast(0.6);
-    }
-    .pagelayout-course ul.nav.nav-tabs.mb-3 {
-        box-shadow: 0px 2px 9px 0px rgb(0 0 0 / 14%);
-    }
-    .nav-tabs.mb {
-        display: flex !important;
-    }
-    .nav-tabs {
-        padding: 0;
-    }
-    #modal-iframe-library .modal-dialog {
-        max-width: 100% !important;
     }
 }
 [data-block="lp"] h3 {
@@ -4338,7 +4237,7 @@ select#formactionid {
 .loading-page {
     display:    none;
     position:   absolute;
-    z-index:    999;
+    z-index:    1000;
     top:        0;
     left:       0;
     height:     100%;
@@ -4679,9 +4578,9 @@ button[data-target="#add-popup-modal-module"] {
 .overflow-auto {
     overflow: auto;
 }
-/*.modal-iframe {
-    width: 1300px !important;
-}*/
+.modal-iframe {
+    width: 1300px;
+}
 #table-library td a {
     cursor: pointer;
 }
@@ -5266,7 +5165,7 @@ input.apple-switch:checked:after {
 .userbutton .usertext {
     display: none;
 }
-@media (max-width: 1000px) {
+@media (min-width: 768px) {
     .fixed-sidebar-left {
         margin-left: -225px;
         width: 225px;
@@ -5279,6 +5178,10 @@ input.apple-switch:checked:after {
     }
     #page-wrapper {
         margin-left: 0 !important;
+    }
+    #region-main-box.col-12 {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
     }
 }
 @media (min-width: 1000px) { 
@@ -5421,6 +5324,7 @@ input.apple-switch:checked:after {
 }
 #page-course-view-topcoll .sectionhead .the_toggle {
     background: transparent;
+    padding-bottom: 0;
 }
 #page-course-view-topcoll  .course-content ul.ctopics li.section.main .content {
     margin: 0;
@@ -6182,27 +6086,8 @@ body.format-topcoll.editing .course-content .right.side {
 .list-category.title {
     overflow: hidden;
 }
-.icon-opensection-mb {
-    display: none;
-}
-.card.user-card.profile {
-    position: fixed;
-}
-.nav-tabs.mb {
-    display: none;
-}
-.participant-list {
-    padding: 6px 5px;
-    display: flex;
-    position: relative;
-    align-items: center;
-}
-.participant-list-hr {
-    border-bottom: 1px solid #c0bdbd8a;
-    margin-left: 60px;
-}
-#modal-iframe-library .modal-dialog {
-    max-width: 80%;
+#page-content {
+    margin: 0;
 }
 #course-iframe,
 #mod-iframe {
@@ -6235,40 +6120,8 @@ body {
 <body {{{ bodyattributes }}}>
     
 {{> core/local/toast/wrapper}}
-
-<a id="return-to-top" title="{{#str}}gotop, theme_moove{{/str}}" data-placement="left"><i class="fa fa-arrow-up"></i></a>
 <div class="modal123"></div>
-{{# hasopenmenu}}
-    <div class="check-menu slide-nav-toggle">
-{{/ hasopenmenu}}
-{{^ hasopenmenu}}
-    <div class="check-menu">
-{{/ hasopenmenu}}
-        <div class="all-header">
-            {{>theme_moove/header}}
-        </div>
-
-        <div class="fixed-sidebar-left">
-            <div class="slimScrollDiv">
-                <ul class="nav navbar-nav side-nav nicescroll-bar">
-                    {{{output.right_sidebar_menu}}}
-                    {{# flatnavigation }}
-                        {{#showdivider}}
-                            <li><hr class="light-grey-hr mb-10"></li>
-                            <li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>{{#str}}admin,theme_moove{{/str}}</span></li>
-                            <li class="menu-link" data-key="{{key}}" id=''><a class ="nav-active" href="{{{action}}}"><i class="{{{class}}} mr-3"></i>{{{text}}}</a></li>
-                        {{/showdivider}}
-                    {{/ flatnavigation }}
-                </ul>
-            </div>
-        </div>
-    </div>
-{{# hasopenmenu}}
-    <div id="page-wrapper" class="slide-nav-toggle">
-{{/ hasopenmenu}}
-{{^ hasopenmenu}}
-    <div id="page-wrapper">
-{{/ hasopenmenu}}
-{{{ output.standard_top_of_body_html }}}
+<div id="page-wrapper">
+    {{{ output.standard_top_of_body_html }}}
 
 

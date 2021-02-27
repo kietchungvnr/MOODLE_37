@@ -50,12 +50,9 @@ if ($navdraweropen) {
 if ($draweropenright && $hasblocks) {
     $extraclasses[] = 'drawer-open-right';
 }
+
 $check = theme_moove_layout_check();
-// if(isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe') {
-//     $check->hasiframe = true;
-// } else {
-//     $check->hasiframe = false;
-// }
+
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
 $templatecontext = [
@@ -71,6 +68,7 @@ $templatecontext = [
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'hasportal' => $check->hasportal,
     'hasiframe' => $check->hasiframe,
+    'hasgeneraliframe' => $check->hasgeneraliframe,
     'hasfocusmod' => $check->hasfocusmod,
     'hasopenmenu' => $check->hasopenmenu
 ];
@@ -83,5 +81,8 @@ $templatecontext['flatnavigation'] = $PAGE->flatnav;
 $themesettings = new \theme_moove\util\theme_settings();
 
 $templatecontext = array_merge($templatecontext, $themesettings->footer_items());
-
-echo $OUTPUT->render_from_template('theme_moove/columns2', $templatecontext);
+if($check->hasgeneraliframe == "true") {
+    echo $OUTPUT->render_from_template('theme_moove/general_iframe_columns2', $templatecontext);
+} else {
+    echo $OUTPUT->render_from_template('theme_moove/columns2', $templatecontext);
+}

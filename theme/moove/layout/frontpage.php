@@ -73,6 +73,7 @@ if (isloggedin()) {
         'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
         'hasportal' => $check->hasportal,
         'hasiframe' => $check->hasiframe,
+        'hasgeneraliframe' => $check->hasgeneraliframe,
         'hasopenmenu' => $check->hasopenmenu
     ];
 
@@ -95,8 +96,11 @@ if (isloggedin()) {
     $templatecontext['competencyplans'] = $competencyplans;
 
     $templatecontext['headerbuttons'] = \theme_moove\util\extras::get_mypublic_headerbuttons($context, $user);
-    // var_dump($templatecontext);die;
-    echo $OUTPUT->render_from_template('theme_moove/frontpage', $templatecontext);
+    if($check->hasgeneraliframe == "true") {
+        echo $OUTPUT->render_from_template('theme_moove/general_iframe_frontpage', $templatecontext);
+    } else {
+        echo $OUTPUT->render_from_template('theme_moove/frontpage', $templatecontext);
+    }
 } else {
     $sliderfrontpage = false;
     if ((theme_moove_get_setting('sliderenabled', true) == true) && (theme_moove_get_setting('sliderfrontpage', true) == true)) {

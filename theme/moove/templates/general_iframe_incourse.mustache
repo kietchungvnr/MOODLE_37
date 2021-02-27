@@ -53,19 +53,14 @@
     {{>theme_moove/portal_inc_start}}
 {{/hasportal}}
 {{^hasportal}}
-    {{^hasiframe}}
+    {{^hasgeneraliframe}}
         {{>theme_moove/inc_start}}
-    {{/hasiframe}}
-    {{#hasiframe}}
-        {{>theme_moove/focusmode_inc_start}}
-    {{/hasiframe}}
+    {{/hasgeneraliframe}}
+    {{#hasgeneraliframe}}
+        {{>theme_moove/general_iframe_inc_start}}
+    {{/hasgeneraliframe}}
 {{/hasportal}}
 <div id="page" class="container-fluid">
-    {{^hasportal}}
-        {{^hasiframe}}
-            {{{ output.full_header }}}
-        {{/hasiframe}}
-    {{/hasportal}}
     <div id="page-content" class="row">
         <div id="region-main-box" class="col-12">
             {{#hasregionmainsettingsmenu}}
@@ -82,9 +77,11 @@
                     </div>
                     {{/hasiframe}}
                     {{^hasiframe}}
-                        <div class="">
-                            {{> theme_moove/nav-drawer }}
-                        </div>
+                        {{^hasgeneraliframe}}
+                            <div class="">
+                                {{> theme_moove/nav-drawer }}
+                            </div>
+                        {{/hasgeneraliframe}}
                         <div class="card-body">
                             {{#hasregionmainsettingsmenu}}
                                 <div class="region_main_settings_menu_proxy"></div>
@@ -95,7 +92,6 @@
                             {{{ output.course_content_footer }}}
                         </div>
                     {{/hasiframe}}
-                    
                 </div>
                 {{{ output.activity_navigation }}}
                 <div id="general-iframe-view-coursepage">
@@ -108,10 +104,10 @@
     {{>theme_moove/portal_inc_end}}
 {{/hasportal}}
 {{^hasportal}}
-    {{^hasiframe}}
+    {{^hasgeneraliframe}}
         {{>theme_moove/inc_end}}
-    {{/hasiframe}}
-    {{#hasiframe}}
-        {{>theme_moove/focusmode_inc_end}}
-    {{/hasiframe}}
+    {{/hasgeneraliframe}}
+    {{#hasgeneraliframe}}
+        {{>theme_moove/general_iframe_inc_end}}
+    {{/hasgeneraliframe}}
 {{/hasportal}}

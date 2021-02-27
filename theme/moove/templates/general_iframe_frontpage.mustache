@@ -15,11 +15,11 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template theme_moove/columns2
+    @template theme_moove/frontpage
 
     Admin time setting template.
 
-    Moove 2 column layout template.
+    Moove Frontpage layout template.
 
     Context variables required for this template:
     * sitename - The name of the site
@@ -44,74 +44,68 @@
         "sidepreblocks": "<h2>Blocks html goes here</h2>",
         "hasblocks":true,
         "navdraweropen":true,
-        "sidepreopen":true,
         "regionmainsettingsmenu": "",
         "hasregionmainsettingsmenu": false
     }
-}}  
+}}
 {{#hasportal}}
     {{>theme_moove/portal_inc_start}}
 {{/hasportal}}
 {{^hasportal}}
-    {{^hasiframe}}
+    {{^hasgeneraliframe}}
         {{>theme_moove/inc_start}}
-    {{/hasiframe}}
-    {{#hasiframe}}
-        {{>theme_moove/focusmode_inc_start}}
-    {{/hasiframe}}
+    {{/hasgeneraliframe}}
+    {{#hasgeneraliframe}}
+        {{>theme_moove/general_iframe_inc_start}}
+    {{/hasgeneraliframe}}
 {{/hasportal}}
-<div id="page" class="container-fluid">
+{{>theme_moove/fp_slideshow}}
+<div id="page" class="container-fluid p-0">
+
     {{^hasportal}}
         {{^hasiframe}}
             {{{ output.full_header }}}
         {{/hasiframe}}
     {{/hasportal}}
-    <div id="page-content" class="row">
-        <div id="region-main-box" class="col-12">
-            {{#hasregionmainsettingsmenu}}
-                <div id="region-main-settings-menu" class="d-print-none">
-                    <div> {{{ output.region_main_settings_menu }}} </div>
-                </div>
-            {{/hasregionmainsettingsmenu}}
-            <section id="region-main">
-                <div class="loading-page"></div>
-                <div class="card">
-                    {{#hasiframe}}
-                    <div class="card-body">
-                        <div id="mod-view">{{{ output.main_content }}}</div>
-                    </div>
-                    {{/hasiframe}}
-                    {{^hasiframe}}
-                        <div class="">
-                            {{> theme_moove/nav-drawer }}
-                        </div>
-                        <div class="card-body">
-                            {{#hasregionmainsettingsmenu}}
-                                <div class="region_main_settings_menu_proxy"></div>
-                            {{/hasregionmainsettingsmenu}}
-                            {{{ output.course_content_header }}}
-                            {{{ output.main_content }}}
-                            {{{ output.activity_navigation }}}
-                            {{{ output.course_content_footer }}}
-                        </div>
-                    {{/hasiframe}}
-                    
-                </div>
-                {{{ output.activity_navigation }}}
-                <div id="general-iframe-view-coursepage">
-                </div>
+    
+    <div id="page-content" style="outline: none;">
+    
+    <div class="p-3">
+    {{#displaynews}}
+        {{>theme_moove/fp_slidenews}}
+    {{/displaynews}}
+    {{#displaycoursespopular}}
+        {{>theme_moove/fp_slidecourse}}
+    {{/displaycoursespopular}}
+        <div id="region-main-box">
+            <section id="region-main" style="overflow: unset;">
+                {{#displaymycourses}}
+                    {{# hascourses }}<h4 class="text-dark md-block font-weight-bold" align="center">{{#str}}mycoursesupper, theme_moove{{/str}}</h4>{{/ hascourses }}
+                    {{>theme_moove/fp_mycourse}}
+                {{/displaymycourses}}
+                {{#hasregionmainsettingsmenu}}
+                <div class="region_main_settings_menu_proxy"></div>
+                {{/hasregionmainsettingsmenu}}
+                {{{ output.course_content_header }}}
+                <div style="display:none">{{{ output.main_content }}}</div>
+                {{{ output.course_content_footer }}}
             </section>
         </div>
+    {{#displayforums}}
+        {{>theme_moove/fp_forum}}
+    {{/displayforums}}
+    </div>
     </div>
 </div>
+
 {{#hasportal}}
     {{>theme_moove/portal_inc_end}}
 {{/hasportal}}
 {{^hasportal}}
-    {{^hasiframe}}
+    {{^hasgeneraliframe}}
         {{>theme_moove/inc_end}}
-    {{/hasiframe}}
-    {{#hasiframe}}
-        {{>theme_moove/focusmode_inc_end}}
-    {{/hasiframe}}
+    {{/hasgeneraliframe}}
+    {{#hasgeneraliframe}}
+        {{>theme_moove/general_iframe_inc_end}}
+    {{/hasgeneraliframe}}
 {{/hasportal}}
