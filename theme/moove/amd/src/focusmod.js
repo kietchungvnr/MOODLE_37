@@ -19,6 +19,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         var fm = Cookie.getCookie('cookie');
         var spa = Cookie.getCookie('spa');
         var course = $(this).attr('course');
+        var width = $(window).width();
         if(spa == "true") {
             document.cookie = 'spa=; max-Age=-1;path=/';
         }
@@ -47,6 +48,9 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             $('#region-main').removeAttr("style");
             $('.fixed-sidebar-left').removeClass('d-none');
             $('footer,.all-header,#page-header').slideDown();
+            if(width <= 576) {
+                $('.nav.multi-tab').slideDown();
+            }
             document.cookie = 'cookie=; max-Age=-1;path=/';
         } else {
             /// Ẩn các element khi bật chế độ focusmode
@@ -59,12 +63,16 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             $('#course-main-content').addClass('d-none');
             $('#mod-view-coursepage').removeClass('d-none');
             $('#page-content').attr('style', 'margin-left:0;margin-right:0');
-            $('#region-main-box').attr('style', 'padding:0!important;margin-top:62px');
+            if(width <= 576) {
+                $('#region-main-box').attr('style', 'padding:0!important;margin-top:48px');    
+            } else {
+                $('#region-main-box').attr('style', 'padding:0!important;margin-top:62px'); 
+            }
             $('#page.container-fluid').attr('style', 'padding: 0!important');
             $('#setting-context').addClass('d-none');
             $('#sidepreopen-control').addClass('d-none');
             $('#sidepre-blocks').addClass('d-none');
-
+            $('.nav.multi-tab').slideUp();
             Cookie.setCookie('cookie', 'focusmod');
         }
     })
@@ -73,11 +81,9 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
     $(window).resize(function() {
         var fm = Cookie.getCookie('cookie')
         var width = $(window).width();
-        if (width <= 1050) {
+        if (width <= 576) {
             if (fm == "focusmod") {
-                $('.fixed-top.focusmod .open-focusmod ').trigger('click');
-                $('#setting-context').removeClass('d-none');
-                $('#sidepreopen-control').removeClass('d-none');
+                $('.nav.multi-tab').slideUp();
             }
         }
     })
@@ -143,6 +149,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             $('#mod-view-coursepage').html('');
             setTimeout(function() {
                 $(element).trigger('click');
+                $(element).parents('div.dropdown-content-2').slideDown();
             }, 1000);
         })    
     }
@@ -152,7 +159,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         var _this = $(this);
         var url = _this.attr('data-focusmode-url');
         var modType = _this.attr('data-mod-type');
-
+        //var height = $(window).height()
         if($('body').hasClass('focusmod')) {
             Cookie.setCookie('cookie', 'focusmod');
         }
@@ -205,23 +212,39 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                     }
                     if(modType == 'quiz') {
                         var iframe = document.getElementById("mod-iframe");
+                        $("#mod-iframe").removeAttr('style')
+                        var width = $(window).width();
                         var iframeModBody = iframe.contentWindow.document.querySelectorAll("body")[0]['id'];
-                        if(iframeModBody.includes('page-mod-quiz-attempt') == true || iframeModBody.includes('page-mod-quiz-summary') == true || iframeModBody.includes('page-mod-quiz-review') == true) {
+                        if((iframeModBody.includes('page-mod-quiz-attempt') == true || iframeModBody.includes('page-mod-quiz-summary') == true || iframeModBody.includes('page-mod-quiz-review') == true))  {
                             $('#header-quiz').removeAttr('style');
                             if($('#back-focusmod').length == 0) {
-                                $('#header-main').attr('style', 'display: none!important');
                                 var quizHeader = $('nav.focusmod').eq(0);
                                 var quizName = $('div.dropdown-content-2 a.active').text();
                                 var moduleId = $('div.dropdown-content-2 a.active').attr('module-id');
-                                quizHeader.after('<nav class="fixed-top navbar moodle-has-zindex focusmod d-flex" id="header-quiz"><div class="loading-page"></div><span class="d-flex m-auto font-weight-bold" style="font-size:22px">'+quizName+'</span><span id="back-focusmod" class="cl-cursor" style="position: relative; right: 28px; background-color: #3c80bc; color: #fff; padding: 5px; border-radius: 15px;"><i class="fa fa-share" style="margin: 0 5px;position: relative;top: 1px;" aria-hidden="true"></i><span style="margin-right:5px">Quay lại</span></span></nav>');
+                                if(width > 576) {
+                                    $('#header-main').attr('style', 'display: none!important');
+                                    quizHeader.after('<nav class="fixed-top navbar moodle-has-zindex focusmod d-flex" id="header-quiz"><div class="loading-page"></div><span class="d-flex m-auto font-weight-bold" style="font-size:22px">'+quizName+'</span><span class="back-focusmod-desktop" id="back-focusmod" class="cl-cursor"><i class="fa fa-share" style="margin: 0 5px;position: relative;top: 1px;" aria-hidden="true"></i><span style="margin-right:5px">Quay lại</span></span></nav>');
+                                } else {
+                                    $('body').attr('style','overflow:hidden !important');
+                                    $('#header-quiz').attr('style', 'display: none!important');
+                                    var html = '<div class="d-flex menu-left">'
+                                        html += '<div class="course-info-focus">'
+                                        html += '<div class="icon-back-focusmod" id="back-focusmod"><i class="fa fa-chevron-left mr-1" aria-hidden="true"></i></div>'
+                                        html += '<div class="page-header-headings"><a>'+quizName+'</a></div>'
+                                        html += '</div>'
+                                        html += '</div>'
+                                    quizHeader.after('<nav class="fixed-top navbar moodle-has-zindex focusmod d-flex" id="header-quiz"><div class="loading-page"></div>'+html+'</nav>');
+                                }
                                 $('#header-main .loading-page').removeClass('active');
                                 $('#back-focusmod').bind('click', function(e) {
+                                    $('body').removeAttr('style');
                                     $('div.dropdown-content-2 a[module-id="'+moduleId+'"]').trigger('click');
                                     $('#header-main').removeAttr('style');
                                     $('#header-quiz').attr('style', 'display: none!important');
                                 });
                             }
-                        } else {
+                        }    
+                        else {
                             $('#header-main').removeAttr('style');
                             if($('#header-quiz').length > 0) {
                                 $('#header-quiz').attr('style', 'display: none!important');
@@ -249,5 +272,32 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
 
     if (!$('.card-header.level2 a').hasClass('active')) {
         $('.nav-link.prev, .nav-link.next').addClass('disable');
+    }
+    // Nút thoát focusmod mobile 
+    $('.back-focusmod').click(function() {
+        $('#focus-mod').click();
+    })
+    // function cookie
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
     }
 });

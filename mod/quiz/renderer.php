@@ -343,6 +343,16 @@ class mod_quiz_renderer extends plugin_renderer_base {
 
         return $output;
     }
+    // Custom by Thắng: kiểu câu hỏi ở dạng mobile
+    public function navigation_panel_mobile(quiz_nav_panel_base $panel) {
+        $output = '';
+        foreach ($panel->get_question_buttons() as $button) {
+            $output .= $this->render($button);
+        }
+        $this->page->requires->js_init_call('M.mod_quiz.nav.init', null, false,
+                quiz_get_js_module());
+        return $output;
+    }
 
     /**
      * Display a quiz navigation button.

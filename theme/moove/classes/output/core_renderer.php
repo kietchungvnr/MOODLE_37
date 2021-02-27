@@ -97,7 +97,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $header->courseheader = $this->course_header();
         return $this->render_from_template('theme_moove/fp_header', $header);
     }
-    public function menu_focus(){
+    public function menu_focus() {
         global $COURSE, $CFG, $OUTPUT, $DB;
         require_once($CFG->libdir.'/completionlib.php');
         $completioninfo = new completion_info($COURSE);
@@ -108,8 +108,10 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output .= '<nav class="fixed-top navbar moodle-has-zindex focusmod" id="header-main">';
         $output .= '<div class="loading-page"></div>';
         $output .= '<div class="d-flex menu-left">';
-        $output .= '<div class="course-info-focus"><div class="page-header-headings"><a href="'.$linkcourse.'">'.$COURSE->fullname.'</a></div>';
-        $output .= '<div class="d-flex"><div class="progress course">';
+        $output .= '<div class="course-info-focus">';
+        $output .= '<div class="back-focusmod icon-back-focusmod"><i class="fa fa-chevron-left mr-1" aria-hidden="true"></i></div>';
+        $output .= '<div class="page-header-headings"><a href="'.$linkcourse.'">'.$COURSE->fullname.'</a></div>';
+        $output .= '<div class="d-flex header-progress-focusmod"><div class="progress course">';
         $output .= '<div class="progress-bar" role="progressbar" aria-valuenow="'.$process.'"
                     aria-valuemin="0" aria-valuemax="100" style="width:'.$process.'%"></div></div><div>'.$process.'%</div>';
         $output .= '</div></div>';

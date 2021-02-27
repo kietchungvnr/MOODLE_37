@@ -3800,11 +3800,7 @@ nav.focusmod #focus-mod {
     width: 80px;
     font-weight: bold;
 }
-@media(max-width: 950px) {
-    #focus-mod {
-        display: none !important;
-    }
-}
+
 /*focus-mod*/
 .dashboard-card-deck.one-row {
     overflow-x: auto;
@@ -3914,7 +3910,7 @@ li.nav-item.border-left {
 
 .btn-secondary{
     color: #000;
-    background-color: #e0e0e0 !important;
+    /*background-color: #e0e0e0 !important;*/
     border: none;
 }
 .btn {
@@ -3923,7 +3919,7 @@ li.nav-item.border-left {
 
 .btn-primary {
     color: #fff;
-    background-color: #4285f4 !important;
+    /*background-color: #4285f4 !important;*/
     border: none;
 }
 .btn-primary:hover {
@@ -6057,9 +6053,9 @@ body.format-topcoll.editing .course-content .right.side {
 .que .formulation .qtext{
     display: none;
 }
-.que.essay .ablock {
+/*.que.essay .ablock {
     margin:10px;
-}
+}*/
 .que.multichoice .ablock .prompt,
 .que.truefalse .ablock .prompt {
     margin-right: 20px;
@@ -6081,6 +6077,130 @@ body.format-topcoll.editing .course-content .right.side {
     width: 20px;
     margin-right: 5px;
 }
+.d-flex-desktop {
+    display: flex;
+}
+/*course app portal*/
+.number-question-mb {
+    display: none;
+}
+@media(max-width: 950px) {
+    li.nav-item.border-left {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .d-flex-desktop {
+        display: block;
+    }
+    body {
+        background-color: #ffffff;
+    }
+    .action-menu-trigger ,
+    .questionflag,
+    .editquestion,
+    .mod_quiz-prev-nav,
+    .mod_quiz-next-nav,
+    #page-mod-quiz-attempt #sidepreopen-control,
+    #page-mod-quiz-attempt #sidepre-blocks { 
+        display: none;
+    }
+    #page-mod-quiz-attempt #quiz-timer {
+        margin: -10px 0 0 0;
+        border: 0;
+    }
+    .card-body {
+        background: white;
+    }
+    
+    #page-mod-quiz-attempt .submitbtns {
+        height: 35px;
+        margin-bottom: 60px;
+    }
+    .que span.qno {
+        display: none;
+    }
+    .number-question-mb {
+        padding: 10px 0;
+        color: black;
+        margin-right: 10px;
+        width: auto;
+        height: auto;
+        background: transparent;
+        border-radius: unset;
+        display: block;
+        font-size: 14px;
+    }
+    .que {
+        padding: 0;
+    }
+    #page-content {
+        margin-top: 0;
+    }
+    .hr-quiz {
+        margin:0 -10px !important;
+    }
+    .que .qtext {
+        color: black;
+        margin-bottom: 10px;
+    }
+    .ablock {
+        color: black;
+        padding: 0 5px;
+    }
+    .que.multichoice .ablock .prompt {
+        font-weight: bold;
+    }
+    .que.multichoice .answer div.r0,
+    .que.multichoice .answer div.r1,
+    .que.truefalse .answer div.r0,
+    .que.truefalse .answer div.r1 {
+        border: 1px solid #cac5c5;
+        border-radius: 8px;
+        padding: 8px 5px;
+        margin: 10px 0;
+    }
+    .que.truefalse .answer div.r0 input,
+    .que.truefalse .answer div.r1 input {
+        margin: .3rem .5rem;
+    }
+    .qtype_multichoice_clearchoice {
+        margin-left: 8px;
+    }
+    #page-mod-quiz-attempt #page-wrapper {
+        margin-top: 40px;
+    }
+    #page-mod-quiz-summary .controls {
+        height: 100px;
+    }
+    #page-mod-quiz-review {
+        padding-bottom: 40px;
+        padding-top: 10px;
+    }
+    #page-mod-quiz-view .singlebutton {
+        display: none;
+    }
+    #page-mod-quiz-view .singlebutton.quizstartbuttondiv {
+        display: block;
+        width: 100%;
+    }
+    #page-mod-quiz-view .singlebutton.quizstartbuttondiv button {
+        width: 100%;
+        color: white;
+        background: #007bff;
+        font-weight: bold;
+        background: linear-gradient(to top, #0d70d9 0%, #0069da 100%)
+    }
+    #page-mod-quiz-view .generaltable.quizattemptsummary {
+        display: none;
+    }
+    #page-mod-quiz-view table thead th {
+        text-align: center;
+        color: #343a40;
+        border: 0 !important;
+        background: transparent;
+    }
 #course-iframe,
 #mod-iframe {
     min-width: 100%;

@@ -24,7 +24,8 @@
 
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/mod/quiz/locallib.php');
-
+$css = file_get_contents($CFG->dirroot . '/theme/moove/css/quizattempt.css');
+echo $css;
 // Look for old-style URLs, such as may be in the logs, and redirect them to startattemtp.php.
 if ($id = optional_param('id', 0, PARAM_INT)) {
     redirect($CFG->wwwroot . '/mod/quiz/startattempt.php?cmid=' . $id . '&sesskey=' . sesskey());
@@ -130,4 +131,23 @@ if ($attemptobj->is_last_page($page)) {
     $nextpage = $page + 1;
 }
 
+//Custom by Thắng:
+$check = theme_moove_layout_check();
+if($check->hasiframe) {
+    $PAGE->requires->js_call_amd('theme_moove/quiz_attempt_mobile','init');
+    $quiztimer = html_writer::tag('div',html_writer::tag('span','', array('id' => 'quiz-time-left')),
+        array('id' => 'quiz-timer', 'role' => 'timer',
+            'aria-atomic' => 'true', 'aria-relevant' => 'text'));
+    $headermb .= '<div class="list-question-mobile quiz" >'.$quiztimer.'<div class="list-question-scroll" style="display:-webkit-box">'.$navbc->contentmobile.'</div></div>';
+    echo $headermb;
+}
 echo $output->attempt_page($attemptobj, $page, $accessmanager, $messages, $slots, $id, $nextpage);
+if($check->hasiframe) {
+    $bottommb = '<nav class="quiz-menu-bottom">';
+    $bottommb .= '<div class="quiz-menu-item prev-quiz"><a class="quiz-prev-page" href="javaScript:;">Trước</a></div>';
+    $bottommb .= '<div class="quiz-menu-item-mid"><a href="'.$CFG->wwwroot.'/mod/quiz/summary.php?attempt='.$attemptid.'&cmid='.$cmid.'">Nộp bài</a></div>';
+    $bottommb .= '<div class="quiz-menu-item next-quiz"><a class="quiz-next-page" href="javaScript:;">Tiếp theo</a></div>';
+    $bottommb .= '</nav>';
+    echo $bottommb;
+}
+

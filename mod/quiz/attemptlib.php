@@ -1883,6 +1883,8 @@ class quiz_attempt {
         // $bc->attributes['aria-labelledby'] = 'mod_quiz_navblock_title';
         // $bc->title = html_writer::span(get_string('quiznavigation', 'quiz'), '', array('id' => 'mod_quiz_navblock_title'));
         $bc->content = $output->navigation_panel($panel);
+        // Custom by Thắng: kiểu câu hỏi ở dạng mobile
+        $bc->contentmobile = $output->navigation_panel_mobile($panel);
         return $bc;
     }
 

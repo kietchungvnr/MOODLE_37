@@ -103,7 +103,7 @@ class core_question_renderer extends plugin_renderer_base {
                 array('class' => 'info clearfix'));
 
         $output .= html_writer::start_tag('div', array('class' => 'content'));
-        $output .= '<hr class="mt-0" style="margin-left:45px">';
+        $output .= '<hr class="mt-0 hr-quiz" style="margin-left:45px">';
         $output .= html_writer::tag('div',
                 $this->add_part_heading($qtoutput->formulation_heading(),
                     $this->formulation($qa, $behaviouroutput, $qtoutput, $options)),
@@ -148,7 +148,7 @@ class core_question_renderer extends plugin_renderer_base {
         $output .= $this->question_flag($qa, $options->flags);
         $output .= $this->edit_question_link($qa, $options);
         $output .= html_writer::end_div();
-        $output .= html_writer::start_div('d-flex');
+        $output .= html_writer::start_div('d-flex-desktop');
         $question = $qa->get_question();
         $output .= $this->number($number);
         $output .= html_writer::tag('div', $question->format_questiontext($qa),
@@ -173,7 +173,7 @@ class core_question_renderer extends plugin_renderer_base {
         if (trim($number) === 'i') {
             $numbertext = get_string('information', 'question');
         } else {
-            $numbertext = html_writer::tag('span', $number, array('class' => 'qno'));
+            $numbertext = html_writer::tag('span',get_string('questionx', 'question',$number),array('class' => 'number-question-mb')).html_writer::tag('span', $number, array('class' => 'qno'));
         }
         return html_writer::tag('h3', $numbertext, array('class' => 'no'));
     }

@@ -1836,108 +1836,9 @@ nav.navbar ul.navbar-nav .popover-region .popover-region-toggle .count-container
 .active-nav {
     color: blue !important;
 }
-/*course app portal*/
 @media (max-width: 576px) {
     .widget-about .has-logo .d-sm-inline {
         display: inline!important;
-    }
-    #page-course-view-topcoll.pagelayout-course .nav-tabs.course li,
-    body.jsenabled#page-course-view-topcoll #toggle-all {
-        display: none;
-    }
-    #page-course-view-topcoll #page-wrapper {
-        padding: 0 !important;
-    }
-    #page-course-view-topcoll .card#course-content .card-body {
-        padding: 0 !important;
-    }
-    body#page-course-view-topcoll {
-        background: #ffffff;
-    }
-    #page-course-view-topcoll.pagelayout-incourse .card-body {
-        background: #f5f5f5;
-    }
-    #page-header {
-        display: none;
-    }
-    #page-course-view-topcoll .sectionhead {
-        border: 1px solid #007bff;
-        background: white !important;
-    }
-    #page-course-view-topcoll .sectionhead .the_toggle {
-        position: relative;
-    }
-    #page-course-view-topcoll .sectionhead.active h3.sectionname {
-        color: white;
-    }
-    #page-course-view-topcoll .sectionhead.active {
-        border: 0;
-        background: linear-gradient(to right, #007BFF 0%, #B7D7F6 100%) !important;
-    }
-    #page-course-view-topcoll .course-content ul.ctopics li.section.main .left {
-        padding: 9px 5px 10px 5px !important;
-        color: white;
-        margin-top: 0 !important;
-        width: 45px;
-        margin-right: 10px;
-        border-radius: 8px 0 0 8px;
-        position: relative;
-    }
-    #page-course-view-topcoll .course-content ul.ctopics li.section.main .left-before {
-        background: #007bff;
-    }
-    #page-course-view-topcoll .course-content ul.ctopics li.section.main .left-before:before {
-        position: absolute;
-        content: '';
-        left: 40px;
-        right: 0;
-        top: 1px;
-        width: 12px;
-        height: 36px;
-        border-radius: 8px;
-        background: white;
-    }
-    #page-course-view-topcoll .course-content #section-0 .left.side{
-        display: none !important;
-    }
-    #page-course-view-topcoll .section.img-text {
-        margin: 5px -10px 5px -10px;
-        background: white;
-    }
-    #page-course-view-topcoll .section li.activity {
-        padding: .5em 0.8em;
-        position: relative;
-    }
-    #page-course-view-topcoll .section li.activity:before {
-        position: absolute;
-        content: '';
-        top: 0;
-        left: 53px;
-        right: 0;
-        bottom: 1px;
-        border-bottom: 1px solid #80808033;
-    }
-    body.format-topcoll .course-content ul.ctopics li.section.main {
-        margin: 4px 1px 6px 1px !important;
-    }
-    .icon-opensection-mb {
-        display: block !important;
-        position: absolute;
-        right: 7px;
-        top: 8px;
-        filter: contrast(0.6);
-    }
-    .pagelayout-course ul.nav.nav-tabs.mb-3 {
-        box-shadow: 0px 2px 9px 0px rgb(0 0 0 / 14%);
-    }
-    .nav-tabs.mb {
-        display: flex !important;
-    }
-    .nav-tabs {
-        padding: 0;
-    }
-    #modal-iframe-library .modal-dialog {
-        max-width: 100% !important;
     }
 }
 [data-block="lp"] h3 {
@@ -3904,11 +3805,11 @@ nav.focusmod #focus-mod {
     width: 80px;
     font-weight: bold;
 }
-@media(max-width: 950px) {
+/*@media(max-width: 950px) {
     #focus-mod {
         display: none !important;
     }
-}
+}*/
 /*focus-mod*/
 .dashboard-card-deck.one-row {
     overflow-x: auto;
@@ -6190,6 +6091,22 @@ body.format-topcoll.editing .course-content .right.side {
 .nav-tabs.mb {
     display: none;
 }
+
+#modal-iframe-library .modal-dialog {
+    max-width: 80%;
+}
+#back-quiz {
+    position: relative;
+    right: 28px;
+    background-color: #3c80bc;
+    color: #fff;
+    padding: 5px;
+    border-radius: 15px;
+}
+/*course app portal*/
+.back-focusmod {
+    display: none;
+}
 .participant-list {
     padding: 6px 15px;
     display: flex;
@@ -6200,8 +6117,169 @@ body.format-topcoll.editing .course-content .right.side {
     border-bottom: 1px solid #c0bdbd8a;
     margin-left: 70px;
 }
-#modal-iframe-library .modal-dialog {
-    max-width: 80%;
+.back-focusmod-desktop {
+    position: relative;
+    right: 28px; 
+    background-color: #3c80bc; 
+    color: #fff; padding: 5px; 
+    border-radius: 15px;
+}
+.d-flex-desktop {
+    display: flex;
+}
+
+/*app portal*/
+.number-question-mb {
+    display: none;
+}
+/*focusmod*/
+@media (max-width: 1060px) {
+    li.nav-item.border-left {
+        display: none;
+    }
+}
+@media (max-width: 576px) {
+    #page-course-view-topcoll.pagelayout-course .nav-tabs.course li,
+    body.jsenabled#page-course-view-topcoll #toggle-all,
+    #page-header {
+        display: none !important;
+    }
+    #page-course-view-topcoll #page-wrapper {
+        padding: 0 !important;
+    }
+    #page-course-view-topcoll .card#course-content .card-body {
+        padding: 0 !important;
+    }
+    body#page-course-view-topcoll {
+        background: #ffffff;
+    }
+    #page-course-view-topcoll.pagelayout-incourse .card-body {
+        background: #f5f5f5;
+    }
+    #page-course-view-topcoll .sectionhead {
+        border: 1px solid #007bff;
+        background: white !important;
+    }
+    #page-course-view-topcoll .sectionhead .the_toggle {
+        position: relative;
+    }
+    #page-course-view-topcoll .sectionhead.active h3.sectionname {
+        color: white;
+    }
+    #page-course-view-topcoll .sectionhead.active {
+        border: 0;
+        background: linear-gradient(to right, #007BFF 0%, #B7D7F6 100%) !important;
+    }
+    #page-course-view-topcoll .course-content ul.ctopics li.section.main .left {
+        padding: 9px 5px 10px 5px !important;
+        color: white;
+        margin-top: 0 !important;
+        width: 45px;
+        margin-right: 10px;
+        border-radius: 8px 0 0 8px;
+        position: relative;
+    }
+    #page-course-view-topcoll .course-content ul.ctopics li.section.main .left-before {
+        background: #007bff;
+    }
+    #page-course-view-topcoll .course-content ul.ctopics li.section.main .left-before:before {
+        position: absolute;
+        content: '';
+        left: 40px;
+        right: 0;
+        top: 1px;
+        width: 12px;
+        height: 36px;
+        border-radius: 8px;
+        background: white;
+    }
+    #page-course-view-topcoll .course-content #section-0 .left.side{
+        display: none !important;
+    }
+    #page-course-view-topcoll .section.img-text {
+        margin: 5px -10px 5px -10px;
+        background: white;
+    }
+    #page-course-view-topcoll .section li.activity {
+        padding: .5em 0.8em;
+        position: relative;
+    }
+    #page-course-view-topcoll .section li.activity:before {
+        position: absolute;
+        content: '';
+        top: 0;
+        left: 53px;
+        right: 0;
+        bottom: 1px;
+        border-bottom: 1px solid #80808033;
+    }
+    body.format-topcoll .course-content ul.ctopics li.section.main {
+        margin: 4px 1px 6px 1px !important;
+    }
+    .icon-opensection-mb {
+        display: block !important;
+        position: absolute;
+        right: 7px;
+        top: 8px;
+        filter: contrast(0.6);
+    }
+    .pagelayout-course ul.nav.nav-tabs.mb-3 {
+        box-shadow: 0px 2px 9px 0px rgb(0 0 0 / 14%);
+    }
+    .nav-tabs.mb {
+        display: flex;
+    }
+    .nav-tabs {
+        padding: 0;
+    }
+    #modal-iframe-library .modal-dialog {
+        max-width: 100% !important;
+    }
+    /*focusmod app*/
+    .navbar.focusmod {
+        background: #007bff;
+        min-height: 45px;
+    }
+    .region-main-box {
+        margin-top: 45px;
+    }
+    .menu-left .page-header-headings a {
+        color: white;
+        display: inline-block;
+        width: 315px;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+        text-align: center;
+    }
+    .icon-back-focusmod {
+        display: flex;
+        background: white;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+    nav.focusmod #focus-mod,
+    .header-progress-focusmod {
+        display: none !important;
+    }
+    nav.focusmod .menu-left {
+        width: 100%;
+        max-width: 100%;
+    }
+    .course-info-focus {
+        display: flex;
+    }
+    .page-header-headings {
+        display: flex;
+    }
+/*    body#page-course-view-topcoll {
+        overflow: hidden;
+    }*/
 }
 #course-iframe,
 #mod-iframe {

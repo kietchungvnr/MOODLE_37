@@ -58,6 +58,9 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
         if(width > 576) {
             $('.nav-tabs.multi-tab li:first-child a').click();
         }
+        if(width <= 576 && $('body.format-topcoll').hasClass('editing')) {
+            $('#page-header .btn.btn-primary').click();
+        }
     })
     
 });
