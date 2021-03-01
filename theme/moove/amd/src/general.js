@@ -6,12 +6,12 @@ require.config({
 });
 define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], function($, Config, Cookie, iframetracker) {
     "use strict";
-    $(window).on('load', function() {
-        var getSpa = Cookie.getCookie('spa');
-        if(getSpa) {
-            document.cookie = 'spa=; max-Age=-1;path=/';
-        }
-    });
+    // $(window).on('load', function() {
+    //     var getSpa = Cookie.getCookie('spa');
+    //     if(getSpa) {
+    //         document.cookie = 'spa=; max-Age=-1;path=/';
+    //     }
+    // });
     
     window.onbeforeunload = function() {
         var baseUrl = Cookie.getCookie('baseUrl');
@@ -64,11 +64,14 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
         $('#course-iframe').on('load', function() {
             $('#course-iframe').iframeTracker({
                 blurCallback: function(event) {
+                    $('body').focus();
                     Cookie.setCookie('spa', 'true');
+                    console.log('spa');
                 },
                 outCallback: function(element, event) {
                     this._overId = null; // Reset hover iframe wrapper i
                     document.cookie = 'spa=; max-Age=-1;path=/';
+                    console.log('unspa');
                 },
                 _overId: null
             });
@@ -76,7 +79,6 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
             const iframes = iFrameResize({ log: false }, '#course-iframe');
             $('#region-main .loading-page').removeClass('active');
         });
-        
     });
 
     

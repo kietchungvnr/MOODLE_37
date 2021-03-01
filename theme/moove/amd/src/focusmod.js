@@ -208,9 +208,11 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                     //     },
                     //     _overId: null
                     // });
-                    if(modType == 'resource' || modType == 'quiz') {
+                    if(modType == 'resource') {
                         var vh = $('body').height();
                         $('#mod-iframe').height(vh);
+                    } else if (modType == 'quiz') {
+                        // To do nothing...
                     } else {
                         const iframes = iFrameResize({ log: false }, '#mod-iframe');
                     }
