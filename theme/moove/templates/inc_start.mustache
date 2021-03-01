@@ -5314,6 +5314,9 @@ input.apple-switch:checked:after {
     font-size: 14px !important;
     font-weight: bold;
     color: #595858;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 #page-course-view-topcoll .sectionhead {
     background: #d3d3d366;
@@ -6095,6 +6098,12 @@ body.format-topcoll.editing .course-content .right.side {
 #modal-iframe-library .modal-dialog {
     max-width: 80%;
 }
+#page-user-profile .post-slide6 .progress {
+    font-size: 10px;
+    line-height: 12px;
+    text-align: center;
+    color: black;
+}
 #back-quiz {
     position: relative;
     right: 28px;
@@ -6130,6 +6139,9 @@ body.format-topcoll.editing .course-content .right.side {
 
 /*app portal*/
 .number-question-mb {
+    display: none;
+}
+#header-quiz-mb {
     display: none;
 }
 /*focusmod*/
@@ -6277,9 +6289,12 @@ body.format-topcoll.editing .course-content .right.side {
     .page-header-headings {
         display: flex;
     }
-/*    body#page-course-view-topcoll {
-        overflow: hidden;
-    }*/
+    #header-quiz-mb {
+        display: block;
+    }
+    #header-quiz-ds {
+        display: none !important;
+    }
 }
 #course-iframe,
 #mod-iframe {

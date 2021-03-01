@@ -32,6 +32,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         if (fm == "focusmod") {
             /// Hiện các element khi thoát chế độ focusmode
             $('body').removeClass('focusmod');
+            $('body').removeAttr('style');
             $('#region-main .loading-page').removeClass('active');
             $('#setting-context').removeClass('d-none');
             $('#sidepreopen-control').removeClass('d-none');
@@ -54,6 +55,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             document.cookie = 'cookie=; max-Age=-1;path=/';
         } else {
             /// Ẩn các element khi bật chế độ focusmode
+            $('body').attr('style','overflow:hidden !important');
             $('body').addClass('focusmod');
             $('footer,.all-header,#page-header').slideUp();
             $('.fixed-sidebar-left').addClass('d-none');
@@ -81,13 +83,13 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
     $(window).resize(function() {
         var fm = Cookie.getCookie('cookie')
         var width = $(window).width();
-        if (width <= 576) {
-            if (fm == "focusmod") {
-                $('.nav.multi-tab').slideUp();
-            }
+        if (width <= 576 && fm == "focusmod") {
+            $('.nav.multi-tab').slideUp();
+        }
+        if (width > 576 && fm == "focusmod") {
+            $('.page-header').slideUp()
         }
     })
-
     // Xử dropdown khi click
     $(".dropdown-content .card-header.level1").click(function() {
         var id = $(this).attr("id");
@@ -224,11 +226,8 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                                 var quizName = $('div.dropdown-content-2 a.active').text();
                                 var moduleId = $('div.dropdown-content-2 a.active').attr('module-id');
                                 if(width > 576) {
-                                    $('#header-main').attr('style', 'display: none!important');
                                     quizHeader.after('<nav class="fixed-top navbar moodle-has-zindex focusmod d-flex" id="header-quiz"><div class="loading-page"></div><span class="d-flex m-auto font-weight-bold" style="font-size:22px">'+quizName+'</span><span class="back-focusmod-desktop" id="back-focusmod" class="cl-cursor"><i class="fa fa-share" style="margin: 0 5px;position: relative;top: 1px;" aria-hidden="true"></i><span style="margin-right:5px">Quay lại</span></span></nav>');
                                 } else {
-                                    $('body').attr('style','overflow:hidden !important');
-                                    $('#header-quiz').attr('style', 'display: none!important');
                                     var html = '<div class="d-flex menu-left">'
                                         html += '<div class="course-info-focus">'
                                         html += '<div class="icon-back-focusmod" id="back-focusmod"><i class="fa fa-chevron-left mr-1" aria-hidden="true"></i></div>'
