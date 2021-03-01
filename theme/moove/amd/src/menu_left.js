@@ -12,7 +12,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             Cookie.setCookie('menu', 'openmenu');
         } else {
             $('#btn-menu i').removeClass('fa-align-left').addClass('fa-align-right');
-            document.Cookie = 'menu=; max-Age=-1;path=/';
+            document.cookie = 'menu=; max-Age=-1;path=/';
         }
     })
     $('.fixed-sidebar-left').hover(function() {

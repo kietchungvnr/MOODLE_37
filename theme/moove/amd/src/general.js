@@ -12,9 +12,7 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
             document.cookie = 'spa=; max-Age=-1;path=/';
         }
     });
-    window.onload = function() { 
-     document.cookie = 'spa=; max-Age=-1;path=/';
-    } 
+    
     window.onbeforeunload = function() {
         var baseUrl = Cookie.getCookie('baseUrl');
         if(baseUrl) {
@@ -39,11 +37,7 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
             Cookie.setCookie('baseUrl', window.location.href);    
         }
     }
-    var first = true;
-    console.log(first);
     $('ul.nav-tabs.course li').click(function(e) {
-        console.log(false)
-        first = false;
         $(this).addClass('active').siblings().removeClass('active');
     	Cookie.setCookie('spa', 'true');
         var _this = this;
@@ -71,24 +65,13 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
             $('#course-iframe').iframeTracker({
                 blurCallback: function(event) {
                     Cookie.setCookie('spa', 'true');
-                    console.log('spa');
                 },
                 outCallback: function(element, event) {
-                    console.log(event, element)
                     this._overId = null; // Reset hover iframe wrapper i
-
                     document.cookie = 'spa=; max-Age=-1;path=/';
-
-                    $(document).ready( function() { 
-                        console.log('unspa');
-                    }) 
-                    
                 },
                 _overId: null
             });
-            // $('#course-iframe').iframeTracker(function(event) {
-            //     console.log(event)
-            // });
             $('#course-iframe').removeClass('d-none')
             const iframes = iFrameResize({ log: false }, '#course-iframe');
             $('#region-main .loading-page').removeClass('active');

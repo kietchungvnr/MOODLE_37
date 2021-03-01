@@ -159,7 +159,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         var _this = $(this);
         var url = _this.attr('data-focusmode-url');
         var modType = _this.attr('data-mod-type');
-        //var height = $(window).height()
+        var height = $(window).height()
         if($('body').hasClass('focusmod')) {
             Cookie.setCookie('cookie', 'focusmod');
         }
@@ -181,6 +181,8 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
 
         if(modType == 'resource') {
             var iframe = '<iframe id="mod-iframe" src="'+url+'" height="768" frameBorder="0"></iframe>';
+        } else if(modType == 'quiz') {
+            var iframe = '<iframe id="mod-iframe" src="'+url+'" height="'+height+'" frameBorder="0"></iframe>';
         } else {
             var iframe = '<iframe id="mod-iframe" src="'+url+'" frameBorder="0"></iframe>';
         }
@@ -192,19 +194,19 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             $('.dropdown-content').attr('style', 'display: none');
             setTimeout(function() {
                 try {
-                    $('#mod-iframe').iframeTracker({
-                        blurCallback: function(event) {
-                            console.log(1)
-                            Cookie.setCookie('cookie', 'focusmod');
-                        },
-                        outCallback: function(element, event) {
-                            console.log(2)
-                            this._overId = null; // Reset hover iframe wrapper i
-                            document.cookie = 'cookie=; max-Age=-1;path=/';
-                        },
-                        _overId: null
-                    });
-                    if(modType == 'resource') {
+                    // $('#mod-iframe').iframeTracker({
+                    //     blurCallback: function(event) {
+                    //         console.log(1)
+                    //         Cookie.setCookie('cookie', 'focusmod');
+                    //     },
+                    //     outCallback: function(element, event) {
+                    //         console.log(2)
+                    //         this._overId = null; // Reset hover iframe wrapper i
+                    //         document.cookie = 'cookie=; max-Age=-1;path=/';
+                    //     },
+                    //     _overId: null
+                    // });
+                    if(modType == 'resource' || modType == 'quiz') {
                         var vh = $('body').height();
                         $('#mod-iframe').height(vh);
                     } else {
@@ -277,27 +279,5 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
     $('.back-focusmod').click(function() {
         $('#focus-mod').click();
     })
-    // function cookie
-    function setCookie(cname, cvalue, exdays) {
-        var d = new Date();
-        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-        var expires = "expires=" + d.toUTCString();
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
 
-    function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }
 });

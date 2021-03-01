@@ -33,7 +33,7 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
                 }
             })
             //
-            setTimeOut(function() {
+            setTimeout(function() {
                 var text = $('#quiz-time-left').text()
                 if(text == "") {
                     $('#quiz-time-left').css({'padding':0});
