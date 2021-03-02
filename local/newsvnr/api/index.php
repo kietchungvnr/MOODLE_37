@@ -17,5 +17,6 @@ require __DIR__ . '../src/hrm/routes.php';
 
 require __DIR__ . '../src/ebm/routes.php';
 
+require __DIR__ . '../src/lms/routes.php';
 
 $app->run();
