@@ -399,6 +399,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
 
     public function right_sidebar_menu() {
         global $CFG;
+        $theme = theme_config::load('moove');
+        $array = explode(',',$theme->settings->menuitem);
         $output = '';
         if(isloggedin()) {
             $theme = theme_config::load('moove');
@@ -412,7 +414,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $forum = $CFG->wwwroot . '/local/newsvnr/forum.php';
             $calendar = $CFG->wwwroot . '/calendar/view.php?view=month';
             $files = $CFG->wwwroot . '/user/files.php';
-            // Danh mục chính
+            // Danh mục học viên - giáo viên
             $output .= '<li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>'.get_string('private','theme_moove').'</span></li>';
             if(isset($theme->settings->displayhome) && $theme->settings->displayhome == 1){
                 $output .= '<li class="menu-link"><a href="'.$home .'"><i class="fa fa-home mr-3"></i>'. get_string('home', 'theme_moove') .'</a></li>';
@@ -428,18 +430,29 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 $output .= '<li class="menu-link d-flex align-items-center click-menu-expand" id="teachercourse"><a href="javascript:"><i class="fa fa-graduation-cap mr-3" aria-hidden="true"></i>'.get_string('myteachingcourses','local_newsvnr').'  </a><i class="fa fa-angle-right rotate-icon float-right pl-3 pr-3"></i></li>';
                 $output .= '<ul class="dropdown-menu content-menu-expand teachercourse" role="menu" id="drop-course-by-student">'.$this->nav_coursebyteacher().'</ul>';
             }
+            // Danh mục chính
+            $output .= '<div class="menuitem-custom">';
             $output .= '<li><hr class="light-grey-hr mb-10"></li>';
-            // Danh mục học viên - giáo viên
             $output .= '<li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>'.get_string('main','theme_moove').'</span></li>';
-            $output .= '<li class="menu-link"><a href="'.$examonline .'"><i class="fa fa-pencil-square mr-3" aria-hidden="true"></i>'. get_string('examonline', 'theme_moove') .'</a></li>';
-            $output .= '<li class="menu-link"><a href="'.$course .'"><i class="fa fa-university mr-3" aria-hidden="true"></i>'. get_string('course', 'theme_moove') .'</a></li>';
-            $output .= '<li class="menu-link"><a href="'.$library .'"><i class="fa fa-book mr-3"></i>'. get_string('library', 'theme_moove') .'</a></li>';
-            $output .= '<li class="menu-link"><a href="'.$filelibrary .'"><i class="fa fa-folder-open mr-3"></i>'. get_string('filelibrary', 'theme_moove') .'</a></li>';
-            $output .= '<li class="menu-link"><a href="'.$news .'"><i class="fa fa-newspaper-o mr-3"></i>'. get_string('news', 'theme_moove') .'</a></li>';
-            $output .= '<li class="menu-link"><a href="'.$forum .'"><i class="fa fa-users mr-3"></i>'. get_string('forum', 'theme_moove') .'</a></li>';
-            
-
-
+            if(!in_array('exam',$array)) {
+                $output .= '<li class="menu-link"><a href="'.$examonline .'"><i class="fa fa-pencil-square mr-3" aria-hidden="true"></i>'. get_string('examonline', 'theme_moove') .'</a></li>';
+            }
+            if(!in_array('course',$array)) {
+                $output .= '<li class="menu-link"><a href="'.$course .'"><i class="fa fa-university mr-3" aria-hidden="true"></i>'. get_string('course', 'theme_moove') .'</a></li>';
+            }
+            if(!in_array('library',$array)) {
+                $output .= '<li class="menu-link"><a href="'.$library .'"><i class="fa fa-book mr-3"></i>'. get_string('library', 'theme_moove') .'</a></li>';
+            }
+            if(!in_array('systemresource',$array)) {
+                $output .= '<li class="menu-link"><a href="'.$filelibrary .'"><i class="fa fa-folder-open mr-3"></i>'. get_string('filelibrary', 'theme_moove') .'</a></li>';
+            }
+            if(!in_array('news',$array)) {
+                $output .= '<li class="menu-link"><a href="'.$news .'"><i class="fa fa-newspaper-o mr-3"></i>'. get_string('news', 'theme_moove') .'</a></li>';
+            }
+            if(!in_array('forum',$array)) {
+                $output .= '<li class="menu-link"><a href="'.$forum .'"><i class="fa fa-users mr-3"></i>'. get_string('forum', 'theme_moove') .'</a></li>';
+            }
+            $output .= '</div>';
         } else {
             $dashboard = $CFG->wwwroot . '/my/';
             $output .= '<li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>'.get_string('main','theme_moove').'</span></li>';

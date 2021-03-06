@@ -1,0 +1,158 @@
+<style type="text/css">
+    .que.multianswer .qtext {
+        display: none;
+    }
+    body {
+        background: white !important;
+    }
+    #region-main,
+    .que .formulation {
+        border: 0 !important;
+        background: transparent !important;
+    }
+    #page-question-preview .que .info {
+        float: none;
+        width: auto;
+        background: transparent;
+        border: none;
+    }
+    #page-question-preview .multianswer .formulation  {
+        padding: 0 5px;
+        color: black;
+    }
+    #page-question-preview .multianswer .formulation select,
+    #page-question-preview .multianswer .formulation input {
+        height: 30px;
+    }
+    #page-question-preview .que.multianswer .answer div.r0, .que.multianswer .answer div.r1 {
+        display: flex;
+        align-items: center;
+    }
+    #page-question-preview .multianswer.que label {
+        margin-left: 10px;
+        margin-bottom: 0;
+    }
+    .que.multianswer td.r0,
+    .que.multianswer td.r1 {
+        display: flex;
+        align-items: center;
+    }
+    #page-question-preview .que .content {
+        margin: 0
+    }
+/*    .que span.qno {
+        display: none;
+    }*/
+    .number-question-mb {
+        font-size: 14px;
+        color: black;
+        display: none;
+    }
+    #page-question-preview .que .info {
+        margin-bottom: 0;
+    }
+    #page-question-preview .que .qtext {
+        margin-bottom: 0;
+        font-size: 14px;
+        color: black;
+    }
+    #page-question-preview .que .formulation {
+        padding: 0;
+    }
+    #page-question-preview #page {
+        margin-top: 0;
+    }
+    .que .ablock {
+        color: black;
+        font-size: 14px;
+    }
+    .que {
+        display: block;
+        background: white;
+        padding: 0;
+        margin: 0;
+        border-radius: 8px;
+        margin-bottom: 0 !important;
+    }
+    .que .info {
+        float: none;
+        height: auto;
+        border: 0;
+        margin-bottom: 0;
+        background: transparent;
+        width: auto;
+        padding: 12px 5px 0 5px;
+    }
+    .que.multianswer .info {
+        padding: .5em 0;
+    }
+    .que .info>div {
+        margin-top: 0;
+    }
+    .que .qtext {
+        margin-bottom: 0;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        max-width: inherit;
+    }
+    .que .formulation {
+        border: none;
+        background: transparent;
+        padding: 0;
+        margin-bottom: 0;
+    }
+    .que span.qno {
+        background: #3c80bc;
+        border-radius: 50%;
+        padding: 10px 15px;
+        color: white;
+        margin-right: 10px;
+        width: 40px;
+        text-align: center;
+        height: 40px;
+    }
+    .que.multichoice .ablock,
+    .que.truefalse .ablock{
+        display: flex;
+        margin-bottom: 0;
+    }
+    .content .ablock,
+    .qtype_multichoice_clearchoice {
+        margin-left: 55px !important;
+    }
+    .que .formulation .qtext{
+        display: none;
+    }
+    .que.essay .ablock {
+        margin:10px;
+    }
+    .que.multichoice .ablock .prompt,
+    .que.truefalse .ablock .prompt {
+        margin-right: 20px;
+    }
+    .d-flex-desktop {
+        display: flex;
+    }
+    .multianswer .qtext,
+    .multianswer .hr-quiz {
+        display: none;
+    }
+    .multianswer .formulation select,
+    .multianswer .formulation input {
+        height: 30px;
+        margin: 3px;
+    }
+    #page-question-preview .que h3.no {
+        line-height: 3;
+    }
+    .mform {
+        overflow: hidden;
+    }
+    .video-js {
+        width: 1000px !important;
+    }
+    .video-js .vjs-big-play-button {
+        display: none;
+    }
+</style>

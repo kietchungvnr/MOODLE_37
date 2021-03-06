@@ -477,7 +477,6 @@ function showMenuLi($menus, $table_name)
 {
     switch ($table_name) {
         case 'mdl_orgstructure':
-        case 'mdl_library_folder':
             $arr = array();
                 foreach ($menus as $value) {
                     $arr['id'] = $value->id;

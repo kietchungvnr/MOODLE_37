@@ -136,6 +136,7 @@ require(['theme_moove/chatbot']);
 
 var id = $('.new-detail-chat').attr('data');
 $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussionid='+id);
+document.cookie = 'cookie=; max-Age=-1;path=/';
 {{/js}}
 <script type="text/javascript">
     function setPositionWindow(gridname,top) {
@@ -509,7 +510,6 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             });
         });
     }
-
     // Xóa file trong tài liệu hệ thống
     const deleteFile = (fileName, filePath, id) => {
         require(['jquery', 'core/config'], ($, Config) => {
@@ -534,7 +534,6 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             });
         });
     }
-
     // Duyệt file trong tài liệu hệ thống
     const acceptFile = (id) => {
         require(['jquery', 'core/config', 'local_newsvnr/requestfiles'], ($, Config, Grid) => {
@@ -558,7 +557,6 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             });
         });
     }
-
     // Kiểm tra quyền trong tài liệu hệ thống
     const checkRoles = () => {
         require(['jquery', 'core/config'], ($, Config) => {

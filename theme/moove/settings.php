@@ -198,7 +198,18 @@ if ($ADMIN->fulltree) {
         get_string('administrationtabdesc', 'theme_moove'), [], $listtab);
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
-
+    // Show/Hidden item menu 
+    $listmenuitem = [
+            'exam' => get_string('exam', 'local_newsvnr'),
+            'course' => get_string('course','local_newsvnr'),
+            'library' => get_string('library','local_newsvnr'),
+            'systemresource' => get_string('systemresource', 'local_newsvnr'),
+            'news' => get_string('news','local_newsvnr'),
+            'forum' => get_string('forum','local_newsvnr'),
+    ];
+    $setting = new admin_setting_configmultiselect('theme_moove/menuitem', get_string('listmenuitem', 'local_newsvnr'),
+    get_string('listmenuitemdesc', 'local_newsvnr'), [], $listmenuitem);
+    $page->add($setting);
     // Change dashboad new and old (3.7 and 3.9)
     $name = 'theme_moove/switch_dashboard';
     $title = get_string('switch_dashboard', 'theme_moove');

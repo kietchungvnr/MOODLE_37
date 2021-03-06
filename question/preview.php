@@ -1,21 +1,3 @@
-<style type="text/css">
-    #techinfo_inner .notifytiny {
-        font-size: 15px;
-    }
-    .collapsibleregioncaption a {
-        font-size: 24px;
-    }
-    #techinfo_sizer {
-        padding: 0px 15px;
-    }
-    #id_displayoptionsheader .custom-select {
-        width: 262px;
-    }
-    .col-12 #region-main {
-        padding: 15px;
-        overflow: hidden;
-    }
-</style>
 <?php
 // This file is part of Moodle - http://moodle.org/
 //
@@ -51,7 +33,8 @@
 require_once(__DIR__ . '/../config.php');
 require_once($CFG->libdir . '/questionlib.php');
 require_once(__DIR__ . '/previewlib.php');
-
+$css = file_get_contents($CFG->dirroot . '/theme/moove/css/preview.css');
+echo $css;
 /**
  * The maximum number of variants previewable. If there are more variants than this for a question
  * then we only allow the selection of the first x variants.

@@ -57,4 +57,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             $(".search_form_fp i").click();
         }
     })
+    if($('.menuitem-custom .menu-link').length == 0) {
+        $('.menuitem-custom').css('display','none');
+    }
 });
