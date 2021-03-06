@@ -561,3 +561,5 @@ $string['systemresource'] = "Tài nguyên hệ thống";
 $string['exam'] = "Kỳ thi";
 $string['listmenuitem'] = "Danh sách các mục của menu hệ thông";
 $string['listmenuitemdesc'] = "Ẩn hoặc hiện các danh mục của menu hệ thống";
+$string['positionviewfolder'] = "Chức vụ được quyền xem ( Mặc định tất cả )";
+$String['selectposition'] = "Chọn chức vụ";

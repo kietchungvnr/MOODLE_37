@@ -1329,8 +1329,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
         return $count;
     }
+
     public function folder_tree_custom($menus, $id_parent = 0, &$output = '', $stt = 0) {
-        global $DB, $CFG, $OUTPUT;
+        global $DB, $CFG, $OUTPUT,$USER;
         $menu_tmp = array();
         foreach ($menus as $key => $item) {
             if ((int) $item->parent == (int) $id_parent) {
@@ -1339,54 +1340,62 @@ class core_renderer extends \theme_boost\output\core_renderer {
             }
         }
         if ($menu_tmp) {   
-            if($stt == 0)
-                $output .= '<ul class="tree-folder" role="menu"><li class="folder full-flex pl-3 title"><a href="javascript:void(0)" class="folder-child" id="0">'.get_string('folder', 'local_newsvnr').'</a><button type="button" class="btn" data-toggle="modal" data-target="#add-popup-modal-folder"><i class="fa fa-plus-circle mr-2" aria-hidden="true"></i>'.get_string('addfolder', 'local_newsvnr').'</button></li>';
+            if($stt == 0) {
+                $output .= '<ul class="tree-folder" role="menu"><li class="folder full-flex pl-3 title"><a href="javascript:void(0)" class="folder-child" id="0">'.get_string('folder', 'local_newsvnr').'</a>';
+                if(is_siteadmin()) {
+                    $output .= '<button type="button" class="btn" data-toggle="modal" data-target="#add-popup-modal-folder"><i class="fa fa-plus-circle mr-2" aria-hidden="true"></i>'.get_string('addfolder', 'local_newsvnr').'</button>';
+                }
+                $output .= '</li>';
+            }
             else {
                 if($id_parent == 0)
                     $output .= '<ul class=" 0">';
             }
             foreach ($menu_tmp as $item) {
-                if($item->visible == 1 || ($item->visible == 0 && is_siteadmin())) {
-                    if($item->visible == 0) {
-                        $visible = 'hide';
-                        $iconhide = $OUTPUT->pix_icon('t/show', get_string('show'));
-                    }
-                    else {
-                        $visible = 'show';
-                        $iconhide = '';
-                    }
-                    $output .= '<li onclick="getParentValue('.$item->id.',\''.$item->name.'\')" class="pl-3 folder '.$item->id.' '.$visible.'" id="'.$item->id.'" allmodule="'.$OUTPUT->recursive_module_folder($item->id).'">';
-                    $getcategory = $DB->get_records_sql('SELECT * FROM {library_folder} WHERE parent = :id',[ 'id' => $item->id] );
-                    if(empty($getcategory)){
-                        $output .= '<a style="margin-left: 18px;"></a>';
-                    } else { $output .= '<img class="icon-plus" id="'.$item->id.'" src="'.$CFG->wwwroot.'/theme/moove/pix/plus.png">';}
-                    $output .= '<img class="icon-folder" src="'.$CFG->wwwroot.'/theme/moove/pix/folder2.png"><a class="folder-child mr-1" tabindex="-1" href="javascript:void(0)" id="'.$item->id.'"">' . $item->name . '</a>'.$iconhide.'';
-                    $output .= '</li>';
-                    $output .= '<ul class="content-expand '.$item->id.' pl-3 '.$visible.'" >';
-                    foreach($menus as $childkey => $childitem) {
-                        // Kiểm tra phần tử có con hay không?
-                        if($childitem->visible == 0) {
+                $listposition = folder_permission_list($item->id);
+                if((!empty($listposition) && in_array($USER->orgpositionid,$listposition)) || is_siteadmin() || empty($listposition)) {
+                    if($item->visible == 1 || ($item->visible == 0 && is_siteadmin())) {
+                        if($item->visible == 0) {
                             $visible = 'hide';
                             $iconhide = $OUTPUT->pix_icon('t/show', get_string('show'));
-                        } else {
+                        }
+                        else {
                             $visible = 'show';
                             $iconhide = '';
                         }
-                        if($childitem->parent == $item->id && ($childitem->visible == 1 || is_siteadmin())) {
-                            $getcategory_child = $DB->get_records_sql('SELECT * FROM {library_folder} WHERE parent = :id',[ 'id' => $childitem->id] );
-                            $output .= '<li onclick="getParentValue('.$childitem->id.',\''.$childitem->name.'\')" class="pl-3 folder '.$childitem->id.' '.$visible.'" id="'.$childitem->id.'" allmodule="'.$OUTPUT->recursive_module_folder($childitem->id).'">';
-                            if(empty($getcategory_child)) {
-                                $output .= '<a style="margin-left: 18px;"></a>';
-                            } else { $output .= '<img class="icon-plus" id="'.$childitem->id.'" src="'.$CFG->wwwroot.'/theme/moove/pix/plus.png">';}
-                            $output .= '<img class="icon-folder" src="'.$CFG->wwwroot.'/theme/moove/pix/folder2.png"><a class="folder-child mr-1" tabindex="-1" href="javascript:void(0)" id="'.$childitem->id.'">' . $childitem->name . '</a>'.$iconhide.'';
-                            $output .= '</li>';
-                            $output .= '<ul class="content-expand '.$childitem->id.' pl-3">';
-                            unset($menus[$childkey]);
-                            $this->folder_tree_custom($menus, $childitem->id, $output,++$stt);
-                            $output .= '</ul>';
-                        } 
+                        $output .= '<li onclick="getParentValue('.$item->id.',\''.$item->name.'\')" class="pl-3 folder '.$item->id.' '.$visible.'" id="'.$item->id.'" allmodule="'.$OUTPUT->recursive_module_folder($item->id).'">';
+                        $getcategory = $DB->get_records_sql('SELECT * FROM {library_folder} WHERE parent = :id',[ 'id' => $item->id] );
+                        if(empty($getcategory)){
+                            $output .= '<a style="margin-left: 18px;"></a>';
+                        } else { $output .= '<img class="icon-plus" id="'.$item->id.'" src="'.$CFG->wwwroot.'/theme/moove/pix/plus.png">';}
+                        $output .= '<img class="icon-folder" src="'.$CFG->wwwroot.'/theme/moove/pix/folder2.png"><a class="folder-child mr-1" tabindex="-1" href="javascript:void(0)" id="'.$item->id.'"">' . $item->name . '</a>'.$iconhide.'';
+                        $output .= '</li>';
+                        $output .= '<ul class="content-expand '.$item->id.' pl-3 '.$visible.'" >';
+                        foreach($menus as $childkey => $childitem) {
+                            // Kiểm tra phần tử có con hay không?
+                            if($childitem->visible == 0) {
+                                $visible = 'hide';
+                                $iconhide = $OUTPUT->pix_icon('t/show', get_string('show'));
+                            } else {
+                                $visible = 'show';
+                                $iconhide = '';
+                            }
+                            if($childitem->parent == $item->id && ($childitem->visible == 1 || is_siteadmin())) {
+                                $getcategory_child = $DB->get_records_sql('SELECT * FROM {library_folder} WHERE parent = :id',[ 'id' => $childitem->id] );
+                                $output .= '<li onclick="getParentValue('.$childitem->id.',\''.$childitem->name.'\')" class="pl-3 folder '.$childitem->id.' '.$visible.'" id="'.$childitem->id.'" allmodule="'.$OUTPUT->recursive_module_folder($childitem->id).'">';
+                                if(empty($getcategory_child)) {
+                                    $output .= '<a style="margin-left: 18px;"></a>';
+                                } else { $output .= '<img class="icon-plus" id="'.$childitem->id.'" src="'.$CFG->wwwroot.'/theme/moove/pix/plus.png">';}
+                                $output .= '<img class="icon-folder" src="'.$CFG->wwwroot.'/theme/moove/pix/folder2.png"><a class="folder-child mr-1" tabindex="-1" href="javascript:void(0)" id="'.$childitem->id.'">' . $childitem->name . '</a>'.$iconhide.'';
+                                $output .= '</li>';
+                                $output .= '<ul class="content-expand '.$childitem->id.' pl-3">';
+                                unset($menus[$childkey]);
+                                $this->folder_tree_custom($menus, $childitem->id, $output,++$stt);
+                                $output .= '</ul>';
+                            } 
+                        }
+                        $output .= '</ul>';
                     }
-                    $output .= '</ul>';
                 }
             }
             if($stt == 0)

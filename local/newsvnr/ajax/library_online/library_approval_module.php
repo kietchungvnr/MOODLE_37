@@ -62,7 +62,6 @@ $sql = "SELECT *,
                 ORDER BY $ordersql";
 
 $get_list = $DB->get_records_sql($sql);
-// var_dump($get_list);die();
 foreach ($get_list as $value) {
     $obj     = new stdClass();
     $nameimg = array();

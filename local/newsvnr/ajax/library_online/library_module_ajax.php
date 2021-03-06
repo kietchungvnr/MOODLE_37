@@ -42,8 +42,8 @@ $strmodulefilter = "N'" . '%' . $modulefilter . '%' . "'";
 $data            = [];
 $modulebyfolder  = [];
 $output          = '';
-$allowmodule      = ['book', 'lesson', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt'];
-$paginationlink  = $CFG->wwwroot . '/local/newsvnr/ajax/library_online/library_module_ajax.php?folderid='.$folderid.'&search='.$search.'&page=';
+$allowmodule     = ['book', 'lesson', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt'];
+$paginationlink  = $CFG->wwwroot . '/local/newsvnr/ajax/library_online/library_module_ajax.php?folderid=' . $folderid . '&search=' . $search . '&page=';
 if ($searchtype == "searchcontent") {
     $searchsql = "(lp.title LIKE $strsearch OR lp.contents LIKE $strsearch OR pa.intro LIKE $strsearch OR pa.content LIKE $strsearch OR ur.externalurl LIKE $strsearch OR (bc.CONTENT LIKE $strsearch OR bc.title LIKE $strsearch))";
 } else {
@@ -51,22 +51,34 @@ if ($searchtype == "searchcontent") {
 }
 $sql = "SELECT DISTINCT lm.*,cm.id,CONCAT(rs.name,b.name,l.name,i.name,pa.name,ur.name) AS name,cm.visible,CONCAT(u.firstname,' ', u.lastname) as fullnamet,cm.deletioninprogress,cm.instance
                     FROM mdl_library_module lm
-                        JOIN mdl_course_modules cm on cm.id = lm.coursemoduleid 
+                        JOIN mdl_course_modules cm on cm.id = lm.coursemoduleid
                         LEFT JOIN mdl_resource rs on cm.instance = rs.id AND rs.course = 1
                         LEFT JOIN mdl_book b on cm.instance = b.id AND b.course = 1
-                        LEFT JOIN mdl_book_chapters bc on bc.bookid = b.id 
+                        LEFT JOIN mdl_book_chapters bc on bc.bookid = b.id
                         LEFT JOIN mdl_page pa on cm.instance = pa.id AND pa.course = 1
                         LEFT JOIN mdl_url ur on cm.instance = ur.id AND ur.course = 1
                         LEFT JOIN mdl_lesson l on cm.instance = l.id AND l.course = 1
                         LEFT JOIN mdl_lesson_pages lp on l.id = lp.lessonid
                         LEFT JOIN mdl_imscp i on cm.instance = i.id AND i.course = 1
-                        JOIN mdl_user u on u.id = lm.userid 
+                        JOIN mdl_user u on u.id = lm.userid
                         JOIN mdl_library_folder lf on lf.id = lm.folderid
-                    WHERE $searchsql AND lm.approval = 1 AND (lm.moduletype LIKE $strmodulefilter OR lm.minetype LIKE $strmodulefilter)";
-$start = $perPage->getStart($page);
+                        LEFT JOIN mdl_library_folder_permissions fp on fp.folderlibraryid = lf.id
+                        LEFT JOIN mdl_library_user_permissions up on up.permissionid = fp.id
+                        LEFT JOIN mdl_user uss on uss.orgpositionid = up.permissionid
+                    WHERE (uss.id is NULL or uss.id = $USER->id) AND $searchsql AND lm.approval = 1 AND (lm.moduletype LIKE $strmodulefilter OR lm.minetype LIKE $strmodulefilter)";
+$start = $perPage->getStart($page); 
 if ($folderid == 0) {
     $modulebyfolder = $DB->get_records_sql("$sql ORDER BY timecreated DESC OFFSET $start ROWS FETCH NEXT $perPage->itemPerPage ROWS only");
     $countall       = $DB->get_records_sql("$sql");
+    foreach ($countall as $key => $value) {
+        $listposition = folder_permission_list($value->folderid);
+        if (!empty($listposition) AND !is_siteadmin()) {
+            if (!in_array($USER->orgpositionid, $listposition)) {
+                unset($countall[$key]);
+                unset($modulebyfolder[$key]);
+            }
+        }
+    }
 } else {
     $modulebyfolder = $DB->get_records_sql("$sql AND lm.folderid =:folderid ORDER BY timecreated DESC OFFSET $start ROWS FETCH NEXT $perPage->itemPerPage ROWS only", ['folderid' => $folderid]);
     $countall       = $DB->get_records_sql("$sql AND lm.folderid =:folderid", ['folderid' => $folderid]);
@@ -103,8 +115,8 @@ if (!empty($modulebyfolder)) {
             $output .= '<td>' . convertunixtime('d/m/Y', $module->timecreated, 'Asia/Ho_Chi_Minh') . '</td>';
             $output .= '<td>' . $module->fullnamet . '</td>';
             $output .= '<td>';
-            if(is_siteadmin() || check_teacherrole($USER->id) != 0) {
-                $output .= html_writer::link('javascript:void(0)','<i class="icon fa fa-share mr-2" aria-hidden="true"></i>',array('id' => 'share-module-library','moduleid' => $module->id));
+            if (is_siteadmin() || check_teacherrole($USER->id) != 0) {
+                $output .= html_writer::link('javascript:void(0)', '<i class="icon fa fa-share mr-2" aria-hidden="true"></i>', array('id' => 'share-module-library', 'moduleid' => $module->id));
             }
             if (is_siteadmin()) {
 
@@ -125,7 +137,7 @@ if (!empty($modulebyfolder)) {
         }
     }
 }
-$perpageresult = $perPage->getAllPageLinks(count($countall), $paginationlink ,'#table-library');
+$perpageresult = $perPage->getAllPageLinks(count($countall), $paginationlink, '#table-library');
 if (!empty($perpageresult)) {
     $pagination = '<div class="col-md-12 mb-2" id="pagination" folderid="' . $folderid . '" search="' . $search . '">' . $perpageresult . '</div> </div>';
 } else {

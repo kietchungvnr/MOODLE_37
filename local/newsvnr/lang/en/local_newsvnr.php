@@ -561,3 +561,5 @@ $string['systemresource'] = "System resource";
 $string['exam'] = "Exam";
 $string['listmenuitem'] = "List item of menu";
 $string['listmenuitemdesc'] = "Show/Hidden item of menu";
+$string['positionviewfolder'] = "Position is viewed (Default all)";
+$string['selectposition'] = "Select position";

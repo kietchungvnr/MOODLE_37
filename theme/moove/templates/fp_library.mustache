@@ -136,6 +136,10 @@
 						<label class="mb-1" for="pwd">{{#str}}description, local_newsvnr{{/str}}:</label>
 						<textarea autocomplete="off" class="form-control" id="folderdes"></textarea>
 					</div>
+                    <div class="form-group">
+                        <label class="mb-1" for="pwd">{{#str}}positionviewfolder, local_newsvnr{{/str}}:</label>
+                        <select id="positionpermission" multiple="multiple" data-placeholder="{{#str}}selectposition, local_newsvnr{{/str}}"></select>
+                    </div>
 				</div>
 				<div class="modal-footer">
 				    <button type="button" class="btn btn-primary" action="add" id="add-new-folder">{{#str}}createfolder, local_newsvnr{{/str}}</button>
@@ -231,6 +235,9 @@
             var parentid = $('.edit-folder-popup .folderparent').attr('parentid');
             var folderdes = $('.edit-folder-popup #folderdes').val();
             var action =  $('#edit-folder-popup').attr('action');
+            var multiselect = $("#edit-positionpermission").data("kendoMultiSelect")
+            var listposition = multiselect.value();
+            var data = JSON.stringify(listposition);
             var settings = {
                 type: "GET",
                 processData: true,
@@ -239,7 +246,9 @@
                     folderid: folderid,
                     parentid: parentid,
                     folderdes: folderdes,
-                    action: action
+                    action: action,
+                    listposition: data
+
                 },
                 contenttype: "application/json"
             }
@@ -330,9 +339,19 @@
     }
     // Xóa , sửa , thêm thư mục con (action popup)
     const actionPopupLibrary = (folderid,foldername,action) => {
-        require(['jquery', 'core/config', 'alertjs'], ($, Config, alertify) => {
+        require(['jquery', 'core/config', 'alertjs','local_newsvnr/initkendogrid'], ($, Config, alertify, kendo) => {
             var script = Config.wwwroot + "/local/newsvnr/ajax/library_online/library_folder_ajax.php";
+            var scriptpermit = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_permission.php';
             // Xử lý thêm thư mục con
+            var kendosettings = {
+                url: scriptpermit,
+                type: 'GET',
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                data: {
+                    action: 'get_position',
+                }
+            };
             if (action == 'addchildfolder') {
                 var val = get_link_folder(folderid, foldername);
                 $('input.folderparent').val(val);
@@ -342,7 +361,7 @@
                 return;
             }
             var settings = {
-                type: "POST",
+                type: "GET",
                 processData: true,
                 data: {
                     folderid: folderid,
@@ -356,6 +375,16 @@
                 if(action == 'edit') {
                     $('#edit-popup-modal-folder').replaceWith(obj.result);
                     $('#edit-popup-modal-folder').modal('show');
+                    $("#edit-positionpermission").kendoMultiSelect({
+                        dataTextField: "positionname",
+                        dataValueField: "positionid",
+                        dataSource: {
+                                transport: {
+                                    read: kendosettings
+                                },
+                            },
+                        value: obj.positionpermisson
+                    });
                 } 
                 if(action == 'hide' || action == 'show') {
                     $('.tree-folder li.folder.'+folderid).toggleClass('show');
@@ -409,3 +438,26 @@
         })
     }
 </script>
+{{#js}}
+require(['jquery','core/config', 'local_newsvnr/initkendogrid','alertjs','core/str'],function($, Config, kendo, alertify, Str) {
+    var scriptpermit = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_permission.php';
+    var settings = {
+            url: scriptpermit,
+            type: 'GET',
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            data: {
+                action: 'get_position',
+            }
+        };
+    $("#positionpermission").kendoMultiSelect({
+        dataTextField: "positionname",
+        dataValueField: "positionid",
+        dataSource: {
+                transport: {
+                    read: settings
+                },
+            },
+    });
+})
+{{/js}}

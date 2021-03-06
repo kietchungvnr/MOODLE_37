@@ -2445,6 +2445,20 @@ function check_studentrole($userid) {
                                             AND ra.userid = :userid))', ['userid' => $userid]);
     return $check_is_student;
 }
+// Quyền xem thư mục thư viện
+function folder_permission_list($folderid) {
+    global $DB;
+    $listpositionid = [];;
+    $permission = $DB->get_record('library_folder_permissions',['folderlibraryid' => $folderid]);
+    if(!empty($permission)) {
+        $userpermissions = $DB->get_records('library_user_permissions',['permissionid' => $permission->id]);
+            foreach ($userpermissions as $value) {
+                $listpositionid[] = $value->positionid;
+            }
+    }
+    return $listpositionid;
+
+}
 // Lấy huy hiệu của người dùng
 function get_user_badge($userid) {
     global $CFG;

@@ -17,12 +17,14 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
         var scriptshare = "/local/newsvnr/ajax/library_online/library_share_module.php?action=";
         Str.get_strings(strings).then(function(s) {
             $('#add-new-folder').click(function() {
-                $(this).addClass('not-allow');
                 var foldername = $('.add-folder-popup #foldername').val();
                 var parentid = $('.add-folder-popup .folderparent').attr('parentid');
                 var folderdes = $('.add-folder-popup #folderdes').val();
                 var folderid = $(this).attr('forderid');
                 var action = $(this).attr('action');
+                var multiselect = $("#positionpermission").data("kendoMultiSelect")
+                var listposition = multiselect.value();
+                var data = JSON.stringify(listposition);
                 var settings = {
                     type: "GET",
                     processData: true,
@@ -31,7 +33,8 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
                         folderid: folderid,
                         parentid: parentid,
                         folderdes: folderdes,
-                        action: action
+                        action: action,
+                        listposition:data
                     },
                     contenttype: "application/json",
                 }
@@ -39,6 +42,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
                     alertify.alert(s[0], s[2]);
                     return;
                 }
+                $(this).addClass('not-allow');
                 $.ajax(scriptfolder, settings).then(function(response) {
                     var obj = $.parseJSON(response);
                     alertify.notify(obj.alert, 'success', 3);
