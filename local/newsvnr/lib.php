@@ -2004,6 +2004,40 @@ function get_link_file($module) {
     return $fullurl;
 }
 /**
+ * Lấy danh sách users trong 1 khóa học và custom điều kiện where:
+ * role, courseid, userid, etc..
+ * @param  [int] $userid      [Mã user]
+ * @param  string $customquery [String để custom điều kiện lọc]
+ * @return [array Object]
+ */
+function get_list_user_in_course($userid, $customquery = '') {
+    global $DB;
+    $query = "
+         SELECT *, 
+            (SELECT COUNT(u.id) FROM mdl_role_assignments ra
+                JOIN mdl_user u ON ra.userid = u.id
+                JOIN mdl_user_enrolments ue ON u.id = ue.userid 
+                JOIN mdl_enrol enr ON ue.enrolid = enr.id
+                JOIN mdl_course c ON enr.courseid = c.id
+                JOIN mdl_context ct ON ct.id = ra.contextid AND ct.instanceid = c.id
+            WHERE u.id = ?) AS total
+                    FROM (
+                        SELECT ROW_NUMBER() OVER (ORDER BY u.id) AS RowNum, c.id courseid,c.fullname coursename, CONCAT(u.firstname, ' ', u.lastname) fullname, u.id userid,r.shortname rolename
+                        FROM mdl_role_assignments ra
+                            JOIN mdl_user u ON ra.userid = u.id
+                            JOIN mdl_user_enrolments ue ON u.id = ue.userid 
+                            JOIN mdl_enrol enr ON ue.enrolid = enr.id
+                            JOIN mdl_course c ON enr.courseid = c.id
+                            JOIN mdl_context ct ON ct.id = ra.contextid AND ct.instanceid = c.id
+                            JOIN mdl_role r ON ra.roleid = r.id
+                        WHERE u.id = ?
+                    ) AS Mydata";
+    $data = $DB->get_records_sql($query, [$userid, $userid]);
+    return $data;
+}
+
+
+/**
  * Tạo node trên menu flat_nav
  * @param  global_navigation $navigation []
  * @return [type]                        []

@@ -453,3 +453,5 @@ $string['selectcoursedata'] = 'Select a lesson in course data!';
 $string['switch_dashboard'] = 'Switch to old dashboard 3.7';
 $string['switch_dashboarddesc'] = 'Switch dashboard between the old and new interfaces in version 3.7 and 3.9';
 $string['private'] = "Private";
+$string['chatbotelearning'] = "Elearning Assistant Chatbot";
+$string['chatbotelearningdesc'] = "Elearning Assistant Chatbot helps to quickly look up courses, scores, exams, courses or exams that are about to expire, etc ...";

@@ -244,6 +244,14 @@ if ($ADMIN->fulltree) {
     $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
     $page->add($setting);
 
+    // Hiện thị or ẩn chatbot
+    $name = 'theme_moove/chatbotelearning';
+    $title = get_string('chatbotelearning', 'theme_moove');
+    $description = get_string('chatbotelearningdesc', 'theme_moove');
+    $default = 0;
+    $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $page->add($setting);
+
     // Hiện thị or ẩn section tin tức
     $name = 'theme_moove/displaynews';
     $title = get_string('displaynews', 'theme_moove');

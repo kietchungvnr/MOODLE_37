@@ -87,7 +87,7 @@ $templatecontext['flatnavigation'] = $PAGE->flatnav;
 
 $themesettings = new \theme_moove\util\theme_settings();
 
-$templatecontext = array_merge($templatecontext, $themesettings->footer_items());
+$templatecontext = array_merge($templatecontext, $themesettings->footer_items(), $themesettings->get_vnr_chatbot());
 
 $usercourses = \theme_moove\util\extras::user_courses_with_progress($user);
 $PAGE->requires->strings_for_js(array(

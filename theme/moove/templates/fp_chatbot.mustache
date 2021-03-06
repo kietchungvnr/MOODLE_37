@@ -6,7 +6,7 @@
                     <div class="close">
                         <div data-size="normal" class="tpl-close">
                             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="#5e6165"></path>
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="#fff"></path>
                             </svg>
                         </div>
                     </div> 
@@ -14,79 +14,29 @@
                         <div class="tpl-avatar">
                             <div class="tpl-avatar-status" style="border-color: rgb(255, 255, 255); background: rgb(105, 222, 64);"></div> 
                             <div class="tpl-avatar-image">
-                                <div data-status="loaded" data-cover="true" class="lazy-img">
-                                    <img src="https://cdn.chatbot.com/widget/5ca71c7e431af645ebb0f6fc/eSHxrqmcEA__.png" alt="" class="lazy-img-loaded">
+                                <div data-status="loaded" data-cover="true" class="lazy-img bg-white">
+                                    <img src="/theme/moove/pix/chatbot-icon.png" alt="" class="lazy-img-loaded">
                                 </div>
                             </div>
                         </div>
                     </div> 
                     <div class="company">
-                        <div class="header" style="color: rgb(0, 0, 0);">
-                            Bot Ngu
+                        <div class="header">
+                            Trợ lý E-Learning
                         </div> 
                         <div class="status" style="color: rgb(155, 166, 179);">
-                            Online
+                            Trực tuyến
                         </div> 
                     </div>
                 </div>
                 <div class="conversation-chatbot">
+                    <div>
                     <div class="main-conversation-chatbot">
-                       {{!  <div class="user-chat">
-                            <div class="user-caption">
-                                you
-                            </div>
-                            <div class="user-response-wrapper">
-                                <div class="tpl-text-response-wrapper" data-type="user">
-                                        
-                                    <div class="tpl-text-response" >
-                                        ádasdsss
-                                    </div>   
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bot-chat">
-                            <div class="bot-caption">
-                                bot
-                            </div>
-                            <div class="bot-response-wrapper">
-                                <div class="tpl-text-response-wrapper" data-type="bot">
-                                        
-                                    <div class="tpl-text-response">
-                                        ádasdsss
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                            
-                        </div> }}
-                      
-                       {{!  <div class="help-chat">
-                            <div class="user-caption">
-                                you
-                            </div>
-                            <div class="help-response-wrapper">
-                                <div class="tpl-text-response-wrapper" data-type="help" >
-                                        
-                                    <div class="tpl-text-response" >
-                                        <ul class="list-group">
-                                            <div class="help-content-chatbot">
-                                                <li class="list-group-item">Xem danh sách khóa học</li>
-                                                <li class="list-group-item">Xem danh sách sách khóa giảng</li>
-                                                <li class="list-group-item">Xem danh sách sách điểm của các khóa học</li>
-                                                <li class="list-group-item">Xem sự kiện sắp hết hạn</li>
-                                                <li class="list-group-item">Xem khóa học sắp hết hạn</li>
-                                            </div>
-                                        </ul>
-                                    </div>   
-                                </div>
-                            </div>
-                        </div> }}
                     </div>
-                    <div class="bot-caption">
-                        <span class="tag-chatbot">Help</span> 
-                        <span class="tag-chatbot">Help</span> 
                     </div>
+                    {{! <div class="bot-caption d-none" style="position: absolute;bottom: 45px;">
+                        <span class="tag-chatbot" id="help-tag">Trợ giúp</span> 
+                    </div> }}
                 </div>
                 <div class="typing-chatbot">
                     <input type="text" maxlength="256" placeholder="Type your message here" style="color: rgb(150, 155, 166);" id="send-message" name="send-message">
@@ -97,6 +47,19 @@
                     </div>
                 </div>
             </div>
+           
         </div>
     </div>
+    <div class="view-detail-popup">
+                <div class="header-popup align-items-center d-flex header-popup">
+                    <span class="header-popup-result">Kết quả:</span>
+                </div>
+                <div class="content-popup">
+                    <div class="" id="report-chatbot"></div>
+                </div>
+                <div class="footer-popup">
+                    
+                </div>
+            </div>
+   
 </div>

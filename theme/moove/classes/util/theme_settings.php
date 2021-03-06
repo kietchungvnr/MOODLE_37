@@ -968,4 +968,11 @@ class theme_settings {
         return $templatecontext;
     }
 
+    // Hiện/ẩn chatbot
+    public function get_vnr_chatbot() {
+        $theme = theme_config::load('moove');
+        $templatecontext['chatbotelearning'] = $theme->settings->chatbotelearning;
+        return $templatecontext;
+    }
+
 }

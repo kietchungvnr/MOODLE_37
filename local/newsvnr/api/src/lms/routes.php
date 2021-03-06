@@ -1,4 +1,5 @@
 <?php
 
-//Tích hợp phòng ban, chức danh, chức vụ (EL - HRM)
 $app->post('/chatbot/hello', local_newsvnr\api\controllers\lms\chatbot\HelloController::class . ':hello');
+
+$app->post('/chatbot/mycourses', local_newsvnr\api\controllers\lms\chatbot\ReportController::class . ':list_course');

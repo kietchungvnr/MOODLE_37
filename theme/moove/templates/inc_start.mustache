@@ -4307,6 +4307,7 @@ select#formactionid {
     display: flex;
     margin:auto;
 }
+
 .single-blog-post.style2 .blog-content .post-title {
     font-size: 15px!important;
 }
@@ -6324,6 +6325,7 @@ body.format-topcoll.editing .course-content .right.side {
 body {
     height: auto;
 }
+/* Chatbot */
 #chatbot-chat {
     border: 0px;
     /*pointer-events: none;*/
@@ -6338,12 +6340,12 @@ body {
     right: 0px;
     max-height: 100%;
     border-radius: 15px;
-    /*display: none;*/
+    display: none;
 }
 .header-chatbot {
     position: relative;
     z-index: 3;
-    height: 100px;
+    height: 70px;
     width: 100%;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -6352,7 +6354,9 @@ body {
     -ms-flex-align: center;
     align-items: center;
     padding: 0 24px;
-    background: rgb(255, 255, 255);
+    background: linear-gradient(to right,rgb(35, 146, 236) 0%,rgb(13, 92, 156) 100%);
+    color: #fff !important;
+    background-blend-mode: overlay;
     -webkit-box-shadow: 0 9.5px 12.7px 0 rgba(0,0,0,.05);
     box-shadow: 0 9.5px 12.7px 0 rgba(0,0,0,.05);
 }
@@ -6374,7 +6378,7 @@ body {
 }
 .main-conversation-chatbot {
     height: 550px;
-    padding: 20px;
+    padding: 10px 20px 20px 20px;
 }
 
 .user-caption {
@@ -6425,11 +6429,11 @@ body {
     color: rgb(255, 255, 255);
     border-radius: 20px;
     font-size: 14px;
-    line-height: 20px;
+    line-height: 15px;
     word-wrap: break-word;
     max-width: 100%;
     padding: 15px 17px;
-    margin-bottom: 5px;
+    margin: 5px 0;
 }
 .tpl-text-response-wrapper[data-type=bot] .tpl-text-response {
     background-color: #fff;
@@ -6471,18 +6475,18 @@ body {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    padding-right: 20px;
+    padding-right: 15px;
     background: rgb(255, 255, 255);
     border-top-color: rgb(234, 234, 234);
 }
 .typing-chatbot input {
-    font-size: 16px;
-    line-height: 20px;
+    font-size: 14px;
+    line-height: 15px;
     height: 100%;
     -webkit-box-flex: 1;
     -ms-flex: 1 0 0px;
     flex: 1 0 0;
-    padding: 0 20px;
+    padding: 0 10px;
     border: 0;
     background: transparent;
     outline: 0;
@@ -6522,8 +6526,8 @@ body {
     height: 100%;
 }
 .header-chatbot .avatar {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     margin-right: 22px;
 }
 .tpl-avatar {
@@ -6573,7 +6577,7 @@ body {
     flex-shrink: 0;
     width: 0;
 }
-.app-wrapper .app-responsive {
+.app-wrapper, .app-responsive {
     height: 100%;
     width: 100%;
     max-width: 100%;
@@ -6610,35 +6614,41 @@ body {
     box-shadow: 0 4px 16px rgba(0,0,0,.25);
     border-radius: 15px;
     overflow: hidden;
+    right: 0px;
+    position: absolute;
 }
 .help-chat {
     margin-top: 5px;
 }
-.help-chat ul {
-    border-top: 5px solid #1177d1;
+.help-chat ul,
+.respone-tag-help-chat ul {
+    border-top: 3px solid #1177d1;
 }
-.help-chat ul li {
+.help-chat ul li,
+.respone-tag-help-chat ul li {
     cursor: pointer;
 }
-.help-chat ul li:hover {
+.help-chat ul li:hover,
+.respone-tag-help-chat ul li:hover {
     background-color: #5bc0de;
 }
-.help-response-wrapper {
-
-}
-.help-content-chatbot {
+.help-content-chatbot,
+.respone-tag-help-content-chatbot {
     overflow-y: scroll;
     max-height: 200px;
 }
-.help-chat .tpl-text-response {
+.help-chat .tpl-text-response,
+.respone-tag-help-chat .tpl-text-response {
     padding: 0;
     color: black;
     background:none;
 }
-.help-content-chatbot {
-    border-radius: 0 0 25px 25px;
+.help-content-chatbot,
+.respone-tag-help-content-chatbot {
+    /*border-radius: 0 0 25px 25px;*/
 }
-.help-content-chatbot::-webkit-scrollbar {
+.help-content-chatbot::-webkit-scrollbar,
+.respone-tag-help-content-chatbot::-webkit-scrollbar {
     display: none !important;
 }
 .spinme-right {
@@ -6726,11 +6736,11 @@ body {
 }
 .tag-chatbot {
     display: inline-block;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 18px;
-    padding: 5px;
+    padding: 6px;
     border: 1px solid #286efa;
-    border-radius: 6px;
+    border-radius: 10px;
     background-color: #fff;
     color: #286efa;
     cursor: pointer;
@@ -6739,6 +6749,159 @@ body {
     background-color: #286efa;
     color: #fff;
 }
+
+@media (max-width: 420px) {
+    .mini-popup-chatbot {
+        max-width: 591px !important;
+    }
+}
+@media (min-width: 421px) {
+    .mini-popup-chatbot {
+        max-width: 400px !important;
+    }
+}
+
+.mini-popup-chatbot {
+    position: fixed;
+    z-index: 100;
+    display: none;
+    right: 81px;
+    bottom: 55px;
+    width: 250px;
+    max-width: 250px;
+    box-shadow: 0 2px 6px 0 rgba(0,0,0,.4);
+    padding: 15px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #000;
+    margin-left: 10px;
+    cursor: pointer;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    word-wrap: break-word;
+}
+.mini-popup-chatbot::before {
+    content: '';
+    position: absolute;
+    right: -18px;
+    bottom: 10px;
+    display: block;
+    border: 9px solid transparent;
+    border-left: 9px solid #ccc;
+}
+.mini-popup-chatbot::after {
+    content: '';
+    position: absolute;
+    right: -15px;
+    bottom: 11px;
+    display: block;
+    border: 8px solid transparent;
+    border-left: 8px solid #fff;
+}
+
+.mini-popup-chatbot > p {
+    overflow: hidden;
+    word-break: break-word;
+    white-space: pre-line;
+    margin: 0;
+    padding: 0;
+    line-height: 1.1;
+}
+
+    .mini-popup-chatbot > span {
+        opacity: 0;
+    }
+    .mini-popup-chatbot:hover > span {
+        opacity: 1;
+    }
+
+.mini-popup-chatbot > span > svg {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    cursor: pointer;
+    padding: 7px;
+    margin: -5px;
+    box-sizing: content-box;
+}
+
+.mini-popup-chatbot > span:hover {
+    opacity: 0.8;
+}
+
+.mini-popup-chatbot_circle {
+    display: none;
+    position: absolute;
+    right: 2px;
+    top: -3px;
+    font-size: 14px;
+    background-color: #f00;
+    color: #fff;
+    border: 3px solid #fff;
+    padding: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    text-align: center;
+    line-height: 12px;
+    font-weight: bold;
+    box-sizing: content-box;
+}
+
+
+/*View report detail chatbot*/
+.view-detail-popup {
+    display: none;
+    flex-flow: column;
+    border-radius: 15px 0 0 15px;
+    box-shadow: 0px 0px 8px 2px rgba(35,47,53,.09);
+    position: absolute;
+    right: 370px;
+    top: 20px;
+    left: 10px;
+    margin-right: 20px;
+    width: auto;
+    height: 100%;
+    max-width: calc(100% - 40px);
+    max-height: calc(100% - 40px);
+   
+}
+.active.view-detail-popup  {
+    display: flex;
+}
+.header-popup {
+    height: 83px;
+    background: linear-gradient(to left,rgb(35, 146, 236) 0%,rgb(13, 92, 156) 100%);
+    border-radius: 15px 0 0 0;
+    border-bottom: 1px solid #E6E6E6;
+}
+.header-popup-result {
+    font-size: 1.2rem;
+    margin-left: 15px;
+    color: #fff;
+}
+.content-popup {
+    height: 620px;
+    background-color: #fff;
+}
+.footer-popup {
+    height: 58px;
+    background-color: #fff;
+    border-radius: 0 0 0 15px;
+    border-top: 1px solid #E6E6E6;
+}
+/*.k-header.k-grid-toolbar {
+    background-color: #3c8dbc;
+    border-color: #3c8dbc;
+}*/
+#report-chatbot .k-header.k-grid-toolbar {
+    background-color: #fff;
+    border-color: #fff;
+}
+/* Chatbot*/
+
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />
@@ -6763,10 +6926,20 @@ body {
 <body {{{ bodyattributes }}}>
     
 {{> core/local/toast/wrapper}}
-
 <a id="return-to-top" title="{{#str}}gotop, theme_moove{{/str}}" data-placement="left"><i class="fa fa-arrow-up"></i></a>
-<a id="chatbot-icon" title="{{#str}}focusmod, theme_moove{{/str}}" data-placement="left"><i class="fa fa-weixin"></i></a><a id="focus-mod" title="{{#str}}focusmod, theme_moove{{/str}}" data-placement="left"><i class="fa fa-expand"></i></a>
+{{#chatbotelearning}}
+<a id="chatbot-icon" title="{{#str}}focusmod, theme_moove{{/str}}" data-placement="left"><i class="fa fa-weixin"></i></a>
+<div class="mini-popup-chatbot">
+    Hi! 🤖 Tôi có thể giúp gì bạn?
+    <span id="close-mini-popup-chatbot">
+        <svg width="10" height="10" viewBox="0 0 2000 2000" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1490 1245q0 40-24 68l-136 136q-24 24-68 24t-68-28l-294-294-294 294q-24 24-68 24t-68-28l-136-136q-24-24-24-68t24-68l294-294-294-294q-24-24-24-68t24-68l136-136q24-24 68-24t68 28l294 294 294-294q24-24 68-28t68 28l136 136q28 24 24 68t-24 68l-294 294 294 294q24 24 24 68z" fill="#d4d4d4">
+            </path>
+        </svg>
+    </span>
+</div>
 {{>theme_moove/fp_chatbot}}
+{{/chatbotelearning}}
 <div class="modal123"></div>
 {{# hasopenmenu}}
     <div class="check-menu slide-nav-toggle">

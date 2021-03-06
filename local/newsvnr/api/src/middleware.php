@@ -12,7 +12,7 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
 	    				"/competencies",
 	    				// "/course-category",
     				],
-    "ignore"    => ["/api/token","/api/chatbot/hello"],
+    "ignore"    => ["/api/token","/api/chatbot/mycourses"],
     "secure"    => false,
     "error" 	=> function ($response, $arguments) {
     	// switch (json_last_error()) {

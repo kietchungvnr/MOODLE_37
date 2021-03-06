@@ -453,3 +453,5 @@ $string['selectcoursedata'] = 'Chọn bài học ở phần nội dung khóa h�
 $string['switch_dashboard'] = 'Chuyển đổi dashboard cũ 3.7';
 $string['switch_dashboarddesc'] = 'Chuyển đổi dashboard giữa 2 giao diện cũ và mới ở version 3.7 và 3.9';
 $string['Private'] = "Riêng tư";
+$string['chatbotelearning'] = "Elearning Assistant Chatbot";
+$string['chatbotelearningdesc'] = "Elearning Assistant Chatbot giúp hỗ trợ tra cứu nhanh các khóa học, điểm, bài thi, khóa học hoặc bài thi sắp hết hạn, etc...";

@@ -76,7 +76,7 @@ $templatecontext = [
 
 $themesettings = new \theme_moove\util\theme_settings();
 
-$templatecontext = array_merge($templatecontext, $themesettings->footer_items(), $themesettings->get_fullinfo_user(), $themesettings->get_data_dashboard_teacher(), $themesettings->get_vnr_dashboard_config());
+$templatecontext = array_merge($templatecontext, $themesettings->footer_items(), $themesettings->get_fullinfo_user(), $themesettings->get_data_dashboard_teacher(), $themesettings->get_vnr_dashboard_config(), $themesettings->get_vnr_chatbot());
 if (is_siteadmin()) {
     global $DB;
 

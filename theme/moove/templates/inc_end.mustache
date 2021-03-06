@@ -174,4 +174,16 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
         }
         return "";
     }
+    var showDetailPopup = function() {
+        require(['jquery', 'core/config'], ($, config) => {
+            $('#viewdetailpopup').click(function() {
+
+                $('.app-wrapper .opened').css('border-radius', '0 15px 15px 0');
+                $('.view-detail-popup').addClass('active');
+                var grid = $('#report-chatbot').data('kendoGrid');
+                    grid.refresh();
+            });
+        });
+    }
+
 </script>
