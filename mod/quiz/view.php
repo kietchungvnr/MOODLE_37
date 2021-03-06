@@ -140,7 +140,9 @@ if (!empty($grading_info->items)) {
 
 $title = $course->shortname . ': ' . format_string($quiz->name);
 $PAGE->set_title($title);
-$PAGE->set_heading($course->fullname);
+if($course->id != 1) {
+    $PAGE->set_heading($course->fullname);
+}
 $output = $PAGE->get_renderer('mod_quiz');
 
 // Print table with existing attempts.
@@ -257,7 +259,6 @@ if(!is_siteadmin() && $DB->record_exists('exam_user', ['userid' => $USER->id, 'r
 }
 
 echo $OUTPUT->header();
-
 if (isguestuser()) {
     // Guests can't do a quiz, so offer them a choice of logging in or going back.
     echo $output->view_page_guest($course, $quiz, $cm, $context, $viewobj->infomessages);

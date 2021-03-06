@@ -6201,13 +6201,43 @@ body.format-topcoll.editing .course-content .right.side {
         border: 0 !important;
         background: transparent;
     }
+    .qtext img {
+        width: 100%;
+    }
+    .formulation img {
+        width: 100%
+    }
+    .que .qtext {
+        display: block;
+    }
 }
-#course-iframe,
-#mod-iframe {
-    min-width: 100%;
+/*//////*/
+.multianswer .qtext,
+.multianswer .hr-quiz {
+    display: none;
 }
-body {
-    height: auto;
+.multianswer .formulation  {
+    padding: 0 5px;
+    color: black;
+}
+.multianswer .formulation select,
+.multianswer .formulation input {
+    height: 30px;
+}
+.que.multianswer .answer div.r0, .que.multianswer .answer div.r1 {
+    display: flex;
+    align-items: center;
+}
+.multianswer.que label {
+    margin-left: 10px;
+}
+.que.multianswer td.r0,
+.que.multianswer td.r1 {
+    display: flex;
+    align-items: center;
+}
+#page-mod-quiz-attempt .video-js .vjs-big-play-button {
+    display: none;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />

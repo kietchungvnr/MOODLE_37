@@ -2476,15 +2476,16 @@ function get_coursecard_info($courseid) {
     $obj->fullnamet      = $arr->fullnamet;
     $obj->countstudent   = $arr->studentnumber;
     if($progress > 0) {
-        $obj->enrolmethod = '<div class="progress">
-                                 <div class="progress-bar" role="progressbar" aria-valuenow="' . $progress . '"
-                                    aria-valuemin="0" aria-valuemax="100" style="width:' . $progress . '%">
-                                    ' . $progress . '%
-                                 </div>
-                              </div>';
+        $noprogress = "";
     } else {
-        $obj->enrolmethod = get_enrol_method($courseid);
+        $noprogress = $progress.'%';
     }
+    $obj->enrolmethod = '<div class="progress">
+                         <div class="progress-bar" role="progressbar" aria-valuenow="' . $progress . '"
+                            aria-valuemin="0" aria-valuemax="100" style="width:' . $progress . '%">
+                            ' . $progress . '%
+                         </div>'.$noprogress.'
+                      </div>';
     $obj->courseimage    = $theme_settings::get_course_images($courseobj, $obj->link);
     $obj->fullname = $course->fullname;
     if (isset($arr->id)) {

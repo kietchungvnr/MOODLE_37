@@ -123,7 +123,11 @@ $PAGE->blocks->add_fake_block($navbc, reset($regions));
 
 $headtags = $attemptobj->get_html_head_contributions($page);
 $PAGE->set_title($attemptobj->attempt_page_title($page));
-$PAGE->set_heading($attemptobj->get_course()->fullname);
+$quiz = $DB->get_record_sql("SELECT q.name from {course_modules} cm
+                                JOIN {quiz} q on q.id = cm.instance
+                            WHERE cm.id = :cmid",['cmid' => $cmid]); 
+$PAGE->set_heading($quiz->name);
+
 
 if ($attemptobj->is_last_page($page)) {
     $nextpage = -1;
@@ -138,6 +142,7 @@ if($check->hasiframe) {
     $quiztimer = html_writer::tag('div',html_writer::tag('span','', array('id' => 'quiz-time-left')),
         array('id' => 'quiz-timer', 'role' => 'timer',
             'aria-atomic' => 'true', 'aria-relevant' => 'text'));
+    $headermb = '';
     $headermb .= '<div class="list-question-mobile quiz" >'.$quiztimer.'<div class="list-question-scroll" style="display:-webkit-box">'.$navbc->contentmobile.'</div></div>';
     echo $headermb;
 }

@@ -6163,9 +6163,6 @@ body.format-topcoll.editing .course-content .right.side {
 .number-question-mb {
     display: none;
 }
-#header-quiz-mb {
-    display: none;
-}
 /*focusmod*/
 @media (max-width: 1060px) {
     li.nav-item.border-left {
@@ -6287,6 +6284,8 @@ body.format-topcoll.editing .course-content .right.side {
         text-align: center;
     }
     .icon-back-focusmod {
+        position: absolute;
+        left: 12px;
         display: flex;
         background: white;
         border-radius: 50%;
@@ -6307,16 +6306,31 @@ body.format-topcoll.editing .course-content .right.side {
     }
     .course-info-focus {
         display: flex;
+        justify-content: center;
+        width: 100%
     }
     .page-header-headings {
         display: flex;
     }
-    #header-quiz-mb {
+    .qtext img {
+        width: 100%;
+    }
+    .formulation img {
+        width: 100%
+    }
+    .que .qtext {
         display: block;
     }
-    #header-quiz-ds {
-        display: none !important;
-    }
+}
+/*//////////*/
+#page-mod-quiz-attempt .page-context-header {
+    background: white;
+    text-align: center;
+    padding: 5px 10px;
+    margin-top: 4px;
+    display: flex;
+    justify-content: center;
+    border-radius: 5px;
 }
 #course-iframe,
 #mod-iframe {
@@ -6902,6 +6916,36 @@ body {
 }
 /* Chatbot*/
 
+.multianswer .qtext,
+.multianswer .hr-quiz {
+    display: none;
+}
+.multianswer .formulation select,
+.multianswer .formulation input {
+    height: 30px;
+    margin: 3px;
+}
+.que.multianswer .answer div.r0, .que.multianswer .answer div.r1 {
+    display: flex;
+    align-items: center;
+}
+.multianswer.que label {
+    margin-left: 10px;
+}
+.multianswer .formulation  {
+    padding: 0 5px;
+}
+.que.multianswer td.r0,
+.que.multianswer td.r1 {
+    display: flex;
+    align-items: center;
+}
+#page-mod-quiz-attempt .video-js {
+    width: 1000px !important;
+}
+#page-mod-quiz-attempt .video-js .vjs-big-play-button {
+    display: none;
+}
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />
