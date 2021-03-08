@@ -3827,11 +3827,11 @@ nav.focusmod #focus-mod {
     border-radius: 35px;
 }
 
-/*@media(max-width: 950px) {
+@media(max-width: 768px) {
     #chatbot-icon {
         display: none !important;
     }
-}*/
+}
 /*focus-mod*/
 .dashboard-card-deck.one-row {
     overflow-x: auto;
@@ -6154,6 +6154,7 @@ body.format-topcoll.editing .course-content .right.side {
     background-color: #3c80bc; 
     color: #fff; padding: 5px; 
     border-radius: 15px;
+    cursor: pointer;
 }
 .d-flex-desktop {
     display: flex;
@@ -6391,7 +6392,6 @@ body {
     background-color: rgb(234, 238, 243);
 }
 .main-conversation-chatbot {
-    height: 550px;
     padding: 10px 20px 20px 20px;
 }
 
@@ -6975,7 +6975,7 @@ body {
 {{> core/local/toast/wrapper}}
 <a id="return-to-top" title="{{#str}}gotop, theme_moove{{/str}}" data-placement="left"><i class="fa fa-arrow-up"></i></a>
 {{#chatbotelearning}}
-<a id="chatbot-icon" title="{{#str}}focusmod, theme_moove{{/str}}" data-placement="left"><i class="fa fa-weixin"></i></a>
+<a id="chatbot-icon" title="Chatbot" data-placement="left"><i class="fa fa-weixin"></i></a>
 <div class="mini-popup-chatbot">
     Hi! 🤖 Tôi có thể giúp gì bạn?
     <span id="close-mini-popup-chatbot">

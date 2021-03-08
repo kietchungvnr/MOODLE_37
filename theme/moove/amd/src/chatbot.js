@@ -57,11 +57,11 @@ define([
             $(SELECTOR.MINIPOPUPCHATBOT).fadeOut('slow');
         })
 
-        setTimeout(function() {
-            if($(SELECTOR.CHATBOTCHAT + ':visible').length == 0) {
-                $(SELECTOR.MINIPOPUPCHATBOT).fadeIn('slow');
-            }
-        }, 10000);
+        // setTimeout(function() {
+        //     if($(SELECTOR.CHATBOTCHAT + ':visible').length == 0) {
+        //         $(SELECTOR.MINIPOPUPCHATBOT).fadeIn('slow');
+        //     }
+        // }, 10000);
         
     });
 
@@ -99,19 +99,18 @@ define([
         enterMessageHtmlToChatBox(botResponseYesNoHTML);
         $('#chatbot-yesno span').click(async function() {
             userAnwserTodo = $(this).text();
-            autoScrollBottom();
             $("#chatbot-yesno").remove();
             if(userAnwserTodo == 'Không') {
+                enterMessageHtmlToChatBox(userSendMessageHTML(userAnwserTodo));
                 var message = botResponseHTML('Nếu bạn cần hỗ trợ, vui lòng nhập "trợ giúp" để được hỗ trợ!');
                 await botSendMessage(message);
             } else if(userAnwserTodo == 'Có') {
                 enterMessageHtmlToChatBox(userSendMessageHTML(userAnwserTodo));
-                var topicMessage = botResponseHTML('Chọn 1 trong các lựa chọn bên dưới được hỗ trợ 💡');
+                var topicMessage = botResponseHTML('Chọn 1 trong các lựa chọn bên dưới để được hỗ trợ 👇');
                 await botSendMessage(topicMessage);
                 enterMessageHtmlToChatBox(botResponseTopicHTML);
                 $('#chatbot-topic span').click(function() {
                     userAnwserTodo = $(this).text();
-                    autoScrollBottom();
                     userSendMessage(userAnwserTodo);
                     $("#chatbot-topic").remove();
                 });
@@ -413,6 +412,7 @@ define([
                 });
                 break;
             default:
+                await botSendMessage(botResponseHTML('Không tìm thấy thông tin nào liên quan đến yêu cầu của ban. Hãy chắc chắn yêu cầu có nghĩa!'));
                 var defaultAnswer = botResponseHTML('Bạn có cần tôi hỗ trợ hay không 🤗?');
                 await botSendMessage(defaultAnswer);
                 enterMessageHtmlToChatBox(botResponseYesNoHTML);
@@ -422,11 +422,11 @@ define([
                     autoScrollBottom();
                     $("#chatbot-yesno").remove();
                     if(userAnwserTodo == 'Không') {
-                        var message = botResponseHTML('Nếu bạn cần hỗ trợ, vui lòng nhập "trợ giúp" để được hỗ trợ!');
+                        var message = botResponseHTML('Nếu bạn cần tôi, vui lòng nhập "trợ giúp" để được hỗ trợ!');
                         await botSendMessage(message);
                     } else if(userAnwserTodo == 'Có') {
                         enterMessageHtmlToChatBox(userSendMessageHTML(userAnwserTodo));
-                        var topicMessage = botResponseHTML('Chọn 1 trong các lựa chọn bên dưới được hỗ trợ 💡');
+                        var topicMessage = botResponseHTML('Chọn 1 trong các lựa chọn bên dưới 👇!');
                         await botSendMessage(topicMessage);
                         enterMessageHtmlToChatBox(botResponseTopicHTML);
                         $('#chatbot-topic span').click(function() {

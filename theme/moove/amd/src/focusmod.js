@@ -142,18 +142,20 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
     // Trong khóa học click vào module sẽ auto chuyển sang chế độ focusmode
     var getBaseUrl = Cookie.getCookie('baseUrl');
     if(getBaseUrl.includes('course/view.php?id=')) {
-        $('.course-content li.activity a.aalink').bind('click', function(e) {
-            e.preventDefault();
-            console.log("clicked")
-            var moduleId = $(this).parents('li').attr('id').split('-')[1];
-            var element = "div.dropdown-content-2 a[module-id=" +moduleId+ "]";
-            $('#focus-mod').trigger('click');
-            $('#mod-view-coursepage').html('');
-            setTimeout(function() {
-                $(element).trigger('click');
-                $(element).parents('div.dropdown-content-2').slideDown();
-            }, 1000);
-        })    
+        if($('.course-content .editing_move').length == 0) {
+            $('.course-content li.activity a.aalink').bind('click', function(e) {
+                e.preventDefault();
+                console.log("clicked")
+                var moduleId = $(this).parents('li').attr('id').split('-')[1];
+                var element = "div.dropdown-content-2 a[module-id=" +moduleId+ "]";
+                $('#focus-mod').trigger('click');
+                $('#mod-view-coursepage').html('');
+                setTimeout(function() {
+                    $(element).trigger('click');
+                    $(element).parents('div.dropdown-content-2').slideDown();
+                }, 1000);
+            })
+        }
     }
     
     // Click vào chọn bài học
@@ -162,6 +164,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         var url = _this.attr('data-focusmode-url');
         var modType = _this.attr('data-mod-type');
         var height = $(window).height()
+        var width = $(window).width()
         if($('body').hasClass('focusmod')) {
             Cookie.setCookie('cookie', 'focusmod');
         }
@@ -212,7 +215,10 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                         var vh = $('body').height();
                         $('#mod-iframe').height(vh);
                     } else if (modType == 'quiz') {
-                        // To do nothing...
+                        if(width > 576) {
+                            $('#mod-iframe').removeAttr('height');
+                            const iframes = iFrameResize({ log: false }, '#mod-iframe');
+                        }
                     } else {
                         const iframes = iFrameResize({ log: false }, '#mod-iframe');
                     }

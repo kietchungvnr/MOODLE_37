@@ -1,4 +1,4 @@
-﻿-- Bảng setup khoá học
+-- Bảng setup khoá học
 CREATE TABLE mdl_course_setup
 (
 	[id] [bigint] NOT NULL IDENTITY(1, 1) PRIMARY KEY,
@@ -329,3 +329,19 @@ CREATE TABLE mdl_exam_quiz
 	usermodified BIGINT NOT NULL,
 )
 --- *** Kết thúc script cho bản build version '28112020' ***--
+
+--- *** Script cho bản build version '06032021' *** ---
+create table mdl_library_folder_permissions (
+	id BIGINT NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+    permission varchar(255) NOT NULL,
+    folderlibraryid BIGINT NOT NULL,
+	timecreated BIGINT NOT NULL
+)
+create table mdl_library_user_permissions (
+	id BIGINT NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+    permissionid BIGINT NOT NULL,
+    positionid BIGINT NULL,
+	userscope BIGINT NOT NULL,
+	timecreated BIGINT NOT NULL
+)
+--- *** Kết thúc script cho bản build version '06032021' ***--
