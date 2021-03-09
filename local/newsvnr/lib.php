@@ -905,6 +905,82 @@ function get_list_courseinfo_by_teacher($userid)
 }
 
 /**
+ * Lấy danh sách khóa học full thông tin của giáo viên dùng cho control kendo
+ */
+function get_list_courseinfo_by_teacher_kendo($userid, $pagetake, $pageskip, $q) {
+    global $DB;
+    $odersql = "";
+    $wheresql = "";
+    if($q) {
+        $wheresql = "WHERE  ra.roleid = 3 AND u.id = $userid AND c.fullname LIKE N'%$q%'";
+    } else {
+        $wheresql = "WHERE ra.roleid = 3 AND u.id = $userid";
+    }
+    if($pagetake == 0) {
+        $ordersql = "RowNum";
+    } else {
+        $ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
+    }
+    $query = "
+            SELECT *, 
+                (SELECT COUNT(u.id) FROM mdl_role_assignments ra
+                    JOIN mdl_user u ON ra.userid = u.id
+                    JOIN mdl_user_enrolments ue ON u.id = ue.userid 
+                    JOIN mdl_enrol enr ON ue.enrolid = enr.id
+                    JOIN mdl_course c ON enr.courseid = c.id
+                    JOIN mdl_context ct ON ct.id = ra.contextid AND ct.instanceid = c.id
+                $wheresql
+                ) AS total
+            FROM (
+                SELECT ROW_NUMBER() OVER (ORDER BY u.id) AS RowNum, c.id courseid, c.fullname coursename, CONCAT(u.firstname, ' ', u.lastname) fullname, u.id userid,r.shortname rolename
+                FROM mdl_role_assignments ra
+                    JOIN mdl_user u ON ra.userid = u.id
+                    JOIN mdl_user_enrolments ue ON u.id = ue.userid 
+                    JOIN mdl_enrol enr ON ue.enrolid = enr.id
+                    JOIN mdl_course c ON enr.courseid = c.id
+                    JOIN mdl_context ct ON ct.id = ra.contextid AND ct.instanceid = c.id
+                    JOIN mdl_role r ON ra.roleid = r.id
+                $wheresql
+            ) AS Mydata
+            ORDER BY $ordersql
+            ";
+    $data = $DB->get_records_sql($query,[]);
+    return $data;
+}
+
+function get_list_courseinfo_by_admin_kendo($pagetake, $pageskip, $q) {
+    global $DB;
+    $odersql = "";
+    $wheresql = "";
+    if($q) {
+        $wheresql = "WHERE id > 1 AND fullname LIKE N'%$q%'";
+    } else {
+        $wheresql = "WHERE id > 1";
+    }
+    if($pagetake == 0) {
+        $ordersql = "RowNum";
+    } else {
+        $ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
+    }
+    $query = "
+            SELECT *, 
+                (SELECT COUNT(id) 
+                    FROM {course}
+                    $wheresql
+                ) AS total
+            FROM (
+                SELECT ROW_NUMBER() OVER (ORDER BY id) AS RowNum, id courseid, fullname coursename
+                FROM {course}
+                $wheresql
+            ) AS Mydata
+            ORDER BY $ordersql
+            ";
+    $data = $DB->get_records_sql($query,[]);
+    return $data;
+}
+
+
+/**
  * Lấy danh sách khóa học của học viên
  * @param  [type] $userid [description]
  * @return [array] $list_courseid [description]

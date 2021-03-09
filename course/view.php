@@ -264,6 +264,8 @@
     }
 
     $PAGE->set_heading($course->fullname);
+    // Custom by Vũ: Thêm add js cho chức năng sao chép module
+    $PAGE->requires->js_call_amd('core_course/copy_module','init', ['courseid' => $COURSE->id, 'userid' => $USER->id]);
     echo $OUTPUT->header();
 
     if ($USER->editing == 1) {

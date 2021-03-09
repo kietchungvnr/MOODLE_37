@@ -3648,8 +3648,8 @@ function duplicate_module_library($course, $cm) {
         $newcm = get_coursemodule_from_id($cm->modname, $newcmid, $cm->course);
         // Add ' (copy)' to duplicates. Note we don't cleanup or validate lengths here. It comes
         // from original name that was valid, so the copy should be too.
-        // $newname = get_string('duplicatedmodule', 'moodle', $newcm->name);
-        // $DB->set_field($cm->modname, 'name', $newname, ['id' => $newcm->instance]);
+        $newname = get_string('duplicatedmodule', 'moodle', $newcm->name);
+        $DB->set_field($cm->modname, 'name', $newname, ['id' => $newcm->instance]);
 
         $section = $DB->get_record('course_sections', array('id' => $cm->section, 'course' => $cm->course));
         $modarray = explode(",", trim($section->sequence));
@@ -4152,6 +4152,8 @@ function course_get_user_administration_options($course, $context) {
     $options->backup = has_capability('moodle/backup:backupcourse', $context);
     $options->restore = has_capability('moodle/restore:restorecourse', $context);
     $options->copy = \core_course\management\helper::can_copy_course($course->id);
+    $options->copymodule = \core_course\management\helper::can_copy_course($course->id);
+    
     $options->files = ($course->legacyfiles == 2 && has_capability('moodle/course:managefiles', $context));
 
     if (!$isfrontpage) {

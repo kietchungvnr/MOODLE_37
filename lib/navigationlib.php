@@ -4560,6 +4560,12 @@ class settings_navigation extends navigation_node {
             $coursenode->add(get_string('copycourse'), $url, self::TYPE_SETTING, null, 'copy', new pix_icon('t/copy', ''));
         }
 
+        // Custom by Vũ: Thêm chức năng sao chép module
+        if ($adminoptions->copymodule) {
+            $url = new moodle_url('/backup/copy.php', array('id' => $course->id));
+            $coursenode->add(get_string('copymodule', 'theme_moove'), 'javascript:;', self::TYPE_SETTING, null, 'copy2', new pix_icon('t/copy', 'data-action-copy-module=popup'));
+        }
+
         // Reset this course
         if ($adminoptions->reset) {
             $url = new moodle_url('/course/reset.php', array('id'=>$course->id));
