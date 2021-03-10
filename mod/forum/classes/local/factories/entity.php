@@ -129,8 +129,8 @@ class entity {
             $record->timestart,
             $record->timeend,
             $record->pinned,
-            $record->timelocked,
-            $record->countviews
+            $record->countviews,
+            $record->timelocked
         );
     }
 

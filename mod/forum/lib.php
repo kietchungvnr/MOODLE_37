@@ -654,7 +654,7 @@ function forum_print_recent_activity($course, $viewfullnames, $timestart) {
                                               f.displaywordcount, f.lockdiscussionafter, f.grade_forum_notify,
                                               d.name AS discussionname, d.firstpost, d.userid AS discussionstarter,
                                               d.assessed AS discussionassessed, d.timemodified, d.usermodified, d.forum, d.groupid,
-                                              d.timestart, d.timeend, d.pinned, d.timelocked,
+                                              d.timestart, d.timeend, d.pinned, d.timelocked, d.countviews,
                                               $allnamefields
                                          FROM {forum_posts} p
                                               JOIN {forum_discussions} d ON d.id = p.discussion
@@ -702,6 +702,7 @@ function forum_print_recent_activity($course, $viewfullnames, $timestart) {
                 'timestart' => $post->timestart,
                 'timeend' => $post->timeend,
                 'pinned' => $post->pinned,
+                'countviews' => $post->countviews,
                 'timelocked' => $post->timelocked
             ];
             // Build the discussion entity from the factory and cache it.
