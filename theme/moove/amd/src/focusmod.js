@@ -21,7 +21,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         var course = $(this).attr('course');
         var width = $(window).width();
         if(spa == "true") {
-            document.cookie = 'spa=; max-Age=-1;path=/';
+            Cookie.setCookie('spa', '-1', 0)
         }
         if($('#mod-iframe').length <= 0) {
             $('#mod-view-coursepage').html('<div class="alert alert-success mb-0"><strong>'+ M.util.get_string('selectcoursedata', 'theme_moove') +'</strong></div>');
@@ -52,7 +52,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             if(width <= 576) {
                 $('.nav.multi-tab').slideDown();
             }
-            document.cookie = 'cookie=; max-Age=-1;path=/';
+            Cookie.setCookie('cookie', '-1', 0)
         } else {
             /// Ẩn các element khi bật chế độ focusmode
             $('body').attr('style','overflow:hidden !important');
@@ -165,6 +165,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         var modType = _this.attr('data-mod-type');
         var height = $(window).height()
         var width = $(window).width()
+        Cookie.setCookie('cookie', 'focusmod');
         if($('body').hasClass('focusmod')) {
             Cookie.setCookie('cookie', 'focusmod');
         }
@@ -199,18 +200,6 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             $('.dropdown-content').attr('style', 'display: none');
             setTimeout(function() {
                 try {
-                    // $('#mod-iframe').iframeTracker({
-                    //     blurCallback: function(event) {
-                    //         console.log(1)
-                    //         Cookie.setCookie('cookie', 'focusmod');
-                    //     },
-                    //     outCallback: function(element, event) {
-                    //         console.log(2)
-                    //         this._overId = null; // Reset hover iframe wrapper i
-                    //         document.cookie = 'cookie=; max-Age=-1;path=/';
-                    //     },
-                    //     _overId: null
-                    // });
                     if(modType == 'resource') {
                         var vh = $('body').height();
                         $('#mod-iframe').height(vh);
@@ -222,6 +211,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                     } else {
                         const iframes = iFrameResize({ log: false }, '#mod-iframe');
                     }
+                    // Xử lý khi module là quiz thì thay đổi header
                     if(modType == 'quiz') {
                         var iframe = document.getElementById("mod-iframe");
                         $("#mod-iframe").removeAttr('style')

@@ -19,9 +19,8 @@
     
 </div><!-- Ends .page-wrapper -->
 
-
 {{{ output.standard_end_of_body_html }}}
-
+</div>
 </body>
 </html>
 {{#js}}
@@ -55,7 +54,7 @@ require(['theme_moove/metismenu', 'jquery'], function(metisMenu, $) {
 
 });
 
-require(['jquery', 'core/config'], function($, Config) {
+require(['jquery', 'core/config', 'theme_moove/handle_cookie'], function($, Config, Cookie) {
     var iconsearch = document.querySelector('.moove-search-input .slicon-magnifier');
     var btnclosesearch = document.querySelector('.search-input-form .close-search');
     var searchinputform = document.querySelector('.moove-search-input');

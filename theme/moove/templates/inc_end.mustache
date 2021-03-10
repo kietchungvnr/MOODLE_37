@@ -18,6 +18,7 @@
     
 </div><!-- Ends .page-wrapper -->
 {{> theme_moove/footer }}
+</div>
 </body>
 </html>
 {{#js}}
@@ -136,7 +137,7 @@ require(['theme_moove/chatbot']);
 
 var id = $('.new-detail-chat').attr('data');
 $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussionid='+id);
-document.cookie = 'cookie=; max-Age=-1;path=/';
+
 {{/js}}
 <script type="text/javascript">
     function setPositionWindow(gridname,top) {
