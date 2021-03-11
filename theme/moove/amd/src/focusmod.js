@@ -140,12 +140,12 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
     })
 
     // Trong khóa học click vào module sẽ auto chuyển sang chế độ focusmode
+    // Chỉ áp dụng khi có role là học viên trong 1 khóa
     var getBaseUrl = Cookie.getCookie('baseUrl');
     if(getBaseUrl.includes('course/view.php?id=')) {
-        if($('.course-content .editing_move').length == 0) {
+        if($('[data-role=1]').length > 0) {
             $('.course-content li.activity a.aalink').bind('click', function(e) {
                 e.preventDefault();
-                console.log("clicked")
                 var moduleId = $(this).parents('li').attr('id').split('-')[1];
                 var element = "div.dropdown-content-2 a[module-id=" +moduleId+ "]";
                 $('#focus-mod').trigger('click');

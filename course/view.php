@@ -325,4 +325,9 @@
     // Include course AJAX
     include_course_ajax($course, $modnamesused);
 
+    // CUstom by Vũ: Kiểm tra có phải là học viên hay không
+    $is_student = current(get_user_roles($context, $USER->id))->shortname=='student'? true : false;
+    echo html_writer::start_tag('div', array('id' => 'check-role', 'class'=>'d-none', 'data-role' => $is_student));
+    echo html_writer::end_tag('div');
+
     echo $OUTPUT->footer();

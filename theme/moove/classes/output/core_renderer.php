@@ -399,11 +399,10 @@ class core_renderer extends \theme_boost\output\core_renderer {
 
     public function right_sidebar_menu() {
         global $CFG;
-        $theme = theme_config::load('moove');
-        $array = explode(',',$theme->settings->menuitem);
         $output = '';
         if(isloggedin()) {
             $theme = theme_config::load('moove');
+            $array = explode(',',$theme->settings->menuitem);
             $home = $CFG->wwwroot;
             $dashboard = $CFG->wwwroot . '/my/';
             $library = $CFG->wwwroot . '/library.php';
@@ -431,7 +430,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 $output .= '<ul class="dropdown-menu content-menu-expand teachercourse" role="menu" id="drop-course-by-student">'.$this->nav_coursebyteacher().'</ul>';
             }
             // Danh mục chính
-            $output .= '<div class="menuitem-custom">';
+            // $output .= '<div class="menuitem-custom">';
             $output .= '<li><hr class="light-grey-hr mb-10"></li>';
             $output .= '<li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>'.get_string('main','theme_moove').'</span></li>';
             if(!in_array('exam',$array)) {
@@ -452,7 +451,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             if(!in_array('forum',$array)) {
                 $output .= '<li class="menu-link"><a href="'.$forum .'"><i class="fa fa-users mr-3"></i>'. get_string('forum', 'theme_moove') .'</a></li>';
             }
-            $output .= '</div>';
+            // $output .= '</div>';
         } else {
             $dashboard = $CFG->wwwroot . '/my/';
             $output .= '<li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>'.get_string('main','theme_moove').'</span></li>';
