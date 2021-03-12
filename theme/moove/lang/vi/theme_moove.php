@@ -463,3 +463,5 @@ $string['selectmodule'] = ' Chọn danh sách module';
 $string['agreeandsubmit'] = ' Đồng ý và sao chép';
 $string['courserequired'] = 'Khóa học không được bỏ trống';
 $string['modulerequired'] = 'Module không được bỏ trống';
+$string['reportaccess'] = 'Thống kê lượt truy cập hệ thống';
+$string['reportcoursestatus'] = 'Thống kê trạng thái khóa họ';
