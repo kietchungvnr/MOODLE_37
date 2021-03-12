@@ -87,7 +87,8 @@ require(['jquery', 'core/config'], function($, Config) {
         ).addClass('active-nav').siblings().removeClass('active-nav');
     });
     // active UI câu hỏi trong bài kiểm tra quiz
-    if($('#responseform')) {
+    var width = $(window).width();
+    if($('#responseform' && width > 576)) {
         $('#responseform .content input').click(function() {
             var quizheight = $(this).closest('div.que.multichoice').height();
             var x = $(this).closest('div.que.multichoice').offset();

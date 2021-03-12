@@ -17,7 +17,6 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             $('.list-question-scroll').animate({
                 scrollLeft: $("#" + finalid).offset().left - (widthtime + 10)
             }, 'fast');
-
             // lan chuột đến câu hỏi 
             $('.qnbutton.thispage').each(function() {
                 var question = $(this).attr('href');
@@ -32,7 +31,6 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
                     $("html, body").animate({ scrollTop: "0" },'fast'); 
                 }
             })
-            //
             setTimeout(function() {
                 var text = $('#quiz-time-left').text()
                 if(text == "") {
@@ -47,6 +45,24 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             if(nextpage == -1) {
                 $('.quiz-menu-item.next-quiz').addClass('disable');
             }
+            var clone = $('#quiz-timer').clone();
+            var initwidth = $(window).width();
+            if(initwidth > 576) {
+                $('#quiz-timer').remove();
+            }
+            $(window).resize(function() {
+                var fm = getCookie('cookie');
+                var width = $(window).width();
+                if (width <= 576 && fm == "focusmod") {
+                    $('#quiz-timer').remove();
+                    $('.list-question-scroll').before(clone);
+                } 
+                else if (width > 576 && fm == "focusmod") {
+                    $('#quiz-timer').remove();
+                    $('#user-picture').after(clone);
+                    $('#quiz-timer').next('div').children('div#quiz-timer').remove();
+                }
+            })
         })
     }
     return {

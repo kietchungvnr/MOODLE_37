@@ -92,7 +92,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $header->contextheader = $this->context_header(null,2);
         }
         $header->hasnavbar = empty($PAGE->layout_options['nonavbar']);
-        $header->navbar = ($COURSE->id != 1) ? $this->navbar() : '';
+        $header->navbar = ($COURSE->id == 1 && $PAGE->pagelayout == 'incourse') ? '' : $this->navbar();
         $header->pageheadingbutton = $this->page_heading_button();
         $header->courseheader = $this->course_header();
         return $this->render_from_template('theme_moove/fp_header', $header);

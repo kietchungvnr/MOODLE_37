@@ -50,7 +50,12 @@
     }
 }}  
 {{#hasportal}}
-    {{>theme_moove/portal_inc_start}}
+    {{#hasiframe}}
+        {{>theme_moove/focusmode_inc_start}}
+    {{/hasiframe}}
+    {{^hasiframe}}
+        {{>theme_moove/portal_inc_start}}
+    {{/hasiframe}}
 {{/hasportal}}
 {{^hasportal}}
     {{^hasiframe}}
@@ -105,7 +110,12 @@
     </div>
 </div>
 {{#hasportal}}
-    {{>theme_moove/portal_inc_end}}
+    {{#hasiframe}}
+        {{>theme_moove/focusmode_inc_end}}
+    {{/hasiframe}}
+    {{^hasiframe}}
+        {{>theme_moove/portal_inc_end}}
+    {{/hasiframe}}
 {{/hasportal}}
 {{^hasportal}}
     {{^hasiframe}}

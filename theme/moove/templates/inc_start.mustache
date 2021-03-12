@@ -11,7 +11,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     {{! <meta name="referrer" content="no-referrer"> }}
-
+ 
 <style type="text/css">
 
 *:focus-within,
@@ -6164,6 +6164,12 @@ body.format-topcoll.editing .course-content .right.side {
 .number-question-mb {
     display: none;
 }
+.d-none-mb  {
+    display: block;
+}
+.d-flex-mb {
+    display: none;
+}
 /*focusmod*/
 @media (max-width: 1060px) {
     li.nav-item.border-left {
@@ -6173,8 +6179,12 @@ body.format-topcoll.editing .course-content .right.side {
 @media (max-width: 576px) {
     #page-course-view-topcoll.pagelayout-course .nav-tabs.course li,
     body.jsenabled#page-course-view-topcoll #toggle-all,
-    #page-header {
+    #page-header,
+    .d-none-mb {
         display: none !important;
+    }
+    .d-flex-mb {
+        display: flex !important;
     }
     #page-course-view-topcoll #page-wrapper {
         padding: 0 !important;
@@ -6948,6 +6958,56 @@ body {
 }
 .video-js.vjs-fluid {
     width: 400px
+}
+/*question bank*/
+.path-question .nav.nav-tabs {
+    background: #e2edf4 !important;
+    margin: -21px -20px 0 -20px;
+}
+.path-question .nav-tabs {
+   display: flex;
+   border-bottom: 0;
+   background-color: #e3eef5;
+}
+.path-question .nav-tabs .nav-item {
+   background-color: #e3eef5;
+}
+.path-question .nav-tabs .nav-item {
+   margin-bottom: 0px;
+   color: black;
+}
+.path-question .nav-tabs .nav-item:hover a {
+   font-weight: bold;
+   background-color: white;
+   border: 0;
+}
+.path-question .nav-tabs .nav-item a {
+   color: #363535;
+   width: max-content;
+}
+.path-question .nav-tabs .nav-item.active {
+   font-weight: bold;
+}
+.path-question .nav-tabs .nav-item.active a {
+    margin-bottom: 0;
+    padding-bottom: 13px;
+    border-radius: 5px 5px 0 0;
+}
+.path-question .nav-tabs .nav-link {
+    border: 0;
+    margin: 0 5px 5px 0;
+    border-radius: 5px;
+    background: #fff;
+    color: #808080;
+    opacity: 1;
+}
+.path-question .nav.nav-tabs .nav-link.active {
+    margin-bottom: 0;
+    padding-bottom: 13px;
+    border-radius: 5px 5px 0 0;
+    color: black !important;
+    border: none !important;
+    background: white !important;
 }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />

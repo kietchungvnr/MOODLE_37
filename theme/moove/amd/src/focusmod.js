@@ -26,7 +26,6 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         if($('#mod-iframe').length <= 0) {
             $('#mod-view-coursepage').html('<div class="alert alert-success mb-0"><strong>'+ M.util.get_string('selectcoursedata', 'theme_moove') +'</strong></div>');
         }
-
         $('#setting-context').addClass('d-none');
         $('#sidepreopen-control').addClass('d-none');
         if (fm == "focusmod") {
@@ -79,15 +78,23 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         }
     })
 
-    // Resize windown nếu nhỏ hơn 1050 thì bỏ chức năng focus
+    // Resize window
     $(window).resize(function() {
-        var fm = Cookie.getCookie('cookie')
+        var fm = Cookie.getCookie('cookie');
         var width = $(window).width();
+        var height = $(window).height();
+        var clone = $('#quiz-timer').clone();
         if (width <= 576 && fm == "focusmod") {
+            $('.list-question-scroll').append(clone);
             $('.nav.multi-tab').slideUp();
+            $('#region-main-box').attr('style', 'padding:0!important;margin-top:48px');
+            $('iframe#mod-iframe').css('height',height);
         }
-        if (width > 576 && fm == "focusmod") {
-            $('.page-header').slideUp()
+        else if (width > 576 && fm == "focusmod") {
+            $('#quiz-timer').remove();
+            $('#page-header').slideUp()
+            $('#region-main-box').attr('style', 'padding:0!important;margin-top:62px');
+            $('iframe#mod-iframe').css('height',height - 60);
         }
     })
     // Xử dropdown khi click
@@ -184,11 +191,16 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                 $('.nav-link.next').addClass('disable');
             }
         }
-
+        if(width <= 576) {
+            var iframeheight = height;
+        } else {
+            var iframeheight = height - 60;
+        }
         if(modType == 'resource') {
             var iframe = '<iframe id="mod-iframe" src="'+url+'" height="768" frameBorder="0"></iframe>';
         } else if(modType == 'quiz') {
-            var iframe = '<iframe id="mod-iframe" src="'+url+'" height="'+height+'" frameBorder="0"></iframe>';
+
+            var iframe = '<iframe id="mod-iframe" src="'+url+'" height="'+iframeheight+'" frameBorder="0"></iframe>';
         } else {
             var iframe = '<iframe id="mod-iframe" src="'+url+'" frameBorder="0"></iframe>';
         }
@@ -214,39 +226,37 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                     // Xử lý khi module là quiz thì thay đổi header
                     if(modType == 'quiz') {
                         var iframe = document.getElementById("mod-iframe");
-                        $("#mod-iframe").removeAttr('style')
                         var width = $(window).width();
                         var iframeModBody = iframe.contentWindow.document.querySelectorAll("body")[0]['id'];
                         if((iframeModBody.includes('page-mod-quiz-attempt') == true || iframeModBody.includes('page-mod-quiz-summary') == true || iframeModBody.includes('page-mod-quiz-review') == true))  {
-                            $('#header-quiz').removeAttr('style');
-                            if($('#back-focusmod').length == 0) {
+                            $('.header-quiz').removeAttr('style');
+                            if($('.back-quiz').length == 0) {
                                 var quizHeader = $('nav.focusmod').eq(0);
                                 var quizName = $('div.dropdown-content-2 a.active').text();
                                 var moduleId = $('div.dropdown-content-2 a.active').attr('module-id');
-                                if(width > 576) {
-                                    quizHeader.after('<nav class="fixed-top navbar moodle-has-zindex focusmod d-flex" id="header-quiz"><div class="loading-page"></div><span class="d-flex m-auto font-weight-bold" style="font-size:22px">'+quizName+'</span><span class="back-focusmod-desktop" id="back-focusmod" class="cl-cursor"><i class="fa fa-share" style="margin: 0 5px;position: relative;top: 1px;" aria-hidden="true"></i><span style="margin-right:5px">Quay lại</span></span></nav>');
-                                } else {
+                                // if(width > 576) {
+                                    quizHeader.after('<nav class="fixed-top navbar moodle-has-zindex focusmod d-flex header-quiz d-none-mb" id="header-quiz"><div class="loading-page"></div><span class="d-flex m-auto font-weight-bold" style="font-size:22px">'+quizName+'</span><span class="back-focusmod-desktop back-quiz"  class="cl-cursor"><i class="fa fa-share" style="margin: 0 5px;position: relative;top: 1px;" aria-hidden="true"></i><span style="margin-right:5px">Quay lại</span></span></nav>');
+                                // } else {
                                     var html = '<div class="d-flex menu-left">'
                                         html += '<div class="course-info-focus">'
-                                        html += '<div class="icon-back-focusmod" id="back-focusmod"><i class="fa fa-chevron-left mr-1" aria-hidden="true"></i></div>'
+                                        html += '<div class="icon-back-focusmod back-quiz" ><i class="fa fa-chevron-left mr-1" aria-hidden="true"></i></div>'
                                         html += '<div class="page-header-headings"><a>'+quizName+'</a></div>'
                                         html += '</div>'
                                         html += '</div>'
-                                    quizHeader.after('<nav class="fixed-top navbar moodle-has-zindex focusmod d-flex" id="header-quiz"><div class="loading-page"></div>'+html+'</nav>');
-                                }
+                                    quizHeader.after('<nav class="fixed-top navbar moodle-has-zindex focusmod d-flex header-quiz d-flex-mb" id="header-quiz"><div class="loading-page"></div>'+html+'</nav>');
+                                // }
                                 $('#header-main .loading-page').removeClass('active');
-                                $('#back-focusmod').bind('click', function(e) {
-                                    $('body').removeAttr('style');
+                                $('.back-quiz').bind('click', function(e) {
                                     $('div.dropdown-content-2 a[module-id="'+moduleId+'"]').trigger('click');
                                     $('#header-main').removeAttr('style');
-                                    $('#header-quiz').attr('style', 'display: none!important');
+                                    $('.header-quiz').attr('style', 'display: none!important');
                                 });
                             }
                         }    
                         else {
                             $('#header-main').removeAttr('style');
-                            if($('#header-quiz').length > 0) {
-                                $('#header-quiz').attr('style', 'display: none!important');
+                            if($('.header-quiz').length > 0) {
+                                $('.header-quiz').attr('style', 'display: none!important');
                             }
                         }
                     }
@@ -259,16 +269,13 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             }, 1000);
 
         });
-        
     });
-
     // Repalce section không có tên
     Str.get_strings(strings).then(function(s) {
 	    if ($('div.card-header.level1:first-child() a').text() == '') {
 	        $('div.card-header.level1:first-child() a').append(s[0]);
 	    }
 	})
-
     if (!$('.card-header.level2 a').hasClass('active')) {
         $('.nav-link.prev, .nav-link.next').addClass('disable');
     }
@@ -276,5 +283,4 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
     $('.back-focusmod').click(function() {
         $('#focus-mod').click();
     })
-
 });

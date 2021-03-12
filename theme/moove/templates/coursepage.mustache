@@ -51,6 +51,12 @@
 }}  
 {{#hasportal}}
     {{>theme_moove/portal_inc_start}}
+    {{#show_hide_focusmod}}
+        {{{output.menu_focus}}}
+    {{/show_hide_focusmod}}
+    {{#hasiframe}}
+        {{>theme_moove/focusmode_inc_start}}
+    {{/hasiframe}}
 {{/hasportal}}
 {{^hasportal}}
     {{^hasiframe}}
@@ -132,6 +138,9 @@
 </div>
 {{#hasportal}}
     {{>theme_moove/portal_inc_end}}
+    {{#hasiframe}}
+        {{>theme_moove/focusmode_inc_end}}
+    {{/hasiframe}}
 {{/hasportal}}
 {{^hasportal}}
     {{^hasiframe}}

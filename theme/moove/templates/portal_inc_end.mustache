@@ -20,10 +20,107 @@
 
 {{{ output.standard_end_of_body_html }}}
 
-
 </body>
 </html>
+{{#js}}
+ require.config({
+    paths: {
+      "kendo.all.min": "//kendo.cdn.telerik.com/2020.3.915/js/kendo.all.min",
+      "dttable": "/local/newsvnr/js/datatable.min",
+      "alertjs": "//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min",
+      "validatefm" : "//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min",
+    }
+});
+require(['theme_boost/loader']);
+require(['theme_boost/drawer'], function(mod) {
+    mod.init();
+});
+
+require(['theme_moove/metismenu', 'jquery'], function(metisMenu, $) {
+
+    $(".metismenu").metisMenu();
+
+});
+
+
+require(['jquery'], function($) {
+    var iconsearch = document.querySelector('.moove-search-input .slicon-magnifier');
+    var btnclosesearch = document.querySelector('.search-input-form .close-search');
+    var searchinputform = document.querySelector('.moove-search-input');
+    if (iconsearch) {
+
+        var togglesearchinputform = function() {
+            searchinputform.classList.toggle('expanded');
+        }
+
+        iconsearch.onclick = togglesearchinputform;
+        btnclosesearch.onclick = togglesearchinputform;
+    }
+    $('[data-region="drawer-toggle"]').click(function(){
+        setTimeout(function(){
+                $('#page').find('.dataTable[role="grid"][aria-describedby]').DataTable().columns.adjust().draw();
+
+        },500);
+       
+    });
+    var courseurl = '/course/view.php';
+    if($('[data-region="drawer"]')) {
+        $('[data-region="drawer"]').removeClass('closed');
+        $('[data-region="drawer"]').addClass('open');
+    }
+   $(document).ready(function() {
+        const regex = /http:\/\/.*\/(.*)\//g;
+        const match = regex.exec(window.location.href);
+        if(match) {
+            $(".nav-active").each(function() {
+                var url = $(this).attr("href");
+                if(url == match.input) {
+                    $(this).addClass("active-nav");
+                }
+            });
+        }
+        else {
+            $(".nav-active:first").addClass("active-nav");
+        }
+    });
+}); 
+
+require(['theme_moove/general']);
+
+require(['theme_moove/course_category']);
+
+require(['theme_moove/focusmod']);
+
+require(['theme_moove/course_menu']);
+
+require(['theme_moove/enrol_course']);
+
+require(['theme_moove/menu_left']);
+
+{{/js}}
 <script type="text/javascript">
+    var setCookie = function(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+    var getCookie = function(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+    ////////////////////////////////
     var modalStore = {};
     const showmodal = (cmid, instance) => {
         require(["jquery", "core/modal_factory", "core/modal_events", "core/config", "core/templates", "core/notification"], function($, ModalFactory, ModalEvents,Config, Templates, Notification) {
@@ -316,75 +413,3 @@
     }
     
 </script>
-{{#js}}
- require.config({
-    paths: {
-      "kendo.all.min": "/local/newsvnr/js/kendo.all.min",
-      "dttable": "/local/newsvnr/js/datatable.min",
-    }
-});
-
-require(['theme_boost/loader']);
-require(['theme_boost/drawer'], function(mod) {
-    mod.init();
-});
-
-require(['theme_moove/metismenu', 'jquery'], function(metisMenu, $) {
-
-    $(".metismenu").metisMenu();
-
-});
-
-
-require(['jquery'], function($) {
-    var iconsearch = document.querySelector('.moove-search-input .slicon-magnifier');
-    var btnclosesearch = document.querySelector('.search-input-form .close-search');
-    var searchinputform = document.querySelector('.moove-search-input');
-    if (iconsearch) {
-
-        var togglesearchinputform = function() {
-            searchinputform.classList.toggle('expanded');
-        }
-
-        iconsearch.onclick = togglesearchinputform;
-        btnclosesearch.onclick = togglesearchinputform;
-    }
-    $('[data-region="drawer-toggle"]').click(function(){
-        setTimeout(function(){
-                $('#page').find('.dataTable[role="grid"][aria-describedby]').DataTable().columns.adjust().draw();
-
-        },500);
-       
-    });
-    var courseurl = '/course/view.php';
-    if($('[data-region="drawer"]')) {
-        $('[data-region="drawer"]').removeClass('closed');
-        $('[data-region="drawer"]').addClass('open');
-    }
-   $(document).ready(function() {
-        const regex = /http:\/\/.*\/(.*)\//g;
-        const match = regex.exec(window.location.href);
-        if(match) {
-            $(".nav-active").each(function() {
-                var url = $(this).attr("href");
-                if(url == match.input) {
-                    $(this).addClass("active-nav");
-                }
-            });
-        }
-        else {
-            $(".nav-active:first").addClass("active-nav");
-        }
-    });
-}); 
-
-require(['theme_moove/course_category']);
-
-require(['theme_moove/menumobile_theme_course']);
-
-require(['theme_moove/course_menu']);
-
-require(['theme_moove/menu_mobile']);
-
-require(['theme_moove/enrol_course']);
-{{/js}}
