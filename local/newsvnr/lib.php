@@ -2552,6 +2552,7 @@ function get_user_badge($userid) {
     }
     return $data;
 }
+
 // course card info
 function get_coursecard_info($courseid) {
     global $DB,$OUTPUT,$CFG;
@@ -2589,6 +2590,23 @@ function get_coursecard_info($courseid) {
     }
     return $obj;
 }
+// form popup
+function get_modal_boostrap($html,$idmodal,$title = '') {
+    $output = '';
+    $output .= '<div class="modal" id="'.$idmodal.'">';
+    $output .= '    <div class="modal-dialog">';
+    $output .= '        <div class="modal-content">';
+    $output .= '            <div class="modal-header">';
+    $output .= '                <h4 class="modal-title">'.$title.'</h4>';
+    $output .= '                <button type="button" class="close" data-dismiss="modal">&times;</button>';
+    $output .= '            </div>';
+    $output .= '            <div class="modal-body">'.$html.'</div>';
+    $output .= '        </div>';
+    $output .= '    </div>';
+    $output .= '</div>';
+    return $output;
+}
+
 function local_newsvnr_extend_navigation($navigation) {
     
 }

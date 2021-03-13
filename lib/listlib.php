@@ -119,14 +119,14 @@ abstract class moodle_list {
             $itemiter = 1;
             $lastitem = '';
             $html = '';
-
+            //Custom by Thắng : sửa giao diện question category
             foreach ($this->items as $item) {
                 $last = (count($this->items) == $itemiter);
                 if ($this->editable) {
                     $item->set_icon_html($first, $last, $lastitem);
                 }
                 if ($itemhtml = $item->to_html($indent+1, $extraargs)) {
-                    $html .= "$tabs\t<li".((!empty($item->attributes))?(' '.$item->attributes):'').">";
+                    $html .= "$tabs\t<li class='li-inside' ".((!empty($item->attributes))?(' '.$item->attributes):'').">";
                     $html .= $itemhtml;
                     $html .= "</li>\n";
                 }

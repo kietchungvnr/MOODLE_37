@@ -25,7 +25,6 @@
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/mod/quiz/locallib.php');
 $css = file_get_contents($CFG->dirroot . '/theme/moove/css/quizattempt.css');
-echo $css;
 // Look for old-style URLs, such as may be in the logs, and redirect them to startattemtp.php.
 if ($id = optional_param('id', 0, PARAM_INT)) {
     redirect($CFG->wwwroot . '/mod/quiz/startattempt.php?cmid=' . $id . '&sesskey=' . sesskey());
@@ -138,6 +137,7 @@ if ($attemptobj->is_last_page($page)) {
 //Custom by Thắng:
 $check = theme_moove_layout_check();
 if($check->hasiframe) {
+    echo $css;
     $PAGE->requires->js_call_amd('theme_moove/quiz_attempt_mobile','init');
     $quiztimer = html_writer::tag('div',html_writer::tag('span','', array('id' => 'quiz-time-left')),
         array('id' => 'quiz-timer', 'role' => 'timer',

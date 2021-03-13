@@ -43,6 +43,7 @@ $context = $contexts->lowest();
 $streditingquestions = get_string('editquestions', 'question');
 $PAGE->set_title($streditingquestions);
 $PAGE->set_heading($COURSE->fullname);
+$PAGE->requires->js_call_amd('theme_moove/questionbank', 'init');
 echo $OUTPUT->header();
 
 // Print horizontal nav if needed.

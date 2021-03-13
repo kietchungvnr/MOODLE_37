@@ -140,6 +140,7 @@ if ($param->edit) {
     $PAGE->navbar->add(get_string('editingcategory', 'question'));
 }
 
+$PAGE->requires->js_call_amd('theme_moove/questionbank', 'init');
 $PAGE->set_title(get_string('editcategories', 'question'));
 $PAGE->set_heading($COURSE->fullname);
 echo $OUTPUT->header();
@@ -155,6 +156,6 @@ if (!empty($param->edit)) {
     $qcobject->display_move_form($questionstomove, $category);
 } else {
     // Display the user interface.
-    $qcobject->display_user_interface();
+    echo $qcobject->display_user_interface();
 }
 echo $OUTPUT->footer();

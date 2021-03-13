@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 // number of categories to display on page
 define('QUESTION_PAGE_LENGTH', 25);
-
+require_once $CFG->dirroot . '/local/newsvnr/lib.php';
 require_once($CFG->libdir . '/listlib.php');
 require_once($CFG->dirroot . '/question/category_form.php');
 require_once($CFG->dirroot . '/question/move_form.php');
@@ -118,18 +118,19 @@ class question_category_list_item extends list_item {
         $category = $this->item;
         $url = new moodle_url('/question/category.php', ($this->parentlist->pageurl->params() + array('edit'=>$category->id)));
         $this->icons['edit']= $this->image_icon(get_string('editthiscategory', 'question'), $url, 'edit');
-        parent::set_icon_html($first, $last, $lastitem);
-        $toplevel = ($this->parentlist->parentitem === null);//this is a top level item
-        if (($this->parentlist->nextlist !== null) && $last && $toplevel && (count($this->parentlist->items)>1)){
-            $url = new moodle_url($this->parentlist->pageurl, array('movedowncontext'=>$this->id, 'tocontext'=>$this->parentlist->nextlist->context->id, 'sesskey'=>sesskey()));
-            $this->icons['down'] = $this->image_icon(
-                get_string('shareincontext', 'question', $this->parentlist->nextlist->context->get_context_name()), $url, 'down');
-        }
-        if (($this->parentlist->lastlist !== null) && $first && $toplevel && (count($this->parentlist->items)>1)){
-            $url = new moodle_url($this->parentlist->pageurl, array('moveupcontext'=>$this->id, 'tocontext'=>$this->parentlist->lastlist->context->id, 'sesskey'=>sesskey()));
-            $this->icons['up'] = $this->image_icon(
-                get_string('shareincontext', 'question', $this->parentlist->lastlist->context->get_context_name()), $url, 'up');
-        }
+        // Custom by Thắng : ẩn bớt icon trong question bank
+        // parent::set_icon_html($first, $last, $lastitem);
+        // $toplevel = ($this->parentlist->parentitem === null);//this is a top level item
+        // if (($this->parentlist->nextlist !== null) && $last && $toplevel && (count($this->parentlist->items)>1)){
+        //     $url = new moodle_url($this->parentlist->pageurl, array('movedowncontext'=>$this->id, 'tocontext'=>$this->parentlist->nextlist->context->id, 'sesskey'=>sesskey()));
+        //     $this->icons['down'] = $this->image_icon(
+        //         get_string('shareincontext', 'question', $this->parentlist->nextlist->context->get_context_name()), $url, 'down');
+        // }
+        // if (($this->parentlist->lastlist !== null) && $first && $toplevel && (count($this->parentlist->items)>1)){
+        //     $url = new moodle_url($this->parentlist->pageurl, array('moveupcontext'=>$this->id, 'tocontext'=>$this->parentlist->lastlist->context->id, 'sesskey'=>sesskey()));
+        //     $this->icons['up'] = $this->image_icon(
+        //         get_string('shareincontext', 'question', $this->parentlist->lastlist->context->get_context_name()), $url, 'up');
+        // }
     }
 
     public function item_html($extraargs = array()){
@@ -160,7 +161,7 @@ class question_category_list_item extends list_item {
             $deleteurl = new moodle_url($this->parentlist->pageurl, array('delete' => $this->id, 'sesskey' => sesskey()));
             $item .= html_writer::link($deleteurl,
                     $OUTPUT->pix_icon('t/delete', $str->delete),
-                    array('title' => $str->delete));
+                    array('title' => $str->delete , 'class' => 'float-right'));
         }
 
         return $item;
@@ -282,12 +283,14 @@ class question_category_object {
     public function display_user_interface() {
 
         /// Interface for editing existing categories
-        $this->output_edit_lists();
 
+        $this->output_edit_lists();
 
         echo '<br />';
         /// Interface for adding a new category:
         $this->output_new_table();
+        $popup = get_modal_boostrap('','add-category-question','Thêm danh mục câu hỏi');
+        echo $popup;
         echo '<br />';
 
     }
@@ -308,7 +311,11 @@ class question_category_object {
     public function output_edit_lists() {
         global $OUTPUT;
 
+        //Custom by Thắng:Chỉnh header danh mục câu hỏi
+        echo html_writer::start_div('header-category-question');
         echo $OUTPUT->heading_with_help(get_string('editcategories', 'question'), 'editcategories', 'question');
+        echo html_writer::tag('button','<i class="fa fa-plus mr-2" aria-hidden="true"></i>',['type' => 'button','class' => 'btn btn-primary mb-2','data-toggle' => 'modal','data-target' => '#add-category-question']);
+        echo html_writer::end_div();
 
         foreach ($this->editlists as $context => $list){
             $listhtml = $list->to_html(0, array('str'=>$this->str));
@@ -319,9 +326,9 @@ class question_category_object {
                 echo $OUTPUT->box_start('pb-0 boxwidthwide boxaligncenter generalbox questioncategories contextlevel' . $list->context->contextlevel, null, ['style' => 'padding-top:0!important']);
                 $fullcontext = context::instance_by_id($context);
                 echo '<div class="card-header icon-toggle" id="'.$list->context->contextlevel.'" data-toggle="collapse" data-target="#collapse'.$list->context->contextlevel.'" aria-expanded="true" aria-controls="collapse'.$list->context->contextlevel.'">';
-                echo $OUTPUT->heading(get_string('questioncatsfor', 'question', $fullcontext->get_context_name()), 5);
+                echo $OUTPUT->heading($fullcontext->get_context_name(), 5);
                 echo '</div>';
-                echo '<div class="collapse p-3" id="collapse'.$list->context->contextlevel.'"';
+                echo '<div class="collapse show category-collapse" id="collapse'.$list->context->contextlevel.'"';
                 echo '<div class="card-body" id="questioncategories_desc">';
                 echo $listhtml;
                 echo '</div>';

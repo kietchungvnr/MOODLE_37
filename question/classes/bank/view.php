@@ -711,7 +711,7 @@ class view {
         global $PAGE;
         echo \html_writer::start_tag('form', array('method' => 'get',
                 'action' => new \moodle_url($scriptpath), 'id' => 'displayoptions'));
-        echo \html_writer::start_div('row');
+        // echo \html_writer::start_div('row');
 
         $excludes = array('recurse', 'showhidden', 'qbshowtext');
         // If the URL contains any tags then we need to prevent them
@@ -726,22 +726,23 @@ class view {
         }
         echo \html_writer::input_hidden_params($this->baseurl, $excludes);
         
-        echo \html_writer::start_div('col-xl-7');
+        // echo \html_writer::start_div('col-xl-7');
         foreach ($this->searchconditions as $searchcondition) {
             echo $searchcondition->display_options();
         }
-        echo \html_writer::end_div();
-        echo \html_writer::start_div('col-xl-5',['style' => 'padding-top:10px']);
+        // echo \html_writer::end_div();
+        // Custom by Thắng : ẩn bớt thông tin ngân hàng câu hỏi
+        // echo \html_writer::start_div('col-xl-5',['style' => 'padding-top:10px']);
         
-        if ($showtextoption) {
-            $this->display_showtext_checkbox($showquestiontext);
-        }
+        // if ($showtextoption) {
+        //     $this->display_showtext_checkbox($showquestiontext);
+        // }
      
-        $this->display_advanced_search_form();
-        $go = \html_writer::empty_tag('input', array('type' => 'submit', 'value' => get_string('go')));
-        echo \html_writer::tag('noscript', \html_writer::div($go), array('class' => 'inline'));
-        echo \html_writer::end_div();
-        echo \html_writer::end_div();
+        // $this->display_advanced_search_form();
+        // $go = \html_writer::empty_tag('input', array('type' => 'submit', 'value' => get_string('go')));
+        // echo \html_writer::tag('noscript', \html_writer::div($go), array('class' => 'inline'));
+        // echo \html_writer::end_div();
+        // echo \html_writer::end_div();
         echo \html_writer::end_tag('form');
         $PAGE->requires->yui_module('moodle-question-searchform', 'M.question.searchform.init');
     }
@@ -776,7 +777,8 @@ class view {
      */
     protected function display_question_bank_header() {
         global $OUTPUT;
-        echo $OUTPUT->heading(get_string('questionbank', 'question'), 2);
+        // Custom by Thắng : sửa header ngân hàng câu hỏi
+        echo \html_writer::tag('div',$OUTPUT->heading(get_string('questionbank', 'question'), 2). '<div class="add-question-bank"><i class="fa fa-plus ml-2 mb-3" aria-hidden="true"></i></div>',['class' => 'header-questionbank']);
     }
 
     protected function create_new_question_form($category, $canadd) {
@@ -838,12 +840,13 @@ class view {
             $column->load_additional_data($questions);
         }
 
-        echo '<div class="categorypagingbarcontainer">';
+        // Custom by Thắng : ẩn bớt thông tin trang ngân hàng câu hỏi
+        // echo '<div class="categorypagingbarcontainer">';
         $pageingurl = new \moodle_url('edit.php', $pageurl->params());
         $pagingbar = new \paging_bar($totalnumber, $page, $perpage, $pageingurl);
-        $pagingbar->pagevar = 'qpage';
-        echo $OUTPUT->render($pagingbar);
-        echo '</div>';
+        // $pagingbar->pagevar = 'qpage';
+        // echo $OUTPUT->render($pagingbar);
+        // echo '</div>';
 
         echo '<form method="post" action="edit.php">';
         echo '<fieldset class="invisiblefieldset" style="display: block;">';
