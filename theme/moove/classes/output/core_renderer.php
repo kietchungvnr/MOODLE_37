@@ -415,7 +415,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $files = $CFG->wwwroot . '/user/files.php';
             // Danh mục học viên - giáo viên
             $output .= '<li class="navigation-header"><i class="fa fa-ellipsis-h"></i><span>'.get_string('private','theme_moove').'</span></li>';
-            if(isset($theme->settings->displayhome) && $theme->settings->displayhome == 1){
+            if($CFG->defaulthomepage == HOMEPAGE_SITE || $CFG->defaulthomepage == HOMEPAGE_USER){
                 $output .= '<li class="menu-link"><a href="'.$home .'"><i class="fa fa-home mr-3"></i>'. get_string('home', 'theme_moove') .'</a></li>';
             }
             $output .= '<li class="menu-link"><a href="'.$dashboard .'"><i class="fa fa-line-chart mr-3"></i>'. get_string('dashboard', 'theme_moove') .'</a></li>';
