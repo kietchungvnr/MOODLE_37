@@ -24,7 +24,6 @@
 
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/mod/quiz/locallib.php');
-$css = file_get_contents($CFG->dirroot . '/theme/moove/css/quizattempt.css');
 // Look for old-style URLs, such as may be in the logs, and redirect them to startattemtp.php.
 if ($id = optional_param('id', 0, PARAM_INT)) {
     redirect($CFG->wwwroot . '/mod/quiz/startattempt.php?cmid=' . $id . '&sesskey=' . sesskey());
@@ -134,7 +133,8 @@ if ($attemptobj->is_last_page($page)) {
     $nextpage = $page + 1;
 }
 
-//Custom by Thắng:
+//Custom by Thắng: Chỉnh sửa giao diện bài thi
+$css = file_get_contents($CFG->dirroot . '/theme/moove/css/quizattempt.css');
 $check = theme_moove_layout_check();
 if($check->hasiframe) {
     echo $css;

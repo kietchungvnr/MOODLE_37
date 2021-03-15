@@ -465,3 +465,4 @@ $string['courserequired'] = 'Khóa học không được bỏ trống';
 $string['modulerequired'] = 'Module không được bỏ trống';
 $string['reportaccess'] = 'Thống kê lượt truy cập hệ thống';
 $string['reportcoursestatus'] = 'Thống kê trạng thái khóa họ';
+$string['loginfollow'] = 'Theo dõi chúng tôi';

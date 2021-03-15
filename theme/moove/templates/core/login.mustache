@@ -19,6 +19,9 @@
     color: #455a64 !important;
    }        
    }
+   #page-login-index.moove-login #page-wrapper #page {
+    background-image: unset;
+   }
    #page-login-index .page-brand-info, #page-login-signup .page-brand-info {
    position: fixed;
    left: 0;
@@ -167,14 +170,35 @@
         transform: translate3d(0,0,0)
     }
 }
+body {
+    overflow: hidden;
+}
+@media (max-width: 767px) {
+    
+    .hidden-xs {
+        display: none !important;
+    }
+}
+@media (min-width: 1365px) {
+    .card-block {
+        padding: 3rem !important;
+    }
+}
+@media (max-width: 767px) {
+    .card-block {
+        padding: 3rem !important;
+    }
+}
+
 </style>
-<div class="row justify-content-center" id="yui_3_17_2_1_1598058773684_23">
-   <div class="page-brand-info">
-      
-   </div>
-   <div class="p-0 loginform" id="yui_3_17_2_1_1598058773684_22">
-      <div class="card" style="border: none; box-shadow: none;" id="yui_3_17_2_1_1598058773684_21">
-         <div class="card-block p-5" id="yui_3_17_2_1_1598058773684_20">
+<div class="row p-0">
+  <div class="col-md-9 hidden-sm hidden-xs p-0">
+      <img src="/theme/moove/pix/bg.jpg" class="vh-100 w-100">
+ </div>
+ <div class="col-md-3 col-sm-12 col-xs-12 p-0 bg-white">
+   <div class="p-0 ">
+      <div class="card" style="border: none; box-shadow: none;">
+         <div class="card-block">
             {{# logourl }}
             <h2 class="card-header text-center bg-transparent mb-3 p-4"><img src="{{logourl}}" title="{{sitename}}" alt="{{sitename}}" class="img-fluid"/> </h2>
             {{/ logourl }}
@@ -184,10 +208,9 @@
                   <div class="alert alert-danger" role="alert">{{error}}</div>
               </div>
             {{/error}}
-            <div class="card-body" id="yui_3_17_2_1_1598058773684_28">
-               <div class="row justify-content-md-center" id="yui_3_17_2_1_1598058773684_27">
-                  <div class="col-md-12" id="yui_3_17_2_1_1598058773684_26">
-                     <h3 class="mb-4" id="yui_3_17_2_1_1598058773684_25">{{#str}}login{{/str}}</h3>
+               <div class="row justify-content-md-center">
+                  <div class="col-md-12 p-0">
+                     <h4 class="mb-4">{{#str}}login{{/str}}</h4>
                      <form action="{{loginurl}}" method="post" id="login" class="signup-form">
                         <input id="anchor" type="hidden" name="anchor" value="">
                         <script>document.getElementById('anchor').value = location.hash;</script>
@@ -212,12 +235,12 @@
                               class="form-control"
                               placeholder={{#quote}}{{#str}}password{{/str}}{{/quote}}>
                         </div>
-                    <button type="submit" class="btn btn-primary btn-block" id="loginbtn">{{#str}}login{{/str}}</button>
+                    <button type="submit" class="btn btn-primary btn-block rounded" id="loginbtn">{{#str}}login{{/str}}</button>
                      </form>
                   </div>
-                  <div class="col-md-12" id="yui_3_17_2_1_1598233254846_22">
-                     <footer class="page-copyright py-4" id="yui_3_17_2_1_1598233254846_21">
-                        <p class="text-center" id="yui_3_17_2_1_1598233254846_20">Theo dõi chúng tôi</p>
+                  <div class="col-md-12 p-0">
+                     <footer class="page-copyright py-4">
+                        <p class="text-center text-muted">{{#str}}loginfollow, theme_moove{{/str}}</p>
                         <div class="social text-center">
                            <a href="#" class="btn btn-icon btn-round social-facebook p-0 mr-1"><img src="/theme/moove/pix/youtube.png"></i></a>
                            <a href="#" class="btn btn-icon btn-round social-twitter p-0 mr-1"><img src="/theme/moove/pix/facebook.png"></i></a>
@@ -226,11 +249,11 @@
                      </footer>
                   </div>
                </div>
-            </div>
          </div>
       </div>
    </div>
-</div>
+ </div>
+ </div>
 <script type="text/javascript">
    const submitform = (username, password) => {
        var username = username;

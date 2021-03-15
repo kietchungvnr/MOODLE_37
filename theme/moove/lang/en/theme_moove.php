@@ -465,3 +465,4 @@ $string['courserequired'] = 'Course is required';
 $string['modulerequired'] = 'Module is required';
 $string['accessreport'] = 'Access site report';
 $string['coursestatusreport'] = 'Course status report';
+$string['loginfollow'] = 'Folow us';

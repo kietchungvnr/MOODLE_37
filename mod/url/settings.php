@@ -58,9 +58,9 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox('url/printintro',
         get_string('printintro', 'url'), get_string('printintroexplain', 'url'), 1));
     $settings->add(new admin_setting_configselect('url/display',
-        get_string('displayselect', 'url'), get_string('displayselectexplain', 'url'), RESOURCELIB_DISPLAY_AUTO, $displayoptions));
+        get_string('displayselect', 'url'), get_string('displayselectexplain', 'url'), RESOURCELIB_DISPLAY_POPUP, $displayoptions));
     $settings->add(new admin_setting_configtext('url/popupwidth',
-        get_string('popupwidth', 'url'), get_string('popupwidthexplain', 'url'), 620, PARAM_INT, 7));
+        get_string('popupwidth', 'url'), get_string('popupwidthexplain', 'url'), 1000, PARAM_INT, 7));
     $settings->add(new admin_setting_configtext('url/popupheight',
-        get_string('popupheight', 'url'), get_string('popupheightexplain', 'url'), 450, PARAM_INT, 7));
+        get_string('popupheight', 'url'), get_string('popupheightexplain', 'url'), 700, PARAM_INT, 7));
 }

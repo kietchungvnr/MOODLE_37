@@ -778,7 +778,7 @@ class view {
     protected function display_question_bank_header() {
         global $OUTPUT;
         // Custom by Thắng : sửa header ngân hàng câu hỏi
-        echo \html_writer::tag('div',$OUTPUT->heading(get_string('questionbank', 'question'), 2). '<div class="add-question-bank"><i class="fa fa-plus ml-2 mb-3" aria-hidden="true"></i></div>',['class' => 'header-questionbank']);
+        echo \html_writer::tag('div',$OUTPUT->heading(get_string('questionbank', 'question'), 2). '<div class="add-question-bank"><i class="fa fa-plus position-relative text-white" aria-hidden="true" style="top:-4px;"></i></div>',['class' => 'header-questionbank']);
     }
 
     protected function create_new_question_form($category, $canadd) {
