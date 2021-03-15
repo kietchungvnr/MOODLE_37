@@ -262,7 +262,7 @@ define([
     // tag list todo help 
     function botResponseTopicHTML() {
         var elementId = 'chatbot-topic';
-        var listTag = ['Khóa học', 'Bài kiểm tra', 'Bài tập về nhà', 'Kết quả học tập', 'Kết quả học tập', 'Kết quả học tập', 'Kết quả học tập'];
+        var listTag = ['Khóa học', 'Khóa giảng', 'Bài kiểm tra', 'Bài tập về nhà'];
         return botResponseTagHTML(listTag, elementId);
     }
 
