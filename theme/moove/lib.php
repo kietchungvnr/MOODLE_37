@@ -828,7 +828,7 @@ function theme_moove_layout_check() {
     $object->settingexam = ($COURSE->id == 1) ? true : false;
     $check_is_teacher = check_teacherrole($USER->id);
     $check_is_student = check_studentrole($USER->id);
-    $url = $_SERVER['REQUEST_SCHEME'] . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    $url = $_SERVER['REQUEST_SCHEME'] . "://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
     $url_components = parse_url($url);
     if(isset($url_components['query'])) {
         parse_str($url_components['query'], $params); 

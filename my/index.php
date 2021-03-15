@@ -137,7 +137,7 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
     // Add button for editing page
     $params = array('edit' => !$edit);
     // Custom by Thắng : làm dashboard cho nhiều vai trò
-    $currenturl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    $currenturl = $CFG->wwwroot . "/my/index.php";
     $resetbutton = '';
     $resetstring = get_string('resetpage', 'my');
     $reseturl = new moodle_url("$CFG->wwwroot/my/index.php", array('edit' => 1, 'reset' => 1, 'sesskey'=>sesskey()));
