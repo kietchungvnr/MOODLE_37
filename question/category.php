@@ -151,11 +151,13 @@ echo $renderer->extra_horizontal_navigation();
 
 // Display the UI.
 if (!empty($param->edit)) {
-    $qcobject->edit_single_category($param->edit);
+    echo $qcobject->edit_single_category($param->edit);
 } else if ($questionstomove){
     $qcobject->display_move_form($questionstomove, $category);
 } else {
     // Display the user interface.
+    echo '<div class="category">';
     $qcobject->display_user_interface();
+    echo '</div>';
 }
 echo $OUTPUT->footer();

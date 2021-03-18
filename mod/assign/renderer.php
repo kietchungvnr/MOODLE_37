@@ -1437,6 +1437,7 @@ class mod_assign_renderer extends plugin_renderer_base {
                                              $filename,
                                              'moodle',
                                              array('class'=>'icon'));
+            // Custom by Thắng: Chỉnh sửa module assign - HTML
             $result .= '<li yuiConfig=\'' . json_encode($yuiconfig) . '\'>' .
                 '<div class="full-flex">' .
                     '<div><div class="fileuploadsubmission">' . $image . ' ' .

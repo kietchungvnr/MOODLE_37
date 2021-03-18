@@ -314,7 +314,7 @@ class question_category_object {
         //Custom by Thắng:Chỉnh header danh mục câu hỏi
         echo html_writer::start_div('header-category-question');
         echo $OUTPUT->heading_with_help(get_string('editcategories', 'question'), 'editcategories', 'question');
-        echo html_writer::tag('button','<i class="fa fa-plus mr-2" aria-hidden="true"></i>',['type' => 'button','class' => 'btn btn-primary mb-2','data-toggle' => 'modal','data-target' => '#add-category-question']);
+        echo html_writer::tag('div','<i class="fa fa-plus mr-2" aria-hidden="true"></i>',['class' => 'add-question-bank','data-toggle' => 'modal','data-target' => '#add-category-question']);
         echo html_writer::end_div();
 
         foreach ($this->editlists as $context => $list){

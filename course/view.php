@@ -264,8 +264,10 @@
     }
 
     $PAGE->set_heading($course->fullname);
-    // Custom by Vũ: Thêm add js cho chức năng sao chép module
+    // Custom by Vũ: Thêm add js cho chức năng sao chép module và focusmod
     $PAGE->requires->js_call_amd('core_course/copy_module','init', ['courseid' => $COURSE->id, 'userid' => $USER->id]);
+    $PAGE->requires->js_call_amd('theme_moove/focusmod','init');
+
     echo $OUTPUT->header();
 
     if ($USER->editing == 1) {
@@ -324,7 +326,6 @@
 
     // Include course AJAX
     include_course_ajax($course, $modnamesused);
-    $PAGE->requires->js_call_amd('theme_moove/focusmod','init');
     // CUstom by Vũ: Kiểm tra có phải là học viên hay không
     $is_student = current(get_user_roles($context, $USER->id))->shortname=='student'? true : false;
     echo html_writer::start_tag('div', array('id' => 'check-role', 'class'=>'d-none', 'data-role' => $is_student));

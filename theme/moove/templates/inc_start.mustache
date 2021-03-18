@@ -6337,8 +6337,8 @@ body.format-topcoll.editing .course-content .right.side {
     .page-header-headings {
         display: flex;
     }
-    .qtext img {
-        width: 100%;
+    .qtext img.icon {
+        width: auto;
     }
     .formulation img {
         width: 100%
@@ -7180,7 +7180,7 @@ body {
 #page-question-category i.icon.fa.slicon-settings {
     float: right;
 }
-#page-question-category .card .card-body form {
+#page-question-category .card .card-body .category form {
     display: none;
 }
 #page-question-category .card .card-body .modal .modal-body form {
@@ -7193,7 +7193,7 @@ body {
     align-items: center;
 }
 .header-category-question button {
-    padding: 2px 1px 2px 8px;
+    padding: 8px 1px 0px 8px;
     border-radius: 50%;
     /*margin-left: 5px;*/
     background: transparent !important;
@@ -7254,10 +7254,14 @@ table#categoryquestions {
     position: relative;
     width: 30px;
     height: 30px;
-    display: block;
     cursor: pointer;
     top: 0;
     border-radius: 35px;
+    background: #3c8dbc;
+    color: white;
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
 }
 #page-mod-quiz-edit .choosecategory .custom-select {
     width: 100%;
