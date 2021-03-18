@@ -466,3 +466,5 @@ $string['modulerequired'] = 'Module is required';
 $string['accessreport'] = 'Access site report';
 $string['coursestatusreport'] = 'Course status report';
 $string['loginfollow'] = 'Folow us';
+$string['templateimport_help'] = 'Import guide';
+$string['templateimportclick'] = 'Click download.';

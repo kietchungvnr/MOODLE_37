@@ -51,7 +51,11 @@ class question_import_form extends moodleform {
         $fileformatnames = get_import_export_formats('import');
         $radioarray = array();
         $separators = array();
+        // Custom by Vũ: Lượt bỏ 1 số format k cần thiết
+        $template_import = ['aiken', 'gift', 'missingword', 'multianswer'];
         foreach ($fileformatnames as $shortname => $fileformatname) {
+            if(!in_array($shortname, $template_import))
+                continue;
             $radioarray[] = $mform->createElement('radio', 'format', '', $fileformatname, $shortname);
 
             $separator = '';
@@ -65,6 +69,8 @@ class question_import_form extends moodleform {
         $radioarray[] = $mform->createElement('static', 'makelasthelpiconshowup', '');
         $mform->addGroup($radioarray, "formatchoices", '', $separators, false);
         $mform->addRule("formatchoices", null, 'required', null, 'client');
+
+        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-2">'.get_string('templateimport_help', 'theme_moove').'</div><div class="col-md-9 pr-0 form-inline felement"><a href="/theme/moove/data/Moodle_Question_template.docx">'.get_string('templateimportclick', 'theme_moove').'</a></div></div>');
 
         // Import options.
         $mform->addElement('header','general', get_string('general', 'form'));
