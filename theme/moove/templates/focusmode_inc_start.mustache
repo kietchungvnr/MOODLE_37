@@ -6090,12 +6090,20 @@ body.format-topcoll.editing .course-content .right.side {
 .number-question-mb {
     display: none;
 }
+.que.ddmarker .formulation .qtext,
+.que.shortanswer .info .qtext,
+.que.truefalse .formulation .qtext,
+.que.gapfill .info .qtext,
+.que.ddwtos .info .qtext,
+.que.ddimageortext .info .qtext, 
+.que.wordselect .info .qtext {
+    display: none;
+}
 @media(max-width: 950px) {
     li.nav-item.border-left {
         display: none;
     }
 }
-
 @media (max-width: 576px) {
     .d-flex-desktop {
         display: block;
@@ -6217,6 +6225,16 @@ body.format-topcoll.editing .course-content .right.side {
     .que .qtext {
         display: block;
     }
+    #page-mod-quiz-view .moodle-dialogue-focused {
+        left: 15px !important;
+        top: 100px !important;
+        z-index: 1046;
+        right: 15px !important;
+        width: auto;
+    }
+    #page-mod-quiz-view #mod_quiz_preflight_form {
+        margin-top: 15px;
+    }
 }
 /*//////*/
 .multianswer .qtext,
@@ -6252,6 +6270,114 @@ body.format-topcoll.editing .course-content .right.side {
 body {
     height: auto;
 }
+/*bài tập về nhà */
+#page-mod-assign-view div.submissionstatustable {
+    margin-bottom: 0;
+    padding: 0;
+} 
+@media(max-width: 576px) {
+    #page-mod-assign-view .generaltable tbody tr {
+        display: grid;
+        background: white;
+        /*border-top: 1px solid #dee2e6;*/
+    }
+    #page-mod-assign-view .generaltable {
+
+    }
+    #page-mod-assign-view .generaltable tbody th {
+        width: 100%;
+    }
+    #page-mod-assign-view .submissionstatustable {
+        padding: 0;
+    }
+    #page-mod-assign-view .submissionstatustable h3,
+    #page-mod-assign-view .gradingsummary h3{
+        display: none;
+    }
+    #page-mod-assign-view .generaltable .submissionnotgraded {
+        background: transparent;
+    }
+    #page-mod-assign-view #intro {
+        padding: 0 !important;
+        color: black;
+    }
+    #page-mod-assign-view .card-body {
+        padding: 0 !important;
+    }
+    #page-mod-assign-view .submissionaction.submit .singlebutton {
+        width: 100%;
+    }
+    #page-mod-assign-view .submissionaction.submit .singlebutton  button {
+        background: #007bff !important;
+        color: white;
+        border-radius: 10px;
+        width: 100%;
+    }
+    #page-mod-assign-view .submissionaction .submithelp {
+        display: none;
+    }
+    #page-mod-assign-view .submissionsummarytable {
+        padding-bottom: 0 !important;
+    }
+    #page-mod-assign-view .submissionaction {
+        padding: 5px !IMPORTANT;
+    }
+    #page-mod-assign-view .submissionaction button {
+        background: transparent !important;
+        color: #007bff;
+    }
+    #page-mod-assign-view td.submissionstatusdraft,
+    #page-mod-assign-view td.submissionstatussubmitted {
+        background-color: transparent;
+    }
+    #page-mod-assign-view .submissionsummarytable tr:nth-child(2) td a,
+    #page-mod-assign-view .submissionsummarytable tr:nth-child(3) td a  {
+        background: #DB2835;
+        border-radius: 10px;
+        padding: 5px 10px;
+        color: white !important;
+    }
+    #page-mod-assign-view .submissionsummarytable tr td {
+        color: grey;
+    }
+    #page-mod-assign-view .submissionsummarytable tr td.submissionstatusdraft a {
+        background: #F87F28 !important;
+    }
+    #page-mod-assign-view .submissionsummarytable tr td.submissionstatussubmitted a {
+        background: #357E1B !important;
+    }
+    #page-mod-assign-view .submissionstatustable {
+        margin: 0px -10px;
+    }
+    .path-mod-assign div.fileuploadsubmission a {
+        color: black;
+        overflow: hidden;
+        display: inline-block;
+        width: 280px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .path-mod-assign div.fileuploadsubmissiontime {
+        color: grey;
+        float:none;
+        margin-left: 28px;
+    }
+    .path-mod-assign table.ygtvtable td.ygtvcell.ygtvln {
+        display: none;
+    }
+    .path-mod-assign table.ygtvtable {
+        width: 100%;
+        margin-top: 10px;
+    }
+    .path-mod-assign #intro table.ygtvtable td.ygtvcontent {
+        box-shadow: 0px 8px 16px 0px rgb(0 0 0 / 16%);
+        padding: 10px;
+    }
+    .path-mod-assign .plugincontentsummary {
+        padding: 0 !important;
+    }
+}
+/*end bài tập về nhà */
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />

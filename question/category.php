@@ -156,6 +156,6 @@ if (!empty($param->edit)) {
     $qcobject->display_move_form($questionstomove, $category);
 } else {
     // Display the user interface.
-    echo $qcobject->display_user_interface();
+    $qcobject->display_user_interface();
 }
 echo $OUTPUT->footer();

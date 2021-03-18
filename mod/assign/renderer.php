@@ -962,7 +962,7 @@ class mod_assign_renderer extends plugin_renderer_base {
 
             if ($status->cansubmit) {
                 $urlparams = array('id' => $status->coursemoduleid, 'action'=>'submit');
-                $o .= $this->output->box_start('generalbox submissionaction');
+                $o .= $this->output->box_start('generalbox submissionaction submit');
                 $o .= $this->output->single_button(new moodle_url('/mod/assign/view.php', $urlparams),
                                                    get_string('submitassignment', 'assign'), 'get');
                 $o .= $this->output->box_start('boxaligncenter submithelp');
@@ -1039,7 +1039,7 @@ class mod_assign_renderer extends plugin_renderer_base {
 
             if ($submission) {
                 $cell1content = get_string('submissionstatus', 'assign');
-                $cell2content = get_string('submissionstatus_' . $submission->status, 'assign');
+                $cell2content = '<a>'.get_string('submissionstatus_' . $submission->status, 'assign').'</a>';
                 $this->add_table_row_tuple($t, $cell1content, $cell2content);
 
                 foreach ($history->submissionplugins as $plugin) {
@@ -1438,13 +1438,14 @@ class mod_assign_renderer extends plugin_renderer_base {
                                              'moodle',
                                              array('class'=>'icon'));
             $result .= '<li yuiConfig=\'' . json_encode($yuiconfig) . '\'>' .
-                '<div>' .
-                    '<div class="fileuploadsubmission">' . $image . ' ' .
+                '<div class="full-flex">' .
+                    '<div><div class="fileuploadsubmission">' . $image . ' ' .
                     $file->fileurl . ' ' .
                     $plagiarismlinks . ' ' .
                     $file->portfoliobutton . ' ' .
                     '</div>' .
-                    '<div class="fileuploadsubmissiontime">' . $file->timemodified . '</div>' .
+                    '<div class="fileuploadsubmissiontime">' . $file->timemodified . '</div></div>' .
+                    '<div style="color:black"><i class="fa fa-cloud-download fa-2x" aria-hidden="true"></i></div>' .
                 '</div>' .
             '</li>';
         }
