@@ -5931,7 +5931,6 @@ nav.navbar ul.navbar-nav .usermenu {
 }
 .tree-folder .folder.title {
     background: #f5f5f5;
-    margin-bottom: 10px;
     font-size: 16px;
 }
 .example input[type=text] {
@@ -6192,6 +6191,9 @@ body.format-topcoll.editing .course-content .right.side {
     .d-none-mb {
         display: none !important;
     }
+    #page-mod-quiz-attempt #page-header {
+        display: block !important;
+    }
     .d-flex-mb {
         display: flex !important;
     }
@@ -6358,9 +6360,9 @@ body.format-topcoll.editing .course-content .right.side {
         margin: -10px 0 0 0;
         border: 0;
     }
-    .card-body {
+/*    .card-body {
         background: white;
-    }
+    }*/
     
     .que span.qno {
         display: none;
@@ -7259,7 +7261,13 @@ table#categoryquestions {
 #page-question-edit .form-autocomplete-selection [role=listitem] {
     margin: 5px 0 !important;
 }
-
+/*///*/
+#viewApprovalModule {
+    display: none;
+}
+.k-widget.k-window #viewApprovalModule {
+    display: block;
+}
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />
