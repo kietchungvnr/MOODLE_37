@@ -1,4 +1,4 @@
-define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'kendo.all.min'], function($, Config, Str, Notification, alertify, kendo) {
+define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'kendo.all.min','local_newsvnr/initkendocontrolservices'], function($, Config, Str, Notification, alertify, kendo, kendoService) {
     "use strict";
     var init = function() {
         var strings = [{
@@ -39,7 +39,8 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
                     contenttype: "application/json",
                 }
                 if (foldername == '') {
-                    alertify.alert(s[0], s[2]);
+                    // var text = "* Bắt buộc nhập tên thư mục";
+                    $('.form_input_validate:not(:focus):invalid').css('background-image','url("theme/moove/pix/notvalid.png")');
                     return;
                 }
                 $(this).addClass('not-allow');
@@ -244,42 +245,19 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
                 $('#module-from-library').attr('moduleid', moduleid);
             })
             // kendo lọc khóa học 
-            $("#course-share-input").kendoDropDownList({
-                dataTextField: "name",
-                dataValueField: "courseid",
-                autoBind: false,
-                filter: "contains",
-                dataSource: {
-                    transport: {
-                        read: {
-                            url: scriptshare + 'filter_course',
-                            contentType: 'application/json; charset=utf-8',
-                            type: 'POST',
-                            dataType: 'json',
-                            serverFiltering: true
-                        }
-                    }
-                }
-            });
+            var kendoConfig = {};
+                kendoConfig.apiSettings = { url: scriptshare+'filter_course' };
+                kendoConfig.value = 'courseid';
+            var kendoCourseList = kendoService.initDropDownList(kendoConfig);
+            $("#course-share-input").kendoDropDownList(kendoCourseList);
             // kendo lọc section của khóa học
-            $("#course-section-input").kendoDropDownList({
-                cascadeFrom: "course-share-input",
-                dataTextField: "name",
-                dataValueField: "sectionid",
-                autoBind: false,
-                filter: "contains",
-                dataSource: {
-                    transport: {
-                        read: {
-                            url: scriptshare + 'filter_course_section',
-                            contentType: 'application/json; charset=utf-8',
-                            type: 'POST',
-                            dataType: 'json',
-                            serverFiltering: true
-                        }
-                    }
-                }
-            });
+            var kendoConfig = {};
+                kendoConfig.apiSettings = { url: scriptshare+'filter_course' };
+                kendoConfig.value = 'sectionid';
+                kendoConfig.cascadeFrom = 'course-share-input';
+            var kendoCourseSection = kendoService.initDropDownList(kendoConfig);
+            $("#course-section-input").kendoDropDownList(kendoCourseSection);
+            
             $("#share-module-library").click(function() {
                 var moduleid = $('#module-from-library').attr('moduleid');
                 var courseid = $('#course-share-input').val();

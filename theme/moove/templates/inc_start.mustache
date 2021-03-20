@@ -6337,8 +6337,8 @@ body.format-topcoll.editing .course-content .right.side {
     .page-header-headings {
         display: flex;
     }
-    .qtext img.icon {
-        width: auto;
+    .que img.icon {
+        width: auto !important;
     }
     .formulation img {
         width: 100%
@@ -7271,6 +7271,12 @@ table#categoryquestions {
 }
 #page-question-edit .form-autocomplete-selection [role=listitem] {
     margin: 5px 0 !important;
+    background: #f7f2f2;
+    min-width: 80px;
+    text-align: center;
+}
+#page-question-edit .form-autocomplete-selection {
+    text-align: center;
 }
 /*end question bank*/
 /*///*/
@@ -7364,14 +7370,52 @@ table#categoryquestions {
     }
     .path-mod-assign div.fileuploadsubmission a {
         color: black;
+        overflow: hidden;
+        display: inline-block;
+        width: 280px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
     .path-mod-assign div.fileuploadsubmissiontime {
         color: grey;
         float:none;
         margin-left: 28px;
     }
+    .path-mod-assign table.ygtvtable td.ygtvcell.ygtvln {
+        display: none;
+    }
+    .path-mod-assign table.ygtvtable {
+        width: 100%;
+        margin-top: 10px;
+    }
+    .path-mod-assign #intro table.ygtvtable td.ygtvcontent {
+        box-shadow: 0px 8px 16px 0px rgb(0 0 0 / 16%);
+        padding: 10px;
+    }
+    .path-mod-assign .plugincontentsummary {
+        padding: 0 !important;
+    }
+    .path-mod-assign div.gradingsummary {
+        margin: 0 -10px;
+    }
 }
 /*end bài tập về nhà */
+.form_input_validate {
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: 16px;
+    background-position-x: 99%;
+}
+.form_input_validate:focus:invalid {
+    background-image: url("theme/moove/pix/notvalid.png");
+}
+.form_input_validate:focus:valid {
+    background-image: url("theme/moove/pix/valid.png") !important;
+}
+.footer-big .footer-widget .logo img {
+    max-width: 230px !important;
+}
+</style>
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />

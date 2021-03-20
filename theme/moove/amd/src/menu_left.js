@@ -1,4 +1,4 @@
-define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/handle_cookie"], function($, Config, Str, Notification, Cookie) {
+define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/handle_cookie","local_newsvnr/initkendocontrolservices"], function($, Config, Str, Notification, Cookie, kendoService) {
     "use strict";
     $('#btn-menu').click(function() {
         var ck = Cookie.getCookie('menu');
@@ -65,4 +65,12 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         $(this).html('<a></a>') 
         $(this).children('a').append(text);
     })
+    var script = Config.wwwroot + '/local/newsvnr/restfulapi/webservice.php?action=';
+    var linkcourse = Config.wwwroot + '/course/view.php?id=';
+    var kendoConfig = {};
+        kendoConfig.apiSettings = { url: script+'search_course' };
+        kendoConfig.textfield = 'fullname';
+        kendoConfig.template = '<a href="'+linkcourse+'#:courseid#">#: fullname #</a>';
+    var kendoCourseAll = kendoService.initSearchAutoComplete(kendoConfig);
+    $("#course_search_form_fp").kendoAutoComplete(kendoCourseAll);
 });

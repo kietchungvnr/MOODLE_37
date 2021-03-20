@@ -117,7 +117,8 @@
 				<div class="modal-body add-folder-popup">
 				    <div class="form-group">
 						<label class="mb-1" for="email">{{#str}}foldername, local_newsvnr{{/str}}:</label>
-						<input autocomplete="off" class="form-control" id="foldername">
+						<input autocomplete="off" class="form-control form_input_validate" id="foldername" required>
+                        <div class="foldernamevalidate mt-1"></div>
 					</div>
                     <div class="form-check">
                         <input class="form-check-input folderdefault" type="checkbox" value="" onchange="defaultFolder()" checked>

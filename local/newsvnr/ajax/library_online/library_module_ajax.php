@@ -50,7 +50,6 @@ if (is_siteadmin()) {
                     LEFT JOIN {user} uss on uss.orgpositionid = up.positionid
                     WHERE (uss.id is NULL or uss.id = $USER->id) AND lf.visible = 1 AND cm.visible = 1 AND cm.deletioninprogress = 0 AND";
 }
-$paginationlink = $CFG->wwwroot . '/local/newsvnr/ajax/library_online/library_module_ajax.php?folderid=' . $folderid . '&search=' . $search . '&page=';
 if ($searchtype == "searchcontent") {
     $searchsql = "(lp.title LIKE $strsearch OR lp.contents LIKE $strsearch OR pa.intro LIKE $strsearch OR pa.content LIKE $strsearch OR ur.externalurl LIKE $strsearch OR (bc.CONTENT LIKE $strsearch OR bc.title LIKE $strsearch))";
 } else {
@@ -109,8 +108,9 @@ if (!empty($modulebyfolder)) {
         $output .= html_writer::end_tag('tr');
     }
 }
+$paginationlink = $CFG->wwwroot . '/local/newsvnr/ajax/library_online/library_module_ajax.php?folderid=' . $folderid . '&search=' . $search . '&modulefilter='. $modulefilter .'&page=';
 $perpageresult      = $perPage->getAllPageLinks(count($countall), $paginationlink, '#table-library');
-$pagination         = (!empty($perpageresult)) ? html_writer::tag('div', $perpageresult, ['class' => 'col-md-12 mb-2', 'id' => 'pagination', 'folderid' => $folderid, 'search' => $search]) : html_writer::tag('div', '', ['class' => 'col-md-12 mb-2', 'id' => 'pagination', 'folderid' => $folderid, 'search' => $search]);
+$pagination         = (!empty($perpageresult)) ? html_writer::tag('div', $perpageresult, ['class' => 'col-md-12 mb-2', 'id' => 'pagination', 'folderid' => $folderid, 'search' => $search,'modulefilter' => $modulefilter]) : html_writer::tag('div', '', ['class' => 'col-md-12 mb-2', 'id' => 'pagination', 'folderid' => $folderid, 'search' => $search]);
 $alert              = (empty($countall)) ? html_writer::tag('div', get_string('nomodule', 'local_newsvnr'), ['class' => 'alert-warning', 'role' => 'alert']) : '';
 $data['alert']      = $alert;
 $data['pagination'] = $pagination;
