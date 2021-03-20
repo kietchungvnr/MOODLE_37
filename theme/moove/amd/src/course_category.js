@@ -1,7 +1,8 @@
-define(["jquery", "core/config", "core/str", "core/notification"], function($, Config, Str, Notification) {
+define(["jquery", "core/config", "core/str", "core/notification","local_newsvnr/initkendocontrolservices"], function($, Config, Str, Notification, kendoService) {
     "use strict";
     var init = function() {
         // load khóa học theo danh mục khóa
+        var script = Config.wwwroot + '/local/newsvnr/restfulapi/webservice.php?action=';
         $('.ajax-load').click(function() {
             $('.loading-page').addClass('active');
             $('li').removeClass('active');
@@ -88,6 +89,33 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
                 $(this).css('background', 'transparent')
             }
         })
+        // search danh mục khóa học
+        var kendoConfig = {};
+            kendoConfig.apiSettings = { url:script + 'search_category'};
+            kendoConfig.textfield = 'name';
+            kendoConfig.select = function(e) {
+                setTimeout(function() { $('#courses_search_button').click()},500);
+            }
+        var kendoCategory = kendoService.initSearchAutoComplete(kendoConfig)
+        $("#category").kendoAutoComplete(kendoCategory);
+        // search danh mục khóa học
+        var kendoConfig = {};
+            kendoConfig.apiSettings = { url:script + 'search_course'};
+            kendoConfig.textfield = 'fullname';
+            kendoConfig.select = function(e) {
+                setTimeout(function() { $('#courses_search_button').click()},500);
+            }
+        var kendoCourseName = kendoService.initSearchAutoComplete(kendoConfig);
+        $("#keyword").kendoAutoComplete(kendoCourseName);
+        // search tên giáo viên 
+        var kendoConfig = {};
+            kendoConfig.apiSettings = { url:script + 'search_teacher'};
+            kendoConfig.textfield = 'fullnamet';
+            kendoConfig.select = function(e) {
+                setTimeout(function() { $('#courses_search_button').click()},500);
+            }
+        var kendoTeacherName = kendoService.initSearchAutoComplete(kendoConfig);
+        $("#teacher").kendoAutoComplete(kendoTeacherName);
     }
     return {
         init:init

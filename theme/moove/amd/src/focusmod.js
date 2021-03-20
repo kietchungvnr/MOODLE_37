@@ -4,7 +4,7 @@ require.config({
         iframetracker: "//cdn.rawgit.com/vincepare/iframeTracker-jquery/master/dist/jquery.iframetracker"
     }
 });
-define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/handle_cookie", 'iframetracker'], function($, Config, Str, Notification, Cookie, iframetracker) {
+define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/handle_cookie", 'iframetracker','kendo.all.min'], function($, Config, Str, Notification, Cookie, iframetracker,kendo) {
     "use strict";
     var init = function() {
         var strings = [{
@@ -286,6 +286,20 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         $('.back-focusmod').click(function() {
             $('#focus-mod').click();
         })
+        // swipe app 
+        var width = $(window).width();
+        if(width <= 576) {
+            $("html").kendoTouch({
+                enableSwipe: true,
+                swipe: function(e) { 
+                    $('.tab-pane.active').toggle('slide', function(){
+                        $(this).next().toggle('slide', function() {
+                        })
+                    })
+                }
+            });
+        }
+
     }
     return {
         init:init

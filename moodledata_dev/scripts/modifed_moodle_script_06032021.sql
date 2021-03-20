@@ -117,7 +117,7 @@ CREATE TABLE mdl_local_newsvnr_comments
 )
 
 -- Bảng lưu reply trong trang chi tiết tin tức chung
-CREATE TABLE mdl_local_newsvnr_replies]
+CREATE TABLE mdl_local_newsvnr_replies
 (
 	[id] [int] NOT NULL IDENTITY(1, 1) PRIMARY KEY,
 	[content] [nvarchar] (max) NULL,

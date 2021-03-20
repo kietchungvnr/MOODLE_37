@@ -466,3 +466,5 @@ $string['modulerequired'] = 'Module không được bỏ trống';
 $string['accessreport'] = 'Thống kê lượt truy cập hệ thống';
 $string['coursestatusreport'] = 'Thống kê trạng thái khóa học';
 $string['loginfollow'] = 'Theo dõi chúng tôi';
+$string['templateimport_help'] = 'Hướng dẫn import';
+$string['templateimportclick'] = 'Nhấp để tải về.';

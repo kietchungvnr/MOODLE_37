@@ -27,13 +27,15 @@ define(['jquery', 'core/config', 'core/str', 'kendo.all.min'], function($, Confi
     var initSearchAutoComplete = function(kendoConfig) {
         Object.assign(kendoConfig.apiSettings,kendoConfigDefault.apiSettings)
         return {
-            dataTextField: "name",
+            dataTextField: kendoConfig.textfield,
             filter: "contains",
-            minLength: 2,
-            dataSource: newDataSource(kendoConfig)
+            minLength: 3,
+            dataSource: newDataSource(kendoConfig),
+            select:kendoConfig.select,
+            template:kendoConfig.template
         }
     }   
-    var newDataSource = function(kendoConfig) {        
+    var newDataSource = function(kendoConfig) {   
         return new kendo.data.DataSource({
             transport: {
                 read: kendoConfig.apiSettings,
