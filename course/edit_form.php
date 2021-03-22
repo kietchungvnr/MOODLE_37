@@ -277,7 +277,10 @@ class course_edit_form extends moodleform {
 
         $courseformats = get_sorted_course_formats(true);
         $formcourseformats = array();
+        $ignoreformats = ['multitopic', 'onetopic', 'tiles', 'weeks', 'topics', 'social', 'singleactivity'];
         foreach ($courseformats as $courseformat) {
+            if(in_array($courseformat, $ignoreformats))
+                continue;
             $formcourseformats[$courseformat] = get_string('pluginname', "format_$courseformat");
         }
         if (isset($course->format)) {
