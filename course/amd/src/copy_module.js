@@ -192,51 +192,52 @@ define(['jquery', 'core/str', 'core/modal_factory', 'core/modal_events',
             });
 
             // Lấy danh sách khóa học theo user login
-            $('#list_course').kendoMultiSelect({
-                placeholder: "Chọn khóa học...",
-                dataTextField: "name",
-                dataValueField: "value",
-                dataSource: {
-                    transport: {
-                        read: {
-                            type: "GET",
-                            processData: true,
-                            dataType: "json",
-                            contenttype: "application/json",
-                            url: script,
-                            data: {
-                                action : "list_course",
-                                userid : templateData.userid
+            Str.get_string('selectcourse', 'theme_moove').then(function(placeholder) {
+                $('#list_course').kendoMultiSelect({
+                    placeholder: placeholder + "...",
+                    dataTextField: "name",
+                    dataValueField: "value",
+                    dataSource: {
+                        transport: {
+                            read: {
+                                type: "GET",
+                                processData: true,
+                                dataType: "json",
+                                contenttype: "application/json",
+                                url: script,
+                                data: {
+                                    action : "list_course",
+                                    userid : templateData.userid
+                                }
+                            },
+                            parameterMap: function(options, operation) {
+                                if (operation == "read") {
+                                    if (options["filter"]) {
+                                        if (options["filter"]["filters"][0])
+                                            options["q"] = options["filter"]["filters"][0].value;
+                                    }
+                                    return options;
+                                }
                             }
                         },
-                        parameterMap: function(options, operation) {
-                            if (operation == "read") {
-                                if (options["filter"]) {
-                                    if (options["filter"]["filters"][0])
-                                        options["q"] = options["filter"]["filters"][0].value;
+                        schema: {
+                            model: {
+                                fields: {
+                                    coursid: {
+                                        type: "number"
+                                    },
+                                    coursename: {
+                                        type: "string"
+                                    },
                                 }
-                                return options;
                             }
-                        }
+                        },
+                        pageSize: 30,
+                        serverPaging: true,
+                        serverFiltering: true
                     },
-                    schema: {
-                        model: {
-                            fields: {
-                                coursid: {
-                                    type: "number"
-                                },
-                                coursename: {
-                                    type: "string"
-                                },
-                            }
-                        }
-                    },
-                    pageSize: 30,
-                    serverPaging: true,
-                    serverFiltering: true
-                },
+                });
             });
-
             // Xử lý khi nhấn copy submit
             $('#submit').click(function(e) {
                 e.preventDefault();
@@ -257,6 +258,10 @@ define(['jquery', 'core/str', 'core/modal_factory', 'core/modal_events',
                     {
                         key: 'modulerequired',
                         component: 'theme_moove'
+                    },
+                    {
+                        key: 'copyingdata',
+                        component: 'theme_moove'
                     }
                 ];
                 Str.get_strings(strings).then(function(s) {
@@ -275,6 +280,8 @@ define(['jquery', 'core/str', 'core/modal_factory', 'core/modal_events',
                             $('#hanlde_message').html('');
                         }, 5000)
                         return 0;
+                    } else {
+                        $('#hanlde_message').html("<div class='alert alert-success mt-3'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>" + s[2] + "</div>");
                     }
                     $.ajax({
                         type: "GET",
@@ -292,7 +299,7 @@ define(['jquery', 'core/str', 'core/modal_factory', 'core/modal_events',
                         },
                         success:function(data) {
                             var percentage = 0;
-
+                            listCourseKendo.value([]);
                             var timer = setInterval(function(){
                                 percentage = percentage + 20;
                                 progress_bar_process(percentage, timer, data);
@@ -345,6 +352,15 @@ define(['jquery', 'core/str', 'core/modal_factory', 'core/modal_events',
             if(getAction == 'data-action-copy-module=popup') {
                 createModal(templateData);
             }
+        });
+        $('#page-course-admin li a').click(function() {
+            var _this = this;
+            Str.get_string('copymodule', 'theme_moove').then(function(action) {
+                var getAction = $(_this).text();
+                if(getAction === action)
+                    createModal(templateData);
+
+            });
         });
     }
 
