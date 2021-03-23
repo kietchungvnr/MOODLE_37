@@ -4478,6 +4478,13 @@ class settings_navigation extends navigation_node {
                              new pix_icon('i/settings', ''));
         }
 
+        // Custom by Vũ: Add question bank lên nút setting course
+        if ($adminoptions->questionbank) {
+            $url = new moodle_url('/question/edit.php', array('courseid' => $course->id));
+            $coursenode->add(get_string('questionbank', 'local_newsvnr'), $url, self::TYPE_SETTING,
+                'questionbank', 'questionbank', new pix_icon('i/settings', 'questionbank'));
+        }
+
         if (!$adminoptions->update && $adminoptions->tags) {
             $url = new moodle_url('/course/tags.php', array('id' => $course->id));
             $coursenode->add(get_string('coursetags', 'tag'), $url, self::TYPE_SETTING, null, 'coursetags', new pix_icon('i/settings', ''));
@@ -4549,10 +4556,10 @@ class settings_navigation extends navigation_node {
         }
 
         // Import data from other courses
-        if ($adminoptions->import) {
-            $url = new moodle_url('/backup/import.php', array('id'=>$course->id));
-            $coursenode->add(get_string('import'), $url, self::TYPE_SETTING, null, 'import', new pix_icon('i/import', ''));
-        }
+        // if ($adminoptions->import) {
+        //     $url = new moodle_url('/backup/import.php', array('id'=>$course->id));
+        //     $coursenode->add(get_string('import'), $url, self::TYPE_SETTING, null, 'import', new pix_icon('i/import', ''));
+        // }
 
         // Copy this course.
         if ($adminoptions->copy) {
@@ -4562,15 +4569,15 @@ class settings_navigation extends navigation_node {
 
         // Custom by Vũ: Thêm chức năng sao chép module
         if ($adminoptions->copymodule) {
-            $url = new moodle_url('/backup/copy.php', array('id' => $course->id));
-            $coursenode->add(get_string('copymodule', 'theme_moove'), 'javascript:;', self::TYPE_SETTING, null, 'copy2', new pix_icon('t/copy', 'data-action-copy-module=popup'));
+            $url = new moodle_url('#', array('id' => $course->id));
+            $coursenode->add(get_string('copymodule', 'theme_moove'), 'javascript:;', self::TYPE_SETTING, null, 'copymodule', new pix_icon('t/copy', 'data-action-copy-module=popup'));
         }
 
         // Reset this course
-        if ($adminoptions->reset) {
-            $url = new moodle_url('/course/reset.php', array('id'=>$course->id));
-            $coursenode->add(get_string('reset'), $url, self::TYPE_SETTING, null, 'reset', new pix_icon('i/return', ''));
-        }
+        // if ($adminoptions->reset) {
+        //     $url = new moodle_url('/course/reset.php', array('id'=>$course->id));
+        //     $coursenode->add(get_string('reset'), $url, self::TYPE_SETTING, null, 'reset', new pix_icon('i/return', ''));
+        // }
 
         // Questions
         require_once($CFG->libdir . '/questionlib.php');
@@ -4587,10 +4594,10 @@ class settings_navigation extends navigation_node {
             } else {
                 $haseditabletypes = $this->cache->{'contexthasrepos'.$coursecontext->id};
             }
-            if ($haseditabletypes) {
-                $url = new moodle_url('/repository/manage_instances.php', array('contextid' => $coursecontext->id));
-                $coursenode->add(get_string('repositories'), $url, self::TYPE_SETTING, null, null, new pix_icon('i/repository', ''));
-            }
+            // if ($haseditabletypes) {
+            //     $url = new moodle_url('/repository/manage_instances.php', array('contextid' => $coursecontext->id));
+            //     $coursenode->add(get_string('repositories'), $url, self::TYPE_SETTING, null, null, new pix_icon('i/repository', ''));
+            // }
         }
 
         // Manage files
@@ -4603,9 +4610,12 @@ class settings_navigation extends navigation_node {
 
         // Let plugins hook into course navigation.
         $pluginsfunction = get_plugins_with_function('extend_navigation_course', 'lib.php');
+        // Custom by Vũ: bỏ 1 số chức năng trên setting khóa học
+        $ignorefunction = ['report','enrol','block', 'tool'];
         foreach ($pluginsfunction as $plugintype => $plugins) {
             // Ignore the report plugin as it was already loaded above.
-            if ($plugintype == 'report') {
+            // Custom by Vũ: bỏ 1 số chức năng trên setting khóa học
+            if (in_array($plugintype, $ignorefunction)) {
                 continue;
             }
             foreach ($plugins as $pluginfunction) {

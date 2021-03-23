@@ -45,6 +45,10 @@ if ($courseid == $SITE->id) {
 $PAGE->set_title($title);
 $PAGE->set_heading($course->fullname);
 $PAGE->navbar->add($title);
+// Custom by Vũ: Thêm chức năng copy module trong khóa học
+$PAGE->requires->js_call_amd('core_course/copy_module','init', ['courseid' => $COURSE->id, 'userid' => $USER->id]);
+$node->children->remove('questionbank', navigation_node::TYPE_SETTING);
+
 echo $OUTPUT->header();
 echo $OUTPUT->heading($title);
 

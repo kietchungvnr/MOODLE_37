@@ -468,3 +468,4 @@ $string['coursestatusreport'] = 'Course status report';
 $string['loginfollow'] = 'Folow us';
 $string['templateimport_help'] = 'Import guide';
 $string['templateimportclick'] = 'Click download.';
+$string['copyingdata'] = 'Copying data';

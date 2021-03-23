@@ -4152,7 +4152,9 @@ function course_get_user_administration_options($course, $context) {
     $options->backup = has_capability('moodle/backup:backupcourse', $context);
     $options->restore = has_capability('moodle/restore:restorecourse', $context);
     $options->copy = \core_course\management\helper::can_copy_course($course->id);
-    $options->copymodule = \core_course\management\helper::can_copy_course($course->id);
+    // Custom by Vũ: Thêm chức năng copy module và add question bank vào nút setting
+    $options->copymodule = has_capability('moodle/grade:manage', $context);
+    $options->questionbank = has_capability('moodle/grade:manage', $context);
     
     $options->files = ($course->legacyfiles == 2 && has_capability('moodle/course:managefiles', $context));
 
