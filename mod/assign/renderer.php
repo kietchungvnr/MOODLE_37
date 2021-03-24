@@ -389,8 +389,26 @@ class mod_assign_renderer extends plugin_renderer_base {
         if ($summary->cangrade) {
             $urlparams = array('id' => $summary->coursemoduleid, 'action' => 'grader');
             $url = new moodle_url('/mod/assign/view.php', $urlparams);
-            $o .= html_writer::link($url, get_string('grade'),
-                ['class' => 'btn btn-primary ml-1']);
+
+            // Custom by Vũ: Đổi kiểu hiện thị chấm điểm bài tập về nhà thành popup
+            $o .= html_writer::link('javascript:;', get_string('grade'),
+                ['class' => 'btn btn-primary ml-1', 'id' => 'view-grader']);
+            $o .= html_writer::tag('style', "@media (min-width: 577px) { .modal-dialog { max-width: 90%; } }",['type' => 'text/css']);
+            $o .= html_writer::start_tag('div', ['class' => 'modal', 'id' => 'grader-modal']);
+            $o .= html_writer::start_tag('div', ['class' => 'modal-dialog modal-xl']);
+            $o .= html_writer::start_tag('div', ['class' => 'modal-content']);
+            $o .= html_writer::start_tag('div', ['class' => 'modal-header']);
+            $o .= html_writer::tag('h4',  get_string('grade'),['class' => 'modal-title']);
+            $o .= html_writer::tag('button', '&times;',['class' => 'close', 'type' => 'button', 'data-dismiss' => 'modal']);
+            $o .= html_writer::end_tag('div');
+            $o .= html_writer::start_tag('div', ['class' => 'modal-body p-0']);
+            $o .= html_writer::tag('iframe', '', ['id' => 'grader-popup', 'src' => $url, 'height' => 768, 'width' => '100%', 'frameborder' => 0]);
+            $o .= html_writer::end_tag('div'); // end body
+            $o .= html_writer::end_tag('div'); // end content
+            $o .= html_writer::end_tag('div'); // end dialog
+            $o .= html_writer::end_tag('div'); // end modal
+            $o .= html_writer::tag('script', "$('#view-grader').click(function(e) { $('#grader-modal').modal('show') })",['type' => 'text/javascript']);
+
         }
         $o .= $this->output->container_end();
 
