@@ -500,7 +500,7 @@ class mod_quiz_mod_form extends moodleform_mod {
         $errors = parent::validation($data, $files);
         // Custom by Vũ: bắt trùng tên Quiz
         $code = trim($data['code']);
-        $current = $DB->get_record('quiz', array('id' => $data['instance']), '*', MUST_EXIST);
+        $current = $DB->get_record('quiz', array('id' => $data['instance']), '*');
 
         if (!$current or $current->code !== $data['code']) {
             if ($DB->record_exists('quiz', array('code'=>$code))) {
