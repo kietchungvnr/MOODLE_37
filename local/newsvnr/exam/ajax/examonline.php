@@ -158,6 +158,7 @@ foreach ($subjectdata as $subject) {
         $output .= '<div class="detail-quiz"><i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>' . $countquestion->count . ' ' . get_string('question', 'local_newsvnr') . '</div>';
         $output .= '<div class="detail-quiz"><i class="fa fa-clock-o mr-1" aria-hidden="true"></i>' . convertTimeExam($quiz->timelimit) . '</div>';
         $output .= '<div class="detail-quiz">' . $countattempt->count . ' ' . get_string('attempt', 'local_newsvnr') . '</div>';
+        $output .= '<div class="detail-quiz"><img src="/theme/moove/pix/qr-code.svg" class="cl-cursor qr-code-icon" data-qrcode="qrcode" data-qrcontent="'.$url.'"></div>';
         $output .= '</div>';
         $output .= '</div>';
     }
