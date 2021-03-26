@@ -180,14 +180,15 @@ if ($editform->is_cancelled()) {
     // The form has been cancelled, take them back to what ever the return to is.
     redirect($returnurl);
 } else if ($data = $editform->get_data()) {
+
     //Custom by Vũ: Params and url hrm api
-    $params_el = [
-                'CourseName' => $data->fullname,
-                'CourseCode' =>  $data->code,
-            ];
-    $params_hrm = [];
     $course_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecCourse']);
     if($course_api) {
+        $params_el = [
+                    'CourseName' => $data->fullname,
+                    'CourseCode' =>  $data->code,
+                ];
+        $params_hrm = [];
         $getparams_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $course_api->id]);
         foreach ($getparams_hrm as $key => $value) {
             if(array_key_exists($value->client_params, $params_el)) {
@@ -225,8 +226,8 @@ if ($editform->is_cancelled()) {
         if($course) {
             if($params_hrm) {
                 $params_hrm['Status'] = "E_CREATE";
-                if($data->typeofcourse == 1) {
-                    // HTTPPost($url_hrm, $params_hrm);
+                if($data->typeofcourse == COURSE_INTERVIEW_HRM || $data->typeofcourse == COURSE_TRANING_HRM) {
+                    HTTPPost($url_hrm, $params_hrm);
                 }
             }
         }
@@ -331,7 +332,7 @@ if ($editform->is_cancelled()) {
                 $params_hrm['ExamCode'] = $strexamcode;
             }
             $params_hrm['Status'] = "E_UPDATE";
-            if($data->typeofcourse == 1)
+            if($data->typeofcourse == COURSE_INTERVIEW_HRM || $data->typeofcourse == COURSE_TRAINING_HRM)
                 HTTPPost($url_hrm, $params_hrm);    
         }
         
