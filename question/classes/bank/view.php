@@ -589,7 +589,6 @@ class view {
                     new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
             $PAGE->requires->js_call_amd('core_question/edit_tags', 'init', ['#questionscontainer']);
         }
-        // var_dump($tagids);die();
         array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
         array_unshift($this->searchconditions, new \core_question\bank\search\category_condition(
                 $cat, $recurse, $editcontexts, $this->baseurl, $this->course));
