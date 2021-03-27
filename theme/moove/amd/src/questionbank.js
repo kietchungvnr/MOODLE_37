@@ -11,6 +11,22 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
                 $('.createnewquestion .singlebutton button').trigger('click');
             })
         }
+        $('.tag-item').click(function() {
+            var id = $(this).attr('value');
+            var url = window.location.href;
+            if($(this).hasClass('active')) {
+                url = url.replace('&qtagids[]='+id,'');
+            } else {
+                url += '&qtagids[]=' + id;
+            }
+            window.location.href = url;
+        })
+        $('.checkbox input').change(function() {
+            $('.modulespecificbuttonscontainer').show();
+        })
+        $('#qbheadercheckbox').change(function() {
+            $('.modulespecificbuttonscontainer').show();
+        })
     }
     return {
         init: init

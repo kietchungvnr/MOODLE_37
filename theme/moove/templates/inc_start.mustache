@@ -6172,6 +6172,7 @@ body.format-topcoll.editing .course-content .right.side {
     display: none;
 }
 .que.ddmarker .formulation .qtext,
+.que.essay .formulation .qtext,
 .que.shortanswer .info .qtext,
 .que.truefalse .formulation .qtext,
 .que.gapfill .info .qtext,
@@ -7266,17 +7267,31 @@ table#categoryquestions {
 #page-mod-quiz-edit .choosecategory .custom-select {
     width: 100%;
 }
-#page-question-edit .form-autocomplete-selection {
-    min-height:auto;
-}
 #page-question-edit .form-autocomplete-selection [role=listitem] {
-    margin: 5px 0 !important;
+    margin: 0 3px !important;
     background: #f7f2f2;
-    min-width: 80px;
     text-align: center;
+    border-radius: 10px;
+    padding: 3px 15px;
+    color: grey;
 }
 #page-question-edit .form-autocomplete-selection {
     text-align: center;
+    min-height:auto;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    align-items: center;
+}
+#page-question-edit .tag-condition-container {
+    display: none;
+}
+#page-question-edit .tag-item.active {
+    color: white;
+    background: #3c8dbc;
+}
+#page-question-edit .modulespecificbuttonscontainer {
+    display: none; 
 }
 /*end question bank*/
 /*///*/

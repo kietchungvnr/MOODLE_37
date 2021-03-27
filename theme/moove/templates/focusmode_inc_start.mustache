@@ -6091,6 +6091,7 @@ body.format-topcoll.editing .course-content .right.side {
     display: none;
 }
 .que.ddmarker .formulation .qtext,
+.que.essay .formulation .qtext,
 .que.shortanswer .info .qtext,
 .que.truefalse .formulation .qtext,
 .que.gapfill .info .qtext,
@@ -6127,7 +6128,9 @@ body.format-topcoll.editing .course-content .right.side {
     .card-body {
         background: white;
     }
-    
+    #page-mod-quiz-attempt .card-body {
+        background: #f7f7f7;
+    }
     #page-mod-quiz-attempt .submitbtns {
         height: 35px;
         margin-bottom: 60px;
@@ -6144,10 +6147,11 @@ body.format-topcoll.editing .course-content .right.side {
         background: transparent;
         border-radius: unset;
         display: block;
-        font-size: 14px;
+        font-size: 15px;
     }
-    .que {
+    #page-mod-quiz-attempt .que {
         padding: 0;
+        background: #f7f7f7;
     }
     #page-content {
         margin-top: 0;
@@ -6170,10 +6174,24 @@ body.format-topcoll.editing .course-content .right.side {
     .que.multichoice .answer div.r1,
     .que.truefalse .answer div.r0,
     .que.truefalse .answer div.r1 {
-        border: 1px solid #cac5c5;
         border-radius: 8px;
         padding: 8px 5px;
         margin: 10px 0;
+        background: white;
+        background: linear-gradient(to right, #007bff 50%, white 50%);
+        background-size: 201% 100%;
+        background-position: right bottom;
+        transition: all ease 0.3s;
+    }
+    .que.multichoice .answer div.r0.active,
+    .que.multichoice .answer div.r1.active {
+        background-position: left bottom;
+        color: white;
+        transition: all ease 0.3s;
+    }
+    .que.multichoice .answer div.r0.active .answernumber,
+    .que.multichoice .answer div.r1.active .answernumber {
+        visibility: hidden;
     }
     .que.truefalse .answer div.r0 input,
     .que.truefalse .answer div.r1 input {
@@ -6228,16 +6246,57 @@ body.format-topcoll.editing .course-content .right.side {
     .que .qtext {
         display: block;
     }
+    #page-mod-quiz-attempt .que .qtext {
+        font-size: 15px;
+    }
     #page-mod-quiz-view .moodle-dialogue-focused {
         left: 15px !important;
         top: 100px !important;
-        z-index: 1046;
+        z-index: 1005;
         right: 15px !important;
         width: auto;
     }
     #page-mod-quiz-view #mod_quiz_preflight_form {
         margin-top: 15px;
     }
+    .que.multichoice .formulation .answer .answernumber {
+        text-transform: uppercase;
+        width: 25px;
+        height: 25px;
+        text-align: center;
+        border-radius: 50%;
+        margin-right: 5px;
+        background: #007bff;
+        color: white;
+        font-weight: bold;
+        padding: 2px;
+    }
+    #page-mod-quiz-attempt .que.multichoice .formulation .r1 input[type="radio"],
+    #page-mod-quiz-attempt .que.multichoice .formulation .r0 input[type="radio"] {
+        display: none;
+    }
+    #page-mod-quiz-attempt .que.multichoice .formulation label {
+        font-size: 15px;
+        align-items: center;
+    }
+    body#page-mod-quiz-attempt {
+        background: #f7f7f7;
+    } 
+    .que.multichoice .clear-choice {
+        height: 25px;
+        text-align: center;
+        padding: 3px;
+        border-radius: 50%;
+        color: #007bff;
+        background: white;
+        width: 27px;
+        font-size: 18px;
+        display: none;
+    }
+    .qtype_multichoice_clearchoice {
+        display: none;
+    }
+
 }
 /*//////*/
 .multianswer .qtext,
