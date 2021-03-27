@@ -1,4 +1,10 @@
 <style type="text/css">
+    .que.gapselect .info .qtext {
+        display: none;
+    }
+    .que.ddwtos .info .qtext {
+        display: none;
+    }
     .que.multianswer .qtext {
         display: none;
     }
