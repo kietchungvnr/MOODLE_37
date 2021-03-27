@@ -1,4 +1,12 @@
 define(["jquery", "core/config", 'kendo.all.min', "core/str", "core/notification", "local_newsvnr/initkendocontrolservices", "theme_moove/generate_qrcode"], function($, Config, kendo, Str, Notification, kendoService, qrCode) {
+    
+    var showQrCode = function() {
+        $('[data-qrcode=qrcode]').bind('click', function(e) {
+            var getQrContent = $(this).attr('data-qrcontent');
+            qrCode.init('[data-qrcode=qrcode]', getQrContent);
+        })
+    }
+
     var init = function() {
         var strings = [{
             key: 'listexamrequired',
@@ -20,12 +28,7 @@ define(["jquery", "core/config", 'kendo.all.min', "core/str", "core/notification
             $.getJSON(script, function(data) {
                 $('#table-exam').hide().html(data.result).fadeIn('fast');
                 //Tạo mã QR cho mỗi bài thi
-                $(document).ready(function() {
-                    $('[data-qrcode=qrcode]').bind('click', function(e) {
-                        var getQrContent = $(this).attr('data-qrcontent');
-                        qrCode.init('[data-qrcode=qrcode]', getQrContent);
-                    })
-                })
+                showQrCode();
             })
             $.getJSON(script + "?action=exam_category", function(data) {
                 $('#examonline-category').hide().html(data.category_exam).fadeIn('fast');
@@ -69,6 +72,7 @@ define(["jquery", "core/config", 'kendo.all.min', "core/str", "core/notification
                             examtype: examType
                         }
                     }
+                    $('#add-quiz').addClass('d-none');
                     $.ajax(script, settingsExamCategory).then(function(response) {
                         var obj = $.parseJSON(response);
                         $('#examonline-category').hide().html(obj.category_exam).fadeIn('fast');
@@ -103,6 +107,7 @@ define(["jquery", "core/config", 'kendo.all.min', "core/str", "core/notification
                 $.ajax(script, settings).then(function(response) {
                     var obj = $.parseJSON(response);
                     $('#table-exam').hide().html(obj.result).fadeIn('fast');
+                    showQrCode();
                     $('.loading-page').removeClass('active');
                     $('#menu-tree-exam li.exam').removeClass('not-allow');
                 });
@@ -137,6 +142,8 @@ define(["jquery", "core/config", 'kendo.all.min', "core/str", "core/notification
                 $.ajax(script, settings).then(function(response) {
                     var obj = $.parseJSON(response);
                     $('#table-exam').hide().html(obj.result).fadeIn('fast');
+                    //Tạo mã QR cho mỗi bài thi
+                    showQrCode();
                     $('.loading-page').removeClass('active');
                 });
             })

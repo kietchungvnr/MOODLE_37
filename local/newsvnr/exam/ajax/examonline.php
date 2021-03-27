@@ -82,6 +82,9 @@ if ($action == "exam_category") {
             $cancreateexam = 'true';
         else
             $cancreateexam = 'false';
+        if(is_siteadmin()) {
+            $cancreateexam = 'true';
+        }
         foreach ($list_subject as $subject) {
             $category_exam .= '<li class="list-subcategory subject-exam" data-cancreate="'.$cancreateexam.'" data-examsujbectexam="' . $subject->examsubjectexam . '" id="' . $subject->id . '"><a>' . $subject->name . '</a></li>';
         }
