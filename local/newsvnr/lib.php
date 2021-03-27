@@ -25,18 +25,6 @@
  **/
 
 defined('MOODLE_INTERNAL') || die();
-/**
- *   Khóa tuyển dụng HRM
- **/
-define('COURSE_INTERVIEW_HRM', 1);
-/**
- *   Khóa đào tạo HRM
- **/
-define('COURSE_TRAINING_HRM', 2);
-/**
- *  Khóa EBM
- **/
-define('COURSE_PORTAL_EBM', 3);
 
 require_once($CFG->libdir.'/filelib.php');
 use theme_moove\util\theme_settings;
