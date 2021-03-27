@@ -3170,9 +3170,6 @@ div[data-region='coursecompetencies'] {
   p {
     margin-bottom: 0;
   }
-  .custom-select {
-    margin-top: 12px;
-  }
 }
 .gradeimport_data_area {
   width: auto;
@@ -3344,6 +3341,11 @@ table.quizreviewsummary {
       display: none;
     }
   }
+}
+#page-grade-report-overview-index {
+	.tab-pane.active {
+		display: none;
+	}
 }
 #page-mod-quiz-review {
   .submitbtns {
@@ -7670,9 +7672,6 @@ body.format-topcoll.editing {
   body {
     background-color: #ffffff;
   }
-  .action-menu-trigger {
-    display: none;
-  }
   .questionflag {
     display: none;
   }
@@ -7834,6 +7833,9 @@ body.format-topcoll.editing {
     float: left;
     width: 20%;
     float: left;
+  }
+  .k-widget.k-window {
+  	width: 98vw;
   }
 }
 @media (max-width: 900px) {
@@ -8435,3 +8437,73 @@ body.format-topcoll.editing {
     }
   }
 }
+.topbar-nav.header {
+  #topbar {
+    background: transparent;
+    padding: 0 32px;
+    width: 100%;
+    min-height: 51px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+  nav#topbar {
+    ul.menu-categories {
+      display: flex;
+      margin-bottom: 0;
+      margin-left: 5px;
+      li.menu {
+        >a {
+          display: flex;
+          height: 100%;
+          padding: 10px 0 10px 0;
+          margin-right: 44px;
+          border-radius: 6px;
+          >div {
+            align-self: center;
+            margin-right: 6px;
+          }
+        }
+        position: relative;
+        padding: 11px 0 11px 0;
+        a {
+          >div {
+            span {
+              font-size: 14px;
+              font-weight: 400;
+              color: #0e1726;
+              vertical-align: top;
+            }
+          }
+        }
+      }
+    }
+  }
+  padding: 0;
+  width: 100%;
+  top: 0;
+  margin: 0;
+  -webkit-box-shadow: 0px 0px 15px 1px rgb(138 132 206 / 3%);
+  -moz-box-shadow: 0px 0px 15px 1px rgba(138, 132, 206, 0.03);
+  box-shadow: 0px 20px 20px rgb(126 142 177 / 12%);
+  background: #fff;
+  min-height: 53px;
+  right: 0;
+  left: 0;
+}
+#page-admin-search {
+  .card-body {
+    padding: 0;
+  }
+}
+#page-admin-tool-lp-coursecompetencies {
+  .form-autocomplete-selection {
+    display: none;
+  }
+}
+.col-md-3.table-competencies {
+  background: #3c8dbc;
+  font-weight: bold;
+  color: white;
+  padding: 10px 15px;
+}
+

@@ -53,7 +53,7 @@ echo $output->header();
 $baseurl = new moodle_url('/admin/tool/lp/coursecompetencies.php');
 $nav = new \tool_lp\output\module_navigation($course->id, $currentmodule, $baseurl);
 echo $output->render($nav);
-echo $output->heading($title);
+// echo $output->heading($title);
 
 echo $output->render($page);
 
