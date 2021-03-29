@@ -81,7 +81,10 @@ if ($attemptobj->is_finished()) {
 if (empty($attemptobj->get_quiz()->showblocks)) {
     $PAGE->blocks->show_only_fake_blocks();
 }
-
+//Custom by Thắng: bỏ session mobile khi kết thúc thi
+if(isset($_SESSION['ismobile'])) {
+    unset($_SESSION['ismobile']);
+}
 $navbc = $attemptobj->get_navigation_panel($output, 'quiz_attempt_nav_panel', -1);
 $regions = $PAGE->blocks->get_regions();
 $PAGE->blocks->add_fake_block($navbc, reset($regions));

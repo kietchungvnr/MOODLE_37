@@ -35,4 +35,4 @@ $version  = 2020061500.11;              // 20200615      = branching date YYYYMM
 $release  = '3.9+ (Build: 20032021)'; // Human-friendly version name
 $branch   = '39';                       // This version's branch.
 $maturity = MATURITY_STABLE;             // This version's maturity level.
-$build_version = '39_W011.1_2021';
+$build_version = '39_W12.1_2021';

@@ -571,7 +571,7 @@ class view {
      */
     public function display($tabname, $page, $perpage, $cat,
             $recurse, $showhidden, $showquestiontext, $tagids = []) {
-        global $PAGE, $CFG;
+        global $PAGE, $CFG, $DB;
 
         if ($this->process_actions_needing_ui()) {
             return;
@@ -589,12 +589,24 @@ class view {
                     new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
             $PAGE->requires->js_call_amd('core_question/edit_tags', 'init', ['#questionscontainer']);
         }
-
         array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
         array_unshift($this->searchconditions, new \core_question\bank\search\category_condition(
                 $cat, $recurse, $editcontexts, $this->baseurl, $this->course));
         $this->display_options_form($showquestiontext);
-
+        // Custom by Thắng : làm mới bộ lọc câu hỏi
+        $list_tag = $DB->get_records_sql("SELECT DISTINCT t.id,t.name from {tag} t JOIN {tag_instance} ti on ti.tagid = t.id");
+        if(!empty($list_tag)) {
+            echo \html_writer::start_div('form-autocomplete-selection');
+            echo \html_writer::tag('div','Tags:',['class' => 'tag-title mr-2 font-bold','style' => 'color:black']);
+            foreach ($list_tag as $tag) {
+                if(in_array($tag->id,$tagids)) {
+                    echo \html_writer::tag('div','<i class="fa fa-times mr-2" aria-hidden="true"></i>'.$tag->name,['role' => 'listitem','class' => 'tag-item active','value' => $tag->id]);
+                } else {
+                    echo \html_writer::tag('div',$tag->name,['role' => 'listitem','class' => 'tag-item','value' => $tag->id]);
+                }
+            }
+            echo \html_writer::end_div();
+        }
         // Continues with list of questions.
         $this->display_question_list($editcontexts,
                 $this->baseurl, $cat, $this->cm,

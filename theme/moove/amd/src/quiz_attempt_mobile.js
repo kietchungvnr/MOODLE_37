@@ -63,6 +63,38 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
                     $('#quiz-timer').next('div').children('div#quiz-timer').remove();
                 }
             })
+            $('.multichoice .answer input[type="radio"]').change(function() {
+                var name = $(this).attr('name');
+                var id = name.replace('q','');
+                    id = id.replace(':','-');
+                    id = id.replace('_answer','');
+                    id = '#question-'+id;
+                $(id+' div.r0').removeClass('active');
+                $(id+' div.r1').removeClass('active');
+                $(this).parent('div').addClass('active');
+                $('.clear-choice[name="'+name+'"]').remove();    
+                var clearchoice = $('<div class="clear-choice" name="'+name+'"><i class="fa fa-times" aria-hidden="true"></i></div>').insertAfter($(this).next());
+                setTimeout(function() {
+                    clearchoice.show()
+                },300);
+                $('.clear-choice').click(function() {
+                    var name = $(this).attr('name');
+                    name += '-1';
+                    $('.qtype_multichoice_clearchoice a[for="'+name+'"]').trigger('click')
+                    $(this).parent().removeClass('active');
+                    $(this).remove();
+                })
+            })
+            $('.multichoice .answer input[type="radio"]').each(function() {
+                if($(this).is(":checked")   ) {
+                    $(this).parent('div').addClass('active');
+                    var name = $(this).attr('name');
+                    var clearchoice = $('<div class="clear-choice" name="'+name+'"><i class="fa fa-times" aria-hidden="true"></i></div>').insertAfter($(this).next());
+                    setTimeout(function() {
+                        clearchoice.show()
+                    },300)
+                }
+            })
         })
     }
     return {

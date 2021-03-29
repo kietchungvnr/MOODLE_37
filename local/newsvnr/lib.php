@@ -25,7 +25,7 @@
  **/
 
 defined('MOODLE_INTERNAL') || die();
-// require_once($CFG->dirroot.'/local/newsvnr/classes/output/news_page.php');
+
 require_once($CFG->libdir.'/filelib.php');
 use theme_moove\util\theme_settings;
 
@@ -1667,8 +1667,8 @@ function encode_array($args)
 function getToken($url) {
     $data = [
         'grant_type' => 'password',
-        'username' => 'phong.nguyen',
-        'password' => '123'
+        'username' => 'vnr',
+        'password' => 'VNR@muc123'
     ];
     $params = encode_array($data);
     $curl = curl_init();
@@ -1690,7 +1690,7 @@ function getToken($url) {
 
 //curl gửi dữ liệu kiểu json
 function HTTPPost($url,$data) {
-    $urltoken = 'http://103.42.56.200:8088/Token';
+    $urltoken = 'http://113.190.242.50:7709/Token';
     $token = getToken($urltoken);
     $auth = 'Authorization: Bearer ' . $token;
     $params = encode_array($data);

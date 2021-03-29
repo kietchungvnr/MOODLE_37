@@ -456,7 +456,7 @@ class mod_quiz_renderer extends plugin_renderer_base {
             $nextpage) {
         $output = '';
         $output .= $this->header();
-        $output .= $this->quiz_notices($messages);
+        // $output .= $this->quiz_notices($messages);
         $output .= $this->attempt_form($attemptobj, $page, $slots, $id, $nextpage);
         $output .= $this->footer();
         return $output;

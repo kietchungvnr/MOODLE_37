@@ -151,6 +151,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         // Chỉ áp dụng khi có role là học viên trong 1 khóa
         var getBaseUrl = Cookie.getCookie('baseUrl');
         if(getBaseUrl.includes('course/view.php?id=')) {
+            debugger
             if($('[data-role=1]').length > 0) {
                 $('.course-content li.activity a.aalink').bind('click', function(e) {
                     e.preventDefault();
@@ -193,16 +194,18 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                 }
             }
             if(width <= 576) {
+                var isMobile = true
                 var iframeheight = height;
             } else {
+                var isMobile = false
                 var iframeheight = height - 60;
             }
             if(modType == 'resource') {
                 $('body').removeAttr('style');
                 var iframe = '<iframe id="mod-iframe" src="'+url+'" height="768" frameBorder="0"></iframe>';
             } else if(modType == 'quiz') {
-
                 var iframe = '<iframe id="mod-iframe" src="'+url+'" height="'+iframeheight+'" frameBorder="0"></iframe>';
+                createSession(isMobile);
             } else {
                 $('body').removeAttr('style');
                 var iframe = '<iframe id="mod-iframe" src="'+url+'" frameBorder="0"></iframe>';
@@ -222,7 +225,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                             if(width > 576) {
                                 $('#mod-iframe').removeAttr('height');
                                 const iframes = iFrameResize({ log: false }, '#mod-iframe');
-                            }
+                            } 
                         } else {
                             const iframes = iFrameResize({ log: false }, '#mod-iframe');
                         }
@@ -299,7 +302,19 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                 }
             });
         }
-
+        // Hàm tạo session 
+        function createSession(devicemobile) {
+            var settings = {
+                    contenttype: "application/json",
+                    type:"GET",
+                    processData:true,
+                    data: {
+                        devicemobile:devicemobile
+                    }
+                }
+            var script = Config.wwwroot + '/local/newsvnr/ajax/session.php'  
+            $.ajax(script,settings).then(function(){})
+        }
     }
     return {
         init:init

@@ -82,6 +82,9 @@ if ($action == "exam_category") {
             $cancreateexam = 'true';
         else
             $cancreateexam = 'false';
+        if(is_siteadmin()) {
+            $cancreateexam = 'true';
+        }
         foreach ($list_subject as $subject) {
             $category_exam .= '<li class="list-subcategory subject-exam" data-cancreate="'.$cancreateexam.'" data-examsujbectexam="' . $subject->examsubjectexam . '" id="' . $subject->id . '"><a>' . $subject->name . '</a></li>';
         }
@@ -158,6 +161,7 @@ foreach ($subjectdata as $subject) {
         $output .= '<div class="detail-quiz"><i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>' . $countquestion->count . ' ' . get_string('question', 'local_newsvnr') . '</div>';
         $output .= '<div class="detail-quiz"><i class="fa fa-clock-o mr-1" aria-hidden="true"></i>' . convertTimeExam($quiz->timelimit) . '</div>';
         $output .= '<div class="detail-quiz">' . $countattempt->count . ' ' . get_string('attempt', 'local_newsvnr') . '</div>';
+        $output .= '<div class="detail-quiz"><img src="/theme/moove/pix/qr-code.svg" class="cl-cursor qr-code-icon" data-qrcode="qrcode" data-qrcontent="'.$url.'"></div>';
         $output .= '</div>';
         $output .= '</div>';
     }

@@ -740,9 +740,17 @@ class quiz_attempt {
      */
     protected function determine_layout() {
         $this->pagelayout = array();
-
+        
         // Break up the layout string into pages.
-        $pagelayouts = explode(',0', $this->attempt->layout);
+        
+        // Custom by Thắng : Sửa format số câu hỏi trên trang ở mobile
+        if(isset($_SESSION['ismobile']) && $_SESSION['ismobile'] == true) {
+            $layoutmobile = str_replace(',0,',',',$this->attempt->layout);
+            $layoutmobile = str_replace(',0','',$layoutmobile);
+            $pagelayouts = explode(',', $layoutmobile);
+        } else {
+            $pagelayouts = explode(',0', $this->attempt->layout);
+        }
 
         // Strip off any empty last page (normally there is one).
         if (end($pagelayouts) == '') {

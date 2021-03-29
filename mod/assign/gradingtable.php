@@ -990,7 +990,8 @@ class assign_grading_table extends table_sql implements renderable {
             }
 
             $url = new moodle_url('/mod/assign/view.php', $urlparams);
-            $link = '<a href="' . $url . '" class="btn btn-primary">' . get_string('grade') . '</a>';
+            // Custom by Vũ: Đổi kiểu hiện thị chấm điểm bài tập về nhà thành popup
+            $link = '<a href="javascript:;" class="btn btn-primary" data-id="grading" data-grading-url="'.$url.'">' . get_string('grade') . '</a>';
             $grade .= $link . $separator;
         }
 

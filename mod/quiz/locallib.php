@@ -887,7 +887,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
         // Custom by Vũ: POST CURL 
         if($success) {
             // Đẩy thông tin kết quả tuyển dụng sang HRM
-            if($typeofcourse == 1) {
+            if($typeofcourse == COURSE_INTERVIEW_HRM) {
                 if($interview_api && $interview_api->visible == 1) {
                     $get_params_interview_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $interview_api->id]);
                     $params_interview_hrm = [];
@@ -935,7 +935,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                 }
             }
             // Đẩy thông tin kết quả đào tạo sang HRM
-            if($typeofcourse == 2) {
+            if($typeofcourse == COURSE_TRAINING_HRM) {
                 if($training_api && $training_api->visible == 1) {
                     $get_params_training_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $training_api->id]);
                     $params_training_hrm = [];
@@ -983,7 +983,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                 }
             }
             // Đẩy thông tin kết quả kì thi đầu vào và kì thi trong lớp sang EBM
-            if($typeofcourse == 3) {
+            if($typeofcourse == COURSE_PORTAL_EBM) {
                 if($portal_exam_api && $portal_exam_api->visible == 1) {
                     $get_params_portal_ebm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $portal_exam_api->id]);
                     $params_portal_ebm = [];
@@ -1030,7 +1030,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
         //Custom by Vũ: POST CURL 
         if($success) {
             // Đẩy thông tin kết quả tuyển dụng sang HRM
-            if($typeofcourse == 1) {
+            if($typeofcourse == COURSE_INTERVIEW_HRM) {
                 if($interview_api && $interview_api->visible == 1) {
                     $get_params_interview_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $interview_api->id]);
                     $params_interview_hrm = [];
@@ -1078,7 +1078,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                 }
             }
             // Đẩy thông tin kết quả đào tạo sang HRM
-            if($typeofcourse == 2) {
+            if($typeofcourse == COURSE_TRAINING_HRM) {
                 if($training_api && $training_api->visible == 1) {
                     $get_params_training_hrm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $training_api->id]);
                     $params_training_hrm = [];
@@ -1126,7 +1126,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
                 }
             }
             // Đẩy thông tin kết quả kì thi đầu vào và kì thi trong lớp sang EBM
-            if($typeofcourse == 3) {
+            if($typeofcourse == COURSE_PORTAL_EBM) {
                 if($portal_exam_api && $portal_exam_api->visible == 1) {
                     $get_params_portal_ebm = $DB->get_records('local_newsvnr_api_detail', ['api_id' => $portal_exam_api->id]);
                     $params_portal_ebm = [];
