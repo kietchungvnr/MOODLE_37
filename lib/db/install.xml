@@ -101,6 +101,12 @@
         <FIELD NAME="enablecompletion" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 = allow use of 'completion' progress-tracking on this course. 0 = disable completion tracking on this course."/>
         <FIELD NAME="completionnotify" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Notify users when they complete this course"/>
         <FIELD NAME="cacherev" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Incrementing revision for validating the course content cache"/>
+        <!-- Custom by Vũ: Thêm field vào bảng course -->
+        <FIELD NAME="code" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="pinned" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="typeclass" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="required" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="typeofcourse" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -211,6 +217,55 @@
         <INDEX NAME="timecompleted" UNIQUE="false" FIELDS="timecompleted"/>
         <INDEX NAME="useridcourse" UNIQUE="true" FIELDS="userid, course"/>
       </INDEXES>
+    </TABLE>
+    <!-- Custom by Vũ: Khóa học theo vị trí (PB - CD - CV) -->
+    <TABLE NAME="course_position" COMMENT="The position of course">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The course of position."/>
+        <FIELD NAME="courseofposition" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The position of course"/>
+        <FIELD NAME="courseoforgstructure" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The orgstructure of course"/>
+        <FIELD NAME="courseofjobtitle" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The jobtitle of course"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time this record was created."/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time this record was last modified"/>
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The user who last modified this field."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="coursekey" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id" COMMENT="Foreign key on course table."/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="course" UNIQUE="true" FIELDS="course" COMMENT="Index on course."/>
+      </INDEXES>
+    </TABLE>
+    <!-- Custom by Vũ: Thêm bảng cấu hình thời gian tối thiểu để hoàn thành module -->
+    <TABLE NAME="course_modules_completion_rule" COMMENT="The rules complete module in course">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="moduleid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The course module on course"/>
+        <FIELD NAME="completiontimespent" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The number time spend complete course"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time this record was last modified"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="moduleidkey" TYPE="foreign" FIELDS="moduleid" REFTABLE="course_modules" REFFIELDS="id" COMMENT="Foreign key on course module table."/>
+      </KEYS>
+    </TABLE>
+    <!-- Custom by Vũ: Thêm bảng lưu thông tin thời gian học viên đã xem được bao nhiêu thời gian trong module -->
+    <TABLE NAME="course_modules_completion_timer" COMMENT="Time completed course module">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="completionruleid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The completion ruleid of course module"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="starttime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="lastseentime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="completed" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodifiedoffline" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="completionruleidkey" TYPE="foreign" FIELDS="completionruleid" REFTABLE="course_modules_completion_rule" REFFIELDS="id" COMMENT="Foreign key on course modules completion rule table."/>
+      </KEYS>
     </TABLE>
     <TABLE NAME="enrol" COMMENT="Instances of enrolment plugins used in courses, fields marked as custom have a plugin defined meaning, core does not touch them. Create a new linked table if you need even more custom fields.">
       <FIELDS>
@@ -873,6 +928,11 @@
         <FIELD NAME="middlename" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Middle name"/>
         <FIELD NAME="alternatename" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Alternate name - Useful for three-name countries."/>
         <FIELD NAME="moodlenetprofile" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Moodle.net profile information"/>
+        <!-- Custom by Vũ: Thêm field vào bảng user -->
+        <FIELD NAME="usercode" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false" DEFAULT="0"/>
+        <FIELD NAME="orgpositionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0"/>
+        <FIELD NAME="orgstructureid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0"/>
+        <FIELD NAME="typeofuser" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" DEFAULT="0"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -1407,6 +1467,7 @@
         <FIELD NAME="category" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="parent" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="level" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="questiontext" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="questiontextformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="generalfeedback" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="to store the question feedback"/>
@@ -2574,6 +2635,25 @@
         <KEY NAME="sourcefileid" TYPE="foreign" FIELDS="sourcefileid" REFTABLE="files" REFFIELDS="id"/>
         <KEY NAME="destfileid" TYPE="foreign" FIELDS="destfileid" REFTABLE="files" REFFIELDS="id"/>
       </KEYS>
+    </TABLE>
+    <!-- Custom by Vũ: Thêm bảng yêu cầu duyệt file -->
+    <TABLE NAME="files_request" COMMENT="Table to track file request.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="fileid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="requester" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="reviewer" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fileidkey" TYPE="foreign" FIELDS="fileid" REFTABLE="files" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="fileid" UNIQUE="false" FIELDS="fileid"/>
+      </INDEXES>
     </TABLE>
     <TABLE NAME="repository" COMMENT="This table contains one entry for every configured external repository instance.">
       <FIELDS>
@@ -3771,6 +3851,45 @@
         <INDEX NAME="cmidcompetencyid" UNIQUE="true" FIELDS="cmid, competencyid"/>
       </INDEXES>
     </TABLE>
+    <!-- Custom by Vũ: Thêm bảng năng lực theo vị trí -->
+    <TABLE NAME="competency_position" COMMENT="competency on orgstructure - orgjobtitle - orgposition">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="competencyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The course competency this activity is linked to."/>
+        <FIELD NAME="positionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The positionid of department"/>
+        <FIELD NAME="ordernumber" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="The order competency."/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time this record was created."/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time this record was last modified"/>
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The user who last modified this field."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="competencyidkey" TYPE="foreign" FIELDS="competencyid" REFTABLE="competency" REFFIELDS="id" COMMENT="Foreign key on competency table."/>
+        <KEY NAME="positionidkey" TYPE="foreign" FIELDS="positionid" REFTABLE="orgstructure_position" REFFIELDS="id" COMMENT="Foreign key on orgstructure position table."/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="competencyidpositionid" UNIQUE="true" FIELDS="competencyid, positionid" COMMENT="Index on competencyid and positionid so we can quickly find what to do when an activity is completed."/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Custom by Vũ: Thêm bảng lưu năng lực theo vị trí và khoá học của năng lực đó -->
+    <TABLE NAME="competency_coursepositioncomp" COMMENT="The competency orgstructure on course">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="competencyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The course competency this activity is linked to."/>
+        <FIELD NAME="orgpositionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The positionid of department"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The position on course."/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time this record was created."/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time this record was last modified"/>
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The user who last modified this field."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="courseidkey" TYPE="foreign" FIELDS="courseid" REFTABLE="courseid" REFFIELDS="id" COMMENT="Foreign key on course table."/>
+        <KEY NAME="orgpositionidkey" TYPE="foreign" FIELDS="orgpositionid" REFTABLE="orgpositionid" REFFIELDS="id" COMMENT="Foreign key on orgstructure position table."/>
+      </KEYS>
+    </TABLE>
+
     <TABLE NAME="oauth2_endpoint" COMMENT="Describes the named endpoint for an oauth2 service.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
