@@ -14,8 +14,12 @@
     }
     .gradeform.mform .fcontainer {
     	border: 0;
-    	padding: 10px 0;
+    	padding-bottom:10px;
         background: white;
+        border-radius: 5px;
+    }
+    .gradeform.mform .fcontainer .col-md-2 {
+        padding: 0;
     }
     .box.boxaligncenter.gradingform {
         padding-top: 0 !important;
@@ -81,6 +85,7 @@
     .path-mod-assign [data-region="grade-panel"] div.submissionstatustable {
         margin-bottom: 0;
         padding: 0;
+        border-radius: 5px;
     }
     .path-mod-assign [data-region="user-info"] em.nowrap {
         overflow: initial !important;
@@ -96,7 +101,6 @@
     }
     .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .assignsubmission_file,
     .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .assignsubmission_comments  {
-        border-bottom: 1px solid #dee2e6;
         padding: 0 10px;
     }
     .path-mod-assign [data-region="grade-panel"] .fitem.has-popout {
