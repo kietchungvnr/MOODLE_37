@@ -1,3 +1,5 @@
+$table-color: #3c8dbc;
+$border-color:#dee2e6;
 * {
   &:focus-within {
     outline: 0;
@@ -742,7 +744,7 @@ body.drawer-open-right {
 .input-group-btn {
   width: 45px;
   .btn-search {
-    background-color: #3c8dbc;
+    background-color: $table-color;
     border: 0;
     display: inline-block;
     width: 50px;
@@ -1007,7 +1009,7 @@ div.dataTables_wrapper {
   border-bottom: 1px solid lavenderblush;
   background-color: #060606;
   color: white;
-  background-color: #3c8dbc;
+  background-color: $table-color;
   i {
     margin-right: 5px;
   }
@@ -1952,7 +1954,7 @@ li {
   }
 }
 nav.navcourse {
-  background: #3c8dbc;
+  background: $table-color;
   width: 100%;
   height: 52px;
 }
@@ -2001,7 +2003,7 @@ nav.navcourse {
     padding: 0 !important;
     margin-top: 10px;
     h3 {
-      color: #3c8dbc;
+      color: $table-color;
       font-size: 16px !important;
     }
   }
@@ -2098,7 +2100,7 @@ legend {
   text-align: center;
   margin: 15px 0px;
   color: white;
-  background: #3c8dbc;
+  background: $table-color;
   padding: 8px;
   font-weight: bold;
 }
@@ -2184,7 +2186,7 @@ legend {
     }
     color: #3f7dec;
     font-weight: bold;
-    color: #3c8dbc;
+    color: $table-color;
   }
   td.creatorname {
     span.date {
@@ -2192,7 +2194,7 @@ legend {
     }
     color: #3f7dec;
     font-weight: bold;
-    color: #3c8dbc;
+    color: $table-color;
   }
   .header {
     padding: 10px 5px;
@@ -2305,7 +2307,7 @@ a.icon-no-margin {
   }
 }
 .calendar_event_course {
-  background-color: #3c8dbc;
+  background-color: $table-color;
   h3.name {
     color: white;
   }
@@ -3286,7 +3288,7 @@ table.quizreviewsummary {
 .generaltable.quizattemptsummary {
   thead {
     tr {
-      background: #3c8dbc;
+      background: $table-color;
       color: white;
     }
   }
@@ -3595,7 +3597,7 @@ tr.drag-samenode {
 }
 .forum-general-table {
   thead {
-    background-color: #3c8dbc;
+    background-color: $table-color;
     tr {
       th {
         padding-left: 30px;
@@ -4075,7 +4077,7 @@ nav.focusmod {
   height: 40px;
   display: block;
   z-index: 1000;
-  background: #2871b5d4;
+  background: $table-color;
   cursor: pointer;
   border-radius: 35px;
 }
@@ -4229,7 +4231,7 @@ li.nav-item.border-left {
 table {
   thead {
     th {
-      background-color: #3c8dbc;
+      background-color: $table-color;
       color: white;
       a {
         color: white;
@@ -4238,7 +4240,7 @@ table {
   }
   tbody {
     .icon {
-      color: #3c8dbc;
+      color: $table-color;
     }
   }
 }
@@ -4278,9 +4280,9 @@ table#participants {
 .pagination {
   .page-item.active {
     .page-link {
-      background: #3c8dbc;
+      background: $table-color;
       border: none;
-      background: #3c8dbc;
+      background: $table-color;
       border: none;
     }
   }
@@ -4417,7 +4419,7 @@ i.fa-angle-right.active {
   }
 }
 .list-category.title {
-  background: #3c8dbc;
+  background: $table-color;
   overflow: hidden;
   a {
     color: white !important;
@@ -4442,7 +4444,7 @@ i.fa-angle-right.active {
 .search-button {
   width: 161px;
   height: 35px;
-  background: #3c8dbc;
+  background: $table-color;
   color: #FFFFFF;
   font-size: 14px;
   font-weight: 500;
@@ -4481,9 +4483,9 @@ i.fa-angle-right.active {
     white-space: nowrap;
     color: #fff;
     border: 1px solid transparent;
-    border-color: #3c8dbc;
+    border-color: $table-color;
     border-radius: .215rem;
-    background-color: #3c8dbc;
+    background-color: $table-color;
   }
   span.arrow_text {
     font-size: 1rem;
@@ -4496,9 +4498,9 @@ i.fa-angle-right.active {
     white-space: nowrap;
     color: #fff;
     border: 1px solid transparent;
-    border-color: #3c8dbc;
+    border-color: $table-color;
     border-radius: .215rem;
-    background-color: #3c8dbc;
+    background-color: $table-color;
   }
   .calendar-controls {
     .current {
@@ -4704,7 +4706,7 @@ table.k-selectable {
 }
 .k-grid {
   tr.k-state-selected {
-    background-color: #3c8dbc !important;
+    background-color: $table-color !important;
   }
   .k-header {
     .k-button.k-grid-excel {
@@ -4763,7 +4765,7 @@ a.add-sections {
   width: 100%;
   padding: unset;
   align-items: center;
-  background-color: #3c8dbc;
+  background-color: $table-color;
   a {
     align-items: center;
     height: 100%;
@@ -4822,7 +4824,7 @@ a.add-sections {
       th {
         background-color: #f6f9fb;
         color: #36353b;
-        border-bottom: 1px solid #dee2e6;
+        border-bottom: 1px solid $border-color;
       }
     }
     td {
@@ -4941,7 +4943,7 @@ button[data-target="#add-popup-modal-module"] {
     a {
       cursor: pointer;
       .fa-download {
-        color: #3c8dbc;
+        color: $table-color;
       }
     }
   }
@@ -5022,7 +5024,7 @@ ul.hide {
   width: 220px;
   margin-right: 10px;
   border-radius: 0;
-  border: 1px solid #dee2e6;
+  border: 1px solid $border-color;
 }
 .child-list {
   padding: .5rem 1rem;
@@ -5101,11 +5103,11 @@ ul.hide {
   overflow: hidden;
   .k-dropdown {
     .k-state-default {
-      border-color: #3c8dbc !important;
-      background-color: #3c8dbc !important;
+      border-color: $table-color !important;
+      background-color: $table-color !important;
       color: #fff;
-      border-color: #3c8dbc !important;
-      background-color: #3c8dbc !important;
+      border-color: $table-color !important;
+      background-color: $table-color !important;
       color: #fff;
     }
     .k-input {
@@ -5117,13 +5119,13 @@ ul.hide {
   }
 }
 #exam-type {
-  border-color: #3c8dbc !important;
-  background-color: #3c8dbc !important;
+  border-color: $table-color !important;
+  background-color: $table-color !important;
   font-weight: 700;
   color: #fff;
   overflow: hidden;
-  border-color: #3c8dbc !important;
-  background-color: #3c8dbc !important;
+  border-color: $table-color !important;
+  background-color: $table-color !important;
   font-weight: 700;
   color: #fff;
   overflow: hidden;
@@ -5143,11 +5145,11 @@ ul.hide {
   color: #101010;
 }
 #filter_exam_required {
-  background: #3c8dbc;
+  background: $table-color;
   color: white;
 }
 #filter_exam_free {
-  background: #3c8dbc;
+  background: $table-color;
   color: white;
 }
 .font-bold {
@@ -5767,7 +5769,7 @@ i.expand-icon.active {
 .nav-tabs.course {
   display: flex;
   border-bottom: 0;
-  background-color: #e3eef5;
+  background-color: #e3eef5 !important;
   .nav-item {
     background-color: #e3eef5;
     margin-bottom: 0px;
@@ -6335,28 +6337,30 @@ body.format-topcoll.editing {
       }
     }
   }
-  .form-autocomplete-selection {
-    [role=listitem] {
-      margin: 0 3px !important;
-      background: #f7f2f2;
+  .questionbankwindow {
+    .form-autocomplete-selection {
+      [role=listitem] {
+        margin: 0 3px !important;
+        background: #f7f2f2;
+        text-align: center;
+        border-radius: 10px;
+        padding: 3px 15px;
+        color: grey;
+      }
       text-align: center;
-      border-radius: 10px;
-      padding: 3px 15px;
-      color: grey;
+      min-height: auto;
+      display: flex;
+      justify-content: center;
+      margin: 0;
+      align-items: center;
     }
-    text-align: center;
-    min-height: auto;
-    display: flex;
-    justify-content: center;
-    margin: 0;
-    align-items: center;
   }
   .tag-condition-container {
     display: none;
   }
   .tag-item.active {
-    color: white;
-    background: #3c8dbc;
+    color: white !important;
+    background: $table-color !important;
   }
   .modulespecificbuttonscontainer {
     display: none;
@@ -7196,7 +7200,7 @@ body.format-topcoll.editing {
   }
   .icon-toggle {
     margin-left: 0;
-    background: #3c8dbc;
+    background: $table-color;
     border: 1px solid #eaeaea;
     h5 {
       color: white;
@@ -7293,7 +7297,7 @@ body.format-topcoll.editing {
   cursor: pointer;
   top: 0;
   border-radius: 35px;
-  background: #3c8dbc;
+  background: $table-color;
   color: white;
   margin-left: 5px;
   display: flex;
@@ -8437,59 +8441,6 @@ body.format-topcoll.editing {
     }
   }
 }
-.topbar-nav.header {
-  #topbar {
-    background: transparent;
-    padding: 0 32px;
-    width: 100%;
-    min-height: 51px;
-    max-width: 1600px;
-    margin: 0 auto;
-  }
-  nav#topbar {
-    ul.menu-categories {
-      display: flex;
-      margin-bottom: 0;
-      margin-left: 5px;
-      li.menu {
-        >a {
-          display: flex;
-          height: 100%;
-          padding: 10px 0 10px 0;
-          margin-right: 44px;
-          border-radius: 6px;
-          >div {
-            align-self: center;
-            margin-right: 6px;
-          }
-        }
-        position: relative;
-        padding: 11px 0 11px 0;
-        a {
-          >div {
-            span {
-              font-size: 14px;
-              font-weight: 400;
-              color: #0e1726;
-              vertical-align: top;
-            }
-          }
-        }
-      }
-    }
-  }
-  padding: 0;
-  width: 100%;
-  top: 0;
-  margin: 0;
-  -webkit-box-shadow: 0px 0px 15px 1px rgb(138 132 206 / 3%);
-  -moz-box-shadow: 0px 0px 15px 1px rgba(138, 132, 206, 0.03);
-  box-shadow: 0px 20px 20px rgb(126 142 177 / 12%);
-  background: #fff;
-  min-height: 53px;
-  right: 0;
-  left: 0;
-}
 #page-admin-search {
   .card-body {
     padding: 0;
@@ -8501,9 +8452,24 @@ body.format-topcoll.editing {
   }
 }
 .col-md-3.table-competencies {
-  background: #3c8dbc;
+  background: $table-color;
   font-weight: bold;
   color: white;
   padding: 10px 15px;
 }
+#page-login-index {
+  #page-wrapper {
+    margin-left: 0
+  }
+  #page {
+    .container-fluid {
+      
+    }
+  }
 
+}
+[data-region="coursecompetencystatistics"] {
+  .progress {
+    height: 8px;
+  }
+}

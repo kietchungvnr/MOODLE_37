@@ -595,7 +595,7 @@ class view {
         $this->display_options_form($showquestiontext);
         // Custom by Thắng : làm mới bộ lọc câu hỏi
         $list_tag = $DB->get_records_sql("SELECT DISTINCT t.id,t.name from {tag} t JOIN {tag_instance} ti on ti.tagid = t.id");
-        if(!empty($list_tag)) {
+        if(!empty($list_tag) && $tabname == "questions") {
             echo \html_writer::start_div('form-autocomplete-selection');
             echo \html_writer::tag('div','Tags:',['class' => 'tag-title mr-2 font-bold','style' => 'color:black']);
             foreach ($list_tag as $tag) {

@@ -70,7 +70,7 @@ class module_navigation implements renderable, templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output) {
-
+        global $DB;
         $context = context_course::instance($this->courseid);
 
         $data = new stdClass();
@@ -78,6 +78,14 @@ class module_navigation implements renderable, templatable {
         $data->moduleid = $this->moduleid;
         $data->baseurl = $this->baseurl;
         $data->hasmodules = false;
+        // Custom by Thắng : thêm tên module khi filter năng lực
+        if($this->moduleid) {
+            $modtype = $DB->get_record_sql("SELECT m.name,cm.instance FROM {course_modules} cm
+                                                JOIN {modules} m on cm.module = m.id
+                                            WHERE cm.id = :moduleid",['moduleid' => $this->moduleid]);
+            $data->modulename = $DB->get_field("$modtype->name",'name',['id' => $modtype->instance]);
+            $data->hasmodulename = true;
+        }
         $data->modules = array();
 
         $data->hasmodules = true;

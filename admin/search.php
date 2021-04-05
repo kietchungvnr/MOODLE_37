@@ -57,7 +57,7 @@ echo $OUTPUT->header($focus);
 //     echo $adminrenderer->warn_if_not_registered();
 // }
 
-echo $OUTPUT->heading(get_string('administrationsite'));
+// echo $OUTPUT->heading(get_string('administrationsite'));
 
 if ($errormsg !== '') {
     echo $OUTPUT->notification($errormsg);
@@ -68,21 +68,21 @@ if ($errormsg !== '') {
 
 $showsettingslinks = true;
 
-if ($hassiteconfig) {
-    require_once("admin_settings_search_form.php");
-    $form = new admin_settings_search_form();
-    $form->display();
-    echo '<hr>';
-    if ($query) {
-        echo admin_search_settings_html($query);
-        $showsettingslinks = false;
-    }
-}
+// if ($hassiteconfig) {
+//     require_once("admin_settings_search_form.php");
+//     $form = new admin_settings_search_form();
+//     $form->display();
+//     echo '<hr>';
+//     if ($query) {
+//         echo admin_search_settings_html($query);
+//         $showsettingslinks = false;
+//     }
+// }
 
 if ($showsettingslinks) {
     $node = $PAGE->settingsnav->find('root', navigation_node::TYPE_SITE_ADMIN);
     if ($node) {
-        echo $OUTPUT->render_from_template('core/settings_link_page', ['node' => $node]);
+        echo $OUTPUT->render_from_template('theme_moove/custom_settings_link_page', ['node' => $node]);
     }
 }
 
