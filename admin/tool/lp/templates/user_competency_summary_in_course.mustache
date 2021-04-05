@@ -44,53 +44,83 @@
         {{> tool_lp/competency_summary }}
     {{/competency}}
     <dl>
-        <dt>{{#str}}activities, tool_lp{{/str}}</dt>
-        <dd data-region="coursecompetencyactivities">
-        <p>
-        <ul class="inline list-inline">
-        {{#coursemodules}}
-            <li class="list-inline-item"><a href="{{url}}"><img src="{{iconurl}}"> {{name}} </a></li>
-        {{/coursemodules}}
-        {{^coursemodules}}
-            <li class="list-inline-item"><span class="alert">{{#str}}noactivities, tool_lp{{/str}}</span></li>
-        {{/coursemodules}}
-        </ul>
-        </p>
-        </dd>
+        <div class="row">
+            <div class="col-md-2">
+                <dt>{{#str}}activities, tool_lp{{/str}}</dt>
+            </div>
+            <div class="col-md-10">
+                <dd data-region="coursecompetencyactivities">
+                    <p>
+                    <ul class="inline list-inline">
+                    {{#coursemodules}}
+                        <li class="list-inline-item"><a href="{{url}}"><img src="{{iconurl}}"> {{name}} </a></li>
+                    {{/coursemodules}}
+                    {{^coursemodules}}
+                        <li class="list-inline-item"><span class="alert">{{#str}}noactivities, tool_lp{{/str}}</span></li>
+                    {{/coursemodules}}
+                    </ul>
+                    </p>
+                </dd>
+            </div>
+        </div>
         {{#displayuser}}
         {{#user}}
-        <dt>{{#str}}user{{/str}}</dt>
-        <dd>
-            {{>tool_lp/user_summary}}
-        </dd>
+        <div class="row">
+            <div class="col-md-2">
+                <dt>{{#str}}user{{/str}}</dt>
+            </div>
+            <div class="col-md-10">
+                <dd>
+                    {{>tool_lp/user_summary}}
+                </dd>
+            </div>
+        </div>
         {{/user}}
         {{/displayuser}}
-        <dt>{{#str}}userplans, competency{{/str}}</dt>
-        <dd>
-        <p>
-        <ul class="inline list-inline">
-        {{#plans}}
-            <li class="list-inline-item"><a href="{{pluginbaseurl}}/plan.php?id={{id}}">{{{name}}}</a></li>
-        {{/plans}}
-        {{^plans}}
-            <li>{{#str}}nouserplanswithcompetency, competency{{/str}}</li>
-        {{/plans}}
-        </ul>
-        </p>
-        </dd>
+        <div class="row">
+            <div class="col-md-2">
+                <dt>{{#str}}userplans, competency{{/str}}</dt>
+            </div>
+            <div class="col-md-10">
+                <dd>
+                <p>
+                <ul class="inline list-inline">
+                {{#plans}}
+                    <li class="list-inline-item"><a href="{{pluginbaseurl}}/plan.php?id={{id}}">{{{name}}}</a></li>
+                {{/plans}}
+                {{^plans}}
+                    <li>{{#str}}nouserplanswithcompetency, competency{{/str}}</li>
+                {{/plans}}
+                </ul>
+                </p>
+                </dd>
+            </div>
+        </div>
         {{#usercompetencycourse}}
-        <dt>{{#str}}proficient, tool_lp{{/str}}</dt>
-        <dd>
-            <span class="badge {{#proficiency}}badge-success{{/proficiency}}{{^proficiency}}badge-danger{{/proficiency}} float-left">
-                {{proficiencyname}}
-            </span>
-        </dd>
-        <dt>{{#str}}rating, tool_lp{{/str}}</dt>
-        <dd>{{gradename}}
-            {{#cangrade}}
-                <button class="btn btn-secondary" id="rate_{{uniqid}}">{{#str}}rate, tool_lp{{/str}}</button>
-            {{/cangrade}}
-        </dd>
+        <div class="row">
+            <div class="col-md-2">
+                <dt>{{#str}}proficient, tool_lp{{/str}}</dt>
+            </div>
+            <div class="col-md-10">
+                <dd>
+                    <span class="badge {{#proficiency}}badge-success{{/proficiency}}{{^proficiency}}badge-danger{{/proficiency}} float-left">
+                        {{proficiencyname}}
+                    </span>
+                </dd>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <dt>{{#str}}rating, tool_lp{{/str}}</dt>
+            </div>
+            <div class="col-md-10">
+                <dd>{{gradename}}
+                    {{#cangrade}}
+                        <button class="btn btn-secondary" id="rate_{{uniqid}}">{{#str}}rate, tool_lp{{/str}}</button>
+                    {{/cangrade}}
+                </dd>
+            </div>
+        </div>
         {{/usercompetencycourse}}
         {{#js}}
         require(['jquery', 'tool_lp/grade_user_competency_inline', 'tool_lp/user_competency_info'], function($, mod, info) {
@@ -112,15 +142,21 @@
         {{/canpostorhascomments}}
     {{/commentarea}}
     <dl data-region="evidence-listing">
-        <dt>{{#str}}evidence, tool_lp{{/str}}</dt>
-        <dd>
-            {{#evidence}}
-                {{> tool_lp/evidence_summary }}
-            {{/evidence}}
-            {{^evidence}}
-                <p>{{#str}}noevidence, tool_lp{{/str}}</p>
-            {{/evidence}}
-        </dd>
+    <div class="row">
+        <div class="col-md-2">
+            <dt>{{#str}}evidence, tool_lp{{/str}}</dt>
+        </div>
+        <div class="col-md-10">
+            <dd>
+                {{#evidence}}
+                    {{> tool_lp/evidence_summary }}
+                {{/evidence}}
+                {{^evidence}}
+                    <p>{{#str}}noevidence, tool_lp{{/str}}</p>
+                {{/evidence}}
+            </dd>
+        </div>
+    </div>
     </dl>
 </div>
 </div>
