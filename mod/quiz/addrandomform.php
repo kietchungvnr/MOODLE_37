@@ -53,7 +53,7 @@ class quiz_add_random_form extends moodleform {
                 array('contexts' => $usablecontexts, 'top' => true));
         $mform->setDefault('category', $this->_customdata['cat']);
 
-        $mform->addElement('checkbox', 'includesubcategories', '', get_string('recurse', 'quiz'));
+        // $mform->addElement('checkbox', 'includesubcategories', '', get_string('recurse', 'quiz'));
 
         $tops = question_get_top_categories_for_contexts(array_column($contexts->all(), 'id'));
         $mform->hideIf('includesubcategories', 'category', 'in', $tops);
@@ -77,8 +77,56 @@ class quiz_add_random_form extends moodleform {
         // only matched 9 questions (not already in the quiz), then the drop-down would
         // only offer choices 1..9. This nice UI hint got lost when the UI became Ajax-y.
         // We should add it back.
-        $mform->addElement('select', 'numbertoadd', get_string('randomnumber', 'quiz'),
-                $this->get_number_of_questions_to_add_choices());
+         
+        $categoryid = explode(',',$this->_customdata['cat'])[0];
+
+        $loader_default = new \core_question\bank\random_question_loader(new qubaid_list([]));
+        $loader_easy = new \core_question\bank\random_question_loader(new qubaid_list([]));
+        $loader_normal = new \core_question\bank\random_question_loader(new qubaid_list([]));
+        $loader_hard = new \core_question\bank\random_question_loader(new qubaid_list([]));
+        $totalcount_default = $loader_default->count_questions($categoryid, false, [], 'default');
+        $totalcount_easy = $loader_easy->count_questions($categoryid, false, [], 'easy');
+        $totalcount_normal = $loader_normal->count_questions($categoryid, false, [], 'normal');
+        $totalcount_hard = $loader_hard->count_questions($categoryid, false, [], 'hard');
+        $totalcount = $totalcount_default + $totalcount_easy + $totalcount_normal + $totalcount_hard;
+        
+        $mform->addElement('select', 'typeofquestion', get_string('typeofquestion', 'local_newsvnr'), ['no' => get_string('no'), 'yes' => get_string('yes')]); 
+        $mform->setDefault('typeofquestion', 'no');
+
+        $mform->addElement('select', 'numbertoadd', get_string('randomnumber', 'local_newsvnr'), $this->get_number_of_questions_to_add_choices($totalcount_default));
+        $mform->hideIf('numbertoadd', 'typeofquestion', 'eq', 'yes');
+            
+        $mform->addElement('select', 'typeofclass', get_string('typeofclass', 'local_newsvnr'), ['number' => get_string('typeofclass_number', 'local_newsvnr'), 'percent' => get_string('typeofclass_percent', 'local_newsvnr')]);
+        $mform->hideIf('typeofclass', 'typeofquestion', 'eq', 'no');
+
+        $mform->addElement('select', 'numbertoadd_percent', get_string('randomnumber', 'local_newsvnr'), $this->get_number_of_questions_to_add_choices($totalcount));
+        $mform->setDefault('typeofquestion', $totalcount);
+        $mform->hideIf('numbertoadd_percent', 'typeofquestion', 'eq', 'no');
+        $mform->hideIf('numbertoadd_percent', 'typeofclass', 'eq', 'number');
+
+        $mform->addElement('select', 'hardlevel_number', get_string('questionlevel_hard', 'local_newsvnr'), $this->get_number_of_questions_to_add_choices($totalcount_hard));
+        $mform->hideIf('hardlevel_number', 'typeofquestion', 'eq', 'no');
+        $mform->hideIf('hardlevel_number', 'typeofclass', 'eq', 'percent');
+
+        $mform->addElement('select', 'normallevel_number', get_string('questionlevel_normal', 'local_newsvnr'), $this->get_number_of_questions_to_add_choices($totalcount_normal));
+        $mform->hideIf('normallevel_number', 'typeofquestion', 'eq', 'no');
+        $mform->hideIf('normallevel_number', 'typeofclass', 'eq', 'percent');
+
+        $mform->addElement('select', 'easylevel_number', get_string('questionlevel_easy', 'local_newsvnr'), $this->get_number_of_questions_to_add_choices($totalcount_easy));
+        $mform->hideIf('easylevel_number', 'typeofquestion', 'eq', 'no');
+        $mform->hideIf('easylevel_number', 'typeofclass', 'eq', 'percent');
+
+        $mform->addElement('select', 'hardlevel_percent', get_string('questionlevel_hard', 'local_newsvnr'), $this->get_percent_of_questions_to_add_choices());
+        $mform->hideIf('hardlevel_percent', 'typeofclass', 'eq', 'number');
+        $mform->hideIf('hardlevel_percent', 'typeofquestion', 'eq', 'no');
+
+        $mform->addElement('select', 'normallevel_percent', get_string('questionlevel_normal', 'local_newsvnr'), $this->get_percent_of_questions_to_add_choices());
+        $mform->hideIf('normallevel_percent', 'typeofclass', 'eq', 'number');
+        $mform->hideIf('normallevel_percent', 'typeofquestion', 'eq', 'no');
+
+        $mform->addElement('select', 'easylevel_percent', get_string('questionlevel_easy', 'local_newsvnr'), $this->get_percent_of_questions_to_add_choices());
+        $mform->hideIf('easylevel_percent', 'typeofclass', 'eq', 'number');
+        $mform->hideIf('easylevel_percent', 'typeofquestion', 'eq', 'no');
 
         $previewhtml = $OUTPUT->render_from_template('mod_quiz/random_question_form_preview', []);
         $mform->addElement('html', $previewhtml);
@@ -125,6 +173,14 @@ class quiz_add_random_form extends moodleform {
         if (!empty($fromform['newcategory']) && trim($fromform['name']) == '') {
             $errors['name'] = get_string('categorynamecantbeblank', 'question');
         }
+        if(isset($fromform['typeofclass']) && $fromform['typeofclass'] == 'percent') {
+            $totalpercent = $fromform['easylevel_percent'] + $fromform['normallevel_percent'] + $fromform['hardlevel_percent'];
+            if($totalpercent > 100 || $totalpercent != 100) {
+                $errors['easylevel_percent'] = get_string('questionlevel_erorr_sumpercent', 'local_newsvnr');
+                $errors['normallevel_percent'] = get_string('questionlevel_erorr_sumpercent', 'local_newsvnr');
+                $errors['hardlevel_percent'] = get_string('questionlevel_erorr_sumpercent', 'local_newsvnr');
+            }
+        }
 
         return $errors;
     }
@@ -141,5 +197,19 @@ class quiz_add_random_form extends moodleform {
             $randomcount[$i] = $i;
         }
         return $randomcount;
+    }
+
+    /**
+     * Return an arbitrary array for the dropdown menu
+     *
+     * @param int $maxrand
+     * @return array of integers [1, 2, ..., 100] (or to the smaller of $maxrand and 100.)
+     */
+    private function get_percent_of_questions_to_add_choices($maxrand = 100) {
+        $counts = [];
+        for ($i = 1; $i <= min(100, $maxrand); $i++) {
+            $counts[$i] = $i . '%';
+        }
+        return $counts;
     }
 }

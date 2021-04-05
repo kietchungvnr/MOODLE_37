@@ -129,11 +129,11 @@ class course_edit_form extends moodleform {
         );     
         
         //Lấy danh sách khoá học setup
-        $coursesetuplist = $DB->get_records('course_setup');
-        $coursesetupnames = array();
-        foreach ($coursesetuplist as $key => $value) {
-            $coursesetupnames[$key] = $value->fullname;
-        }
+        // $coursesetuplist = $DB->get_records('course_setup');
+        // $coursesetupnames = array();
+        // foreach ($coursesetuplist as $key => $value) {
+        //     $coursesetupnames[$key] = $value->fullname;
+        // }
         //Lấy danh sách chức vụ
         $orgpositionlist = $DB->get_records('orgstructure_position');
         $orgpositionnames = array();

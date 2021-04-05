@@ -26,6 +26,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+// Custom by Vũ: Phân loại câu hỏi
+// Thêm các loại câu hỏi vào bảng question
+define('QUESTION_LEVEL_DEFAULT', 'default');
+define('QUESTION_LEVEL_EASY', 'easy');
+define('QUESTION_LEVEL_NORMAL', 'normal');
+define('QUESTION_LEVEL_HARD', 'hard');
+
 global $CFG;
 require_once($CFG->libdir.'/formslib.php');
 
@@ -200,6 +207,17 @@ abstract class question_edit_form extends question_wizard_form {
         $mform->addElement('text', 'idnumber', get_string('idnumber', 'question'), 'maxlength="100"  size="10"');
         $mform->addHelpButton('idnumber', 'idnumber', 'question');
         $mform->setType('idnumber', PARAM_RAW);
+
+        // Custom by Vũ: Phân loại câu hỏi
+        // Thêm element tùy chỉnh mức độ câu hỏi
+        $level = [
+            QUESTION_LEVEL_DEFAULT => get_string('questionlevel_default', 'local_newsvnr'),
+            QUESTION_LEVEL_EASY => get_string('questionlevel_essy', 'local_newsvnr'),
+            QUESTION_LEVEL_NORMAL => get_string('questionlevel_normal', 'local_newsvnr'),
+            QUESTION_LEVEL_HARD => get_string('questionlevel_hard', 'local_newsvnr')
+        ];
+        $mform->addElement('select', 'level', get_string('questionlevel', 'local_newsvnr'), $level);
+        $mform->setType('level', PARAM_RAW);
 
         // Any questiontype specific fields.
         $this->definition_inner($mform);

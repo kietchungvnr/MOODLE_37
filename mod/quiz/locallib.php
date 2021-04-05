@@ -223,8 +223,11 @@ function quiz_start_new_attempt($quizobj, $quba, $attempt, $attemptnumber, $time
             }
 
             // Normal case, pick one at random.
+            // Custom by Vũ: Phân loại câu hỏi
+            // Thêm @param strings $level vào để lấy câu hỏi theo mức độ 
             $questionid = $randomloader->get_next_question_id($questiondata->randomfromcategory,
-                    $questiondata->randomincludingsubcategories, $tagids);
+                    $questiondata->randomincludingsubcategories, $tagids,
+                $questiondata->level);
             if ($questionid === null) {
                 throw new moodle_exception('notenoughrandomquestions', 'quiz',
                                            $quizobj->view_url(), $questiondata);
@@ -2639,7 +2642,7 @@ function quiz_update_section_firstslots($quizid, $direction, $afterslot, $before
  * @param int[] $tagids Array of tagids. The question that will be picked randomly should be tagged with all these tags.
  */
 function quiz_add_random_questions($quiz, $addonpage, $categoryid, $number,
-        $includesubcategories, $tagids = []) {
+        $includesubcategories, $tagids = [], $questionrates = []) {
     global $DB;
 
     $category = $DB->get_record('question_categories', array('id' => $categoryid));
@@ -2668,36 +2671,133 @@ function quiz_add_random_questions($quiz, $addonpage, $categoryid, $number,
                       FROM {quiz_slots}
                      WHERE questionid = q.id)
         ORDER BY id", array($category->id, $includesubcategories ? '1' : '0'));
-
-    for ($i = 0; $i < $number; $i++) {
-        // Take as many of orphaned "random" questions as needed.
-        if (!$question = array_shift($existingquestions)) {
-            $form = new stdClass();
-            $form->category = $category->id . ',' . $category->contextid;
-            $form->includesubcategories = $includesubcategories;
-            $form->fromtags = $tagstrings;
-            $form->defaultmark = 1;
-            $form->hidden = 1;
-            $form->stamp = make_unique_id_code(); // Set the unique code (not to be changed).
-            $question = new stdClass();
-            $question->qtype = 'random';
-            $question = question_bank::get_qtype('random')->save_question($question, $form);
-            if (!isset($question->id)) {
-                print_error('cannotinsertrandomquestion', 'quiz');
+    if(!empty($questionrates)) {
+        for ($i = 0; $i < $questionrates['hard']; $i++) {
+            // Take as many of orphaned "random" questions as needed.
+            if (!$question = array_shift($existingquestions)) {
+                $form = new stdClass();
+                $form->category = $category->id . ',' . $category->contextid;
+                $form->includesubcategories = $includesubcategories;
+                $form->fromtags = $tagstrings;
+                $form->defaultmark = 1;
+                $form->hidden = 1;
+                $form->stamp = make_unique_id_code(); // Set the unique code (not to be changed).
+                $question = new stdClass();
+                $question->qtype = 'random';
+                $question->level = 'hard';
+                $question = question_bank::get_qtype('random')->save_question($question, $form);
+                if (!isset($question->id)) {
+                    print_error('cannotinsertrandomquestion', 'quiz');
+                }
             }
+
+            $randomslotdata = new stdClass();
+            $randomslotdata->quizid = $quiz->id;
+            $randomslotdata->questionid = $question->id;
+            $randomslotdata->questioncategoryid = $categoryid;
+            $randomslotdata->includingsubcategories = $includesubcategories ? 1 : 0;
+            $randomslotdata->maxmark = 1;
+
+            $randomslot = new \mod_quiz\local\structure\slot_random($randomslotdata);
+            $randomslot->set_quiz($quiz);
+            $randomslot->set_tags($tags);
+            $randomslot->insert($addonpage);
         }
+        for ($i = 0; $i < $questionrates['normal']; $i++) {
+            // Take as many of orphaned "random" questions as needed.
+            if (!$question = array_shift($existingquestions)) {
+                $form = new stdClass();
+                $form->category = $category->id . ',' . $category->contextid;
+                $form->includesubcategories = $includesubcategories;
+                $form->fromtags = $tagstrings;
+                $form->defaultmark = 1;
+                $form->hidden = 1;
+                $form->stamp = make_unique_id_code(); // Set the unique code (not to be changed).
+                $question = new stdClass();
+                $question->qtype = 'random';
+                $question->level = 'normal';
+                $question = question_bank::get_qtype('random')->save_question($question, $form);
+                if (!isset($question->id)) {
+                    print_error('cannotinsertrandomquestion', 'quiz');
+                }
+            }
 
-        $randomslotdata = new stdClass();
-        $randomslotdata->quizid = $quiz->id;
-        $randomslotdata->questionid = $question->id;
-        $randomslotdata->questioncategoryid = $categoryid;
-        $randomslotdata->includingsubcategories = $includesubcategories ? 1 : 0;
-        $randomslotdata->maxmark = 1;
+            $randomslotdata = new stdClass();
+            $randomslotdata->quizid = $quiz->id;
+            $randomslotdata->questionid = $question->id;
+            $randomslotdata->questioncategoryid = $categoryid;
+            $randomslotdata->includingsubcategories = $includesubcategories ? 1 : 0;
+            $randomslotdata->maxmark = 1;
 
-        $randomslot = new \mod_quiz\local\structure\slot_random($randomslotdata);
-        $randomslot->set_quiz($quiz);
-        $randomslot->set_tags($tags);
-        $randomslot->insert($addonpage);
+            $randomslot = new \mod_quiz\local\structure\slot_random($randomslotdata);
+            $randomslot->set_quiz($quiz);
+            $randomslot->set_tags($tags);
+            $randomslot->insert($addonpage);
+        }
+        for ($i = 0; $i < $questionrates['easy']; $i++) {
+            // Take as many of orphaned "random" questions as needed.
+            if (!$question = array_shift($existingquestions)) {
+                $form = new stdClass();
+                $form->category = $category->id . ',' . $category->contextid;
+                $form->includesubcategories = $includesubcategories;
+                $form->fromtags = $tagstrings;
+                $form->defaultmark = 1;
+                $form->hidden = 1;
+                $form->stamp = make_unique_id_code(); // Set the unique code (not to be changed).
+                $question = new stdClass();
+                $question->qtype = 'random';
+                $question->level = 'easy';
+                $question = question_bank::get_qtype('random')->save_question($question, $form);
+                if (!isset($question->id)) {
+                    print_error('cannotinsertrandomquestion', 'quiz');
+                }
+            }
+
+            $randomslotdata = new stdClass();
+            $randomslotdata->quizid = $quiz->id;
+            $randomslotdata->questionid = $question->id;
+            $randomslotdata->questioncategoryid = $categoryid;
+            $randomslotdata->includingsubcategories = $includesubcategories ? 1 : 0;
+            $randomslotdata->maxmark = 1;
+
+            $randomslot = new \mod_quiz\local\structure\slot_random($randomslotdata);
+            $randomslot->set_quiz($quiz);
+            $randomslot->set_tags($tags);
+            $randomslot->insert($addonpage);
+        }
+        
+    } else {
+        for ($i = 0; $i < $number; $i++) {
+            // Take as many of orphaned "random" questions as needed.
+            if (!$question = array_shift($existingquestions)) {
+                $form = new stdClass();
+                $form->category = $category->id . ',' . $category->contextid;
+                $form->includesubcategories = $includesubcategories;
+                $form->fromtags = $tagstrings;
+                $form->defaultmark = 1;
+                $form->hidden = 1;
+                $form->stamp = make_unique_id_code(); // Set the unique code (not to be changed).
+                $question = new stdClass();
+                $question->qtype = 'random';
+                $question->level = 'default';
+                $question = question_bank::get_qtype('random')->save_question($question, $form);
+                if (!isset($question->id)) {
+                    print_error('cannotinsertrandomquestion', 'quiz');
+                }
+            }
+
+            $randomslotdata = new stdClass();
+            $randomslotdata->quizid = $quiz->id;
+            $randomslotdata->questionid = $question->id;
+            $randomslotdata->questioncategoryid = $categoryid;
+            $randomslotdata->includingsubcategories = $includesubcategories ? 1 : 0;
+            $randomslotdata->maxmark = 1;
+
+            $randomslot = new \mod_quiz\local\structure\slot_random($randomslotdata);
+            $randomslot->set_quiz($quiz);
+            $randomslot->set_tags($tags);
+            $randomslot->insert($addonpage);
+        }
     }
 }
 
