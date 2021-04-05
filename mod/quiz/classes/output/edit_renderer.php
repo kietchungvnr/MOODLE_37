@@ -59,37 +59,41 @@ class edit_renderer extends \plugin_renderer_base {
         $strselect = get_string('selectallquestion', 'mod_quiz');
 
         $output = '';
-
+        $changemark = '';
         // Page title.
+        $output .= html_writer::start_div('text-center title-edit-question mb-3');
+        $output .= html_writer::start_div('text-left',['style' => 'display: inline-block;']);
         $output .= $this->heading_with_help(get_string('editingquizx', 'quiz',
                 format_string($quizobj->get_quiz_name())), 'editingquiz', 'quiz', '',
                 get_string('basicideasofquiz', 'quiz'), 2);
-
+        $output .= $this->quiz_information($structure);
+        $output .= html_writer::end_div();
+        $output .= html_writer::end_div();
         // Information at the top.
         $output .= $this->quiz_state_warnings($structure);
 
         $output .= html_writer::start_div('mod_quiz-edit-top-controls');
-
-        $output .= html_writer::start_div('d-flex justify-content-between flex-wrap mb-1');
-        $output .= html_writer::start_div('d-flex flex-column justify-content-around');
-        $output .= $this->quiz_information($structure);
-        $output .= html_writer::end_tag('div');
-        $output .= $this->maximum_grade_input($structure, $pageurl);
-        $output .= html_writer::end_tag('div');
-
+        // Custom by Thắng: sửa giao diện trang chỉnh sửa bài quiz
         $output .= html_writer::start_div('d-flex justify-content-between flex-wrap mb-1');
         $output .= html_writer::start_div('mod_quiz-edit-action-buttons btn-group edit-toolbar', ['role' => 'group']);
+        $output .= html_writer::tag('input','',['type' => 'checkbox','name' => 'all','class' => 'mr-2']);
+        // $output .= $this->selectmultiple_controls($structure);
         $output .= $this->repaginate_button($structure, $pageurl);
-        $output .= $this->selectmultiple_button($structure);
+        $output .= $this->selectmultiple_button($structure);    
+        $output .= html_writer::tag('button','Thay đổi điểm hàng loạt',['class' => 'btn btn-secondary','data-target' => '#modalchangeallmark','data-toggle' => 'modal']);
         $output .= html_writer::end_tag('div');
 
-        $output .= html_writer::start_div('d-flex flex-column justify-content-around');
+        $output .= html_writer::start_div('d-flex align-items-center justify-content-around');
+        $output .= $this->maximum_grade_input($structure, $pageurl);
         $output .= $this->total_marks($quizobj->get_quiz());
         $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('div');
 
         $output .= $this->selectmultiple_controls($structure);
         $output .= html_writer::end_tag('div');
+        $changemark .= '<div id="changeallmark"><div class="d-flex align-items-center">';
+        $changemark .= '<input type="text" name="maxmark" id="maxmark" class="form-control ml-1 w-auto"><input type="submit" id="changemark" value="'.$strbtn.'" class="btn btn-secondary"></div></div>';
+        $output .= get_modal_boostrap($changemark,'modalchangeallmark','Thay đổi điểm số hàng loạt');
 
         // Show the questions organised into sections and pages.
         $output .= $this->start_section_list($structure);
@@ -98,9 +102,6 @@ class edit_renderer extends \plugin_renderer_base {
             $output .= $this->start_section($structure, $section);
             // Custom by Vũ: Thêm button đổi all điểm câu hỏi
             // Chức năng sửa tất cả điểm question với select.
-            $output .= '<div id="changeallmark" style="margin-left: 20px;"><div class="d-flex align-items-center"><input type="checkbox" name="all"><label>'.$strselect.'</label>';
-            $output .= '<input type="text" name="maxmark" id="maxmark" class="form-control ml-1 w-auto"><input type="submit" id="changemark" value="'.$strbtn.'" class="btn btn-secondary"></div></div>';
-
             $output .= $this->questions_in_section($structure, $section, $contexts, $pagevars, $pageurl);
 
             if ($structure->is_last_section($section)) {
@@ -169,12 +170,11 @@ class edit_renderer extends \plugin_renderer_base {
      */
     public function quiz_information(structure $structure) {
         list($currentstatus, $explanation) = $structure->get_dates_summary();
-
         $output = html_writer::span(
                     get_string('numquestionsx', 'quiz', $structure->get_question_count()),
-                    'numberofquestions') . ' | ' .
-                html_writer::span($currentstatus, 'quizopeningstatus',
-                    array('title' => $explanation));
+                    'numberofquestions') .
+                html_writer::div('Trạng thái: ' . html_writer::span($currentstatus,'quizopeningstatus',
+                    array('title' => $explanation,'class' => 'font-bold')));
 
         return html_writer::div($output, 'statusbar');
     }
@@ -188,7 +188,7 @@ class edit_renderer extends \plugin_renderer_base {
      */
     public function maximum_grade_input($structure, \moodle_url $pageurl) {
         $output = '';
-        $output .= html_writer::start_div('maxgrade');
+        $output .= html_writer::start_div('maxgrade mr-2');
         $output .= html_writer::start_tag('form', array('method' => 'post', 'action' => 'edit.php',
                 'class' => 'quizsavegradesform form-inline'));
         $output .= html_writer::start_tag('fieldset', array('class' => 'invisiblefieldset'));
@@ -223,7 +223,7 @@ class edit_renderer extends \plugin_renderer_base {
             'name'  => 'repaginate',
             'id'    => 'repaginatecommand',
             'value' => get_string('repaginatecommand', 'quiz'),
-            'class' => 'btn btn-secondary',
+            'class' => 'btn btn-secondary mr-2',
             'data-header' => $header,
             'data-form'   => $form,
         );
@@ -248,7 +248,7 @@ class edit_renderer extends \plugin_renderer_base {
             'name'  => 'selectmultiple',
             'id'    => 'selectmultiplecommand',
             'value' => get_string('selectmultipleitems', 'quiz'),
-            'class' => 'btn btn-secondary'
+            'class' => 'btn btn-secondary mr-2'
         );
         if (!$structure->can_be_edited()) {
             $buttonoptions['disabled'] = 'disabled';
@@ -271,7 +271,7 @@ class edit_renderer extends \plugin_renderer_base {
             'type' => 'button',
             'id' => 'selectmultipledeletecommand',
             'value' => get_string('deleteselected', 'mod_quiz'),
-            'class' => 'btn btn-secondary',
+            'class' => 'btn btn-secondary mr-2',
             'data-action' => 'toggle',
             'data-togglegroup' => $this->togglegroup,
             'data-toggle' => 'action',
@@ -288,7 +288,8 @@ class edit_renderer extends \plugin_renderer_base {
             'class' => 'btn-group selectmultiplecommand actions m-1',
             'role' => 'group'
         );
-
+        //Custom by Thắng :
+        // $output .= html_writer::tag('div',html_writer::tag('button', get_string('deleteselected', 'mod_quiz'), $buttondeleteoptions),$groupoptions);
         $output .= html_writer::tag('div',
                         html_writer::tag('button', get_string('deleteselected', 'mod_quiz'), $buttondeleteoptions) .
                         " " .
@@ -423,10 +424,12 @@ class edit_renderer extends \plugin_renderer_base {
                         'moodle', array('class' => 'editicon visibleifjs')),
                         array('class' => 'editing_section', 'data-action' => 'edit_section_title'));
         }
-        $output .= html_writer::div($headingtext . $editsectionheadingicon, 'instancesectioncontainer');
+        
 
         if (!$structure->is_first_section($section) && $structure->can_be_edited()) {
-            $output .= $this->section_remove_icon($section);
+            $output .= html_writer::div($headingtext . $editsectionheadingicon . $this->section_remove_icon($section), 'instancesectioncontainer');
+        } else {
+            $output .= html_writer::div($headingtext . $editsectionheadingicon, 'instancesectioncontainer');
         }
         $output .= $this->section_shuffle_questions($structure, $section);
 
