@@ -393,6 +393,12 @@ class question_type {
             }
         }
 
+        // Custom by Vũ: Phân loại câu hỏi
+        // Thêm field loại vào bảng question
+        if (isset($form->level)) {
+            $question->level = $form->level;
+        }
+
         // If the question is new, create it.
         $newquestion = false;
         if (empty($question->id)) {

@@ -85,7 +85,7 @@ if ($userid > 0) {
 
 $baseurl = new moodle_url('/admin/tool/lp/user_competency_in_course.php');
 $nav = new \tool_lp\output\user_competency_course_navigation($userid, $competencyid, $courseid, $baseurl);
-echo $output->render($nav);
+// echo $output->render($nav);
 if ($userid > 0) {
     $page = new \tool_lp\output\user_competency_summary_in_course($userid, $competencyid, $courseid);
     echo $output->render($page);

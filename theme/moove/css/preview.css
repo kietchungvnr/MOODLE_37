@@ -130,6 +130,9 @@
     .que .formulation .qtext{
         display: none;
     }
+    .que.shortanswer .formulation .qtext {
+        display: block;
+    }
     .que.essay .ablock {
         margin:10px;
     }

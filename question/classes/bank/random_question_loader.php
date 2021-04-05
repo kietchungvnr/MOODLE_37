@@ -76,6 +76,8 @@ class random_question_loader {
     }
 
     /**
+     * Custom by Vũ: Phân loại câu hỏi
+     * Thêm @param strings $level vào để lấy câu hỏi theo mức độ 
      * Pick a question at random from the given category, from among those with the fewest uses.
      * If an array of tag ids are specified, then only the questions that are tagged with ALL those tags will be selected.
      *
@@ -89,8 +91,8 @@ class random_question_loader {
      *      in order to be eligible for being picked.
      * @return int|null the id of the question picked, or null if there aren't any.
      */
-    public function get_next_question_id($categoryid, $includesubcategories, $tagids = []) {
-        $this->ensure_questions_for_category_loaded($categoryid, $includesubcategories, $tagids);
+    public function get_next_question_id($categoryid, $includesubcategories, $tagids = [], $level = 'default') {
+        $this->ensure_questions_for_category_loaded($categoryid, $includesubcategories, $tagids, $level);
 
         $categorykey = $this->get_category_key($categoryid, $includesubcategories, $tagids);
         if (empty($this->availablequestionscache[$categorykey])) {
@@ -128,6 +130,8 @@ class random_question_loader {
     }
 
     /**
+     * Custom by Vũ: Phân loại câu hỏi
+     * Thêm @param strings $level vào để lấy câu hỏi theo mức độ 
      * Populate {@link $availablequestionscache} for this combination of options.
      * @param int $categoryid The id of a category in the question bank.
      * @param bool $includesubcategories Whether to pick a question from exactly
@@ -135,15 +139,15 @@ class random_question_loader {
      * @param array $tagids An array of tag ids. If an array is provided, then
      *      only the questions that are tagged with ALL the provided tagids will be loaded.
      */
-    protected function ensure_questions_for_category_loaded($categoryid, $includesubcategories, $tagids = []) {
+    protected function ensure_questions_for_category_loaded($categoryid, $includesubcategories, $tagids = [], $level = 'default') {
         global $DB;
 
         $categorykey = $this->get_category_key($categoryid, $includesubcategories, $tagids);
 
-        if (isset($this->availablequestionscache[$categorykey])) {
-            // Data is already in the cache, nothing to do.
-            return;
-        }
+        // if (isset($this->availablequestionscache[$categorykey])) {
+        //     // Data is already in the cache, nothing to do.
+        //     return;
+        // }
 
         // Load the available questions from the question bank.
         if ($includesubcategories) {
@@ -156,7 +160,7 @@ class random_question_loader {
                 SQL_PARAMS_NAMED, 'excludedqtype', false);
 
         $questionidsandcounts = \question_bank::get_finder()->get_questions_from_categories_and_tags_with_usage_counts(
-                $categoryids, $this->qubaids, 'q.qtype ' . $extraconditions, $extraparams, $tagids);
+                $categoryids, $this->qubaids, 'q.qtype ' . $extraconditions, $extraparams, $tagids, $level);
         if (!$questionidsandcounts) {
             // No questions in this category.
             $this->availablequestionscache[$categorykey] = array();
@@ -166,10 +170,10 @@ class random_question_loader {
         // Put all the questions with each value of $prevusecount in separate arrays.
         $idsbyusecount = array();
         foreach ($questionidsandcounts as $questionid => $prevusecount) {
-            if (isset($this->recentlyusedquestions[$questionid])) {
-                // Recently used questions are never returned.
-                continue;
-            }
+            // if (isset($this->recentlyusedquestions[$questionid])) {
+            //     // Recently used questions are never returned.
+            //     continue;
+            // }
             $idsbyusecount[$prevusecount][] = $questionid;
         }
 
@@ -220,8 +224,8 @@ class random_question_loader {
      *      only the questions that are tagged with ALL the provided tagids will be loaded.
      * @return int[] The list of question ids
      */
-    protected function get_question_ids($categoryid, $includesubcategories, $tagids = []) {
-        $this->ensure_questions_for_category_loaded($categoryid, $includesubcategories, $tagids);
+    protected function get_question_ids($categoryid, $includesubcategories, $tagids = [], $level = 'default') {
+        $this->ensure_questions_for_category_loaded($categoryid, $includesubcategories, $tagids, $level);
         $categorykey = $this->get_category_key($categoryid, $includesubcategories, $tagids);
         $cachedvalues = $this->availablequestionscache[$categorykey];
         $questionids = [];
@@ -315,8 +319,8 @@ class random_question_loader {
      *      only the questions that are tagged with ALL the provided tagids will be loaded.
      * @return int The number of questions matching the criteria.
      */
-    public function count_questions($categoryid, $includesubcategories, $tagids = []) {
-        $questionids = $this->get_question_ids($categoryid, $includesubcategories, $tagids);
+    public function count_questions($categoryid, $includesubcategories, $tagids = [], $level = 'default') {
+        $questionids = $this->get_question_ids($categoryid, $includesubcategories, $tagids, $level);
         return count($questionids);
     }
 }

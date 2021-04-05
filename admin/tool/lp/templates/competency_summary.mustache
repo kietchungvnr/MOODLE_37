@@ -49,29 +49,37 @@
     }
 }}
 <div class='competency-heading'>
-    <h4 id="competency_link_{{competency.id}}">{{{competency.shortname}}}
-        <small>
-        {{#showlinks}}
-            <a href="{{pluginbaseurl}}/competencies.php?competencyid={{competency.id}}">{{competency.idnumber}}</a>
-        {{/showlinks}}
-        {{^showlinks}}
-            {{competency.idnumber}}
-        {{/showlinks}}
-        </small>
-    </h4>
-    {{#framework}}
-        <div class='competency-origin'>
-            <p><small>{{{framework.shortname}}} - {{taxonomyterm}}</small>
+    <div class="row">
+        <div class="col-md-2">
+            <b>Năng lực</b>
         </div>
-    {{/framework}}
+        <div class="col-md-10 d-flex">
+            <h4 id="competency_link_{{competency.id}}">{{{competency.shortname}}}
+                <small>
+                {{#showlinks}}
+                    <a href="{{pluginbaseurl}}/competencies.php?competencyid={{competency.id}}">{{competency.idnumber}}</a>
+                {{/showlinks}}
+                {{^showlinks}}
+                    {{competency.idnumber}}
+                {{/showlinks}}
+                </small>
+            </h4>
+            {{#framework}}
+                <div class='competency-origin'>
+                    <p><small>{{{framework.shortname}}} - {{taxonomyterm}}</small>
+                </div>
+            {{/framework}}
+            {{#competency.description}}
+                <p>{{{competency.description}}}</p>
+            {{/competency.description}}
+            {{#comppath}}
+                <span class="float-left">{{#str}}path, tool_lp{{/str}}&nbsp;</span>{{> tool_lp/competency_path }}
+            {{/comppath}}
+        </div>
+    </div>
+
 </div>
 
-{{#competency.description}}
-<p>{{{competency.description}}}</p>
-{{/competency.description}}
-{{#comppath}}
-    <span class="float-left">{{#str}}path, tool_lp{{/str}}&nbsp;</span>{{> tool_lp/competency_path }}
-{{/comppath}}
 {{#showrelatedcompetencies}}
     {{> tool_lp/related_competencies }}
 {{/showrelatedcompetencies}}

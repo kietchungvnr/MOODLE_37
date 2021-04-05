@@ -290,6 +290,19 @@ class core_question_external extends external_api {
         $properties = \core_question\external\question_summary_exporter::get_mandatory_properties();
         $questions = $loader->get_questions($categoryid, $includesubcategories, $tagids, $limit, $offset, $properties);
         $totalcount = $loader->count_questions($categoryid, $includesubcategories, $tagids);
+
+        // Custom by Vũ: Phân loại câu hỏi
+        // Tính số lượng câu hỏi khó dễ without cache   
+        $loader_default = new \core_question\bank\random_question_loader(new qubaid_list([]));
+        $loader_easy = new \core_question\bank\random_question_loader(new qubaid_list([]));
+        $loader_normal = new \core_question\bank\random_question_loader(new qubaid_list([]));
+        $loader_hard = new \core_question\bank\random_question_loader(new qubaid_list([]));
+        $totalcount_default = $loader_default->count_questions($categoryid, $includesubcategories, $tagids, 'default');
+        $totalcount_easy = $loader_easy->count_questions($categoryid, $includesubcategories, $tagids, 'easy');
+        $totalcount_normal = $loader_normal->count_questions($categoryid, $includesubcategories, $tagids, 'normal');
+        $totalcount_hard = $loader_hard->count_questions($categoryid, $includesubcategories, $tagids, 'hard');
+        $totalcount_level = $totalcount_default + $totalcount_easy + $totalcount_normal + $totalcount_hard;
+
         $renderer = $PAGE->get_renderer('core');
 
         $formattedquestions = array_map(function($question) use ($context, $renderer) {
@@ -299,6 +312,11 @@ class core_question_external extends external_api {
 
         return [
             'totalcount' => $totalcount,
+            'totalcount_default' => $totalcount_default,
+            'totalcount_easy' => $totalcount_easy,
+            'totalcount_normal' => $totalcount_normal,
+            'totalcount_hard' => $totalcount_hard,
+            'totalcount_level' => $totalcount_level,
             'questions' => $formattedquestions
         ];
     }
@@ -309,6 +327,11 @@ class core_question_external extends external_api {
     public static function  get_random_question_summaries_returns() {
         return new external_single_structure([
             'totalcount' => new external_value(PARAM_INT, 'total number of questions in result set'),
+            'totalcount_default' => new external_value(PARAM_INT, 'total number of default questions in result set'),
+            'totalcount_easy' => new external_value(PARAM_INT, 'total number of easy questions in result set'),
+            'totalcount_normal' => new external_value(PARAM_INT, 'total number of normal questions in result set'),
+            'totalcount_hard' => new external_value(PARAM_INT, 'total number of hard questions in result set'),
+            'totalcount_level' => new external_value(PARAM_INT, 'total number of all level questions in result set'),
             'questions' => new external_multiple_structure(
                 \core_question\external\question_summary_exporter::get_read_structure()
             )

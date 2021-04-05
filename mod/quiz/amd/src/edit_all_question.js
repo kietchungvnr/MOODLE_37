@@ -49,7 +49,19 @@ function(
 				$('input[name="slot[]"]').removeClass('d-none');
 				$('#changeallmark').removeClass('d-none');
 		});
-		
+		$(document).on('click','.tag-item',function() {
+			var value = $(this).attr('value');
+			if($(this).hasClass('active')) {
+				$('.tag-condition-container span[role="listitem"][data-value="'+value+'"]').trigger('click');
+			} else {
+				$('.form-autocomplete-downarrow').trigger('click');
+				setTimeout(function() {
+					$('.questionbankformforpopup li[role="option"]').attr('aria-selected','false');
+					$('.questionbankformforpopup li[data-value="'+value+'"]').attr('aria-selected','true');
+					$('.questionbankformforpopup li[data-value="'+value+'"]').trigger('click');
+				},500)
+			}
+		})
 	    $("#changemark").click(function () {
 	        var selected = new Array();
 	        $('input[name="slot[]"]:checked').each(function () {

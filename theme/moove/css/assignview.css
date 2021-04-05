@@ -1,0 +1,128 @@
+<style type="text/css">
+    #page-mod-assign-grader div[data-region="user-info"] img {
+        border-radius: 50%;
+    }
+    #page-mod-assign-grader .submissionstatustable h3,
+    .path-mod-assign [data-region="grade-panel"] h3{
+        display: none;
+    }
+    #page-mod-assign-grader div[data-region="assignment-info"] {
+        visibility: hidden;
+    }
+    .path-mod-assign [data-region="grade-panel"] #id_gradeheader>legend {
+    	display: none;
+    }
+    .gradeform.mform .fcontainer {
+    	border: 0;
+    	padding-bottom:10px;
+        background: white;
+        border-radius: 5px;
+    }
+    .gradeform.mform .fcontainer .col-md-2 {
+        padding: 0;
+    }
+    .box.boxaligncenter.gradingform {
+        padding-top: 0 !important;
+    }
+    .path-mod-assign [data-region="user-info"] {
+        display: inline-grid;
+        align-items: center;
+    }
+    .path-mod-assign span[data-region="configure-filters"] {
+        top: 24px;
+        right: 14px;
+    }
+    .path-mod-assign [data-region="user-info"] h4 {
+        width: 100%;
+        margin-bottom: 0;
+        display: flex;
+        justify-content: center;
+    }
+    .path-mod-assign [data-region="user-info"] a {
+        color: #3c8dbc;
+        font-weight: bold;
+    }
+    .path-mod-assign [data-region="user-info"] .nowrap:nth-child(2) {
+        color: grey;
+        font-size: 16px;
+    }
+    .path-mod-assign [data-region="user-info"] .nowrap:nth-child(3) {
+        display: none;
+    }
+    .path-mod-assign [data-region="grading-navigation"] [data-region="input-field"] input {
+        border: 0
+    }
+    .path-mod-assign [data-region="user-selector"] .alignment a[data-action="previous-user"] {
+        position: absolute;
+        left: -122%;
+        font-size: 15px;
+        color: white;
+        background: #3c8dbc;
+        padding: 5px 8px 5px 5px;
+        border-radius: 5px 0 0 5px;
+    }
+    .path-mod-assign [data-region="user-selector"] .alignment a[data-action="next-user"] {
+        position: absolute;
+        left: 18%;
+        font-size: 15px;
+        color: white;
+        background: #3c8dbc;
+        padding: 5px 5px 5px 8px;
+        border-radius: 0 5px 5px 0;
+    }
+    .path-mod-assign [data-region="user-selector"] .alignment {
+        display: flex;
+        align-items: center;
+        width: auto !important;
+    }
+    .path-mod-assign [data-region="user-selector"] .alignment a {
+        color: #3c8dbc;
+    }
+    .path-mod-assign [data-region="grading-navigation-panel"] {
+        height: 64px
+        background:#e3eef5;
+    }
+    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable {
+        margin-bottom: 0;
+        padding: 0;
+        border-radius: 5px;
+    }
+    .path-mod-assign [data-region="user-info"] em.nowrap {
+        overflow: initial !important;
+    }
+    .path-mod-assign .teamname,
+    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .submissionstatussubmitted,
+    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .submissionnotgraded,
+    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .earlysubmission,
+    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .submissionnoteditable,
+    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .assignsubmission_file {
+        border-bottom: 1px solid #dee2e6;
+        padding: 10px;
+    }
+    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .assignsubmission_file,
+    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .assignsubmission_comments  {
+        padding: 0 10px;
+    }
+    .path-mod-assign [data-region="grade-panel"] .fitem.has-popout {
+        padding:0 !important;
+        border: 0 !important;
+    }
+    #id_groupsubmissionsettings .ftoggler {
+        display: none;
+    }
+    .path-mod-assign [data-region="user-selector"] .form-autocomplete-suggestions {
+        margin-left: 0 !important;
+    }
+    .path-mod-assign .btn-primary {
+        background: #3c8dbc; 
+    }
+    .col-form-label {
+        font-weight: bold;
+    }
+    .path-mod-assign div.fileuploadsubmissiontime {
+        margin-right: 10px;
+    }
+    .path-mod-assign [data-region="grade-panel"] {
+        top: 70px !important;
+    }
+</style>
