@@ -8495,3 +8495,13 @@ body.format-topcoll.editing {
     height: 8px;
   }
 }
+.path-admin-tool-lp {
+  [data-region="competencylinktree"] {
+    h3 {
+      font-size: 14px;
+    }
+    >ul {
+      height: 100px;
+    }
+  }
+}
