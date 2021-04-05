@@ -8408,11 +8408,17 @@ body.format-topcoll.editing {
         td.submissionstatusdraft {
           a {
             background: #F87F28 !important;
+            border-radius: 10px;
+            padding: 5px 10px;
+            color: white!important;
           }
         }
         td.submissionstatussubmitted {
           a {
             background: #357E1B !important;
+            border-radius: 10px;
+            padding: 5px 10px;
+            color: white!important;
           }
         }
       }
