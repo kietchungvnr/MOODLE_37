@@ -37,7 +37,7 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
         if(baseUrl) {
             Cookie.setCookie('baseUrl', '-1', 0);
         }
-        Cookie.setCookie('spa', '-1', 0);
+        // Cookie.setCookie('spa', '-1', 0);
         return;
     }
 
