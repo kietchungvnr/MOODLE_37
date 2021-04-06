@@ -24,6 +24,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             if(spa == "true") {
                 Cookie.setCookie('spa', '-1', 0)
             }
+            
             if($('#mod-iframe').length <= 0) {
                 $('#mod-view-coursepage').html('<div class="alert alert-success mb-0"><strong>'+ M.util.get_string('selectcoursedata', 'theme_moove') +'</strong></div>');
             }
@@ -151,7 +152,6 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         // Chỉ áp dụng khi có role là học viên trong 1 khóa
         var getBaseUrl = Cookie.getCookie('baseUrl');
         if(getBaseUrl.includes('course/view.php?id=')) {
-            debugger
             if($('[data-role=1]').length > 0) {
                 $('.course-content li.activity a.aalink').bind('click', function(e) {
                     e.preventDefault();
