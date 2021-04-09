@@ -1360,7 +1360,7 @@ class mod_assign_renderer extends plugin_renderer_base {
             }
         } else if ($feedbackplugin->view == assign_feedback_plugin_feedback::FULL) {
             $o .= $this->output->box_start('boxaligncenter feedbackfull');
-            $o .= $feedbackplugin->plugin->view($feedbackplugin->grade);
+        $o .= $feedbackplugin->plugin->view($feedbackplugin->grade);
             $o .= $this->output->box_end();
         }
 
@@ -1478,7 +1478,7 @@ class mod_assign_renderer extends plugin_renderer_base {
                 '<div class="full-flex">' .
             '<div>
                         <div class="fileuploadsubmission">
-                            <a href="javascript:;" data-id="assignfile" data-assignfile-type="'. mime2ext($file->get_mimetype()) .'" data-assignfile-url="'. $fileurl . '" onclick="viewFilePopup(\'' .mime2ext($file->get_mimetype()). '\',\''.$fileurl.'\')">
+                            <a href="javascript:;" data-id="assignfile" data-assignfile-name="'. $file->get_filename() .'" data-assignfile-type="'. mime2ext($file->get_mimetype()) .'" data-assignfile-url="'. $fileurl . '" onclick="viewFilePopup(\'' .mime2ext($file->get_mimetype()). '\',\''.$fileurl.'\',\''.$file->get_filename().'\')">
                             ' . $fileimg . ' 
                             ' . $filename . '
                             </a>

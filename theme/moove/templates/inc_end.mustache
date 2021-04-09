@@ -682,11 +682,12 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             })
         });
     };
-    const viewFilePopup = (assignFileType, assignFileUrl) => {
+    const viewFilePopup = (assignFileType, assignFileUrl, assignFileName) => {
         require(['jquery', 'core/config'], ($, config) => {
             $('body').addClass('loading');
             var getFileType = assignFileType;
             var getUrl = assignFileUrl;
+            var getName = assignFileName;
             var exceptions = ['png', 'jpeg', 'jpg', 'gif', 'tiff', 'psd', 'ai', 'raw', 'indd', 'eps'];
             if(exceptions.includes(getFileType)) {
                 var img = '<img src=\''+getUrl+'\' height="auto" width="100%">';
@@ -698,6 +699,7 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             $('#body-assignfile-modal').html(iframe); 
             $('#assignfile-popup').on('load', function(e) {
                 setTimeout(function() {
+                    $('#assignfile-modal .modal-header h4').html(getName);
                     if(exceptions.includes(getFileType)) {
                         $('#assignfile-popup').contents().find("html").html(img); 
                     }
