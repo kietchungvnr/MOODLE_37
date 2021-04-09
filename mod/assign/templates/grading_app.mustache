@@ -64,3 +64,30 @@
 <div data-region="overlay" class="moodle-has-zindex">
 {{> mod_assign/grading_save_in_progress }}
 </div>
+<script>
+    const viewFilePopup = (assignFileType, assignFileUrl) => {
+        require(['jquery', 'core/config'], ($, config) => {
+            $('body').addClass('loading');
+            var getFileType = assignFileType;
+            var getUrl = assignFileUrl;
+            var exceptions = ['png', 'jpeg', 'jpg', 'gif', 'tiff', 'psd', 'ai', 'raw', 'indd', 'eps'];
+            if(exceptions.includes(getFileType)) {
+                var img = '<img src=\''+getUrl+'\' height="auto" width="100%">';
+                var iframe = '<iframe id=\'assignfile-popup\' height=\'768px\' width=\'100%\' frameborder=\'0\'></iframe>'; 
+            } else {
+                var url = "https://docs.google.com/viewerng/viewer?url=" + getUrl + "&embedded=true";
+                var iframe = '<iframe src=\' '+url+' \' id=\'assignfile-popup\' height=\'768px\' width=\'100%\' frameborder=\'0\'></iframe>';    
+            }
+            $('#body-assignfile-modal').html(iframe); 
+            $('#assignfile-popup').on('load', function(e) {
+                setTimeout(function() {
+                    if(exceptions.includes(getFileType)) {
+                        $('#assignfile-popup').contents().find("html").html(img); 
+                    }
+                    $('#assignfile-modal').modal('show'); 
+                    $('body').removeClass('loading');
+                }, 1000);
+            }) 
+        });
+    };
+</script>
