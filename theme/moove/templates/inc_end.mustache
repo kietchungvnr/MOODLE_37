@@ -684,7 +684,7 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
     };
     const viewFilePopup = (assignFileType, assignFileUrl) => {
         require(['jquery', 'core/config'], ($, config) => {
-            // $('body').addClass('loading');
+            $('body').addClass('loading');
             var getFileType = assignFileType;
             var getUrl = assignFileUrl;
             var exceptions = ['png', 'jpeg', 'jpg', 'gif', 'tiff', 'psd', 'ai', 'raw', 'indd', 'eps'];
