@@ -470,4 +470,5 @@ $string['templateimport_help'] = 'Import guide';
 $string['templateimportclick'] = 'Click download.';
 $string['copyingdata'] = 'Copying data';
 $string['qrcode'] = 'Scan QR code';
-$string['qrcode_help'] = 'To scan this code, you can use a QR scanner app on your phone, or some camera apps.';
+$string['fullsite'] = 'Displays all system functions';
+$string['fullsitedesc'] = 'If checked, all functions of the system will be displayed';

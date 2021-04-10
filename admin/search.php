@@ -79,8 +79,93 @@ $showsettingslinks = true;
 //     }
 // }
 
+
+
 if ($showsettingslinks) {
     $node = $PAGE->settingsnav->find('root', navigation_node::TYPE_SITE_ADMIN);
+    // Custom by Vũ: Loại bỏ 1 số chức năng trong quản trị hệ thống
+    $theme = theme_config::load('moove');
+    if($theme->settings->fullsite == false) {
+        $ignore_node = [
+            "registrationmoodleorg", 
+            "upgradesettings", 
+            "moodleservices", 
+            "userfeedback", 
+            "optionalsubsystems", 
+            "usermanagement", 
+            "userbulk", 
+            "userdefaultpreferences", 
+            "profilefields", 
+            "tooluploaduserpictures", 
+            "userpolicies", 
+            "toolunsuproles", 
+            "toolcapability", 
+            "course_customfield", 
+            "tooluploadcourse",
+            "coursecolors",
+            "calendar",
+            "blog",
+            "htmlsettings",
+            "resetemoticons",
+            "documentation",
+            "profilepage",
+            "coursecontact",
+            "ajax",
+            "additionalhtml",
+            "templates",
+            "tool_usertours/tours",
+            "systempaths",
+            "supportcontact",
+            "sessionhandling",
+            "stats",
+            "http",
+            "maintenancemode",
+            "cleanup",
+            "environment",
+            "phpinfo",
+            "performance",
+            "oauth2",
+            "tool_filetypes",
+            "server",
+            "reports",
+            "experimental",
+            "profiling",
+            "testclient",
+            "mnettestclient",
+            "thirdpartylibs",
+            "toolphpunit",
+            "toolbehat",
+            "tooltemplatelibrary",
+            "toolxmld",
+            "toolgeneratorcourse",
+            "toolgeneratortestplan",
+            "managebackpacks",
+            "backpacksettings",
+            "themesettings",
+            "toollpexportcsv"
+        ];
+        $ignore_tabnode = [
+            "analytics", 
+            "license", 
+            "location", 
+            "ipblocker", 
+            "mobileapp", 
+            "moodlenet", 
+            "privacy", 
+            "backups", 
+            "activitychooser", 
+            "modules", 
+            "mnet", 
+            "unsupported", 
+            "messaging"
+        ];
+        foreach ($ignore_tabnode as $tabnodename) {
+            $node->find($tabnodename, navigation_node::TYPE_SETTING)->hide();
+        }
+        foreach ($ignore_node as $nodename) {
+            $node->find($nodename, navigation_node::TYPE_SETTING)->hide();
+        }
+    }
     if ($node) {
         echo $OUTPUT->render_from_template('theme_moove/custom_settings_link_page', ['node' => $node]);
     }

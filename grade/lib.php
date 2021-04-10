@@ -997,7 +997,8 @@ function print_grade_page_head($courseid, $active_type, $active_plugin=null,
     }
 
     $plugin_info = grade_get_plugin_info($courseid, $active_type, $active_plugin);
-
+    // Custom by Vũ: Loại bỏ 1 số report không dùng đến ở màn hình điểm số
+    unset($plugin_info['report']['singleview']);
     // Determine the string of the active plugin
     $stractive_plugin = ($active_plugin) ? $plugin_info['strings']['active_plugin_str'] : $heading;
     $stractive_type = $plugin_info['strings'][$active_type];
