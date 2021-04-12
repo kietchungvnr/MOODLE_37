@@ -81,6 +81,9 @@ class user_competency_course_navigation implements renderable, templatable {
 
         $data = new stdClass();
         $data->userid = $this->userid;
+        // Custom by Thắng : thêm thông tin cho filter competency
+        $data->username = $DB->get_field('user',"CONCAT(firstname,' ',lastname)",['id' => $this->userid]);
+        $data->competencyname = $DB->get_field('competency',"CONCAT(shortname,' ',idnumber)",['id' => $this->competencyid]);
         $data->competencyid = $this->competencyid;
         $data->courseid = $this->courseid;
         $data->baseurl = $this->baseurl;

@@ -8511,3 +8511,248 @@ body.format-topcoll.editing {
     }
   }
 }
+.qr-code {
+  display: flex;
+  margin: auto;
+  padding: 10px;
+  border-radius: 15px;
+  border: 2px solid;
+  border-color: #d5e1ea;
+  margin: 16px 0px;
+  justify-content: center;
+}
+.qr-code-icon {
+  height: 24px;
+  width: 24px;
+  filter: contrast(0%);
+  &:hover {
+    filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+  }
+  &:focus {
+    filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+  }
+}
+.list-unstyled {
+  li {
+    a {
+      color: #000;
+    }
+  }
+}
+#page-admin-search {
+  .card-body {
+    margin-top: -1px;
+  }
+  .title-admin {
+    font-size: 15px;
+    font-weight: bold;
+    a {
+      font-size: 15px;
+      font-weight: bold;
+    }
+  }
+  .nav.nav-tabs.course {
+    .nav-link.active {
+      border-bottom: 0 !important;
+      color: #363535 !important;
+      background: white !important;
+    }
+  }
+  .nav-tabs.course {
+    .nav-link.active {
+      box-shadow: unset;
+    }
+  }
+}
+#page-mod-quiz-edit {
+  .section-heading {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .instanceshufflequestions {
+      margin: 0;
+    }
+    .instancesectioncontainer {
+      font-size: 15px;
+    }
+  }
+  ul.slots {
+    li.section {
+      .content {
+        background: transparent;
+      }
+    }
+  }
+  .title-edit-question {
+    h2 {
+      font-size: 14px !important;
+      color: #363535;
+    }
+  }
+  #displayoptions {
+    border: 0;
+    padding: 0;
+  }
+  #categoryquestions {
+    >tbody {
+      >tr {
+        &:nth-of-type(even) {
+          background: white;
+        }
+      }
+    }
+    .iconcol {
+      .icon {
+        margin-top: 5px;
+      }
+    }
+  }
+  .modal-dialog {
+    max-width: 70%;
+  }
+  .fcontainer {
+    border: 0;
+    padding: 0;
+  }
+  .modal-footer {
+    display: flex;
+    justify-content: center;
+    border-top: 0;
+  }
+  .modal-footer.hidden {
+    display: none;
+  }
+  .modulespecificbuttonscontainer {
+    text-align: center;
+  }
+  .iconcol.previewaction {
+    a {
+      i {
+        margin-right: 10px;
+      }
+    }
+  }
+  #fitem_id_fromtags {
+    .form-autocomplete-selection {
+      display: block;
+      text-align: left;
+    }
+  }
+  div[data-region="paging-control-container"] {
+    justify-content: flex-end;
+  }
+  .mod_quiz-edit-top-controls {
+    padding: 0 0 0 45px;
+  }
+  .paging {
+    text-align: left;
+    background: transparent;
+  }
+  .questionbankformforpopup {
+    .form-group {
+      display: none;
+    }
+  }
+}
+.path-mod-quiz {
+  .mod-quiz-edit-content {
+    margin-bottom: 0;
+  }
+}
+.page-link {
+  &:focus {
+    box-shadow: unset;
+  }
+}
+.competencylinktree {
+  h3 {
+    font-size: 14px;
+  }
+}
+.path-admin-tool-lp {
+  [data-region="competencylinktree"] {
+    >ul {
+      height: 150px;
+    }
+  }
+}
+#page-admin-tool-lp-user_competency_in_course {
+  div[data-region="competency-summary"] {
+    border: 1px solid #dee2e6;
+    padding: 15px;
+    border-radius: 8px;
+    .badge {
+      padding: 5px 10px;
+      font-size: 14px;
+    }
+    .row {
+      margin-bottom: 15px;
+    }
+  }
+  .list-inline-item {
+    margin-left: 0;
+  }
+  p {
+    margin-bottom: 0;
+  }
+  .competency-heading {
+    margin-bottom: 0;
+    span.float-left {
+      display: none;
+    }
+    nav {
+      display: none;
+    }
+    .competency-origin {
+      display: none;
+    }
+    h4 {
+      font-size: 14px;
+      margin-top: 1px;
+      color: grey;
+    }
+  }
+  dd {
+    margin-bottom: 0;
+  }
+  dl {
+    margin-bottom: 0;
+  }
+  .col-md-10 {
+    color: grey;
+  }
+  .page-header-headings {
+    h3 {
+      font-weight: bold;
+      margin-bottom: 0;
+    }
+  }
+  .page-context-header {
+    #toggle-contact-button {
+      background-color: #ced4da;
+      margin-left: 10px;
+    }
+    float: left;
+    display: flex;
+    align-items: center;
+  }
+  .form-autocomplete-selection {
+    display: none;
+  }
+  small {
+    margin-right: 5px;
+    font-size: 14px;
+  }
+}
+#page-user-profile {
+  #intro {
+    margin-top: 10px;
+  }
+}
+@media max-width: 1200px) {
+  .k-widget.k-window {
+    width: 98vw !important;
+  }
+}
+
