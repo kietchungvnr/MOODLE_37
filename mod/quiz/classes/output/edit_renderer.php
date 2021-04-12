@@ -77,23 +77,22 @@ class edit_renderer extends \plugin_renderer_base {
         $output .= html_writer::start_div('d-flex justify-content-between flex-wrap mb-1');
         $output .= html_writer::start_div('mod_quiz-edit-action-buttons btn-group edit-toolbar', ['role' => 'group']);
         $output .= html_writer::tag('input','',['type' => 'checkbox','name' => 'all','class' => 'mr-2']);
-        // $output .= $this->selectmultiple_controls($structure);
+        $output .= $this->selectmultiple_controls($structure);
+        $output .= html_writer::tag('button',get_string('changepointall','local_newsvnr'),['class' => 'btn btn-secondary mr-2','data-target' => '#modalchangeallmark','data-toggle' => 'modal','disabled' => 'disabled']);
         $output .= $this->repaginate_button($structure, $pageurl);
         $output .= $this->selectmultiple_button($structure);    
-        $output .= html_writer::tag('button','Thay đổi điểm hàng loạt',['class' => 'btn btn-secondary','data-target' => '#modalchangeallmark','data-toggle' => 'modal']);
         $output .= html_writer::end_tag('div');
-
         $output .= html_writer::start_div('d-flex align-items-center justify-content-around');
         $output .= $this->maximum_grade_input($structure, $pageurl);
         $output .= $this->total_marks($quizobj->get_quiz());
         $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('div');
 
-        $output .= $this->selectmultiple_controls($structure);
+        // $output .= $this->selectmultiple_controls($structure);
         $output .= html_writer::end_tag('div');
         $changemark .= '<div id="changeallmark"><div class="d-flex align-items-center">';
-        $changemark .= '<input type="text" name="maxmark" id="maxmark" class="form-control ml-1 w-auto"><input type="submit" id="changemark" value="'.$strbtn.'" class="btn btn-secondary"></div></div>';
-        $output .= get_modal_boostrap($changemark,'modalchangeallmark','Thay đổi điểm số hàng loạt');
+        $changemark .= '<label class="mr-2">'.get_string('inputpoint','local_newsvnr').'</label><input type="text" name="maxmark" id="maxmark" class="form-control mr-2 w-auto"><input type="submit" id="changemark" value="'.$strbtn.'" class="btn btn-secondary"></div></div>';
+        $output .= get_modal_boostrap($changemark,'modalchangeallmark',get_string('changepointall','local_newsvnr'));
 
         // Show the questions organised into sections and pages.
         $output .= $this->start_section_list($structure);
@@ -173,7 +172,7 @@ class edit_renderer extends \plugin_renderer_base {
         $output = html_writer::span(
                     get_string('numquestionsx', 'quiz', $structure->get_question_count()),
                     'numberofquestions') .
-                html_writer::div('Trạng thái: ' . html_writer::span($currentstatus,'quizopeningstatus',
+                html_writer::div(get_string('status','local_newsvnr').': ' . html_writer::span($currentstatus,'quizopeningstatus',
                     array('title' => $explanation,'class' => 'font-bold')));
 
         return html_writer::div($output, 'statusbar');
@@ -285,7 +284,7 @@ class edit_renderer extends \plugin_renderer_base {
         );
 
         $groupoptions = array(
-            'class' => 'btn-group selectmultiplecommand actions m-1',
+            'class' => 'btn-group selectmultiplecommand actions',
             'role' => 'group'
         );
         //Custom by Thắng :
@@ -297,7 +296,7 @@ class edit_renderer extends \plugin_renderer_base {
                 $buttoncanceloptions), $groupoptions);
 
         $toolbaroptions = array(
-            'class' => 'btn-toolbar m-1',
+            'class' => 'btn-toolbar',
             'role' => 'toolbar',
             'aria-label' => get_string('selectmultipletoolbar', 'quiz'),
         );
@@ -414,7 +413,7 @@ class edit_renderer extends \plugin_renderer_base {
         $output .= html_writer::start_div('section-heading');
 
         $headingtext = $this->heading(html_writer::span(
-                html_writer::span($section->heading, 'instancesection'), 'sectioninstance'), 3);
+                html_writer::span($section->heading.' | '.get_string('edittitle','local_newsvnr'), 'instancesection'), 'sectioninstance'), 3);
 
         if (!$structure->can_be_edited()) {
             $editsectionheadingicon = '';
@@ -429,7 +428,7 @@ class edit_renderer extends \plugin_renderer_base {
         if (!$structure->is_first_section($section) && $structure->can_be_edited()) {
             $output .= html_writer::div($headingtext . $editsectionheadingicon . $this->section_remove_icon($section), 'instancesectioncontainer');
         } else {
-            $output .= html_writer::div($headingtext . $editsectionheadingicon, 'instancesectioncontainer');
+            $output .= html_writer::div($headingtext . $editsectionheadingicon, 'instancesectioncontainer') ;
         }
         $output .= $this->section_shuffle_questions($structure, $section);
 

@@ -38,17 +38,36 @@ function(
 	var editquestion = function () {
 		$(document).ready(function(){
 	        $('input[name="all"]').bind('click', function(){
-	            $('input[name="slot[]"]').not(this).prop('checked', this.checked);
+	        	if($(this).is(":checked")) {
+	        		$('input[name="slot[]"]').not(this).prop('checked', this.checked);
+	        		$('input[name="selectquestion[]"]').prop('checked', false);
+	        		$('input[name="selectquestion[]"]').not(this).trigger('click');
+	        	} else {
+	        		$('input[name="slot[]"]').not(this).prop('checked', this.checked);
+	        		$('input[name="selectquestion[]"]').prop('checked', true);
+	        		$('input[name="selectquestion[]"]').not(this).trigger('click');
+	        	}
+	            $('input[name="selectquestion[]"]').each(function() {
+	            	if($(this).is(":checked")) {
+	            		$('button[data-target="#modalchangeallmark"]').removeAttr('disabled');
+	            	} else {
+	            		$('button[data-target="#modalchangeallmark"]').attr('disabled','disabled');
+	            	}
+	            })
 	        });
+	        $('input[name="slot[]"]').click(function(){
+			    $(this).next('input').trigger('click');
+	            $('input[name="selectquestion[]"]').each(function() {
+	            	if($(this).is(":checked")) {
+	            		$('button[data-target="#modalchangeallmark"]').removeAttr('disabled');
+	            		return false;
+	            	} else {
+	            		$('button[data-target="#modalchangeallmark"]').attr('disabled','disabled');
+	            	}
+	            })
+			});
 	    });
-	    $('#selectmultiplecommand').click(function() {
-				$('input[name="slot[]"]').addClass('d-none');
-				$('#changeallmark').addClass('d-none');
-		});
-		$('#selectmultiplecancelcommand').click(function() {
-				$('input[name="slot[]"]').removeClass('d-none');
-				$('#changeallmark').removeClass('d-none');
-		});
+
 		$(document).on('click','.tag-item',function() {
 			var value = $(this).attr('value');
 			if($(this).hasClass('active')) {

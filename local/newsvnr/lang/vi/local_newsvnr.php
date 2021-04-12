@@ -577,3 +577,6 @@ $string['questionlevel_erorr_sumpercent'] = "Tổng mức độ khó trung bình
 $String['selectposition'] = "Chọn chức vụ";
 $string['competency'] = "Năng lực";
 $string['noquestion'] = "Không có câu hỏi";
+$string['changepointall'] = "Thay đổi điểm hàng loạt";
+$string['inputpoint'] = "Nhập điểm";
+$string['edittitle'] = "Sửa tiêu đề";

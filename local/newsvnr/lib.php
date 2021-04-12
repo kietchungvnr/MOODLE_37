@@ -2591,13 +2591,19 @@ function get_coursecard_info($courseid) {
     return $obj;
 }
 // form popup
-function get_modal_boostrap($html,$idmodal,$title = '') {
+function get_modal_boostrap($html,$idmodal,$title = '',$footer = false) {
     $output = '';
     $output .= html_writer::start_div('modal',['id' => $idmodal]);
     $output .= html_writer::start_div('modal-dialog');
     $output .= html_writer::start_div('modal-content');
     $output .= html_writer::tag('div','<h4 class="modal-title">'.$title.'</h4><button type="button" class="close" data-dismiss="modal">&times;</button>' ,['class' => 'modal-header']);
     $output .= html_writer::tag('div',$html,['class' => 'modal-body']);
+    if($footer == true) {
+        $output .= html_writer::start_div('modal-footer');
+        $output .= html_writer::tag('button','Save changes',['type' => 'button','class' => 'submit btn btn-primary']);
+        $output .= html_writer::tag('button','Close',['type' => 'button','class' => 'btn btn-secondary','data-dismiss' => 'modal']);
+        $output .= html_writer::end_div();
+    }
     $output .= html_writer::end_div();
     $output .= html_writer::end_div();
     $output .= html_writer::end_div();
