@@ -45,7 +45,7 @@
     <thead>
         <tr>
             <div class="row mg-0">
-                <div class="col-md-3 table-competencies">Năng lực</div>
+                <div class="col-md-3 table-competencies">{{#str}}competency, local_newsvnr{{/str}}</div>
                 <div class="col-md-3 table-competencies">{{#str}}uponcoursecompletion, tool_lp{{/str}}</div>
                 <div class="col-md-3 table-competencies">{{#str}}activities{{/str}}</div>
                 <div class="col-md-3 table-competencies">{{#str}}userplans, core_competency{{/str}}</div>
@@ -68,21 +68,16 @@
                            title="{{#str}}viewdetails, tool_lp{{/str}}">
                         <p><strong>{{{competency.shortname}}}</strong></p>
                     </a>
-                    <p>{{{competency.description}}}</p>
                 {{/competency}}
                 {{#canmanagecoursecompetencies}}
                     {{#comppath}}
-                        <span class="float-sm-left ml-2">{{#str}}path, tool_lp{{/str}}&nbsp;</span>{{> tool_lp/competency_path }}
+                        <span class="float-sm-left ml-2 mr-2"> - </span>{{> tool_lp/competency_path }}
                     {{/comppath}}
                 {{/canmanagecoursecompetencies}}
             </div>
         </div>
         <div class="col-md-3">
-            {{#usercompetencycourse}}
-                {{#grade}}
-                <span class="badge {{#proficiency}}badge-success{{/proficiency}}{{^proficiency}}badge-danger{{/proficiency}}">{{gradename}}</span>
-                {{/grade}}         
-            {{/usercompetencycourse}}
+
             {{#canmanagecoursecompetencies}}
                 <label>
                     <select data-field="ruleoutcome" data-id="{{coursecompetency.id}}" class="custom-select">
@@ -91,6 +86,13 @@
                       {{/ruleoutcomeoptions}}
                     </select>
                 </label>
+            {{/canmanagecoursecompetencies}}
+            {{^canmanagecoursecompetencies}}
+                {{#usercompetencycourse}}
+                    {{#grade}}
+                    <span class="badge {{#proficiency}}badge-success{{/proficiency}}{{^proficiency}}badge-danger{{/proficiency}}">{{gradename}}</span>
+                    {{/grade}}         
+                {{/usercompetencycourse}}
             {{/canmanagecoursecompetencies}}
         </div>
         <div class="col-md-3" data-region="coursecompetencyactivities">

@@ -8694,7 +8694,8 @@ body.format-topcoll.editing {
     border-radius: 8px;
     .badge {
       padding: 5px 10px;
-      font-size: 14px;
+      font-size: 12px;
+      border-radius: 8px;
     }
     .row {
       margin-bottom: 15px;
@@ -8765,4 +8766,82 @@ body.format-topcoll.editing {
     width: 98vw !important;
   }
 }
+@media max-width: 576px) {
+  #page-mod-assign-view {
+    .ygtvcell.ygtvcontent {
+      .fa-cloud-download {
+        display: block !important;
+      }
+    }
+  }
+  .dot-desktop {
+    display: none !important;
+  }
+}
+#page-mod-assign-view {
+  .ygtvcell.ygtvcontent {
+    .fa-cloud-download {
+      display: none;
+    }
+  }
+}
+#page-mod-quiz-edit {
+  ul.slots {
+    li.section {
+      li.activity {
+        .mod-indent-outer {
+          align-items: center;
+        }
+        .editing_move {
+          i {
+            margin-top: 3px;
+          }
+        }
+      }
+    }
+  }
+  .selectmultiplecommand {
+    display: inline-block !important;
+  }
+  #selectmultiplecommand {
+    display: none;
+  }
+  .mod_quiz-edit-action-buttons {
+    display: flex;
+    align-items: center;
+    #selectmultiplecancelcommand[value="Cancel"] {
+      display: none;
+    }
+  }
+  .section-heading {
+    .instancesection {
+      max-width: 100%;
+      font-size: 16px;
+    }
+  }
+  #selectmultiplecancelcommand {
+    display: none;
+  }
+}
+.dot-desktop {
+  display: contents;
+}
+#page-mod-quiz-edit.select-multiple {
+  input.select-multiple-checkbox[type="checkbox"] {
+    display: none !important;
+  }
+}
+#page-question-category {
+  .category {
+    padding: 1.25rem;
+  }
+}
+#page-course-view-topics {
+  .list-inline-item {
+    .alert {
+      padding: .75rem 0;
+    }
+  }
+}
+
 
