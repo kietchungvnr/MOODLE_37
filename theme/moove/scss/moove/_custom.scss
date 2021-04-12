@@ -2662,8 +2662,6 @@ div.submissionstatustable {
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 25px;
-  -webkit-line-clamp: 3;
-  height: 80px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -4103,7 +4101,7 @@ nav.focusmod {
 .dashboard-card-deck.one-row {
   overflow-x: auto;
 }
-.card-body.course {
+.card-body.nav-header {
   min-height: 70vh;
 }
 .navbar.focus-mod {
@@ -5785,7 +5783,7 @@ i.expand-icon.active {
     padding: 0 10px 10px 10px;
   }
 }
-.nav-tabs.course {
+.nav-tabs.nav-header {
   display: flex;
   border-bottom: 0;
   background-color: #e3eef5 !important;
@@ -5803,6 +5801,11 @@ i.expand-icon.active {
     a {
       color: $text-color;
       width: max-content;
+    }
+    a.active {
+      margin-bottom: 0;
+      padding-bottom: 13px;
+      border-radius: 5px 5px 0 0;
     }
   }
   .nav-item.active {
@@ -7166,9 +7169,15 @@ body.format-topcoll.editing {
   width: 400px;
 }
 .path-question {
+  .card-body {
+    padding: 0;
+  }
+  .questionbankwindow {
+    padding: 1.25rem;
+  }
   .nav.nav-tabs {
     background: #e2edf4 !important;
-    margin: -21px -20px 0 -20px;
+    margin: -1px -20px 0 0px;
     .nav-link.active {
       margin-bottom: 0;
       padding-bottom: 13px;
@@ -7463,7 +7472,7 @@ body.format-topcoll.editing {
     }
   }
   #page-course-view-topcoll.pagelayout-course {
-    .nav-tabs.course {
+    .nav-tabs.nav-header {
       li {
         display: none !important;
       }
@@ -8551,14 +8560,14 @@ body.format-topcoll.editing {
       font-weight: bold;
     }
   }
-  .nav.nav-tabs.course {
+  .nav.nav-tabs.nav-header {
     .nav-link.active {
       border-bottom: 0 !important;
       color: #363535 !important;
       background: white !important;
     }
   }
-  .nav-tabs.course {
+  .nav-tabs.nav-header {
     .nav-link.active {
       box-shadow: unset;
     }

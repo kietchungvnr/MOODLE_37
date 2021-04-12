@@ -101,17 +101,6 @@ margin-bottom: 10px;
     font-size: 16px;
     font-weight: bold;
 }
-.new-latest-content {
-    padding-top:5px;
-    width: 95%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 25px;
-    -webkit-line-clamp: 3;
-    height: 80px;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-}
 .new-latest-comment-info{
     color:#0094ff;
     text-align:left;

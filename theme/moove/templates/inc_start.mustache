@@ -11,7 +11,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     {{! <meta name="referrer" content="no-referrer"> }}
 <style type="text/css">
-    
+    @media(max-width: 576px) {
+        #page-mod-assign-view .ygtvcell.ygtvcontent .fa-cloud-download {
+            display: block !important;
+        }
+        .dot-desktop {
+            display: none !important;
+        }
+    }
+    #page-mod-assign-view .ygtvcell.ygtvcontent .fa-cloud-download {
+        display: none;
+    }
+    #page-mod-quiz-edit ul.slots li.section li.activity .mod-indent-outer {
+        align-items: center;
+    }
+    .dot-desktop {
+        display: contents;
+    }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />

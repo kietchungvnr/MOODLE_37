@@ -575,3 +575,4 @@ $string['randomnumber'] = "Random number";
 $string['typeofclass'] = "Type of classification";
 $string['questionlevel_erorr_sumpercent'] = "The average total difficulty level should easily equal 100%";
 $string['competency'] = "Competence";
+$string['noquestion'] = "No question";

@@ -428,7 +428,7 @@ class course_renderer extends \core_course_renderer {
         // // Display course category tree.
         // $output .= $this->coursecat_tree($chelper, $coursecat);
        
-        $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent FROM mdl_course_categories cc JOIN mdl_course c ON cc.id = c.category OR cc.parent = c.category WHERE cc.visible = 1');
+        $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent FROM mdl_course_categories cc LEFT JOIN mdl_course c ON cc.id = c.category OR cc.parent = c.category WHERE cc.visible = 1');
         $output .= $this->menucoursecategory($categories);
         $output .= '</div></div>';
         $output .= '<div class="col-xl-9 col-lg-8 col-md-8 position-relative">';

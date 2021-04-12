@@ -576,3 +576,4 @@ $string['typeofquestion'] = "Phân mức độ câu hỏi";
 $string['questionlevel_erorr_sumpercent'] = "Tổng mức độ khó trung bình dễ phải bằng 100%";
 $String['selectposition'] = "Chọn chức vụ";
 $string['competency'] = "Năng lực";
+$string['noquestion'] = "Không có câu hỏi";
