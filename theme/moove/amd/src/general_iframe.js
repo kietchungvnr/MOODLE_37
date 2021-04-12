@@ -79,21 +79,21 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
         $('#region-main .card-body').addClass('d-none');
         $('#region-main .loading-page').addClass('active');
         //reload để resize height iframe
-        $('#course-iframe').on('load', function() {
-            $('#course-iframe').iframeTracker({
-                blurCallback: function(event) {
-                    $('body').focus();
-                    Cookie.setCookie('spa', 'true');
-                },
-                outCallback: function(element, event) {
-                    this._overId = null; // Reset hover iframe wrapper i
-                    Cookie.setCookie('spa', '-1', 0);
-                },
-                _overId: null
-            });
-            $('#course-iframe').removeClass('d-none')
-            const iframes = iFrameResize({ log: false }, '#course-iframe');
-            $('#region-main .loading-page').removeClass('active');
-        });
+        // $('#course-iframe').on('load', function() {
+        //     $('#course-iframe').iframeTracker({
+        //         blurCallback: function(event) {
+        //             $('body').focus();
+        //             Cookie.setCookie('spa', 'true');
+        //         },
+        //         outCallback: function(element, event) {
+        //             this._overId = null; // Reset hover iframe wrapper i
+        //             Cookie.setCookie('spa', '-1', 0);
+        //         },
+        //         _overId: null
+        //     });
+        //     $('#course-iframe').removeClass('d-none')
+        //     const iframes = iFrameResize({ log: false }, '#course-iframe');
+        //     $('#region-main .loading-page').removeClass('active');
+        // });
     });
 });

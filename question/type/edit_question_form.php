@@ -212,7 +212,7 @@ abstract class question_edit_form extends question_wizard_form {
         // Thêm element tùy chỉnh mức độ câu hỏi
         $level = [
             QUESTION_LEVEL_DEFAULT => get_string('questionlevel_default', 'local_newsvnr'),
-            QUESTION_LEVEL_EASY => get_string('questionlevel_essy', 'local_newsvnr'),
+            QUESTION_LEVEL_EASY => get_string('questionlevel_easy', 'local_newsvnr'),
             QUESTION_LEVEL_NORMAL => get_string('questionlevel_normal', 'local_newsvnr'),
             QUESTION_LEVEL_HARD => get_string('questionlevel_hard', 'local_newsvnr')
         ];

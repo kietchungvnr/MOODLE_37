@@ -92,7 +92,9 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
                 _overId: null
             });
             $('#course-iframe').removeClass('d-none')
-            const iframes = iFrameResize({ log: false }, '#course-iframe');
+            const iframes = iFrameResize({  log: false,
+                                            heightCalculationMethod : 'taggedElement', }
+                                        , '#course-iframe');
             $('#region-main .loading-page').removeClass('active');
         });
     });

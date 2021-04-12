@@ -210,6 +210,15 @@ if ($ADMIN->fulltree) {
     $setting = new admin_setting_configmultiselect('theme_moove/menuitem', get_string('listmenuitem', 'local_newsvnr'),
     get_string('listmenuitemdesc', 'local_newsvnr'), [], $listmenuitem);
     $page->add($setting);
+
+    // Change portal to full funcs
+    $name = 'theme_moove/fullsite';
+    $title = get_string('fullsite', 'theme_moove');
+    $description = get_string('fullsitedesc', 'theme_moove');
+    $default = 0;
+    $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $page->add($setting);
+
     // Change dashboad new and old (3.7 and 3.9)
     $name = 'theme_moove/switch_dashboard';
     $title = get_string('switch_dashboard', 'theme_moove');

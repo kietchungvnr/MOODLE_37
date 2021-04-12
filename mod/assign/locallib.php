@@ -4658,7 +4658,23 @@ class assign {
         $o .= html_writer::end_tag('div'); // end content
         $o .= html_writer::end_tag('div'); // end dialog
         $o .= html_writer::end_tag('div'); // end modal
-        $o .= html_writer::tag('script', "$('[data-id=grading]').click(function(e) { var getUrl = $(this).attr('data-grading-url'); console.log(getUrl); var iframe = '<iframe src=\' '+getUrl+' \' id=\'grading-popup\' height=\'768px\' width=\'100%\' frameborder=\'0\'></iframe>'; console.log(iframe); $('#body-grading-modal').html(iframe); $('#grading-popup').on('load', function(e) { setTimeout(function() {  $('#grading-modal').modal('show'); }, 1000);}) })",['type' => 'text/javascript']);
+
+        // Custom by Vũ: Đổi kiểu hiện thị BTVN thành popup
+        $o .= html_writer::tag('style', "@media (min-width: 577px) { .modal-dialog { max-width: 90%; } }", ['type' => 'text/css']);
+        $o .= html_writer::start_tag('div', ['class' => 'modal', 'id' => 'assignfile-modal']);
+        $o .= html_writer::start_tag('div', ['class' => 'modal-dialog modal-xl']);
+        $o .= html_writer::start_tag('div', ['class' => 'modal-content']);
+        $o .= html_writer::start_tag('div', ['class' => 'modal-header']);
+        $o .= html_writer::tag('h4',  get_string('grade'),['class' => 'modal-title']);
+        $o .= html_writer::tag('button', '&times;', ['class' => 'close', 'type' => 'button', 'data-dismiss' => 'modal']);
+        $o .= html_writer::end_tag('div');
+        $o .= html_writer::start_tag('div', ['class' => 'modal-body p-0', 'id' => 'body-assignfile-modal']);
+        $o .= html_writer::end_tag('div'); // end body
+        $o .= html_writer::end_tag('div'); // end content
+        $o .= html_writer::end_tag('div'); // end dialog
+        $o .= html_writer::end_tag('div'); // end modal
+
+        $o .= html_writer::tag('script', "$('[data-id=grading]').click(function(e) { $('body').addClass('loading');; var getUrl = $(this).attr('data-grading-url'); var iframe = '<iframe src=\' '+getUrl+' \' id=\'grading-popup\' height=\'768px\' width=\'100%\' frameborder=\'0\'></iframe>'; $('#body-grading-modal').html(iframe); $('#grading-popup').on('load', function(e) { setTimeout(function() {  $('#grading-modal').modal('show'); $('body').removeClass('loading');}, 1000);}) })",['type' => 'text/javascript']);
 
         \mod_assign\event\grading_table_viewed::create_from_assign($this)->trigger();
 

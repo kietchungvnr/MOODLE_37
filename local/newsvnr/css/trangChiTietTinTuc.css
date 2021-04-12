@@ -66,13 +66,7 @@
     padding-top:30px;
 
 }
-
-.new-detail-chat .chat-panel{
-
-}
-
 .chat-panel .chat-image {
-    width: 50px;
     float: left;
 }
 
@@ -88,19 +82,10 @@
     padding: 8px;
 }
 
-    .chat-panel .chat-content .chat-body {
-
-        padding: 4px;
-        border-top: none;
-        border-radius: 10px;
-
-        background-color: #e8e8e8;
-    }
 
         .chat-panel .chat-content .chat-body .name {
             font-size: 14px;
             font-weight: 600;
-            color: #0094ff;
         }
          .chat-panel .chat-content .chat-body p {
             font-size: 14px;
@@ -179,7 +164,6 @@
 .chat-reply .chat-panel .chat-image {
     width: 40px;
     float: left;
-    margin-top: 15px;
 }
 
 .chat-hidden-reply, .chat-show-reply {
@@ -282,7 +266,6 @@
 }
 .btn-new-Related .btn{
     background-color:#ff0000;
-    color:#ffffff;
 }
 .new-Related-body{
     padding-top:20px;

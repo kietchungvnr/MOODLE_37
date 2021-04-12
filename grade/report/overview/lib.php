@@ -116,8 +116,8 @@ class grade_report_overview extends grade_report {
                         break;
                     }
                 }
-
-                if (has_capability('moodle/grade:viewall', $coursecontext, $userid)) {
+                // Custom by Thắng : thêm điều kiện kiểm tra teacher
+                if (has_capability('moodle/grade:viewall', $coursecontext, $userid) && check_teacherrole($userid) != 0) {
                     $this->teachercourses[$course->id] = $course;
                 }
             }

@@ -277,7 +277,8 @@ class course_edit_form extends moodleform {
 
         $courseformats = get_sorted_course_formats(true);
         $formcourseformats = array();
-        $ignoreformats = ['multitopic', 'onetopic', 'tiles', 'weeks', 'topics', 'social', 'singleactivity'];
+        // Custom by Vũ: Loại bỏ 1 số format trong khóa học
+        $ignoreformats = ['multitopic', 'onetopic', 'tiles', 'weeks', 'social', 'singleactivity'];
         foreach ($courseformats as $courseformat) {
             if(in_array($courseformat, $ignoreformats))
                 continue;

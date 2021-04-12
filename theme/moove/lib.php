@@ -791,7 +791,7 @@ function theme_moove_layout_check() {
     $object->show_hide_focusmod = true;
     if(isset($referer) && ($referer_split[2] == $_SERVER['HTTP_HOST'])) {
         if(isset($_COOKIE['cookie']) && $_COOKIE['cookie'] == 'focusmod') {
-            if (strpos($referer, 'mod/') == true || strpos($_SERVER['QUERY_STRING'], 'course') == true || strpos($referer, 'course=') == true || strpos($_SERVER['SCRIPT_NAME'], 'mod/') == true) {
+            if (strpos($referer, 'question/') == true || strpos($referer, 'mod/') == true || strpos($_SERVER['QUERY_STRING'], 'course') == true || strpos($referer, 'course=') == true || strpos($_SERVER['SCRIPT_NAME'], 'mod/') == true) {
                 $object->hasiframe = true;
                 $object->show_hide_focusmod = false;
             } else {

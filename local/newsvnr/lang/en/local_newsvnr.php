@@ -1,5 +1,4 @@
 <?php 
-
 $string['pluginname'] = 'News VNR';
 $string['newsvnr:edit'] = 'Edit learningplan';
 $string['pagetitle'] = 'News';
@@ -574,3 +573,10 @@ $string['typeofclass_percent'] = "Percent";
 $string['randomnumber'] = "Random number";
 $string['typeofclass'] = "Type of classification";
 $string['questionlevel_erorr_sumpercent'] = "The average total difficulty level should easily equal 100%";
+$string['competency'] = "Competence";
+$string['noquestion'] = "No question";
+$string['changepointall'] = "Change point series";
+$string['inputpoint'] = "Input point";
+$string['edittitle'] = "Edit title";
+$string['addnewcategoryquestion'] = "Add new category question";
+$string['editcategoryquestion'] = "Edit category question";

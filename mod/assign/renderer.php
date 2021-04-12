@@ -66,6 +66,21 @@ class mod_assign_renderer extends plugin_renderer_base {
         if ($tree->portfolioform) {
             $html .= $tree->portfolioform;
         }
+        // Custom by Vũ: Đổi kiểu hiện thị BTVN thành popup
+        $html .= html_writer::tag('style', "@media (min-width: 577px) { .modal-dialog { max-width: 90%; } }", ['type' => 'text/css']);
+        $html .= html_writer::start_tag('div', ['class' => 'modal', 'id' => 'assignfile-modal']);
+        $html .= html_writer::start_tag('div', ['class' => 'modal-dialog modal-xl']);
+        $html .= html_writer::start_tag('div', ['class' => 'modal-content']);
+        $html .= html_writer::start_tag('div', ['class' => 'modal-header']);
+        $html .= html_writer::tag('h4',  'Điểm');
+        $html .= html_writer::tag('button', '&times;', ['class' => 'close', 'type' => 'button', 'data-dismiss' => 'modal']);
+        $html .= html_writer::end_tag('div');
+        $html .= html_writer::start_tag('div', ['class' => 'modal-body p-0', 'id' => 'body-assignfile-modal']);
+        $html .= html_writer::end_tag('div'); // end body
+        $html .= html_writer::end_tag('div'); // end content
+        $html .= html_writer::end_tag('div'); // end dialog
+        $html .= html_writer::end_tag('div'); // end modal
+      
         return $html;
     }
 
@@ -1345,7 +1360,7 @@ class mod_assign_renderer extends plugin_renderer_base {
             }
         } else if ($feedbackplugin->view == assign_feedback_plugin_feedback::FULL) {
             $o .= $this->output->box_start('boxaligncenter feedbackfull');
-            $o .= $feedbackplugin->plugin->view($feedbackplugin->grade);
+        $o .= $feedbackplugin->plugin->view($feedbackplugin->grade);
             $o .= $this->output->box_end();
         }
 
@@ -1420,7 +1435,8 @@ class mod_assign_renderer extends plugin_renderer_base {
      * @return string
      */
     protected function htmllize_tree(assign_files $tree, $dir) {
-        global $CFG;
+        global $CFG, $OUTPUT;
+        require_once $CFG->dirroot . '/local/newsvnr/lib.php';
         $yuiconfig = array();
         $yuiconfig['type'] = 'html';
 
@@ -1451,19 +1467,24 @@ class mod_assign_renderer extends plugin_renderer_base {
             } else {
                 $plagiarismlinks = '';
             }
+            $fileurl = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename(), false);
             $image = $this->output->pix_icon(file_file_icon($file),
                                              $filename,
                                              'moodle',
                                              array('class'=>'icon'));
+            $fileimg = mimetype2Img($file->get_mimetype());
             // Custom by Thắng: Chỉnh sửa module assign - HTML
             $result .= '<li yuiConfig=\'' . json_encode($yuiconfig) . '\'>' .
                 '<div class="full-flex">' .
-                    '<div><div class="fileuploadsubmission">' . $image . ' ' .
-                    $file->fileurl . ' ' .
-                    $plagiarismlinks . ' ' .
-                    $file->portfoliobutton . ' ' .
-                    '</div>' .
-                    '<div class="fileuploadsubmissiontime">' . $file->timemodified . '</div></div>' .
+            '<div>
+                        <div class="fileuploadsubmission">
+                            <a href="javascript:;" data-id="assignfile" data-assignfile-name="'. $file->get_filename() .'" data-assignfile-type="'. mime2ext($file->get_mimetype()) .'" data-assignfile-url="'. $fileurl . '" onclick="viewFilePopup(\'' .mime2ext($file->get_mimetype()). '\',\''.$fileurl.'\',\''.$file->get_filename().'\')">
+                            ' . $fileimg . ' 
+                            ' . $filename . '
+                            </a>
+                        </div>' .
+                        '<div class="fileuploadsubmissiontime">' . $file->timemodified . '</div>
+                    </div>' .
                     '<div style="color:black"><i class="fa fa-cloud-download fa-2x" aria-hidden="true"></i></div>' .
                 '</div>' .
             '</li>';

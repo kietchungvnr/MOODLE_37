@@ -300,24 +300,24 @@ class core_admin_renderer extends plugin_renderer_base {
         $output .= $this->header();
         $output .= $this->maturity_info($maturity);
         $output .= $this->legacy_log_store_writing_error();
-        $output .= empty($CFG->disableupdatenotifications) ? $this->available_updates($availableupdates, $availableupdatesfetch) : '';
+        // $output .= empty($CFG->disableupdatenotifications) ? $this->available_updates($availableupdates, $availableupdatesfetch) : '';
         $output .= $this->insecure_dataroot_warning($insecuredataroot);
-        $output .= $this->development_libs_directories_warning($devlibdir);
+        // $output .= $this->development_libs_directories_warning($devlibdir);
         $output .= $this->themedesignermode_warning($themedesignermode);
         $output .= $this->display_errors_warning($errorsdisplayed);
         $output .= $this->buggy_iconv_warning($buggyiconvnomb);
         $output .= $this->cron_overdue_warning($cronoverdue);
         $output .= $this->cron_infrequent_warning($croninfrequent);
-        $output .= $this->db_problems($dbproblems);
+        // $output .= $this->db_problems($dbproblems);
         $output .= $this->maintenance_mode_warning($maintenancemode);
         $output .= $this->overridetossl_warning($overridetossl);
         $output .= $this->cache_warnings($cachewarnings);
         $output .= $this->events_handlers($eventshandlers);
-        $output .= $this->registration_warning($registered);
-        $output .= $this->mobile_configuration_warning($mobileconfigured);
-        $output .= $this->forgotten_password_url_warning($invalidforgottenpasswordurl);
-        $output .= $this->userfeedback_encouragement($showfeedbackencouragement);
-        $output .= $this->campaign_content($showcampaigncontent);
+        // $output .= $this->registration_warning($registered);
+        // $output .= $this->mobile_configuration_warning($mobileconfigured);
+        // $output .= $this->forgotten_password_url_warning($invalidforgottenpasswordurl);
+        // $output .= $this->userfeedback_encouragement($showfeedbackencouragement);
+        // $output .= $this->campaign_content($showcampaigncontent);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////
         ////  IT IS ILLEGAL AND A VIOLATION OF THE GPL TO HIDE, REMOVE OR MODIFY THIS COPYRIGHT NOTICE ///

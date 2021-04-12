@@ -840,6 +840,7 @@ class view {
         $this->build_query();
         $totalnumber = $this->get_question_count();
         if ($totalnumber == 0) {
+            echo '<div class="alert alert-warning mt-3" role="alert">'.get_string("noquestion","local_newsvnr").'</div>';
             return;
         }
         $questionsrs = $this->load_page_questions($page, $perpage);
