@@ -772,61 +772,60 @@ class course_renderer extends \core_course_renderer {
         $startfrom = 1;
         $end = count($modinfo->sections);
         $output = '';
-        $output .= '<div class="all-tab-content col-xl-9 col-md-8 col-12">';
-        $output .= '<ul class="nav nav-tabs tab-click multi-tab" tab="enrolcourse">';
-        $output .= '<li class="nav-item"><a class="nav-link active" data-key="courseintro">'.get_string('introcourse','local_newsvnr').'</a></li>
-                    <li class="nav-item "><a class="nav-link" data-key="descriptioncourse">'.get_string('descriptioncourse','local_newsvnr').'</a></li>
-                    <li class="nav-item"><a class="nav-link" data-key="lesson">'.get_string('lesson','local_newsvnr').'</a></li>
-                    <li class="nav-item"><a class="nav-link" data-key="teachername">'.get_string('teachername','local_newsvnr').'</a></li>';
-        $output .= '</ul>';
-        $output .= '<div class="tab-content" tab="enrolcourse">';
+        $output .= html_writer::start_div('all-tab-content col-xl-9 col-md-8 col-12');
+        $output .= html_writer::start_tag('ul',['class' => 'nav nav-tabs tab-click multi-tab','tab' => 'enrolcourse']);
+        $output .= html_writer::tag('li',html_writer::tag('a',get_string('introcourse','local_newsvnr'),['class' => 'nav-link active' ,'data-key' => 'courseintro']),['class' => 'nav-item']);
+        $output .= html_writer::tag('li',html_writer::tag('a',get_string('descriptioncourse','local_newsvnr'),['class' => 'nav-link' ,'data-key' => 'descriptioncourse']),['class' => 'nav-item']);
+        $output .= html_writer::tag('li',html_writer::tag('a',get_string('lesson','local_newsvnr'),['class' => 'nav-link' ,'data-key' => 'lesson']),['class' => 'nav-item']);
+        $output .= html_writer::tag('li',html_writer::tag('a',get_string('teachername','local_newsvnr'),['class' => 'nav-link' ,'data-key' => 'teachername']),['class' => 'nav-item']);
+        $output .= html_writer::end_tag('ul');
+        $output .= html_writer::start_div('tab-content',['tab' => 'enrolcourse']);
         // Giới thiệu khóa học
-        $output .= ' <div data="courseintro" class="tab-pane in active">';
-        $output .= '<div class="count-module">';
-        $output .= get_string('startdate','local_newsvnr').': '. convertunixtime('l, d-m-Y,',$course->startdate,'Asia/Ho_Chi_Minh').'<br>';
+        $output .= html_writer::start_div('tab-pane in active',['data' => 'courseintro']);
+        $output .= html_writer::start_div('count-module');
+        $output .= html_writer::div('<span class="grey">'.get_string('startdate','local_newsvnr').'</span> : <b>'. convertunixtime('l, d-m-Y,',$course->startdate,'Asia/Ho_Chi_Minh').'</b>','mb-3');
         if($course->enddate > 0) {
-            $output .= get_string('enddate','local_newsvnr').': '. convertunixtime('l, d-m-Y,',$course->enddate,'Asia/Ho_Chi_Minh');
+            $output .= html_writer::div('<span class="grey">'.get_string('enddate','local_newsvnr').'</span> : <b>'. convertunixtime('l, d-m-Y,',$course->enddate,'Asia/Ho_Chi_Minh').'</b>','mb-3');
         } else {
             $output .= '-';
         }
         $studentdata = $theme_settings::role_courses_teacher_slider($course->id);
-        $output .= '<div>'.get_string('totalstudent','local_newsvnr').' : '.$studentdata->studentnumber.'</div>';
-        $output .= '</div>';
-        $output .= '</div>';
+        $output .= html_writer::div('<span class="grey">'.get_string('totalstudent','local_newsvnr').'</span> : <b>'.$studentdata->studentnumber.'</b>');
+        $output .= html_writer::end_div();
+        $output .= html_writer::end_div();
         // Mô tả khóa học
-        $output .= ' <div data="descriptioncourse" class="tab-pane">';
-        $output .= '<div class="count-module">';
-        $output .= '<p>'.$course->summary.'</p>';
-        $output .= '</div></div>';
-        $output .= '<div data="lesson" class="tab-pane">';
+        $output .= html_writer::start_div('tab-pane',['data' => 'descriptioncourse']);
+        $output .= html_writer::div('<p>'.$course->summary.'</p>','count-module');
+        $output .= html_writer::end_div();
+        $output .= html_writer::start_div('tab-pane',['data' => 'lesson']);
         for ($section = $startfrom; $section <= $end; $section++) {
             $currentsection = $modinfo->get_section_info($section);
             if($currentsection == null || $currentsection->visible != 1) {
                 continue;
             }
-            $output .= '<div class="curriculum-chapter click-expand mt-2" id="'.$currentsection->id.'">';
+            $output .= html_writer::start_div('curriculum-chapter click-expand mt-2',['id' => $currentsection->id]);
             if($currentsection->name == '' && $currentsection->section != 0) {
-                $output .= '<div>'.get_string('topic', 'theme_moove').' '.$currentsection->section.'</div>';
+                $output .= html_writer::div(get_string('topic', 'theme_moove').' '.$currentsection->section);
             } else {
-                $output .= '<div>'.$currentsection->name.'</div>';
+                $output .= html_writer::div($currentsection->name);
             }
             if (empty($modinfo->sections[$currentsection->section])) {
-                $output .= '</div>';
+                $output .= html_writer::end_div();
                 continue;
             }
             $sectionmods = $this->count_module($course,$currentsection);
             if($sectionmods['total'] > 0) {
-                $output .= '<a>'.$sectionmods['total'] .' '.get_string('countmodule','local_newsvnr').'  <i class="fa fa-angle-up rotate-icon"></i></a>';
+                $output .= html_writer::tag('a',$sectionmods['total'] .' '.get_string('countmodule','local_newsvnr').'  <i class="fa fa-angle-up rotate-icon"></i>');
             }
-            $output .= '</div>';
-            $output .= '<div class="content-expand '.$currentsection->id.' display-none">';
+            $output .= html_writer::end_div();
+            $output .= html_writer::start_div('content-expand '.$currentsection->id.' display-none');
             foreach ($sectionmods['activityinfo'] as $value) {
-                $output .= '<div class="count-module">'.$value.'</div>';
+                $output .= html_writer::div($value,'count-module');
             }
-            $output .= '</div>';
+            $output .= html_writer::end_div();
         }
-        $output .= '</div>'; 
-        $output .= '<div data="teachername" class="tab-pane">';
+        $output .= html_writer::end_div();
+        $output .= html_writer::start_div('tab-pane',['data' => 'teachername']);
         //Láy thông tin giáo viên
         if(is_array($teachers)) {
             foreach ($teachers as $teacher) {
@@ -849,9 +848,9 @@ class course_renderer extends \core_course_renderer {
                             '.get_string('noteacher','local_newsvnr').' !
                         </div>';
         }
-        $output .= '</div>'; //end div tab3
-        $output .= '</div>'; //end div tab-content
-        $output .= '</div>'; //end div all-tab-content
+        $output .= html_writer::end_div(); //end div tab3
+        $output .= html_writer::end_div(); //end div tab-content
+        $output .= html_writer::end_div(); //end div all-tab-content
         return $output;
         }
     }

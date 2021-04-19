@@ -830,7 +830,6 @@ input:focus {
 .footer-area {
   position: relative;
   z-index: 1;
-  background-color: #1f1c1c;
   padding-left: 4%;
   padding-right: 4%; }
   .footer-area .widget-title {

@@ -3,8 +3,8 @@
 }
 .new-detail-title{
     width:100%;
-    font-size:30px;
-    color:#0094ff;
+    font-size:18px;
+    color:#363535;
 }
 .new-detail-img{
     width:100%;
@@ -58,7 +58,6 @@
 }
 .new-detail-comment-control > .btn, .new-detail-reply-control > .btn {
     color:#ffffff;
-    background-color:#0094ff;
 }
 
 /*css chat*/
