@@ -580,3 +580,6 @@ $string['inputpoint'] = "Input point";
 $string['edittitle'] = "Edit title";
 $string['addnewcategoryquestion'] = "Add new category question";
 $string['editcategoryquestion'] = "Edit category question";
+$string['sizewidth'] = "Size width";
+$string['sizeheight'] = "Size height";
+$string['savechange'] = "Save change";

@@ -1896,7 +1896,7 @@ li {
   }
 }
 .footer-big {
-  padding: 20px 0 20px 0;
+  padding: 50px 0 50px 0;
   .footer-widget {
     margin-bottom: 40px;
     .logo {
@@ -2779,11 +2779,6 @@ body#page-enrol-index {
   }
   .generalbox.info {
     display: none !important;
-  }
-  .action-menu {
-    .dropdown-toggle {
-      display: none !important;
-    }
   }
 }
 .gradeparent {
@@ -5646,7 +5641,7 @@ input.apple-switch {
       text-align: left;
       font-size: 14px !important;
       font-weight: bold;
-      color: #595858;
+      color: $text-color;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

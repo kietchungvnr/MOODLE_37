@@ -351,3 +351,9 @@ create table mdl_library_user_permissions (
 -- Thêm field level cho câu hỏi
 ALTER TABLE mdl_question ADD level NVARCHAR(50) DEFAULT(N'default')
 --- *** Kết thúc script cho bản build version '03042021' ***--
+
+--- *** Script cho bản build version '12042021' *** ---
+-- Thêm field size hình ảnh cho câu hỏi
+ALTER TABLE mdl_question ADD imgwidth NVARCHAR(50) DEFAULT(N'default')
+ALTER TABLE mdl_question ADD imgheight NVARCHAR(50) DEFAULT(N'default')
+--- *** Kết thúc script cho bản build version '12042021' ***--

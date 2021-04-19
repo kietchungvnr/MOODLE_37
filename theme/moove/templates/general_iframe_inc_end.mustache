@@ -125,4 +125,8 @@ require(['theme_moove/general_iframe']);
 
 var id = $('.new-detail-chat').attr('data');
 $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussionid='+id);
+
+$('div[data-region="coursecompetencyactivities"] li a').click(function(e) {
+    e.preventDefault();
+})
 {{/js}}
