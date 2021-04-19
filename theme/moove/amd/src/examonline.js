@@ -79,6 +79,8 @@ define(["jquery", "core/config", 'kendo.all.min', "core/str", "core/notification
                         $('#table-exam').hide().html(obj.result).fadeIn('fast');
                         examDropdown();
                         subjectDropdown();
+                        //Tạo mã QR cho mỗi bài thi
+                        showQrCode();
                     });
                 }
             })

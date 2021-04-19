@@ -52,9 +52,11 @@ class qtype_ddtoimage_renderer_base extends qtype_with_combined_feedback_rendere
 
     public function formulation_and_controls(question_attempt $qa,
             question_display_options $options) {
-
+        // Custom by Thắng : tùy chỉnh size hình ảnh format kéo thả
+        global $DB;
         $question = $qa->get_question();
         $response = $qa->get_last_qt_data();
+        $imgsize = $DB->get_record('question',['id' => $question->id],'imgwidth,imgheight');
 
         $questiontext = $question->format_questiontext($qa);
 
@@ -69,9 +71,17 @@ class qtype_ddtoimage_renderer_base extends qtype_with_combined_feedback_rendere
 
         $output .= html_writer::start_div('ddarea');
         $output .= html_writer::start_div($dropareaclass);
-        $output .= html_writer::img(self::get_url_for_image($qa, 'bgimage'), get_string('dropbackground', 'qtype_ddmarker'),
-                ['class' => 'dropbackground img-responsive img-fluid']);
-
+        if($imgsize->imgheight || $imgsize->imgwidth) {
+            if($imgsize->imgwidth == 0) {
+                $imgsize->imgwidth = null;
+            }
+            if($imgsize->imgheight == 0) {
+                $imgsize->imgheight = null;
+            }
+            $output .= html_writer::img(self::get_url_for_image($qa, 'bgimage'), get_string('dropbackground', 'qtype_ddmarker'),['class' => 'dropbackground img-responsive img-fluid','style' => 'width:'.$imgsize->imgwidth.'px;height:'.$imgsize->imgheight.'px']);
+        } else {
+            $output .= html_writer::img(self::get_url_for_image($qa, 'bgimage'), get_string('dropbackground', 'qtype_ddmarker'),['class' => 'dropbackground img-responsive img-fluid']);
+        }
         $output .= html_writer::div('', 'dropzones');
         $output .= html_writer::end_div();
         $output .= html_writer::start_div($draghomesclass);

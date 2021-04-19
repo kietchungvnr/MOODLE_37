@@ -2600,8 +2600,8 @@ function get_modal_boostrap($html,$idmodal,$title = '',$footer = false) {
     $output .= html_writer::tag('div',$html,['class' => 'modal-body']);
     if($footer == true) {
         $output .= html_writer::start_div('modal-footer');
-        $output .= html_writer::tag('button','Save changes',['type' => 'button','class' => 'submit btn btn-primary']);
-        $output .= html_writer::tag('button','Close',['type' => 'button','class' => 'btn btn-secondary','data-dismiss' => 'modal']);
+        $output .= html_writer::tag('button',get_string('savechange','local_newsvnr'),['type' => 'button','class' => 'submit btn btn-primary']);
+        $output .= html_writer::tag('button',get_string('close','local_newsvnr'),['type' => 'button','class' => 'btn btn-secondary','data-dismiss' => 'modal']);
         $output .= html_writer::end_div();
     }
     $output .= html_writer::end_div();
