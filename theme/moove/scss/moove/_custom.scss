@@ -3263,7 +3263,7 @@ table.quizreviewsummary {
     max-width: inherit;
   }
   span.qno {
-    font-size: 1em;
+    font-size: 18px;
     background: #3c80bc;
     border-radius: 50%;
     padding: 10px 0;
@@ -6517,6 +6517,9 @@ body.format-topcoll.editing {
 .d-none-mb {
   display: block;
 }
+.d-none-ds {
+  display: none;
+}
 .d-flex-mb {
   display: none;
 }
@@ -7488,6 +7491,9 @@ body.format-topcoll.editing {
   }
   .d-none-mb {
     display: none !important;
+  }
+  .d-none-ds {
+    display: block;
   }
   #page-mod-quiz-attempt {
     #page-header {

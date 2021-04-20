@@ -115,7 +115,7 @@ $templatecontext['email'] = $user->email;
 $templatecontext['country'] = $user->country;
 $templatecontext['hascourses'] = (count($usercourses)) ? true : false;
 $templatecontext['hasblog'] = ($DB->count_records('post',['module' => 'blog','userid' => $user->id]) > 0) ? true : false;
-$templatecontext['editprofile'] = $CFG->wwwroot . '/user/editadvanced.php?id='.$user->id.'&course=1';
+$templatecontext['editprofile'] = $CFG->wwwroot . '/user/edit.php?id='.$user->id.'&course=1';
 foreach ($usercourses as $value) {
     $templatecontext['courses'][] = get_coursecard_info($value->id);
 }  
