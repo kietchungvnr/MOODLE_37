@@ -1,7 +1,7 @@
 <?php
 defined('MOODLE_INTERNAL') || die;
 
-function xmldb_label_upgrade($oldversion) {
+function xmldb_newsvnr_upgrade($oldversion) {
     global $CFG;
 
     // Automatically generated Moodle v3.7.0 release upgrade line.

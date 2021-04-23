@@ -10,7 +10,6 @@
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Foreign key reference to the course this quiz is part of."/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Quiz name."/>
         <FIELD NAME="code" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Quiz code."/>
-        <FIELD NAME="quizlevel" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Quiz level."/>
         <FIELD NAME="intro" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Quiz introduction text."/>
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Quiz intro text format."/>
         <FIELD NAME="timeopen" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The time when this quiz opens. (0 = no restriction.)"/>

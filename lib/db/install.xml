@@ -1484,6 +1484,8 @@
         <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="userid of person who created this question"/>
         <FIELD NAME="modifiedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="userid of person who last edited this question"/>
         <FIELD NAME="idnumber" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="imgwidth" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" SEQUENCE="false" COMMENT="Quiz imgwidth."/>
+        <FIELD NAME="imgheight" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" SEQUENCE="false" COMMENT="Quiz imgheight."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
