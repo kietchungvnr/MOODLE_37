@@ -76,20 +76,13 @@
    
     text-align:right;
 }
-.btn-new-latest{
-    padding-top:30px;
-}
-
 .new-latest-box {
-margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 .new-latest-image{
     width:100%;
     height: 162px;
 
-}
-.new-latest-body {
-    padding-top: 30px;
 }
 .new-latest-title {
     width:95%;
@@ -110,8 +103,7 @@ margin-bottom: 10px;
     height:30px;
 }
 .btn-new-course {
-    padding-top: 30px;
-    padding-bottom: 30px;
+    padding-bottom: 5px;
 }
 .new-list-course {
     /*font-size:25px;

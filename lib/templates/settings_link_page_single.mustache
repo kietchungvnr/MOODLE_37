@@ -29,7 +29,17 @@
 }}
 {{#display}}
     {{#action}}
-        <li><a href="{{{action}}}">{{text}}</a></li>
+        <li>
+            <a href="{{{action}}}">{{text}}</a>
+            {{#node.isedit}}
+                {{#hidden}}
+                    <a class="config-admin" action="show" key={{key}} href="javascript:;"><i class="ml-1 fa fa-eye-slash" aria-hidden="true"></i></a>
+                {{/hidden}}
+                {{^hidden}}
+                    <a class="config-admin" action="hide" key={{key}} href="javascript:;"><i class="ml-1 fa fa-eye" aria-hidden="true"></i></a>
+                {{/hidden}}
+            {{/node.isedit}}
+        </li>
     {{/action}}
     {{^action}}
         <li><strong>{{text}}</strong></li>
@@ -40,6 +50,7 @@
                 {{#children}}
                     {{> core/settings_link_page_single }}
                 {{/children}}
+
             </ul>
         </li>
     {{/children.count}}
