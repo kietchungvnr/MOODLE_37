@@ -1812,5 +1812,42 @@ if($action == "search_module_library") {
 	}
 	echo json_encode($data,JSON_UNESCAPED_UNICODE);
 }
-
+if($action == "logreviewapi") {
+	$pagesize = optional_param('pagesize',10, PARAM_INT);
+	$pagetake = optional_param('take',0, PARAM_INT);
+	$pageskip = optional_param('skip',0, PARAM_INT);
+	$q = optional_param('q','', PARAM_RAW);
+	$odersql = "";
+	$wheresql = "";
+	if($q) {
+		$wheresql = "WHERE action LIKE N'%$q%'";
+	}
+	if($pagetake == 0) {
+		$ordersql = "time DESC";
+	} else {
+		$ordersql = "time DESC OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
+	}
+	$sql = "
+			SELECT *, (SELECT COUNT(id) FROM {log}) AS total
+			FROM (
+			    SELECT *, ROW_NUMBER() OVER (ORDER BY id) AS RowNum
+			    FROM {log}
+			) AS Mydata
+			$wheresql
+			ORDER BY $ordersql";
+	$get_list = $DB->get_records_sql($sql);
+	$data = [];
+	foreach ($get_list as $value) {
+		$object = new stdClass();
+		$dt = new DateTime('@'.$value->time.'');
+		$dt->setTimeZone(new DateTimeZone('Asia/Ho_Chi_Minh'));
+		$object->time = $dt->format('F j, Y, g:i a');
+		$object->action = $value->action;
+		$object->url = $value->url;
+		$object->info = $value->info;
+		$object->total = $value->total;
+		$data[] = $object;
+	}
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+}
 die();

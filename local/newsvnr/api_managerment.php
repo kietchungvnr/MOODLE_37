@@ -51,6 +51,7 @@ $PAGE->set_context(context_system::instance());
 
 $PAGE->requires->css('/local/newsvnr/css/api.css');
 $PAGE->requires->js_call_amd('local_newsvnr/api_managerment','api_managerment');
+$PAGE->requires->js_call_amd('local_newsvnr/log_api','init');
 $output = $PAGE->get_renderer('local_newsvnr');
 $page = new \local_newsvnr\output\api_managerment();
 
