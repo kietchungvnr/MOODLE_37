@@ -824,6 +824,15 @@ class navigation_node implements renderable {
             }
         }
     }
+    // Custom by Thắng : thêm function hiện các chức năng bị ẩn
+    public function show() {
+        $this->hidden = true;
+        if($this->has_children()) {
+            foreach($this->children as $child) {
+                $child->show();
+            }
+        }
+    }
 
     /**
      * Get the action url for this navigation node.
