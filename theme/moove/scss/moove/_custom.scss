@@ -5784,6 +5784,7 @@ i.expand-icon.active {
   }
 }
 .nav-tabs.nav-header {
+  margin-top: -1px;
   display: flex;
   border-bottom: 0;
   background-color: #e3eef5 !important;
@@ -8566,17 +8567,17 @@ body.format-topcoll.editing {
       font-weight: bold;
     }
   }
-  .nav.nav-tabs.nav-header {
-    .nav-link.active {
-      border-bottom: 0 !important;
-      color: #363535 !important;
-      background: white !important;
-    }
+}
+.nav.nav-tabs.nav-header {
+  .nav-link.active {
+    border-bottom: 0 !important;
+    color: #363535 !important;
+    background: white !important;
   }
-  .nav-tabs.nav-header {
-    .nav-link.active {
-      box-shadow: unset;
-    }
+}
+.nav-tabs.nav-header {
+  .nav-link.active {
+    box-shadow: unset;
   }
 }
 #page-mod-quiz-edit {
