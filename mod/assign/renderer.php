@@ -1485,7 +1485,7 @@ class mod_assign_renderer extends plugin_renderer_base {
                         </div>' .
                         '<div class="fileuploadsubmissiontime">' . $file->timemodified . '</div>
                     </div>' .
-                    '<div style="color:black"><i class="fa fa-cloud-download fa-2x" aria-hidden="true"></i></div>' .
+                    '<div style="color:black"><i class="fa fa-cloud-download fa-2x d-none-ds" aria-hidden="true"></i></div>' .
                 '</div>' .
             '</li>';
         }

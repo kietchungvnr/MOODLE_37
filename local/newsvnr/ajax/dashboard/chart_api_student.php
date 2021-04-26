@@ -124,11 +124,30 @@ switch ($action) {
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 'homework':
-        $listhomework = $DB->get_records_sql("SELECT ROW_NUMBER() OVER (ORDER BY a.id) AS RowNum,*
-                                                    FROM {assignment} a
-                                                    JOIN {assignment_submissions} ass on a.id = ass.assignment
-                                            WHERE ass.userid =:userid ORDER BY $ordersql", ['userid' => $USER->id]);
+        $listhomework = $DB->get_records_sql("SELECT ROW_NUMBER() OVER (ORDER BY ass.id) AS RowNum,c.id,ass.name,ass.duedate,cm.id as moduleid,ass.course,
+                                                (SELECT COUNT(ass.id) FROM mdl_role_assignments AS ra
+                                                    JOIN mdl_user AS u ON u.id= ra.userid
+                                                    JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
+                                                    JOIN mdl_enrol AS e ON e.id=ue.enrolid
+                                                    JOIN mdl_course AS c ON c.id=e.courseid
+                                                    JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
+                                                    JOIN mdl_role AS r ON r.id= ra.roleid
+                                                    JOIN mdl_course_modules cm ON cm.course = c.id
+                                                    JOIN mdl_assign ass ON ass.id = cm.instance
+                                                WHERE ra.roleid=5 AND ue.status = 0 AND u.id =:useridcount AND c.visible = 1 AND cm.deletioninprogress = 0 AND cm.visible = 1 AND cm.module = 1) as total
+                                            FROM mdl_role_assignments AS ra
+                                                JOIN mdl_user AS u ON u.id= ra.userid
+                                                JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
+                                                JOIN mdl_enrol AS e ON e.id=ue.enrolid
+                                                JOIN mdl_course AS c ON c.id=e.courseid
+                                                JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
+                                                JOIN mdl_role AS r ON r.id= ra.roleid
+                                                JOIN mdl_course_modules cm ON cm.course = c.id
+                                                JOIN mdl_assign ass ON ass.id = cm.instance
+                                            WHERE  ra.roleid=5 AND ue.status = 0 AND u.id =:userid AND c.visible = 1 AND cm.deletioninprogress = 0 AND cm.visible = 1 AND cm.module = 1
+                                            ORDER BY $ordersql", ['userid' => $USER->id,'useridcount' => $USER->id]);
         foreach ($listhomework as $value) {
+
             $obj = new stdClass();
             // $href         = $CFG->wwwroot . '/mod/quiz/view.php?id=' .
             $obj->name    = ($value->grade) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2">' . $value->name : $value->name;
@@ -140,7 +159,19 @@ switch ($action) {
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 'myquiz':
-        $myquiz = $DB->get_records_sql("SELECT ROW_NUMBER() OVER (ORDER BY q.id) AS RowNum,c.id,q.name,gg.finalgrade,gg.userid,q.timeclose,cm.id as moduleid
+        $myquiz = $DB->get_records_sql("SELECT ROW_NUMBER() OVER (ORDER BY q.id) AS RowNum,c.id,q.name,gg.finalgrade,gg.userid,q.timeclose,cm.id as moduleid, 
+                                            (SELECT COUNT(q.id) FROM mdl_role_assignments AS ra
+                                                JOIN mdl_user AS u ON u.id= ra.userid
+                                                JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
+                                                JOIN mdl_enrol AS e ON e.id=ue.enrolid
+                                                JOIN mdl_course AS c ON c.id=e.courseid
+                                                JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
+                                                JOIN mdl_role AS r ON r.id= ra.roleid
+                                                JOIN mdl_course_modules cm ON cm.course = c.id
+                                                JOIN mdl_quiz q ON q.id = cm.instance
+                                                LEFT JOIN mdl_grade_items gi ON gi.courseid = c.id AND gi.itemmodule = 'quiz' AND gi.iteminstance = q.id
+                                                LEFT JOIN mdl_grade_grades gg ON gg.itemid = gi.id AND gg.userid = u.id 
+                                            WHERE ra.roleid=5 AND ue.status = 0 AND u.id = :useridcount AND c.visible = 1 AND cm.deletioninprogress = 0 AND cm.visible = 1 AND cm.module = 16) as total
                                         FROM mdl_role_assignments AS ra
                                             JOIN mdl_user AS u ON u.id= ra.userid
                                             JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
@@ -152,7 +183,8 @@ switch ($action) {
                                             JOIN mdl_quiz q ON q.id = cm.instance
                                             LEFT JOIN mdl_grade_items gi ON gi.courseid = c.id AND gi.itemmodule = 'quiz' AND gi.iteminstance = q.id
                                             LEFT JOIN mdl_grade_grades gg ON gg.itemid = gi.id AND gg.userid = u.id
-                                        WHERE  ra.roleid=5 AND ue.status = 0 AND u.id =:userid AND c.visible = 1 AND cm.deletioninprogress = 0 AND cm.visible = 1 AND cm.module = 16 ORDER BY $ordersql", ['userid' => $USER->id]);
+                                        WHERE  ra.roleid=5 AND ue.status = 0 AND u.id = :userid AND c.visible = 1 AND cm.deletioninprogress = 0 AND cm.visible = 1 AND cm.module = 16 
+                                        ORDER BY $ordersql",['userid' => $USER->id,'useridcount' => $USER->id]);
         foreach ($myquiz as $value) {
             $obj          = new stdClass();
             $href         = $CFG->wwwroot . '/mod/quiz/view.php?id=' . $value->moduleid;
@@ -160,7 +192,7 @@ switch ($action) {
             $finalgrade   = number_format($value->finalgrade,1);
             $obj->grade   = $value->finalgrade ? $finalgrade : '-';
             $obj->timedue = convertunixtime('d/m/Y', $value->timeclose, 'Asia/Ho_Chi_Minh');
-            $obj->total   = count($myquiz);
+            $obj->total   = $value->total;
             $data[]       = $obj;
         }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);

@@ -24,8 +24,7 @@
 
 require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/assign/locallib.php');
-$css = file_get_contents($CFG->dirroot . '/theme/moove/css/assignview.css');
-echo $css;
+
 $id = required_param('id', PARAM_INT);
 
 list ($course, $cm) = get_course_and_cm_from_cmid($id, 'assign');
@@ -54,3 +53,5 @@ $assign->update_effective_access($USER->id);
 // Get the assign class to
 // render the page.
 echo $assign->view(optional_param('action', '', PARAM_ALPHA));
+$css = file_get_contents($CFG->dirroot . '/theme/moove/css/assignview.css');
+echo $css;

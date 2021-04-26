@@ -54,6 +54,7 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
 
     // Xử lý khi click vào tab trong khóa học
     $('ul.nav-tabs.course li').click(function(e) {
+        var iframes;
         $(this).addClass('active').siblings().removeClass('active');
     	Cookie.setCookie('spa', 'true');
         Cookie.setCookie('baseUrl', window.location.href); 
@@ -91,10 +92,12 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
                 },
                 _overId: null
             });
-            $('#course-iframe').removeClass('d-none')
-            const iframes = iFrameResize({  log: false,
+            $('#course-iframe').removeClass('d-none');
+            if(iframes == undefined) {
+                iframes = iFrameResize({  log: false,
                                             heightCalculationMethod : 'taggedElement', }
                                         , '#course-iframe');
+            }
             $('#region-main .loading-page').removeClass('active');
         });
     });

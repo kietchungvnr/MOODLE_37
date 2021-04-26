@@ -1667,8 +1667,8 @@ function encode_array($args)
 function getToken($url) {
     $data = [
         'grant_type' => 'password',
-        'username' => 'vnr',
-        'password' => 'VNR@muc123'
+        'username' => 'vnr.hrm@',
+        'password' => '123'
     ];
     $params = encode_array($data);
     $curl = curl_init();
@@ -1687,11 +1687,41 @@ function getToken($url) {
     curl_close($curl);
     return json_decode($resp,JSON_UNESCAPED_UNICODE)['access_token'];
 }
-
+function getTokenHRM() {
+    global $DB;
+    $token = $DB->get_record('local_newsvnr_api',['functionapi' => 'ApiToken']);
+    if(empty($token)) {
+        return;
+    }
+    $username = $DB->get_field('local_newsvnr_api_detail','default_value',['api_id' => $token->id,'client_params' => 'username']);
+    $password = $DB->get_field('local_newsvnr_api_detail','default_value',['api_id' => $token->id,'client_params' => 'password']);
+    $data = [
+        'grant_type' => 'password',
+        'username' => $username,
+        'password' => $password
+    ];
+    $params = encode_array($data);
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+    CURLOPT_RETURNTRANSFER => true,
+    // CURLOPT_HEADER => true,
+    CURLOPT_URL => $token->url,
+    CURLOPT_POST => true,
+    CURLOPT_SSL_VERIFYPEER => false,
+    CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/x-www-form-urlencoded',
+            // 'Content-Length: ' . strlen($data),
+    ),
+    CURLOPT_POSTFIELDS => $params));
+    $resp = curl_exec($curl);
+    curl_close($curl);
+    return json_decode($resp,JSON_UNESCAPED_UNICODE)['access_token'];
+}
 //curl gửi dữ liệu kiểu json
 function HTTPPost($url,$data) {
-    $urltoken = 'http://113.190.242.50:7709/Token';
-    $token = getToken($urltoken);
+    global $DB,$USER;
+    $urltoken = 'http://125.212.226.105:814/Token';
+    $token = getTokenHRM();
     $auth = 'Authorization: Bearer ' . $token;
     $params = encode_array($data);
     $curl = curl_init();
@@ -1708,6 +1738,7 @@ function HTTPPost($url,$data) {
     ),
     CURLOPT_POSTFIELDS => $params));
     $resp = curl_exec($curl);
+    insert_log($resp,$url);
     curl_close($curl);
 }
 
@@ -1731,6 +1762,7 @@ function HTTPPost_EBM($url,$data) {
     ),
     CURLOPT_POSTFIELDS => $params));
     $resp = curl_exec($curl);
+    insert_log($resp,$url);
     curl_close($curl);
 }
 
@@ -2589,6 +2621,17 @@ function get_coursecard_info($courseid) {
         $obj->imageteacher = $arr->imgdefault;
     }
     return $obj;
+}
+function insert_log($resp,$url) {
+    global $DB,$USER;
+    $apiname = $DB->get_field('local_newsvnr_api','functionapi',['url' => $url]);
+    $log = new stdClass();
+    $log->url = $url;
+    $log->time = time();
+    $log->userid = $USER->id;
+    $log->info = $resp;
+    $log->action = $apiname;
+    $DB->insert_record('log',$log);
 }
 // form popup
 function get_modal_boostrap($html,$idmodal,$title = '',$footer = false) {

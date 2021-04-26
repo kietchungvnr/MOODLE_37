@@ -658,7 +658,7 @@ class theme_settings {
         global $OUTPUT,$USER, $DB;
         if(has_capability('moodle/site:configview', context_system::instance()))
         { 
-            $forumid = $DB->get_field_sql("SELECT TOP 1 id FROM mdl_forum", []);
+            $forumid = $DB->get_field_sql("SELECT id FROM mdl_forum WHERE course = :courseid", ['courseid' => 1]);
             $buttonadd = get_string('addanewdiscussion', 'forum');
             $button = new single_button(new moodle_url('/mod/forum/post.php', ['forum' => $forumid]), $buttonadd, 'get');
             $button->class = 'singlebutton forumaddnew';

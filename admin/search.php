@@ -8,7 +8,8 @@ require_once($CFG->libdir.'/adminlib.php');
 redirect_if_major_upgrade_required();
 
 $query = trim(optional_param('query', '', PARAM_NOTAGS));  // Search string
-
+$adminedit = optional_param('adminedit','',PARAM_INT);
+$showall = optional_param('showall', 0, PARAM_BOOL);
 $context = context_system::instance();
 $PAGE->set_context($context);
 
@@ -80,18 +81,35 @@ $showsettingslinks = true;
 // }
 
 
-
+$PAGE->requires->js_call_amd('theme_moove/admin_config','init');
 if ($showsettingslinks) {
     $node = $PAGE->settingsnav->find('root', navigation_node::TYPE_SITE_ADMIN);
+    $stritem = $DB->get_field('config_plugins','value',['name' => 'administrationtab']);
+    $listitem = explode(",",$stritem);
+    if($adminedit == 1) {
+        $node->isedit = true;
+        if($stritem != '') {
+            foreach ($listitem as $item) {
+                $node->find($item, navigation_node::TYPE_SETTING)->show();
+            }
+        }
+    } else {
+        $node->isedit = false;
+        if($stritem != '') {
+            foreach ($listitem as $item) {
+                $node->find($item, navigation_node::TYPE_SETTING)->hide();
+            }
+        }
+    }
     // Custom by Vũ: Loại bỏ 1 số chức năng trong quản trị hệ thống
     $theme = theme_config::load('moove');
-    if($theme->settings->fullsite == false) {
+    if($theme->settings->fullsite == false && $showall != 1) {
         $ignore_node = [
             "registrationmoodleorg", 
             "upgradesettings", 
             "moodleservices", 
             "userfeedback", 
-            "optionalsubsystems", 
+            "optionalsubsystems",
             "usermanagement", 
             "userbulk", 
             "userdefaultpreferences", 
@@ -165,6 +183,7 @@ if ($showsettingslinks) {
         foreach ($ignore_node as $nodename) {
             $node->find($nodename, navigation_node::TYPE_SETTING)->hide();
         }
+
     }
     if ($node) {
         echo $OUTPUT->render_from_template('theme_moove/custom_settings_link_page', ['node' => $node]);
