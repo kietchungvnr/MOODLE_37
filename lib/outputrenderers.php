@@ -1340,7 +1340,7 @@ class core_renderer extends renderer_base {
             }
         }
 
-        send_headers($this->contenttype, $this->page->cacheable);
+        // send_headers($this->contenttype, $this->page->cacheable);
 
         $this->opencontainers->push('header/footer', $footer);
         $this->page->set_state(moodle_page::STATE_IN_BODY);
