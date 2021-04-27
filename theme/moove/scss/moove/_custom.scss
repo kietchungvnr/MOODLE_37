@@ -3104,7 +3104,6 @@ td[data-field="listbtn"] {
 }
 ul.nav.nav-tabs.mb-3 {
   width: 100%;
-  margin-bottom: 0 !important;
 }
 #page-header {
   .mr-auto {
@@ -5917,7 +5916,7 @@ i.expand-icon.active {
 }
 .db-student {
   .k-grid-content {
-    height: 200px;
+    max-height: 450px;
   }
 }
 .course-list {
@@ -8045,9 +8044,6 @@ body.format-topcoll.editing {
         padding: 5px 12px;
       }
     }
-  }
-  ul.nav.nav-tabs.mb-3 {
-    margin-bottom: 0 !important;
   }
   .course-content {
     ul.section {

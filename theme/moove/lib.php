@@ -806,16 +806,16 @@ function theme_moove_layout_check() {
     // Xét layout cho chế độ single page app
     if(isset($referer) && $referer_split[2] == $_SERVER['HTTP_HOST']) {
         if(isset($_COOKIE['spa']) && $_COOKIE['spa'] == 'true') {
-            // $referers = ['/course/view.php', '/user/index.php', '/badges/view.php', '/admin/tool/lp/coursecompetencies.php', '/grade/report/index.php', '/contentbank/index.php', '/grade/report/user/index.php'];
-            // if (in_array(get_pathname_url($referer), $referers)) {
-            //     $object->hasgeneraliframe = true;
-            //     // if(in_array($_SERVER['SCRIPT_NAME'], $referers) == false) {
-            //     //     $object->hasgeneraliframe = false;
-            //     // }
-            // } else {
-            //     $object->hasgeneraliframe = false;
-            // }
-             $object->hasgeneraliframe = true;
+            $referers = ['/course/view.php', '/user/index.php', '/badges/view.php', '/admin/tool/lp/coursecompetencies.php', '/grade/report/index.php', '/contentbank/index.php', '/grade/report/user/index.php'];
+            if (in_array(get_pathname_url($referer), $referers)) {
+                $object->hasgeneraliframe = true;
+                if(in_array($_SERVER['SCRIPT_NAME'], $referers) == false) {
+                    $object->hasgeneraliframe = false;
+                }
+            } else {
+                $object->hasgeneraliframe = false;
+            }
+            //  $object->hasgeneraliframe = true;
         } else {
             $object->hasgeneraliframe = false;
         }
