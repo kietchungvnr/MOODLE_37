@@ -246,13 +246,13 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
             })
             // kendo lọc khóa học 
             var kendoConfig = {};
-                kendoConfig.apiSettings = { url: scriptshare+'filter_course' };
+                kendoConfig.apiSettings = { url: scriptshare+'filter_course'};
                 kendoConfig.value = 'courseid';
             var kendoCourseList = kendoService.initDropDownList(kendoConfig);
             $("#course-share-input").kendoDropDownList(kendoCourseList);
             // kendo lọc section của khóa học
             var kendoConfig = {};
-                kendoConfig.apiSettings = { url: scriptshare+'filter_course' };
+                kendoConfig.apiSettings = { url: scriptshare+'filter_course_section'};
                 kendoConfig.value = 'sectionid';
                 kendoConfig.cascadeFrom = 'course-share-input';
             var kendoCourseSection = kendoService.initDropDownList(kendoConfig);
