@@ -42,7 +42,6 @@
 }}
 {{#usercompetencysummary}}
 <div data-region="user-competency-full-info" data-node="user-competency" data-competencyid="{{usercompetency.competencyid}}" data-userid="{{usercompetency.userid}}" data-region-id="{{uniqid}}">
-<div>{{{plan.description}}}</div>
 {{#plan.iscompleted}}
 <div class="alert alert-info" role="alert">
     {{#str}} usercompetencyfrozen, tool_lp {{/str}}
@@ -54,30 +53,48 @@
     {{/competency}}
     <dl>
         {{#usercompetency}}
-        <dt>{{#str}}reviewstatus, tool_lp{{/str}}</dt>
-        <dd data-region="user-competency-status">{{statusname}}
+        <div class="row">
+            <div class="col-md-2">
+                <dt>{{#str}}reviewstatus, tool_lp{{/str}}</dt>
+            </div>
+            <div class="col-md-10">
+                <dd data-region="user-competency-status">{{statusname}}
 
-            {{#isstatusinreview}}
-                - {{reviewer.fullname}}
-            {{/isstatusinreview}}
+                    {{#isstatusinreview}}
+                        - {{reviewer.fullname}}
+                    {{/isstatusinreview}}
 
-            {{#isrequestreviewallowed}}<button class="btn btn-secondary" data-action="request-review">{{#str}}requestreview, tool_lp{{/str}}</button>{{/isrequestreviewallowed}}
-            {{#iscancelreviewrequestallowed}}<button class="btn btn-secondary" data-action="cancel-review-request">{{#str}}cancelreviewrequest, tool_lp{{/str}}</button>{{/iscancelreviewrequestallowed}}
-            {{#isstartreviewallowed}}<button class="btn btn-secondary" data-action="start-review">{{#str}}startreview, tool_lp{{/str}}</button>{{/isstartreviewallowed}}
-            {{#isstopreviewallowed}}<button class="btn btn-secondary" data-action="stop-review">{{#str}}stopreview, tool_lp{{/str}}</button>{{/isstopreviewallowed}}
-        </dd>
-        <dt>{{#str}}proficient, tool_lp{{/str}}</dt>
-        <dd>
-            <span class="badge {{#proficiency}}badge-success{{/proficiency}}{{^proficiency}}badge-danger{{/proficiency}} float-left">
-                {{proficiencyname}}
-            </span>
-        </dd>
-        <dt>{{#str}}rating, tool_lp{{/str}}</dt>
-        <dd>{{gradename}}
-            {{#cangrade}}
-                <button class="btn btn-secondary" id="rate_{{uniqid}}">{{#str}}rate, tool_lp{{/str}}</button>
-            {{/cangrade}}
-        </dd>
+                    {{#isrequestreviewallowed}}<button class="btn btn-secondary" data-action="request-review">{{#str}}requestreview, tool_lp{{/str}}</button>{{/isrequestreviewallowed}}
+                    {{#iscancelreviewrequestallowed}}<button class="btn btn-secondary" data-action="cancel-review-request">{{#str}}cancelreviewrequest, tool_lp{{/str}}</button>{{/iscancelreviewrequestallowed}}
+                    {{#isstartreviewallowed}}<button class="btn btn-secondary" data-action="start-review">{{#str}}startreview, tool_lp{{/str}}</button>{{/isstartreviewallowed}}
+                    {{#isstopreviewallowed}}<button class="btn btn-secondary" data-action="stop-review">{{#str}}stopreview, tool_lp{{/str}}</button>{{/isstopreviewallowed}}
+                </dd>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <dt>{{#str}}proficient, tool_lp{{/str}}</dt>
+            </div>
+            <div class="col-md-10">
+                <dd>
+                    <span class="badge {{#proficiency}}badge-success{{/proficiency}}{{^proficiency}}badge-danger{{/proficiency}} float-left">
+                        {{proficiencyname}}
+                    </span>
+                </dd>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <dt>{{#str}}rating, tool_lp{{/str}}</dt>
+            </div>
+            <div class="col-md-10">
+                <dd>{{gradename}}
+                    {{#cangrade}}
+                        <button class="btn btn-secondary" id="rate_{{uniqid}}">{{#str}}rate, tool_lp{{/str}}</button>
+                    {{/cangrade}}
+                </dd>
+            </div>
+        </div>
         {{#js}}
         require(['jquery', 'tool_lp/grade_user_competency_inline', 'tool_lp/user_competency_info', 'tool_lp/user_competency_workflow'], function($, mod, info, UserCompWorkflow) {
 
@@ -97,14 +114,26 @@
         {{/js}}
         {{/usercompetency}}
         {{#usercompetencyplan}}
-        <dt>{{#str}}rating, tool_lp{{/str}}</dt>
-        <dd>{{gradename}} - {{#str}}plancompleted, tool_lp{{/str}}</dd>
-        <dt>{{#str}}proficient, tool_lp{{/str}}</dt>
-        <dd>
-            <span class="badge {{#proficiency}}badge-success{{/proficiency}}{{^proficiency}}badge-danger{{/proficiency}} float-left">
-                {{proficiencyname}}
-            </span>
-        </dd>
+        <div class="row">
+            <div class="col-md-2">
+                <dt>{{#str}}rating, tool_lp{{/str}}</dt>
+            </div>
+            <div class="col-md-10">
+                <dd>{{gradename}} - {{#str}}plancompleted, tool_lp{{/str}}</dd>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <dt>{{#str}}proficient, tool_lp{{/str}}</dt>
+            </div>
+            <div class="col-md-10">
+                <dd>
+                    <span class="badge {{#proficiency}}badge-success{{/proficiency}}{{^proficiency}}badge-danger{{/proficiency}} float-left">
+                        {{proficiencyname}}
+                    </span>
+                </dd>
+            </div>
+        </div>
         {{/usercompetencyplan}}
     </dl>
     {{#commentarea}}
@@ -113,15 +142,20 @@
         {{/canpostorhascomments}}
     {{/commentarea}}
     <dl data-region="evidence-listing">
-        <dt>{{#str}}evidence, tool_lp{{/str}}</dt>
-        <dd>
-            {{#evidence}}
-                {{> tool_lp/evidence_summary }}
-            {{/evidence}}
-            {{^evidence}}
-                <p>{{#str}}noevidence, tool_lp{{/str}}</p>
-            {{/evidence}}
-        </dd>
+        <div class="row">
+            <div class="col-md-2">
+                <dt>{{#str}}evidence, tool_lp{{/str}}</dt>
+            </div>
+            <div class="col-md-10">
+                <dd>
+                    {{#evidence}}
+                        {{> tool_lp/evidence_summary }}
+                    {{/evidence}}
+                    {{^evidence}}
+                        <p>{{#str}}noevidence, tool_lp{{/str}}</p>
+                    {{/evidence}}
+                </dd>
+            </div>
     </dl>
 </div>
 </div>
