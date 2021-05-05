@@ -584,3 +584,6 @@ $string['sizewidth'] = "Size width";
 $string['sizeheight'] = "Size height";
 $string['savechange'] = "Save change";
 $string['coursecatogories'] = 'Category';
+$string['nameuser'] = "User name";
+$string['codeuser'] = "User code";
+$string['createdtime'] = "Time created";

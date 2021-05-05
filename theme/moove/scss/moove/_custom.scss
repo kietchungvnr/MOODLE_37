@@ -3105,6 +3105,9 @@ td[data-field="listbtn"] {
 ul.nav.nav-tabs.mb-3 {
   width: 100%;
 }
+.nav-tabs.mb[tab="coursetab"] {
+  display: none;
+}
 #page-header {
   .mr-auto {
     width: 100%;
@@ -6469,9 +6472,6 @@ body.format-topcoll.editing {
 }
 .card.user-card.profile {
   position: fixed;
-}
-.nav-tabs.mb {
-  display: none;
 }
 #modal-iframe-library {
   .modal-dialog {
