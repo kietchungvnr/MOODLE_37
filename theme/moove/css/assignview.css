@@ -125,4 +125,10 @@
     .path-mod-assign [data-region="grade-panel"] {
         top: 70px !important;
     }
+    .path-mod-assign [data-region="grade-panel"].fullwidth {
+        padding: 0;
+    }
+    .path-mod-assign [data-region="grade-panel"].fullwidth [data-region="grade"] {
+        max-width: 100% !important;
+    }
 </style>

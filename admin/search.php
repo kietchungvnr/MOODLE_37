@@ -178,12 +178,15 @@ if ($showsettingslinks) {
             "messaging"
         ];
         foreach ($ignore_tabnode as $tabnodename) {
-            $node->find($tabnodename, navigation_node::TYPE_SETTING)->hide();
+            if($node->find($tabnodename, navigation_node::TYPE_SETTING)) {
+                $node->find($tabnodename, navigation_node::TYPE_SETTING)->hide();
+            }
         }
         foreach ($ignore_node as $nodename) {
-            $node->find($nodename, navigation_node::TYPE_SETTING)->hide();
+            if($node->find($nodename, navigation_node::TYPE_SETTING)) {
+                $node->find($nodename, navigation_node::TYPE_SETTING)->hide();
+            }
         }
-
     }
     if ($node) {
         echo $OUTPUT->render_from_template('theme_moove/custom_settings_link_page', ['node' => $node]);

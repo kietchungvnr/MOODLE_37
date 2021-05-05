@@ -731,7 +731,8 @@ class theme_settings {
                       (object) array('moduleicon'=>'mod_lesson','modulename'=>'Lesson','value'=>'lesson'),
                       (object) array('moduleicon'=>'mod_page','modulename'=>'Page','value'=>'page'));
         $moduleuser = array((object) array('moduleicon'=>'mod_url','modulename'=>'Url','value'=>'url'),
-                      (object) array('moduleicon'=>'mod_resource','modulename'=>'File','value'=>'resource'));
+                      (object) array('moduleicon'=>'mod_resource','modulename'=>'File','value'=>'resource'),
+                      (object) array('moduleicon'=>'mod_wiki','modulename'=>'Wiki','value'=>'wiki'));
         if(is_siteadmin() || check_teacherrole($USER->id) != 0) {
             $data = array_merge($moduleadmin,$moduleuser);
         } else {
