@@ -38,6 +38,11 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
             Cookie.setCookie('baseUrl', '-1', 0);
         }
         Cookie.setCookie('spa', '-1', 0);
+        var listUrl = ['/course/view.php', '/user/index.php', '/badges/view.php', '/admin/tool/lp/coursecompetencies.php', '/grade/report/index.php', '/contentbank/index.php'];
+        var getCurrentPathName = window.location.pathname;
+        if(listUrl.includes(getCurrentPathName)) {
+            Cookie.setCookie('cookie', '-1', 0);
+        }
         return;
     }
 
