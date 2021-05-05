@@ -54,7 +54,7 @@ class QuizController extends BaseController {
             'coursecode' => $this->v::notEmpty()->notBlank(),
             // 'teachercode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
             'quizname' => $this->v::notEmpty()->notBlank(),
-            'quizcode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
+            'quizcode' => $this->v::notEmpty()->notBlank(),
             // 'sectionname' => $this->v::notEmpty()->notBlank()
             // 'startdate' => $this->v::notEmpty()->notBlank()->DateTime(),
             // 'enddate' => $this->v::notEmpty()->notBlank()->DateTime(),
