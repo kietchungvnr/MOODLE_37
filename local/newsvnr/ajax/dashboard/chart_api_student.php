@@ -124,7 +124,7 @@ switch ($action) {
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 'homework':
-        $listhomework = $DB->get_records_sql("SELECT ROW_NUMBER() OVER (ORDER BY ass.id) AS RowNum,c.id,ass.name,ass.duedate,cm.id as moduleid,ass.course,
+        $listhomework = $DB->get_records_sql("SELECT ROW_NUMBER() OVER (ORDER BY ass.id) AS RowNum,cm.id,ass.name,ass.duedate,cm.id as moduleid,ass.course,
                                                 (SELECT COUNT(ass.id) FROM mdl_role_assignments AS ra
                                                     JOIN mdl_user AS u ON u.id= ra.userid
                                                     JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
@@ -147,12 +147,11 @@ switch ($action) {
                                             WHERE  ra.roleid=5 AND ue.status = 0 AND u.id =:userid AND c.visible = 1 AND cm.deletioninprogress = 0 AND cm.visible = 1 AND cm.module = 1
                                             ORDER BY $ordersql", ['userid' => $USER->id,'useridcount' => $USER->id]);
         foreach ($listhomework as $value) {
-
             $obj = new stdClass();
-            // $href         = $CFG->wwwroot . '/mod/quiz/view.php?id=' .
-            $obj->name    = ($value->grade) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2">' . $value->name : $value->name;
+            $href         = $CFG->wwwroot . '/mod/assign/view.php?id=' .$value->id;
+            $obj->name    = ($value->grade) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2"><a href="'.$href.'" target="_blank">' . $value->name .'</a>': '<img src="' . $OUTPUT->image_url('icon', 'assign') . '" class="img-module mr-2"><a href="'.$href.'" target="_blank">'.$value->name .'</a>';
             $obj->grade   = ($value->grade) ? $value->grade : '-';
-            $obj->timedue = $value->timedue;
+            $obj->timedue = ($value->duedate) ? convertunixtime('d/m/Y', $value->duedate, 'Asia/Ho_Chi_Minh') : 'Không giới hạn';
             $obj->total   = count($listhomework);
             $data[]       = $obj;
         }
@@ -191,7 +190,7 @@ switch ($action) {
             $obj->name    = ($value->finalgrade) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2"><a href="' . $href . '" target="_blank">' . $value->name . '</a>' : '<img src="' . $OUTPUT->image_url('icon', 'quiz') . '" class="img-module mr-2"><a href="' . $href . '" target="_blank">' . $value->name . '</a></div>';
             $finalgrade   = number_format($value->finalgrade,1);
             $obj->grade   = $value->finalgrade ? $finalgrade : '-';
-            $obj->timedue = convertunixtime('d/m/Y', $value->timeclose, 'Asia/Ho_Chi_Minh');
+            $obj->timedue = ($value->timeclose) ? convertunixtime('d/m/Y', $value->timeclose, 'Asia/Ho_Chi_Minh') : 'Không giới hạn';
             $obj->total   = $value->total;
             $data[]       = $obj;
         }

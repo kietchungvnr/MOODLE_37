@@ -400,7 +400,7 @@ class CourseController extends BaseController {
 		global $DB,$CFG;
 		require_once($CFG->dirroot . '/enrol/locallib.php');
 		$this->validate = $this->validator->validate($this->request, [
-            'usercode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
+            'usercode' => $this->v::notEmpty()->notBlank(),
             'coursecode' => $this->v::notEmpty()->notBlank(),
             'typeofuser' => $this->v::notEmpty()->notBlank()
         ]);

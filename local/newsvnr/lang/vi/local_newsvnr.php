@@ -585,3 +585,7 @@ $string['editcategoryquestion'] = "Chỉnh sủa danh mục câu hỏi";
 $string['sizewidth'] = "Chiều dài ảnh";
 $string['sizeheight'] = "Chiều cao ảnh";
 $string['savechange'] = "Lưu thay dổi";
+$string['coursecatogories'] = 'Danh mục';
+$string['nameuser'] = "Tên tài khoản";
+$string['codeuser'] = "Mã người dùng";
+$string['createdtime'] = "Ngày tạo";

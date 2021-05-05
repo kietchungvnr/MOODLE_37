@@ -55,7 +55,7 @@ if ($searchtype == "searchcontent") {
 } else {
     $searchsql = "CONCAT(rs.name,b.name,l.name,i.name,pa.name,ur.name) LIKE $strsearch";
 }
-$sql = "SELECT DISTINCT lm.*,cm.id,CONCAT(rs.name,b.name,l.name,i.name,pa.name,ur.name) AS name,cm.visible,CONCAT(u.firstname,' ', u.lastname) as fullnamet,cm.deletioninprogress,cm.instance
+$sql = "SELECT DISTINCT lm.*,cm.id,CONCAT(rs.name,b.name,l.name,i.name,pa.name,ur.name,wk.name) AS name,cm.visible,CONCAT(u.firstname,' ', u.lastname) as fullnamet,cm.deletioninprogress,cm.instance
             FROM {library_module} lm
                 JOIN {course_modules} cm on cm.id = lm.coursemoduleid
                 LEFT JOIN {resource} rs on cm.instance = rs.id AND rs.course = 1
@@ -66,6 +66,7 @@ $sql = "SELECT DISTINCT lm.*,cm.id,CONCAT(rs.name,b.name,l.name,i.name,pa.name,u
                 LEFT JOIN {lesson} l on cm.instance = l.id AND l.course = 1
                 LEFT JOIN {lesson_pages} lp on l.id = lp.lessonid
                 LEFT JOIN {imscp} i on cm.instance = i.id AND i.course = 1
+                LEFT JOIN {wiki} wk on cm.instance = wk.id AND wk.course = 1 
                 JOIN {user} u on u.id = lm.userid
                 JOIN {library_folder} lf on lf.id = lm.folderid
             $condition $searchsql AND lm.approval = 1 AND (lm.moduletype LIKE $strmodulefilter OR lm.minetype LIKE $strmodulefilter)";
