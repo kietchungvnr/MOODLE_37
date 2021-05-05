@@ -124,11 +124,6 @@ switch ($action) {
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 'homework':
-        if ($pagetake == 0) {
-            $ordersql = "ass.duedate ASC";
-        } else {
-            $ordersql = "ass.duedate ASC OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
-        }
         $listhomework = $DB->get_records_sql("SELECT ROW_NUMBER() OVER (ORDER BY ass.id) AS RowNum,cm.id,ass.name,ass.duedate,cm.id as moduleid,ass.course,
                                                 (SELECT COUNT(ass.id) FROM mdl_role_assignments AS ra
                                                     JOIN mdl_user AS u ON u.id= ra.userid

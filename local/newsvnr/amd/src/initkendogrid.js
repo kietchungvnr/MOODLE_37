@@ -1,4 +1,4 @@
-define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config, Str, kendo) {
+define(['jquery', 'core/config', 'core/str','kendo.all.min','alertjs'], function($, Config, Str, kendo, alertify) {
 	var initGrid = function (gridConfig) {
         eventArr = [];
         if (gridConfig.columns === undefined) { gridConfig.columns = []; }
@@ -26,7 +26,6 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
                 width: 45
             });
         }
-        //edit
         // if (gridConfig.selectRowEvent != undefined) {
         //     var funcSelectRow = function(e) {
         //         e.preventDefault();
@@ -143,6 +142,110 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
             }
             eventArr.push(objEventJoinCourse);
         }
+        if (gridConfig.deleteUserEvent != undefined) {
+            var funcDeleteUser = function(e) {
+                e.preventDefault();
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                var script = Config.wwwroot + '/local/newsvnr/report/ajax/userreport_action.php';
+                var settings = {
+                    type:"GET",
+                    processData:true,
+                    data:{
+                        userid:dataItem.id,
+                        action:'delete'
+                    }
+                }
+                $.ajax(script,settings).then(function() {
+                    var obj = $.parseJSON(response);
+                    alertify.notify(obj.result, 'success', 3);
+                })
+                gridConfig.deleteUserEvent(dataItem);
+            }
+            var objEventDeleteUser = {
+                click: funcDeleteUser,
+                iconClass: 'fa fa-trash mr-1',
+                text: '',
+                name: 'deleteuser',
+            }
+            eventArr.push(objEventDeleteUser);
+        }
+        if (gridConfig.hideUserEvent != undefined) {
+            var dataItem = '';
+            var funcHideUser = function(e) {
+                e.preventDefault();
+                dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                var settings = {
+                    type:"GET",
+                    processData:true,
+                    data:{
+                        userid:dataItem.id,
+                        action:'hide'
+                    }
+                }
+                var script = Config.wwwroot + '/local/newsvnr/report/ajax/userreport_action.php';
+                $.ajax(script,settings).then(function(response) {
+                    var obj = $.parseJSON(response);
+                    alertify.notify(obj.result, 'success', 3);
+                })
+                gridConfig.hideUserEvent(dataItem);
+            }
+            var objEventHideUser = {
+                click: funcHideUser,
+                iconClass: 'fa fa-eye mr-1',
+                text: '',
+                name: 'hideuser',
+                visible: function(dataItem) {
+                    return dataItem.suspended == 0;
+                }
+            }
+            eventArr.push(objEventHideUser);
+        }
+        if (gridConfig.showUserEvent != undefined) {
+            var dataItem = '';
+            var funcShowUser = function(e) {
+                e.preventDefault();
+                dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                var settings = {
+                    type:"GET",
+                    processData:true,
+                    data:{
+                        userid:dataItem.id,
+                        action:'show'
+                    }
+                }
+                var script = Config.wwwroot + '/local/newsvnr/report/ajax/userreport_action.php';
+                $.ajax(script,settings).then(function(response) {
+                    var obj = $.parseJSON(response);
+                    alertify.notify(obj.result, 'success', 3);
+                })
+                gridConfig.showUserEvent(dataItem);
+            }
+            var objEventShowUser = {
+                click: funcShowUser,
+                iconClass: 'fa fa-eye-slash mr-1',
+                text: '',
+                name: 'showuser',
+                visible: function(dataItem) {
+                    return dataItem.suspended == 1;
+                }
+            }
+            eventArr.push(objEventShowUser);
+        }
+        if (gridConfig.editUserEvent != undefined) {
+            var funcEditUser = function(e) {
+                e.preventDefault();
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                window.open(Config.wwwroot + '/user/editadvanced.php?id='+dataItem.id+'&course=1');
+                gridConfig.editUserEvent(dataItem);
+            }
+            var objEventEditUser = {
+                click: funcEditUser,
+                iconClass: 'fa fa-cog mr-1',
+                text: '',
+                name: 'edituser',
+            }
+            eventArr.push(objEventEditUser);
+        }
         if(eventArr.length > 0) {
             gridConfig.columns.push({
                 title: M.util.get_string('action', 'local_newsvnr'),
@@ -162,6 +265,7 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min'], function($, Config
             // selectable: "multiple",
             //dataBound: gridConfig.dataBound,
             //height: 520,
+            change: gridConfig.onChange,
             toolbar: gridConfig.toolbar,
             excel: gridConfig.excel,
             search: {
