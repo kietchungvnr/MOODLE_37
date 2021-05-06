@@ -54,10 +54,10 @@ class OrgstructurePositionController extends BaseController {
 	        return $response->withStatus(422)->withJson($this->resp);
 	    }
 	    $check_orgstructure_jobtitle = find_orgstructure_jobtitle_by_code($this->data->jobtitlecode);
-			$check_orgstructure = find_orgstructure_by_code($this->data->orgstructurecode);
+		$check_orgstructure = find_orgstructure_by_code($this->data->orgstructurecode);
 		$check_orgstructure_position = find_orgstructure_position_by_code($this->data->code);
 		if($check_orgstructure_position) {
-			$check_orgstructure_position = $check_orgstructure_position->code;
+			$check_orgstructure_position = $this->data->code;
 			$this->resp->error = true;
 			$this->resp->data['code'] = "Mã loại phòng ban '$check_orgstructure_position' đã tồn tại";
 		}

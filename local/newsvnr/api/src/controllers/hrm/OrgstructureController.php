@@ -7,7 +7,7 @@ use local_newsvnr\api\controllers\BaseController as BaseController;
 
 defined('MOODLE_INTERNAL') || die;
 
-class TokenController extends BaseController {
+class OrgstructureController extends BaseController {
 
 	private $table = 'orgstructure';
 
@@ -57,6 +57,7 @@ class TokenController extends BaseController {
 	    }
         $check_orgstructure_by_code = find_orgstructure_by_code($this->data->code);
 		if($check_orgstructure_by_code) {
+			$check_orgstructure_by_code = $this->data->code;
 			$this->resp->error = true;
 			$this->resp->data['code'] = "Mã phòng ban '$check_orgstructure_by_code' đã tồn tại";
 

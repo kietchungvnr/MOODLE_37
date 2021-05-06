@@ -1277,49 +1277,50 @@ function check_auth_api($username, $password) {
 function find_orgstructure_by_name($name) {
     global $DB;
     $sql = "
-            SELECT name
+            SELECT *
             FROM {orgstructure}
             WHERE name = ?";
-   $data = $DB->get_field_sql($sql, array($name));
+   $data = $DB->get_record_sql($sql, array($name));
    return $data;
 }
 
 function find_orgstructure_by_code($code) {
    global $DB;
    $sql = "
-            SELECT code 
+            SELECT * 
             FROM {orgstructure} 
             WHERE code = ?";
-   $data = $DB->get_field_sql($sql, array($code));
+   $data = $DB->get_record_sql($sql, array($code));
    return $data;
 }
 
 function find_orgstructure_jobtitle_by_name($name) {
    global $DB;
    $sql = "
-            SELECT name 
+            SELECT * 
             FROM {orgstructure_jobtitle}
             WHERE name = ?";
-   $data = $DB->get_field_sql($sql, array($name));
+   $data = $DB->get_record_sql($sql, array($name));
    return $data;
 }
+
 function find_orgstructure_jobtitle_by_code($code) {
    global $DB;
    $sql = "
-            SELECT code 
+            SELECT * 
             FROM {orgstructure_jobtitle} 
             WHERE code = ?";
-   $data = $DB->get_field_sql($sql, array($code));
+   $data = $DB->get_record_sql($sql, array($code));
    return $data;
 }
 
 function find_orgstructure_category_by_name($name) {
     global $DB;
     $sql = "
-            SELECT name
+            SELECT *
             FROM {orgstructure_category} 
             WHERE name = ?";
-    $data = $DB->get_field_sql($sql, array($name));
+    $data = $DB->get_record_sql($sql, array($name));
     return $data;
 }
 
@@ -1349,16 +1350,16 @@ function find_orgstructure_position_by_name($name) {
             SELECT name 
             FROM {orgstructure_position} 
             WHERE name = ?";
-    $data = $DB->get_field_sql($sql, array($name));
+    $data = $DB->get_record_sql($sql, array($name));
     return $data;
 }
 
 function find_orgstructure_position_by_code($code) {
     global $DB;
-    $sql = "SELECT code 
+    $sql = "SELECT * 
             FROM {orgstructure_position}
             WHERE code = ?";
-    $data = $DB->get_field_sql($sql, array($code));
+    $data = $DB->get_record_sql($sql, array($code));
     return $data;
 }
 
