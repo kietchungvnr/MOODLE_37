@@ -782,13 +782,13 @@ function theme_moove_layout_check() {
     // Xét layout cho nhúng LMS vào portal EBM
     if(isset($referer) && ($referer_split[2] == $_SERVER['HTTP_HOST'])) {
         $object->hasportal = false;
-    } elseif(isset($referer) && ($referer_split[2] != $_SERVER['HTTP_HOST']) && strpos($_SERVER['QUERY_STRING'], 'ebmlms=true') == true) {
+    } elseif(isset($referer) && ($referer_split[2] != $_SERVER['HTTP_HOST']) && strpos($_SERVER['QUERY_STRING'], 'EBMLMS=true') == true) {
         $object->hasportal = true;
     } else {
         $object->hasportal = false;
     }
     // Xét layout cho chế độ focusmode
-    $object->show_hide_focusmod = false;
+    $object->show_hide_focusmod = true;
     if(isset($referer) && ($referer_split[2] == $_SERVER['HTTP_HOST'])) {
         if(isset($_COOKIE['cookie']) && $_COOKIE['cookie'] == 'focusmod') {
             if (strpos($referer, 'report/user') ==  true || strpos($referer, 'question/') == true || strpos($referer, 'mod/') == true || strpos($_SERVER['QUERY_STRING'], 'course') == true || strpos($referer, 'course=') == true || strpos($_SERVER['SCRIPT_NAME'], 'mod/') == true) {
@@ -807,11 +807,12 @@ function theme_moove_layout_check() {
     if(isset($referer) && $referer_split[2] == $_SERVER['HTTP_HOST']) {
         if(isset($_COOKIE['spa']) && $_COOKIE['spa'] == 'true') {
             // $referers = ['/course/view.php', '/user/index.php', '/badges/view.php', '/admin/tool/lp/coursecompetencies.php', '/grade/report/index.php', '/contentbank/index.php', '/grade/report/user/index.php'];
-            // if (in_array(get_pathname_url($referer), $referers)) {
+            // $check_referer = get_pathname_url($referer);
+            // if (in_array($check_referer, $referers)) {
             //     $object->hasgeneraliframe = true;
-            //     if(in_array($_SERVER['SCRIPT_NAME'], $referers) == false) {
-            //         $object->hasgeneraliframe = false;
-            //     }
+            //     // if(in_array($_SERVER['SCRIPT_NAME'], $referers) == false) {
+            //     //     $object->hasgeneraliframe = false;
+            //     // }
             // } else {
             //     $object->hasgeneraliframe = false;
             // }

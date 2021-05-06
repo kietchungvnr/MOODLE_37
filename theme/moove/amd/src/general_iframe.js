@@ -7,6 +7,20 @@ require.config({
 define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], function($, Config, Cookie, iframetracker) {
     "use strict";
 
+    // Kiểm tra có phải là 1 iframe hây không?
+    function iniFrame() {
+        var gfg = window.frameElement;
+        // Checking if webpage is embedded
+        if (gfg) {
+            // The page is in an iFrame
+            Cookie.setCookie('spa', 'true');
+        } 
+        else {
+            // The page is not in an iFrame
+        }
+    }
+    iniFrame();
+
     // Xử lý xóa cookie khi right click vào thẻ <a>
     $(document).ready(function() {
         $('body').removeClass('loading');
