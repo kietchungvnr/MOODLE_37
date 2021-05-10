@@ -592,3 +592,4 @@ $string['createdtime'] = "Ngày tạo";
 $string['orgpositioncode'] = "Mã chức vụ";
 $string['orgpositionname'] = "Tên chức vụ";
 $string['viewed'] = "Lượt xem";
+$string['nopermission'] = "Bạn không có quyền truy cập trang này";

@@ -590,3 +590,4 @@ $string['createdtime'] = "Time created";
 $string['orgpositioncode'] = "Position code";
 $string['orgpositionname'] = "Position name";
 $string['viewed'] = "Viewed";
+$string['nopermission'] = "You dont’t have permission to access this page";

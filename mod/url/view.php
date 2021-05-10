@@ -46,6 +46,19 @@ $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
 
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
+
+// Kiểm tra nếu module đã ẩn thì không đc view
+if($course->id == 1) {
+    if(is_siteadmin() || user_has_role_assignment($USER->id, 1, $context->id) == true) {
+        // Nothing to do...
+    } else {
+        $module = $DB->get_record('course_modules', array('id' => $id), 'visible', MUST_EXIST);
+        if($module && $module->visible == 0) {
+            print_error('nopermission', 'local_newsvnr');
+        }    
+    }
+}
+
 require_capability('mod/url:view', $context);
 
 // Completion and trigger events.

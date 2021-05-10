@@ -71,6 +71,20 @@ if ($id) {
     $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
     require_course_login($course, true, $cm);
+ 
+    // Kiểm tra nếu module đã ẩn thì không đc view
+    if($course->id == 1) {
+        $context = context_module::instance($cm->id);
+        if(is_siteadmin() || user_has_role_assignment($USER->id, 1, $context->id) == true) {
+            // Nothing to do...
+        } else {
+            $module = $DB->get_record('course_modules', array('id' => $id), 'visible', MUST_EXIST);
+            if($module && $module->visible == 0) {
+                print_error('nopermission', 'local_newsvnr');
+            }    
+        }
+    }
+
 
     // Checking wiki instance
     if (!$wiki = wiki_get_wiki($cm->instance)) {
