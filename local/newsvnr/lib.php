@@ -1739,7 +1739,7 @@ function HTTPPost($url,$data) {
     ),
     CURLOPT_POSTFIELDS => $params));
     $resp = curl_exec($curl);
-    insert_log($resp,$url);
+    // insert_log($resp,$url);
     curl_close($curl);
 }
 
@@ -1763,7 +1763,7 @@ function HTTPPost_EBM($url,$data) {
     ),
     CURLOPT_POSTFIELDS => $params));
     $resp = curl_exec($curl);
-    insert_log($resp,$url);
+    // insert_log($resp,$url);
     curl_close($curl);
 }
 
