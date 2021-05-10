@@ -251,7 +251,7 @@ class participants extends \table_sql implements dynamic_table {
      * @return string
      */
     public function col_fullname($data) {
-        global $OUTPUT,$DB;
+        global $OUTPUT, $DB, $CFG;
         $user = $DB->get_record("user", ['id' => $data->id]);
         return $OUTPUT->user_picture($user) . html_writer::tag('a',$user->firstname.' '.$user->lastname,['target' => "_blank",'href' => $CFG->wwwroot . '/user/profile.php?id=' . $user->id]);
         // return $OUTPUT->user_picture($data, array('size' => 35, 'courseid' => $this->course->id, 'includefullname' => true));
