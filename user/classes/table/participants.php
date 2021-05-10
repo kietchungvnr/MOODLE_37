@@ -31,6 +31,7 @@ use core_table\dynamic as dynamic_table;
 use core_table\local\filter\filterset;
 use core_user\output\status_field;
 use core_user\table\participants_search;
+use html_writer;
 use moodle_url;
 
 defined('MOODLE_INTERNAL') || die;
@@ -250,9 +251,10 @@ class participants extends \table_sql implements dynamic_table {
      * @return string
      */
     public function col_fullname($data) {
-        global $OUTPUT;
-
-        return $OUTPUT->user_picture($data, array('size' => 35, 'courseid' => $this->course->id, 'includefullname' => true));
+        global $OUTPUT,$DB;
+        $user = $DB->get_record("user", ['id' => $data->id]);
+        return $OUTPUT->user_picture($user) . html_writer::tag('a',$user->firstname.' '.$user->lastname,['target' => "_blank",'href' => $CFG->wwwroot . '/user/profile.php?id=' . $user->id]);
+        // return $OUTPUT->user_picture($data, array('size' => 35, 'courseid' => $this->course->id, 'includefullname' => true));
     }
 
     /**

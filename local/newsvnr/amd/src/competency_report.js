@@ -109,7 +109,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                 width: "90px"
             },
             {
-                field: "planname",
+                field: "duedate",
                 title: "Ngày hoàn thành",
                 width: "80px"
             },

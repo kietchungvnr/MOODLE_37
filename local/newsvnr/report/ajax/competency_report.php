@@ -114,7 +114,7 @@ foreach ($get_list as $value) {
     $object->competencyname = $value->shortname;
     $object->coursename     = '<a target="_blank" href="' . $CFG->wwwroot . '/course/view.php?id=' . $value->courseid . '">' . $value->fullname . '</a>';
     $object->activity       = ($activity) ? $activity : '-';
-    $object->duedate        = $value->duedate;
+    $object->duedate        = '-';
     $object->planname       = ($value->planname) ? $value->planname : "-";
     $object->status         = ($value->grade == 2) ? "<span class='badge text-white teacher-bg-3 font-weight-bold rounded p-2'>Hoàn thành</span>" : "<span class='badge text-white teacher-bg-2 font-weight-bold rounded p-2'>Chưa hoàn thành</span>";
     $object->total          = $value->total;
