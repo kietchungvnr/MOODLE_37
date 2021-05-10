@@ -29,6 +29,13 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
             Cookie.setCookieSecure('cookie', '-1', 0);
             Cookie.setCookieSecure('ebmlms', '-1', 0);
         });
+        $("body a[target='_blank']").on('click', function(event) {
+            event.preventDefault();
+            Cookie.setCookieSecure('spa', '-1', 0);
+            Cookie.setCookieSecure('cookie', '-1', 0);
+            Cookie.setCookieSecure('ebmlms', '-1', 0);
+            window.open($(this).attr('href'), '_blank').focus();
+        });
         $('body a').on('click', function(e) {
             if (e.ctrlKey || e.shiftKey || e.metaKey || (e.button && e.button == 1)) {
                 Cookie.setCookieSecure('spa', '-1', 0);
@@ -45,10 +52,7 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
         if(baseUrl) {
             Cookie.setCookieSecure('baseUrl', '-1', 0);
         }
-
-        Cookie.setCookieSecure('spa', '-1', 0);
-        Cookie.setCookieSecure('ebmlms', 'true');
-
+        
         // Xóa focusmode khi không phải ở trong mod page
         var listUrl = ['/course/view.php', '/user/index.php', '/badges/view.php', '/admin/tool/lp/coursecompetencies.php', '/grade/report/index.php', '/contentbank/index.php'];
         var getCurrentPathName = window.location.pathname;
@@ -99,17 +103,6 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
         $('#region-main .loading-page').addClass('active');
         //reload để resize height iframe
         $('#course-iframe').on('load', function() {
-            $('#course-iframe').iframeTracker({
-                blurCallback: function(event) {
-                    $('body').focus();
-                    // Cookie.setCookieSecure('spa', 'true');
-                },
-                outCallback: function(element, event) {
-                    this._overId = null; // Reset hover iframe wrapper i
-                    // Cookie.setCookieSecure('spa', '-1', 0);
-                },
-                _overId: null
-            });
             $('#course-iframe').removeClass('d-none');
             if(iframes == undefined) {
                 iframes =  iFrameResize({ log: false }, '#course-iframe');
