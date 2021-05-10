@@ -53,7 +53,7 @@ class OrgstructureController extends BaseController {
         	$errors = $this->validate->getErrors();
         	$this->resp->error = true;
         	$this->resp->data[] = $errors;
-	        return $response->withStatus(422)->withJson($this->resp);
+	        return $response->withStatus(422)->withJson($this->resp, 422, JSON_UNESCAPED_UNICODE);
 	    }
         $check_orgstructure_by_code = find_orgstructure_by_code($this->data->code);
 		if($check_orgstructure_by_code) {
@@ -101,7 +101,7 @@ class OrgstructureController extends BaseController {
 			$this->resp->message['info'] = "Thêm thất bại";
 		}
 		
-		return $this->response->withStatus(200)->withJson($this->resp);
+		return $this->response->withStatus(200)->withJson($this->resp, 200, JSON_UNESCAPED_UNICODE);
 	}
 
 	public function update($request, $response, $args) {
@@ -118,7 +118,7 @@ class OrgstructureController extends BaseController {
         	$errors = $this->validate->getErrors();
         	$this->resp->error = true;
         	$this->resp->data[] = $errors;
-	        return $response->withStatus(422)->withJson($this->resp);
+	        return $response->withStatus(422)->withJson($this->resp, 422, JSON_UNESCAPED_UNICODE);
 	    }
        
 		$orgstructureid = $request->getAttribute('id');
@@ -150,7 +150,7 @@ class OrgstructureController extends BaseController {
 			$this->resp->data['id'] = "Không tìm thấy phòng ban với id '$orgstructureid'";
 		}
 		
-		return $this->response->withStatus(200)->withJson($this->resp);
+		return $this->response->withStatus(200)->withJson($this->resp, 200, JSON_UNESCAPED_UNICODE);
 	}
 
 	public function delete() {
