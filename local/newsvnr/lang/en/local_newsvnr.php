@@ -589,3 +589,4 @@ $string['codeuser'] = "User code";
 $string['createdtime'] = "Time created";
 $string['orgpositioncode'] = "Position code";
 $string['orgpositionname'] = "Position name";
+$string['viewed'] = "Viewed";

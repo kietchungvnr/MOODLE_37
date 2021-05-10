@@ -591,3 +591,4 @@ $string['codeuser'] = "Mã người dùng";
 $string['createdtime'] = "Ngày tạo";
 $string['orgpositioncode'] = "Mã chức vụ";
 $string['orgpositionname'] = "Tên chức vụ";
+$string['viewed'] = "Lượt xem";

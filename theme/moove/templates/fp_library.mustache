@@ -72,8 +72,9 @@
 										 					<th scope="col">{{#str}}name, local_newsvnr{{/str}}</th>
 										 					<th scope="col">{{#str}}type, local_newsvnr{{/str}}</th>
 															<th scope="col">{{#str}}size, local_newsvnr{{/str}}</th>
-										 					<th scope="col">{{#str}}timecreated, local_newsvnr{{/str}}</th>
+										 					<th scope="col" class="sort-module cursor-pointer" action="timesort_desc">{{#str}}timecreated, local_newsvnr{{/str}}</th>
 										 					<th scope="col">{{#str}}author, local_newsvnr{{/str}}</th>
+                                                            <th scope="col" class="sort-module cursor-pointer" action="viewsort_desc">{{#str}}viewed, local_newsvnr{{/str}}</th>
 										 					<th scope="col">{{#str}}function, local_newsvnr{{/str}}</th>
 										 				    </tr>
 														</thead>
@@ -409,6 +410,7 @@
     // Lọc theo loại module thư viện
     const filterModule = (moduletype,folderid) => {
         require(['jquery', 'core/config'], ($, Config) => {
+            $('.sort-module i').remove();
             var script = Config.wwwroot + "/local/newsvnr/ajax/library_online/library_module_ajax.php";
             $('.loading-page').addClass('active');
             var settings = {
