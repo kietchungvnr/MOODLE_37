@@ -101,7 +101,8 @@
         display: flex;
         align-items: center;
     }
-    #user_report .k-grid-excel {
+    #user_report .k-grid-excel,
+    #competency_report .k-grid-excel {
         display: none;
     }
     .badge.badge-danger,
@@ -127,6 +128,29 @@
     }
     #page-local-newsvnr-report-user .k-widget.k-datepicker {
         width: 100%;
+    }
+    .report-button {
+        padding: 5px 10px;
+        background: #E3EEF5;
+        margin: 0 5px;
+        border-radius: 50%;
+        color: white;
+        cursor: pointer;
+    }
+    .status {
+        color: white;
+        border-radius: 15px;
+        padding: 5px;
+        text-align: center;
+    }
+    #page-competency-report .card {
+        background: transparent;
+    }
+    #page-competency-report .card .card-body {
+        padding: 0;
+    }
+    #page-competency-report #page-header .card-body {
+        display: none;
     }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />

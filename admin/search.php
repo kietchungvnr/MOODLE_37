@@ -160,7 +160,9 @@ if ($showsettingslinks) {
             "managebackpacks",
             "backpacksettings",
             "themesettings",
-            "toollpexportcsv"
+            "toollpexportcsv",
+            "editusers",
+            "addnewuser"
         ];
         $ignore_tabnode = [
             "analytics", 

@@ -140,6 +140,9 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         };
         var colums = [
             {
+                template:function(e) {
+                    return e.name;
+                },
                 field: "name",
                 title: M.util.get_string('nameuser', 'local_newsvnr'),
                 width: "130px"
