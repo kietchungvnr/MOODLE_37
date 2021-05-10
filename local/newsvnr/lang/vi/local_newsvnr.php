@@ -589,3 +589,5 @@ $string['coursecatogories'] = 'Danh mục';
 $string['nameuser'] = "Tên tài khoản";
 $string['codeuser'] = "Mã người dùng";
 $string['createdtime'] = "Ngày tạo";
+$string['orgpositioncode'] = "Mã chức vụ";
+$string['orgpositionname'] = "Tên chức vụ";

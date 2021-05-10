@@ -29,6 +29,7 @@ require_once __DIR__ . '/../../../../config.php';
 require_once $CFG->dirroot . '/local/newsvnr/lib.php';
 require_once $CFG->dirroot . '\theme\moove\classes\output\core_renderer.php';
 require_once "../system_paginationAll.class.php";
+require_login();
 $PAGE->set_context(context_system::instance());
 $perPage         = new PerPage();
 $folderid        = optional_param('folderid', 0, PARAM_INT);
@@ -51,9 +52,9 @@ if (is_siteadmin()) {
                     WHERE (uss.id is NULL or uss.id = $USER->id) AND lf.visible = 1 AND cm.visible = 1 AND cm.deletioninprogress = 0 AND";
 }
 if ($searchtype == "searchcontent") {
-    $searchsql = "(lp.title LIKE $strsearch OR lp.contents LIKE $strsearch OR pa.intro LIKE $strsearch OR pa.content LIKE $strsearch OR ur.externalurl LIKE $strsearch OR (bc.CONTENT LIKE $strsearch OR bc.title LIKE $strsearch))";
+    $searchsql = "(lp.title LIKE $strsearch OR lp.contents LIKE $strsearch OR pa.intro LIKE $strsearch OR pa.content LIKE $strsearch OR ur.externalurl LIKE $strsearch OR (bc.CONTENT LIKE $strsearch OR bc.title LIKE $strsearch) OR (wk.intro LIKE $strsearch))";
 } else {
-    $searchsql = "CONCAT(rs.name,b.name,l.name,i.name,pa.name,ur.name) LIKE $strsearch";
+    $searchsql = "CONCAT(rs.name,b.name,l.name,i.name,pa.name,ur.name,wk.name) LIKE $strsearch";
 }
 $sql = "SELECT DISTINCT lm.*,cm.id,CONCAT(rs.name,b.name,l.name,i.name,pa.name,ur.name,wk.name) AS name,cm.visible,CONCAT(u.firstname,' ', u.lastname) as fullnamet,cm.deletioninprogress,cm.instance
             FROM {library_module} lm

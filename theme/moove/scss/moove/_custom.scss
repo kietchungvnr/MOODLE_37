@@ -2305,6 +2305,9 @@ a.icon-no-margin {
     background: white;
     overflow: hidden;
   }
+  .endtestlink {
+    display: none;
+  }
 }
 #page-calendar-view {
   h3 {
@@ -5523,10 +5526,7 @@ input.apple-switch {
 .slide-nav-toggle#page-wrapper {
   margin-left: 225px;
 }
-#page-wrapper {
-  margin-left: 44px;
-  transition: all 0.4s ease;
-}
+
 .btn-menu-search {
   transition: all 0.4s ease;
 }
@@ -7620,7 +7620,7 @@ body.format-topcoll.editing {
     }
   }
   .nav-tabs.mb {
-    display: flex;
+    display: flex !important;
   }
   .nav-tabs {
     padding: 0;

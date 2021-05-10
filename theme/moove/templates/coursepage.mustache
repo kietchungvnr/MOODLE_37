@@ -102,10 +102,12 @@
                         <div class="">
                             {{> theme_moove/nav-drawer }}
                         </div>
-                        <ul class="nav-tabs nav multi-tab mb-3 mb" tab="coursetab">
-                            <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="general">Chung</a></li>
-                            <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="participant">Thành viên</a></li>
-                        </ul>
+                        {{^hasportal}}
+                            <ul class="nav-tabs nav multi-tab mb-3 mb" tab="coursetab">
+                                <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="general">Chung</a></li>
+                                <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="participant">Thành viên</a></li>
+                            </ul>
+                        {{/hasportal}}
                         <div class="tab-content" tab="coursetab">
                             <div data="general" class="tab-pane active">
                                 <div class="card-body" id="course-main-content">
