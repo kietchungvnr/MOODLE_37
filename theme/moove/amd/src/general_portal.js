@@ -7,56 +7,33 @@ require.config({
 define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], function($, Config, Cookie, iframetracker) {
     "use strict";
 
-    // Kiểm tra có phải là 1 iframe hây không?
     function iniFrame() {
-        debugger
         var gfg = window.frameElement;
         // Checking if webpage is embedded
         if (gfg) {
             // The page is in an iFrame
-            Cookie.setCookie('spa', 'true');
+            Cookie.setCookieSecure('spa', 'true');
         } 
         else {
             // The page is not in an iFrame
-            Cookie.setCookie('spa', 'false');
+            Cookie.setCookieSecure('spa', 'false');
         }
     }
     iniFrame();
-// $(function() {
-//     console.log(document, document.referrer);
-//     Cookie.setCookie('previousUrl', window.location.href);
-//     if (window.history && window.history.pushState) {
-//         window.history.pushState('', null, './');
-//         $(window).on('popstate', function() {
-//             window.history.go(-1);
-//             Cookie.setCookie('spa', 'true');
-//             console.log(document.referrer, document.location, window.history);
-//             // document.location.href = 'https://elearning.vnresource.net:8089/user/index.php?id=12811';
-
-//         });
-//     }
-// });
-
+    
     // Xử lý xóa cookie khi right click vào thẻ <a>
     $(document).ready(function() {
         $('body').removeClass('loading');
-        $('#standard-iframe a').bind('contextmenu', function(event) {
-            Cookie.setCookie('spa', '-1', 0);
-            Cookie.setCookie('cookie', '-1', 0);
+        $('body a').bind('contextmenu', function(event) {
+            Cookie.setCookieSecure('spa', '-1', 0);
+            Cookie.setCookieSecure('cookie', '-1', 0);
+            Cookie.setCookieSecure('ebmlms', '-1', 0);
         });
-        $('#standard-iframe a').on('click', function(e) {
+        $('body a').on('click', function(e) {
             if (e.ctrlKey || e.shiftKey || e.metaKey || (e.button && e.button == 1)) {
-                Cookie.setCookie('spa', '-1', 0);
-                Cookie.setCookie('cookie', '-1', 0);
-            }
-        })
-        $('#general-iframe a').bind('contextmenu', function(event) {
-            Cookie.setCookie('spa', '-1', 0);
-        });
-        $('#general-iframe a').on('click', function(e) {
-            Cookie.setCookie('spa', 'true');
-            if (e.ctrlKey || e.shiftKey || e.metaKey || (e.button && e.button == 1)) {
-                Cookie.setCookie('spa', '-1', 0);
+                Cookie.setCookieSecure('spa', '-1', 0);
+                Cookie.setCookieSecure('cookie', '-1', 0);
+                Cookie.setCookieSecure('ebmlms', '-1', 0);
             }
         })
     });
@@ -66,11 +43,18 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
     window.onbeforeunload = function() {
         var baseUrl = Cookie.getCookie('baseUrl');
         if(baseUrl) {
-            Cookie.setCookie('baseUrl', '-1', 0);
+            Cookie.setCookieSecure('baseUrl', '-1', 0);
         }
-        if(Cookie.getCookie('true'))
-            Cookie.setCookie('spa', 'true');
-        // Cookie.setCookie('spa', '-1', 0);
+
+        Cookie.setCookieSecure('spa', '-1', 0);
+        Cookie.setCookieSecure('ebmlms', 'true');
+
+        // Xóa focusmode khi không phải ở trong mod page
+        var listUrl = ['/course/view.php', '/user/index.php', '/badges/view.php', '/admin/tool/lp/coursecompetencies.php', '/grade/report/index.php', '/contentbank/index.php'];
+        var getCurrentPathName = window.location.pathname;
+        if(listUrl.includes(getCurrentPathName)) {
+            Cookie.setCookieSecure('cookie', '-1', 0);
+        }
         return;
     }
 
@@ -81,15 +65,17 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
         var listUrl = ['/course/view.php', '/user/index.php', '/badges/view.php', '/admin/tool/lp/coursecompetencies.php', '/grade/report/index.php', '/contentbank/index.php'];
         var getCurrentPathName = window.location.pathname;
         if(listUrl.includes(getCurrentPathName)) {
-            Cookie.setCookie('baseUrl', window.location.href);    
+            Cookie.setCookieSecure('baseUrl', window.location.href);    
         }
     }
 
     // Xử lý khi click vào tab trong khóa học
     $('ul.nav-tabs.course li').click(function(e) {
+        var iframes;
         $(this).addClass('active').siblings().removeClass('active');
-        Cookie.setCookie('spa', 'true');
-        Cookie.setCookie('baseUrl', window.location.href); 
+        Cookie.setCookieSecure('spa', 'true');
+        Cookie.setCookieSecure('ebmlms', 'true');
+        Cookie.setCookieSecure('baseUrl', window.location.href); 
         var _this = this;
         var getUrl = $(_this).attr('data-page-url');
         if(getUrl.includes('course/view.php')) {
@@ -101,7 +87,7 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
         if(getBaseUrl.includes(getUrl)) {
             $('#course-iframe').addClass('d-none');
             $('#region-main .card-body').removeClass('d-none');
-            Cookie.setCookie('spa', '-1', 0);
+            Cookie.setCookieSecure('spa', '-1', 0);
             // window.history.pushState({path:getUrl},'',getUrl);
             return;
         }
@@ -116,16 +102,18 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
             $('#course-iframe').iframeTracker({
                 blurCallback: function(event) {
                     $('body').focus();
-                    Cookie.setCookie('spa', 'true');
+                    // Cookie.setCookieSecure('spa', 'true');
                 },
                 outCallback: function(element, event) {
                     this._overId = null; // Reset hover iframe wrapper i
-                    Cookie.setCookie('spa', '-1', 0);
+                    // Cookie.setCookieSecure('spa', '-1', 0);
                 },
                 _overId: null
             });
-            $('#course-iframe').removeClass('d-none')
-            const iframes = iFrameResize({ log: false }, '#course-iframe');
+            $('#course-iframe').removeClass('d-none');
+            if(iframes == undefined) {
+                iframes =  iFrameResize({ log: false }, '#course-iframe');
+            }
             $('#region-main .loading-page').removeClass('active');
         });
     });

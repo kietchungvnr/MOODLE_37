@@ -8,18 +8,20 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
     "use strict";
 
     function iniFrame() {
+        debugger
         var gfg = window.frameElement;
         // Checking if webpage is embedded
         if (gfg) {
             // The page is in an iFrame
+            Cookie.setCookie('spa', 'true');
         } 
         else {
-            Cookie.setCookie('spa', 'false');
             // The page is not in an iFrame
+            Cookie.setCookie('spa', 'false');
         }
     }
     iniFrame();
-
+    
     // Xử lý xóa cookie khi right click vào thẻ <a>
     $(document).ready(function() {
         $('body').removeClass('loading');
@@ -37,6 +39,7 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
             Cookie.setCookie('spa', '-1', 0);
         });
         $('#general-iframe a').on('click', function(e) {
+            
             if (e.ctrlKey || e.shiftKey || e.metaKey || (e.button && e.button == 1)) {
                 Cookie.setCookie('spa', '-1', 0);
             }
@@ -74,7 +77,7 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
     $('ul.nav-tabs.course li').click(function(e) {
         var iframes;
         $(this).addClass('active').siblings().removeClass('active');
-    	Cookie.setCookie('spa', 'true');
+        Cookie.setCookie('spa', 'true');
         Cookie.setCookie('baseUrl', window.location.href); 
         var _this = this;
         var getUrl = $(_this).attr('data-page-url');
@@ -102,11 +105,11 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
             $('#course-iframe').iframeTracker({
                 blurCallback: function(event) {
                     $('body').focus();
-                    Cookie.setCookie('spa', 'true');
+                    // Cookie.setCookie('spa', 'true');
                 },
                 outCallback: function(element, event) {
                     this._overId = null; // Reset hover iframe wrapper i
-                    Cookie.setCookie('spa', '-1', 0);
+                    // Cookie.setCookie('spa', '-1', 0);
                 },
                 _overId: null
             });
