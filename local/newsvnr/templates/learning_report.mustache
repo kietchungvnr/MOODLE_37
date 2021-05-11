@@ -1,7 +1,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
 <div class="d-flex mb-2 justify-content-between align-items-center" style="padding:1rem;background: white">
 	<div class="page-header-headings">
-		<h2>Báo cáo hồ sơ năng lực học viên</h2>
+		<h2>Báo cáo tiến độ học tập</h2>
 	</div>
 	<div class="d-flex">
 		<div class="report-button" id="dropdownMenuButton" style="background: #2d5b7c">
@@ -18,7 +18,7 @@
 		</div>
 	  	<div class="dropdown-menu user-report d-none" aria-labelledby="dropdownMenuButton" style="top: 92px;">
 	        <ul class="nav-tabs nav multi-tab" tab="searchuser" style="padding: 0 25px;">
-	            <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="account">Thông tin hồ sơ</a></li>
+	            <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="account">Thông tin tìm kiếm</a></li>
 	            <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="department">Phòng ban</a></li>
 	        </ul>
 	        <div class="tab-content" tab="searchuser" style="padding: 1.25rem">
@@ -29,16 +29,45 @@
 						    <input placeholder="Nhập tên học viên" class="form-control mt-1" id="username">
 						</div>
 						<div class="form-group col-md-6">
-							<label >Năng lực</label>
-						    <input class="form-control mt-1" id="competency">
-						</div>
-		              	<div class="form-group col-md-6">
-						    <label>Kế hoạch đào tạo</label>
-						    <input class="form-control mt-1" id="competencyplan">
-						</div>
-						<div class="form-group col-md-6">
 							<label >Khóa học</label>
 						    <input class="form-control mt-1" id="course">
+						</div>
+		              	<div class="form-group col-md-6">
+							<label >Ngày tham gia</label>
+							<div class="row">
+								<div class="col-md-6">
+							    	<input placeholder="Từ ngày" class="form-control mt-1" id="start_timeaccess">
+							    </div>
+							    <div class="col-md-6">
+							    	<input placeholder="Đến ngày" class="form-control mt-1" id="end_timeaccess">
+							    </div>
+							</div>
+						</div>
+{{! 						<div class="form-group col-md-6">
+							<label >Điểm số</label>
+							<div class="row">
+								<div class="col-md-6">
+							    	<input placeholder="Thang điểm" class="form-control mt-1" id="start_timeaccess">
+							    </div>
+							    <div class="col-md-6">
+							    	<input placeholder="Điểm" class="form-control mt-1" id="end_timeaccess">
+							    </div>
+							</div>
+						</div> }}
+						<div class="form-group col-md-6">
+							<label >Tiến độ học</label>
+							<div class="row">
+								<div class="col-md-6">
+							    	<input placeholder="Từ phần trăm" class="form-control mt-1" id="start_process">
+							    </div>
+							    <div class="col-md-6">
+							    	<input placeholder="Đến phần trăm" class="form-control mt-1" id="end_process">
+							    </div>
+							</div>
+						</div>
+						<div class="form-group col-md-6">
+							<label >Trạng thái</label>
+							<input placeholder="Điểm" class="form-control mt-1" id="status">
 						</div>
 					</div>
 	                <div class="text-right">

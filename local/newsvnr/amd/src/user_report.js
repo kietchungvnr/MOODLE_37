@@ -52,7 +52,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         })
     }
     var kendoDropdown = function() {
-        var datascript = "/local/newsvnr/report/ajax/userreport_data.php?action=";
+        var datascript = "/local/newsvnr/report/ajax/report_data.php?action=";
         //dropdown trạng thái người dùng
         var kendoConfig = {};
             kendoConfig.apiSettings = { url: datascript + 'get_userstatus'};
@@ -224,8 +224,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             usercode:usercode,
             userstatus:userstatus,
             notaccess:notaccess,
-            notmodify:notmodify,
-            notcourse:notcourse
+            notmodify:notmodify
         }
         initGrid(data);
     }
@@ -260,8 +259,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             var userstatus = $('#userstatus').val();;
             var notaccess = $('#isnotaccess').is(':checked');
             var notmodify = $('#isnotmodify').is(':checked');
-            var notcourse = $('#isnothascourse').is(':checked');
-            gridSearchAccount(username,useremail,usercode,userstatus,notaccess,notmodify,notcourse);
+            gridSearchAccount(username,useremail,usercode,userstatus,notaccess,notmodify);
         })
         $('#searchorgs').click(function() {
             var orgstructureid = $('#orgstructure').val();

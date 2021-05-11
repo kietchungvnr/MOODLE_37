@@ -33,32 +33,21 @@ require_login();
 $action = optional_param('action', '', PARAM_RAW);
 $data   = array();
 switch ($action) {
-    case 'get_competency':
-    	$competencys = $DB->get_records('competency');
-    	foreach ($competencys as $competency) {
-    		$object = new stdClass();
-    		$object->name = $competency->shortname;
-    		$object->value = $competency->id;
-    		$data[] = $object;
-    	}
-        break;
-    case 'get_competencyplan':
-        $competencyplans = $DB->get_records_sql('select DISTINCT name from mdl_competency_plan');
-        foreach ($competencyplans as $competencyplan) {
-            $object = new stdClass();
-            $object->name = $competencyplan->name;
-            $object->value = $competencyplan->name;
-            $data[] = $object;
-        }
+    case 'get_userstatus':
+    	$data = [
+    				['name' => 'Tài khoản bị đình chỉ','value' => 1],
+    				['name' => 'Tài khoản bình thường','value' => 0]
+    			];
+
         break;
     case 'get_orgstructure_category':
-        $categorys = $DB->get_records('orgstructure_category',['visible' => 1]);
-        foreach ($categorys as $category) {
-            $object = new stdClass();
-            $object->name = $category->name;
-            $object->categoryid = $category->id;
-            $data[] = $object;
-        }
+    	$categorys = $DB->get_records('orgstructure_category',['visible' => 1]);
+    	foreach ($categorys as $category) {
+    		$object = new stdClass();
+    		$object->name = $category->name;
+    		$object->categoryid = $category->id;
+    		$data[] = $object;
+    	}
         break;
     case 'get_orgstructure';
     	$orgs = $DB->get_records('orgstructure',['visible' => 1]);
@@ -89,14 +78,52 @@ switch ($action) {
     		$data[] = $object;
     	}
         break;
+    case 'get_system_role';
+        $data = [
+            ['name' => 'Người quản lý','value' => 1],
+            ['name' => 'Giáo viên biên soạn','value' => 3],
+            ['name' => 'supervisor','value' => 11]
+        ];
+        break;
+    case 'get_course_role';
+        $data = [
+            ['name' => 'Học viên','value' => 5],
+            ['name' => 'Giáo viên','value' => 3],
+            ['name' => 'Người quản lý','value' => 1]
+        ];
+        break;
     case 'get_course';
         $courses = $DB->get_records('course',['visible' => 1]);
         foreach ($courses as $course) {
             $object = new stdClass();
             $object->name = $course->fullname;
-            $object->value = $course->id;
+            $object->id = $course->id;
             $data[] = $object;
         }
+        break;
+    case 'get_competency':
+        $competencys = $DB->get_records('competency');
+        foreach ($competencys as $competency) {
+            $object = new stdClass();
+            $object->name = $competency->shortname;
+            $object->value = $competency->id;
+            $data[] = $object;
+        }
+        break;
+    case 'get_competencyplan':
+        $competencyplans = $DB->get_records_sql('select DISTINCT name from mdl_competency_plan');
+        foreach ($competencyplans as $competencyplan) {
+            $object = new stdClass();
+            $object->name = $competencyplan->name;
+            $object->value = $competencyplan->name;
+            $data[] = $object;
+        }
+        break;
+    case 'get_learning_status':
+        $data = [
+            ['name' => 'Hoàn thành', 'value' => 2],
+            ['name' => 'Chưa hoàn thành', 'value' => 1],
+        ];
         break;
     default:
         break;
