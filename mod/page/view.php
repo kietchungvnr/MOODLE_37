@@ -56,8 +56,21 @@ if($course->id == 1) {
         // Nothing to do...
     } else {
         $module = $DB->get_record('course_modules', array('id' => $id), 'visible', MUST_EXIST);
+        $moduleapproval = $DB->get_record('library_module', array('coursemoduleid' => $id), '*', MUST_EXIST);
         if($module && $module->visible == 0) {
             print_error('nopermission', 'local_newsvnr');
+        }
+        switch ($moduleapproval->approval) {
+            case 1:
+                // Nothing to do...
+                break;
+            case 0:
+                if($moduleapproval->userid != $USER->id) {
+                    print_error('nopermission', 'local_newsvnr');
+                }
+            default:
+                // Nothing to do...
+                break;
         }    
     }
 }
