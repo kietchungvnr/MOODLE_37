@@ -15,18 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * Permissions.
  *
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- * @package local_newsvnr
- * @copyright 2019 VnResource
- * @author   Le Thanh Vu
- **/
+ * @package    filter_shortcodes
+ * @copyright  2018 Frédéric Massart
+ * @author     Frédéric Massart <fred@branchup.tech>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 defined('MOODLE_INTERNAL') || die();
-$plugin->release   = '1.1.18';
-$plugin->maturity = MATURITY_STABLE;
-$plugin->version   = 2019032719;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2015111602;        // Requires this Moodle version.
-$plugin->component = 'local_newsvnr'; // Full name of the plugin (used for diagnostics).
+
+$capabilities = [
+
+    // Whether the user can view the list of shortcodes.
+    'filter/shortcodes:viewlist' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => [
+            'user' => CAP_ALLOW
+        ]
+    ],
+
+];

@@ -1,7 +1,8 @@
 <?php
 
-require_once("$CFG->libdir/externallib.php");
+use core_user;
 
+require_once("$CFG->libdir/externallib.php");
 class local_newsvnr_external extends external_api {
 
 
@@ -407,6 +408,171 @@ class local_newsvnr_external extends external_api {
      */
     public static function submit_create_orgstructure_form_returns() {
         return new external_value(PARAM_INT, 'group id');
+    }
+
+    //orgstructure modal
+    /**
+     * Describes the parameters for submit_create_group_form webservice.
+     * @return external_function_parameters
+     */
+    public static function submit_send_email_form_parameters() {
+        return new external_function_parameters(
+            array(
+                'contextid' => new external_value(PARAM_INT, 'The context id for the course'),
+                'jsonformdata' => new external_value(PARAM_RAW, 'The data from the send email form, encoded as a json array')
+            )
+        );
+    }
+ 
+    /**
+     * Submit the create group form.
+     *
+     * @param int $contextid The context id for the course.
+     * @param string $jsonformdata The data from the form, encoded as a json array.
+     * @return int new group id.
+     */
+    public static function submit_send_email_form($contextid, $jsonformdata) {
+        global $CFG, $USER, $DB, $EMAILUSER, $EMAILCOURSE;
+ 
+        require_once($CFG->dirroot . '/user/sendemail_form.php');
+        // We always must pass webservice params through validate_parameters.
+        $params = self::validate_parameters(self::submit_send_email_form_parameters(),
+                                            ['contextid' => $contextid, 'jsonformdata' => $jsonformdata]);
+ 
+        $context = context::instance_by_id($params['contextid'], MUST_EXIST);
+        // We always must call validate_context in a webservice.
+        self::validate_context($context);
+ 
+        list($ignored, $course) = get_context_info_array($context->id);
+        $serialiseddata = json_decode($params['jsonformdata']);
+        
+        $data = array();
+        parse_str($serialiseddata, $data);
+        $EMAILCOURSE = $DB->get_record('course', ['id' => $data['courseid']]);
+        $EMAILUSER = new stdClass();
+        $get_users = explode(',', $data['users']);
+        foreach($get_users as $user) {
+            $EMAILUSER->id = (int)$user;
+            $content = trim(format_text($data['content_editor']['text'], $data['content_editor']['format'], '', null));
+            $emailuser = new stdClass();
+            $emailuser->email = $DB->get_field('user', 'email', ['id' => $user]);
+            $emailuser->id = -99;
+            ob_start();
+            $supportuser = core_user::get_support_user();
+            $success = email_to_user($emailuser, $supportuser, $data['subject'], $content);
+            $smtplog = ob_get_contents();
+            ob_end_clean();
+        }
+
+        // $email_template = new stdClass();
+
+        // // The last param is the ajax submitted data.
+        // $mform = new sendemail_form(null, array('email_template' => $email_template), 'post', '', null, true, $data);
+        
+        // $validateddata = $mform->get_data();
+        // if ($validateddata) {
+        //     $text = trim(format_text($validateddata->emailcontent_editor['text'], $validateddata->emailcontent_editor['format'], '', null));
+        //     $emailuser = new stdClass();
+        //     $emailuser->email = 'thang.nguyen@vnresource.org';
+        //     $emailuser->id = -99;
+        //     ob_start();
+        //     $success = email_to_user($emailuser, $USER, $validateddata->emailsubject, $text);
+        //     $smtplog = ob_get_contents();
+        //     ob_end_clean();
+        //     if($success) {
+        //         $rs = "OK";
+        //     }
+        // } else {
+        //     // Generate a warning.
+        //     throw new moodle_exception('erroreditgroup', 'group');
+        // }
+
+        return 'OK';
+    }
+
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_description
+     * @since Moodle 3.0
+     */
+    public static function submit_send_email_form_returns() {
+        return new external_value(PARAM_RAW, 'group id');
+    }
+
+    public static function submit_create_email_template_form_parameters() {
+        return new external_function_parameters(
+            array(
+                'contextid' => new external_value(PARAM_INT, 'The context id for the course'),
+                'jsonformdata' => new external_value(PARAM_RAW, 'The data from the send email form, encoded as a json array')
+            )
+        );
+    }
+ 
+    /**
+     * Submit the create group form.
+     *
+     * @param int $contextid The context id for the course.
+     * @param string $jsonformdata The data from the form, encoded as a json array.
+     * @return int new group id.
+     */
+    public static function submit_create_email_template_form($contextid, $jsonformdata) {
+        global $CFG, $USER, $DB;
+ 
+        require_once($CFG->dirroot . '/user/sendemail_form.php');
+        
+        // We always must pass webservice params through validate_parameters.
+        $params = self::validate_parameters(self::submit_create_email_template_form_parameters(),
+                                            ['contextid' => $contextid, 'jsonformdata' => $jsonformdata]);
+ 
+        $context = context::instance_by_id($params['contextid'], MUST_EXIST);
+ 
+        // We always must call validate_context in a webservice.
+        self::validate_context($context);
+ 
+        list($ignored, $course) = get_context_info_array($context->id);
+        $serialiseddata = json_decode($params['jsonformdata']);
+ 
+        $data = array();
+
+        parse_str($serialiseddata, $data);
+ 
+        $warnings = array();
+        $result = '';
+        $email_template = new stdClass();
+
+        // The last param is the ajax submitted data.
+        $mform = new sendemail_form(null, array('email_template' => $email_template), 'post', '', null, true, $data);
+        
+        $getform = $mform->get_data();
+        if ($getform) {
+            $obj = new stdClass;
+            $obj->id = $getform->id;
+            $obj->subject = $getform->subject;
+            $obj->subjectformat = '1';
+            $obj->content = $getform->content_editor['text'];
+            $obj->contentformat = $getform->content_editor['format'];
+            $obj->timemodified = time();
+            $obj->usermodified = $USER->id;
+            $update = $DB->update_record('email_template', $obj);
+            if($update) {
+                $result = get_string('edit_success', 'local_newsvnr');
+            }
+        } else {
+            // Generate a warning.
+            throw new moodle_exception('erroreditgroup', 'group');
+        }
+        return $result;
+    }
+
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_description
+     * @since Moodle 3.0
+     */
+    public static function submit_create_email_template_form_returns() {
+        return new external_value(PARAM_RAW, 'response info');
     }
     
 }
