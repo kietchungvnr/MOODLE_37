@@ -34,89 +34,89 @@ $action = optional_param('action', '', PARAM_RAW);
 $data   = array();
 switch ($action) {
     case 'get_userstatus':
-    	$data = [
-    				['name' => 'Tài khoản bị đình chỉ','value' => 1],
-    				['name' => 'Tài khoản bình thường','value' => 0]
-    			];
+        $data = [
+            ['name' => 'Tài khoản bị đình chỉ', 'value' => 1],
+            ['name' => 'Tài khoản bình thường', 'value' => 0],
+        ];
 
         break;
     case 'get_orgstructure_category':
-    	$categorys = $DB->get_records('orgstructure_category',['visible' => 1]);
-    	foreach ($categorys as $category) {
-    		$object = new stdClass();
-    		$object->name = $category->name;
-    		$object->categoryid = $category->id;
-    		$data[] = $object;
-    	}
+        $categorys = $DB->get_records('orgstructure_category', ['visible' => 1]);
+        foreach ($categorys as $category) {
+            $object             = new stdClass();
+            $object->name       = $category->name;
+            $object->categoryid = $category->id;
+            $data[]             = $object;
+        }
         break;
     case 'get_orgstructure';
-    	$orgs = $DB->get_records('orgstructure',['visible' => 1]);
-    	foreach ($orgs as $org) {
-    		$object = new stdClass();
-    		$object->name = $org->name;
-    		$object->categoryid = $org->orgstructuretypeid;
-    		$object->orgid = $org->id;
-    		$data[] = $object;
-    	}
+        $orgs = $DB->get_records('orgstructure', ['visible' => 1]);
+        foreach ($orgs as $org) {
+            $object             = new stdClass();
+            $object->name       = $org->name;
+            $object->categoryid = $org->orgstructuretypeid;
+            $object->orgid      = $org->id;
+            $data[]             = $object;
+        }
         break;
     case 'get_orgstructure_jobtitle';
-    	$jobtitles = $DB->get_records('orgstructure_jobtitle',['visible' => 1]);
-    	foreach ($jobtitles as $jobtitle) {
-    		$object = new stdClass();
-    		$object->name = $jobtitle->name;
-    		$object->jobtitleid = $jobtitle->id;
-    		$data[] = $object;
-    	}
+        $jobtitles = $DB->get_records('orgstructure_jobtitle', ['visible' => 1]);
+        foreach ($jobtitles as $jobtitle) {
+            $object             = new stdClass();
+            $object->name       = $jobtitle->name;
+            $object->jobtitleid = $jobtitle->id;
+            $data[]             = $object;
+        }
         break;
     case 'get_orgstructure_position';
-    	$positions = $DB->get_records('orgstructure_position',['visible' => 1]);
-    	foreach ($positions as $position) {
-    		$object = new stdClass();
-    		$object->name = $position->name;
-    		$object->jobtitleid = $position->jobtitleid;
-    		$object->positionid = $position->id;
-    		$data[] = $object;
-    	}
+        $positions = $DB->get_records('orgstructure_position', ['visible' => 1]);
+        foreach ($positions as $position) {
+            $object             = new stdClass();
+            $object->name       = $position->name;
+            $object->jobtitleid = $position->jobtitleid;
+            $object->positionid = $position->id;
+            $data[]             = $object;
+        }
         break;
     case 'get_system_role';
         $data = [
-            ['name' => 'Người quản lý','value' => 1],
-            ['name' => 'Giáo viên biên soạn','value' => 3],
-            ['name' => 'supervisor','value' => 11]
+            ['name' => 'Người quản lý', 'value' => 1],
+            ['name' => 'Giáo viên biên soạn', 'value' => 3],
+            ['name' => 'supervisor', 'value' => 11],
         ];
         break;
     case 'get_course_role';
         $data = [
-            ['name' => 'Học viên','value' => 5],
-            ['name' => 'Giáo viên','value' => 3],
-            ['name' => 'Người quản lý','value' => 1]
+            ['name' => 'Học viên', 'value' => 5],
+            ['name' => 'Giáo viên', 'value' => 3],
+            ['name' => 'Người quản lý', 'value' => 1],
         ];
         break;
     case 'get_course';
-        $courses = $DB->get_records('course',['visible' => 1]);
+        $courses = $DB->get_records('course', ['visible' => 1]);
         foreach ($courses as $course) {
-            $object = new stdClass();
+            $object       = new stdClass();
             $object->name = $course->fullname;
-            $object->id = $course->id;
-            $data[] = $object;
+            $object->id   = $course->id;
+            $data[]       = $object;
         }
         break;
     case 'get_competency':
         $competencys = $DB->get_records('competency');
         foreach ($competencys as $competency) {
-            $object = new stdClass();
-            $object->name = $competency->shortname;
+            $object        = new stdClass();
+            $object->name  = $competency->shortname;
             $object->value = $competency->id;
-            $data[] = $object;
+            $data[]        = $object;
         }
         break;
     case 'get_competencyplan':
         $competencyplans = $DB->get_records_sql('select DISTINCT name from mdl_competency_plan');
         foreach ($competencyplans as $competencyplan) {
-            $object = new stdClass();
-            $object->name = $competencyplan->name;
+            $object        = new stdClass();
+            $object->name  = $competencyplan->name;
             $object->value = $competencyplan->name;
-            $data[] = $object;
+            $data[]        = $object;
         }
         break;
     case 'get_learning_status':
@@ -124,6 +124,22 @@ switch ($action) {
             ['name' => 'Hoàn thành', 'value' => 2],
             ['name' => 'Chưa hoàn thành', 'value' => 1],
         ];
+        break;
+    case 'get_report':
+        $data = [
+            ['name' => 'Báo cáo tiến độ học tập', 'value' => 'learning'],
+            ['name' => 'Báo cáo kế hoạch đào tạo', 'value' => 'trainingplan'],
+            ['name' => 'Báo cáo hồ sơ năng lực', 'value' => 'competency'],
+        ];
+        break;
+    case 'get_route':
+        $routes = $DB->get_records('competency_template', ['visible' => 1]);
+        foreach ($routes as $route) {
+            $object        = new stdClass();
+            $object->name  = $route->shortname;
+            $object->value = $route->id;
+            $data[]        = $object;
+        }
         break;
     default:
         break;

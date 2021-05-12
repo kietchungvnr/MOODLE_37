@@ -1,31 +1,28 @@
 define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'alertjs', 'core/str', 'kendo.all.min', 'local_newsvnr/initkendocontrolservices'], function($, Config, Validatefm, kendo, alertify, Str, kendoControl, kendoService) {
     "use strict";
-    let gridName = '#competency_report';
+    let gridName = '#trainingplan_report';
     let kendoConfig = {};
-    let kendoscript = Config.wwwroot + '/local/newsvnr/report/ajax/competency_report.php';
+    let kendoscript = Config.wwwroot + '/local/newsvnr/report/ajax/trainingplan_report.php';
     var kendoDropdown = function() {
         var datascript = "/local/newsvnr/report/ajax/report_data.php?action=";
         //dropdown trạng thái người dùng
-        var kendoConfig = {};
-            kendoConfig.apiSettings = { url: datascript + 'get_competency'};
-            kendoConfig.value = 'value';
-            kendoConfig.optionLabel = "Chọn năng lực";
-        var kendoUserStatus = kendoService.initDropDownList(kendoConfig);
-        $("#competency").kendoDropDownList(kendoUserStatus);
-        //dropdown trạng thái người dùng
-        var kendoConfig = {};
-            kendoConfig.apiSettings = { url: datascript + 'get_competencyplan'};
-            kendoConfig.value = 'value';
-            kendoConfig.optionLabel = "Chọn kế hoạch";
-        var kendoUserStatus = kendoService.initDropDownList(kendoConfig);
-        $("#competencyplan").kendoDropDownList(kendoUserStatus);
-        //dropdown trạng thái người dùng
-        var kendoConfig = {};
-            kendoConfig.apiSettings = { url: datascript + 'get_course'};
-            kendoConfig.value = 'value';
-            kendoConfig.optionLabel = "Chọn khóa học";
-        var kendoUserStatus = kendoService.initDropDownList(kendoConfig);
-        $("#course").kendoDropDownList(kendoUserStatus);
+        $("#start_timeaccess").kendoDatePicker({
+            change: onChange
+        });
+        function onChange() {
+            $('#end_timeaccess').val('');
+            var date =  $("#start_timeaccess").val().split('/');
+            if(date.length > 1) {
+                var datepicker = $("#end_timeaccess").data("kendoDatePicker");
+                var year = parseInt(date[2]);
+                var month = parseInt(date[0]);
+                var day = parseInt(date[1]);
+                datepicker.setOptions({
+                    min: new Date(year,month-1,day+1)
+                });
+            }
+        }
+        $("#end_timeaccess").kendoDatePicker();
         //dropdown loại phòng ban
         var kendoConfig = {};
             kendoConfig.apiSettings = { url: datascript + 'get_orgstructure_category'};
@@ -56,6 +53,20 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             kendoConfig.cascadeFrom = 'orgstructure_jobtitle';
         var kendoOrgPosition = kendoService.initDropDownList(kendoConfig);
         $("#orgstructure_position").kendoDropDownList(kendoOrgPosition);
+        //dropdown trạng thái
+        var kendoConfig = {};
+            kendoConfig.apiSettings = { url: datascript + 'get_learning_status'};
+            kendoConfig.value = 'value';
+            kendoConfig.optionLabel = "Chọn";
+        var kendoStatus = kendoService.initDropDownList(kendoConfig);
+        $("#status").kendoDropDownList(kendoStatus);
+        //dropdown lộ trình
+        var kendoConfig = {};
+            kendoConfig.apiSettings = { url: datascript + 'get_route'};
+            kendoConfig.value = 'value';
+            kendoConfig.optionLabel = "Chọn";
+        var kendoRoute = kendoService.initDropDownList(kendoConfig);
+        $("#route").kendoDropDownList(kendoRoute);
         //dropdown loại báo cáo
         var kendoConfig = {};
             kendoConfig.apiSettings = { url: datascript + 'get_report'};
@@ -63,7 +74,22 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             kendoConfig.optionLabel = "Chọn báo cáo";
         var kendoReport = kendoService.initDropDownList(kendoConfig);
         $("#report").kendoDropDownList(kendoReport);
-    }   
+
+        $("#start_process").kendoNumericTextBox({
+            format: "p0",
+            factor: 100,
+            min: 0,
+            max: 1,
+            step: 0.01, 
+        });
+        $("#end_process").kendoNumericTextBox({
+            format: "p0",
+            factor: 100,
+            min: 0,
+            max: 1,
+            step: 0.01, 
+        });
+    }
     var initGrid = function(data) {
         var settings = {            
             url: kendoscript,
@@ -82,29 +108,14 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                 width: "100px"
             },
             {
-                field: "competencyname",
-                title: "Năng lực",
-                width: "100px"
+                field: "routename",
+                title: "Lộ trình hiện tại",
+                width: "120px"
             },
             {
-                template:function(e) {
-                    return e.activity;
-                },
-                field: "activity",
-                title: "Hoạt động",
-                width: "100px"
-            },
-            {
-                template:function(e) {
-                    return e.coursename;
-                },
-                field: "coursename",
-                title: "Khóa học",
-                width: "130px"
-            },
-            {
-                field: "planname",
-                title: "Kế hoạch học tập",
+                template:"<div class='d-flex participants-collum'><div class='progress course'><div class='progress-bar' role='progressbar' aria-valuenow='#: process #' aria-valuemin='0' aria-valuemax='100' style='width:#: process #%'></div></div><div></div></div></div>",
+                field: "process",
+                title: "Trạng thái",
                 width: "100px"
             },
             {
@@ -113,22 +124,17 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                 },
                 field: "status",
                 title: "Trạng thái",
-                width: "90px"
+                width: "100px"
             },
             {
                 field: "timecompleted",
                 title: "Ngày hoàn thành",
-                width: "80px"
-            },
-            {
-                field: "reviewer",
-                title: "Người đánh giá",
-                width: "100px"
+                width: "70px"
             }
         ];
         var toolbar = ["excel"]
         var excel = { 
-            fileName: "competency_report.xlsx",
+            fileName: "learning_report.xlsx",
             allPages: true
         }
         kendoConfig.toolbar = toolbar;
@@ -141,13 +147,16 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         }
         $(gridName).kendoGrid(gridData);
     }
-    var gridSearchAccount = function(username,competency,competencyplan,course) {
+    var gridSearchAccount = function(username,route,datestart,dateend,status,startprocess,endprocess) {
         var data = {
             action:'searchaccount',
             username:username,
-            competency:competency,
-            competencyplan:competencyplan,
-            course:course
+            route:route,
+            datestart:datestart,
+            dateend:dateend,
+            status:status,
+            startprocess:startprocess,
+            endprocess:endprocess
         }
         initGrid(data);
     }
@@ -169,10 +178,15 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         })
         $('#searchaccount').click(function() {
             var username = $('#username').val();
-            var competency = $('#competency').val();
-            var competencyplan = $('#competencyplan').val();
-            var course = $('#course').val();;
-            gridSearchAccount(username,competency,competencyplan,course);
+            var route = $('#route').val();;
+            var datestartpicker = $("#start_timeaccess").val();
+            var datestart = parseInt((new Date(datestartpicker).getTime() / 1000).toFixed(0));
+            var dateendpicker = $("#end_timeaccess").val();
+            var dateend = parseInt((new Date(dateendpicker).getTime() / 1000).toFixed(0));
+            var status = $('#status').val();
+            var startprocess = $('#start_process').val();
+            var endprocess = $('#end_process').val();
+            gridSearchAccount(username,route,datestart,dateend,status,startprocess,endprocess);
         })
         $('#resettable').click(function() {
             initGrid();

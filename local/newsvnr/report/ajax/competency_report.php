@@ -72,17 +72,17 @@ $sql = "SELECT *, (SELECT COUNT(*) FROM mdl_competency cm
 					JOIN mdl_competency_usercompcourse cmu on cmu.competencyid = cm.id
 					JOIN mdl_course c on c.id = cmu.courseid
 					JOIN mdl_user us on us.id = cmu.userid
-					LEFT JOIN mdl_competency_usercompplan cmus on cmus.competencyid = cm.id and cmus.userid = us.id
-					left join mdl_competency_plan cmp on cmp.id = cmus.planid
+                    LEFT JOIN mdl_competency_usercompplan cmus on cmus.competencyid = cm.id and cmus.userid = us.id
+					LEFT JOIN mdl_competency_plan cmp on cmp.id = cmus.planid
 					LEFT JOIN mdl_competency_usercomp cmmu on cmmu.userid = us.id AND cmmu.competencyid = cm.id $wheresql) AS total
 						FROM (
-						    select ROW_NUMBER() OVER (ORDER BY cm.id) AS RowNum,us.orgpositionid,us.id as userid,c.id as courseid,cm.id,CONCAT(us.firstname,' ',us.lastname) as name,cm.shortname,c.fullname,cmmu.grade,cmp.name as planname,cmp.reviewerid,cmp.duedate
+						    select ROW_NUMBER() OVER (ORDER BY cm.id) AS RowNum,us.orgpositionid,us.id as userid,c.id as courseid,cm.id,CONCAT(us.firstname,' ',us.lastname) as name,cm.shortname,c.fullname,cmmu.proficiency,cmmu.timemodified,cmp.name as planname,cmp.reviewerid,cmp.duedate
 						    FROM mdl_competency cm
 					JOIN mdl_competency_usercompcourse cmu on cmu.competencyid = cm.id
 					JOIN mdl_course c on c.id = cmu.courseid
 					JOIN mdl_user us on us.id = cmu.userid
-					LEFT JOIN mdl_competency_usercompplan cmus on cmus.competencyid = cm.id and cmus.userid = us.id
-					left join mdl_competency_plan cmp on cmp.id = cmus.planid
+                    LEFT JOIN mdl_competency_usercompplan cmus on cmus.competencyid = cm.id and cmus.userid = us.id
+					LEFT JOIN mdl_competency_plan cmp on cmp.id = cmus.planid
 					LEFT JOIN mdl_competency_usercomp cmmu on cmmu.userid = us.id AND cmmu.competencyid = cm.id $wheresql
 						) AS Mydata
 						ORDER BY $ordersql";
@@ -116,7 +116,8 @@ foreach ($get_list as $value) {
     $object->activity       = ($activity) ? $activity : '-';
     $object->duedate        = '-';
     $object->planname       = ($value->planname) ? $value->planname : "-";
-    $object->status         = ($value->grade == 2) ? "<span class='badge text-white teacher-bg-3 font-weight-bold rounded p-2'>Hoàn thành</span>" : "<span class='badge text-white teacher-bg-2 font-weight-bold rounded p-2'>Chưa hoàn thành</span>";
+    $object->status         = ($value->proficiency == 1) ? "<span class='badge text-white teacher-bg-3 font-weight-bold rounded p-2'>Hoàn thành</span>" : "<span class='badge text-white teacher-bg-2 font-weight-bold rounded p-2'>Chưa hoàn thành</span>";
+    $object->timecompleted  = ($value->proficiency == 1) ? convertunixtime('d/m/Y', $value->timemodified, 'Asia/Ho_Chi_Minh') : '-';
     $object->total          = $value->total;
     $data[]                 = $object;
 }

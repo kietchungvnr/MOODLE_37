@@ -74,6 +74,10 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('local_newsvnr/learning_report', $data);
     }
+    public function render_trainingplan_report_page(trainingplan_report_page $page) {
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('local_newsvnr/trainingplan_report', $data);
+    }
     public function render_exam_page(exam_page $page) {
         $data = $page->export_for_template($this);
         return parent::render_from_template('local_newsvnr/exam', $data);
