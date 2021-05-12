@@ -225,7 +225,6 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             userstatus:userstatus,
             notaccess:notaccess,
             notmodify:notmodify,
-            notcourse:notcourse
         }
         initGrid(data);
     }
@@ -260,8 +259,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             var userstatus = $('#userstatus').val();;
             var notaccess = $('#isnotaccess').is(':checked');
             var notmodify = $('#isnotmodify').is(':checked');
-            var notcourse = $('#isnothascourse').is(':checked');
-            gridSearchAccount(username,useremail,usercode,userstatus,notaccess,notmodify,notcourse);
+            gridSearchAccount(username,useremail,usercode,userstatus,notaccess,notmodify);
         })
         $('#searchorgs').click(function() {
             var orgstructureid = $('#orgstructure').val();
