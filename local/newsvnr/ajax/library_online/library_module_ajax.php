@@ -44,8 +44,12 @@ $start           = $perPage->getStart($page);
 $data            = [];
 $modulebyfolder  = [];
 $output          = '';
+$excelsql        = '';
 $allowmodule     = ['book', 'lesson', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt'];
 $odersql         = "GROUP BY lm.id,lm.coursemoduleid,lm.moduletype,lm.minetype,lm.filesize,cm.id,lm.timecreated,CONCAT(rs.name,b.name,l.name,i.name,pa.name,ur.name,wk.name),cm.visible,CONCAT(u.firstname,' ', u.lastname),cm.instance ";
+if ($modulefilter == 'excel') {
+    $excelsql = "OR lm.minetype LIKE N'%spreadsheetml%'";
+}
 if (is_siteadmin()) {
     $condition = "WHERE cm.deletioninprogress = 0 AND ";
 } else {
@@ -79,6 +83,7 @@ switch ($action) {
 $sql = "SELECT DISTINCT lm.id,lm.coursemoduleid,lm.moduletype,lm.minetype,lm.filesize,cm.id as cmid,COUNT(lsl.id) as viewed,lm.timecreated,CONCAT(rs.name,b.name,l.name,i.name,pa.name,ur.name,wk.name) AS name,cm.visible,CONCAT(u.firstname,' ', u.lastname) as fullnamet,cm.instance
             FROM {library_module} lm
                 JOIN {course_modules} cm on cm.id = lm.coursemoduleid
+                JOIN {modules} m on m.id = cm.module
                 LEFT JOIN {resource} rs on cm.instance = rs.id AND rs.course = 1
                 LEFT JOIN {book} b on cm.instance = b.id AND b.course = 1
                 LEFT JOIN {book_chapters} bc on bc.bookid = b.id
@@ -91,15 +96,15 @@ $sql = "SELECT DISTINCT lm.id,lm.coursemoduleid,lm.moduletype,lm.minetype,lm.fil
                 JOIN {user} u on u.id = lm.userid
                 JOIN {library_folder} lf on lf.id = lm.folderid
                 LEFT JOIN mdl_logstore_standard_log lsl ON lsl.contextinstanceid = cm.id AND lsl.courseid  = cm.course AND lsl.action = 'viewed' and lsl.target = 'course_module' and lsl.courseid = 1
-            $condition $searchsql AND lm.approval = 1 AND (lm.moduletype LIKE $strmodulefilter OR lm.minetype LIKE $strmodulefilter)";
+            $condition $searchsql AND lm.approval = 1 AND (lm.moduletype LIKE $strmodulefilter OR lm.minetype LIKE $strmodulefilter $excelsql)";
 
 if ($folderid == 0) {
     $modulebyfolder = $DB->get_records_sql("$sql $odersql");
-    $newsql         = str_replace("COUNT(lsl.id) as viewed,","","$sql");
+    $newsql         = str_replace("COUNT(lsl.id) as viewed,", "", "$sql");
     $countall       = $DB->get_records_sql("$newsql");
 } else {
     $modulebyfolder = $DB->get_records_sql("$sql AND lm.folderid =:folderid $odersql", ['folderid' => $folderid]);
-    $newsql         = str_replace("COUNT(lsl.id) as viewed,","","$sql");
+    $newsql         = str_replace("COUNT(lsl.id) as viewed,", "", "$sql");
     $countall       = $DB->get_records_sql("$newsql AND lm.folderid =:folderid", ['folderid' => $folderid]);
 }
 if (!empty($modulebyfolder)) {
@@ -134,7 +139,7 @@ if (!empty($modulebyfolder)) {
         $output .= html_writer::end_tag('tr');
     }
 }
-$paginationlink     = $CFG->wwwroot . '/local/newsvnr/ajax/library_online/library_module_ajax.php?folderid=' . $folderid . '&search=' . $search . '&modulefilter=' . $modulefilter . '&action='.$action.'&page=';
+$paginationlink     = $CFG->wwwroot . '/local/newsvnr/ajax/library_online/library_module_ajax.php?folderid=' . $folderid . '&search=' . $search . '&modulefilter=' . $modulefilter . '&action=' . $action . '&page=';
 $perpageresult      = $perPage->getAllPageLinks(count($countall), $paginationlink, '#table-library');
 $pagination         = (!empty($perpageresult)) ? html_writer::tag('div', $perpageresult, ['class' => 'col-md-12 mb-2', 'id' => 'pagination', 'folderid' => $folderid, 'search' => $search, 'modulefilter' => $modulefilter]) : html_writer::tag('div', '', ['class' => 'col-md-12 mb-2', 'id' => 'pagination', 'folderid' => $folderid, 'search' => $search, 'modulefilter' => $modulefilter]);
 $alert              = (empty($countall)) ? html_writer::tag('div', get_string('nomodule', 'local_newsvnr'), ['class' => 'alert-warning', 'role' => 'alert']) : '';

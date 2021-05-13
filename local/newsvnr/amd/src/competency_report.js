@@ -180,14 +180,6 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         $('#exporttable').click(function() {
             $('.k-grid-excel').click();
         })
-        $('#changereport').click(function() {
-            var report = $('#report').val();
-            if(report) {
-                location.replace(Config.wwwroot + '/local/newsvnr/report/' + report + '.php');
-            } else {
-                alertify.alert('Thông báo', 'Vui lòng chọn báo cáo!');
-            }
-        })
     }
     return {
         init:init,
