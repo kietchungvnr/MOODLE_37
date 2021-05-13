@@ -1,8 +1,7 @@
 <?php
 
-use core_user;
-
 require_once("$CFG->libdir/externallib.php");
+
 class local_newsvnr_external extends external_api {
 
 
@@ -458,36 +457,13 @@ class local_newsvnr_external extends external_api {
             $emailuser->email = $DB->get_field('user', 'email', ['id' => $user]);
             $emailuser->id = -99;
             ob_start();
-            $supportuser = core_user::get_support_user();
+            $supportuser = \core_user::get_support_user();
             $success = email_to_user($emailuser, $supportuser, $data['subject'], $content);
             $smtplog = ob_get_contents();
             ob_end_clean();
         }
 
-        // $email_template = new stdClass();
-
-        // // The last param is the ajax submitted data.
-        // $mform = new sendemail_form(null, array('email_template' => $email_template), 'post', '', null, true, $data);
-        
-        // $validateddata = $mform->get_data();
-        // if ($validateddata) {
-        //     $text = trim(format_text($validateddata->emailcontent_editor['text'], $validateddata->emailcontent_editor['format'], '', null));
-        //     $emailuser = new stdClass();
-        //     $emailuser->email = 'thang.nguyen@vnresource.org';
-        //     $emailuser->id = -99;
-        //     ob_start();
-        //     $success = email_to_user($emailuser, $USER, $validateddata->emailsubject, $text);
-        //     $smtplog = ob_get_contents();
-        //     ob_end_clean();
-        //     if($success) {
-        //         $rs = "OK";
-        //     }
-        // } else {
-        //     // Generate a warning.
-        //     throw new moodle_exception('erroreditgroup', 'group');
-        // }
-
-        return 'OK';
+        return 'success';
     }
 
     /**

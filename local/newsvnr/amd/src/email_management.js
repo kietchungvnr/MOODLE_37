@@ -1,149 +1,129 @@
-define(['jquery', 'core/config', 'local_newsvnr/initkendoexam', 'alertjs', 'core/str', 'core/modal_factory', 'core/modal_events', 'core/fragment', 'core/ajax', 'core/yui', 'kendo.all.min'], 
-	function($, Config, kendo, alertify, Str, ModalFactory, ModalEvents, Fragment, Ajax, Y, kendoControl) {
+define(['jquery', 'core/config', 'local_newsvnr/initkendoexam', 'alertjs', 'core/str', 'core/modal_factory', 'core/modal_events', 'core/notification', 'core/fragment', 'core/ajax', 'core/yui', 'kendo.all.min'], 
+	function($, Config, kendo, alertify, Str, ModalFactory, ModalEvents, Notification, Fragment, Ajax, Y, kendoControl) {
     "use strict";
     var gridEmailManagement = $('#email_management_grid');
     var script = Config.wwwroot + '/local/newsvnr/ajax/email/emailmanagement.php';
     var action = '';
     var kendoConfig = {};
   	
-  		var Template = function(dataItem) {
-	        Template.prototype.init(dataItem);
-	    };
+	var Template = function(dataItem) {
+        Template.prototype.init(dataItem);
+    };
 
-	    /**
-	     * @var {Modal} modal
-	     * @private
-	     */
-	    Template.prototype.modal = null;
+    /**
+     * @var {Modal} modal
+     * @private
+     */
+    Template.prototype.modal = null;
 
-	    /**
-	     * @var {int} contextid
-	     * @private
-	     */
-	    Template.prototype.contextid = 1;
+    /**
+     * @var {int} contextid
+     * @private
+     */
+    Template.prototype.contextid = 1;
 
-	    /**
-	     * Initialise the class.
-	     *
-	     * @param {String} selector used to find triggers for the new group modal.
-	     * @private
-	     * @return {Promise}
-	     */
-	    Template.prototype.init = function(dataItem) {
-	        // Fetch the title string.
-	        return Str.get_string('emailcontentconfig', 'local_newsvnr').then(function(title) {
-	            // Create the modal.
-	            return ModalFactory.create({
-	                type: ModalFactory.types.SAVE_CANCEL,
-	                title: title,
-	                body: this.getBody({templateid: dataItem.id})
-	            });
-	        }.bind(this)).then(function(modal) {
-	            // Keep a reference to the modal.
-	            this.modal = modal;
+    /**
+     * Cấu hình email content 
+     * 
+     * @param  {[Object]} dataItem [description]
+     * @return {[Object]} modal [description]
+     */
+    Template.prototype.init = function(dataItem) {
+        // Fetch the title string.
+        return Str.get_string('emailcontentconfig', 'local_newsvnr').then(function(title) {
+            // Create the modal.
+            return ModalFactory.create({
+                type: ModalFactory.types.SAVE_CANCEL,
+                title: title,
+                body: this.getBody({templateid: dataItem.id})
+            });
+        }.bind(this)).then(function(modal) {
+            // Keep a reference to the modal.
+            this.modal = modal;
 
-	            // Forms are big, we want a big modal.
-	            this.modal.setLarge();
+            // Forms are big, we want a big modal.
+            this.modal.setLarge();
 
-	            // We want to reset the form every time it is opened.
-	            this.modal.getRoot().on(ModalEvents.hidden, function() {
-	                this.modal.destroy();
-	            }.bind(this));
+            // We want to reset the form every time it is opened.
+            this.modal.getRoot().on(ModalEvents.hidden, function() {
+                this.modal.destroy();
+            }.bind(this));
 
-	            // We want to hide the submit buttons every time it is opened.
-	            this.modal.getRoot().on(ModalEvents.shown, function() {
-	                this.modal.getRoot().append('<style>[data-fieldtype=submit] { display: none ! important; }</style>');
-	            }.bind(this));
+            // We want to hide the submit buttons every time it is opened.
+            this.modal.getRoot().on(ModalEvents.shown, function() {
+                this.modal.getRoot().append('<style>[data-fieldtype=submit] { display: none ! important; }</style>');
+            }.bind(this));
 
 
-	            // We catch the modal save event, and use it to submit the form inside the modal.
-	            // Triggering a form submission will give JS validation scripts a chance to check for errors.
-	            this.modal.getRoot().on(ModalEvents.save, this.submitForm.bind(this));
-	            // We also catch the form submit event and use it to submit the form with ajax.
-	            this.modal.getRoot().on('submit', 'form', this.submitFormAjax.bind(this));
-	            kendoControl.ui.progress($('body'), false);
-	            this.modal.show();
-	            return this.modal;
-	        }.bind(this));
-	    };
-
-	    /**
-	     * @method getBody
-	     * @private
-	     * @return {Promise}
-	     */
-	    Template.prototype.getBody = function(formdata) {
-            debugger
-	        if (typeof formdata === "undefined") {
-	            formdata = {};
-            }
-	        // Get the content of the modal.
-            var params = {jsonformdata: JSON.stringify(formdata)};
+            // We catch the modal save event, and use it to submit the form inside the modal.
+            // Triggering a form submission will give JS validation scripts a chance to check for errors.
+            this.modal.getRoot().on(ModalEvents.save, this.submitForm.bind(this));
+            // We also catch the form submit event and use it to submit the form with ajax.
+            this.modal.getRoot().on('submit', 'form', this.submitFormAjax.bind(this));
             
-	        return Fragment.loadFragment('local_newsvnr', 'create_email_template_form', this.contextid, params);
-	    };
+            this.modal.show();
 
-	    /**
-	     * @method handleFormSubmissionResponse
-	     * @private
-	     * @return {Promise}
-	     */
-	    Template.prototype.handleFormSubmissionResponse = function() {
-	        this.modal.hide();
-	        // We could trigger an event instead.
-	        // Yuk.
-	        Y.use('moodle-core-formchangechecker', function() {
-	            M.core_formchangechecker.reset_form_dirty_state();
-	        });
-	       
-	    };
+            return this.modal;
+        }.bind(this));
+    };
 
-	    /**
-	     * @method handleFormSubmissionFailure
-	     * @private
-	     * @return {Promise}
-	     */
-	    Template.prototype.handleFormSubmissionFailure = function(data) {
-	        // Oh noes! Epic fail :(
-	        // Ah wait - this is normal. We need to re-display the form with errors!
-	        this.modal.setBody(this.getBody(data));
-	    };
+    /**
+     * @method getBody
+     * @private
+     * @return {Promise}
+     */
+    Template.prototype.getBody = function(formdata) {
+        if (typeof formdata === "undefined") {
+            formdata = {};
+        }
+        // Get the content of the modal.
+        var params = {jsonformdata: JSON.stringify(formdata)};
+        
+        return Fragment.loadFragment('local_newsvnr', 'create_email_template_form', this.contextid, params);
+    };
 
-	    /**
-	     * Private method
-	     *
-	     * @method submitFormAjax
-	     * @private
-	     * @param {Event} e Form submission event.
-	     */
-	    Template.prototype.submitFormAjax = function(e) {
-	        // We don't want to do a real form submission.
-	        e.preventDefault();
+    /**
+     * Private method
+     *
+     * @method submitFormAjax
+     * @private
+     * @param {Event} e Form submission event.
+     */
+    Template.prototype.submitFormAjax = function(e) {
+        // We don't want to do a real form submission.
+        e.preventDefault();
 
-	        // Convert all the form elements values to a serialised string.
-	        var formData = this.modal.getRoot().find('form').serialize();
-	        
+        var _this = this;
 
-	        // Now we can continue...
-	        Ajax.call([{
-	            methodname: 'local_newsvnr_submit_create_email_template_form',
-	            args: {contextid: this.contextid, jsonformdata: JSON.stringify(formData)},
-	            done: this.handleFormSubmissionResponse.bind(this, formData),
-	            fail: this.handleFormSubmissionFailure.bind(this, formData)
-	        }]);
-	    };
+        // Convert all the form elements values to a serialised string.
+        var formData = this.modal.getRoot().find('form').serialize();
+        
+        // Now we can continue...
+        Ajax.call([{
+            methodname: 'local_newsvnr_submit_create_email_template_form',
+            args: {contextid: this.contextid, jsonformdata: JSON.stringify(formData)},
+        }])[0].then(function(data) {
+        	if(data) {
+        		_this.modal.hide();
+		       	alertify.success(M.util.get_string('add_success', 'local_newsvnr'), 'success', 3);
+		       	kendoControl.ui.progress($('body'), false);
+        	} else {
+        		_this.modal.setBody(this.getBody(data));
+        	}
+        }).catch(Notification.exception);;
+    };
 
-	    /**
-	     * This triggers a form submission, so that any mform elements can do final tricks before the form submission is processed.
-	     *
-	     * @method submitForm
-	     * @param {Event} e Form submission event.
-	     * @private
-	     */
-	    Template.prototype.submitForm = function(e) {
-	        e.preventDefault();
-	        this.modal.getRoot().find('form').submit();
-	    };
+    /**
+     * This triggers a form submission, so that any mform elements can do final tricks before the form submission is processed.
+     *
+     * @method submitForm
+     * @param {Event} e Form submission event.
+     * @private
+     */
+    Template.prototype.submitForm = function(e) {
+        e.preventDefault();
+        this.modal.getRoot().find('form').submit();
+    };
 
 
     var prepareEmailTemplateForm = function(form, action) {
@@ -262,7 +242,7 @@ define(['jquery', 'core/config', 'local_newsvnr/initkendoexam', 'alertjs', 'core
         }
     }
 
-    // Tạo modal form môn thi
+    // Tạo lưới kendo của email template
     var initEmailTemplate = function() {
 
         var form = $("#form-emailtemplate"),
