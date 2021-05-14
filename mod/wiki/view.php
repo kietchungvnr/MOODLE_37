@@ -35,6 +35,7 @@ require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/wiki/lib.php');
 require_once($CFG->dirroot . '/mod/wiki/locallib.php');
 require_once($CFG->dirroot . '/mod/wiki/pagelib.php');
+require_once $CFG->dirroot . '/local/newsvnr/lib.php';
 
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID
 
@@ -284,7 +285,7 @@ if (!wiki_user_can_view($subwiki, $wiki)) {
 if (($edit != - 1) and $PAGE->user_allowed_editing()) {
     $USER->editing = $edit;
 }
-
+$PAGE->requires->js_call_amd('local_newsvnr/wiki_comment','init');
 $wikipage = new page_wiki_view($wiki, $subwiki, $cm);
 
 $wikipage->set_gid($currentgroup);
@@ -304,8 +305,11 @@ if ($pageid) {
     );
     wiki_page_view($wiki, $page, $course, $cm, $context, $uid, $other, $subwiki);
 }
-
+$comment = new stdClass();
+$wikicomment = new page_wiki_comments($wiki, $subwiki, $cm);
+$wikicomment->set_page($page);
 $wikipage->print_header();
 $wikipage->print_content();
 
+$wikicomment->print_content();
 $wikipage->print_footer();

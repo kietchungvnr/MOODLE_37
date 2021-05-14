@@ -8,7 +8,6 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
     "use strict";
 
     function iniFrame() {
-        debugger
         var gfg = window.frameElement;
         // Checking if webpage is embedded
         if (gfg) {

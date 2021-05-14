@@ -1273,7 +1273,7 @@ function wiki_get_comment($commentid){
 function wiki_get_comments($contextid, $pageid) {
     global $DB;
 
-    return $DB->get_records('comments', array('contextid' => $contextid, 'itemid' => $pageid, 'commentarea' => 'wiki_page'), 'timecreated ASC');
+    return $DB->get_records('comments', array('contextid' => $contextid, 'itemid' => $pageid, 'commentarea' => 'wiki_page'), 'timecreated DESC');
 }
 
 /**

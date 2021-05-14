@@ -607,9 +607,10 @@ class page_wiki_comments extends page_wiki {
         require_capability('mod/wiki:viewcomment', $this->modcontext, NULL, true, 'noviewcommentpermission', 'wiki');
 
         $comments = wiki_get_comments($this->modcontext->id, $page->id);
-
+        // Custom by Thắng : custom chức năng comment wiki
         if (has_capability('mod/wiki:editcomment', $this->modcontext)) {
-            echo '<div class="midpad"><a href="' . $CFG->wwwroot . '/mod/wiki/editcomments.php?action=add&amp;pageid=' . $page->id . '">' . get_string('addcomment', 'wiki') . '</a></div>';
+            // echo '<div class="midpad"><a href="' . $CFG->wwwroot . '/mod/wiki/editcomments.php?action=add&amp;pageid=' . $page->id . '">' . get_string('addcomment', 'wiki') . '</a></div>';
+            echo form_comment_wiki('Bình luận',$this->modcontext->id,$page->id,$USER->id,'add');
         }
 
         $options = array('swid' => $this->page->subwikiid, 'pageid' => $page->id);
@@ -631,6 +632,9 @@ class page_wiki_comments extends page_wiki {
 
             $t = new html_table();
             $t->id = 'wiki-comments';
+            $outputavatar = $OUTPUT->user_picture($user);
+            $outputdate = get_string('bynameondate', 'forum', $by);
+
             $cell1 = new html_table_cell($OUTPUT->user_picture($user, array('popup' => true)));
             $cell2 = new html_table_cell(get_string('bynameondate', 'forum', $by));
             $cell3 = new html_table_cell();
@@ -652,8 +656,10 @@ class page_wiki_comments extends page_wiki {
                 }
 
                 $cell4->text = format_text(html_entity_decode($parsedcontent['parsed_text'], ENT_QUOTES, 'UTF-8'), FORMAT_HTML);
+                $outputcontent = format_text(html_entity_decode($parsedcontent['parsed_text'], ENT_QUOTES, 'UTF-8'), FORMAT_HTML);
             } else {
                 $cell4->text = format_text($comment->content, FORMAT_HTML);
+                $outputcontent = format_text($comment->content, FORMAT_HTML);
             }
 
             $row2->cells[] = $cell4;
@@ -684,13 +690,36 @@ class page_wiki_comments extends page_wiki {
 
             if ($candelete || $canedit) {
                 $cell6 = new html_table_cell($editicon.$deleteicon);
+                $outputaction = $urledit.$urldelete;
                 $row3 = new html_table_row();
                 $row3->cells[] = $cell5;
                 $row3->cells[] = $cell6;
                 $t->data[] = $row3;
             }
 
-            echo html_writer::tag('div', html_writer::table($t), array('class'=>'no-overflow'));
+            // echo html_writer::tag('div', html_writer::table($t), array('class'=>'no-overflow'));
+            // echo $outputavatar.$outputcontent.$outputaction.$outputdate;
+            echo '<div class="row">
+                    <div class="col chat-panel">
+                        <div class="chat-image">
+                            ' . $outputavatar . '
+                        </div>
+                        <div class="chat-content">
+                            <div class="chat-body">
+                                <p><span class="name mr-2">'.$user->firstname.' '.$user->lastname.'</span><span class="content" commentid="'.$comment->id.'">' . $comment->content . '</span></p>
+                            </div>
+                            <div class="chat-footer d-flex">
+                                <a class="mr-2 delete_comment" href="javascript:;" commentid="'.$comment->id.'">Xóa</a>
+                                <a class="mr-2 show_edit_comment" commentid="'.$comment->id.'" href="javascript:;">Chỉnh Sửa</a>
+                                <label class="date-feedback">' . converttime($comment->timecreated) . '</label>
+                            </div>
+                            <div class="d-none edit_comment" id="'.$comment->id.'">
+                            '.form_comment_wiki('Sửa bình luận',$this->modcontext->id,$page->id,$USER->id,'edit',$comment->id).'
+                            </div>
+                        </div>
+                    </div>
+                </div>';
+            // form_comment_wiki($this->modcontext->id,$page->id,$USER->id,'add',$comment->id);
 
         }
     }
