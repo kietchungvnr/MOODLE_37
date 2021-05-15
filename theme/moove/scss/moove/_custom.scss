@@ -4949,7 +4949,7 @@ li.folder {
   margin-bottom: 5px;
   align-items: center;
 }
-button[data-target="#add-popup-modal-module"] {
+div[data-target="#add-popup-modal-module"] {
   display: none;
 }
 .overflow-auto {
@@ -5106,8 +5106,7 @@ ul.hide {
   background-color: #4285f4 !important;
 }
 .k-window-titlebar {
-  background-color: #4285f4 !important;
-  background-color: #4285f4 !important;
+  background-color: $table-color !important;
 }
 .k-button {
   &:focus {

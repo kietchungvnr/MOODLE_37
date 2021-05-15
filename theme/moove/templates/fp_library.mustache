@@ -13,20 +13,123 @@
                     </div>
                 {{/hasregionmainsettingsmenu}}
                 <section id="region-main">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            {{#reportdata}}
+                                <div class="row">
+                                    <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12">
+                                        <div class="card text-white card-dashboard-library">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between">
+                                                    <div>
+                                                        <div class="mb-2 font-weight-bold">
+                                                            {{access}}
+                                                        </div>
+                                                        <a class="cl-cursor" data-action="viewcourse">
+                                                            Lượt truy cập thư viện
+                                                        </a>
+                                                    </div>
+                                                    <div>
+                                                        <i class="fa fa-line-chart mr-3 db-icon-font-size">
+                                                        </i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12">
+                                        <div class="card text-white card-dashboard-library">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between">
+                                                    <div>
+                                                        <div class="mb-2 font-weight-bold">
+                                                            {{folder}}
+                                                        </div>
+                                                        <a class="cl-cursor" data-action="viewstudent">
+                                                            Tổng thư mục
+                                                        </a>
+                                                    </div>
+                                                    <div>
+                                                        <i class="fa fa-folder-open mr-3 db-icon-font-size"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12">
+                                        <div class="card text-white card-dashboard-library" style=";">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between">
+                                                    <div>
+                                                        <div class="mb-2 font-weight-bold">
+                                                            {{module}}
+                                                        </div>
+                                                        <a class="cl-cursor" data-action="viewmodule">
+                                                            Tổng tài liệu thư viện
+                                                        </a>
+                                                    </div>
+                                                    <div>
+                                                        <i class="fa fa-file mr-3 db-icon-font-size"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12">
+                                        <div class="card text-white card-dashboard-library">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between">
+                                                    <div>
+                                                        <div class="mb-2 font-weight-bold">
+                                                            {{moduleapproval}}
+                                                        </div>
+                                                        <a class="cl-cursor" data-action="viewexam">
+                                                            Tài liệu yêu cầu duyệt
+                                                        </a>
+                                                    </div>
+                                                    <div>
+                                                        <img src="/./theme/moove/pix/prize.svg" class="db-icon">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/reportdata}}
+                            <div class="row">
+                                <div class="col-md-6 mt-3">
+                                    <div style="margin-left: -6px;margin-right: -6px;">
+                                        <div class="title-db-library d-flex justify-content-between">
+                                            <h3>Thống kê lượt truy cập thư viện</h3>
+                                            <h3 id="last-access" style="color: white"></h3>
+                                        </div>
+                                        <hr>
+                                        <div id="access-chart"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <div style="margin-left: -6px;margin-right: -6px;">
+                                        <div class="title-db-library d-flex justify-content-between">
+                                            <h3>Danh sách yêu cầu</h3>
+                                            <div class="approvalmodule color-white cursor-pointer" style="font-size: 11px"><i class="fa fa-arrows-alt" aria-hidden="true"></i></div>
+                                        </div>
+                                        <div id="library-approval-module-db">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card">
                         <div class="card-body d-none">
                             {{{ output.main_content }}}
                         </div>
+
 		                    <div class="card-body library">
 			                    <div class="row">
 			                        <div class="col-12 col-md-3">
                                         <div class="row-card">
-                                            {{#canedit}}
-                                                <button type="button" class="btn btn-primary mb-2 approvalmodule"><i class="fa fa-check mr-2" aria-hidden="true"></i>{{#str}}approvalmodule, local_newsvnr{{/str}}</button>
-                                            {{/canedit}}
-                                            {{#canaddresource}}
-                                                <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#add-popup-modal-module"><i class="fa fa-plus mr-2" aria-hidden="true"></i>{{#str}}addresource, local_newsvnr{{/str}}</button>
-                                            {{/canaddresource}}
+                      
 				                        	<div id="folder_library">
 				                        		<div class="folder-tree-replace">
 				                       			  {{{output.library_folder_custom}}}
@@ -60,10 +163,12 @@
                                                 </div>
                                             </div>
 				                       		<div id="file_library">
-				                       			<div class="top-library">
+				                       			<div class="top-library full-flex">
 				                       				<div id="header-library">
 				                       				</div>
-	
+                                                    {{#canaddresource}}
+                                                        <div class="cursor-pointer" data-toggle="modal" data-target="#add-popup-modal-module"><i class="fa fa-plus mr-2" aria-hidden="true"></i>Đưa tài nguyên lên hệ thống</div>
+                                                    {{/canaddresource}}
 												</div>
 												<div class="overflow-auto">
 													<table class="table" >

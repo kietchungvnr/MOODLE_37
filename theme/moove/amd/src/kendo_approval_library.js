@@ -1,6 +1,8 @@
-define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertjs'], function($, Config, Str, kendo, alertify) {
+define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertjs','highcharts'], function($, Config, Str, kendo, alertify, Highcharts) {
 	var gridName = '#library-approval-module';
+	var gridNameDB = '#library-approval-module-db';
 	var kendoConfig = {};
+	var kendoConfigDB = {};
 	var script = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_approval_module.php';
     var strings = [
     	{
@@ -80,6 +82,31 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 	                width: "200px"
 				}
 			];
+			var subjectLibraryColumsDB = [
+				{
+					template:function(e) {
+						return e.name;
+					},
+	                field: "name",
+	                title: s[5],
+	                width: "200px"
+				},
+				{
+	                field: "type",
+	                title: s[0],
+	                width: "100px"
+				},
+				{
+	                field: "timecreated",
+	                title: s[2],
+	                width: "120px"
+				},
+				{
+	                field: "author",
+	                title: s[3],
+	                width: "200px"
+				}
+			];
 			kendoConfig.columns = subjectLibraryColums;
 			kendoConfig.apiSettings = settings;
 			kendoConfig.approvalModuleEvent = function(dataItem) {
@@ -94,9 +121,76 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 			}
 			var gridData = kendo.initGrid(kendoConfig);
 			$(gridName).kendoGrid(gridData);
+
+			kendoConfigDB.columns = subjectLibraryColumsDB;
+			kendoConfigDB.apiSettings = settings;
+			kendoConfigDB.selectable = false;
+			kendoConfigDB.approvalModuleEvent = function(dataItem) {
+				var grid = $(gridNameDB).data("kendoGrid");
+				alertify.notify(s[7],'success',3);
+				grid.dataSource.read();
+			}
+			kendoConfigDB.deleteModuleEvent = function(dataItem) {
+				var grid = $(gridNameDB).data("kendoGrid");
+				alertify.notify(s[6],'success',3);
+				grid.dataSource.read();
+			}
+
+			var gridDataDB = kendo.initGrid(kendoConfigDB);
+			$(gridNameDB).kendoGrid(gridDataDB);
+		})
+	}
+	var chart = function() {
+		var script = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_chart.php';
+	    var settings = {
+	        type: 'GET',
+	        dataType: 'json',
+	        processData: true,
+	        contentType: "application/json"
+	    };
+    	$.ajax(script, settings).then(function(response) {
+    		debugger
+    		$('#last-access').html(response.lastaccess);
+	        Highcharts.chart('access-chart', {
+	            chart: {
+	                type: 'line',
+	                height: 350
+	            },
+	            title: {
+	                text: ''
+	            },
+	            subtitle: {
+	                text: ''
+	            }, 
+	            xAxis: {
+	                categories: response.categories,
+	            },
+	            yAxis: {
+	                title: {
+	                    text: ''
+	                }
+	            },
+	            credits: {
+	                enabled: false
+	            },
+	            plotOptions: {
+	                line: {
+	                    dataLabels: {
+	                        enabled: true
+	                    },
+	                    enableMouseTracking: true
+	                }
+	            },
+	            series: [{
+	                name: 'Lượt truy cập thư viện',
+	                data: response.series,
+	                color: '#ef4914'
+	            }]
+	        });
 		})
 	}
 	return {
-		init : init
+		init : init,
+		chart:chart
 	}
 });

@@ -609,7 +609,7 @@ class page_wiki_comments extends page_wiki {
         $comments = wiki_get_comments($this->modcontext->id, $page->id);
         // Custom by Thắng : custom chức năng comment wiki
         if (has_capability('mod/wiki:editcomment', $this->modcontext)) {
-            // echo '<div class="midpad"><a href="' . $CFG->wwwroot . '/mod/wiki/editcomments.php?action=add&amp;pageid=' . $page->id . '">' . get_string('addcomment', 'wiki') . '</a></div>';
+            echo '<div class="midpad"><a href="' . $CFG->wwwroot . '/mod/wiki/editcomments.php?action=add&amp;pageid=' . $page->id . '">' . get_string('addcomment', 'wiki') . '</a></div>';
             echo form_comment_wiki('Bình luận',$this->modcontext->id,$page->id,$USER->id,'add');
         }
 
@@ -687,10 +687,11 @@ class page_wiki_comments extends page_wiki {
                                                                '',
                                                                array('class' => 'iconsmall')));
             }
-
+            $outputaction = '';
             if ($candelete || $canedit) {
                 $cell6 = new html_table_cell($editicon.$deleteicon);
-                $outputaction = $urledit.$urldelete;
+                $outputaction = '<a class="mr-2 delete_comment" href="javascript:;" commentid="'.$comment->id.'">Xóa</a>
+                                <a class="mr-2 show_edit_comment" commentid="'.$comment->id.'" href="javascript:;">Chỉnh Sửa</a>';
                 $row3 = new html_table_row();
                 $row3->cells[] = $cell5;
                 $row3->cells[] = $cell6;
@@ -698,7 +699,6 @@ class page_wiki_comments extends page_wiki {
             }
 
             // echo html_writer::tag('div', html_writer::table($t), array('class'=>'no-overflow'));
-            // echo $outputavatar.$outputcontent.$outputaction.$outputdate;
             echo '<div class="row">
                     <div class="col chat-panel">
                         <div class="chat-image">
@@ -709,8 +709,7 @@ class page_wiki_comments extends page_wiki {
                                 <p><span class="name mr-2">'.$user->firstname.' '.$user->lastname.'</span><span class="content" commentid="'.$comment->id.'">' . $comment->content . '</span></p>
                             </div>
                             <div class="chat-footer d-flex">
-                                <a class="mr-2 delete_comment" href="javascript:;" commentid="'.$comment->id.'">Xóa</a>
-                                <a class="mr-2 show_edit_comment" commentid="'.$comment->id.'" href="javascript:;">Chỉnh Sửa</a>
+                                '.$outputaction.'
                                 <label class="date-feedback">' . converttime($comment->timecreated) . '</label>
                             </div>
                             <div class="d-none edit_comment" id="'.$comment->id.'">
