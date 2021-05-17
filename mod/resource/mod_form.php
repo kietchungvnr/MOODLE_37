@@ -66,7 +66,7 @@ class mod_resource_mod_form extends moodleform_mod {
         $element->setAttributes($attributes);
         $filemanager_options = array();
         if($COURSE->id == 1) {
-            $filemanager_options['accepted_types'] = ['.pdf','.xls','.xlsx','.docx','.doc','.pptx','.ppt','.png','.jpg','.mp3','.mp4'];
+            $filemanager_options['accepted_types'] = ['.pdf','.xls','.xlsx','.docx','.doc','.pptx','.ppt','.png','.jpg','.mp3','.mp4','.txt'];
         } else {
             $filemanager_options['accepted_types'] = '*';
         }
