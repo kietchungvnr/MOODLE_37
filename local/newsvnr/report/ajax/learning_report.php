@@ -51,7 +51,7 @@ switch ($action) {
         $courseid  = optional_param('courseid', 0, PARAM_INT);
         $datestart = optional_param('datestart', 0, PARAM_INT);
         $dateend   = optional_param('dateend', 0, PARAM_INT);
-        $wheresql .= "AND CONCAT(u.firstname,' ',u.lastname) LIKE '%$username%'";
+        $wheresql .= "AND CONCAT(u.firstname,' ',u.lastname) LIKE N'%$username%'";
         $wheresql .= ($courseid) ? "AND c.id = $courseid" : '';
         if ($datestart != 0 && $dateend != 0) {
             $wheresql .= "AND ue.timestart > $datestart AND ue.timestart < $dateend";

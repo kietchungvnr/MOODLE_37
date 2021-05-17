@@ -1,6 +1,6 @@
 define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'alertjs', 'core/str', 'kendo.all.min', 'local_newsvnr/initkendocontrolservices'], function($, Config, Validatefm, kendo, alertify, Str, kendoControl, kendoService) {
     "use strict";
-    let gridName = '#competency_report';
+    let gridName = '#learning_report';
     let kendoConfig = {};
     let kendoscript = Config.wwwroot + '/local/newsvnr/report/ajax/learning_report.php';
     var kendoDropdown = function() {
@@ -67,6 +67,13 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             kendoConfig.optionLabel = "Chọn";
         var kendoStatus = kendoService.initDropDownList(kendoConfig);
         $("#status").kendoDropDownList(kendoStatus);
+        //dropdown loại báo cáo
+        var kendoConfig = {};
+            kendoConfig.apiSettings = { url: datascript + 'get_report'};
+            kendoConfig.value = 'value';
+            kendoConfig.optionLabel = "Chọn báo cáo";
+        var kendoReport = kendoService.initDropDownList(kendoConfig);
+        $("#report").kendoDropDownList(kendoReport);
         $("#start_process").kendoNumericTextBox({
             format: "p0",
             factor: 100,
@@ -201,6 +208,14 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         })
         $('#exporttable').click(function() {
             $('.k-grid-excel').click();
+        })
+        $('#changereport').click(function() {
+            var report = $('#report').val();
+            if(report) {
+                location.replace(Config.wwwroot + '/local/newsvnr/report/' + report + '.php');
+            } else {
+                alertify.alert('Thông báo', 'Vui lòng chọn báo cáo!');
+            }
         })
     }
     return {
