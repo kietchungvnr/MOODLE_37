@@ -2153,6 +2153,8 @@ function count_module($course,$currentsection) {
 function mimetype2Img($mimetype) {
     global $OUTPUT;
     $typeresource = mime2ext($mimetype);
+    // $typeresource = mime2ext('image/jpeg');
+    // var_dump($typeresource);die();
     if ($typeresource == 'xls' || $typeresource == 'xlsx' || $typeresource == 'xlsm') {
         $img = html_writer::img($OUTPUT->image_url('f/spreadsheet-24'),'',['class' => 'pr-1 img-module']);
     } elseif ($typeresource == 'ppt') {
@@ -2161,6 +2163,16 @@ function mimetype2Img($mimetype) {
         $img = html_writer::img($OUTPUT->image_url('f/document-24'),'',['class' => 'pr-1 img-module']);
     } elseif ($typeresource == 'pdf') {
         $img = html_writer::img($OUTPUT->image_url('f/pdf-24'),'',['class' => 'pr-1 img-module']);
+    } elseif ($typeresource == 'jpeg') {
+        $img = html_writer::img($OUTPUT->image_url('f/jpeg-24'),'',['class' => 'pr-1 img-module']);
+    } elseif ($typeresource == 'png') {
+        $img = html_writer::img($OUTPUT->image_url('f/png-24'),'',['class' => 'pr-1 img-module']);
+    } elseif ($typeresource == 'txt') {
+        $img = html_writer::img($OUTPUT->image_url('f/text-24'),'',['class' => 'pr-1 img-module']);
+    } elseif ($typeresource == 'mp4') {
+        $img = html_writer::img($OUTPUT->image_url('f/video-24'),'',['class' => 'pr-1 img-module']);
+    } elseif ($typeresource == 'mp3') {
+        $img = html_writer::img($OUTPUT->image_url('f/wav-24'),'',['class' => 'pr-1 img-module']);
     }
     else {
         $img = '';
