@@ -52,7 +52,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         })
     }
     var kendoDropdown = function() {
-        var datascript = "/local/newsvnr/report/ajax/userreport_data.php?action=";
+        var datascript = "/local/newsvnr/report/ajax/report_data.php?action=";
         //dropdown trạng thái người dùng
         var kendoConfig = {};
             kendoConfig.apiSettings = { url: datascript + 'get_userstatus'};
@@ -224,7 +224,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             usercode:usercode,
             userstatus:userstatus,
             notaccess:notaccess,
-            notmodify:notmodify,
+            notmodify:notmodify
         }
         initGrid(data);
     }
