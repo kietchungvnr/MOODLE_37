@@ -2692,6 +2692,22 @@ function get_coursecard_info($courseid) {
     }
     return $obj;
 }
+////
+function form_comment_wiki($title,$contextid,$pageid,$userid,$action,$commentid = null) {
+    $cancel = ($commentid) ? '<button type="button" action="'.$action.'" commentid="'.$commentid.'" class="mt-2 btn btn-danger cancel-comment">Hủy</button>' : '';
+    $output =   '<div class="wiki-add new-detail-comment">
+                     <div class="new-detail-comment-body">
+                        <label class="new-detail-comment-title">'.$title.'</label>
+                        <textarea commentid="'.$commentid.'" contextid="'.$contextid.'" wikipage="'.$pageid.'" userid="'.$userid.'" class="new-detail-comment-content" name="content" id="content_comment" maxlength="1000"></textarea>
+                        <div class="new-detail-comment-control">
+                            '.$cancel.'
+                           <button type="button" action="'.$action.'" class="mt-2 btn btn-submit post_comment">Gửi</button>
+                        </div>
+                     </div>
+                </div>';
+    return $output;
+
+}
 function insert_log($resp,$url) {
     global $DB,$USER;
     $apiname = $DB->get_field('local_newsvnr_api','functionapi',['url' => $url]);

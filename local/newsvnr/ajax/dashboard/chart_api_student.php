@@ -124,7 +124,7 @@ switch ($action) {
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 'homework':
-        $listhomework = $DB->get_records_sql("SELECT ROW_NUMBER() OVER (ORDER BY ass.id) AS RowNum,cm.id,ass.name,ass.duedate,cm.id as moduleid,ass.course,
+        $listhomework = $DB->get_records_sql("SELECT ROW_NUMBER() OVER (ORDER BY ass.id) AS RowNum,cm.id,ass.name,ass.duedate,cm.id as moduleid,ass.course,gg.finalgrade,
                                                 (SELECT COUNT(ass.id) FROM mdl_role_assignments AS ra
                                                     JOIN mdl_user AS u ON u.id= ra.userid
                                                     JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
@@ -134,6 +134,8 @@ switch ($action) {
                                                     JOIN mdl_role AS r ON r.id= ra.roleid
                                                     JOIN mdl_course_modules cm ON cm.course = c.id
                                                     JOIN mdl_assign ass ON ass.id = cm.instance
+                                                    LEFT JOIN mdl_grade_items gi ON gi.courseid = c.id AND gi.itemmodule = 'assign' AND gi.iteminstance = ass.id
+                                                    LEFT JOIN mdl_grade_grades gg ON gg.itemid = gi.id AND gg.userid = u.id 
                                                 WHERE ra.roleid=5 AND ue.status = 0 AND u.id =:useridcount AND c.visible = 1 AND cm.deletioninprogress = 0 AND cm.visible = 1 AND cm.module = 1) as total
                                             FROM mdl_role_assignments AS ra
                                                 JOIN mdl_user AS u ON u.id= ra.userid
@@ -144,13 +146,15 @@ switch ($action) {
                                                 JOIN mdl_role AS r ON r.id= ra.roleid
                                                 JOIN mdl_course_modules cm ON cm.course = c.id
                                                 JOIN mdl_assign ass ON ass.id = cm.instance
+                                                LEFT JOIN mdl_grade_items gi ON gi.courseid = c.id AND gi.itemmodule = 'assign' AND gi.iteminstance = ass.id
+                                                LEFT JOIN mdl_grade_grades gg ON gg.itemid = gi.id AND gg.userid = u.id 
                                             WHERE  ra.roleid=5 AND ue.status = 0 AND u.id =:userid AND c.visible = 1 AND cm.deletioninprogress = 0 AND cm.visible = 1 AND cm.module = 1
                                             ORDER BY $ordersql", ['userid' => $USER->id,'useridcount' => $USER->id]);
         foreach ($listhomework as $value) {
             $obj = new stdClass();
             $href         = $CFG->wwwroot . '/mod/assign/view.php?id=' .$value->id;
-            $obj->name    = ($value->grade) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2"><a href="'.$href.'" target="_blank">' . $value->name .'</a>': '<img src="' . $OUTPUT->image_url('icon', 'assign') . '" class="img-module mr-2"><a href="'.$href.'" target="_blank">'.$value->name .'</a>';
-            $obj->grade   = ($value->grade) ? $value->grade : '-';
+            $obj->name    = ($value->finalgrade) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2"><a href="'.$href.'" target="_blank">' . $value->name .'</a>': '<img src="' . $OUTPUT->image_url('icon', 'assign') . '" class="img-module mr-2"><a href="'.$href.'" target="_blank">'.$value->name .'</a>';
+            $obj->grade   = ($value->finalgrade) ? $value->finalgrade : '-';
             $obj->timedue = ($value->duedate) ? convertunixtime('d/m/Y', $value->duedate, 'Asia/Ho_Chi_Minh') : 'Không giới hạn';
             $obj->total   = count($listhomework);
             $data[]       = $obj;
