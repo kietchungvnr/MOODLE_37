@@ -53,7 +53,7 @@ class CourseAddUserController extends BaseController {
             'usercode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
             'fullname' => $this->v::notEmpty()->notBlank(),
             'email' => $this->v::notEmpty()->notBlank(),
-            'orgpositioncode' => $this->v::notEmpty()->notBlank(),
+            // 'orgpositioncode' => $this->v::notEmpty()->notBlank(),
             // 'password' => $this->v::notEmpty()->notBlank()->noWhitespace()
             // 'orgstructurecode' => $this->v::notEmpty()->notBlank(),
         ]);

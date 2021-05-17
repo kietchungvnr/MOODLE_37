@@ -47,6 +47,7 @@ define(['jquery', 'core/config', 'local_newsvnr/initkendoexam', 'alertjs', 'core
             // We want to reset the form every time it is opened.
             this.modal.getRoot().on(ModalEvents.hidden, function() {
                 this.modal.destroy();
+                kendoControl.ui.progress($('body'), false);
             }.bind(this));
 
             // We want to hide the submit buttons every time it is opened.

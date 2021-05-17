@@ -44,7 +44,7 @@ $PAGE->navbar->ignore_active();
 $PAGE->navbar->add($title,$baseurl);
 $PAGE->requires->js_call_amd('local_newsvnr/email_management', 'initEmailTemplate');
 $PAGE->requires->strings_for_js(
-                                array('required', 'name', 'code', 'emailtype', 'description', 'addnew', 'clear', 'templateemailconfig', 'action', 'edit', 'emailcontentconfig', 'fieldrequired'), 'local_newsvnr');
+                                array('required', 'name', 'code', 'emailtype', 'description', 'addnew', 'clear', 'templateemailconfig', 'action', 'edit', 'emailcontentconfig', 'fieldrequired', 'emptydata', 'add_success'), 'local_newsvnr');
 
 echo $OUTPUT->header();
 
