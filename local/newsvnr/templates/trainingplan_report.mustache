@@ -13,10 +13,10 @@
 		<div class="report-button" id="resettable">
 			<i class="fa fa-refresh" aria-hidden="true"></i>
 		</div>
-		<div class="report-button" data-toggle="modal" data-target="#modalreport">
+		<div class="report-button" id="dropdownreport">
 			<i class="fa fa-sign-out" aria-hidden="true"></i>
 		</div>
-	  	<div class="dropdown-menu user-report d-none" aria-labelledby="dropdownMenuButton" style="top: 92px;">
+	  	<div class="dropdown-menu trainingplan-report report d-none" aria-labelledby="dropdownMenuButton" style="top: 92px;">
 	        <ul class="nav-tabs nav multi-tab" tab="searchuser" style="padding: 0 25px;">
 	            <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="account">Thông tin tìm kiếm</a></li>
 	            <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="department">Phòng ban</a></li>
@@ -43,17 +43,6 @@
 							    </div>
 							</div>
 						</div>
-{{! 						<div class="form-group col-md-6">
-							<label >Điểm số</label>
-							<div class="row">
-								<div class="col-md-6">
-							    	<input placeholder="Thang điểm" class="form-control mt-1" id="start_timeaccess">
-							    </div>
-							    <div class="col-md-6">
-							    	<input placeholder="Điểm" class="form-control mt-1" id="end_timeaccess">
-							    </div>
-							</div>
-						</div> }}
 						<div class="form-group col-md-6">
 							<label >Tiến độ học</label>
 							<div class="row">
@@ -99,31 +88,35 @@
 	            </div>
 	        </div>
 	  	</div>
+	  	<div class="dropdown-menu report change-report d-none" style="width: 400px;padding: 0.5rem;">
+	  		<div class="card-body">
+				<h4 class="modal-title">Các loại báo cáo</h4>
+				<div>
+			   		<a href="competency.php">Báo cáo hồ sơ năng lực</a>
+			   	</div>
+			   	<div>
+			   		<a href="learning.php">Báo cáo hồ tiến độ học tập</a>
+			   	</div>
+			   	<div>
+			   		<a href="trainingplan.php">Báo cáo kế hoạch đào tạo</a>
+				</div>
+			</div>
+		</div>
 	 </div>
 </div>
 <div id="trainingplan_report" style="padding: 1.25rem"></div>
-<div class="modal" id="modalreport">
-	<div class="modal-dialog" style="width: 600px">
-		<!-- Modal content-->
-		<div class="modal-content">
-			<div class="modal-header">
-			    <h4 class="modal-title">Chuyển báo cáo</h4>
-			    <button type="button" class="close" data-dismiss="modal">&times;</button>
-			</div>
-			<div class="modal-body" style="height: 150px">
-				<label >Báo cáo</label>
-			    <input class="form-control mt-1" id="report">
-			</div>
-			<div class="modal-footer">
-			    <button type="button" class="btn btn-primary" id="changereport">Chuyển</button>
-			    <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancel-popup">{{#str}}cancel, local_newsvnr{{/str}}</button>
-			</div>
-		</div>
-	</div>
-</div>
 
 {{#js}}
 	$('#dropdownMenuButton').click(function() {
-		$('.dropdown-menu').toggleClass('d-none');
+		$('.dropdown-menu.trainingplan-report').toggleClass('d-none');
+		if(!$('.dropdown-menu.change-report').hasClass('d-none')) {
+			$('.dropdown-menu.change-report').addClass('d-none');
+		}
+	})
+	$('#dropdownreport').click(function() {
+		$('.dropdown-menu.change-report').toggleClass('d-none');
+		if(!$('.dropdown-menu.trainingplan-report').hasClass('d-none')) {
+			$('.dropdown-menu.trainingplan-report').addClass('d-none');
+		}
 	})
 {{/js}}

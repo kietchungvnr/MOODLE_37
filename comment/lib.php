@@ -22,7 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
-
+// Custom by Thắng: Thêm lib của newvnr
+require_once $CFG->dirroot . '/local/newsvnr/lib.php';
 /**
  * Comment is helper class to add/delete comments anywhere in moodle
  *

@@ -31,7 +31,7 @@ require_once($CFG->libdir.'/filelib.php');
 
 class mod_resource_mod_form extends moodleform_mod {
     function definition() {
-        global $CFG, $DB;
+        global $CFG, $DB, $COURSE;
         $mform =& $this->_form;
 
         $config = get_config('resource');
@@ -65,7 +65,11 @@ class mod_resource_mod_form extends moodleform_mod {
         $attributes['rows'] = 5;
         $element->setAttributes($attributes);
         $filemanager_options = array();
-        $filemanager_options['accepted_types'] = '*';
+        if($COURSE->id == 1) {
+            $filemanager_options['accepted_types'] = ['.pdf','.xls','.xlsx','.docx','.doc','.pptx','.ppt'];
+        } else {
+            $filemanager_options['accepted_types'] = '*';
+        }
         $filemanager_options['maxbytes'] = 0;
         $filemanager_options['maxfiles'] = -1;
         $filemanager_options['mainfile'] = true;
