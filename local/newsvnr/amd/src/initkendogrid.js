@@ -23,7 +23,7 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min','alertjs'], function
         if(gridConfig.selectable === undefined) {
             gridConfig.columns.unshift({
                 selectable: true,
-                width: 30
+                width: 50
             });
         }
         // if (gridConfig.selectRowEvent != undefined) {

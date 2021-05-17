@@ -111,9 +111,9 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
                 $('.add-module-popup input[name="selectmodule"]').attr('folderid', folderid);
                 $('.searchlibrary').attr('folderid', folderid);
                 if($(this).parent('li').hasClass('title')) {
-                    $('button[data-target="#add-popup-modal-module"]').hide();
+                    $('div[data-target="#add-popup-modal-module"]').hide();
                 } else {
-                    $('button[data-target="#add-popup-modal-module"]').show();
+                    $('div[data-target="#add-popup-modal-module"]').show();
                 }
                 var settings = {
                     type: "GET",
@@ -290,6 +290,8 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
                 visible: false,
                 open: onOpen,
                 actions: [
+                    "Minimize", 
+                    "Maximize",
                     "Close"
                 ],
             })

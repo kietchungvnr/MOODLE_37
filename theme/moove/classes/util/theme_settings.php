@@ -749,6 +749,20 @@ class theme_settings {
         return $templatecontext;
     }
 
+    public function get_datareport_library() {
+        global $DB;
+        $templatecontext = [];
+        $object = new stdClass();
+        $object->access = count($DB->get_records('logstore_standard_log',['target' => 'library']));
+        $object->folder = count($DB->get_records('library_folder',['visible' => 1]));
+        $object->module = count($DB->get_records_sql('select * from mdl_library_module lm 
+                                                                    join mdl_course_modules cm on cm.id = lm.coursemoduleid
+                                                                where visible = 1'));
+        $object->moduleapproval = count($DB->get_records('library_module',['approval' => 0]));
+        $templatecontext['reportdata'] = $object;
+        return $templatecontext;
+    }
+
     public function get_news_data()
     {
         global $OUTPUT,$DB,$CFG,$USER;
