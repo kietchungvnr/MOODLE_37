@@ -604,3 +604,4 @@ $string['templateemailconfig'] = "Cấu hình mẫu email";
 $string['sendingsuccess'] = "Gửi thành công email";
 $string['pleasepickuser'] = "Vui lòng chọn học viên trước khi thực hiện thao tác này!";
 $string['emailcontentconfig'] = "Mẫu email";
+$string['accesssite'] = "Lượt truy cập hệ thống";

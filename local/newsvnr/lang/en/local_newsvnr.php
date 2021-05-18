@@ -602,3 +602,4 @@ $string['templateemailconfig'] = "Email template config";
 $string['sendingsuccess'] = "Sending success";
 $string['pleasepickuser'] = "Please select users before doing this!";
 $string['emailcontentconfig'] = "Email template";
+$string['accesssite'] = "Access site time";
