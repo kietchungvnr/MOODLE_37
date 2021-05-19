@@ -47,7 +47,7 @@ switch ($action) {
         $competency     = optional_param('competency', '', PARAM_RAW);
         $competencyplan = optional_param('competencyplan', '', PARAM_RAW);
         $course         = optional_param('course', 0, PARAM_INT);
-        $wheresql .= "WHERE us.username LIKE N'%$username%' ";
+        $wheresql .= "WHERE CONCAT(us.firstname,' ',us.lastname) LIKE N'%$username%' ";
         $wheresql .= ($competency) ? "AND cm.id = $competency" : "";
         $wheresql .= ($competencyplan) ? "AND cmp.name LIKE N'%$competency%'" : "";
         $wheresql .= ($course) ? "AND c.id = $course" : "";

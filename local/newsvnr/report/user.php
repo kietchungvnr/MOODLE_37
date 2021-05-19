@@ -42,7 +42,7 @@ $PAGE->requires->js_call_amd('local_newsvnr/user_report', 'init');
 $PAGE->requires->js_call_amd('local_newsvnr/user_report', 'deleteUser');
 $PAGE->requires->js_call_amd('local_newsvnr/user_report', 'openPopUp');
 $PAGE->requires->js_call_amd('local_newsvnr/user_report', 'kendoDropdown');
-$PAGE->requires->strings_for_js(array('action','email','codeuser','nameuser','timeaccess','createdtime','lastaccess'), 'local_newsvnr');
+$PAGE->requires->strings_for_js(array('emptydata','selectrole','selectcourse','selectstatus','selectorgstructuretype','selectorgstructure','selectjobtitle','selectjobposition','selectcourse','studentcode','email','timeaccess','createdtime','lastaccess','action','studentname','codeuser'), 'local_newsvnr');
 $page = new \local_newsvnr\output\user_report_page();
 
 $output = $PAGE->get_renderer('local_newsvnr');
