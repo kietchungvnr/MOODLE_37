@@ -29,14 +29,20 @@
 }}
 {{#display}}
     {{#action}}
-        <li>
+        <li class="d-flex">
             <a href="{{{action}}}">{{text}}</a>
             {{#node.isedit}}
                 {{#hidden}}
-                    <a class="config-admin" action="show" key={{key}} href="javascript:;"><i class="ml-1 fa fa-eye-slash" aria-hidden="true"></i></a>
+                    <div class="config-admin switch" action="show" key={{key}}>
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </div>
                 {{/hidden}}
                 {{^hidden}}
-                    <a class="config-admin" action="hide" key={{key}} href="javascript:;"><i class="ml-1 fa fa-eye" aria-hidden="true"></i></a>
+                    <div class="config-admin switch" action="hide" key={{key}}>
+                        <input type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </div>
                 {{/hidden}}
             {{/node.isedit}}
         </li>
