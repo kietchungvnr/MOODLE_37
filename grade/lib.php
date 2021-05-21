@@ -1653,7 +1653,7 @@ class grade_structure {
             $a->title = $title;
             $title = get_string('linktoactivity', 'grades', $a);
 
-            $header = html_writer::link($url, $header, array('title' => $title, 'class' => 'gradeitemheader'));
+            $header = html_writer::link($url, $header, array('title' => $title, 'class' => 'gradeitemheader','target' => '_blank'));
         } else {
             $header = html_writer::span($header, 'gradeitemheader', array('title' => $title, 'tabindex' => '0'));
         }
