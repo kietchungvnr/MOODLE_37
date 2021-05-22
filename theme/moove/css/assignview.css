@@ -54,7 +54,7 @@
     }
     .path-mod-assign [data-region="user-selector"] .alignment a[data-action="previous-user"] {
         position: absolute;
-        left: -122%;
+        left: -95%;
         font-size: 15px;
         color: white;
         background: #3c8dbc;
@@ -63,7 +63,7 @@
     }
     .path-mod-assign [data-region="user-selector"] .alignment a[data-action="next-user"] {
         position: absolute;
-        left: 18%;
+        left: -10px;
         font-size: 15px;
         color: white;
         background: #3c8dbc;
@@ -90,12 +90,18 @@
     .path-mod-assign [data-region="user-info"] em.nowrap {
         overflow: initial !important;
     }
+    .path-mod-assign div.submissionstatustable .submissionstatus {
+        padding:10px;
+    }
     .path-mod-assign .teamname,
     .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .submissionstatussubmitted,
     .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .submissionnotgraded,
     .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .earlysubmission,
     .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .submissionnoteditable,
-    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .assignsubmission_file {
+    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .assignsubmission_file,
+    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .submissioneditable,
+    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .timeremaining,
+    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .submissiongraded  {
         border-bottom: 1px solid #dee2e6;
         padding: 10px;
     }

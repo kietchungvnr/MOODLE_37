@@ -5912,6 +5912,11 @@ i.expand-icon.active {
 .text-title {
   color: #455a64;
   font-weight: bold;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: auto;
+  height: 1.2em;
+  white-space: nowrap;
 }
 .font-title {
   font-size: 18px;
