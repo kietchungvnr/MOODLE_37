@@ -90,7 +90,7 @@ if (isloggedin()) {
    
     $templatecontext['flatnavigation'] = $PAGE->flatnav;
 
-    $templatecontext = array_merge($templatecontext, $themesettings->footer_items(),$themesettings->get_module_data(), $themesettings->get_vnr_chatbot());
+    $templatecontext = array_merge($templatecontext, $themesettings->footer_items(),$themesettings->get_module_data(), $themesettings->get_vnr_chatbot(), $themesettings->get_datareport_library());
 
     //mycourse 
     $usercourses = \theme_moove\util\extras::user_courses_with_progress($user);

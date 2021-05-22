@@ -42,9 +42,10 @@ if ($confirm and confirm_sesskey()) {
     } else {
         echo $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
     }
-    $continue = new single_button(new moodle_url($return), get_string('continue'), 'post');
-    echo $OUTPUT->render($continue);
-    echo $OUTPUT->box_end();
+    // Custom by Thắng ; bỏ redirect
+    // $continue = new single_button(new moodle_url($return), get_string('continue'), 'post');
+    // echo $OUTPUT->render($continue);
+    // echo $OUTPUT->box_end();
 } else {
     list($in, $params) = $DB->get_in_or_equal($SESSION->bulk_users);
     $userlist = $DB->get_records_select_menu('user', "id $in", $params, 'fullname', 'id,'.$DB->sql_fullname().' AS fullname');

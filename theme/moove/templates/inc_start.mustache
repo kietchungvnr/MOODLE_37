@@ -11,6 +11,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     {{! <meta name="referrer" content="no-referrer"> }}
 <style type="text/css">
+    #page-wrapper {
+        margin-left: 44px;
+        transition: all 0.4s ease;
+    }
     @media(max-width: 576px) {
         #page-mod-assign-view .ygtvcell.ygtvcontent .fa-cloud-download {
             display: block !important;
@@ -69,6 +73,14 @@
     #page-course-edit .form-autocomplete-selection {
         justify-content: end;
     }
+    #page-question-edit .form-autocomplete-selection,
+    #page-mod-quiz-edit .form-autocomplete-selection {
+        justify-content: center;
+        min-height: auto;
+        display: flex;
+        margin: 0;
+        align-items: center;
+    }
     #page-mod-assign-grading .generaltable thead th {
         font-size: 14px;
     }
@@ -97,7 +109,10 @@
         display: flex;
         align-items: center;
     }
-    #user_report .k-grid-excel {
+    #user_report .k-grid-excel,
+    #competency_report .k-grid-excel,
+    #learning_report .k-grid-excel,
+    #trainingplan_report .k-grid-excel {
         display: none;
     }
     .badge.badge-danger,
@@ -114,7 +129,7 @@
     a.disabled {
         font-style: inherit;
     }
-    .dropdown-menu.user-report {
+    .dropdown-menu.report {
         top: 64px;
         right: 21px;
         left: auto;
@@ -123,6 +138,194 @@
     }
     #page-local-newsvnr-report-user .k-widget.k-datepicker {
         width: 100%;
+    }
+    .report-button {
+        padding: 5px 10px;
+        background: #E3EEF5;
+        margin: 0 5px;
+        border-radius: 50%;
+        color: white;
+        cursor: pointer;
+    }
+    .status {
+        color: white;
+        border-radius: 15px;
+        padding: 5px;
+        text-align: center;
+    }
+    #page-competency-report .card,
+    #page-learning-report .card,
+    #page-trainingplan-report .card {
+        background: transparent;
+    }
+    #page-competency-report .card .card-body ,
+    #page-learning-report .card .card-body ,
+    #page-trainingplan-report .card .card-body {
+        padding: 0;
+    }
+    #page-competency-report #page-header .card-body,
+    #page-learning-report #page-header .card-body,
+    #page-trainingplan-report #page-header .card-body  {
+        display: none;
+    }
+    .cursor-pointer {
+        cursor: pointer;
+    }
+    .k-widget.k-datepicker,
+    .k-widget.k-numerictextbox {
+        width: 100%;
+    }
+    .competency-framework-title {
+        background: #3c8dbc;
+        color: white;
+        padding: 10px 5px;
+    }
+    .competency-framework-title h3 {
+        margin-bottom: 0;
+        color: white;
+    }
+    .competency-framework {
+        padding: 5px 5px;
+        border: 1px solid #dee2e6;
+        cursor: pointer;
+    }
+    .competency-framework-table {
+        max-height: 439px;
+        overflow: scroll;
+    }
+    #page-admin-tool-lp-coursecompetencies .moodle-dialogue-base .moodle-dialogue-wrap {
+        width: 700px;
+    }
+    div[data-region="competencylinktree"] .competency-tree {
+        border-radius: 0 !important;
+        border-top: 0 !important;
+    }
+    .chat-panel .chat-content {
+        width: calc(100% - 70px);
+        float: left;
+        min-height: 70px;
+        padding: 8px;
+    }
+    .chat-panel .chat-image {
+        float: left;
+    }
+    .col.chat-panel {
+        padding-top: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .chat-panel .chat-content .chat-body .name {
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .chat-panel .chat-content .chat-footer .date-feedback{
+        float: right;
+        font-size: 13px;
+    }
+    .new-detail-comment-title, .new-detail-reply-title {
+        font-weight:bold;
+        font-size:14px;
+        margin-top: 5px;
+    }
+    .new-detail-comment-control {
+        width:100%;
+        text-align:right;
+        padding-bottom:5px;
+    }
+    .new-detail-comment-control > .btn {
+        color:#ffffff;
+    }
+    .path-mod-wiki li:nth-child(3) {
+        display: none;
+    }
+    .btn-danger {
+        background-color: #d43f3a !IMPORTANT;
+    }
+    .card-dashboard-library {
+        background: #3c8dbc;
+        margin-left: -6px;
+        margin-right: -6px;
+    }
+    .title-db-library {
+        background: #3c8dbc;
+        padding: 10px;
+        border-radius: 8px 8px 0 0;
+    }
+    .title-db-library h3 {
+        color: white;
+        font-size: 14px !IMPORTANT;
+        margin-bottom: 0;
+    }
+    #page-library .k-header.k-grid-toolbar {
+        display: none;
+    }
+    .color-white {
+        color: white !important;
+    }
+    .tree-module-count {
+        color: #c8cbcf;
+        font-size: 12px;
+        margin-right: 0;
+        margin-top: 2px;
+        float:right;
+    }
+    #library-approval-module-db .k-grid-content {
+        height: 270px;
+    }
+    #page-library .k-grid tbody .k-button {
+        min-width: auto !important;
+    }
+    .config-admin {
+        cursor: pointer;
+        margin-left: 6px;
+    }
+    #page-admin-search .title-admin {
+        display: flex;
+        color: #1177d1;
+    }
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 30px;
+        height: 15px;
+        top: 3px;
+    }
+    .switch input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 34px;
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 11px;
+        width: 11px;
+        left: 3px;
+        bottom: 2px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 50%;
+    }
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(13px);
     }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />

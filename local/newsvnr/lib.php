@@ -1184,6 +1184,75 @@ function local_newsvnr_output_fragment_new_orgstructure_form($args) {
     return $o;
 }
 
+function local_newsvnr_output_fragment_create_email_template_form($args) {
+    global $CFG, $SITE, $DB;
+    require_once $CFG->dirroot . '/user/sendemail_form.php';
+    $args = (object) $args;
+    $context = $args->context;
+    $o = '';
+    $formdata = [];
+    if (!empty($args->jsonformdata)) {
+        $serialiseddata = json_decode($args->jsonformdata);
+    }
+    $editoroptions = array('maxfiles' => EDITOR_UNLIMITED_FILES,
+    'maxbytes' => $SITE->maxbytes, 'context' => context_system::instance());
+    $get_template = $DB->get_record('email_template', ['id' => $serialiseddata->templateid]);
+    $email_template = new stdClass;
+    $email_template->id = $serialiseddata->templateid;
+    $email_template->subject = $get_template->subject;
+    $email_template->content = $get_template->content;
+    $email_template = file_prepare_standard_editor($email_template, 'content', $editoroptions,
+            context_system::instance(), 'email', 'content', null);
+    $mform = new sendemail_form(null,array('email_template' => $email_template),'post','', null, true, $formdata);
+    $mform->set_data($email_template);
+    // Used to set the courseid.
+ 
+    if (!empty($args->jsonformdata)) {
+        // If we were passed non-empty form data we want the mform to call validation functions and show errors.
+        $mform->is_validated();
+    }
+ 
+    ob_start();
+    $mform->display();
+    $o .= ob_get_contents();
+    ob_end_clean();
+ 
+    return $o;
+}
+
+function local_newsvnr_output_fragment_send_email_form($args) {
+    global $CFG, $OUTPUT, $SITE;
+    require_once $CFG->dirroot . '/user/sendemail_form.php';
+    $args = (object) $args;
+    $context = $args->context;
+    $o = '';
+    $formdata = [];
+    if (!empty($args->jsonformdata)) {
+        $serialiseddata = json_decode($args->jsonformdata);
+        parse_str($serialiseddata, $formdata);
+    }
+    $editoroptions = array('maxfiles' => EDITOR_UNLIMITED_FILES,
+    'maxbytes' => $SITE->maxbytes, 'context' => context_system::instance());
+    $email = new stdClass;
+    $email = file_prepare_standard_editor($email, 'emailcontent', $editoroptions,
+            context_system::instance(), 'email', 'emailcontent', null);
+    $mform = new sendemail_form(null,array('eamil' => $email),'post','', null, true, $formdata);
+    $mform->set_data($email);
+    // Used to set the courseid.
+ 
+    if (!empty($args->jsonformdata)) {
+        // If we were passed non-empty form data we want the mform to call validation functions and show errors.
+        $mform->is_validated();
+    }
+ 
+    ob_start();
+    echo $OUTPUT->render_from_template('core_user/manage_sendemail', $context = []);
+    $mform->display();
+    $o .= ob_get_contents();
+    ob_end_clean();
+ 
+    return $o;
+}
 /** - end call modal cho orgmanager - **/
 /* Năng lực theo vị trí  */
 function get_list_orgstructure() {
@@ -1277,49 +1346,50 @@ function check_auth_api($username, $password) {
 function find_orgstructure_by_name($name) {
     global $DB;
     $sql = "
-            SELECT name
+            SELECT *
             FROM {orgstructure}
             WHERE name = ?";
-   $data = $DB->get_field_sql($sql, array($name));
+   $data = $DB->get_record_sql($sql, array($name));
    return $data;
 }
 
 function find_orgstructure_by_code($code) {
    global $DB;
    $sql = "
-            SELECT code 
+            SELECT * 
             FROM {orgstructure} 
             WHERE code = ?";
-   $data = $DB->get_field_sql($sql, array($code));
+   $data = $DB->get_record_sql($sql, array($code));
    return $data;
 }
 
 function find_orgstructure_jobtitle_by_name($name) {
    global $DB;
    $sql = "
-            SELECT name 
+            SELECT * 
             FROM {orgstructure_jobtitle}
             WHERE name = ?";
-   $data = $DB->get_field_sql($sql, array($name));
+   $data = $DB->get_record_sql($sql, array($name));
    return $data;
 }
+
 function find_orgstructure_jobtitle_by_code($code) {
    global $DB;
    $sql = "
-            SELECT code 
+            SELECT * 
             FROM {orgstructure_jobtitle} 
             WHERE code = ?";
-   $data = $DB->get_field_sql($sql, array($code));
+   $data = $DB->get_record_sql($sql, array($code));
    return $data;
 }
 
 function find_orgstructure_category_by_name($name) {
     global $DB;
     $sql = "
-            SELECT name
+            SELECT *
             FROM {orgstructure_category} 
             WHERE name = ?";
-    $data = $DB->get_field_sql($sql, array($name));
+    $data = $DB->get_record_sql($sql, array($name));
     return $data;
 }
 
@@ -1349,16 +1419,16 @@ function find_orgstructure_position_by_name($name) {
             SELECT name 
             FROM {orgstructure_position} 
             WHERE name = ?";
-    $data = $DB->get_field_sql($sql, array($name));
+    $data = $DB->get_record_sql($sql, array($name));
     return $data;
 }
 
 function find_orgstructure_position_by_code($code) {
     global $DB;
-    $sql = "SELECT code 
+    $sql = "SELECT * 
             FROM {orgstructure_position}
             WHERE code = ?";
-    $data = $DB->get_field_sql($sql, array($code));
+    $data = $DB->get_record_sql($sql, array($code));
     return $data;
 }
 
@@ -1738,7 +1808,7 @@ function HTTPPost($url,$data) {
     ),
     CURLOPT_POSTFIELDS => $params));
     $resp = curl_exec($curl);
-    insert_log($resp,$url);
+    // insert_log($resp,$url);
     curl_close($curl);
 }
 
@@ -1762,7 +1832,7 @@ function HTTPPost_EBM($url,$data) {
     ),
     CURLOPT_POSTFIELDS => $params));
     $resp = curl_exec($curl);
-    insert_log($resp,$url);
+    // insert_log($resp,$url);
     curl_close($curl);
 }
 
@@ -2083,14 +2153,26 @@ function count_module($course,$currentsection) {
 function mimetype2Img($mimetype) {
     global $OUTPUT;
     $typeresource = mime2ext($mimetype);
+    // $typeresource = mime2ext('image/jpeg');
+    // var_dump($typeresource);die();
     if ($typeresource == 'xls' || $typeresource == 'xlsx' || $typeresource == 'xlsm') {
         $img = html_writer::img($OUTPUT->image_url('f/spreadsheet-24'),'',['class' => 'pr-1 img-module']);
-    } elseif ($typeresource == 'ppt') {
+    } elseif ($typeresource == 'ppt' || $typeresource == 'pptx') {
         $img = html_writer::img($OUTPUT->image_url('f/powerpoint-24'),'',['class' => 'pr-1 img-module']);
     } elseif ($typeresource == 'docx' || $typeresource == 'doc' || $typeresource == 'docm') {
         $img = html_writer::img($OUTPUT->image_url('f/document-24'),'',['class' => 'pr-1 img-module']);
     } elseif ($typeresource == 'pdf') {
         $img = html_writer::img($OUTPUT->image_url('f/pdf-24'),'',['class' => 'pr-1 img-module']);
+    } elseif ($typeresource == 'jpeg') {
+        $img = html_writer::img($OUTPUT->image_url('f/jpeg-24'),'',['class' => 'pr-1 img-module']);
+    } elseif ($typeresource == 'png') {
+        $img = html_writer::img($OUTPUT->image_url('f/png-24'),'',['class' => 'pr-1 img-module']);
+    } elseif ($typeresource == 'txt') {
+        $img = html_writer::img($OUTPUT->image_url('f/text-24'),'',['class' => 'pr-1 img-module']);
+    } elseif ($typeresource == 'mp4') {
+        $img = html_writer::img($OUTPUT->image_url('f/video-24'),'',['class' => 'pr-1 img-module']);
+    } elseif ($typeresource == 'mp3') {
+        $img = html_writer::img($OUTPUT->image_url('f/wav-24'),'',['class' => 'pr-1 img-module']);
     }
     else {
         $img = '';
@@ -2621,6 +2703,22 @@ function get_coursecard_info($courseid) {
         $obj->imageteacher = $arr->imgdefault;
     }
     return $obj;
+}
+////
+function form_comment_wiki($title,$contextid,$pageid,$userid,$action,$commentid = null) {
+    $cancel = ($commentid) ? '<button type="button" action="'.$action.'" commentid="'.$commentid.'" class="mt-2 btn btn-danger cancel-comment">Hủy</button>' : '';
+    $output =   '<div class="wiki-add new-detail-comment">
+                     <div class="new-detail-comment-body">
+                        <label class="new-detail-comment-title">'.$title.'</label>
+                        <textarea commentid="'.$commentid.'" contextid="'.$contextid.'" wikipage="'.$pageid.'" userid="'.$userid.'" class="new-detail-comment-content" name="content" id="content_comment" maxlength="1000"></textarea>
+                        <div class="new-detail-comment-control">
+                            '.$cancel.'
+                           <button type="button" action="'.$action.'" class="mt-2 btn btn-submit post_comment">Gửi</button>
+                        </div>
+                     </div>
+                </div>';
+    return $output;
+
 }
 function insert_log($resp,$url) {
     global $DB,$USER;

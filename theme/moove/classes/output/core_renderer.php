@@ -1315,10 +1315,11 @@ class core_renderer extends \theme_boost\output\core_renderer {
     }
     function recursive_module_folder($folderid,&$count = 0) {
         global $DB, $OUTPUT;
+        
         $countmodule = $DB->get_record_sql("SELECT count(cm.id) as count FROM {library_folder} lf 
                                                 JOIN {library_module} lm on lf.id = lm.folderid
                                                 JOIN {course_modules} cm on lm.coursemoduleid = cm.id
-                                            WHERE lf.id = $folderid");
+                                            WHERE lf.id = $folderid and lm.approval = 1");
         $folderidchild = $DB->get_records("library_folder",['parent' => $folderid],'','id');
         $count = $countmodule->count + $count;
         if(!empty(($folderidchild))) {
@@ -1366,6 +1367,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                             $output .= '<a style="margin-left: 18px;"></a>';
                         } else { $output .= '<img class="icon-plus" id="'.$item->id.'" src="'.$CFG->wwwroot.'/theme/moove/pix/plus.png">';}
                         $output .= '<img class="icon-folder" src="'.$CFG->wwwroot.'/theme/moove/pix/folder2.png"><a class="folder-child mr-1" tabindex="-1" href="javascript:void(0)" id="'.$item->id.'"">' . $item->name . '</a>'.$iconhide.'';
+                        $output .= '<div class="tree-module-count">'.$OUTPUT->recursive_module_folder($item->id).'<i class="ml-1 fa fa-file" aria-hidden="true"></i></div>';
                         $output .= '</li>';
                         $output .= '<ul class="content-expand '.$item->id.' pl-3 '.$visible.'" >';
                         foreach($menus as $childkey => $childitem) {
@@ -1386,6 +1388,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                                         $output .= '<a style="margin-left: 18px;"></a>';
                                     } else { $output .= '<img class="icon-plus" id="'.$childitem->id.'" src="'.$CFG->wwwroot.'/theme/moove/pix/plus.png">';}
                                     $output .= '<img class="icon-folder" src="'.$CFG->wwwroot.'/theme/moove/pix/folder2.png"><a class="folder-child mr-1" tabindex="-1" href="javascript:void(0)" id="'.$childitem->id.'">' . $childitem->name . '</a>'.$iconhide.'';
+                                    $output .= '<div class="tree-module-count">'.$OUTPUT->recursive_module_folder($childitem->id).'<i class="ml-1 fa fa-file" aria-hidden="true"></i></div>';
                                     $output .= '</li>';
                                     $output .= '<ul class="content-expand '.$childitem->id.' pl-3">';
                                     unset($menus[$childkey]);

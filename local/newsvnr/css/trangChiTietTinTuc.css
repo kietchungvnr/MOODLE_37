@@ -33,19 +33,11 @@
     
    
 }
-.new-detail-comment .new-detail-comment-body{
-    
 
-}
 
 .new-detail-reply-body{
     width: 80%;
     /*float: right;*/
-}
-
-.new-detail-comment-title, .new-detail-reply-title {
-    font-weight:bold;
-    font-size:20px;
 }
 .new-detail-comment-content, .new-detail-reply-content {
     width:100%;
@@ -82,10 +74,7 @@
 }
 
 
-        .chat-panel .chat-content .chat-body .name {
-            font-size: 14px;
-            font-weight: 600;
-        }
+
          .chat-panel .chat-content .chat-body p {
             font-size: 14px;
         }
@@ -119,11 +108,7 @@
             cursor: pointer;
             font-size: 13px;
         }
-        .chat-panel .chat-content .chat-footer .date-feedback{
-            float: right;
 
-            font-size: 13px;
-        }
 
     .chat-panel .chat-content .chat-footer .form-reply{
     

@@ -53,6 +53,7 @@ class OrgstructureJobtitleController extends BaseController {
 	    }
         $check_jobtitlename =  find_orgstructure_jobtitle_by_name($this->data->name);
 		if($check_jobtitlename) {
+			$check_jobtitlename = $this->data->name;
 			$this->resp->error = true;
 			$this->resp->data['name'] = "Tên loại phòng ban '$check_jobtitlename' đã tồn tại";
 		}

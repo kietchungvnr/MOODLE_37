@@ -29,6 +29,8 @@ define('AJAX_SCRIPT', false);
 require_once __DIR__ . '/../../../../config.php';
 require_once $CFG->dirroot . '/local/newsvnr/lib.php';
 
+require_login();
+
 $key = optional_param('key', null, PARAM_RAW);
 $action = optional_param('action',null,PARAM_RAW);
 $itemadmin = $DB->get_record('config_plugins',['name' => 'administrationtab'],'id,value');
@@ -52,6 +54,5 @@ if($action == 'hide') {
 // $object->value = '';
 $update = $DB->update_record('config_plugins',$object,['']);
 echo "Success";
-require_login();
 
 die;

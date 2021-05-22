@@ -41,6 +41,33 @@ $lesson = new lesson($DB->get_record('lesson', array('id' => $cm->instance), '*'
 
 require_login($course, false, $cm);
 
+// Kiểm tra nếu module đã ẩn thì không đc view
+if($course->id == 1) {
+    $context = context_module::instance($cm->id);
+    if(is_siteadmin() || user_has_role_assignment($USER->id, 1, $context->id) == true) {
+        // Nothing to do...
+    } else {
+        $module = $DB->get_record('course_modules', array('id' => $id), 'visible', MUST_EXIST);
+        $moduleapproval = $DB->get_record('library_module', array('coursemoduleid' => $id), '*', MUST_EXIST);
+        if($module && $module->visible == 0) {
+            print_error('nopermission', 'local_newsvnr');
+        }
+        switch ($moduleapproval->approval) {
+            case 1:
+                // Nothing to do...
+                break;
+            case 0:
+                if($moduleapproval->userid != $USER->id) {
+                    print_error('nopermission', 'local_newsvnr');
+                }
+            default:
+                // Nothing to do...
+                break;
+        } 
+    }
+}
+
+
 if ($backtocourse) {
     redirect(new moodle_url('/course/view.php', array('id'=>$course->id)));
 }

@@ -31,8 +31,10 @@ if ($confirm and !empty($msg) and confirm_sesskey()) {
         //so we have to use html format for it to be displayed correctly
         message_post_message($USER, $user, $msg, FORMAT_HTML);
     }
-    $rs->close();
-    redirect($return);
+    echo $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
+    // Custom by Thắng ; bỏ redirect
+    // $rs->close();
+    // redirect($return);
 }
 
 $msgform = new user_message_form('user_bulk_message.php');

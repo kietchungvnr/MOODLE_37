@@ -47,7 +47,10 @@ if ($pagetake == 0) {
     $ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
 }
 $sql = "SELECT *,
-            (SELECT COUNT(id) FROM {library_module} WHERE approval = 0) AS total
+            (SELECT COUNT(lm.id) FROM {library_module} lm
+                                JOIN {course_modules} cm on cm.id = lm.coursemoduleid
+                                JOIN {user} u on u.id = lm.userid
+                                JOIN {library_folder} lf on lf.id = lm.folderid $wheresql ) AS total
             FROM (SELECT lm.*,lf.parent,CONCAT(rs.name,b.name,l.name,i.name,pa.name,ur.name,wk.name) AS name,lf.name AS foldername,cm.instance,CONCAT(u.firstname,' ', u.lastname) AS fullnamet,ROW_NUMBER() OVER (ORDER BY lm.id) AS RowNum
                 FROM {library_module} lm
                     JOIN {course_modules} cm on cm.id = lm.coursemoduleid

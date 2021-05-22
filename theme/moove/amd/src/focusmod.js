@@ -56,7 +56,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                 Cookie.setCookie('cookie', '-1', 0)
             } else {
                 /// Ẩn các element khi bật chế độ focusmode
-                $('body').attr('style','overflow:hidden !important');
+                // $('body').attr('style','overflow:hidden !important');
                 $('body').addClass('focusmod');
                 $('footer,.all-header,#page-header').slideUp();
                 $('.fixed-sidebar-left').addClass('d-none');
@@ -172,8 +172,8 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             var _this = $(this);
             var url = _this.attr('data-focusmode-url');
             var modType = _this.attr('data-mod-type');
-            var height = $(window).height()
-            var width = $(window).width()
+            var height = $(window).height();
+            var width = $(window).width();
             Cookie.setCookie('cookie', 'focusmod');
             if($('body').hasClass('focusmod')) {
                 Cookie.setCookie('cookie', 'focusmod');
@@ -222,6 +222,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                             var vh = $('body').height();
                             $('#mod-iframe').height(vh);
                         } else if (modType == 'quiz') {
+                            var width = $(window).width();
                             if(width > 576) {
                                 $('#mod-iframe').removeAttr('height');
                                 const iframes = iFrameResize({ log: false }, '#mod-iframe');

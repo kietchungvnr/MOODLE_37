@@ -115,22 +115,22 @@ switch ($action) {
         $obj->description = $folderdes;
         $obj->id          = $folderid;
         $DB->update_record('library_folder', $obj);
-        $folderpermiss = $DB->get_record('library_folder_permissions',['folderlibraryid' => $folderid]);
-        if(empty($folderpermiss)) {
+        $folderpermiss = $DB->get_record('library_folder_permissions', ['folderlibraryid' => $folderid]);
+        if (empty($folderpermiss)) {
             $newfolderpermiss                  = new stdClass();
             $newfolderpermiss->permission      = 'view';
             $newfolderpermiss->folderlibraryid = $folderid;
             $newfolderpermiss->timecreated     = time();
             $newfolderpermissid                = $DB->insert_record('library_folder_permissions', $newfolderpermiss);
         }
-        $DB->delete_records('library_user_permissions',['permissionid' => $folderpermiss->id]);
+        $DB->delete_records('library_user_permissions', ['permissionid' => $folderpermiss->id]);
         foreach ($listposition as $value) {
             $position               = new stdClass();
             $userscope              = $DB->get_records('user', ['orgpositionid' => $value]);
             $position->positionid   = $value;
             $position->timecreated  = time();
             $position->userscope    = count($userscope);
-            if(empty($folderpermiss)) {
+            if (empty($folderpermiss)) {
                 $position->permissionid = $newfolderpermissid;
             } else {
                 $position->permissionid = $folderpermiss->id;
@@ -142,8 +142,7 @@ switch ($action) {
     case 'edit':
         $folder            = $DB->get_record_sql('SELECT * FROM {library_folder} WHERE id = :id', ['id' => $folderid]);
         $folderparent      = $DB->get_record_sql('SELECT * FROM {library_folder} WHERE id = :parentid', ['parentid' => $folder->parent]);
-        $permission        = $DB->get_record('library_folder_permissions', ['folderlibraryid' => $folderid]);
-        $positionpermisson = $DB->get_records('library_user_permissions', ['permissionid' => $permission->id], 'positionid');
+
         if ($folderparent == false) {
             $input = '<input autocomplete="off" class="form-control folderparent" onclick="viewTree()">';
         } else {
@@ -178,8 +177,8 @@ switch ($action) {
                                   <textarea autocomplete="off" class="form-control" id="folderdes" value="' . $folder->description . '"></textarea>
                                 </div>
                                  <div class="form-group">
-                                    <label class="mb-1" for="pwd">'.get_string('positionviewfolder','local_newsvnr').':</label>
-                                    <select id="edit-positionpermission" multiple="multiple" data-placeholder="'.get_string('selectposition','local_newsvnr').'"></select>
+                                    <label class="mb-1" for="pwd">' . get_string('positionviewfolder', 'local_newsvnr') . ':</label>
+                                    <select id="edit-positionpermission" multiple="multiple" data-placeholder="' . get_string('selectposition', 'local_newsvnr') . '"></select>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -190,11 +189,17 @@ switch ($action) {
 
                         </div>
                   </div>';
+        $permission = $DB->get_record('library_folder_permissions', ['folderlibraryid' => $folderid]);
         $arraytemp = [];
-        foreach ($positionpermisson as $key => $value) {
-            $obj = new stdClass();
-            $obj->positionid = $value->positionid;
-            $arraytemp[] = $obj;
+        if ($permission) {
+            $positionpermisson = $DB->get_records('library_user_permissions', ['permissionid' => $permission->id], 'positionid');
+            if ($positionpermisson) {
+                foreach ($positionpermisson as $key => $value) {
+                    $obj = new stdClass();
+                    $obj->positionid = $value->positionid;
+                    $arraytemp[] = $obj;
+                }
+            }
         }
         $data['positionpermisson'] = $arraytemp;
         $data['result']            = $output;

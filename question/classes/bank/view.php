@@ -854,12 +854,12 @@ class view {
         }
 
         // Custom by Thắng : ẩn bớt thông tin trang ngân hàng câu hỏi
-        // echo '<div class="categorypagingbarcontainer">';
+        echo '<div class="categorypagingbarcontainer d-none">';
         $pageingurl = new \moodle_url('edit.php', $pageurl->params());
         $pagingbar = new \paging_bar($totalnumber, $page, $perpage, $pageingurl);
-        // $pagingbar->pagevar = 'qpage';
-        // echo $OUTPUT->render($pagingbar);
-        // echo '</div>';
+        $pagingbar->pagevar = 'qpage';
+        echo $OUTPUT->render($pagingbar);
+        echo '</div>';
 
         echo '<form method="post" action="edit.php">';
         echo '<fieldset class="invisiblefieldset" style="display: block;">';

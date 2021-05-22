@@ -1,26 +1,26 @@
-<div data-region="orgmanager-page">
-    <div class="row justify-content-md-center">
-        <div class="col-md-auto">
-            <button class="btn" type="button" data-toggle="collapse" data-target="#orgcate_tb_wrapper" aria-expanded="false" aria-controls="orgcate_tb_wrapper" id="orgcate_list">{{#str}}listorgcate, local_newsvnr{{/str}}</button>
+<div data-region="orgmanager-page" class="mb-3">
+    <div class="d-flex">
+        <div class="mr-2">
+            <button class="btn" type="button"  id="orgcate_list">{{#str}}listorgcate, local_newsvnr{{/str}}</button>
         </div>
-        <div class="col-md-auto">
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgstructure_tb_wrapper" aria-expanded="false" aria-controls="orgstructure_tb_wrapper" id="orgstructure_list">
+        <div class="mr-2">
+            <button class="btn btn-primary" type="button" id="orgstructure_list">
                 {{#str}}listorgstructure, local_newsvnr{{/str}}
             </button>
         </div>
-        <div class="col-md-auto">
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgjobtitle_tb_wrapper" aria-expanded="false" aria-controls="orgjobtitle_tb_wrapper" id="orgjobtitle_list">
+        <div class="mr-2">
+            <button class="btn btn-primary" type="button" id="orgjobtitle_list">
                 {{#str}}listorgjobtitle, local_newsvnr{{/str}}
             </button>
         </div>
-        <div class="col-md-auto">
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#orgosition_tb_wrapper" aria-expanded="false" aria-controls="orgposition_tb_wrapper" id="orgposition_list">
+        <div class="mr-2">
+            <button class="btn btn-primary" type="button" id="orgposition_list">
                 {{#str}}listorgposition, local_newsvnr{{/str}}
             </button>
         </div>
     </div>
 </div>
-<div style="margin-bottom: 60px;">
+<div style="position: absolute;top: 66px;z-index: 1;;">
     <input type="submit" name="act_orgcategory" id="orgcatemodalid" data-action="orgcategorypmodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
 
     <input type="submit" name="act_orgcategory" id="orgjobtitlemodalid" data-action="orgjobtitlemodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
@@ -29,7 +29,7 @@
 
     <input type="submit" name="act_orgcategory" id="orgstructuremodalid" data-action="orgstructuremodal" value="{{#str}}addnew, local_newsvnr{{/str}}" class="btn btn-primary pull-right mb-3 mt-2 d-none" />
 </div>
-<div id="showtable_data"></div>
+<div id="showtable_data" style="margin-bottom: 50px"></div>
 
 <script type="text/javascript">
     var orgstructure_clickparent = true;

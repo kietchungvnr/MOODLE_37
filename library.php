@@ -30,7 +30,7 @@ if (!file_exists('./config.php')) {
 require_once('config.php');
 require_once($CFG->dirroot .'/course/lib.php');
 require_once($CFG->libdir .'/filelib.php');
-
+require_once $CFG->dirroot . '/local/newsvnr/classes/event/library_viewed.php';
 redirect_if_major_upgrade_required();
 
 $urlparams = array();
@@ -81,6 +81,9 @@ if (file_exists($CFG->dirroot.'/local/hub/lib.php') and get_config('local_hub', 
     }
 }
 $PAGE->set_context(context_system::instance());
+$context = context_course::instance(SITEID);
+$event = \local_newsvnr\event\library_viewed::create(array('context'=> $context));
+$event->trigger();
 
 $PAGE->set_pagetype('library');
 $PAGE->set_docs_path('');
@@ -88,8 +91,10 @@ $editing = $PAGE->user_is_editing();
 $PAGE->set_title(get_string('library','local_newsvnr'));
 $PAGE->set_heading(get_string('library','local_newsvnr'));
 $PAGE->requires->js_call_amd('theme_moove/kendo_approval_library','init');
+$PAGE->requires->js_call_amd('theme_moove/kendo_approval_library','chart');
 $PAGE->requires->js_call_amd('theme_moove/library_folder','init');
-$PAGE->requires->strings_for_js( array('action', 'emptydata'), 'local_newsvnr');
+
+$PAGE->requires->strings_for_js( array('action', 'emptydata','viewed'), 'local_newsvnr');
 $courserenderer = $PAGE->get_renderer('core', 'course');
 echo $OUTPUT->header();
 
