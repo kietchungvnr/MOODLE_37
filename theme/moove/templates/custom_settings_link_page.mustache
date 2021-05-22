@@ -60,20 +60,26 @@
     <div class="tab-pane active" id="link{{node.key}}" role="tabpanel">
         <div class="container">
             <div class="row">
-                <div class="col-md-3 mb-3">
-                    <h4 class="title-admin"><a href="javascript:;">General</a></h4>
+                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-12 mb-3">
+                    <h4 class="title-admin"><a>General</a></h4>
                     <ul class="list-unstyled">
                         {{#node.children}}
                             {{^children.count}}
                                 {{#display}}
-                                    <li>
+                                    <li class="d-flex">
                                         <a class="list-item-admin" href="{{{action}}}">{{text}}</a>
                                         {{#node.isedit}}
                                             {{#hidden}}
-                                                <a class="config-admin" action="show" key="{{key}}" href="javascript:;"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                                <div class="config-admin switch"  action="show" key="{{key}}">
+                                                    <input type="checkbox">
+                                                    <span class="slider round"></span>
+                                                </div>
                                             {{/hidden}}
                                             {{^hidden}}
-                                                <a class="config-admin" action="hide" key="{{key}}" href="javascript:;"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                                <div class="config-admin switch" action="hide" key="{{key}}">
+                                                    <input type="checkbox" checked>
+                                                    <span class="slider round"></span>
+                                                </div>
                                             {{/hidden}}
                                         {{/node.isedit}}
                                     </li>
@@ -86,16 +92,22 @@
                 {{#display}}
                     {{#children.count}}
                         {{#is_short_branch}}
-                            <div class="col-md-3 mb-3">
+                            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-12 mb-3">
                                 {{#action}}
                                 <h4 class="title-admin">
                                     <a href="{{action}}">{{text}}</a>
                                     {{#node.isedit}}
                                         {{#hidden}}
-                                            <a class="config-admin" action="show" key={{key}} href="javascript:;"><i class="ml-1 fa fa-eye-slash" aria-hidden="true"></i></a>
+                                            <div class="config-admin title-tab switch" action="show">
+                                                <input type="checkbox">
+                                                <span class="slider round"></span>
+                                            </div>
                                         {{/hidden}}
                                         {{^hidden}}
-                                            <a class="config-admin" action="hide" key={{key}} href="javascript:;"><i class="ml-1 fa fa-eye" aria-hidden="true"></i></a>
+                                            <div class="config-admin title-tab switch" action="hide">
+                                                <input type="checkbox" checked>
+                                                <span class="slider round"></span>
+                                            </div>
                                         {{/hidden}}
                                     {{/node.isedit}}
                                 </h4>
@@ -119,16 +131,22 @@
             <div class="tab-pane" id="link{{key}}" role="tabpanel">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-3 mb-3">
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-12 mb-3">
                             {{#action}}
                                 <h4 class="title-admin">
                                     <a href="{{action}}">{{text}}</a>
                                     {{#node.isedit}}
                                         {{#hidden}}
-                                            <a class="config-admin" action="show" key={{key}} href="javascript:;"><i class="ml-1 fa fa-eye-slash" aria-hidden="true"></i></a>
+  {{!                                           <div class="config-admin title-tab switch" action="show">
+                                                <input type="checkbox">
+                                                <span class="slider round"></span>
+                                            </div> }}
                                         {{/hidden}}
                                         {{^hidden}}
-                                            <a class="config-admin" action="hide" key={{key}} href="javascript:;"><i class="ml-1 fa fa-eye" aria-hidden="true"></i></a>
+                  {{!                           <div class="config-admin title-tab switch" action="hide">
+                                                <input type="checkbox" checked>
+                                                <span class="slider round"></span>
+                                            </div> }}
                                         {{/hidden}}
                                     {{/node.isedit}}
                                 </h4>
@@ -138,9 +156,22 @@
                                 {{#children}}
                                     {{#display}}
                                         {{^children.count}}
-                                            <li>
+                                            <li class="d-flex">
                                                 <a href="{{{action}}}">{{text}}</a>
-                                                {{#node.isedit}}<a class="config-admin" key="{{key}}" href="javascript:;"><i class="fa fa-eye" aria-hidden="true"></i></a>{{/node.isedit}}
+                                                {{#node.isedit}}
+                                                    {{#hidden}}
+                                                        <div class="config-admin switch" action="show" key={{key}}>
+                                                            <input type="checkbox">
+                                                            <span class="slider round"></span>
+                                                        </div>
+                                                    {{/hidden}}
+                                                    {{^hidden}}
+                                                        <div class="config-admin switch" action="hide" key={{key}}>
+                                                            <input type="checkbox" checked>
+                                                            <span class="slider round"></span>
+                                                        </div>
+                                                    {{/hidden}}
+                                                {{/node.isedit}}
                                             </li>
                                         {{/children.count}}
                                     {{/display}}
@@ -150,16 +181,22 @@
                         {{#children}}
                             {{#display}}
                                 {{#children.count}}
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-12 mb-3">
                                         {{#action}}
                                             <h4 class="title-admin">
                                                 <a href="{{action}}">{{text}}</a>
                                                 {{#node.isedit}}
                                                     {{#hidden}}
-                                                        <a class="config-admin" action="show" key={{key}} href="javascript:;"><i class="ml-1 fa fa-eye-slash" aria-hidden="true"></i></a>
+                                                        <div class="config-admin title-tab switch" action="show">
+                                                            <input type="checkbox">
+                                                            <span class="slider round"></span>
+                                                        </div>
                                                     {{/hidden}}
                                                     {{^hidden}}
-                                                        <a class="config-admin" action="hide" key={{key}} href="javascript:;"><i class="ml-1 fa fa-eye" aria-hidden="true"></i></a>
+                                                        <div class="config-admin title-tab switch" action="hide">
+                                                            <input type="checkbox" checked>
+                                                            <span class="slider round"></span>
+                                                        </div>
                                                     {{/hidden}}
                                                 {{/node.isedit}}
                                             </h4>

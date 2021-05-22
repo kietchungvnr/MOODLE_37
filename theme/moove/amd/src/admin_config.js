@@ -15,18 +15,34 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
 				}
 			}
 			$.ajax(script,setting).then(function(res) {
+				var current = $('.config-admin[key="'+key+'"]');
 				if(action == 'hide') {
-					$('.config-admin[key="'+key+'"]').children('i').replaceWith('<i class="ml-1 fa fa-eye-slash" aria-hidden="true"></i>');
-					$('.config-admin[key="'+key+'"]').attr('action','show');
+					current.children('input').prop('checked',false);
+					current.attr('action','show');
 				} else {
-					$('.config-admin[key="'+key+'"]').children('i').replaceWith('<i class="ml-1 fa fa-eye" aria-hidden="true"></i>');
-					$('.config-admin[key="'+key+'"]').attr('action','hide');
+					current.children('input').prop('checked',true);
+					current.attr('action','hide');
 				}
+				if(current.hasClass('title-tab')) {
+					var count = current.parent('h4').next('ul').children('li').length;
+					if(action == 'hide') {
+						for (var i = 1; i <= count; i++) {
+							if(current.parent('h4').next('ul').children('li:nth-child('+i+')').children('div.config-admin').attr('action') == 'hide') {
+								current.parent('h4').next('ul').children('li:nth-child('+i+')').children('div.config-admin').trigger('click');
+							}
+						}
+					} else {
+						for (var i = 1; i <= count; i++) {
+							if(current.parent('h4').next('ul').children('li:nth-child('+i+')').children('div.config-admin').attr('action') == 'show') {
+								current.parent('h4').next('ul').children('li:nth-child('+i+')').children('div.config-admin').trigger('click');
+							}
+						}
+					}
+				};
 			})
 		})
     }
     return {
     	init: init
     }
-
 })
