@@ -144,16 +144,20 @@ foreach ($get_list as $value) {
             continue;
         }
     }
-    $timespenttotal     = 0;
-    $get_grade          = get_finalgrade_student($value->userid, $value->courseid);
-    $object             = new stdClass();
-    $user               = $DB->get_record("user", ['id' => $value->userid]);
-    $object->name       = $OUTPUT->user_picture($user) . '<a target="_blank" href="' . $CFG->wwwroot . '/user/profile.php?id=' . $value->id . '">' . $value->name . '</a>';
-    $object->coursename = '<a target="_blank" href="' . $CFG->wwwroot . '/course/view.php?id=' . $value->courseid . '">' . $value->coursename . '</a>';
-    $object->grade      = (!empty($get_grade)) ? $get_grade->gradefinal : '-';
-    $object->timestart  = convertunixtime('d/m/Y', $value->timestart, 'Asia/Ho_Chi_Minh');
-    $object->process    = $process . '%';
-    $object->status     = ($iscomplete == false) ? '<div class="text-center"><span class="badge text-white teacher-bg-2 font-weight-bold rounded p-2">Chưa hoàn thành</span></div<>' : '<div class="text-center"><span class="badge text-white teacher-bg-3 font-weight-bold rounded p-2">' . get_string('finished', 'local_newsvnr') . '</span></div>';
+    $timespenttotal      = 0;
+    $get_grade           = get_finalgrade_student($value->userid, $value->courseid);
+    $object              = new stdClass();
+    $user                = $DB->get_record("user", ['id' => $value->userid]);
+    $object->useravatar  = $OUTPUT->user_picture($user);
+    $object->userhref    = $CFG->wwwroot . '/user/profile.php?id=' . $value->id;
+    $object->name        = $value->name;
+    $object->coursehref  = $CFG->wwwroot . '/course/view.php?id=' . $value->courseid;
+    $object->coursename  = $value->coursename;
+    $object->grade       = (!empty($get_grade)) ? $get_grade->gradefinal : '-';
+    $object->timestart   = convertunixtime('d/m/Y', $value->timestart, 'Asia/Ho_Chi_Minh');
+    $object->process     = $process . '%';
+    $object->classstatus = ($iscomplete == false) ? 'teacher-bg-2' : 'teacher-bg-3';
+    $object->status      = ($iscomplete == false) ? get_string('unfinished','local_newsvnr') : get_string('finished', 'local_newsvnr');
     if ($value->timecompleted != null) {
         $object->timecompleted = convertunixtime('d/m/Y', $value->timecompleted, 'Asia/Ho_Chi_Minh');
     } else {

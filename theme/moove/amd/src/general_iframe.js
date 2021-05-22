@@ -9,7 +9,6 @@ define(["jquery", "core/config", "theme_moove/handle_cookie", 'iframetracker'], 
 
     // Kiểm tra có phải là 1 iframe hây không?
     function iniFrame() {
-        debugger
         var gfg = window.frameElement;
         // Checking if webpage is embedded
         if (gfg) {

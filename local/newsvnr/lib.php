@@ -2157,7 +2157,7 @@ function mimetype2Img($mimetype) {
     // var_dump($typeresource);die();
     if ($typeresource == 'xls' || $typeresource == 'xlsx' || $typeresource == 'xlsm') {
         $img = html_writer::img($OUTPUT->image_url('f/spreadsheet-24'),'',['class' => 'pr-1 img-module']);
-    } elseif ($typeresource == 'ppt') {
+    } elseif ($typeresource == 'ppt' || $typeresource == 'pptx') {
         $img = html_writer::img($OUTPUT->image_url('f/powerpoint-24'),'',['class' => 'pr-1 img-module']);
     } elseif ($typeresource == 'docx' || $typeresource == 'doc' || $typeresource == 'docm') {
         $img = html_writer::img($OUTPUT->image_url('f/document-24'),'',['class' => 'pr-1 img-module']);

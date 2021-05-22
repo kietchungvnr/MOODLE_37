@@ -49,7 +49,8 @@ if ($confirm and confirm_sesskey()) {
         $rs->close();
     }
     echo $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
-    echo $OUTPUT->continue_button($return);
+    // Custom by Thắng ; bỏ redirect
+    // echo $OUTPUT->continue_button($return);
 
 } else {
     list($in, $params) = $DB->get_in_or_equal($SESSION->bulk_users);

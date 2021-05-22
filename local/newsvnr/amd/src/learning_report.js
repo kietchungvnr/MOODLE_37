@@ -100,7 +100,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         var colums = [
             {
                 template:function(e) {
-                    return e.name;
+                    return  e.useravatar + "<a href='"+ e.userhref +"' target='_blank'>"+ e.name +"</a>";
                 },
                 field: "name",
                 title: "Tên học viên",
@@ -108,7 +108,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             },
             {
                 template:function(e) {
-                    return e.coursename;
+                    return  "<a href='"+ e.coursehref +"' target='_blank'>"+ e.coursename +"</a>";
                 },
                 field: "coursename",
                 title: "Tên khóa học",
@@ -122,7 +122,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             },
             {
                 template:function(e) {
-                    return e.status;
+                    return '<div class="text-center"><span class="badge text-white '+e.classstatus+' font-weight-bold rounded p-2">'+e.status+'</span></div>';
                 },
                 field: "status",
                 title: "Trạng thái",

@@ -149,7 +149,6 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 	        contentType: "application/json"
 	    };
     	$.ajax(script, settings).then(function(response) {
-    		debugger
     		$('#last-access').html(response.lastaccess);
 	        Highcharts.chart('access-chart', {
 	            chart: {

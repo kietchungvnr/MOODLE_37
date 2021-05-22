@@ -1315,10 +1315,11 @@ class core_renderer extends \theme_boost\output\core_renderer {
     }
     function recursive_module_folder($folderid,&$count = 0) {
         global $DB, $OUTPUT;
+        
         $countmodule = $DB->get_record_sql("SELECT count(cm.id) as count FROM {library_folder} lf 
                                                 JOIN {library_module} lm on lf.id = lm.folderid
                                                 JOIN {course_modules} cm on lm.coursemoduleid = cm.id
-                                            WHERE lf.id = $folderid");
+                                            WHERE lf.id = $folderid and lm.approval = 1");
         $folderidchild = $DB->get_records("library_folder",['parent' => $folderid],'','id');
         $count = $countmodule->count + $count;
         if(!empty(($folderidchild))) {

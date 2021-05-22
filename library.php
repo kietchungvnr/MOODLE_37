@@ -94,7 +94,7 @@ $PAGE->requires->js_call_amd('theme_moove/kendo_approval_library','init');
 $PAGE->requires->js_call_amd('theme_moove/kendo_approval_library','chart');
 $PAGE->requires->js_call_amd('theme_moove/library_folder','init');
 
-$PAGE->requires->strings_for_js( array('action', 'emptydata'), 'local_newsvnr');
+$PAGE->requires->strings_for_js( array('action', 'emptydata','viewed'), 'local_newsvnr');
 $courserenderer = $PAGE->get_renderer('core', 'course');
 echo $OUTPUT->header();
 
