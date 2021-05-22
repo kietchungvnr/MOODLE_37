@@ -76,16 +76,18 @@ $sql = "SELECT *, (SELECT COUNT(*) FROM mdl_competency cm
 					LEFT JOIN mdl_competency_plan cmp on cmp.id = cmus.planid
 					LEFT JOIN mdl_competency_usercomp cmmu on cmmu.userid = us.id AND cmmu.competencyid = cm.id $wheresql) AS total
 						FROM (
-						    select ROW_NUMBER() OVER (ORDER BY cm.id) AS RowNum,us.orgpositionid,us.id as userid,c.id as courseid,cm.id,CONCAT(us.firstname,' ',us.lastname) as name,cm.shortname,c.fullname,cmmu.proficiency,cmmu.timemodified,cmp.name as planname,cmp.reviewerid,cmp.duedate
+						    select ROW_NUMBER() OVER (ORDER BY cm.id) AS RowNum,us.orgpositionid,us.id as userid,c.id as courseid,cm.id as competencyid,CONCAT(us.firstname,' ',us.lastname) as name,cm.shortname,c.fullname,cmmu.proficiency,cmmu.timemodified,cmp.name as planname,cmp.reviewerid,cmp.duedate
 						    FROM mdl_competency cm
 					JOIN mdl_competency_usercompcourse cmu on cmu.competencyid = cm.id
 					JOIN mdl_course c on c.id = cmu.courseid
 					JOIN mdl_user us on us.id = cmu.userid
-                    LEFT JOIN mdl_competency_usercompplan cmus on cmus.competencyid = cm.id and cmus.userid = us.id
-					LEFT JOIN mdl_competency_plan cmp on cmp.id = cmus.planid
-					LEFT JOIN mdl_competency_usercomp cmmu on cmmu.userid = us.id AND cmmu.competencyid = cm.id $wheresql
+                    LEFT JOIN mdl_competency_usercompplan cmus on cmus.competencyid = cm.id AND cmus.competencyid = cm.id
+					LEFT JOIN mdl_competency_plan cmp on cmp.id = cmus.planid AND cmp.userid = us.id
+					LEFT JOIN mdl_competency_usercomp cmmu on cmmu.userid = us.id AND cmmu.competencyid = cm.id 
+                    $wheresql
 						) AS Mydata
 						ORDER BY $ordersql";
+
 $get_list = $DB->get_records_sql($sql);
 $data     = [];
 foreach ($get_list as $value) {
@@ -95,13 +97,23 @@ foreach ($get_list as $value) {
 										JOIN mdl_competency_modulecomp cmm on cmm.competencyid = cm.id
 										JOIN mdl_course_modules com on com.id = cmm.cmid
 										JOIN mdl_modules m on m.id = com.module
-									WHERE cm.id = $value->id AND com.visible = 1 AND com.deletioninprogress = 0");
+									WHERE cm.id = $value->competencyid AND com.visible = 1 AND com.deletioninprogress = 0");
     foreach ($modules as $module) {
         $modulename = $DB->get_record_sql("SELECT name from mdl_$module->name where id = $module->instance");
         if ($modulename) {
             $imgmodule = $OUTPUT->image_url('icon', $module->name);
             $activity .= '<div class="mb-1"><a target="_blank" href="' . $CFG->wwwroot . '/mod/' . $module->name . '/view.php?id=' . $module->moduleid . '"><img class="mr-1 img-module" src="' . $imgmodule . '">' . $modulename->name . '</a></div>';
         }
+    }
+    $plans = $DB->get_records_sql("SELECT p.* 
+                                    FROM mdl_competency_plan p
+                                        LEFT JOIN mdl_competency_plancomp pc ON pc.planid = p.id AND pc.competencyid = $value->competencyid
+                                        LEFT JOIN mdl_competency_usercompplan ucp ON ucp.planid = p.id AND ucp.competencyid = $value->competencyid
+                                        LEFT JOIN mdl_competency_templatecomp tc ON tc.templateid = p.templateid AND tc.competencyid = $value->competencyid
+                                    WHERE p.userid = $value->userid AND (pc.id IS NOT NULL OR ucp.id IS NOT NULL OR tc.id IS NOT NULL)");
+    $planname = '';
+    foreach ($plans as $plan) {
+        $planname .= $plan->name . ' ';
     }
     if ($value->reviewerid) {
         $reviewer         = $DB->get_record("user", ['id' => $value->reviewerid], "CONCAT(firstname,' ',lastname) as name");
@@ -115,7 +127,7 @@ foreach ($get_list as $value) {
     $object->coursename     = '<a target="_blank" href="' . $CFG->wwwroot . '/course/view.php?id=' . $value->courseid . '">' . $value->fullname . '</a>';
     $object->activity       = ($activity) ? $activity : '-';
     $object->duedate        = '-';
-    $object->planname       = ($value->planname) ? $value->planname : "-";
+    $object->planname       = ($planname) ? $planname : "-";
     $object->status         = ($value->proficiency == 1) ? "<span class='badge text-white teacher-bg-3 font-weight-bold rounded p-2'>Hoàn thành</span>" : "<span class='badge text-white teacher-bg-2 font-weight-bold rounded p-2'>Chưa hoàn thành</span>";
     $object->timecompleted  = ($value->proficiency == 1) ? convertunixtime('d/m/Y', $value->timemodified, 'Asia/Ho_Chi_Minh') : '-';
     $object->total          = $value->total;
