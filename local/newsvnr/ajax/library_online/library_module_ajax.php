@@ -84,15 +84,15 @@ $sql = "SELECT DISTINCT lm.id,lm.coursemoduleid,lm.moduletype,lm.minetype,lm.fil
             FROM {library_module} lm
                 JOIN {course_modules} cm on cm.id = lm.coursemoduleid
                 JOIN {modules} m on m.id = cm.module
-                LEFT JOIN {resource} rs on cm.instance = rs.id AND rs.course = 1
-                LEFT JOIN {book} b on cm.instance = b.id AND b.course = 1
-                LEFT JOIN {book_chapters} bc on bc.bookid = b.id
-                LEFT JOIN {page} pa on cm.instance = pa.id AND pa.course = 1
-                LEFT JOIN {url} ur on cm.instance = ur.id AND ur.course = 1
-                LEFT JOIN {lesson} l on cm.instance = l.id AND l.course = 1
-                LEFT JOIN {lesson_pages} lp on l.id = lp.lessonid
-                LEFT JOIN {imscp} i on cm.instance = i.id AND i.course = 1
-                LEFT JOIN {wiki} wk on cm.instance = wk.id AND wk.course = 1
+                LEFT JOIN {resource} rs on cm.instance = rs.id AND rs.course = 1 AND m.name = 'resource'
+                LEFT JOIN {book} b on cm.instance = b.id AND b.course = 1 AND m.name = 'book'
+                LEFT JOIN {book_chapters} bc on bc.bookid = b.id 
+                LEFT JOIN {page} pa on cm.instance = pa.id AND pa.course = 1 AND m.name = 'page'
+                LEFT JOIN {url} ur on cm.instance = ur.id AND ur.course = 1 AND m.name = 'url'
+                LEFT JOIN {lesson} l on cm.instance = l.id AND l.course = 1 AND m.name = 'lesson'
+                LEFT JOIN {lesson_pages} lp on l.id = lp.lessonid 
+                LEFT JOIN {imscp} i on cm.instance = i.id AND i.course = 1 AND m.name = 'imscp'
+                LEFT JOIN {wiki} wk on cm.instance = wk.id AND wk.course = 1 AND m.name = 'wiki'
                 JOIN {user} u on u.id = lm.userid
                 JOIN {library_folder} lf on lf.id = lm.folderid
                 LEFT JOIN mdl_logstore_standard_log lsl ON lsl.contextinstanceid = cm.id AND lsl.courseid  = cm.course AND lsl.action = 'viewed' and lsl.target = 'course_module' and lsl.courseid = 1
