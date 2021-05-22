@@ -310,11 +310,11 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
                 var modulefilter = $('#pagination').attr('modulefilter');
                 var search = $('#pagination').attr('search');
                 if(action == "viewsort_desc") {//   
-                    $(this).html('Viewed<i class="ml-1 fa fa-arrow-down" aria-hidden="true"></i>');
+                    $(this).html(M.util.get_string('viewed', 'local_newsvnr')+'<i class="ml-1 fa fa-arrow-down" aria-hidden="true"></i>');
                     $(this).attr('action','viewsort_asc')
                 }
                 if(action == "viewsort_asc") {
-                    $(this).html('Viewed<i class="ml-1 fa fa-arrow-up" aria-hidden="true"></i>');
+                    $(this).html(M.util.get_string('viewed', 'local_newsvnr')+'<i class="ml-1 fa fa-arrow-up" aria-hidden="true"></i>');
                     $(this).attr('action','viewsort_desc')
                 }
                 if(action == "timesort_desc") {

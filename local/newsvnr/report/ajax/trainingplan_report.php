@@ -31,13 +31,13 @@ require_once $CFG->dirroot . '/local/newsvnr/lib.php';
 require_once $CFG->dirroot . '/blocks/dedication/dedication_lib.php';
 require_login();
 $PAGE->set_context(context_system::instance());
-$pagesize = optional_param('pagesize', 10, PARAM_INT);
-$pagetake = optional_param('take', 0, PARAM_INT);
-$pageskip = optional_param('skip', 0, PARAM_INT);
-$action   = optional_param('action', '', PARAM_RAW);
+$pagesize     = optional_param('pagesize', 10, PARAM_INT);
+$pagetake     = optional_param('take', 0, PARAM_INT);
+$pageskip     = optional_param('skip', 0, PARAM_INT);
+$action       = optional_param('action', '', PARAM_RAW);
 $startprocess = optional_param('startprocess', 0, PARAM_INT);
 $endprocess   = optional_param('endprocess', 0, PARAM_INT);
-$wheresql = "";
+$wheresql     = "";
 if ($pagetake == 0) {
     $ordersql = "RowNum";
 } else {
@@ -49,7 +49,7 @@ switch ($action) {
         $route     = optional_param('route', 0, PARAM_INT);
         $datestart = optional_param('datestart', 0, PARAM_INT);
         $dateend   = optional_param('dateend', 0, PARAM_INT);
-        $status       = optional_param('status', 0, PARAM_INT);
+        $status    = optional_param('status', 0, PARAM_INT);
         $wheresql .= "AND CONCAT(us.firstname,' ',us.lastname) LIKE N'%$username%' ";
         $wheresql .= ($status == 2) ? "AND cp.status = 2 " : "";
         $wheresql .= ($status == 1) ? "AND cp.status <> 2 " : "";
@@ -99,16 +99,19 @@ foreach ($get_list as $value) {
             $proficiency++;
         }
     }
-    $user              = $DB->get_record("user", ['id' => $value->userid]);
-    $object            = new stdClass();
-    $object->name      = $OUTPUT->user_picture($user) . '<a target="_blank" href="' . $CFG->wwwroot . '/user/profile.php?id=' . $value->userid . '">' . $value->name . '</a>';
-    $object->routename = $value->routename;
+    $user               = $DB->get_record("user", ['id' => $value->userid]);
+    $object             = new stdClass();
+    $object->useravatar = $OUTPUT->user_picture($user);
+    $object->userhref   = $CFG->wwwroot . '/user/profile.php?id=' . $value->userid;
+    $object->name       = $value->name;
+    $object->routename  = $value->routename;
     if (!empty($comptencys)) {
         $object->process = round(($proficiency / count($comptencys)) * 100);
     } else {
         $object->process = 0;
     }
-    $object->status        = ($object->process == 100 || $value->status == 2) ? '<span class="badge text-white teacher-bg-3 font-weight-bold rounded p-2">hoàn thành</span>' : '<span class="badge text-white teacher-bg-2 font-weight-bold rounded p-2">Chưa hoàn thành</span>';
+    $object->classstatus   = ($object->process == 100 || $value->status == 2) ? 'teacher-bg-3' : 'teacher-bg-2';
+    $object->status        = ($object->process == 100 || $value->status == 2) ? 'hoàn thành' : 'Chưa hoàn thành';
     $object->timecompleted = ($value->status == 2) ? convertunixtime('d/m/Y', $value->timemodified, 'Asia/Ho_Chi_Minh') : '-';
     $object->total         = $value->total;
     $data[]                = $object;

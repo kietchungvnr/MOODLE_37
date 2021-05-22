@@ -75,7 +75,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         var colums = [
             {
                 template:function(e) {
-                    return e.name;
+                    return  e.useravatar + "<a href='"+ e.userhref +"' target='_blank'>"+ e.name +"</a>";
                 },
                 field: "name",
                 title: "Tên học viên",
@@ -90,13 +90,14 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                 template:function(e) {
                     return e.activity;
                 },
+                // hidden: true,
                 field: "activity",
                 title: "Hoạt động",
                 width: "100px"
             },
             {
                 template:function(e) {
-                    return e.coursename;
+                    return  "<a href='"+ e.coursehref +"' target='_blank'>"+ e.coursename +"</a>";
                 },
                 field: "coursename",
                 title: "Khóa học",
@@ -109,7 +110,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             },
             {
                 template:function(e) {
-                    return e.status;
+                    return "<span class='badge text-white "+e.classstatus+"  font-weight-bold rounded p-2'>"+e.status+"</span>";
                 },
                 field: "status",
                 title: "Trạng thái",

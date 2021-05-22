@@ -63,8 +63,8 @@ switch ($action) {
             $conditionplus .= ($positionid) ? "AND op.id = $positionid " : '';
             $conditionplus .= ($orgstructureid) ? "AND org.id = $orgstructureid " : '';
             $wheresql .= "AND orgpositionid in (select op.id from {orgstructure_position} op
-							JOIN {orgstructure} org on org.id = op.orgstructureid
-						where 1 = 1 $conditionplus)";
+                            JOIN {orgstructure} org on org.id = op.orgstructureid
+                        where 1 = 1 $conditionplus)";
         }
 
         break;
@@ -76,8 +76,8 @@ switch ($action) {
         $dateend      = optional_param('dateend', 0, PARAM_INT);
         if ($systemroleid) {
             $wheresql .= "AND id IN (SELECT userid
-										FROM {role_assignments} ra
-									WHERE ra.roleid = $systemroleid AND ra.contextid = 1)";
+                                        FROM {role_assignments} ra
+                                    WHERE ra.roleid = $systemroleid AND ra.contextid = 1)";
         }
         if ($courseroleid) {
             $conditioncourse = '';
@@ -102,11 +102,11 @@ switch ($action) {
         break;
 }
 $sql = "SELECT *, (SELECT COUNT(id) FROM {user} $wheresql) AS total
-				FROM (
-				    SELECT *,CONCAT(firstname,' ',lastname) as name,ROW_NUMBER() OVER (ORDER BY id) AS RowNum
-				    FROM {user} $wheresql
-				) AS Mydata
-				ORDER BY $ordersql";
+                FROM (
+                    SELECT *,CONCAT(firstname,' ',lastname) as name,ROW_NUMBER() OVER (ORDER BY id) AS RowNum
+                    FROM {user} $wheresql
+                ) AS Mydata
+                ORDER BY $ordersql";
 $get_list = $DB->get_records_sql($sql);
 $data     = [];
 foreach ($get_list as $value) {
@@ -114,7 +114,9 @@ foreach ($get_list as $value) {
     $object->id          = $value->id;
     $user                = $DB->get_record("user", ['id' => $value->id]);
     $object->suspended   = $value->suspended;
-    $object->name        = $OUTPUT->user_picture($user) . '<a target="_blank" href="' . $CFG->wwwroot . '/user/profile.php?id=' . $value->id . '">' . $value->name . '</a>';
+    $object->useravatar  = $OUTPUT->user_picture($user);
+    $object->name        = $value->name;
+    $object->href        = $CFG->wwwroot . '/user/profile.php?id=' . $value->id;
     $object->shortname   = (isset($value->shortname)) ? $value->shortname : '';
     $object->email       = $value->email;
     $object->timecreated = convertunixtime('d/m/Y', $value->timecreated, 'Asia/Ho_Chi_Minh');

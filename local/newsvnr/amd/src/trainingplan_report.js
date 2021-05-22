@@ -102,6 +102,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             {
                 template:function(e) {
                     return e.name;
+                    return  e.useravatar + "<a href='"+ e.userhref +"' target='_blank'>"+ e.name +"</a>"
                 },
                 field: "name",
                 title: "Tên học viên",
@@ -115,12 +116,12 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             {
                 template:"<div class='d-flex participants-collum'><div class='progress course'><div class='progress-bar' role='progressbar' aria-valuenow='#: process #' aria-valuemin='0' aria-valuemax='100' style='width:#: process #%'></div></div><div></div></div></div>",
                 field: "process",
-                title: "Trạng thái",
+                title: "Tiến trình",
                 width: "100px"
             },
             {
                 template:function(e) {
-                    return e.status;
+                    return '<span class="badge text-white '+e.classstatus+' font-weight-bold rounded p-2">'+e.status+'</span>';
                 },
                 field: "status",
                 title: "Trạng thái",
@@ -134,7 +135,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         ];
         var toolbar = ["excel"]
         var excel = { 
-            fileName: "learning_report.xlsx",
+            fileName: "trainingplan_report.xlsx",
             allPages: true
         }
         kendoConfig.toolbar = toolbar;
