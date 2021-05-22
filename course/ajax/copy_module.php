@@ -58,7 +58,7 @@ switch ($action) {
 		}
 	break;
 	case 'list_course':
-		if(is_siteadmin()) {
+		if(is_siteadmin() || user_has_role_assignment($USER->id, 1, context_system::instance()->id)) {
 			$ist_course = get_list_courseinfo_by_admin_kendo($pagetake, $pageskip, $q);
 		} else {
 			$ist_course = get_list_courseinfo_by_teacher_kendo($userid, $pagetake, $pageskip, $q);
