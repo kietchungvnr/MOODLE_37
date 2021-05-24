@@ -2751,6 +2751,191 @@ function get_modal_boostrap($html,$idmodal,$title = '',$footer = false) {
     return $output;
 }
 
+// Gửi message và email yêu cầu duyệt tài liệu
+function send_email_requestfile($moduleinfo) {
+    global $CFG, $DB, $USER;
+    $detailurl = $CFG->wwwroot . '/library.php';
+    $fullmessage = '<p>Dear (Mr/Mrs): <strong>Võ Tâm Ngọc Tinh</strong></p>
+                    <p>Anh/Chị đang có yêu cầu duyệt tài liệu từ thư viện bên dưới:</p>
+                    <p>Anh/Chị bấm vào link sau để xem chi tiết, tiến hành <strong>phê duyệt</strong> hay <strong>từ chối </strong>(<a href="'.$detailurl.'">Đường link</a>)</p>
+                    <table style="border-collapse: collapse;width: 100%;">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">STT</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Mã nhân viên</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Tên nhân viên</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Chức vụ</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Tên tài liệu</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Loại tài liệu</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">1</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$USER->usercode.'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.fullname($USER).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$DB->get_field('orgstructure_position', 'name',['id' => $USER->orgpositionid]).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$moduleinfo->name.'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.ucwords($moduleinfo->modulename).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">Yêu cầu</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br><strong>Thanks &amp; best regards,</strong><br>----------------------------------------<br><span><em><span style=""><span style="">Lưu ý</span></span>:</em>
+                    </span> Thư này được gửi tự động từ hệ thống, vui lòng không reply. Để hỗ trợ thông tin, liên hệ bộ phân IT.<br>
+                    <p></p>';
+    $message = new \core\message\message();
+    $message->component = 'local_newsvnr';
+    $message->name = 'requestfile';
+    $message->userfrom = $USER->id;
+    $message->userto = $CFG->siteadmins;
+    $message->subject = '[VnR.Admin] Nhắc nhở duyệt tài liệu từ thư viện';
+    $message->fullmessage = $fullmessage;
+    $message->fullmessageformat = FORMAT_HTML;
+    $message->fullmessagehtml = $fullmessage;
+    $message->smallmessage = 'Yêu cầu duyệt tài liệu';
+    $message->notification = 1;
+    $message->contexturl = (new \moodle_url('/library.php'))->out(false);
+    $message->contexturlname = 'Chi tiết';
+
+    message_send($message);
+}
+
+// Gửi message và email từ chối duyệt tài liệu
+function send_email_rejectedfile($moduleid) {
+    global $CFG, $DB, $USER;
+    $get_moduleinfo = $DB->get_record_sql('SELECT m.name, cm.instance, lm.userid FROM mdl_library_module lm
+                                                LEFT JOIN mdl_course_modules cm ON lm.coursemoduleid = cm.id
+                                                LEFT JOIN mdl_modules m ON cm.module = m.id 
+                                            WHERE lm.coursemoduleid = :coursemoduleid', 
+                                            ['coursemoduleid' => $moduleid]
+                                        );
+
+    $sql = "SELECT name FROM {" . $get_moduleinfo->name . "} WHERE id = :cmid";
+    $moduleinfo = $DB->get_record_sql($sql, 
+                                        ['cmid' => $get_moduleinfo->instance]
+                                    );
+    // User của người tạo file
+    $userinfo = $DB->get_record('user', ['id' => $get_moduleinfo->userid]);
+
+    $detailurl = $CFG->wwwroot . '/library.php';
+    $fullmessage = '<p>Dear (Mr/Mrs): <strong>'.fullname($userinfo).'</strong></p>
+                    <p>Yêu cầu duyệt tài liệu của Anh/Chị đã bị từ chối</p>
+                    <p>Anh/Chị bấm vào link sau để xem chi tiết(<a href="'.$detailurl.'">Đường link</a>)</p>
+                    <table style="border-collapse: collapse;width: 100%;">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">STT</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Mã nhân viên</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Tên nhân viên</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Chức vụ</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Tên tài liệu</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Loại tài liệu</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Người duyệt</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">1</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$userinfo->usercode.'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.fullname($userinfo).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$DB->get_field('orgstructure_position', 'name',['id' => $userinfo->orgpositionid]).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$moduleinfo->name.'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.ucwords($get_moduleinfo->name).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.fullname($USER).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">Từ chối</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br><strong>Thanks &amp; best regards,</strong><br>----------------------------------------<br><span><em><span style=""><span style="">Lưu ý</span></span>:</em>
+                    </span> Thư này được gửi tự động từ hệ thống, vui lòng không reply. Để hỗ trợ thông tin, liên hệ bộ phân IT.<br>
+                    <p></p>';
+    $message = new \core\message\message();
+    $message->component = 'local_newsvnr';
+    $message->name = 'rejectedfile';
+    $message->userfrom = $CFG->siteadmins;
+    $message->userto = $get_moduleinfo->userid;
+    $message->subject = '[VnR.Admin] Yêu cầu duyệt tài liệu đã bị từ chối';
+    $message->fullmessage = $fullmessage;
+    $message->fullmessageformat = FORMAT_HTML;
+    $message->fullmessagehtml = $fullmessage;
+    $message->smallmessage = 'Yêu cầu duyệt tài liệu đã bị từ chối';
+    $message->notification = 1;
+    $message->contexturl = (new \moodle_url('/library.php'))->out(false);
+    $message->contexturlname = 'Chi tiết';
+
+    message_send($message);
+}
+
+// Gửi message và email đồng ý duyệt tài liệu
+function send_email_approvedfile($moduleid) {
+    global $CFG, $DB, $USER;
+    $get_moduleinfo = $DB->get_record_sql('SELECT m.name, cm.instance, lm.userid FROM mdl_library_module lm
+                                                LEFT JOIN mdl_course_modules cm ON lm.coursemoduleid = cm.id
+                                                LEFT JOIN mdl_modules m ON cm.module = m.id 
+                                            WHERE lm.coursemoduleid = :coursemoduleid', 
+                                            ['coursemoduleid' => $moduleid]
+                                        );
+
+    $sql = "SELECT name FROM {" . $get_moduleinfo->name . "} WHERE id = :cmid";
+    $moduleinfo = $DB->get_record_sql($sql, 
+                                        ['cmid' => $get_moduleinfo->instance]
+                                    );
+    // User của người tạo file
+    $userinfo = $DB->get_record('user', ['id' => $get_moduleinfo->userid]);
+
+    $detailurl = $CFG->wwwroot . '/library.php';
+    $fullmessage = '<p>Dear (Mr/Mrs): <strong>'.fullname($userinfo).'</strong></p>
+                    <p>Yêu cầu duyệt tài liệu của Anh/Chị đã được chấp nhận</p>
+                    <p>Anh/Chị bấm vào link sau để xem chi tiết(<a href="'.$detailurl.'">Đường link</a>)</p>
+                    <table style="border-collapse: collapse;width: 100%;">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">STT</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Mã nhân viên</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Tên nhân viên</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Chức vụ</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Tên tài liệu</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Loại tài liệu</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Người duyệt</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">1</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$userinfo->usercode.'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.fullname($userinfo).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$DB->get_field('orgstructure_position', 'name',['id' => $userinfo->orgpositionid]).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$moduleinfo->name.'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.ucwords($get_moduleinfo->name).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.fullname($USER).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">Chấp nhận</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br><strong>Thanks &amp; best regards,</strong><br>----------------------------------------<br><span><em><span style=""><span style="">Lưu ý</span></span>:</em>
+                    </span> Thư này được gửi tự động từ hệ thống, vui lòng không reply. Để hỗ trợ thông tin, liên hệ bộ phân IT.<br>
+                    <p></p>';
+    $message = new \core\message\message();
+    $message->component = 'local_newsvnr';
+    $message->name = 'approvedfile';
+    $message->userfrom = $CFG->siteadmins;
+    $message->userto = $get_moduleinfo->userid;
+    $message->subject = '[VnR.Admin] Yêu cầu duyệt tài liệu đã được chấp nhận';
+    $message->fullmessage = $fullmessage;
+    $message->fullmessageformat = FORMAT_HTML;
+    $message->fullmessagehtml = $fullmessage;
+    $message->smallmessage = 'Yêu cầu duyệt tài liệu đã được chấp nhận';
+    $message->notification = 1;
+    $message->contexturl = (new \moodle_url('/library.php'))->out(false);
+    $message->contexturlname = 'Chi tiết';
+
+    message_send($message);
+}
+
 function local_newsvnr_extend_navigation($navigation) {
     
 }

@@ -107,7 +107,7 @@ if ($folderid == 0) {
     $newsql         = str_replace("COUNT(lsl.id) as viewed,", "", "$sql");
     $countall       = $DB->get_records_sql("$newsql AND lm.folderid =:folderid", ['folderid' => $folderid]);
 }
-if (!empty($modulebyfolder)) {
+if (!empty($modulebyfolder) && has_capability('local/newsvnr:readfolderlibrary', context_user::instance($USER->id))) {
     foreach ($modulebyfolder as $module) {
         if ($module->moduletype == "resource") {
             $url          = get_link_file($module);
@@ -145,7 +145,9 @@ $pagination         = (!empty($perpageresult)) ? html_writer::tag('div', $perpag
 $alert              = (empty($countall)) ? html_writer::tag('div', get_string('nomodule', 'local_newsvnr'), ['class' => 'alert-warning', 'role' => 'alert']) : '';
 $data['alert']      = $alert;
 $data['pagination'] = $pagination;
-$data['header']     = $OUTPUT->count_module_by_folder($countall, $folderid);
+if(has_capability('local/newsvnr:readfolderlibrary', context_user::instance($USER->id))) {
+    $data['header']     = $OUTPUT->count_module_by_folder($countall, $folderid);
+}
 $data['result']     = $output;
 echo json_encode($data, JSON_UNESCAPED_UNICODE);
 die();

@@ -17,25 +17,31 @@
 /**
  * Defines message providers (types of messages being sent)
  *
- * @package mod_questionnaire
- * @copyright  2010 onwards  Aparup Banerjee  http://moodle.com
- * @author     Mike Churchward
+ * @package local_newsvnr
+ * @copyright  2021 LeThanhVu  http://moodle.com
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $messageproviders = [
-    // Message to nonrespondents.
-    'message' => [
+    // Thông báo khi yêu cầu duyệt file trong thư viện
+    'requestfile' => [
     	'defaults' => [
             'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
             'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
         ]
     ],
-    // Response submissions.
-    'notification' => [
+    // Thông báo khi file trong thư viện đã được duyệt
+    'approvedfile' => [
     	'defaults' => [
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
+            'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
+        ]
+    ],
+    // Thông báo khi file trong thư viện đã bị từ chối
+    'rejectedfile' => [
+        'defaults' => [
             'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
             'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
         ]

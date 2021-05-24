@@ -44,13 +44,20 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min','alertjs'], function
                 var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
                 var script = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_approval_module_ajax.php?action=approval';
                 var settings = {
-                    type:"POST",
+                    type:"GET",
                     processData:true,
+                    dataType: 'json',
+                    contentType: "application/json",
                     data:{
                         moduleid:dataItem.id
                     }
                 }
-                $.ajax(script,settings).then(function() {
+                $.ajax(script,settings).then(function(resp) {
+                    if(resp.error == true) {
+                        alertify.error(resp.message, 'error', 3);
+                    } else {
+                        alertify.success(resp.message, 'success', 3);
+                    }
                 }) 
                 gridConfig.approvalModuleEvent(dataItem);
             }
@@ -82,13 +89,20 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min','alertjs'], function
                 var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
                 var script = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_approval_module_ajax.php?action=delete';
                 var settings = {
-                    type:"POST",
+                    type:"GET",
                     processData:true,
+                    dataType: 'json',
+                    contentType: "application/json",
                     data:{
                         moduleid:dataItem.id
                     }
                 }
-                $.ajax(script,settings).then(function() {
+                $.ajax(script,settings).then(function(resp) {
+                    if(resp.error == true) {
+                        alertify.error(resp.message, 'error', 3);
+                    } else {
+                        alertify.success(resp.message, 'success', 3);
+                    }
                 }) 
                 gridConfig.deleteModuleEvent(dataItem);
             }

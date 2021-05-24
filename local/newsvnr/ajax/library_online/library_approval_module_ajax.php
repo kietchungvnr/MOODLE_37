@@ -37,36 +37,75 @@ $action   = optional_param('action', '', PARAM_TEXT);
 if (isset($_POST['dataselect'])) {
     $dataselect = json_decode($_POST['dataselect']);
 }
+$data = [];
 switch ($action) {
     case 'delete':
-        $DB->delete_records('library_module', ['coursemoduleid' => $moduleid]);
-        course_delete_module($moduleid);
+        if(!has_capability('local/newsvnr:deletefilelibrary', context_user::instance($USER->id))) {
+            $data['error'] = true;
+            $data['message'] = get_string('nopermissiondelete', 'local_newsvnr');
+            break;
+        }
+
+        // Gửi email và thông báo lên chuông khi có yêu cầu duyệt file bị từ chối trong thư viện
+        send_email_rejectedfile($moduleid);
+
+        // $DB->delete_records('library_module', ['coursemoduleid' => $moduleid]);
+        // course_delete_module($moduleid);
+
+        $data['error'] = false;
+        $data['message'] = get_string('deletemodulesuccess', 'local_newsvnr');
         break;
     case 'hide':
+        
         $DB->update_record('course_modules', ['id' => $moduleid, 'visible' => 0]);
         break;
     case 'show':
         $DB->update_record('course_modules', ['id' => $moduleid, 'visible' => 1]);
         break;
     case 'approval':
-        $getid = $DB->get_record('library_module', ['coursemoduleid' => $moduleid], 'id');
-        $DB->update_record('library_module', ['id' => $getid->id, 'approval' => 1]);
+        if (!has_capability('local/newsvnr:confirmfilelibrary', context_user::instance($USER->id))) {
+            $data['error'] = true;
+            $data['message'] = get_string('nopermissionapproval', 'local_newsvnr');
+            break;
+        }
+
+        // Gửi email và thông báo lên chuông khi có yêu cầu duyệt file được chấp nhận trong thư viện
+        send_email_approvedfile($moduleid);
+
+        $getid = $DB->get_field('library_module', 'id', ['coursemoduleid' => $moduleid]);
+        // $DB->update_record('library_module', ['id' => $getid, 'approval' => 1]);
+        $data['error'] = false;
+        $data['message'] = get_string('approvalmodulesuccess', 'local_newsvnr');
         break;
     case 'deleteselect':
+        if (!has_capability('local/newsvnr:deletefilelibrary', context_user::instance($USER->id))) {
+            $data['error'] = true;
+            $data['message'] = get_string('nopermissiondelete', 'local_newsvnr');
+            break;
+        }
         foreach ($dataselect as $value) {
             $DB->delete_records('library_module', ['coursemoduleid' => $value->id]);
             course_delete_module($value->id);
         }
+        $data['error'] = false;
+        $data['message'] = get_string('deletemodulesuccess', 'local_newsvnr');
         break;
     case 'approvalselect':
-        foreach ($dataselect as $value) {
-            $getid = $DB->get_record('library_module', ['coursemoduleid' => $value->id], 'id');
-            $DB->update_record('library_module', ['id' => $getid->id, 'approval' => 1]);
+        if (!has_capability('local/newsvnr:confirmfilelibrary', context_user::instance($USER->id))) {
+            $data['error'] = true;
+            $data['message'] = get_string('nopermissionapproval', 'local_newsvnr');
+            break;
         }
+        foreach ($dataselect as $value) {
+            $getid = $DB->get_field('library_module', 'id', ['coursemoduleid' => $moduleid]);
+            $DB->update_record('library_module', ['id' => $getid, 'approval' => 1]);
+        }
+        $data['error'] = false;
+        $data['message'] = get_string('approvalmodulesuccess', 'local_newsvnr');
         break;
     default:
 
         break;
 }
-
+echo json_encode($data, JSON_UNESCAPED_UNICODE);
 die;
