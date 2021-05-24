@@ -53,7 +53,7 @@ switch ($action) {
         $conditionplus = '';
         $conditionplus .= ($notaccess == 1) ? 'AND lastaccess = 0' : '';
         $conditionplus .= ($notmodify == 1) ? 'AND timecreated = timemodified' : '';
-        $wheresql .= "AND username LIKE '%$username%' AND email LIKE '%$useremail%' AND usercode LIKE '%$usercode%' AND suspended = $userstatus $conditionplus";
+        $wheresql .= "AND CONCAT(firstname,' ',lastname) LIKE '%$username%' AND email LIKE '%$useremail%' AND usercode LIKE '%$usercode%' AND suspended = $userstatus $conditionplus";
         break;
     case 'searchorgstructure':
         $orgstructureid = optional_param('orgstructureid', 0, PARAM_INT);

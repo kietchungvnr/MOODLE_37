@@ -27,7 +27,7 @@ require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/../lib.php');
 
 require_login();
-$title = 'Báo cáo hồ sơ năng lực học viên';
+$title = get_string('competencyreport','local_newsvnr');
 // Set up the page.
 $url = new moodle_url("/local/newsvnr/report/competency.php");
 
@@ -41,6 +41,7 @@ $PAGE->navbar->ignore_active();
 $PAGE->set_pagetype('competency-report');
 $PAGE->requires->js_call_amd('local_newsvnr/competency_report', 'init');
 $PAGE->requires->js_call_amd('local_newsvnr/competency_report', 'kendoDropdown');
+$PAGE->requires->strings_for_js(array('emptydata','selectorgstructuretype','selectorgstructure','selectjobtitle','selectjobposition','selectcourse','studentcode','action','studentname','competency','activeresource','learningplan','status','timefinishcourse','reviewer','course','selectplan','selectcompetency'), 'local_newsvnr');
 $page = new \local_newsvnr\output\competency_report_page();
 
 $output = $PAGE->get_renderer('local_newsvnr');

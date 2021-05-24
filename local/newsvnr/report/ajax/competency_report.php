@@ -132,7 +132,7 @@ foreach ($get_list as $value) {
     $object->duedate        = '-';
     $object->planname       = ($planname) ? $planname : "-";
     $object->classstatus    = ($value->proficiency == 1) ? "teacher-bg-3" : "teacher-bg-2";
-    $object->status         = ($value->proficiency == 1) ? "Hoàn thành" : "Chưa hoàn thành";
+    $object->status         = ($value->proficiency == 1) ? get_string('finished','local_newsvnr') : get_string('unfinished','local_newsvnr');
     $object->timecompleted  = ($value->proficiency == 1) ? convertunixtime('d/m/Y', $value->timemodified, 'Asia/Ho_Chi_Minh') : '-';
     $object->total          = $value->total;
     $data[]                 = $object;

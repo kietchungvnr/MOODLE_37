@@ -90,7 +90,8 @@ if (isloggedin()) {
         'canviewlibrarymanagement' => $permit->canviewlibrarymanagement,
         'canaddresource' => $permit->canaddresource,
         'canapproval' => $permit->canapproval,
-        'hasopenmenu' => $check->hasopenmenu
+        'hasopenmenu' => $check->hasopenmenu,
+        'isadmin' => $check->isadmin
     ];
 
     // Improve boost navigation.

@@ -27,7 +27,7 @@ require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/../lib.php');
 
 require_login();
-$title = 'Báo cáo kế hoạch đào tạo học viên';
+$title = get_string('trainingplanreport','local_newsvnr');
 // Set up the page.
 $url = new moodle_url("/local/newsvnr/report/learning.php");
 
@@ -41,6 +41,7 @@ $PAGE->navbar->ignore_active();
 $PAGE->set_pagetype('trainingplan-report');
 $PAGE->requires->js_call_amd('local_newsvnr/trainingplan_report', 'init');
 $PAGE->requires->js_call_amd('local_newsvnr/trainingplan_report', 'kendoDropdown');
+$PAGE->requires->strings_for_js(array('emptydata','selectorgstructuretype','selectorgstructure','selectjobtitle','selectjobposition','selectcourse','studentcode','action','studentname','status','timefinishcourse','reviewer','course','selectplan','select','progress','currentplan'), 'local_newsvnr'); 	
 $page = new \local_newsvnr\output\trainingplan_report_page();
 
 $output = $PAGE->get_renderer('local_newsvnr');

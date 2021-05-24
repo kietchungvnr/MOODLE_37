@@ -198,7 +198,7 @@ foreach ($getcourse as $value) {
                     <ul class="category">
                         <li>' . get_string('countstudent', 'local_newsvnr') . ': <a href="#">' . $value->countstudent . '</a></li>
                         <li>' . get_string('teachername', 'local_newsvnr') . ': <a href="#">' . $value->fullnamet . '</a></li>
-                        <li>' . get_string('coursecatogories', 'local_newsvnr') . ' :' . $value->category->name . ' </li>
+                        <li>' . get_string('coursecatogories', 'local_newsvnr') . ': ' . $value->category->name . ' </li>
                     </ul>
                 </div>
             </div>
