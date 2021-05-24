@@ -9,5 +9,6 @@ if ($hassiteconfig) {
     // $ADMIN->add('courses', new admin_externalpage('coursesetupvnr', get_string('coursesetup','local_newsvnr'), "$CFG->wwwroot/course/coursesetup_management.php"));
     $ADMIN->add('development', new admin_externalpage('managermentapivnr', get_string('managermentapi_list','local_newsvnr'), "$CFG->wwwroot/local/newsvnr/api_managerment.php"));
     $ADMIN->add('development', new admin_externalpage('emailmanagement', get_string('emailmanagement','local_newsvnr'), "$CFG->wwwroot/local/newsvnr/emailmanagement.php"));
+    $ADMIN->add('development', new admin_externalpage('rolemanagement', get_string('rolemanagement','local_newsvnr'), "$CFG->wwwroot/local/newsvnr/generallibrary.php#rolepermissions"));
     $ADMIN->add('newsvnr', new admin_externalpage('tooluploadorgstruture', get_string('orgimport', 'local_newsvnr'), "$CFG->wwwroot/local/newsvnr/import/uploadorg.php", 'moodle/site:uploadusers'));
 }

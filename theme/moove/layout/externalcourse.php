@@ -53,6 +53,13 @@ if(isloggedin()) {
     $permit->canaddresource = false;
 }
 
+global $USER;
+if(is_siteadmin() || has_capability('local/newsvnr:assignmentfilelibrary', context_user::instance($USER->id))) {
+    $permit->canviewlibrarymanagement = true;
+} else {
+    $permit->canviewlibrarymanagement = false;
+}
+
 if (isloggedin()) {
     global $DB;
 
@@ -80,9 +87,11 @@ if (isloggedin()) {
         'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
         'hasportal' => $check->hasportal,
         'canedit' => $permit->canedit,
+        'canviewlibrarymanagement' => $permit->canviewlibrarymanagement,
         'canaddresource' => $permit->canaddresource,
         'canapproval' => $permit->canapproval,
-        'hasopenmenu' => $check->hasopenmenu
+        'hasopenmenu' => $check->hasopenmenu,
+        'isadmin' => $check->isadmin
     ];
 
     // Improve boost navigation.

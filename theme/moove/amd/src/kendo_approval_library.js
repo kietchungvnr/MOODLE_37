@@ -111,12 +111,10 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 			kendoConfig.apiSettings = settings;
 			kendoConfig.approvalModuleEvent = function(dataItem) {
 				var grid = $(gridName).data("kendoGrid");
-				alertify.notify(s[7],'success',3);
 				grid.dataSource.read();
 			}
 			kendoConfig.deleteModuleEvent = function(dataItem) {
 				var grid = $(gridName).data("kendoGrid");
-				alertify.notify(s[6],'success',3);
 				grid.dataSource.read();
 			}
 			var gridData = kendo.initGrid(kendoConfig);
@@ -127,12 +125,10 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 			kendoConfigDB.selectable = false;
 			kendoConfigDB.approvalModuleEvent = function(dataItem) {
 				var grid = $(gridNameDB).data("kendoGrid");
-				alertify.notify(s[7],'success',3);
 				grid.dataSource.read();
 			}
 			kendoConfigDB.deleteModuleEvent = function(dataItem) {
 				var grid = $(gridNameDB).data("kendoGrid");
-				alertify.notify(s[6],'success',3);
 				grid.dataSource.read();
 			}
 

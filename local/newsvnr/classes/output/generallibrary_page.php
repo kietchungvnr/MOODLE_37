@@ -25,8 +25,6 @@
  **/
 namespace local_newsvnr\output;
 
-require_once('lib.php');
-
 use renderable;
 use templatable;
 use renderer_base;
