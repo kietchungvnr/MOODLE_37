@@ -27,7 +27,7 @@ require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/../lib.php');
 
 require_login();
-$title = 'Báo cáo tiến độ học tập';
+$title = get_string('learningreport','local_newsvnr');
 // Set up the page.
 $url = new moodle_url("/local/newsvnr/report/learning.php");
 
@@ -41,6 +41,7 @@ $PAGE->navbar->ignore_active();
 $PAGE->set_pagetype('learning-report');
 $PAGE->requires->js_call_amd('local_newsvnr/learning_report', 'init');
 $PAGE->requires->js_call_amd('local_newsvnr/learning_report', 'kendoDropdown');
+$PAGE->requires->strings_for_js(array('emptydata','selectorgstructuretype','selectorgstructure','selectjobtitle','selectjobposition','selectcourse','studentcode','action','studentname','learningplan','status','timefinishcourse','reviewer','course','selectplan','selectcompetency','timeaccess','grade','learningprocess','joindate','select'), 'local_newsvnr');
 $page = new \local_newsvnr\output\learning_report_page();
 
 $output = $PAGE->get_renderer('local_newsvnr');

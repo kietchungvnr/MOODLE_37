@@ -111,7 +111,7 @@ foreach ($get_list as $value) {
         $object->process = 0;
     }
     $object->classstatus   = ($object->process == 100 || $value->status == 2) ? 'teacher-bg-3' : 'teacher-bg-2';
-    $object->status        = ($object->process == 100 || $value->status == 2) ? 'hoàn thành' : 'Chưa hoàn thành';
+    $object->status        = ($object->process == 100 || $value->status == 2) ? get_string('finished','local_newsvnr') : get_string('unfinished','local_newsvnr') ;
     $object->timecompleted = ($value->status == 2) ? convertunixtime('d/m/Y', $value->timemodified, 'Asia/Ho_Chi_Minh') : '-';
     $object->total         = $value->total;
     $data[]                = $object;

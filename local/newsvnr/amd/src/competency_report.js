@@ -9,35 +9,35 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         var kendoConfig = {};
             kendoConfig.apiSettings = { url: datascript + 'get_competency'};
             kendoConfig.value = 'value';
-            kendoConfig.optionLabel = "Chọn năng lực";
+            kendoConfig.optionLabel = M.util.get_string('selectcompetency', 'local_newsvnr');
         var kendoUserStatus = kendoService.initDropDownList(kendoConfig);
         $("#competency").kendoDropDownList(kendoUserStatus);
         //dropdown trạng thái người dùng
         var kendoConfig = {};
             kendoConfig.apiSettings = { url: datascript + 'get_competencyplan'};
             kendoConfig.value = 'value';
-            kendoConfig.optionLabel = "Chọn kế hoạch";
+            kendoConfig.optionLabel = M.util.get_string('selectplan', 'local_newsvnr');
         var kendoUserStatus = kendoService.initDropDownList(kendoConfig);
         $("#competencyplan").kendoDropDownList(kendoUserStatus);
         //dropdown trạng thái người dùng
         var kendoConfig = {};
             kendoConfig.apiSettings = { url: datascript + 'get_course'};
             kendoConfig.value = 'value';
-            kendoConfig.optionLabel = "Chọn khóa học";
+            kendoConfig.optionLabel = M.util.get_string('selectcourse', 'local_newsvnr');
         var kendoUserStatus = kendoService.initDropDownList(kendoConfig);
         $("#course").kendoDropDownList(kendoUserStatus);
         //dropdown loại phòng ban
         var kendoConfig = {};
             kendoConfig.apiSettings = { url: datascript + 'get_orgstructure_category'};
             kendoConfig.value = 'categoryid';
-            kendoConfig.optionLabel = "Chọn loại phòng ban";
+            kendoConfig.optionLabel = M.util.get_string('selectorgstructuretype', 'local_newsvnr');
         var kendoOrgCategory = kendoService.initDropDownList(kendoConfig);
         $("#orgstructure_category").kendoDropDownList(kendoOrgCategory);
         //dropdown phòng ban
         var kendoConfig = {};
             kendoConfig.apiSettings = { url: datascript + 'get_orgstructure'};
             kendoConfig.value = 'orgid';
-            kendoConfig.optionLabel = "Chọn phòng ban";
+            kendoConfig.optionLabel = M.util.get_string('selectorgstructure', 'local_newsvnr');
             kendoConfig.cascadeFrom = 'orgstructure_category';
         var kendoOrgstructure = kendoService.initDropDownList(kendoConfig);
         $("#orgstructure").kendoDropDownList(kendoOrgstructure);
@@ -45,14 +45,14 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         var kendoConfig = {};
             kendoConfig.apiSettings = { url: datascript + 'get_orgstructure_jobtitle'};
             kendoConfig.value = 'jobtitleid';
-            kendoConfig.optionLabel = "Chọn chức danh";
+            kendoConfig.optionLabel = M.util.get_string('selectjobtitle', 'local_newsvnr');
         var kendoOrgJobtitle = kendoService.initDropDownList(kendoConfig);
         $("#orgstructure_jobtitle").kendoDropDownList(kendoOrgJobtitle);
         //dropdown chức vụ
         var kendoConfig = {};
             kendoConfig.apiSettings = { url: datascript + 'get_orgstructure_position'};
             kendoConfig.value = 'positionid';
-            kendoConfig.optionLabel = "Chọn chức vụ";
+            kendoConfig.optionLabel = M.util.get_string('selectjobposition', 'local_newsvnr');
             kendoConfig.cascadeFrom = 'orgstructure_jobtitle';
         var kendoOrgPosition = kendoService.initDropDownList(kendoConfig);
         $("#orgstructure_position").kendoDropDownList(kendoOrgPosition);
@@ -60,7 +60,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         var kendoConfig = {};
             kendoConfig.apiSettings = { url: datascript + 'get_report'};
             kendoConfig.value = 'value';
-            kendoConfig.optionLabel = "Chọn báo cáo";
+            kendoConfig.optionLabel = M.util.get_string('selectreport', 'local_newsvnr');
         var kendoReport = kendoService.initDropDownList(kendoConfig);
         $("#report").kendoDropDownList(kendoReport);
     }   
@@ -78,12 +78,12 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                     return  e.useravatar + "<a href='"+ e.userhref +"' target='_blank'>"+ e.name +"</a>";
                 },
                 field: "name",
-                title: "Tên học viên",
+                title: M.util.get_string('studentname', 'local_newsvnr'),
                 width: "100px"
             },
             {
                 field: "competencyname",
-                title: "Năng lực",
+                title: M.util.get_string('competency', 'local_newsvnr'),
                 width: "100px"
             },
             {
@@ -92,7 +92,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                 },
                 // hidden: true,
                 field: "activity",
-                title: "Hoạt động",
+                title: M.util.get_string('activeresource', 'local_newsvnr'),
                 width: "100px"
             },
             {
@@ -100,12 +100,12 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                     return  "<a href='"+ e.coursehref +"' target='_blank'>"+ e.coursename +"</a>";
                 },
                 field: "coursename",
-                title: "Khóa học",
+                title: M.util.get_string('course', 'local_newsvnr'),
                 width: "130px"
             },
             {
                 field: "planname",
-                title: "Kế hoạch học tập",
+                title: M.util.get_string('learningplan', 'local_newsvnr'),
                 width: "100px"
             },
             {
@@ -113,17 +113,17 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                     return "<span class='badge text-white "+e.classstatus+"  font-weight-bold rounded p-2'>"+e.status+"</span>";
                 },
                 field: "status",
-                title: "Trạng thái",
+                title: M.util.get_string('status', 'local_newsvnr'),
                 width: "90px"
             },
             {
                 field: "timecompleted",
-                title: "Ngày hoàn thành",
+                title: M.util.get_string('timefinishcourse', 'local_newsvnr'),
                 width: "80px"
             },
             {
                 field: "reviewer",
-                title: "Người đánh giá",
+                title: M.util.get_string('reviewer', 'local_newsvnr'),
                 width: "100px"
             }
         ];
