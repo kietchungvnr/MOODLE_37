@@ -101,7 +101,8 @@
     .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .assignsubmission_file,
     .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .submissioneditable,
     .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .timeremaining,
-    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .submissiongraded  {
+    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .submissiongraded,
+    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .latesubmission  {
         border-bottom: 1px solid #dee2e6;
         padding: 10px;
     }

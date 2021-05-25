@@ -94,31 +94,6 @@ $sql = "SELECT ROW_NUMBER() OVER (ORDER BY c.id) AS RowNum,CONCAT(u.firstname,' 
             JOIN {context} AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
             JOIN {role} AS r ON r.id= ra.roleid
             LEFT JOIN mdl_course_completions cc ON cc.userid = c.id AND cc.course = c.id $wheresql ORDER BY $ordersql";
-if ($startprocess || $endprocess || $status) {
-    foreach ($all as $key => $value) {
-        $course     = $DB->get_record('course', ['id' => $value->courseid]);
-        $cinfo      = new completion_info($course);
-        $iscomplete = $cinfo->is_course_complete($value->userid);
-        if ($startprocess) {
-            if ($process < $startprocess) {
-                unset($all[$key]);
-            }
-        }
-        if ($endprocess) {
-            if ($process > $endprocess) {
-                unset($all[$key]);
-            }
-        }
-        if ($status) {
-            if ($status == 2 && $iscomplete == false) {
-                unset($all[$key]);
-            }
-            if ($status == 1 && $iscomplete == true) {
-                unset($all[$key]);
-            }
-        }
-    }
-}
 $get_list = $DB->get_records_sql($sql);
 $data     = [];
 foreach ($get_list as $value) {

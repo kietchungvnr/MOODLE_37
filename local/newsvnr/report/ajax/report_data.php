@@ -94,6 +94,7 @@ switch ($action) {
         break;
     case 'get_course';
         $courses = $DB->get_records('course', ['visible' => 1]);
+        $courses = $DB->get_records_sql('select * from {course} where visible = 1 AND id <> 1');
         foreach ($courses as $course) {
             $object       = new stdClass();
             $object->name = $course->fullname;
