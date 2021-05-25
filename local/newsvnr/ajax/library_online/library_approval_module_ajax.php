@@ -49,8 +49,8 @@ switch ($action) {
         // Gửi email và thông báo lên chuông khi có yêu cầu duyệt file bị từ chối trong thư viện
         send_email_rejectedfile($moduleid);
 
-        // $DB->delete_records('library_module', ['coursemoduleid' => $moduleid]);
-        // course_delete_module($moduleid);
+        $DB->delete_records('library_module', ['coursemoduleid' => $moduleid]);
+        course_delete_module($moduleid);
 
         $data['error'] = false;
         $data['message'] = get_string('deletemodulesuccess', 'local_newsvnr');
@@ -73,7 +73,7 @@ switch ($action) {
         send_email_approvedfile($moduleid);
 
         $getid = $DB->get_field('library_module', 'id', ['coursemoduleid' => $moduleid]);
-        // $DB->update_record('library_module', ['id' => $getid, 'approval' => 1]);
+        $DB->update_record('library_module', ['id' => $getid, 'approval' => 1]);
         $data['error'] = false;
         $data['message'] = get_string('approvalmodulesuccess', 'local_newsvnr');
         break;
