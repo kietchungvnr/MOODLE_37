@@ -462,6 +462,7 @@ h6 {
         }
       }
       a {
+        white-space: break-spaces;
         color: #fff;
         transition: all 0.40s linear;
         &:hover {
@@ -5915,7 +5916,6 @@ i.expand-icon.active {
   text-overflow: ellipsis;
   overflow: hidden;
   width: auto;
-  height: 1.2em;
   white-space: nowrap;
 }
 .font-title {

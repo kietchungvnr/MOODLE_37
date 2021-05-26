@@ -244,7 +244,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
             $('#table-library').on('click', 'a#share-module-library', function(e) {
                 $('#share-popup-modal-module').modal('show');
                 var moduleid = $(this).attr('moduleid');
-                $('#module-from-library').attr('moduleid', moduleid);
+                $('#share-module-library').attr('moduleid', moduleid);
             })
             // kendo lọc khóa học 
             var kendoConfig = {};
@@ -261,7 +261,8 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
             $("#course-section-input").kendoDropDownList(kendoCourseSection);
             
             $("#share-module-library").click(function() {
-                var moduleid = $('#module-from-library').attr('moduleid');
+                debugger
+                var moduleid = $('#share-module-library').attr('moduleid');
                 var courseid = $('#course-share-input').val();
                 var sectionid = $('#course-section-input').val();
                 var settings = {
