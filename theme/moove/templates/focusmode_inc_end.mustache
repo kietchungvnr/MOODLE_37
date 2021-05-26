@@ -155,8 +155,13 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
                 var url = "https://docs.google.com/viewerng/viewer?url=" + getUrl + "&embedded=true";
                 var iframe = '<iframe src=\' '+url+' \' id=\'assignfile-popup\' height=\'768px\' width=\'100%\' frameborder=\'0\'></iframe>';    
             }
-            $('#body-assignfile-modal').html(iframe); 
-            $('#assignfile-popup').on('load', function(e) {
+            $('#body-assignfile-modal').html(iframe);
+            if($('#btn-grade-download').length == 0) {
+                $('#assignfile-modal .modal-header .close').attr('style', 'margin: -1rem');
+                var urlDownload = assignFileUrl + '?forcedownload=1';
+                $('<a href="'+urlDownload+'" class="ml-auto" id="btn-grade-download"><i class="icon fa fa-cloud-download fa-fw" title="Tải xuống" aria-label="Tải xuống"></i></a>').insertBefore('.close');
+            } 
+            $('#assignfile-popup').on('load', async function(e) {
                 setTimeout(function() {
                     $('#assignfile-modal .modal-header h4').html(getName);
                     if(exceptions.includes(getFileType)) {

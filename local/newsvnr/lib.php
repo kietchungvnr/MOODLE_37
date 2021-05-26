@@ -2789,7 +2789,7 @@ function send_email_requestfile($moduleinfo) {
     $message->component = 'local_newsvnr';
     $message->name = 'requestfile';
     $message->userfrom = $USER->id;
-    $message->userto = $CFG->siteadmins;
+    $message->userto = \core_user::get_support_user();
     $message->subject = '[VnR.Admin] Nhắc nhở duyệt tài liệu từ thư viện';
     $message->fullmessage = $fullmessage;
     $message->fullmessageformat = FORMAT_HTML;
@@ -2855,7 +2855,7 @@ function send_email_rejectedfile($moduleid) {
     $message = new \core\message\message();
     $message->component = 'local_newsvnr';
     $message->name = 'rejectedfile';
-    $message->userfrom = $CFG->siteadmins;
+    $message->userfrom = \core_user::get_support_user();
     $message->userto = $get_moduleinfo->userid;
     $message->subject = '[VnR.Admin] Yêu cầu duyệt tài liệu đã bị từ chối';
     $message->fullmessage = $fullmessage;
@@ -2922,7 +2922,7 @@ function send_email_approvedfile($moduleid) {
     $message = new \core\message\message();
     $message->component = 'local_newsvnr';
     $message->name = 'approvedfile';
-    $message->userfrom = $CFG->siteadmins;
+    $message->userfrom = \core_user::get_support_user();
     $message->userto = $get_moduleinfo->userid;
     $message->subject = '[VnR.Admin] Yêu cầu duyệt tài liệu đã được chấp nhận';
     $message->fullmessage = $fullmessage;
