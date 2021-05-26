@@ -473,8 +473,8 @@ class mod_wiki_renderer extends plugin_renderer_base {
         $select->label = get_string('mapmenu', 'wiki') . ': ';
         return $this->output->container($this->output->render($select), 'midpad');
     }
-    public function wiki_files_tree($context, $subwiki) {
-        return $this->render(new wiki_files_tree($context, $subwiki));
+    public function wiki_files_tree($context, $subwiki, $search) {
+        return $this->render(new wiki_files_tree($context, $subwiki, $search));
     }
     public function render_wiki_files_tree(wiki_files_tree $tree) {
         if (empty($tree->dir['subdirs']) && empty($tree->dir['files'])) {
@@ -537,10 +537,22 @@ class wiki_files_tree implements renderable {
     public $context;
     public $dir;
     public $subwiki;
-    public function __construct($context, $subwiki) {
+    public $search;
+    public function __construct($context, $subwiki, $search) {
         $fs = get_file_storage();
+        $this->context = $search;
         $this->context = $context;
         $this->subwiki = $subwiki;
         $this->dir = $fs->get_area_tree($context->id, 'mod_wiki', 'attachments', $subwiki->id);
+        // Custom by Thắng : search tài liệu wiki
+        if($search) {
+            foreach ($this->dir['files'] as $key => $value) {
+                $format_key = ' '.mb_strtolower(str_replace(' ','',$key),'UTF-8');
+                $format_search = mb_strtolower(str_replace(' ','',$search),'UTF-8');
+                if(strpos($format_key,$format_search) == false) {
+                    unset($this->dir['files'][$key]);
+                } 
+            }
+        }
     }
 }
