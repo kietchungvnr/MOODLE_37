@@ -155,6 +155,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             if($('[data-role=1]').length > 0) {
                 $('.course-content li.activity a.aalink').bind('click', function(e) {
                     e.preventDefault();
+                    Cookie.setCookieSecure('ebmlms', 'true');
                     var moduleId = $(this).parents('li').attr('id').split('-')[1];
                     var element = "div.dropdown-content-2 a[module-id=" +moduleId+ "]";
                     $('#focus-mod').trigger('click');
