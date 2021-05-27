@@ -134,6 +134,7 @@ if ($mform_orgposition->is_cancelled()) {
     $orgposition->code = $orgposition->poscode;
     $orgposition->namebylaw = $orgposition->position_namebylaw;
     $orgposition->description = $orgposition->orgposition_description;
+    $orgposition->level = $orgposition->level;
     if (isset($orgposition->submitbutton)) {
       $message = $strInsert;
     }

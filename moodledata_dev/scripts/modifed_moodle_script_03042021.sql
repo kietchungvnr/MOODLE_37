@@ -357,3 +357,7 @@ ALTER TABLE mdl_question ADD level NVARCHAR(50) DEFAULT(N'default')
 ALTER TABLE mdl_question ADD imgwidth NVARCHAR(50) DEFAULT(N'default')
 ALTER TABLE mdl_question ADD imgheight NVARCHAR(50) DEFAULT(N'default')
 --- *** Kết thúc script cho bản build version '12042021' ***--
+
+--- *** Script cho bản build version '24052021' *** ---
+ALTER TABLE mdl_orgstructure_position ADD level SMALLINT DEFAULT NULL
+--- *** Kết thúc script cho bản build version '24052021' ***--

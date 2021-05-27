@@ -223,6 +223,7 @@ class local_newsvnr_external extends external_api {
             $getorgstructureid = $DB->get_field_sql('SELECT id FROM {orgstructure} WHERE name = ?',array($validateddata->orgstructureid)); 
             $orgposition->name = $validateddata->posname;
             $orgposition->code = $validateddata->poscode;
+            $orgposition->level = $validateddata->level;
             $orgposition->namebylaw = $validateddata->position_namebylaw;
             $orgposition->jobtitleid = $validateddata->jobtitleid;
             $orgposition->orgstructureid = $getorgstructureid;
