@@ -1,5 +1,6 @@
 define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/handle_cookie","local_newsvnr/initkendocontrolservices"], function($, Config, Str, Notification, Cookie, kendoService) {
     "use strict";
+    // menu left 
     $('#btn-menu').click(function() {
         var ck = Cookie.getCookie('menu');
         $('.content-menu-expand').slideUp('fast');
@@ -33,12 +34,14 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         $(".click-menu-expand#" + id + " i").toggleClass('active');
         $('.content-menu-expand.' + id).slideToggle('fast');
     })
+    // click dropdown
     var path = window.location.href;
     $('.fixed-sidebar-left li.menu-link a').each(function() {
         if (this.href === path) {
             $(this).parent('li').addClass('active');
         }
     });
+    // tab click 
     $(".nav.multi-tab").on('click','li a',function() {
         var tab = $(this).parent().parent('ul').attr('tab');
         var data = $(this).attr('data-key');
@@ -47,6 +50,25 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         $('.tab-content[tab='+tab+'] .tab-pane').hide();
         $('.tab-content[tab='+tab+'] .tab-pane[data="' + data + '"]').show();
     });
+
+    if($('.menuitem-custom .menu-link').length == 0) {
+        $('.menuitem-custom').css('display','none');
+    }
+    $('#page-mod-assign-view .generaltable tbody tr td').each(function() {
+        var text = $(this).html();
+        $(this).html('<a></a>') 
+        $(this).children('a').append(text);
+    })
+    /// search khóa học header
+    var script = Config.wwwroot + '/local/newsvnr/restfulapi/webservice.php?action=';
+    var linkcourse = Config.wwwroot + '/course/view.php?id=';
+    var kendoConfig = {};
+        kendoConfig.apiSettings = { url: script+'search_course' };
+        kendoConfig.textfield = 'fullname';
+        kendoConfig.template = '<a href="'+linkcourse+'#:courseid#">#: fullname #</a>';
+    var kendoCourseAll = kendoService.initSearchAutoComplete(kendoConfig);
+    $("#course_search_form_fp").kendoAutoComplete(kendoCourseAll);
+
     $(".search_form_fp i").click(function(){
         var keyword = $('#course_search_form_fp').val();
         var linksearch = Config.wwwroot + '/course/search.php?search=' + keyword ;
@@ -57,20 +79,4 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             $(".search_form_fp i").click();
         }
     })
-    if($('.menuitem-custom .menu-link').length == 0) {
-        $('.menuitem-custom').css('display','none');
-    }
-    $('#page-mod-assign-view .generaltable tbody tr td').each(function() {
-        var text = $(this).html();
-        $(this).html('<a></a>') 
-        $(this).children('a').append(text);
-    })
-    var script = Config.wwwroot + '/local/newsvnr/restfulapi/webservice.php?action=';
-    var linkcourse = Config.wwwroot + '/course/view.php?id=';
-    var kendoConfig = {};
-        kendoConfig.apiSettings = { url: script+'search_course' };
-        kendoConfig.textfield = 'fullname';
-        kendoConfig.template = '<a href="'+linkcourse+'#:courseid#">#: fullname #</a>';
-    var kendoCourseAll = kendoService.initSearchAutoComplete(kendoConfig);
-    $("#course_search_form_fp").kendoAutoComplete(kendoCourseAll);
 });

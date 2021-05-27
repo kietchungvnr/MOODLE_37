@@ -3846,10 +3846,12 @@ class core_course_external extends external_api {
         $theme_settings = new theme_settings();
         foreach ($formattedcourses as $key => $value) {
             $courseid = $value->id;
+            $coursestarred = $DB->get_record('favourite', ['component' => 'core_course', 'itemid' => $courseid, 'userid' => $USER->id]);
             $arr = $theme_settings::role_courses_teacher_slider_block_course_recent($courseid);
             $value->fullnamet = $arr->fullnamet;
             $value->countstudent = $arr->studentnumber;
             $value->enrolmethod = get_enrol_method($courseid);
+            $value->hasstarred = ($coursestarred) ? true : false;
             if($value->progress > 0 ){
               $value->hasprogress = true;
             }
@@ -3908,7 +3910,8 @@ class core_course_external extends external_api {
                             'fullnamet' => new external_value(PARAM_RAW, 'teacher name'),
                             'imageteacher' => new external_value(PARAM_RAW, 'teacher image'),
                             'countstudent' => new external_value(PARAM_INT, 'count number of student'),
-                            'enrolmethod' => new external_value(PARAM_RAW, 'method enrol')
+                            'enrolmethod' => new external_value(PARAM_RAW, 'method enrol'),
+                            'hasstarred' => new external_value(PARAM_BOOL, 'course has starred or not')
                         )
                     )
                 ),
@@ -4099,6 +4102,7 @@ class core_course_external extends external_api {
         }, $courses);
         foreach ($recentcourses as $key => $value) {
             $courseid = $value->id;
+            $coursestarred = $DB->get_record('favourite', ['component' => 'core_course', 'itemid' => $courseid, 'userid' => $USER->id]);
             $arr = $theme_settings::role_courses_teacher_slider_block_course_recent($courseid);
             $value->fullnamet = $arr->fullnamet;
             $value->countstudent = $arr->studentnumber;
@@ -4109,6 +4113,7 @@ class core_course_external extends external_api {
               $value->hasprogress = false;
             }
             $value->enrolmethod = get_enrol_method($courseid);
+            $value->hasstarred = ($coursestarred) ? true : false;
             if (isset($arr->id)) {
               $stduser = new stdClass();
               $userid = $DB->get_records('user',array('id' => $arr->id));
@@ -4158,7 +4163,8 @@ class core_course_external extends external_api {
                     'fullnamet' => new external_value(PARAM_RAW, 'teacher name'),
                     'imageteacher' => new external_value(PARAM_RAW, 'teacher image'),
                     'countstudent' => new external_value(PARAM_INT, 'count number of student'),
-                    'enrolmethod' => new external_value(PARAM_RAW, 'method enrol')
+                    'enrolmethod' => new external_value(PARAM_RAW, 'method enrol'),
+                    'hasstarred' => new external_value(PARAM_BOOL, 'course has starred or not')
                 )
             )
         );

@@ -709,4 +709,33 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             }) 
         });
     };
+    // đánh sao khóa học
+    const starCourse = (courseid,action) => {
+        require(['jquery', 'core/config'], ($, Config) => {
+            var script = Config.wwwroot + '/local/newsvnr/ajax/course_action.php';
+            var settings = {
+                type: "GET",
+                processData: true,
+                data: {
+                    courseid: courseid,
+                    action: action
+                },
+                contenttype: "application/json",
+            }
+            $.ajax(script,settings).then(function() {
+                var current = $('.star-course[courseid='+courseid+']');
+                if(action == 'starred') {
+                    current.html('<i class="fa fa-star mr-1"></i>');
+                    current.attr('onclick',"starCourse("+courseid+",'unstarred')");
+                    current.removeClass('notstarred');
+                    current.addClass('starred');
+                } else {
+                    current.html('<i class="fa fa-star-o mr-1"></i>');
+                    current.attr('onclick',"starCourse("+courseid+",'starred')");
+                    current.removeClass('starred');
+                    current.addClass('notstarred');
+                }
+            })
+        })
+    }
 </script>

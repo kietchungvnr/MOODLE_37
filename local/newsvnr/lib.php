@@ -2669,9 +2669,10 @@ function get_user_badge($userid) {
 
 // course card info
 function get_coursecard_info($courseid) {
-    global $DB,$OUTPUT,$CFG;
+    global $DB,$OUTPUT,$CFG,$USER;
     $obj = new stdClass;
     $course         = $DB->get_record('course',['id' => $courseid]);
+    $coursestarred = $DB->get_record('favourite', ['component' => 'core_course', 'itemid' => $courseid, 'userid' => $USER->id]);
     $progress = round(\core_completion\progress::get_course_progress_percentage($course));
     $theme_settings = new theme_settings();
     $courseobj      = new \core_course_list_element($course);
@@ -2679,6 +2680,8 @@ function get_coursecard_info($courseid) {
     $arr            = $theme_settings::role_courses_teacher_slider_block_course_recent($courseid);
     $obj->fullnamet      = $arr->fullnamet;
     $obj->countstudent   = $arr->studentnumber;
+    $obj->hasstarred = ($coursestarred) ? true : false;
+    $obj->id = $courseid;
     if($progress > 0) {
         $noprogress = "";
     } else {

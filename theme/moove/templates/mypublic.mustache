@@ -156,6 +156,12 @@
                                                     <div class="post-img">
                                                         {{{courseimage}}}
                                                         <div class="post-info">
+                                                            {{#hasstarred}}
+                                                                <div class="star-course starred" courseid="{{id}}" title="Khóa học đã đánh sao" onclick="starCourse('{{id}}','unstarred')"><i class="fa fa-star mr-1"></i></div>
+                                                            {{/hasstarred}}
+                                                            {{^hasstarred}}
+                                                                <div class="star-course notstarred" courseid="{{id}}" title="Đánh sao khóa học" onclick="starCourse('{{id}}','starred')"><i class="fa fa-star-o mr-1"></i></div>
+                                                            {{/hasstarred}}
                                                             <ul class="category">
                                                                 <li>{{#str}}countstudent, local_newsvnr{{/str}} <a href="#">{{countstudent}}</a></li>
                                                                 <li>{{#str}}teachername, local_newsvnr{{/str}} <a href="#">{{fullnamet}}</a></li>
