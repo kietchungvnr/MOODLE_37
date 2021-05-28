@@ -333,13 +333,18 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                
                             },
                             {
+                                field: "level",
+                                title: 'level',
+                                width: 300
+                            },
+                            {
                                 template: function(e) {
                                     return e.listbtn;
                                 },
                                 field: "listbtn",
                                 title: s[0],
                                 width: 120
-                            },
+                            }
                         ];
                         var param = event.target.id; 
                         var columns = '';   

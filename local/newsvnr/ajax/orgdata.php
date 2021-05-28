@@ -222,6 +222,7 @@ switch ($section) {
 		$object->description = $value->description;
 		$object->listbtn = $showbuttons;
 		$object->total = $value->total;
+		$object->level = $value->level;
 		$data[] = $object;		
 	}
 	echo json_encode($data,JSON_UNESCAPED_UNICODE);
