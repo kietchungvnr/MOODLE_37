@@ -110,10 +110,12 @@ class block_starredcourses_external extends core_course_external {
         $theme_settings = new theme_settings();
         foreach ($formattedcourses as $key => $value) {
             $courseid = $value->id;
+            $coursestarred = $DB->get_record('favourite', ['component' => 'core_course', 'itemid' => $courseid, 'userid' => $USER->id]);
             $arr = $theme_settings::role_courses_teacher_slider_block_course_recent($courseid);
             $value->fullnamet = $arr->fullnamet;
             $value->countstudent = $arr->studentnumber;
             $value->enrolmethod = get_enrol_method($courseid);
+            $value->hasstarred = ($coursestarred) ? true : false;
             if($value->progress > 0 ){
               $value->hasprogress = true;
             }
@@ -126,14 +128,13 @@ class block_starredcourses_external extends core_course_external {
               foreach ($userid as $userdata)
                  $stduser = (object)$userdata;
 
-               $value->imageteacher = $OUTPUT->user_picture($stduser, array('size'=>72));
+              $value->imageteacher = $OUTPUT->user_picture($stduser, array('size'=>72));
             }
             else
             {
               $value->imageteacher = $arr->imgdefault;
             }
         } 
-        // print_r($formattedcourses);die();
         return $formattedcourses;
     }
 
@@ -170,7 +171,8 @@ class block_starredcourses_external extends core_course_external {
                     'fullnamet' => new external_value(PARAM_RAW, 'teacher name'),
                     'imageteacher' => new external_value(PARAM_RAW, 'teacher image'),
                     'countstudent' => new external_value(PARAM_INT, 'count number of student'),
-                    'enrolmethod' => new external_value(PARAM_RAW, 'method enrol')
+                    'enrolmethod' => new external_value(PARAM_RAW, 'method enrol'),
+                    'hasstarred' => new external_value(PARAM_BOOL, 'course has starred or not')
                 )
             )
         );

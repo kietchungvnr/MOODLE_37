@@ -1,0 +1,38 @@
+<div class="post-slide6">
+    <div class="post-img">
+        {{{courseimage}}}
+        <div class="post-info">
+            {{#hasstarred}}
+                <div class="star-course starred" courseid="{{id}}" title="Khóa học đã đánh sao" onclick="starCourse('{{id}}','unstarred')"><i class="fa fa-star mr-1"></i></div>
+            {{/hasstarred}}
+            {{^hasstarred}}
+                <div class="star-course notstarred" courseid="{{id}}" title="Đánh sao khóa học" onclick="starCourse('{{id}}','starred')"><i class="fa fa-star-o mr-1"></i></div>
+            {{/hasstarred}}
+            <ul class="category" style="{{$style}}{{/style}}">
+                <li>{{#str}}countstudent, block_vnr_db_coursesuggest_position{{/str}} <a href="#">{{countstudent}}</a></li>
+                <li>{{#str}}teachername, block_vnr_db_coursesuggest_position{{/str}} <a href="#">{{fullnamet}}</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="post-review">
+        <span class="icons">
+               {{{imageteacher}}}
+        </span>
+        <h3 class="post-title"><a href="{{viewurl}}" title="{{fullname}}">{{fullname}}</a></h3>
+        <p class="post-teachername">{{#shortentext}}30, {{fullnamet}}{{/shortentext}}</p>
+        <p class="post-description">{{#shortentext}}90, {{summary}}{{/shortentext}}</p>
+        {{#hasprogress}}
+                <div class="progress">
+                  <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}"
+                  aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%">
+                    {{progress}}%
+                  </div>
+                </div>
+        {{/hasprogress}}
+        {{^hasprogress}}
+            <p class="post-enrolmethod">
+                {{{enrolmethod}}}
+            </p>
+        {{/hasprogress}}
+    </div>
+</div>

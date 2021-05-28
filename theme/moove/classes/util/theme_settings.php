@@ -704,6 +704,7 @@ class theme_settings {
         for ($i = 1, $j = 0; $i <= count($courses); $i++, $j++) {
             $enrolmethod = get_enrol_method($courses[$j]->id);
             $progress = \core_completion\progress::get_course_progress_percentage($courses[$j],$USER->id);
+            $coursestarred = $DB->get_record('favourite', ['component' => 'core_course', 'itemid' => $courses[$j]->id, 'userid' => $USER->id]);
             $templatecontext['newscourse'][$j]['key'] = $j;
             $templatecontext['newscourse'][$j]['fullname'] = $arr[$j]['fullname'];
             $templatecontext['newscourse'][$j]['summary'] = $arr[$j]['summary'];
@@ -712,12 +713,16 @@ class theme_settings {
             $templatecontext['newscourse'][$j]['countstudent'] = $arr[$j]['countstudent'];
             $templatecontext['newscourse'][$j]['imageteacher'] = $arr[$j]['imageteacher'];
             $templatecontext['newscourse'][$j]['fullnamet'] = $arr[$j]['fullnamet'];
+            $templatecontext['newscourse'][$j]['id'] = $courses[$j]->id;
+            $templatecontext['newscourse'][$j]['hasstarred'] = ($coursestarred) ? true : false;
             if(isset($progress)) {
                 $templatecontext['newscourse'][$j]['progress'] = round($progress);
+                $templatecontext['newscourse'][$j]['hasprogress'] = true;
                 if($templatecontext['newscourse'][$j]['progress'] == 0)
                     $templatecontext['newscourse'][$j]['progress'] = -1;
             } else {
                 $templatecontext['newscourse'][$j]['enrolmethod'] = $enrolmethod;
+                $templatecontext['newscourse'][$j]['hasprogress'] = false;
             }
         }
         // var_dump($templatecontext);die;
