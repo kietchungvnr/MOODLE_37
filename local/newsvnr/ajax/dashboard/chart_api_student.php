@@ -171,10 +171,11 @@ switch ($action) {
                                                 JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
                                                 JOIN mdl_role AS r ON r.id= ra.roleid
                                                 JOIN mdl_course_modules cm ON cm.course = c.id
+                                                JOIN mdl_modules mo ON mo.id = cm.module AND mo.name = 'quiz'
                                                 JOIN mdl_quiz q ON q.id = cm.instance
                                                 LEFT JOIN mdl_grade_items gi ON gi.courseid = c.id AND gi.itemmodule = 'quiz' AND gi.iteminstance = q.id
                                                 LEFT JOIN mdl_grade_grades gg ON gg.itemid = gi.id AND gg.userid = u.id 
-                                            WHERE ra.roleid=5 AND ue.status = 0 AND u.id = :useridcount AND c.visible = 1 AND cm.deletioninprogress = 0 AND cm.visible = 1 AND cm.module = 16) as total
+                                            WHERE ra.roleid=5 AND ue.status = 0 AND u.id = :useridcount AND c.visible = 1 AND cm.deletioninprogress = 0 AND cm.visible = 1) as total
                                         FROM mdl_role_assignments AS ra
                                             JOIN mdl_user AS u ON u.id= ra.userid
                                             JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
@@ -183,10 +184,11 @@ switch ($action) {
                                             JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
                                             JOIN mdl_role AS r ON r.id= ra.roleid
                                             JOIN mdl_course_modules cm ON cm.course = c.id
+                                            JOIN mdl_modules mo ON mo.id = cm.module AND mo.name = 'quiz'
                                             JOIN mdl_quiz q ON q.id = cm.instance
                                             LEFT JOIN mdl_grade_items gi ON gi.courseid = c.id AND gi.itemmodule = 'quiz' AND gi.iteminstance = q.id
                                             LEFT JOIN mdl_grade_grades gg ON gg.itemid = gi.id AND gg.userid = u.id
-                                        WHERE  ra.roleid=5 AND ue.status = 0 AND u.id = :userid AND c.visible = 1 AND cm.deletioninprogress = 0 AND cm.visible = 1 AND cm.module = 16 
+                                        WHERE  ra.roleid=5 AND ue.status = 0 AND u.id = :userid AND c.visible = 1 AND cm.deletioninprogress = 0 AND cm.visible = 1
                                         ORDER BY $ordersql",['userid' => $USER->id,'useridcount' => $USER->id]);
         foreach ($myquiz as $value) {
             $obj          = new stdClass();
