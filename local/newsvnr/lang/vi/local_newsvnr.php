@@ -682,6 +682,6 @@ $string['selectreport'] = 'Chọn báo cáo';
 $string['reviewer'] = 'Người đánh giá';
 $string['joindate'] = 'Ngày tham gia';
 $string['frompercent'] = 'Từ phần trăm';
-$string['topercent'] = 'Ngày tham gia';
+$string['topercent'] = 'Đến phần trăm';
 $string['select'] = 'Chọn';
 $string['currentplan'] = 'Lộ trình hiện tại';
