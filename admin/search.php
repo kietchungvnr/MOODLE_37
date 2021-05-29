@@ -80,7 +80,6 @@ $showsettingslinks = true;
 //     }
 // }
 
-
 $PAGE->requires->js_call_amd('theme_moove/admin_config','init');
 if ($showsettingslinks) {
     $node = $PAGE->settingsnav->find('root', navigation_node::TYPE_SITE_ADMIN);
@@ -90,14 +89,18 @@ if ($showsettingslinks) {
         $node->isedit = true;
         if($stritem != '') {
             foreach ($listitem as $item) {
-                $node->find($item, navigation_node::TYPE_SETTING)->show();
+                if($node->find($item, navigation_node::TYPE_SETTING)) {
+                    $node->find($item, navigation_node::TYPE_SETTING)->show();
+                }
             }
         }
     } else {
         $node->isedit = false;
         if($stritem != '') {
             foreach ($listitem as $item) {
-                $node->find($item, navigation_node::TYPE_SETTING)->hide();
+                if($node->find($item, navigation_node::TYPE_SETTING)) {
+                    $node->find($item, navigation_node::TYPE_SETTING)->hide();
+                }
             }
         }
     }

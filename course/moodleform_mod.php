@@ -1100,10 +1100,14 @@ abstract class moodleform_mod extends moodleform {
      * @return void
      */
     function add_action_buttons($cancel=true, $submitlabel=null, $submit2label=null) {
+        global $COURSE;
+        // custom by Thắng sửa lại key dịch khi course = 1
         if (is_null($submitlabel)) {
             $submitlabel = get_string('savechangesanddisplay');
         }
-
+        if (is_null($submit2label) && $COURSE->id == 1) {
+            $submit2label = get_string('saveandreturn','local_newsvnr');
+        } 
         if (is_null($submit2label)) {
             $submit2label = get_string('savechangesandreturntocourse');
         }
