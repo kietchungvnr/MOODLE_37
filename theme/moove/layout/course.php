@@ -91,7 +91,7 @@ $themesettings = new \theme_moove\util\theme_settings();
 
 $templatecontext = array_merge($templatecontext, $themesettings->footer_items(), $themesettings->get_vnr_chatbot());
 if (!$coursepresentation || $coursepresentation == 1) {
-    if($check->hasgeneraliframe == "true") {
+    if($check->hasgeneraliframe == "true" && $check->portalcourse != "true") {
         echo $OUTPUT->render_from_template('theme_moove/general_iframe_coursepage', $templatecontext);
     } else {
         echo $OUTPUT->render_from_template('theme_moove/coursepage', $templatecontext);

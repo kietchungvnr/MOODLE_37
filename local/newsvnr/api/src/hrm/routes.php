@@ -2,13 +2,13 @@
 
 //Tích hợp phòng ban, chức danh, chức vụ (EL - HRM)
 $app->post('/hrm/orgstructures/orgstructure', local_newsvnr\api\controllers\hrm\OrgstructureController::class . ':create');
-$app->put('/hrm//orgstructures/orgstructure/{id}', local_newsvnr\api\controllers\hrm\OrgstructureController::class . ':update');
-$app->post('/hrm//orgstructures/orgstructurecategory', local_newsvnr\api\controllers\hrm\OrgstructureCategoryController::class . ':create');
-$app->put('/hrm//orgstructures/orgstructurecategory/{id}', local_newsvnr\api\controllers\hrm\OrgstructureCategoryController::class . ':update');
-$app->post('/hrm//orgstructures/orgstructurejobtitle', local_newsvnr\api\controllers\hrm\OrgstructureJobtitleController::class . ':create');
-$app->put('/hrm//orgstructures/orgstructurejobtitle/{id}', local_newsvnr\api\controllers\hrm\OrgstructureJobtitleController::class . ':update');
-$app->post('/hrm//orgstructures/orgstructureposition', local_newsvnr\api\controllers\hrm\OrgstructurePositionController::class . ':create');
-$app->put('/hrm//orgstructures/orgstructureposition/{id}', local_newsvnr\api\controllers\hrm\OrgstructurePositionController::class . ':update');
+$app->put('/hrm/orgstructures/orgstructure/{id}', local_newsvnr\api\controllers\hrm\OrgstructureController::class . ':update');
+$app->post('/hrm/orgstructures/orgstructurecategory', local_newsvnr\api\controllers\hrm\OrgstructureCategoryController::class . ':create');
+$app->put('/hrm/orgstructures/orgstructurecategory/{id}', local_newsvnr\api\controllers\hrm\OrgstructureCategoryController::class . ':update');
+$app->post('/hrm/orgstructures/orgstructurejobtitle', local_newsvnr\api\controllers\hrm\OrgstructureJobtitleController::class . ':create');
+$app->put('/hrm/orgstructures/orgstructurejobtitle/{id}', local_newsvnr\api\controllers\hrm\OrgstructureJobtitleController::class . ':update');
+$app->post('/hrm/orgstructures/orgstructureposition', local_newsvnr\api\controllers\hrm\OrgstructurePositionController::class . ':create');
+$app->put('/hrm/orgstructures/orgstructureposition/{id}', local_newsvnr\api\controllers\hrm\OrgstructurePositionController::class . ':update');
 
 //Tích hợp đào tạo, tuyển dụng (EL - HRM)
 $app->post('/hrm/courses/course-category', local_newsvnr\api\controllers\hrm\CourseCategoryController::class . ':create');

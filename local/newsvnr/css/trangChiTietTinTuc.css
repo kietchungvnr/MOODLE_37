@@ -3,8 +3,8 @@
 }
 .new-detail-title{
     width:100%;
-    font-size:30px;
-    color:#0094ff;
+    font-size:18px;
+    color:#363535;
 }
 .new-detail-img{
     width:100%;
@@ -33,19 +33,11 @@
     
    
 }
-.new-detail-comment .new-detail-comment-body{
-    
 
-}
 
 .new-detail-reply-body{
     width: 80%;
     /*float: right;*/
-}
-
-.new-detail-comment-title, .new-detail-reply-title {
-    font-weight:bold;
-    font-size:20px;
 }
 .new-detail-comment-content, .new-detail-reply-content {
     width:100%;
@@ -58,7 +50,6 @@
 }
 .new-detail-comment-control > .btn, .new-detail-reply-control > .btn {
     color:#ffffff;
-    background-color:#0094ff;
 }
 
 /*css chat*/
@@ -66,13 +57,7 @@
     padding-top:30px;
 
 }
-
-.new-detail-chat .chat-panel{
-
-}
-
 .chat-panel .chat-image {
-    width: 50px;
     float: left;
 }
 
@@ -88,20 +73,8 @@
     padding: 8px;
 }
 
-    .chat-panel .chat-content .chat-body {
 
-        padding: 4px;
-        border-top: none;
-        border-radius: 10px;
 
-        background-color: #e8e8e8;
-    }
-
-        .chat-panel .chat-content .chat-body .name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #0094ff;
-        }
          .chat-panel .chat-content .chat-body p {
             font-size: 14px;
         }
@@ -135,11 +108,7 @@
             cursor: pointer;
             font-size: 13px;
         }
-        .chat-panel .chat-content .chat-footer .date-feedback{
-            float: right;
 
-            font-size: 13px;
-        }
 
     .chat-panel .chat-content .chat-footer .form-reply{
     
@@ -179,7 +148,6 @@
 .chat-reply .chat-panel .chat-image {
     width: 40px;
     float: left;
-    margin-top: 15px;
 }
 
 .chat-hidden-reply, .chat-show-reply {
@@ -282,7 +250,6 @@
 }
 .btn-new-Related .btn{
     background-color:#ff0000;
-    color:#ffffff;
 }
 .new-Related-body{
     padding-top:20px;

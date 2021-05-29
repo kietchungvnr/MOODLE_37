@@ -68,8 +68,14 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                     key: 'namebylaw',
                     component: 'local_newsvnr'
                 },
-               
-               
+                {
+                    key: 'orgpositioncode',
+                    component: 'local_newsvnr'
+                },
+                {
+                    key: 'orgpositionname',
+                    component: 'local_newsvnr'
+                },
             ];
             Str.get_strings(strings).then(function(s) {
 
@@ -294,12 +300,12 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                         ];
                         var orgposition_columns = [{
                                 field: "name",
-                                title: s[8],
+                                title: s[16],
                                 width: 300
                             },
                             {
                                 field: "code",
-                                title: s[9],
+                                title: s[17],
                                 width: 150
                             },
                             {
@@ -327,13 +333,18 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                                
                             },
                             {
+                                field: "level",
+                                title: 'level',
+                                width: 300
+                            },
+                            {
                                 template: function(e) {
                                     return e.listbtn;
                                 },
                                 field: "listbtn",
                                 title: s[0],
                                 width: 120
-                            },
+                            }
                         ];
                         var param = event.target.id; 
                         var columns = '';   

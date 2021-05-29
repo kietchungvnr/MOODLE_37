@@ -289,7 +289,7 @@ $string['editingquiz_help'] = 'When creating a quiz, the main concepts are:
 * The question bank, which stores copies of all questions organised into categories
 * Random questions -  A student gets different questions each time they attempt the quiz and different students can get different questions';
 $string['editingquiz_link'] = 'mod/quiz/edit';
-$string['editingquizx'] = 'Editing quiz: {$a}';
+$string['editingquizx'] = 'Editing quiz: <b>{$a}</b>';
 $string['editmaxmark'] = 'Edit maximum mark';
 $string['editoverride'] = 'Edit override';
 $string['editqcats'] = 'Edit questions categories';
@@ -566,7 +566,7 @@ $string['numattempts'] = '{$a->studentnum} {$a->studentstring} have made {$a->at
 $string['numattemptsmade'] = '{$a} attempts made on this quiz';
 $string['numberabbr'] = '#';
 $string['numerical'] = 'Numerical';
-$string['numquestionsx'] = 'Questions: {$a}';
+$string['numquestionsx'] = 'Questions: <b>{$a}</b>';
 $string['oneminute'] = '1 minute';
 $string['onlyteachersexport'] = 'Only teachers can export questions';
 $string['onlyteachersimport'] = 'Only teachers with editing rights can import questions';

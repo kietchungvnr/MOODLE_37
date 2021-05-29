@@ -471,3 +471,5 @@ $string['templateimportclick'] = 'Nhấp để tải về.';
 $string['copyingdata'] = 'Đang tiến hành sao chép';
 $string['qrcode'] = 'Quét mã QR';
 $string['qrcode_help'] = 'Quét mã này, để quét bạn có thể dùng phần mềm QR scanner trên điện thoại hoặc bất cứ phần mềm nào có thể quét QR code.';
+$string['fullsite'] = 'Hiện thị tất cả chức năng hệ thống';
+$string['fullsitedesc'] = 'Nếu tích sẽ hiện thị tất cả chức năng của hệ thống';

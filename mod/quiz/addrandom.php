@@ -39,6 +39,16 @@ $returnurl = optional_param('returnurl', '', PARAM_LOCALURL);
 $addonpage = optional_param('addonpage', 0, PARAM_INT);
 $category = optional_param('category', 0, PARAM_INT);
 $scrollpos = optional_param('scrollpos', 0, PARAM_INT);
+// Custom by Vũ: Phân loại câu hỏi
+$typeofquestion = optional_param('typeofquestion', '', PARAM_RAW);
+$typeofclass = optional_param('typeofclass', '', PARAM_RAW);
+$numbertoadd_percent = optional_param('numbertoadd_percent', 0, PARAM_INT);
+$easylevel_number = optional_param('easylevel_number', 0, PARAM_INT);
+$normallevel_number = optional_param('normallevel_number', 0, PARAM_INT);
+$hardlevel_number = optional_param('hardlevel_number', 0, PARAM_INT);
+$easylevel_percent = optional_param('easylevel_percent', 0, PARAM_INT);
+$normallevel_percent = optional_param('normallevel_percent', 0, PARAM_INT);
+$hardlevel_percent = optional_param('hardlevel_percent', 0, PARAM_INT);
 
 // Get the course object and related bits.
 if (!$course = $DB->get_record('course', array('id' => $quiz->course))) {
@@ -109,8 +119,27 @@ if ($data = $mform->get_data()) {
     $tagids = array_map(function($tagstrings) {
         return (int)explode(',', $tagstrings)[0];
     }, $data->fromtags);
+    // Custom by Vũ: Phân loại câu hỏi
+    // Tính tỉ lệ câu hỏi khó, trung bình, dễ
+    $questionpercentrates = $questionnumberrates = [];
+    $totalnumber = $easy = $normal = $hard = 0;
+    if($typeofquestion == 'yes') {
+        if($numbertoadd_percent) {
+            $easy = round(($easylevel_percent * $numbertoadd_percent) / 100);
+            $normal = round(($normallevel_percent * $numbertoadd_percent) / 100);
+            $hard = round(($hardlevel_percent * $numbertoadd_percent) / 100);
+        } else {
+            $easy = $easylevel_number;
+            $normal = $normallevel_number;
+            $hard = $hardlevel_number;
+        }
+        $totalnumber = $easy + $normal + $hard;
+        $questionnumberrates = ['easy' => $easy, 'normal' => $normal, 'hard' => $hard];
+    } else {
+        $totalnumber = $data->numbertoadd;
+    }
 
-    quiz_add_random_questions($quiz, $addonpage, $categoryid, $data->numbertoadd, $includesubcategories, $tagids);
+    quiz_add_random_questions($quiz, $addonpage, $categoryid, $totalnumber, $includesubcategories, $tagids, $questionnumberrates);
     quiz_delete_previews($quiz);
     quiz_update_sumgrades($quiz);
     redirect($returnurl);

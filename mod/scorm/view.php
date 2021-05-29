@@ -64,6 +64,32 @@ require_login($course, false, $cm);
 $context = context_course::instance($course->id);
 $contextmodule = context_module::instance($cm->id);
 
+// Kiểm tra nếu module đã ẩn thì không đc view
+if($course->id == 1) {
+    if(is_siteadmin() || user_has_role_assignment($USER->id, 1, $contextmodule->id) == true) {
+        // Nothing to do...
+    } else {
+        $module = $DB->get_record('course_modules', array('id' => $id), 'visible', MUST_EXIST);
+        $moduleapproval = $DB->get_record('library_module', array('coursemoduleid' => $id), '*', MUST_EXIST);
+        if($module && $module->visible == 0) {
+            print_error('nopermission', 'local_newsvnr');
+        }
+        switch ($moduleapproval->approval) {
+            case 1:
+                // Nothing to do...
+                break;
+            case 0:
+                if($moduleapproval->userid != $USER->id) {
+                    print_error('nopermission', 'local_newsvnr');
+                }
+            default:
+                // Nothing to do...
+                break;
+        }    
+    }
+}
+
+
 $launch = false; // Does this automatically trigger a launch based on skipview.
 if (!empty($scorm->popup)) {
     $scoid = 0;

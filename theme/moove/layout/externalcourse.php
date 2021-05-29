@@ -53,6 +53,13 @@ if(isloggedin()) {
     $permit->canaddresource = false;
 }
 
+global $USER;
+if(is_siteadmin() || has_capability('local/newsvnr:assignmentfilelibrary', context_user::instance($USER->id))) {
+    $permit->canviewlibrarymanagement = true;
+} else {
+    $permit->canviewlibrarymanagement = false;
+}
+
 if (isloggedin()) {
     global $DB;
 
@@ -80,9 +87,11 @@ if (isloggedin()) {
         'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
         'hasportal' => $check->hasportal,
         'canedit' => $permit->canedit,
+        'canviewlibrarymanagement' => $permit->canviewlibrarymanagement,
         'canaddresource' => $permit->canaddresource,
         'canapproval' => $permit->canapproval,
-        'hasopenmenu' => $check->hasopenmenu
+        'hasopenmenu' => $check->hasopenmenu,
+        'isadmin' => $check->isadmin
     ];
 
     // Improve boost navigation.
@@ -90,7 +99,7 @@ if (isloggedin()) {
    
     $templatecontext['flatnavigation'] = $PAGE->flatnav;
 
-    $templatecontext = array_merge($templatecontext, $themesettings->footer_items(),$themesettings->get_module_data(), $themesettings->get_vnr_chatbot());
+    $templatecontext = array_merge($templatecontext, $themesettings->footer_items(),$themesettings->get_module_data(), $themesettings->get_vnr_chatbot(), $themesettings->get_datareport_library());
 
     //mycourse 
     $usercourses = \theme_moove\util\extras::user_courses_with_progress($user);

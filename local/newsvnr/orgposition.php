@@ -57,6 +57,7 @@ if($id){
         $orgposition->id = $value->id;
         $orgposition->posname = $value->name;
         $orgposition->poscode = $value->code;
+        $orgposition->level = $value->level;
         $orgposition->position_namebylaw = $value->namebylaw;
         $orgposition->jobtitleid = $value->jobtitleid;
 		    $orgposition->orgstructureid = $DB->get_field('orgstructure','name',['id' => $value->orgstructureid]);
@@ -115,7 +116,7 @@ if ($mform_orgposition->is_cancelled()){
       $getorgstructeid = $DB->get_field('orgstructure','id',['name' => $orgposition->orgstructureid]);
   if($id){
       
-      $orgpositionupdate = (object)array('id' => $orgposition->id, 'name' => $orgposition->posname,'code' => $orgposition->poscode,'namebylaw' => $orgposition->position_namebylaw,'jobtitleid' => $orgposition->jobtitleid,'orgstructureid' => $getorgstructeid,'description' => $orgposition->orgposition_description);
+      $orgpositionupdate = (object)array('id' => $orgposition->id, 'name' => $orgposition->posname,'code' => $orgposition->poscode,'namebylaw' => $orgposition->position_namebylaw,'jobtitleid' => $orgposition->jobtitleid,'orgstructureid' => $getorgstructeid,'description' => $orgposition->orgposition_description,'level' => $orgposition->level);
       if (isset($orgposition->submitbutton)) {
           $message = $strupdate;
       }
@@ -128,6 +129,7 @@ if ($mform_orgposition->is_cancelled()){
 
   	  $orgposition->name = $orgposition->posname;
       $orgposition->code = $orgposition->poscode;
+      $orgposition->level = $orgposition->level;
       $orgposition->namebylaw = $orgposition->position_namebylaw;
       $orgposition->jobtitleid = $orgposition->jobtitleid;
       $orgposition->orgstructureid = $getorgstructeid;

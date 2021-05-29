@@ -261,6 +261,7 @@ if ($bulkoperations) {
     }
     echo html_writer::end_tag('div');
     $displaylist = array();
+    $displaylist['#sendemail'] = 'Gửi email';
     if (!empty($CFG->messaging) && has_all_capabilities(['moodle/site:sendmessage', 'moodle/course:bulkmessaging'], $context)) {
         $displaylist['#messageselect'] = get_string('messageselectadd');
     }
@@ -330,6 +331,8 @@ if ($bulkoperations) {
 echo '</form>';
 
 $PAGE->requires->js_call_amd('core_user/participants', 'init', [$bulkoptions]);
+$PAGE->requires->strings_for_js(
+                                array('sendemail', 'emailtype', 'emailtemplate', 'role', 'emailsubject', 'emailcontent', 'sendingsuccess', 'studentrole', 'teacherrole', 'pleasepickuser'), 'local_newsvnr');
 echo '</div>';  // Userlist.
 
 $enrolrenderer = $PAGE->get_renderer('core_enrol');
@@ -339,10 +342,11 @@ $enrolbuttonsout = '';
 foreach ($enrolbuttons as $enrolbutton) {
     $enrolbuttonsout .= $enrolrenderer->render($enrolbutton);
 }
-echo html_writer::div($enrolbuttonsout, 'd-flex justify-content-end', [
-    'data-region' => 'wrapper',
-    'data-table-uniqueid' => $participanttable->uniqueid,
-]);
+// Ẩn bớt button ghi danh
+// echo html_writer::div($enrolbuttonsout, 'd-flex justify-content-end', [
+//     'data-region' => 'wrapper',
+//     'data-table-uniqueid' => $participanttable->uniqueid,
+// ]);
 
 if ($newcourse == 1) {
     $str = get_string('proceedtocourse', 'enrol');

@@ -505,6 +505,42 @@ class question_finder implements cache_data_source {
     }
 
     /**
+     * Custom by Vũ: Phân loại câu hỏi
+     * lấy danh sách câu hỏi từ category
+     * Get the ids of all the questions in a list of categories.
+     * @param array $categoryids either a categoryid, or a comma-separated list
+     *      category ids, or an array of them.
+     * @param string $extraconditions extra conditions to AND with the rest of
+     *      the where clause. Must use named parameters.
+     * @param array $extraparams any parameters used by $extraconditions.
+     * @return array questionid => questionid.
+     */
+    public function get_questions_with_level_from_categories(
+        $categoryids,
+        $extraconditions,
+        $extraparams = array()
+    ) {
+        global $DB;
+
+        list($qcsql, $qcparams) = $DB->get_in_or_equal($categoryids, SQL_PARAMS_NAMED, 'qc');
+
+        if ($extraconditions) {
+            $extraconditions = ' AND (' . $extraconditions . ')';
+        }
+
+        return $DB->get_records_select(
+            'question',
+            "category {$qcsql}
+                 AND parent = 0
+                 AND hidden = 0
+                 {$extraconditions}",
+            $qcparams + $extraparams,
+            '',
+            'id, level'
+        );
+    }
+
+    /**
      * Get the ids of all the questions in a list of categories, with the number
      * of times they have already been used in a given set of usages.
      *
@@ -538,7 +574,7 @@ class question_finder implements cache_data_source {
      * @return array questionid => count of number of previous uses.
      */
     public function get_questions_from_categories_and_tags_with_usage_counts($categoryids,
-            qubaid_condition $qubaids, $extraconditions = '', $extraparams = array(), $tagids = array()) {
+            qubaid_condition $qubaids, $extraconditions = '', $extraparams = array(), $tagids = array(), $level = 'default') {
         global $DB;
 
         list($qcsql, $qcparams) = $DB->get_in_or_equal($categoryids, SQL_PARAMS_NAMED, 'qc');
@@ -548,9 +584,19 @@ class question_finder implements cache_data_source {
                            WHERE qa.questionid = q.id AND " . $qubaids->where() . "
                          ) AS previous_attempts";
         $from   = "{question} q";
-        $where  = "q.category {$qcsql}
+        $questionlevel = ['easy','normal','hard'];
+        if(in_array($level, $questionlevel)) {
+            $where  = "q.category {$qcsql}
                AND q.parent = 0
-               AND q.hidden = 0";
+               AND q.level = '$level'
+               AND q.hidden = 0";    
+        } else {
+            $where  = "q.category {$qcsql}
+               AND q.parent = 0
+               AND (q.level = '$level' OR q.level IS NULL)
+               AND q.hidden = 0";    
+        }
+        
         $params = $qcparams;
 
         if (!empty($tagids)) {

@@ -78,6 +78,12 @@ abstract class qtype_ddtoimage_edit_form_base extends question_edit_form {
         $mform->addElement('filepicker', 'bgimage', get_string('bgimage', 'qtype_'.$this->qtype()),
                                                                null, self::file_picker_options());
         $mform->closeHeaderBefore('dropzoneheader');
+        $mform->addElement('text','imgwidth',get_string('sizewidth','local_newsvnr'));
+        $mform->addRule('imgwidth', 'Numeric', 'numeric', null, 'client');
+        $mform->setType('imgwidth',PARAM_INT);
+        $mform->addElement('text','imgheight',get_string('sizeheight','local_newsvnr'));
+        $mform->addRule('imgheight', 'Numeric', 'numeric', null, 'client');
+        $mform->setType('imgheight',PARAM_INT);
 
         // Add the draggable image fields & drop zones to the form.
         list($itemrepeatsatstart, $imagerepeats) = $this->get_drag_item_repeats();

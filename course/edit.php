@@ -223,7 +223,7 @@ if ($editform->is_cancelled()) {
         $course = create_course($data, $editoroptions);
         
         //Đẩy khoá học khi tạo mới realtime qua HRM
-        if($course) {
+        if($course && $course_api) {
             if($params_hrm) {
                 $params_hrm['Status'] = "E_CREATE";
                 if($data->typeofcourse == COURSE_INTERVIEW_HRM || $data->typeofcourse == COURSE_TRANING_HRM) {

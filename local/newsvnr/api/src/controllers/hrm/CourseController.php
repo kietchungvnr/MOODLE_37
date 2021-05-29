@@ -165,7 +165,7 @@ class CourseController extends BaseController {
 				$this->data->showgrades = 1;
 				$this->data->numsections = 4;
 				$this->data->newsitems = 10;
-				$this->data->visible = 0;
+				$this->data->visible = 1;
 				$this->data->showreports = 1;
 				$this->data->summary = '';
 				$this->data->summaryformat = FORMAT_HTML;

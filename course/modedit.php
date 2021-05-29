@@ -209,67 +209,71 @@ if ($mform->is_cancelled()) {
         }
         $fromform = add_moduleinfo($fromform, $course, $mform);
         //Dữ liệu insert vào table library_module khi course = 1 (thư viện trực tuyến)
-        if($course->id == SITEID && $add != 'quiz') {
-            $record = new stdClass();
-            $record->folderid = $folderid;
-            $record->timecreated = time();
-            $record->userid = $USER->id;
-            $record->coursemoduleid = $fromform->coursemodule;
-            $record->moduletype = $fromform->modulename;
-            if(!is_siteadmin()) {
-                $record->approval = 0;
+        if($course->id == SITEID) {
+            if($add != 'quiz') {
+                $record = new stdClass();
+                $record->folderid = $folderid;
+                $record->timecreated = time();
+                $record->userid = $USER->id;
+                $record->coursemoduleid = $fromform->coursemodule;
+                $record->moduletype = $fromform->modulename;
+                if(!is_siteadmin()) {
+                    $record->approval = 0;
+                }
+                if($fromform->modulename == 'resource') {
+                    $getfile = $DB->get_record_sql("SELECT TOP 1 * 
+                                                    FROM {files} 
+                                                    where component = 'user' 
+                                                        AND filearea = 'draft' 
+                                                        AND itemid = :itemid 
+                                                        AND filesize IS NOT NULL",array('itemid' => $fromform->files));
+                    $record->minetype = $getfile->mimetype;
+                    $record->filesize = $getfile->filesize;
+                }
+                
+                $DB->insert_record('library_module',$record);
             }
-            if($fromform->modulename == 'resource') {
-                $getfile = $DB->get_record_sql("SELECT TOP 1 * 
-                                                FROM {files} 
-                                                where component = 'user' 
-                                                    AND filearea = 'draft' 
-                                                    AND itemid = :itemid 
-                                                    AND filesize IS NOT NULL",array('itemid' => $fromform->files));
-                $record->minetype = $getfile->mimetype;
-                $record->filesize = $getfile->filesize;
+            // Custom by Vũ: Dữ liệu insert vào table exam_quiz khi course = 1 và auto tạo sự kiện kỳ thi vào lịch theo (kì thi ngoài khóa)
+            if($add == 'quiz') {
+                $examrecord = new stdClass();
+                $examrecord->coursemoduleid = $fromform->coursemodule;
+                $examrecord->subjectexamid = $examsubjectexamid;
+                $examrecord->timecreated = time();
+                $examrecord->timemodified = time();
+                $examrecord->usercreate = $USER->id;
+                $examrecord->usermodified = $USER->id;
+                $get_quizid = $DB->get_field('course_modules', 'instance', ['id' => $fromform->coursemodule]);
+                $quizinfo = $DB->get_field('quiz', 'id', ['id' => $get_quizid]);
+                // $get_subjectid = $DB->get_field('exam_subject_exam', 'subjectid', ['id' => $examsubjectexamid]);
+                // $subjectname = $DB->get_field('exam_subject', 'name', ['id' => $get_subjectid]);
+                $DB->insert_record('exam_quiz',$examrecord);
+                $sql = "SELECT eu.userid, e.name
+                        FROM {exam_subject_exam} esx
+                            LEFT JOIN {exam_user} eu ON esx.examid = eu.examid
+                            LEFT JOIN {exam} e ON e.id = esx.examid
+                        WHERE esx.id = :subjectexamid";
+                $listexamuser = $DB->get_records_sql($sql, ['subjectexamid' => $examsubjectexamid]);
+                $calendarevents = [];
+                foreach ($listexamuser as $examuser) {
+                    $event = new stdClass();
+                    $event->eventtype = 'open';
+                    $event->type = CALENDAR_IMPORT_FROM_URL;
+                    $event->name = $DB->get_field('quiz', 'name', ['id' => $get_quizid]);
+                    $event->description = '';
+                    $event->format = FORMAT_HTML;
+                    $event->courseid = SITEID;
+                    $event->groupid = 0;
+                    $event->userid = $examuser->userid;
+                    $event->modulename = 'quiz';
+                    $event->instance = $quizinfo;
+                    $event->timestart = time();
+                    $event->timesort = time();
+                    $event->timemodified = time();
+                    calendar_event::create($event, false);
+                }
             }
-            
-            $DB->insert_record('library_module',$record);
-        }
-        // Custom by Vũ: Dữ liệu insert vào table exam_quiz khi course = 1 và auto tạo sự kiện kỳ thi vào lịch theo (kì thi ngoài khóa)
-        if($course->id == SITEID && $add == 'quiz') {
-            $examrecord = new stdClass();
-            $examrecord->coursemoduleid = $fromform->coursemodule;
-            $examrecord->subjectexamid = $examsubjectexamid;
-            $examrecord->timecreated = time();
-            $examrecord->timemodified = time();
-            $examrecord->usercreate = $USER->id;
-            $examrecord->usermodified = $USER->id;
-            $get_quizid = $DB->get_field('course_modules', 'instance', ['id' => $fromform->coursemodule]);
-            $quizinfo = $DB->get_field('quiz', 'id', ['id' => $get_quizid]);
-            // $get_subjectid = $DB->get_field('exam_subject_exam', 'subjectid', ['id' => $examsubjectexamid]);
-            // $subjectname = $DB->get_field('exam_subject', 'name', ['id' => $get_subjectid]);
-            $DB->insert_record('exam_quiz',$examrecord);
-            $sql = "SELECT eu.userid, e.name
-                    FROM {exam_subject_exam} esx
-                        LEFT JOIN {exam_user} eu ON esx.examid = eu.examid
-                        LEFT JOIN {exam} e ON e.id = esx.examid
-                    WHERE esx.id = :subjectexamid";
-            $listexamuser = $DB->get_records_sql($sql, ['subjectexamid' => $examsubjectexamid]);
-            $calendarevents = [];
-            foreach ($listexamuser as $examuser) {
-                $event = new stdClass();
-                $event->eventtype = 'open';
-                $event->type = CALENDAR_IMPORT_FROM_URL;
-                $event->name = $DB->get_field('quiz', 'name', ['id' => $get_quizid]);
-                $event->description = '';
-                $event->format = FORMAT_HTML;
-                $event->courseid = SITEID;
-                $event->groupid = 0;
-                $event->userid = $examuser->userid;
-                $event->modulename = 'quiz';
-                $event->instance = $quizinfo;
-                $event->timestart = time();
-                $event->timesort = time();
-                $event->timemodified = time();
-                calendar_event::create($event, false);
-            }
+            // Custom by Vũ: Gửi email và thông báo lên chuông khi có yêu cầu duyệt file trong thư viện
+            send_email_requestfile($fromform);
         }
     } else {
         print_error('invaliddata');

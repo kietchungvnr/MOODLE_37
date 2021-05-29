@@ -48,7 +48,18 @@
 require(['core/form-autocomplete', 'tool_lp/module_navigation'], function(autocomplete, nav) {
     (new nav('#module-nav-{{uniqid}}', '{{baseurl}}', {{courseid}}, {{moduleid}}));
 {{#hasmodules}}
-    autocomplete.enhance('#module-nav-{{uniqid}}', false, false, {{# quote }}{{# str }}filterbyactivity, tool_lp{{/ str }}{{/ quote }});
+    autocomplete.enhance('#module-nav-{{uniqid}}', false, false,
+    {{#hasmodulename}}
+        {{# quote }}
+            {{modulename}}
+        {{/ quote }}
+    {{/hasmodulename}}
+    {{^hasmodulename}}
+        {{# quote }}
+            {{# str }}filterbyactivity, tool_lp{{/ str }}
+        {{/ quote }}
+    {{/hasmodulename}}
+    );
 {{/hasmodules}}
 });
 {{/js}}

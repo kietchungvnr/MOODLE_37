@@ -1184,6 +1184,75 @@ function local_newsvnr_output_fragment_new_orgstructure_form($args) {
     return $o;
 }
 
+function local_newsvnr_output_fragment_create_email_template_form($args) {
+    global $CFG, $SITE, $DB;
+    require_once $CFG->dirroot . '/user/sendemail_form.php';
+    $args = (object) $args;
+    $context = $args->context;
+    $o = '';
+    $formdata = [];
+    if (!empty($args->jsonformdata)) {
+        $serialiseddata = json_decode($args->jsonformdata);
+    }
+    $editoroptions = array('maxfiles' => EDITOR_UNLIMITED_FILES,
+    'maxbytes' => $SITE->maxbytes, 'context' => context_system::instance());
+    $get_template = $DB->get_record('email_template', ['id' => $serialiseddata->templateid]);
+    $email_template = new stdClass;
+    $email_template->id = $serialiseddata->templateid;
+    $email_template->subject = $get_template->subject;
+    $email_template->content = $get_template->content;
+    $email_template = file_prepare_standard_editor($email_template, 'content', $editoroptions,
+            context_system::instance(), 'email', 'content', null);
+    $mform = new sendemail_form(null,array('email_template' => $email_template),'post','', null, true, $formdata);
+    $mform->set_data($email_template);
+    // Used to set the courseid.
+ 
+    if (!empty($args->jsonformdata)) {
+        // If we were passed non-empty form data we want the mform to call validation functions and show errors.
+        $mform->is_validated();
+    }
+ 
+    ob_start();
+    $mform->display();
+    $o .= ob_get_contents();
+    ob_end_clean();
+ 
+    return $o;
+}
+
+function local_newsvnr_output_fragment_send_email_form($args) {
+    global $CFG, $OUTPUT, $SITE;
+    require_once $CFG->dirroot . '/user/sendemail_form.php';
+    $args = (object) $args;
+    $context = $args->context;
+    $o = '';
+    $formdata = [];
+    if (!empty($args->jsonformdata)) {
+        $serialiseddata = json_decode($args->jsonformdata);
+        parse_str($serialiseddata, $formdata);
+    }
+    $editoroptions = array('maxfiles' => EDITOR_UNLIMITED_FILES,
+    'maxbytes' => $SITE->maxbytes, 'context' => context_system::instance());
+    $email = new stdClass;
+    $email = file_prepare_standard_editor($email, 'emailcontent', $editoroptions,
+            context_system::instance(), 'email', 'emailcontent', null);
+    $mform = new sendemail_form(null,array('eamil' => $email),'post','', null, true, $formdata);
+    $mform->set_data($email);
+    // Used to set the courseid.
+ 
+    if (!empty($args->jsonformdata)) {
+        // If we were passed non-empty form data we want the mform to call validation functions and show errors.
+        $mform->is_validated();
+    }
+ 
+    ob_start();
+    echo $OUTPUT->render_from_template('core_user/manage_sendemail', $context = []);
+    $mform->display();
+    $o .= ob_get_contents();
+    ob_end_clean();
+ 
+    return $o;
+}
 /** - end call modal cho orgmanager - **/
 /* Năng lực theo vị trí  */
 function get_list_orgstructure() {
@@ -1277,49 +1346,50 @@ function check_auth_api($username, $password) {
 function find_orgstructure_by_name($name) {
     global $DB;
     $sql = "
-            SELECT name
+            SELECT *
             FROM {orgstructure}
             WHERE name = ?";
-   $data = $DB->get_field_sql($sql, array($name));
+   $data = $DB->get_record_sql($sql, array($name));
    return $data;
 }
 
 function find_orgstructure_by_code($code) {
    global $DB;
    $sql = "
-            SELECT code 
+            SELECT * 
             FROM {orgstructure} 
             WHERE code = ?";
-   $data = $DB->get_field_sql($sql, array($code));
+   $data = $DB->get_record_sql($sql, array($code));
    return $data;
 }
 
 function find_orgstructure_jobtitle_by_name($name) {
    global $DB;
    $sql = "
-            SELECT name 
+            SELECT * 
             FROM {orgstructure_jobtitle}
             WHERE name = ?";
-   $data = $DB->get_field_sql($sql, array($name));
+   $data = $DB->get_record_sql($sql, array($name));
    return $data;
 }
+
 function find_orgstructure_jobtitle_by_code($code) {
    global $DB;
    $sql = "
-            SELECT code 
+            SELECT * 
             FROM {orgstructure_jobtitle} 
             WHERE code = ?";
-   $data = $DB->get_field_sql($sql, array($code));
+   $data = $DB->get_record_sql($sql, array($code));
    return $data;
 }
 
 function find_orgstructure_category_by_name($name) {
     global $DB;
     $sql = "
-            SELECT name
+            SELECT *
             FROM {orgstructure_category} 
             WHERE name = ?";
-    $data = $DB->get_field_sql($sql, array($name));
+    $data = $DB->get_record_sql($sql, array($name));
     return $data;
 }
 
@@ -1349,16 +1419,16 @@ function find_orgstructure_position_by_name($name) {
             SELECT name 
             FROM {orgstructure_position} 
             WHERE name = ?";
-    $data = $DB->get_field_sql($sql, array($name));
+    $data = $DB->get_record_sql($sql, array($name));
     return $data;
 }
 
 function find_orgstructure_position_by_code($code) {
     global $DB;
-    $sql = "SELECT code 
+    $sql = "SELECT * 
             FROM {orgstructure_position}
             WHERE code = ?";
-    $data = $DB->get_field_sql($sql, array($code));
+    $data = $DB->get_record_sql($sql, array($code));
     return $data;
 }
 
@@ -1667,8 +1737,8 @@ function encode_array($args)
 function getToken($url) {
     $data = [
         'grant_type' => 'password',
-        'username' => 'vnr',
-        'password' => 'VNR@muc123'
+        'username' => 'vnr.hrm@',
+        'password' => '123'
     ];
     $params = encode_array($data);
     $curl = curl_init();
@@ -1687,11 +1757,41 @@ function getToken($url) {
     curl_close($curl);
     return json_decode($resp,JSON_UNESCAPED_UNICODE)['access_token'];
 }
-
+function getTokenHRM() {
+    global $DB;
+    $token = $DB->get_record('local_newsvnr_api',['functionapi' => 'ApiToken']);
+    if(empty($token)) {
+        return;
+    }
+    $username = $DB->get_field('local_newsvnr_api_detail','default_value',['api_id' => $token->id,'client_params' => 'username']);
+    $password = $DB->get_field('local_newsvnr_api_detail','default_value',['api_id' => $token->id,'client_params' => 'password']);
+    $data = [
+        'grant_type' => 'password',
+        'username' => $username,
+        'password' => $password
+    ];
+    $params = encode_array($data);
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+    CURLOPT_RETURNTRANSFER => true,
+    // CURLOPT_HEADER => true,
+    CURLOPT_URL => $token->url,
+    CURLOPT_POST => true,
+    CURLOPT_SSL_VERIFYPEER => false,
+    CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/x-www-form-urlencoded',
+            // 'Content-Length: ' . strlen($data),
+    ),
+    CURLOPT_POSTFIELDS => $params));
+    $resp = curl_exec($curl);
+    curl_close($curl);
+    return json_decode($resp,JSON_UNESCAPED_UNICODE)['access_token'];
+}
 //curl gửi dữ liệu kiểu json
 function HTTPPost($url,$data) {
-    $urltoken = 'http://113.190.242.50:7709/Token';
-    $token = getToken($urltoken);
+    global $DB,$USER;
+    $urltoken = 'http://125.212.226.105:814/Token';
+    $token = getTokenHRM();
     $auth = 'Authorization: Bearer ' . $token;
     $params = encode_array($data);
     $curl = curl_init();
@@ -1708,6 +1808,7 @@ function HTTPPost($url,$data) {
     ),
     CURLOPT_POSTFIELDS => $params));
     $resp = curl_exec($curl);
+    // insert_log($resp,$url);
     curl_close($curl);
 }
 
@@ -1731,6 +1832,7 @@ function HTTPPost_EBM($url,$data) {
     ),
     CURLOPT_POSTFIELDS => $params));
     $resp = curl_exec($curl);
+    // insert_log($resp,$url);
     curl_close($curl);
 }
 
@@ -2051,14 +2153,26 @@ function count_module($course,$currentsection) {
 function mimetype2Img($mimetype) {
     global $OUTPUT;
     $typeresource = mime2ext($mimetype);
+    // $typeresource = mime2ext('image/jpeg');
+    // var_dump($typeresource);die();
     if ($typeresource == 'xls' || $typeresource == 'xlsx' || $typeresource == 'xlsm') {
         $img = html_writer::img($OUTPUT->image_url('f/spreadsheet-24'),'',['class' => 'pr-1 img-module']);
-    } elseif ($typeresource == 'ppt') {
+    } elseif ($typeresource == 'ppt' || $typeresource == 'pptx') {
         $img = html_writer::img($OUTPUT->image_url('f/powerpoint-24'),'',['class' => 'pr-1 img-module']);
     } elseif ($typeresource == 'docx' || $typeresource == 'doc' || $typeresource == 'docm') {
         $img = html_writer::img($OUTPUT->image_url('f/document-24'),'',['class' => 'pr-1 img-module']);
     } elseif ($typeresource == 'pdf') {
         $img = html_writer::img($OUTPUT->image_url('f/pdf-24'),'',['class' => 'pr-1 img-module']);
+    } elseif ($typeresource == 'jpeg') {
+        $img = html_writer::img($OUTPUT->image_url('f/jpeg-24'),'',['class' => 'pr-1 img-module']);
+    } elseif ($typeresource == 'png') {
+        $img = html_writer::img($OUTPUT->image_url('f/png-24'),'',['class' => 'pr-1 img-module']);
+    } elseif ($typeresource == 'txt') {
+        $img = html_writer::img($OUTPUT->image_url('f/text-24'),'',['class' => 'pr-1 img-module']);
+    } elseif ($typeresource == 'mp4') {
+        $img = html_writer::img($OUTPUT->image_url('f/video-24'),'',['class' => 'pr-1 img-module']);
+    } elseif ($typeresource == 'mp3') {
+        $img = html_writer::img($OUTPUT->image_url('f/wav-24'),'',['class' => 'pr-1 img-module']);
     }
     else {
         $img = '';
@@ -2555,9 +2669,10 @@ function get_user_badge($userid) {
 
 // course card info
 function get_coursecard_info($courseid) {
-    global $DB,$OUTPUT,$CFG;
+    global $DB,$OUTPUT,$CFG,$USER;
     $obj = new stdClass;
     $course         = $DB->get_record('course',['id' => $courseid]);
+    $coursestarred = $DB->get_record('favourite', ['component' => 'core_course', 'itemid' => $courseid, 'userid' => $USER->id]);
     $progress = round(\core_completion\progress::get_course_progress_percentage($course));
     $theme_settings = new theme_settings();
     $courseobj      = new \core_course_list_element($course);
@@ -2565,6 +2680,8 @@ function get_coursecard_info($courseid) {
     $arr            = $theme_settings::role_courses_teacher_slider_block_course_recent($courseid);
     $obj->fullnamet      = $arr->fullnamet;
     $obj->countstudent   = $arr->studentnumber;
+    $obj->hasstarred = ($coursestarred) ? true : false;
+    $obj->id = $courseid;
     if($progress > 0) {
         $noprogress = "";
     } else {
@@ -2590,18 +2707,236 @@ function get_coursecard_info($courseid) {
     }
     return $obj;
 }
+////
+function form_comment_wiki($title,$contextid,$pageid,$userid,$action,$commentid = null) {
+    $cancel = ($commentid) ? '<button type="button" action="'.$action.'" commentid="'.$commentid.'" class="mt-2 btn btn-danger cancel-comment">Hủy</button>' : '';
+    $output =   '<div class="wiki-add new-detail-comment">
+                     <div class="new-detail-comment-body">
+                        <label class="new-detail-comment-title">'.$title.'</label>
+                        <textarea commentid="'.$commentid.'" contextid="'.$contextid.'" wikipage="'.$pageid.'" userid="'.$userid.'" class="new-detail-comment-content" name="content" id="content_comment" maxlength="1000"></textarea>
+                        <div class="new-detail-comment-control">
+                            '.$cancel.'
+                           <button type="button" action="'.$action.'" class="mt-2 btn btn-submit post_comment">Gửi</button>
+                        </div>
+                     </div>
+                </div>';
+    return $output;
+
+}
+function insert_log($resp,$url) {
+    global $DB,$USER;
+    $apiname = $DB->get_field('local_newsvnr_api','functionapi',['url' => $url]);
+    $log = new stdClass();
+    $log->url = $url;
+    $log->time = time();
+    $log->userid = $USER->id;
+    $log->info = $resp;
+    $log->action = $apiname;
+    $DB->insert_record('log',$log);
+}
 // form popup
-function get_modal_boostrap($html,$idmodal,$title = '') {
+function get_modal_boostrap($html,$idmodal,$title = '',$footer = false) {
     $output = '';
     $output .= html_writer::start_div('modal',['id' => $idmodal]);
     $output .= html_writer::start_div('modal-dialog');
     $output .= html_writer::start_div('modal-content');
     $output .= html_writer::tag('div','<h4 class="modal-title">'.$title.'</h4><button type="button" class="close" data-dismiss="modal">&times;</button>' ,['class' => 'modal-header']);
     $output .= html_writer::tag('div',$html,['class' => 'modal-body']);
+    if($footer == true) {
+        $output .= html_writer::start_div('modal-footer');
+        $output .= html_writer::tag('button',get_string('savechange','local_newsvnr'),['type' => 'button','class' => 'submit btn btn-primary']);
+        $output .= html_writer::tag('button',get_string('close','local_newsvnr'),['type' => 'button','class' => 'btn btn-secondary','data-dismiss' => 'modal']);
+        $output .= html_writer::end_div();
+    }
     $output .= html_writer::end_div();
     $output .= html_writer::end_div();
     $output .= html_writer::end_div();
     return $output;
+}
+
+// Gửi message và email yêu cầu duyệt tài liệu
+function send_email_requestfile($moduleinfo) {
+    global $CFG, $DB, $USER;
+    $detailurl = $CFG->wwwroot . '/library.php';
+    $fullmessage = '<p>Dear (Mr/Mrs): <strong>Võ Tâm Ngọc Tinh</strong></p>
+                    <p>Anh/Chị đang có yêu cầu duyệt tài liệu từ thư viện bên dưới:</p>
+                    <p>Anh/Chị bấm vào link sau để xem chi tiết, tiến hành <strong>phê duyệt</strong> hay <strong>từ chối </strong>(<a href="'.$detailurl.'">Đường link</a>)</p>
+                    <table style="border-collapse: collapse;width: 100%;">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">STT</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Mã nhân viên</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Tên nhân viên</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Chức vụ</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Tên tài liệu</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Loại tài liệu</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">1</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$USER->usercode.'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.fullname($USER).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$DB->get_field('orgstructure_position', 'name',['id' => $USER->orgpositionid]).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$moduleinfo->name.'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.ucwords($moduleinfo->modulename).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">Yêu cầu</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br><strong>Thanks &amp; best regards,</strong><br>----------------------------------------<br><span><em><span style=""><span style="">Lưu ý</span></span>:</em>
+                    </span> Thư này được gửi tự động từ hệ thống, vui lòng không reply. Để hỗ trợ thông tin, liên hệ bộ phân IT.<br>
+                    <p></p>';
+    $message = new \core\message\message();
+    $message->component = 'local_newsvnr';
+    $message->name = 'requestfile';
+    $message->userfrom = $USER->id;
+    $message->userto = \core_user::get_support_user();
+    $message->subject = '[VnR.Admin] Nhắc nhở duyệt tài liệu từ thư viện';
+    $message->fullmessage = $fullmessage;
+    $message->fullmessageformat = FORMAT_HTML;
+    $message->fullmessagehtml = $fullmessage;
+    $message->smallmessage = 'Yêu cầu duyệt tài liệu';
+    $message->notification = 1;
+    $message->contexturl = (new \moodle_url('/library.php'))->out(false);
+    $message->contexturlname = 'Chi tiết';
+
+    message_send($message);
+}
+
+// Gửi message và email từ chối duyệt tài liệu
+function send_email_rejectedfile($moduleid) {
+    global $CFG, $DB, $USER;
+    $get_moduleinfo = $DB->get_record_sql('SELECT m.name, cm.instance, lm.userid FROM mdl_library_module lm
+                                                LEFT JOIN mdl_course_modules cm ON lm.coursemoduleid = cm.id
+                                                LEFT JOIN mdl_modules m ON cm.module = m.id 
+                                            WHERE lm.coursemoduleid = :coursemoduleid', 
+                                            ['coursemoduleid' => $moduleid]
+                                        );
+
+    $sql = "SELECT name FROM {" . $get_moduleinfo->name . "} WHERE id = :cmid";
+    $moduleinfo = $DB->get_record_sql($sql, 
+                                        ['cmid' => $get_moduleinfo->instance]
+                                    );
+    // User của người tạo file
+    $userinfo = $DB->get_record('user', ['id' => $get_moduleinfo->userid]);
+
+    $detailurl = $CFG->wwwroot . '/library.php';
+    $fullmessage = '<p>Dear (Mr/Mrs): <strong>'.fullname($userinfo).'</strong></p>
+                    <p>Yêu cầu duyệt tài liệu của Anh/Chị đã bị từ chối</p>
+                    <p>Anh/Chị bấm vào link sau để xem chi tiết(<a href="'.$detailurl.'">Đường link</a>)</p>
+                    <table style="border-collapse: collapse;width: 100%;">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">STT</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Mã nhân viên</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Tên nhân viên</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Chức vụ</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Tên tài liệu</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Loại tài liệu</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Người duyệt</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">1</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$userinfo->usercode.'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.fullname($userinfo).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$DB->get_field('orgstructure_position', 'name',['id' => $userinfo->orgpositionid]).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$moduleinfo->name.'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.ucwords($get_moduleinfo->name).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.fullname($USER).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">Từ chối</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br><strong>Thanks &amp; best regards,</strong><br>----------------------------------------<br><span><em><span style=""><span style="">Lưu ý</span></span>:</em>
+                    </span> Thư này được gửi tự động từ hệ thống, vui lòng không reply. Để hỗ trợ thông tin, liên hệ bộ phân IT.<br>
+                    <p></p>';
+    $message = new \core\message\message();
+    $message->component = 'local_newsvnr';
+    $message->name = 'rejectedfile';
+    $message->userfrom = \core_user::get_support_user();
+    $message->userto = $get_moduleinfo->userid;
+    $message->subject = '[VnR.Admin] Yêu cầu duyệt tài liệu đã bị từ chối';
+    $message->fullmessage = $fullmessage;
+    $message->fullmessageformat = FORMAT_HTML;
+    $message->fullmessagehtml = $fullmessage;
+    $message->smallmessage = 'Yêu cầu duyệt tài liệu đã bị từ chối';
+    $message->notification = 1;
+    $message->contexturl = (new \moodle_url('/library.php'))->out(false);
+    $message->contexturlname = 'Chi tiết';
+
+    message_send($message);
+}
+
+// Gửi message và email đồng ý duyệt tài liệu
+function send_email_approvedfile($moduleid) {
+    global $CFG, $DB, $USER;
+    $get_moduleinfo = $DB->get_record_sql('SELECT m.name, cm.instance, lm.userid FROM mdl_library_module lm
+                                                LEFT JOIN mdl_course_modules cm ON lm.coursemoduleid = cm.id
+                                                LEFT JOIN mdl_modules m ON cm.module = m.id 
+                                            WHERE lm.coursemoduleid = :coursemoduleid', 
+                                            ['coursemoduleid' => $moduleid]
+                                        );
+
+    $sql = "SELECT name FROM {" . $get_moduleinfo->name . "} WHERE id = :cmid";
+    $moduleinfo = $DB->get_record_sql($sql, 
+                                        ['cmid' => $get_moduleinfo->instance]
+                                    );
+    // User của người tạo file
+    $userinfo = $DB->get_record('user', ['id' => $get_moduleinfo->userid]);
+
+    $detailurl = $CFG->wwwroot . '/library.php';
+    $fullmessage = '<p>Dear (Mr/Mrs): <strong>'.fullname($userinfo).'</strong></p>
+                    <p>Yêu cầu duyệt tài liệu của Anh/Chị đã được chấp nhận</p>
+                    <p>Anh/Chị bấm vào link sau để xem chi tiết(<a href="'.$detailurl.'">Đường link</a>)</p>
+                    <table style="border-collapse: collapse;width: 100%;">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">STT</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Mã nhân viên</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Tên nhân viên</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Chức vụ</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Tên tài liệu</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Loại tài liệu</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Người duyệt</th>
+                                <th scope="col" style="border: 1px solid #ddd;padding: 8px;text-align: left;background-color:#c5f3f3">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">1</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$userinfo->usercode.'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.fullname($userinfo).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$DB->get_field('orgstructure_position', 'name',['id' => $userinfo->orgpositionid]).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.$moduleinfo->name.'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.ucwords($get_moduleinfo->name).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">'.fullname($USER).'</td>
+                                <td style="border: 1px solid #ddd;padding: 8px;text-align: left;">Chấp nhận</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br><strong>Thanks &amp; best regards,</strong><br>----------------------------------------<br><span><em><span style=""><span style="">Lưu ý</span></span>:</em>
+                    </span> Thư này được gửi tự động từ hệ thống, vui lòng không reply. Để hỗ trợ thông tin, liên hệ bộ phân IT.<br>
+                    <p></p>';
+    $message = new \core\message\message();
+    $message->component = 'local_newsvnr';
+    $message->name = 'approvedfile';
+    $message->userfrom = \core_user::get_support_user();
+    $message->userto = $get_moduleinfo->userid;
+    $message->subject = '[VnR.Admin] Yêu cầu duyệt tài liệu đã được chấp nhận';
+    $message->fullmessage = $fullmessage;
+    $message->fullmessageformat = FORMAT_HTML;
+    $message->fullmessagehtml = $fullmessage;
+    $message->smallmessage = 'Yêu cầu duyệt tài liệu đã được chấp nhận';
+    $message->notification = 1;
+    $message->contexturl = (new \moodle_url('/library.php'))->out(false);
+    $message->contexturlname = 'Chi tiết';
+
+    message_send($message);
 }
 
 function local_newsvnr_extend_navigation($navigation) {

@@ -48,7 +48,8 @@ function assignsubmission_file_pluginfile($course,
         return false;
     }
 
-    require_login($course, false, $cm);
+    // Custom by Vũ: xem file popup, bỏ yêu cầu login khi xem file
+    // require_login($course, false, $cm);
     $itemid = (int)array_shift($args);
     $record = $DB->get_record('assign_submission',
                               array('id'=>$itemid),
@@ -65,15 +66,16 @@ function assignsubmission_file_pluginfile($course,
         return false;
     }
 
-    if ($assign->get_instance()->teamsubmission &&
-        !$assign->can_view_group_submission($groupid)) {
-        return false;
-    }
+    // Custom by Vũ: xem file popup, bỏ yêu cầu login khi xem file
+    // if ($assign->get_instance()->teamsubmission &&
+    //     !$assign->can_view_group_submission($groupid)) {
+    //     return false;
+    // }
 
-    if (!$assign->get_instance()->teamsubmission &&
-        !$assign->can_view_submission($userid)) {
-        return false;
-    }
+    // if (!$assign->get_instance()->teamsubmission &&
+    //     !$assign->can_view_submission($userid)) {
+    //     return false;
+    // }
 
     $relativepath = implode('/', $args);
 

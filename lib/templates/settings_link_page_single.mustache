@@ -29,7 +29,23 @@
 }}
 {{#display}}
     {{#action}}
-        <li><a href="{{{action}}}">{{text}}</a></li>
+        <li class="d-flex">
+            <a href="{{{action}}}">{{text}}</a>
+            {{#node.isedit}}
+                {{#hidden}}
+                    <div class="config-admin switch" action="show" key={{key}}>
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </div>
+                {{/hidden}}
+                {{^hidden}}
+                    <div class="config-admin switch" action="hide" key={{key}}>
+                        <input type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </div>
+                {{/hidden}}
+            {{/node.isedit}}
+        </li>
     {{/action}}
     {{^action}}
         <li><strong>{{text}}</strong></li>
@@ -40,6 +56,7 @@
                 {{#children}}
                     {{> core/settings_link_page_single }}
                 {{/children}}
+
             </ul>
         </li>
     {{/children.count}}

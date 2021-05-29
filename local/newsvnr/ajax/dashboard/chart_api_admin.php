@@ -120,6 +120,7 @@ switch ($action) {
        
         $response = new stdClass();
         $response->series = array_reverse($series);
+        $response->seriesname = get_string('accesssite', 'local_newsvnr');
         $response->categories = array_reverse($categories);
         $response->lastaccess = '<span id="last-access" style="font-size: 13px; color: grey;">'.get_string('lastaccesstime', 'theme_moove', convertunixtime('h:i A', $lastacces), true).'</span>';
         echo json_encode($response,JSON_UNESCAPED_UNICODE);

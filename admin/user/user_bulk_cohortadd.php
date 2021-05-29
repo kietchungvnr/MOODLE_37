@@ -88,7 +88,9 @@ if (empty($users) or $mform->is_cancelled()) {
             cohort_add_member($data->cohort, $user->id);
         }
     }
-    redirect(new moodle_url('/admin/user/user_bulk.php'));
+    echo $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
+    // Custom by Thắng ; bỏ redirect
+    // redirect(new moodle_url('/admin/user/user_bulk.php'));
 }
 
 // Need to sort by date

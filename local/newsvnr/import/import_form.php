@@ -40,6 +40,8 @@ class import_form extends moodleform {
      
         $mform->addElement('header', 'settingsheader', get_string('upload'));
 
+        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-2">'.get_string('templateimport_help', 'theme_moove').'</div><div class="col-md-9 pr-0 form-inline felement"><a href="/theme/moove/data/Moodle_orgstructure_template.docx">'.get_string('templateimportclick', 'theme_moove').'</a></div></div>');
+        
         $mform->addElement('filepicker', 'orgfile', get_string('file'));
         $mform->addRule('orgfile', null, 'required');
         $orglist = [

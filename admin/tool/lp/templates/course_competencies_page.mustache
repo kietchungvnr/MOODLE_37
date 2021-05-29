@@ -45,7 +45,7 @@
     <thead>
         <tr>
             <div class="row mg-0">
-                <div class="col-md-3 table-competencies">Năng lực</div>
+                <div class="col-md-3 table-competencies">{{#str}}competency, local_newsvnr{{/str}}</div>
                 <div class="col-md-3 table-competencies">{{#str}}uponcoursecompletion, tool_lp{{/str}}</div>
                 <div class="col-md-3 table-competencies">{{#str}}activities{{/str}}</div>
                 <div class="col-md-3 table-competencies">{{#str}}userplans, core_competency{{/str}}</div>
@@ -56,43 +56,49 @@
 {{#competencies}}
     <tr class="drag-samenode" data-id="{{competency.id}}">
     <td>
-        {{#usercompetencycourse}}
-            {{#grade}}
-            <span class="badge {{#proficiency}}badge-success{{/proficiency}}{{^proficiency}}badge-danger{{/proficiency}}">{{gradename}}</span>
-            {{/grade}}
-        {{/usercompetencycourse}}
         <div class="row">
-        {{#canmanagecoursecompetencies}}
-        <div class="col-md-3 d-flex" data-region="coursecompetency-ruleoutcome">
-            {{#canmanagecoursecompetencies}}
-                <span class="drag-handlecontainer float-sm-left"></span>
-            {{/canmanagecoursecompetencies}}
-            {{#competency}}
-                <a href="{{pluginbaseurl}}/user_competency_in_course.php?courseid={{courseid}}&competencyid={{competency.id}}&userid={{gradableuserid}}"
-                       id="competency-info-link-{{competency.id}}"
-                       title="{{#str}}viewdetails, tool_lp{{/str}}">
-                    <p><strong>{{{competency.shortname}}}</strong></p>
-                </a>
-                <p>{{{competency.description}}}</p>
-            {{/competency}}
-            {{#comppath}}
-                <span class="float-sm-left ml-2">{{#str}}path, tool_lp{{/str}}&nbsp;</span>{{> tool_lp/competency_path }}
-            {{/comppath}}
+        <div class="col-md-3" data-region="coursecompetency-ruleoutcome">
+            <div class="d-flex">
+                {{#canmanagecoursecompetencies}}
+                    <span class="drag-handlecontainer float-sm-left"></span>
+                {{/canmanagecoursecompetencies}}
+                {{#competency}}
+                    <a href="{{pluginbaseurl}}/user_competency_in_course.php?courseid={{courseid}}&competencyid={{competency.id}}&userid={{gradableuserid}}"
+                           id="competency-info-link-{{competency.id}}"
+                           title="{{#str}}viewdetails, tool_lp{{/str}}">
+                        <p><strong>{{{competency.shortname}}}</strong></p>
+                    </a>
+                {{/competency}}
+                {{#canmanagecoursecompetencies}}
+                    {{#comppath}}
+                        <span class="float-sm-left ml-2 mr-2"> - </span>{{> tool_lp/competency_path }}
+                    {{/comppath}}
+                {{/canmanagecoursecompetencies}}
+            </div>
         </div>
         <div class="col-md-3">
-            <label>
-                <select data-field="ruleoutcome" data-id="{{coursecompetency.id}}" class="custom-select">
-                  {{#ruleoutcomeoptions}}
-                     <option value="{{value}}" {{#selected}}selected{{/selected}}>{{text}}</option>
-                  {{/ruleoutcomeoptions}}
-                </select>
-            </label>
+
+            {{#canmanagecoursecompetencies}}
+                <label>
+                    <select data-field="ruleoutcome" data-id="{{coursecompetency.id}}" class="custom-select">
+                      {{#ruleoutcomeoptions}}
+                         <option value="{{value}}" {{#selected}}selected{{/selected}}>{{text}}</option>
+                      {{/ruleoutcomeoptions}}
+                    </select>
+                </label>
+            {{/canmanagecoursecompetencies}}
+            {{^canmanagecoursecompetencies}}
+                {{#usercompetencycourse}}
+                    {{#grade}}
+                    <span class="badge {{#proficiency}}badge-success{{/proficiency}}{{^proficiency}}badge-danger{{/proficiency}}">{{gradename}}</span>
+                    {{/grade}}         
+                {{/usercompetencycourse}}
+            {{/canmanagecoursecompetencies}}
         </div>
-        {{/canmanagecoursecompetencies}}
         <div class="col-md-3" data-region="coursecompetencyactivities">
             <ul class="inline list-inline">
             {{#coursemodules}}
-                <li class="list-inline-item"><a href="{{url}}"><img src="{{iconurl}}"> {{name}} </a></li>
+                <li class="list-inline-item"><a target="_blank" href="{{url}}"><img src="{{iconurl}}"> {{name}} </a></li>
             {{/coursemodules}}
             {{^coursemodules}}
                 <li class="list-inline-item">{{#str}}noactivities, tool_lp{{/str}}</li>

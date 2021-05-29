@@ -1,150 +1,156 @@
 <div class="containter api" id="nav-drawer-left">
-    <div class="col-md-12 has-arrow bg-info border-0 font-weight-bold p-2 text-white mb-1" href="javascript:void(0);" aria-expanded="false" data-toggle="collapse" data-target="#settingapi">
-        <h3 class="m-0 text-white">{{#str}}addnewapi, local_newsvnr{{/str}}</h3>
-    </div>
-    <div class="col-md-12 main collapse show" id="settingapi">
-        <div class="block">
-            <h5>Request</h5>
-            <form class="form">
-                <div class="col-md-12 form-inline">
-                    <div class="col-md-4 form-group" style="float: left;">
-                        <label class="control-label col-sm-6">Method:</label>
-                        <select class="form-control" id="method">
-                            <option value="post">POST</option>
-                            <option value="get">GET</option>
-                            <option value="delete">DELETE</option>
-                        </select>
-                    </div>
-                    <div class="col-md-8 form-group" style="display: inline-block; ">
-                        <label class="control-label col-sm-6">URL:</label>
-                        <input id="URL" type="text" class="form-control" placeholder="">
-                        <span class=" error-url"></span>
-                    </div>
-                </div>
-                <div class="col-md-12 form-inline">
-                    <div class="col-md-4 form-group" style="display: inline-block; ">
-                        <label class="control-label col-sm-6">Function:</label>
-                        <input id="function_api" type="text" class="form-control" placeholder="">
-                        <span class=" error-function"></span>
-                    </div>
-                </div>
-                <div class="col-md-12 form-inline">
-                    <div class="col form-group" style="display: inline-block; ">
-                        <label class="control-label col-sm-6">Description:</label>
-                        <textarea id="description" rows="5" cols="40"></textarea>
-                        <span class=" error-description"></span>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="block">
-            <h5>Header</h5>
-            <form class="form">
-                <div class="col-md-12  form-inline">
-                    <div class="col-md-4 form-group" style="display: inline-block; ">
-                        <label class="control-label col-sm-6">Content-type</label>
-                        <select class="form-control" id="contenttype">
-                            <option value="" selected="selected"></option>
-                            <option value="application/json">application/json</option>
-                            <option value="application/xml">application/xml</option>
-                            <option value="form-data">form-data</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="add-header">
-                    <div class="col-md-12 form-inline">
-                        <div class="col-md-4 form-group">
-                            <label class="control-label col-sm-6"> Header name</label>
-                            <select class="form-control" name="header-name">
-                                <option value="" selected="selected"></option>
-                                <option value="Cookie">Cookie</option>
-                                <option value="Date">Date</option>
-                                <option value="Authorization">Authorization</option>
-                                <option value="Cache-Control">Cache-Control</option>
-                                <option value="Host">Host</option>
-                                <option value="Range">Range</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 form-group">
-
-                            <label class="control-label col-sm-6"> Header value</label>
-
-                            <input id="header-value" name="header-value" type="text" class="form-control" placeholder="Header value" />
-
-                            <span class="error-header"></span>
-
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-md-12  form-inline">
-                    <div class="col-md-4 form-group">
-                        <input type="button" value="Add form header" class="btn btn-primary" id="add-header" />
-                    </div>
-                </div>
-
-            </form>
-        </div>
-
-        <div class="block">
-            <h5>Body</h5>
-            <form class="form">
-                {{!
-                <div class="add-param">
-                    <div class="col-md-12 form-inline" style="margin-bottom: 0;">
-                        <div class="col-md-4 form-group">
-                            <h5>Client Paramater</h5>
-                        </div>
-
-                        <div class="col-md-4 form-group">
-                            <h5>Server Paramater</h5>
-                        </div>
-
-                        <div class="col-md-3 form-group">
-                            <h5>Default Value</h5>
-                        </div>
-
-                    </div>
-                </div> }}
-                <div class="add-body">
-                    <div class="col-md-12 form-inline">
-                        <div class="col-md-4 form-group">
-                            <label class="control-label col-sm-6"> Client Paramater</label>
-                            <input type="text" class="form-control" name="client_param" placeholder="Paramater name">
-
-                        </div>
-
-                        <div class="col-md-4 form-group">
-                            <label class="control-label col-sm-6"> Server Paramater</label>
-                            <input type="text" class="form-control" name="server_param" placeholder="Paramater name" name="">
-                        </div>
-
-                        <div class="col-md-4 form-group">
-                            <label class="control-label col-sm-6"> Default Value</label>
-                            <input type="text" class="form-control" name="default_value" placeholder="Default value">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12  form-inline">
-                    <div class="col-md-4 form-group">
-                        <input type="button" value="Add form paramater" class="btn btn-primary" id="add-body" />
-                    </div>
-                    <div class="col-md-4 form-group">
-                        <input type="button" value="Create" class="btn btn-primary" id="create">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="col-md-12 has-arrow bg-info border-0 font-weight-bold p-2 text-white" href="javascript:void(0);" aria-expanded="false" data-toggle="collapse" data-target="#managermentapi">
-        <h3 class="m-0 text-white">Quản lý API</h3>
-    </div>
-    <div class="col-md-12 collapse" id="managermentapi">
-        <div class="block">
-            <h5>Danh sách API</h5>
+    <ul class="nav-tabs nav multi-tab mb-3 nav-header" tab="api">
+        <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="apimanagement">Quản lý API</a></li>
+        <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="addnewapi">Thêm mới API</a></li>
+        <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="logapi">Log review API</a></li>
+    </ul>
+    <div class="tab-content" tab="api">
+        <div data="apimanagement" class="tab-pane active">
             <div id="showlistapi_data"></div>
         </div>
+        <div data="addnewapi" class="tab-pane">
+            <div id="settingapi">
+                <div class="block">
+                    <h5>Request</h5>
+                    <form class="form">
+                        <div class="col-md-12 form-inline">
+                            <div class="col-md-4 form-group" style="float: left;">
+                                <label class="control-label col-sm-6">Method:</label>
+                                <select class="form-control" id="method">
+                                    <option value="post">POST</option>
+                                    <option value="get">GET</option>
+                                    <option value="delete">DELETE</option>
+                                </select>
+                            </div>
+                            <div class="col-md-8 form-group" style="display: inline-block; ">
+                                <label class="control-label col-sm-6">URL:</label>
+                                <input id="URL" type="text" class="form-control" placeholder="">
+                                <span class=" error-url"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-inline">
+                            <div class="col-md-4 form-group" style="display: inline-block; ">
+                                <label class="control-label col-sm-6">Function:</label>
+                                <input id="function_api" type="text" class="form-control" placeholder="">
+                                <span class=" error-function"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-inline">
+                            <div class="col form-group" style="display: inline-block; ">
+                                <label class="control-label col-sm-6">Description:</label>
+                                <textarea id="description" rows="5" cols="40"></textarea>
+                                <span class=" error-description"></span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="block">
+                    <h5>Header</h5>
+                    <form class="form">
+                        <div class="col-md-12  form-inline">
+                            <div class="col-md-4 form-group" style="display: inline-block; ">
+                                <label class="control-label col-sm-6">Content-type</label>
+                                <select class="form-control" id="contenttype">
+                                    <option value="" selected="selected"></option>
+                                    <option value="application/json">application/json</option>
+                                    <option value="application/xml">application/xml</option>
+                                    <option value="form-data">form-data</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="add-header">
+                            <div class="col-md-12 form-inline">
+                                <div class="col-md-4 form-group">
+                                    <label class="control-label col-sm-6"> Header name</label>
+                                    <select class="form-control" name="header-name">
+                                        <option value="" selected="selected"></option>
+                                        <option value="Cookie">Cookie</option>
+                                        <option value="Date">Date</option>
+                                        <option value="Authorization">Authorization</option>
+                                        <option value="Cache-Control">Cache-Control</option>
+                                        <option value="Host">Host</option>
+                                        <option value="Range">Range</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 form-group">
+
+                                    <label class="control-label col-sm-6"> Header value</label>
+
+                                    <input id="header-value" name="header-value" type="text" class="form-control" placeholder="Header value" />
+
+                                    <span class="error-header"></span>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-12  form-inline">
+                            <div class="col-md-4 form-group">
+                                <input type="button" value="Add form header" class="btn btn-primary" id="add-header" />
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="block">
+                    <h5>Body</h5>
+                    <form class="form">
+                        {{!
+                        <div class="add-param">
+                            <div class="col-md-12 form-inline" style="margin-bottom: 0;">
+                                <div class="col-md-4 form-group">
+                                    <h5>Client Paramater</h5>
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                    <h5>Server Paramater</h5>
+                                </div>
+
+                                <div class="col-md-3 form-group">
+                                    <h5>Default Value</h5>
+                                </div>
+
+                            </div>
+                        </div> }}
+                        <div class="add-body">
+                            <div class="col-md-12 form-inline">
+                                <div class="col-md-4 form-group">
+                                    <label class="control-label col-sm-6"> Client Paramater</label>
+                                    <input type="text" class="form-control" name="client_param" placeholder="Paramater name">
+
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                    <label class="control-label col-sm-6"> Server Paramater</label>
+                                    <input type="text" class="form-control" name="server_param" placeholder="Paramater name" name="">
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                    <label class="control-label col-sm-6"> Default Value</label>
+                                    <input type="text" class="form-control" name="default_value" placeholder="Default value">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12  form-inline">
+                            <div class="col-md-4 form-group">
+                                <input type="button" value="Add form paramater" class="btn btn-primary" id="add-body" />
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <input type="button" value="Create" class="btn btn-primary" id="create">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div data="logapi" class="tab-pane">
+            <div id="logreviewapi"></div>
+        </div>
     </div>
+
+
+
 </div>
 
 <script>

@@ -8,7 +8,8 @@ require_once($CFG->libdir.'/adminlib.php');
 redirect_if_major_upgrade_required();
 
 $query = trim(optional_param('query', '', PARAM_NOTAGS));  // Search string
-
+$adminedit = optional_param('adminedit','',PARAM_INT);
+$showall = optional_param('showall', 0, PARAM_BOOL);
 $context = context_system::instance();
 $PAGE->set_context($context);
 
@@ -57,7 +58,7 @@ echo $OUTPUT->header($focus);
 //     echo $adminrenderer->warn_if_not_registered();
 // }
 
-echo $OUTPUT->heading(get_string('administrationsite'));
+// echo $OUTPUT->heading(get_string('administrationsite'));
 
 if ($errormsg !== '') {
     echo $OUTPUT->notification($errormsg);
@@ -68,21 +69,129 @@ if ($errormsg !== '') {
 
 $showsettingslinks = true;
 
-if ($hassiteconfig) {
-    require_once("admin_settings_search_form.php");
-    $form = new admin_settings_search_form();
-    $form->display();
-    echo '<hr>';
-    if ($query) {
-        echo admin_search_settings_html($query);
-        $showsettingslinks = false;
-    }
-}
+// if ($hassiteconfig) {
+//     require_once("admin_settings_search_form.php");
+//     $form = new admin_settings_search_form();
+//     $form->display();
+//     echo '<hr>';
+//     if ($query) {
+//         echo admin_search_settings_html($query);
+//         $showsettingslinks = false;
+//     }
+// }
 
+
+$PAGE->requires->js_call_amd('theme_moove/admin_config','init');
 if ($showsettingslinks) {
     $node = $PAGE->settingsnav->find('root', navigation_node::TYPE_SITE_ADMIN);
+    $stritem = $DB->get_field('config_plugins','value',['name' => 'administrationtab']);
+    $listitem = explode(",",$stritem);
+    if($adminedit == 1) {
+        $node->isedit = true;
+        if($stritem != '') {
+            foreach ($listitem as $item) {
+                $node->find($item, navigation_node::TYPE_SETTING)->show();
+            }
+        }
+    } else {
+        $node->isedit = false;
+        if($stritem != '') {
+            foreach ($listitem as $item) {
+                $node->find($item, navigation_node::TYPE_SETTING)->hide();
+            }
+        }
+    }
+    // Custom by Vũ: Loại bỏ 1 số chức năng trong quản trị hệ thống
+    $theme = theme_config::load('moove');
+    if($theme->settings->fullsite == false && $showall != 1) {
+        $ignore_node = [
+            "registrationmoodleorg", 
+            "upgradesettings", 
+            "moodleservices", 
+            "userfeedback", 
+            "optionalsubsystems",
+            "usermanagement", 
+            "userbulk", 
+            "userdefaultpreferences", 
+            "profilefields", 
+            "tooluploaduserpictures", 
+            "userpolicies", 
+            "toolunsuproles", 
+            "toolcapability", 
+            "course_customfield", 
+            "tooluploadcourse",
+            "coursecolors",
+            "calendar",
+            "blog",
+            "htmlsettings",
+            "resetemoticons",
+            "documentation",
+            "profilepage",
+            "coursecontact",
+            "ajax",
+            "additionalhtml",
+            "templates",
+            "tool_usertours/tours",
+            "systempaths",
+            "supportcontact",
+            "sessionhandling",
+            "stats",
+            "http",
+            "maintenancemode",
+            "cleanup",
+            "environment",
+            "phpinfo",
+            "performance",
+            "oauth2",
+            "tool_filetypes",
+            "server",
+            "reports",
+            "experimental",
+            "profiling",
+            "testclient",
+            "mnettestclient",
+            "thirdpartylibs",
+            "toolphpunit",
+            "toolbehat",
+            "tooltemplatelibrary",
+            "toolxmld",
+            "toolgeneratorcourse",
+            "toolgeneratortestplan",
+            "managebackpacks",
+            "backpacksettings",
+            "themesettings",
+            "toollpexportcsv",
+            "editusers",
+            "addnewuser"
+        ];
+        $ignore_tabnode = [
+            "analytics", 
+            "license", 
+            "location", 
+            "ipblocker", 
+            "mobileapp", 
+            "moodlenet", 
+            "privacy", 
+            "backups", 
+            "activitychooser", 
+            "modules", 
+            "mnet", 
+            "unsupported", 
+            "messaging"
+        ];
+        foreach ($ignore_tabnode as $tabnodename) {
+            if($node->find($tabnodename, navigation_node::TYPE_SETTING)) {
+                $node->find($tabnodename, navigation_node::TYPE_SETTING)->hide();
+            }
+        }
+        foreach ($ignore_node as $nodename) {
+            if($node->find($nodename, navigation_node::TYPE_SETTING)) {
+                $node->find($nodename, navigation_node::TYPE_SETTING)->hide();
+            }
+        }
+    }
     if ($node) {
-        echo $OUTPUT->render_from_template('core/settings_link_page', ['node' => $node]);
+        echo $OUTPUT->render_from_template('theme_moove/custom_settings_link_page', ['node' => $node]);
     }
 }
 

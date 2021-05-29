@@ -6186,7 +6186,7 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
 
     // Set word wrap.
     $mail->WordWrap = $wordwrapwidth;
-
+    
     if (!empty($from->customheaders)) {
         // Add custom headers.
         if (is_array($from->customheaders)) {

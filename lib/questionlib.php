@@ -1550,7 +1550,7 @@ function get_import_export_formats($type) {
     require_once($CFG->dirroot . '/question/format.php');
 
     $formatclasses = core_component::get_plugin_list_with_class('qformat', '', 'format.php');
-
+    unset($formatclasses['qformat_xml']);
     $fileformatname = array();
     foreach ($formatclasses as $component => $formatclass) {
 

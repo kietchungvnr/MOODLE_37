@@ -103,6 +103,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
                 $('.alert-warning').text('');
                 $('.alert-warning').removeClass('alert');
                 $('.loading-page').addClass('active');
+                $('.sort-module i').remove();
                 $('#folder_library li.folder').removeClass('active');
                 $('#folder_library li.folder').addClass('not-allow');
                 $(this).parent('li').addClass('active');
@@ -110,9 +111,9 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
                 $('.add-module-popup input[name="selectmodule"]').attr('folderid', folderid);
                 $('.searchlibrary').attr('folderid', folderid);
                 if($(this).parent('li').hasClass('title')) {
-                    $('button[data-target="#add-popup-modal-module"]').hide();
+                    $('div[data-target="#add-popup-modal-module"]').hide();
                 } else {
-                    $('button[data-target="#add-popup-modal-module"]').show();
+                    $('div[data-target="#add-popup-modal-module"]').show();
                 }
                 var settings = {
                     type: "GET",
@@ -152,6 +153,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
             // Search tài liệu thư viện
             $("button.library").click(function() {
                 $('.loading-page').addClass('active');
+                $('.sort-module i').remove();
                 var folderid = $(this).prev('.searchlibrary').attr('folderid');
                 var value = $(this).prev('.searchlibrary').val().trim();
                 var searchtype = $(this).prev('.searchlibrary').attr('searchtype');
@@ -242,24 +244,25 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
             $('#table-library').on('click', 'a#share-module-library', function(e) {
                 $('#share-popup-modal-module').modal('show');
                 var moduleid = $(this).attr('moduleid');
-                $('#module-from-library').attr('moduleid', moduleid);
+                $('#share-module-library').attr('moduleid', moduleid);
             })
             // kendo lọc khóa học 
             var kendoConfig = {};
-                kendoConfig.apiSettings = { url: scriptshare+'filter_course' };
+                kendoConfig.apiSettings = { url: scriptshare+'filter_course'};
                 kendoConfig.value = 'courseid';
             var kendoCourseList = kendoService.initDropDownList(kendoConfig);
             $("#course-share-input").kendoDropDownList(kendoCourseList);
             // kendo lọc section của khóa học
             var kendoConfig = {};
-                kendoConfig.apiSettings = { url: scriptshare+'filter_course' };
+                kendoConfig.apiSettings = { url: scriptshare+'filter_course_section'};
                 kendoConfig.value = 'sectionid';
                 kendoConfig.cascadeFrom = 'course-share-input';
             var kendoCourseSection = kendoService.initDropDownList(kendoConfig);
             $("#course-section-input").kendoDropDownList(kendoCourseSection);
             
             $("#share-module-library").click(function() {
-                var moduleid = $('#module-from-library').attr('moduleid');
+                debugger
+                var moduleid = $('#share-module-library').attr('moduleid');
                 var courseid = $('#course-share-input').val();
                 var sectionid = $('#course-section-input').val();
                 var settings = {
@@ -288,6 +291,8 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
                 visible: false,
                 open: onOpen,
                 actions: [
+                    "Minimize", 
+                    "Maximize",
                     "Close"
                 ],
             })
@@ -296,7 +301,48 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
             }
             $('#modal-iframe-library').on('hidden.bs.modal', function () {
                 document.cookie = 'cookie=; max-Age=-1;path=/';
-            })            
+            }) 
+            // Sắp xếp
+            $('.sort-module').click(function() {
+                $('.loading-page').addClass('active');
+                $('.sort-module i').remove();
+                var action  = $(this).attr('action');
+                var folderid = $('#pagination').attr('folderid');
+                var modulefilter = $('#pagination').attr('modulefilter');
+                var search = $('#pagination').attr('search');
+                if(action == "viewsort_desc") {//   
+                    $(this).html(M.util.get_string('viewed', 'local_newsvnr')+'<i class="ml-1 fa fa-arrow-down" aria-hidden="true"></i>');
+                    $(this).attr('action','viewsort_asc')
+                }
+                if(action == "viewsort_asc") {
+                    $(this).html(M.util.get_string('viewed', 'local_newsvnr')+'<i class="ml-1 fa fa-arrow-up" aria-hidden="true"></i>');
+                    $(this).attr('action','viewsort_desc')
+                }
+                if(action == "timesort_desc") {
+                    $(this).html('Time created<i class="ml-1 fa fa-arrow-down" aria-hidden="true"></i>');
+                    $(this).attr('action','timesort_asc')
+                }
+                if(action == "timesort_asc") {
+                    $(this).html('Time created<i class="ml-1 fa fa-arrow-up" aria-hidden="true"></i>');
+                    $(this).attr('action','timesort_desc')
+                }
+                var settings = {
+                    type: "GET",
+                    processData: true,
+                    dataType: "json",
+                    data: {
+                        folderid:folderid,
+                        modulefilter:modulefilter,
+                        search:search,
+                        action: action,
+                    }
+                }
+                $.ajax(scriptmodule,settings).then(function(response) {
+                    $('#table-library').hide().html(response.result).fadeIn('fast');
+                    $('.loading-page').removeClass('active');
+                    $('#pagination').replaceWith(response.pagination);
+                })
+            })           
         })
     }
     return {

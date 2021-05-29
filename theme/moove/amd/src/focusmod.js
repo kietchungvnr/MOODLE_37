@@ -24,6 +24,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             if(spa == "true") {
                 Cookie.setCookie('spa', '-1', 0)
             }
+            
             if($('#mod-iframe').length <= 0) {
                 $('#mod-view-coursepage').html('<div class="alert alert-success mb-0"><strong>'+ M.util.get_string('selectcoursedata', 'theme_moove') +'</strong></div>');
             }
@@ -55,7 +56,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                 Cookie.setCookie('cookie', '-1', 0)
             } else {
                 /// Ẩn các element khi bật chế độ focusmode
-                $('body').attr('style','overflow:hidden !important');
+                // $('body').attr('style','overflow:hidden !important');
                 $('body').addClass('focusmod');
                 $('footer,.all-header,#page-header').slideUp();
                 $('.fixed-sidebar-left').addClass('d-none');
@@ -151,10 +152,10 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         // Chỉ áp dụng khi có role là học viên trong 1 khóa
         var getBaseUrl = Cookie.getCookie('baseUrl');
         if(getBaseUrl.includes('course/view.php?id=')) {
-            debugger
             if($('[data-role=1]').length > 0) {
                 $('.course-content li.activity a.aalink').bind('click', function(e) {
                     e.preventDefault();
+                    Cookie.setCookieSecure('ebmlms', 'true');
                     var moduleId = $(this).parents('li').attr('id').split('-')[1];
                     var element = "div.dropdown-content-2 a[module-id=" +moduleId+ "]";
                     $('#focus-mod').trigger('click');
@@ -172,8 +173,8 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             var _this = $(this);
             var url = _this.attr('data-focusmode-url');
             var modType = _this.attr('data-mod-type');
-            var height = $(window).height()
-            var width = $(window).width()
+            var height = $(window).height();
+            var width = $(window).width();
             Cookie.setCookie('cookie', 'focusmod');
             if($('body').hasClass('focusmod')) {
                 Cookie.setCookie('cookie', 'focusmod');
@@ -222,6 +223,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                             var vh = $('body').height();
                             $('#mod-iframe').height(vh);
                         } else if (modType == 'quiz') {
+                            var width = $(window).width();
                             if(width > 576) {
                                 $('#mod-iframe').removeAttr('height');
                                 const iframes = iFrameResize({ log: false }, '#mod-iframe');

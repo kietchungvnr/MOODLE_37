@@ -781,8 +781,12 @@ function theme_moove_layout_check() {
     }
     // Xét layout cho nhúng LMS vào portal EBM
     if(isset($referer) && ($referer_split[2] == $_SERVER['HTTP_HOST'])) {
-        $object->hasportal = false;
-    } elseif(isset($referer) && ($referer_split[2] != $_SERVER['HTTP_HOST'])) {
+        if(isset($_COOKIE['ebmlms']) && $_COOKIE['ebmlms'] == 'true') {
+            $object->hasportal = true;
+        } else {
+            $object->hasportal = false;
+        }
+    } elseif(isset($referer) && ($referer_split[2] != $_SERVER['HTTP_HOST']) && strpos($_SERVER['QUERY_STRING'], 'EBMLMS=true') == true) {
         $object->hasportal = true;
     } else {
         $object->hasportal = false;
@@ -791,7 +795,7 @@ function theme_moove_layout_check() {
     $object->show_hide_focusmod = true;
     if(isset($referer) && ($referer_split[2] == $_SERVER['HTTP_HOST'])) {
         if(isset($_COOKIE['cookie']) && $_COOKIE['cookie'] == 'focusmod') {
-            if (strpos($referer, 'mod/') == true || strpos($_SERVER['QUERY_STRING'], 'course') == true || strpos($referer, 'course=') == true || strpos($_SERVER['SCRIPT_NAME'], 'mod/') == true) {
+            if (strpos($referer, 'report/user') ==  true || strpos($referer, 'question/') == true || strpos($referer, 'mod/') == true || strpos($_SERVER['QUERY_STRING'], 'course') == true || strpos($referer, 'course=') == true || strpos($_SERVER['SCRIPT_NAME'], 'mod/') == true) {
                 $object->hasiframe = true;
                 $object->show_hide_focusmod = false;
             } else {
@@ -806,22 +810,22 @@ function theme_moove_layout_check() {
     // Xét layout cho chế độ single page app
     if(isset($referer) && $referer_split[2] == $_SERVER['HTTP_HOST']) {
         if(isset($_COOKIE['spa']) && $_COOKIE['spa'] == 'true') {
-            // $referers = ['/course/view.php', '/user/index.php', '/badges/view.php', '/admin/tool/lp/coursecompetencies.php', '/grade/report/index.php', '/contentbank/index.php', '/grade/report/user/index.php'];
-            // if (in_array(get_pathname_url($referer), $referers)) {
-            //     $object->hasgeneraliframe = true;
-            //     // if(in_array($_SERVER['SCRIPT_NAME'], $referers) == false) {
-            //     //     $object->hasgeneraliframe = false;
-            //     // }
-            // } else {
-            //     $object->hasgeneraliframe = false;
-            // }
-             $object->hasgeneraliframe = true;
+            $object->hasgeneraliframe = true;
         } else {
             $object->hasgeneraliframe = false;
         }
     } else {
         $object->hasgeneraliframe = false;
     }
+    // Xét SPA khi ở trong layout portal
+    if($object->hasportal == true) {
+        $object->portalcourse = true;
+        $object->hasgeneraliframe = true;
+        if(get_pathname_url($referer) == '/course/view.php') {
+            $object->portalcourse = false;
+        }
+    }
+    
     $object->hasfocusmod = (isset($_COOKIE['cookie']) == 'focusmod') ? true : false;
     $object->hasopenmenu = (isset($_COOKIE['menu']) == 'openmenu') ? true : false;
     $object->hascourse = ($COURSE->id > 1) ? true : false;

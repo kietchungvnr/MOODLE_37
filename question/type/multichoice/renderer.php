@@ -168,7 +168,7 @@ abstract class qtype_multichoice_renderer_base extends qtype_with_combined_feedb
     }
 
     protected function number_html($qnum) {
-        return $qnum;
+        return $qnum . '<span class="dot-desktop">.</span>';
     }
 
     /**

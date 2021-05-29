@@ -261,7 +261,9 @@ class qtype_random extends question_type {
             $categoryids = array($categoryid);
         }
 
-        $questionids = question_bank::get_finder()->get_questions_from_categories(
+        // Custom by Vũ: Phân loại câu hỏi
+        // Lấy câu hỏi theo category có field level câu hỏi
+        $questionids = question_bank::get_finder()->get_questions_with_level_from_categories(
                 $categoryids, 'qtype NOT IN (' . $this->excludedqtypes . ')');
         $this->availablequestionsbycategory[$categoryid][$subcategories] = $questionids;
         return $questionids;
@@ -284,19 +286,36 @@ class qtype_random extends question_type {
     public function choose_other_question($questiondata, $excludedquestions, $allowshuffle = true, $forcequestionid = null) {
         $available = $this->get_available_questions_from_category($questiondata->category,
                 !empty($questiondata->questiontext));
-        shuffle($available);
+        // Custom by Vũ: Phân loại câu hỏi
+        // Khi render câu hỏi random có dựa vào mức độ câu hỏi để render
+        $questions = [];
+        $key = 0;
+        foreach($available as $questionkey => $question) {
+            if($questiondata->level != null) {
+                if ($question->level === $questiondata->level) {
+                    $questions[$key] = $question->id;
+                    $key++;
+                    continue;
+                }
+            } else {
+                $questions[$key] = $question->id;
+                $key++;
+                continue;
+            }
+        }
+        shuffle($questions);
 
         if ($forcequestionid !== null) {
-            $forcedquestionkey = array_search($forcequestionid, $available);
+            $forcedquestionkey = array_search($forcequestionid, $questions);
             if ($forcedquestionkey !== false) {
-                unset($available[$forcedquestionkey]);
-                array_unshift($available, $forcequestionid);
+                unset($questions[$forcedquestionkey]);
+                array_unshift($questions, $forcequestionid);
             } else {
                 throw new coding_exception('thisquestionidisnotavailable', $forcequestionid);
             }
         }
 
-        foreach ($available as $questionid) {
+        foreach ($questions as $questionid) {
             if (in_array($questionid, $excludedquestions)) {
                 continue;
             }

@@ -24,10 +24,12 @@
 define(
     [
         'jquery',
+        'core/ajax',
         'mod_quiz/random_question_form_preview'
     ],
     function(
         $,
+        Ajax,
         RandomQuestionFormPreview
     ) {
 
@@ -38,7 +40,12 @@ define(
         PREVIEW_CONTAINER: '[data-region="random-question-preview-container"]',
         CATEGORY_FORM_ELEMENT: '[name="category"]',
         SUBCATEGORY_FORM_ELEMENT: '[name="includesubcategories"]',
-        TAG_IDS_FORM_ELEMENT: '[name="fromtags[]"]'
+        TAG_IDS_FORM_ELEMENT: '[name="fromtags[]"]',
+        QUESTION_EASY: '[name=easylevel_number]',
+        QUESTION_NORMAL: '[name=normallevel_number]',
+        QUESTION_HARD: '[name=hardlevel_number]',
+        QUESTION_COUNT_PERCENT: '[name=numbertoadd_percent]',
+        QUESTION_COUNT_NUMBER: '[name=numbertoadd]'
     };
 
     /**
@@ -111,7 +118,49 @@ define(
         });
     };
 
+    var requestQuestions = function(
+        categoryId,
+        includeSubcategories,
+        tagIds,
+        contextId,
+        limit,
+        offset
+    ) {
+        var request = {
+            methodname: 'core_question_get_random_question_summaries',
+            args: {
+                categoryid: categoryId,
+                includesubcategories: includeSubcategories,
+                tagids: tagIds,
+                contextid: contextId,
+                limit: limit,
+                offset: offset
+            }
+        };
+
+        return Ajax.call([request])[0];
+    };
+
+    // Custom by Vũ: Phân loại câu hỏi
+    // Render option cho select box
+    var renewSelectBox = function(
+        element, 
+        numnber
+    ) {
+        var option = '';
+        for(var i = 1; i <= numnber; i++) {
+            option += '<option value="'+i+'">' + i + '</option>';
+        }
+        if(numnber > 0) {
+            $(element).html(option);
+        } else {
+            $(element).html('<option value="0">0</option>');
+        }
+    }
+
     /**
+     * Custom by Vũ: Phân loại câu hỏi
+     * Reload lại select số lượng câu hỏi khi đổi thư mục question
      * Reload the preview section with a new set of filters.
      *
      * @param {jquery} form The form element.
@@ -119,7 +168,23 @@ define(
      * @param {string[]} topCategories List of top category values (matching the select box values)
      */
     var reloadQuestionPreview = function(form, contextId, topCategories) {
+        requestQuestions(
+            getCategoryId(form),
+            shouldIncludeSubcategories(form, topCategories),
+            getTagIds(form),
+            contextId,
+            5,
+            0
+        ).then(function(response) {
+            var totalQuestionCount = response.totalcount;
+            renewSelectBox(SELECTORS.QUESTION_COUNT_NUMBER, response.totalcount);
+            renewSelectBox(SELECTORS.QUESTION_EASY, response.totalcount_easy);
+            renewSelectBox(SELECTORS.QUESTION_NORMAL, response.totalcount_normal);
+            renewSelectBox(SELECTORS.QUESTION_HARD, response.totalcount_hard);
+            renewSelectBox(SELECTORS.QUESTION_COUNT_PERCENT, response.totalcount_level);
+        })
         var previewContainer = form.find(SELECTORS.PREVIEW_CONTAINER);
+        
         RandomQuestionFormPreview.reload(
             previewContainer,
             getCategoryId(form),

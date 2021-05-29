@@ -36,6 +36,7 @@ use theme_config;
 use core_text;
 use help_icon;
 use context_system;
+use context_user;
 use core_course_list_element;
 use context_module;
 use moodle_page;
@@ -1315,10 +1316,11 @@ class core_renderer extends \theme_boost\output\core_renderer {
     }
     function recursive_module_folder($folderid,&$count = 0) {
         global $DB, $OUTPUT;
+        
         $countmodule = $DB->get_record_sql("SELECT count(cm.id) as count FROM {library_folder} lf 
                                                 JOIN {library_module} lm on lf.id = lm.folderid
                                                 JOIN {course_modules} cm on lm.coursemoduleid = cm.id
-                                            WHERE lf.id = $folderid");
+                                            WHERE lf.id = $folderid and lm.approval = 1");
         $folderidchild = $DB->get_records("library_folder",['parent' => $folderid],'','id');
         $count = $countmodule->count + $count;
         if(!empty(($folderidchild))) {
@@ -1332,6 +1334,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
     public function folder_tree_custom($menus, $id_parent = 0, &$output = '', $stt = 0) {
         global $DB, $CFG, $OUTPUT,$USER;
         $menu_tmp = array();
+        $context = context_user::instance($USER->id);
         foreach ($menus as $key => $item) {
             if ((int) $item->parent == (int) $id_parent) {
                 $menu_tmp[] = $item;
@@ -1340,7 +1343,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
         if($stt == 0) {
             $output .= '<ul class="tree-folder" role="menu"><li class="folder full-flex pl-3 title"><a href="javascript:void(0)" class="folder-child" id="0">'.get_string('folder', 'local_newsvnr').'</a>';
-            if(is_siteadmin()) {
+            if(is_siteadmin() || has_capability('local/newsvnr:createfolderlibrary', $context)) {
                 $output .= '<button type="button" class="btn" data-toggle="modal" data-target="#add-popup-modal-folder"><i class="fa fa-plus-circle mr-2" aria-hidden="true"></i>'.get_string('addfolder', 'local_newsvnr').'</button>';
             }
             $output .= '</li>';
@@ -1350,7 +1353,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 $output .= '<ul class=" 0">';
             foreach ($menu_tmp as $item) {
                 $listposition = folder_permission_list($item->id);
-                if((!empty($listposition) && in_array($USER->orgpositionid,$listposition)) || is_siteadmin() || empty($listposition)) {
+                if(is_siteadmin() || has_capability('local/newsvnr:readfolderlibrary', $context)) {
                     if($item->visible == 1 || ($item->visible == 0 && is_siteadmin())) {
                         if($item->visible == 0) {
                             $visible = 'hide';
@@ -1366,12 +1369,13 @@ class core_renderer extends \theme_boost\output\core_renderer {
                             $output .= '<a style="margin-left: 18px;"></a>';
                         } else { $output .= '<img class="icon-plus" id="'.$item->id.'" src="'.$CFG->wwwroot.'/theme/moove/pix/plus.png">';}
                         $output .= '<img class="icon-folder" src="'.$CFG->wwwroot.'/theme/moove/pix/folder2.png"><a class="folder-child mr-1" tabindex="-1" href="javascript:void(0)" id="'.$item->id.'"">' . $item->name . '</a>'.$iconhide.'';
+                        $output .= '<div class="tree-module-count">'.$OUTPUT->recursive_module_folder($item->id).'<i class="ml-1 fa fa-file" aria-hidden="true"></i></div>';
                         $output .= '</li>';
                         $output .= '<ul class="content-expand '.$item->id.' pl-3 '.$visible.'" >';
                         foreach($menus as $childkey => $childitem) {
                             // Kiểm tra phần tử có con hay không?
                             $listpositionchild = folder_permission_list($childitem->id);
-                            if((!empty($listpositionchild) && in_array($USER->orgpositionid,$listpositionchild)) || is_siteadmin() || empty($listpositionchild)) {
+                            if(is_siteadmin() || has_capability('local/newsvnr:readfolderlibrary', $context)) {
                                 if($childitem->visible == 0) {
                                     $visible = 'hide';
                                     $iconhide = $OUTPUT->pix_icon('t/show', get_string('show'));
@@ -1386,6 +1390,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
                                         $output .= '<a style="margin-left: 18px;"></a>';
                                     } else { $output .= '<img class="icon-plus" id="'.$childitem->id.'" src="'.$CFG->wwwroot.'/theme/moove/pix/plus.png">';}
                                     $output .= '<img class="icon-folder" src="'.$CFG->wwwroot.'/theme/moove/pix/folder2.png"><a class="folder-child mr-1" tabindex="-1" href="javascript:void(0)" id="'.$childitem->id.'">' . $childitem->name . '</a>'.$iconhide.'';
+                                    $output .= '<div class="tree-module-count">'.$OUTPUT->recursive_module_folder($childitem->id).'<i class="ml-1 fa fa-file" aria-hidden="true"></i></div>';
                                     $output .= '</li>';
                                     $output .= '<ul class="content-expand '.$childitem->id.' pl-3">';
                                     unset($menus[$childkey]);

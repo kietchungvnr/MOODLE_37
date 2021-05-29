@@ -117,7 +117,7 @@ class question_category_list_item extends list_item {
         global $CFG;
         $category = $this->item;
         $url = new moodle_url('/question/category.php', ($this->parentlist->pageurl->params() + array('edit'=>$category->id)));
-        $this->icons['edit']= $this->image_icon(get_string('editthiscategory', 'question'), $url, 'edit');
+        $this->icons['edit']= html_writer::span($this->image_icon(get_string('editthiscategory', 'question'),'javascript:;', 'edit'),'edit-category',['data-target' => '#edit-category-question','data-toggle' => "modal",'data-link' => $url]);
         // Custom by Thắng : ẩn bớt icon trong question bank
         // parent::set_icon_html($first, $last, $lastitem);
         // $toplevel = ($this->parentlist->parentitem === null);//this is a top level item
@@ -289,8 +289,10 @@ class question_category_object {
         echo '<br />';
         /// Interface for adding a new category:
         $this->output_new_table();
-        $popup = get_modal_boostrap('','add-category-question','Thêm danh mục câu hỏi');
-        echo $popup;
+        $popupadd = get_modal_boostrap('','add-category-question', get_string('addnewcategoryquestion', 'local_newsvnr'));
+        $popupedit = get_modal_boostrap('','edit-category-question', get_string('editcategoryquestion', 'local_newsvnr'),true);
+        echo $popupadd;
+        echo $popupedit;
         echo '<br />';
 
     }

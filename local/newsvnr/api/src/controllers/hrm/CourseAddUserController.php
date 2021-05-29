@@ -47,13 +47,13 @@ class CourseAddUserController extends BaseController {
 	*/
 	public function create_and_enroll_user_interview($request, $response, $args) {
 		global $DB, $CFG;
-		require_once __DiR__ . '/../../../lib.php';
+		require_once __DiR__ . '/../../../../lib.php';
 		require_once("$CFG->dirroot/user/lib.php");
 		$this->validate = $this->validator->validate($this->request, [
             'usercode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
             'fullname' => $this->v::notEmpty()->notBlank(),
             'email' => $this->v::notEmpty()->notBlank(),
-            'orgpositioncode' => $this->v::notEmpty()->notBlank(),
+            // 'orgpositioncode' => $this->v::notEmpty()->notBlank(),
             // 'password' => $this->v::notEmpty()->notBlank()->noWhitespace()
             // 'orgstructurecode' => $this->v::notEmpty()->notBlank(),
         ]);

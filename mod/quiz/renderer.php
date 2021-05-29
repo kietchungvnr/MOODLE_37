@@ -828,7 +828,7 @@ class mod_quiz_renderer extends plugin_renderer_base {
         $output = '';
 
         // Custom by Vũ: sửa giao diện các button
-        $output .= '<div class="d-flex justify-content-center mb-2">';
+        $output .= '<div class="justify-content-center mb-2">';
 
         $output .= $this->access_messages($viewobj->preventmessages);
         if($viewobj->canedit) {
@@ -877,7 +877,7 @@ class mod_quiz_renderer extends plugin_renderer_base {
         }
 
         $button = new single_button($url, $buttontext);
-        $button->class .= ' quizstartbuttondiv';
+        $button->class .= ' quizstartbuttondiv mt-2';
         if ($popuprequired) {
             $button->class .= ' quizsecuremoderequired';
         }

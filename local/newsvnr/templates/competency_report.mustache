@@ -1,0 +1,104 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<div class="d-flex mb-2 justify-content-between align-items-center" style="padding:1rem;background: white">
+	<div class="page-header-headings">
+		<h2>{{#str}} competencyreport, local_newsvnr {{/str}}</h2>
+	</div>
+	<div class="d-flex">
+		<div class="report-button" id="dropdownMenuButton" style="background: #2d5b7c">
+			<i class="fa fa-search" aria-hidden="true"></i>
+		</div>
+		<div class="report-button" id="exporttable">
+			<i class="fa fa-file-excel-o" aria-hidden="true"></i>
+		</div>
+		<div class="report-button" id="resettable">
+			<i class="fa fa-refresh" aria-hidden="true"></i>
+		</div>
+		<div class="report-button" id="dropdownreport">
+			<i class="fa fa-sign-out" aria-hidden="true"></i>
+		</div>
+	  	<div class="dropdown-menu report competency-report d-none" aria-labelledby="dropdownMenuButton" style="top: 92px;">
+	        <ul class="nav-tabs nav multi-tab" tab="searchuser" style="padding: 0 25px;">
+	            <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="account">{{#str}} accountinfo, local_newsvnr {{/str}}</a></li>
+	            <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="department">{{#str}} orgstructure, local_newsvnr {{/str}}</a></li>
+	        </ul>
+	        <div class="tab-content" tab="searchuser" style="padding: 1.25rem">
+	            <div data="account" class="tab-pane active">
+	            	<div class="row">
+	                	<div class="form-group col-md-6">
+						    <label>{{#str}} studentname, local_newsvnr {{/str}}</label>
+						    <input placeholder="{{#str}} enterstudentname, local_newsvnr {{/str}}" class="form-control mt-1" id="username">
+						</div>
+						<div class="form-group col-md-6">
+							<label >{{#str}} competency, local_newsvnr {{/str}}</label>
+						    <input class="form-control mt-1" id="competency">
+						</div>
+		              	<div class="form-group col-md-6">
+						    <label>{{#str}} learningplan, local_newsvnr {{/str}}</label>
+						    <input class="form-control mt-1" id="competencyplan">
+						</div>
+						<div class="form-group col-md-6">
+							<label >{{#str}} course, local_newsvnr {{/str}}</label>
+						    <input class="form-control mt-1" id="course">
+						</div>
+					</div>
+	                <div class="text-right">
+	            		<button type="button" class="btn btn-primary" id="searchaccount">{{#str}} search, local_newsvnr {{/str}}</button>
+	            	</div>
+	            </div>
+	            <div data="department" class="tab-pane">
+	            	<div class="row">
+	                	<div class="form-group col-md-6">
+						    <label>{{#str}} orgstructuretypeid, local_newsvnr {{/str}}</label>
+						    <input class="form-control mt-1" id="orgstructure_category">
+						</div>
+						<div class="form-group col-md-6">
+							<label >{{#str}} orgstructure, local_newsvnr {{/str}}</label>
+						    <input class="form-control mt-1" id="orgstructure">
+						</div>
+		              	<div class="form-group col-md-6">
+						    <label>{{#str}} jobtitle, local_newsvnr {{/str}}</label>
+						    <input class="form-control mt-1" id="orgstructure_jobtitle">
+						</div>
+						<div class="form-group col-md-6">
+							<label >{{#str}} jobposition, local_newsvnr {{/str}}</label>
+						    <input class="form-control mt-1" id="orgstructure_position">
+						</div>
+					</div>
+	              	<div class="text-right">
+	            		<button type="button" class="btn btn-primary" id="searchorgs">{{#str}} search, local_newsvnr {{/str}}</button>
+	            	</div>
+	            </div>
+	        </div>
+	  	</div>
+	  	<div class="dropdown-menu report change-report d-none" style="width: 400px;padding: 0.5rem;">
+	  		<div class="card-body">
+				<h4 class="modal-title">{{#str}} reports, local_newsvnr {{/str}}</h4>
+				<div>
+			   		<a href="competency.php">{{#str}} competencyreport, local_newsvnr {{/str}}</a>
+			   	</div>
+			   	<div>
+			   		<a href="learning.php">{{#str}} learningreport, local_newsvnr {{/str}}</a>
+			   	</div>
+			   	<div>
+			   		<a href="trainingplan.php">{{#str}} trainingplanreport, local_newsvnr {{/str}}</a>
+				</div>
+			</div>
+		</div>
+	 </div>
+</div>
+<div id="competency_report" style="padding: 1.25rem"></div>
+
+{{#js}}
+	$('#dropdownMenuButton').click(function() {
+		$('.dropdown-menu.competency-report').toggleClass('d-none');
+		if(!$('.dropdown-menu.change-report').hasClass('d-none')) {
+			$('.dropdown-menu.change-report').addClass('d-none');
+		}
+	})
+	$('#dropdownreport').click(function() {
+		$('.dropdown-menu.change-report').toggleClass('d-none');
+		if(!$('.dropdown-menu.competency-report').hasClass('d-none')) {
+			$('.dropdown-menu.competency-report').addClass('d-none');
+		}
+	})
+{{/js}}

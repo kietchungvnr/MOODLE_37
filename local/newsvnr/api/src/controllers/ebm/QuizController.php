@@ -54,7 +54,7 @@ class QuizController extends BaseController {
             'coursecode' => $this->v::notEmpty()->notBlank(),
             // 'teachercode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
             'quizname' => $this->v::notEmpty()->notBlank(),
-            'quizcode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
+            'quizcode' => $this->v::notEmpty()->notBlank(),
             // 'sectionname' => $this->v::notEmpty()->notBlank()
             // 'startdate' => $this->v::notEmpty()->notBlank()->DateTime(),
             // 'enddate' => $this->v::notEmpty()->notBlank()->DateTime(),
@@ -107,7 +107,7 @@ class QuizController extends BaseController {
 	    $courses->shortname = $this->data->examcode;
 	    // $courses->coursesetup = $request->getParam('setupcode');
 		$courses->idnumber = '';
-		$courses->format = 'topcoll';
+		$courses->format = 'topics';
 		$courses->showgrades = 1;
 		$courses->numsections = 0;
 		$courses->newsitems = 10;
@@ -567,7 +567,7 @@ class QuizController extends BaseController {
 	    }
 	    $courseid = $DB->get_field('course', 'id', ['shortname' => $this->data->shortname]);
 	    if($courseid) {
-	    	$quizid = $DB->get_field('quiz', 'id', ['course' => $courseid, 'name' => $this->data->quizname, 'code' => $this->data->quizname]);
+	    	$quizid = $DB->get_field('quiz', 'id', ['course' => $courseid, 'name' => $this->data->quizname, 'code' => $this->data->quizcode]);
 	    	if($quizid) {
 	    		$cm = get_coursemodule_from_instance('quiz', $quizid);
 	    		course_delete_module($cm->id);

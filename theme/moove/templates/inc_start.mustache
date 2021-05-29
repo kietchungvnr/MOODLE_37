@@ -11,25 +11,357 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     {{! <meta name="referrer" content="no-referrer"> }}
 <style type="text/css">
-    .qr-code {
+    #page-wrapper {
+        margin-left: 44px;
+        transition: all 0.4s ease;
+    }
+    @media(max-width: 576px) {
+        #page-mod-assign-view .ygtvcell.ygtvcontent .fa-cloud-download {
+            display: block !important;
+        }
+        .dot-desktop {
+            display: none !important;
+        }
+    }
+    #page-mod-assign-view .ygtvcell.ygtvcontent .fa-cloud-download {
+        display: none;
+    }
+    #page-mod-quiz-edit ul.slots li.section li.activity .mod-indent-outer {
+        align-items: center;
+    }
+    .dot-desktop {
+        display: contents;
+    }
+    #page-mod-quiz-edit ul.slots li.section li.activity .editing_move i {
+        margin-top: 3px;
+    }
+    #page-mod-quiz-edit.select-multiple input.select-multiple-checkbox[type="checkbox"] {
+        display: none !important;
+    }
+    #page-mod-quiz-edit .selectmultiplecommand {
+        display: inline-block !important;
+    }
+    #page-mod-quiz-edit #selectmultiplecommand {
+        display: none;
+    }
+    #page-mod-quiz-edit .mod_quiz-edit-action-buttons {
         display: flex;
-        margin: auto;
-        padding: 10px;
-        border-radius: 15px;
-        border: 2px solid;
-        border-color: #d5e1ea;
-        margin: 16px 0px;
+        align-items: center;
+    }
+    #page-mod-quiz-edit .mod_quiz-edit-action-buttons #selectmultiplecancelcommand[value="Cancel"] { 
+        display: none;
+    }
+    #page-mod-quiz-edit .section-heading .instancesection {
+        max-width: 100%;
+        font-size: 16px;
+    }
+    #page-question-category .category {
+        padding: 1.25rem;
+    }
+    #page-mod-quiz-edit #selectmultiplecancelcommand {
+        display: none;
+    }
+    #page-enrol-index #focus-mod {
+        display: none;
+    }
+    #page-enrol-index .alert.alert-error {
+        display: inline-flex;
+    }
+    form.mform fieldset#id_previewareaheader .dropbackground {
+        max-width: 700px !important;
+    }
+    #page-course-edit .form-autocomplete-selection {
+        justify-content: end;
+    }
+    #page-question-edit .form-autocomplete-selection,
+    #page-mod-quiz-edit .form-autocomplete-selection {
         justify-content: center;
+        min-height: auto;
+        display: flex;
+        margin: 0;
+        align-items: center;
     }
-    .qr-code-icon {
-        height: 24px;
-        width: 24px;
-        filter: contrast(0%);
+    #page-mod-assign-grading .generaltable thead th {
+        font-size: 14px;
     }
-    .qr-code-icon:hover,
-    .qr-code-icon:focus {
-        filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+    #page-mod-assign-grading .generaltable tbody td {
+        font-size: 14px;
     }
+    #page-local-newsvnr-index .k-widget.k-dropdown {
+        margin-bottom: 0!important;
+    }
+    #page-admin-local-newsvnr-api_managerment .card-body {
+        padding: 0;
+    }
+    #page-admin-local-newsvnr-api_managerment .tab-content {
+        padding: 1.25rem;
+    }
+    #page-admin-tool-lp-plan .btn-group.header-button-group,
+    #page-admin-tool-lp-plans .btn-group.header-button-group,
+    #page-admin-tool-lp-user_competency .btn-group.header-button-group{
+        background: #e0e0e0;
+        border-radius: 5px;
+        margin-left: 10px;
+    }
+    #page-admin-tool-lp-plan .page-context-header,
+    #page-admin-tool-lp-plans .page-context-header,
+    #page-admin-tool-lp-user_competency .page-context-header {
+        display: flex;
+        align-items: center;
+    }
+    #user_report .k-grid-excel,
+    #competency_report .k-grid-excel,
+    #learning_report .k-grid-excel,
+    #trainingplan_report .k-grid-excel {
+        display: none;
+    }
+    .badge.badge-danger,
+    .badge.badge-success {
+        border-radius: 8px;
+        padding:5px 10px;
+    }
+    .border-radius {
+        border-radius: 8px;
+    }
+    .delete-evidence {
+        color: #727272;
+    }
+    a.disabled {
+        font-style: inherit;
+    }
+    .dropdown-menu.report {
+        top: 64px;
+        right: 21px;
+        left: auto;
+        width: 800px;
+        display: block;
+    }
+    #page-local-newsvnr-report-user .k-widget.k-datepicker {
+        width: 100%;
+    }
+    .report-button {
+        padding: 5px 10px;
+        background: #E3EEF5;
+        margin: 0 5px;
+        border-radius: 50%;
+        color: white;
+        cursor: pointer;
+    }
+    .status {
+        color: white;
+        padding: 5px;
+        text-align: center;
+    }
+    #page-competency-report .card,
+    #page-learning-report .card,
+    #page-trainingplan-report .card {
+        background: transparent;
+    }
+    #page-competency-report .card .card-body ,
+    #page-learning-report .card .card-body ,
+    #page-trainingplan-report .card .card-body {
+        padding: 0;
+    }
+    #page-competency-report #page-header .card-body,
+    #page-learning-report #page-header .card-body,
+    #page-trainingplan-report #page-header .card-body  {
+        display: none;
+    }
+    .cursor-pointer {
+        cursor: pointer;
+    }
+    .k-widget.k-datepicker,
+    .k-widget.k-numerictextbox {
+        width: 100%;
+    }
+    .competency-framework-title {
+        background: #3c8dbc;
+        color: white;
+        padding: 10px 5px;
+    }
+    .competency-framework-title h3 {
+        margin-bottom: 0;
+        color: white;
+    }
+    .competency-framework {
+        padding: 5px 5px;
+        border: 1px solid #dee2e6;
+        cursor: pointer;
+    }
+    .competency-framework-table {
+        max-height: 439px;
+        overflow: scroll;
+    }
+    #page-admin-tool-lp-coursecompetencies .moodle-dialogue-base .moodle-dialogue-wrap {
+        width: 700px;
+    }
+    div[data-region="competencylinktree"] .competency-tree {
+        border-radius: 0 !important;
+        border-top: 0 !important;
+    }
+    .chat-panel .chat-content {
+        width: calc(100% - 70px);
+        float: left;
+        min-height: 70px;
+        padding: 8px;
+    }
+    .chat-panel .chat-image {
+        float: left;
+    }
+    .col.chat-panel {
+        padding-top: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .chat-panel .chat-content .chat-body .name {
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .chat-panel .chat-content .chat-footer .date-feedback{
+        float: right;
+        font-size: 13px;
+    }
+    .new-detail-comment-title, .new-detail-reply-title {
+        font-weight:bold;
+        font-size:14px;
+        margin-top: 5px;
+    }
+    .new-detail-comment-control {
+        width:100%;
+        text-align:right;
+        padding-bottom:5px;
+    }
+    .new-detail-comment-control > .btn {
+        color:#ffffff;
+    }
+    .path-mod-wiki li:nth-child(3) {
+        display: none;
+    }
+    .btn-danger {
+        background-color: #d43f3a !IMPORTANT;
+    }
+    .card-dashboard-library {
+        background: #3c8dbc;
+        margin-left: -6px;
+        margin-right: -6px;
+    }
+    .title-db-library {
+        background: #3c8dbc;
+        padding: 10px;
+        border-radius: 8px 8px 0 0;
+    }
+    .title-db-library h3 {
+        color: white;
+        font-size: 14px !IMPORTANT;
+        margin-bottom: 0;
+    }
+    #page-library .k-header.k-grid-toolbar {
+        display: none;
+    }
+    .color-white {
+        color: white !important;
+    }
+    .tree-module-count {
+        color: #c8cbcf;
+        font-size: 12px;
+        margin-right: 0;
+        margin-top: 2px;
+        float:right;
+    }
+    #library-approval-module-db .k-grid-content {
+        height: 270px;
+    }
+    #page-library .k-grid tbody .k-button {
+        min-width: auto !important;
+    }
+    .config-admin {
+        cursor: pointer;
+        margin-left: 6px;
+    }
+    #page-admin-search .title-admin {
+        display: flex;
+        color: #1177d1;
+    }
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 30px;
+        height: 15px;
+        top: 3px;
+    }
+    .switch input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 34px;
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 11px;
+        width: 11px;
+        left: 3px;
+        bottom: 2px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 50%;
+    }
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(13px);
+    }
+    #page-local-newsvnr-roles-permissions .card-body {
+        padding: 0 !important;
+    }
+    .path-mod-assign [data-region="configure-filters"] {
+        width: 410px;
+    }
+    .star-course {
+        position: absolute;
+        z-index: 1231214;
+        right: 5px;
+        top: 5px;
+        cursor: pointer;
+    }
+    .starred i {
+        color: #1A7AE8;
+    }
+    .notstarred i {
+        color: white;
+    }
+    [data-block="vnr_db_matrix_competency"] .progress {
+        margin-bottom: 0px;
+        height: 10px;
+    }
+    [data-block="vnr_db_matrix_competency"] td[data-field="competencyframework"] {
+        background-color: #2d5b7c;
+        color: #fff;
+        border-top: 1px solid;
+    }
+    [data-block="vnr_db_matrix_competency"] td[data-field="competency"] {
+        background-color: #2d5b7c;
+        color: #fff;
+        border-top: 1px solid;
+        border-left: 1px solid !important;
+    }
+    
+}
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />

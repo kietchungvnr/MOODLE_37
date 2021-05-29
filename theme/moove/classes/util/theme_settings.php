@@ -658,7 +658,7 @@ class theme_settings {
         global $OUTPUT,$USER, $DB;
         if(has_capability('moodle/site:configview', context_system::instance()))
         { 
-            $forumid = $DB->get_field_sql("SELECT TOP 1 id FROM mdl_forum", []);
+            $forumid = $DB->get_field_sql("SELECT id FROM mdl_forum WHERE course = :courseid", ['courseid' => 1]);
             $buttonadd = get_string('addanewdiscussion', 'forum');
             $button = new single_button(new moodle_url('/mod/forum/post.php', ['forum' => $forumid]), $buttonadd, 'get');
             $button->class = 'singlebutton forumaddnew';
@@ -704,6 +704,7 @@ class theme_settings {
         for ($i = 1, $j = 0; $i <= count($courses); $i++, $j++) {
             $enrolmethod = get_enrol_method($courses[$j]->id);
             $progress = \core_completion\progress::get_course_progress_percentage($courses[$j],$USER->id);
+            $coursestarred = $DB->get_record('favourite', ['component' => 'core_course', 'itemid' => $courses[$j]->id, 'userid' => $USER->id]);
             $templatecontext['newscourse'][$j]['key'] = $j;
             $templatecontext['newscourse'][$j]['fullname'] = $arr[$j]['fullname'];
             $templatecontext['newscourse'][$j]['summary'] = $arr[$j]['summary'];
@@ -712,12 +713,16 @@ class theme_settings {
             $templatecontext['newscourse'][$j]['countstudent'] = $arr[$j]['countstudent'];
             $templatecontext['newscourse'][$j]['imageteacher'] = $arr[$j]['imageteacher'];
             $templatecontext['newscourse'][$j]['fullnamet'] = $arr[$j]['fullnamet'];
+            $templatecontext['newscourse'][$j]['id'] = $courses[$j]->id;
+            $templatecontext['newscourse'][$j]['hasstarred'] = ($coursestarred) ? true : false;
             if(isset($progress)) {
                 $templatecontext['newscourse'][$j]['progress'] = round($progress);
+                $templatecontext['newscourse'][$j]['hasprogress'] = true;
                 if($templatecontext['newscourse'][$j]['progress'] == 0)
                     $templatecontext['newscourse'][$j]['progress'] = -1;
             } else {
                 $templatecontext['newscourse'][$j]['enrolmethod'] = $enrolmethod;
+                $templatecontext['newscourse'][$j]['hasprogress'] = false;
             }
         }
         // var_dump($templatecontext);die;
@@ -731,7 +736,8 @@ class theme_settings {
                       (object) array('moduleicon'=>'mod_lesson','modulename'=>'Lesson','value'=>'lesson'),
                       (object) array('moduleicon'=>'mod_page','modulename'=>'Page','value'=>'page'));
         $moduleuser = array((object) array('moduleicon'=>'mod_url','modulename'=>'Url','value'=>'url'),
-                      (object) array('moduleicon'=>'mod_resource','modulename'=>'File','value'=>'resource'));
+                      (object) array('moduleicon'=>'mod_resource','modulename'=>'File','value'=>'resource'),
+                      (object) array('moduleicon'=>'mod_wiki','modulename'=>'Wiki','value'=>'wiki'));
         if(is_siteadmin() || check_teacherrole($USER->id) != 0) {
             $data = array_merge($moduleadmin,$moduleuser);
         } else {
@@ -745,6 +751,20 @@ class theme_settings {
         for ($i = 0 ;$i < count($data); $i++) {
           $templatecontext['module'][$i] = $arr[$i];
         }
+        return $templatecontext;
+    }
+
+    public function get_datareport_library() {
+        global $DB;
+        $templatecontext = [];
+        $object = new stdClass();
+        $object->access = count($DB->get_records('logstore_standard_log',['target' => 'library']));
+        $object->folder = count($DB->get_records('library_folder',['visible' => 1]));
+        $object->module = count($DB->get_records_sql('select * from mdl_library_module lm 
+                                                                    join mdl_course_modules cm on cm.id = lm.coursemoduleid
+                                                                where visible = 1'));
+        $object->moduleapproval = count($DB->get_records('library_module',['approval' => 0]));
+        $templatecontext['reportdata'] = $object;
         return $templatecontext;
     }
 

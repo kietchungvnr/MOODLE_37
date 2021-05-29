@@ -462,12 +462,13 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
                     if (pageContent.length === 0) {
                         pageContent = $(Selector.regionMain);
                     }
-                    var existingModal = modalStore[cmid];
-                    if (typeof existingModal === "object") {
-                        existingModal.show();
-                    } else {
-                        launchResourceModal(cmid)
-                    }
+                    launchResourceModal(cmid)
+                    // var existingModal = modalStore[cmid];
+                    // if (typeof existingModal === "object") {
+                    //     existingModal.show();
+                    // } else {
+                    //     launchResourceModal(cmid)
+                    // }
                 });
             }
             init(cmid);
@@ -682,4 +683,65 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
             })
         });
     };
+    const viewFilePopup = (assignFileType, assignFileUrl, assignFileName) => {
+        require(['jquery', 'core/config'], ($, config) => {
+            $('body').addClass('loading');
+            var getFileType = assignFileType;
+            var getUrl = assignFileUrl;
+            var getName = assignFileName;
+            var exceptions = ['png', 'jpeg', 'jpg', 'gif', 'tiff', 'psd', 'ai', 'raw', 'indd', 'eps'];
+            if(exceptions.includes(getFileType)) {
+                var img = '<img src=\''+getUrl+'\' height="auto" width="100%">';
+                var iframe = '<iframe id=\'assignfile-popup\' height=\'768px\' width=\'100%\' frameborder=\'0\'></iframe>'; 
+            } else {
+                var url = "https://docs.google.com/viewerng/viewer?url=" + getUrl + "&embedded=true";
+                var iframe = '<iframe src=\' '+url+' \' id=\'assignfile-popup\' height=\'768px\' width=\'100%\' frameborder=\'0\'></iframe>';    
+            }
+            $('#body-assignfile-modal').html(iframe);
+            if($('#btn-grade-download').length == 0) {
+                $('#assignfile-modal .modal-header .close').attr('style', 'margin: -1rem');
+                var urlDownload = assignFileUrl + '?forcedownload=1';
+                $('<a href="'+urlDownload+'" class="ml-auto" id="btn-grade-download"><i class="icon fa fa-cloud-download fa-fw" title="Tải xuống" aria-label="Tải xuống"></i></a>').insertBefore('.close');
+            } 
+            $('#assignfile-popup').on('load', async function(e) {
+                setTimeout(function() {
+                    $('#assignfile-modal .modal-header h4').html(getName);
+                    if(exceptions.includes(getFileType)) {
+                        $('#assignfile-popup').contents().find("html").html(img); 
+                    }
+                    $('#assignfile-modal').modal('show'); 
+                    $('body').removeClass('loading');
+                }, 1000);
+            }) 
+        });
+    };
+    // đánh sao khóa học
+    const starCourse = (courseid,action) => {
+        require(['jquery', 'core/config'], ($, Config) => {
+            var script = Config.wwwroot + '/local/newsvnr/ajax/course_action.php';
+            var settings = {
+                type: "GET",
+                processData: true,
+                data: {
+                    courseid: courseid,
+                    action: action
+                },
+                contenttype: "application/json",
+            }
+            $.ajax(script,settings).then(function() {
+                var current = $('.star-course[courseid='+courseid+']');
+                if(action == 'starred') {
+                    current.html('<i class="fa fa-star mr-1"></i>');
+                    current.attr('onclick',"starCourse("+courseid+",'unstarred')");
+                    current.removeClass('notstarred');
+                    current.addClass('starred');
+                } else {
+                    current.html('<i class="fa fa-star-o mr-1"></i>');
+                    current.attr('onclick',"starCourse("+courseid+",'starred')");
+                    current.removeClass('starred');
+                    current.addClass('notstarred');
+                }
+            })
+        })
+    }
 </script>

@@ -840,6 +840,7 @@ class view {
         $this->build_query();
         $totalnumber = $this->get_question_count();
         if ($totalnumber == 0) {
+            echo '<div class="alert alert-warning mt-3" role="alert">'.get_string("noquestion","local_newsvnr").'</div>';
             return;
         }
         $questionsrs = $this->load_page_questions($page, $perpage);
@@ -853,12 +854,12 @@ class view {
         }
 
         // Custom by Thắng : ẩn bớt thông tin trang ngân hàng câu hỏi
-        // echo '<div class="categorypagingbarcontainer">';
+        echo '<div class="categorypagingbarcontainer d-none">';
         $pageingurl = new \moodle_url('edit.php', $pageurl->params());
         $pagingbar = new \paging_bar($totalnumber, $page, $perpage, $pageingurl);
-        // $pagingbar->pagevar = 'qpage';
-        // echo $OUTPUT->render($pagingbar);
-        // echo '</div>';
+        $pagingbar->pagevar = 'qpage';
+        echo $OUTPUT->render($pagingbar);
+        echo '</div>';
 
         echo '<form method="post" action="edit.php">';
         echo '<fieldset class="invisiblefieldset" style="display: block;">';

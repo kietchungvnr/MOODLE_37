@@ -61,18 +61,24 @@
     if(!empty($portalebmtoken)) {
         $get_configapi = $DB->get_record('local_newsvnr_api', ['functionapi' => 'ValidateAuthenticate', 'visible' => '1']);
         if($get_configapi) {
+            if(isset($_COOKIE['cookie'])) {
+                unset($_COOKIE['cookie']); 
+                setcookie('cookie', null, -1, '/'); 
+            }
             $params_portal = [
                 'Token' => $portalebmtoken
             ];
             $api_data = HTTPPost_EBM_return($get_configapi->url, $params_portal);
-            $user = get_complete_user_data('username', $api_data->Data);
-            if($user) {
-                if (complete_user_login($user)) {
-                    \core\session\manager::apply_concurrent_login_limit($user->id, session_id());
-                    // $auth = true;
-                    $USER->loggedin = true;
-                    $USER->site = $CFG->wwwroot;
-                    set_moodle_cookie($USER->username);
+            if($api_data) {
+                $user = get_complete_user_data('username', $api_data->Data);
+                if($user) {
+                    if (complete_user_login($user)) {
+                        \core\session\manager::apply_concurrent_login_limit($user->id, session_id());
+                        // $auth = true;
+                        $USER->loggedin = true;
+                        $USER->site = $CFG->wwwroot;
+                        set_moodle_cookie($USER->username);
+                    }
                 }
             }
         }
@@ -327,7 +333,10 @@
     // Include course AJAX
     include_course_ajax($course, $modnamesused);
     // CUstom by Vũ: Kiểm tra có phải là học viên hay không
-    $is_student = current(get_user_roles($context, $USER->id))->shortname=='student'? true : false;
+    if(current(get_user_roles($context, $USER->id)))
+        $is_student = current(get_user_roles($context, $USER->id))->shortname=='student'? true : false;
+    else
+        $is_student = false;
     echo html_writer::start_tag('div', array('id' => 'check-role', 'class'=>'d-none', 'data-role' => $is_student));
     echo html_writer::end_tag('div');
 

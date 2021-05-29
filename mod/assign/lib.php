@@ -1345,11 +1345,11 @@ function assign_pluginfile($course,
     if ($context->contextlevel != CONTEXT_MODULE) {
         return false;
     }
-
-    require_login($course, false, $cm);
-    if (!has_capability('mod/assign:view', $context)) {
-        return false;
-    }
+    // Custom by Vũ: xem file popup, bỏ yêu cầu login khi xem file
+    // require_login($course, false, $cm);
+    // if (!has_capability('mod/assign:view', $context)) {
+    //     return false;
+    // }
 
     require_once($CFG->dirroot . '/mod/assign/locallib.php');
     $assign = new assign($context, $cm, $course);

@@ -129,11 +129,11 @@ class course_edit_form extends moodleform {
         );     
         
         //Lấy danh sách khoá học setup
-        $coursesetuplist = $DB->get_records('course_setup');
-        $coursesetupnames = array();
-        foreach ($coursesetuplist as $key => $value) {
-            $coursesetupnames[$key] = $value->fullname;
-        }
+        // $coursesetuplist = $DB->get_records('course_setup');
+        // $coursesetupnames = array();
+        // foreach ($coursesetuplist as $key => $value) {
+        //     $coursesetupnames[$key] = $value->fullname;
+        // }
         //Lấy danh sách chức vụ
         $orgpositionlist = $DB->get_records('orgstructure_position');
         $orgpositionnames = array();
@@ -277,7 +277,11 @@ class course_edit_form extends moodleform {
 
         $courseformats = get_sorted_course_formats(true);
         $formcourseformats = array();
+        // Custom by Vũ: Loại bỏ 1 số format trong khóa học
+        $ignoreformats = ['multitopic', 'onetopic', 'tiles', 'weeks', 'social', 'singleactivity'];
         foreach ($courseformats as $courseformat) {
+            if(in_array($courseformat, $ignoreformats))
+                continue;
             $formcourseformats[$courseformat] = get_string('pluginname', "format_$courseformat");
         }
         if (isset($course->format)) {

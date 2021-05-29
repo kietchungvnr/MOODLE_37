@@ -109,6 +109,7 @@ if($formdata = $mform2->is_cancelled()) {
     $linenum = 1; //column header is first line
     // var_dump($formdata);die;
     $validation = array();
+    $orgdata = [];
     while ($line = $cir->next()) {
         $linenum++;
         $orgcate = new stdClass();
@@ -131,38 +132,39 @@ if($formdata = $mform2->is_cancelled()) {
             } else {
                 $orgcate->$key = trim($value);
             }
+            if (isset($orgcate->orgstructurename)) {
+                $orgstructureid = $DB->get_field_select('orgstructure', 'id', 'name = :name', ['name' => $orgcate->orgstructurename]);
+                if ($orgstructureid) {
+                    $orgcate->orgstructureid = $orgstructureid;
+                }
+            }
+            if (isset($orgcate->jobtitlename)) {
+                $jobtitleid = $DB->get_field_select('orgstructure_jobtitle', 'id', 'name = :name', ['name' => $orgcate->jobtitlename]);
+                if ($jobtitleid) {
+                    $orgcate->jobtitleid = $jobtitleid;
+                }
+            }
+            if (isset($orgcate->categoryname)) {
+                $categoryid = $DB->get_field_select('orgstructure_category', 'id', 'name = :name', ['name' => $orgcate->categoryname]);
+                if ($categoryid) {
+                    $orgcate->orgstructuretypeid = $categoryid;
+                }
+            }
+            if (isset($orgcate->parentname)) {
+                $parentid = $DB->get_field_select('orgstructure', 'id', 'name = :name', ['name' => $orgcate->parentname]);
+                if ($parentid) {
+                    $orgcate->parentid = $parentid;
+                }
+            }
         }
-    }
-    if(isset($orgcate->orgstructurename)) {
-        $orgstructureid = $DB->get_field_select('orgstructure','id','name = :name',['name' => $orgcate->orgstructurename]);
-        if($orgstructureid) {
-            $orgcate->orgstructureid = $orgstructureid;   
-        }        
-    }
-    if(isset($orgcate->jobtitlename)) {
-        $jobtitleid = $DB->get_field_select('orgstructure_jobtitle','id','name = :name',['name' => $orgcate->jobtitlename]);
-        if($jobtitleid) {
-            $orgcate->jobtitleid = $jobtitleid;   
-        } 
-    }
-    if(isset($orgcate->categoryname)) {
-        $categoryid = $DB->get_field_select('orgstructure_category','id','name = :name',['name' => $orgcate->categoryname]);
-        if($categoryid) {
-            $orgcate->orgstructuretypeid = $categoryid;
-        }
-    }
-    if(isset($orgcate->parentname)) {
-        $parentid = $DB->get_field_select('orgstructure','id','name = :name',['name' => $orgcate->parentname]);
-        if($parentid) {
-            $orgcate->parentid = $parentid;
-        }
+        $orgdata[] = $orgcate;
     }
 
-    $DB->insert_record($formdata->tablename,$orgcate);
+    $DB->insert_records($formdata->tablename, $orgdata);
     $cir->close();
     $cir->cleanup(true);
     $strsuccess = get_string('successimport', 'local_newsvnr');
-    \core\notification::add($strsuccess,'NOTIFY_SUCCESS');
+    \core\notification::success($strsuccess);
     echo $OUTPUT->continue_button($returnurl);
     echo $OUTPUT->footer();
     die;
@@ -255,7 +257,7 @@ if ($fields = $cir->next()) {
 }
 $cir->close();
 if($noerror == false) {
-	\core\notification::add($strmessage, 'NOTIFY_WARNING');
+    \core\notification::warning($strmessage);
 
 }
 

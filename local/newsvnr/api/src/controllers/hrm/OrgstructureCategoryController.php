@@ -50,8 +50,9 @@ class OrgstructureCategoryController extends BaseController {
         	$this->resp->data[] = $errors;
 	        return $response->withStatus(422)->withJson($this->resp);
 	    }
-        $check_categoryname =  find_orgstructure_category_by_name($this->data->name);
+        $check_categoryname = find_orgstructure_category_by_name($this->data->name);
 		if($check_categoryname) {
+			$check_categoryname = $this->data->name;
 			$this->resp->data['name'] = "Tên loại phòng ban '$check_categoryname' đã tồn tại";
 		}
 		$check_categorycode = find_orgstructure_category_by_code($this->data->code);
@@ -74,7 +75,7 @@ class OrgstructureCategoryController extends BaseController {
 			$this->resp->error = true;
 		}
 		
-		return $this->response->withStatus(200)->withJson($this->resp);
+		return $this->response->withStatus(200)->withJson($this->resp, 200, JSON_UNESCAPED_UNICODE);
 	}
 
 	public function update($request, $response, $args) {
@@ -119,7 +120,7 @@ class OrgstructureCategoryController extends BaseController {
 			$this->resp->data['id'] = "Không tìm thấy loại phòng ban với id '$orgcategoryid'";
 			
 		}
-		return $this->response->withStatus(200)->withJson($this->resp);
+		return $this->response->withStatus(200)->withJson($this->resp, 200, JSON_UNESCAPED_UNICODE);
 	}
 
 
