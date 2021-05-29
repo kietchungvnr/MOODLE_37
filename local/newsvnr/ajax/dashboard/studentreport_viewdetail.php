@@ -112,7 +112,7 @@ switch ($action) {
                 $output .= '<div class="card">';
                 $output .= '<div class="card-body d-flex justify-content-between pb-0 pt-0 align-items-center" style="border-left:3px solid #'.$randomcolor.'">';
                 $output .= '<div>';
-                $output .= '<h5 class="card-title">' . $value['name'] . '</h5>';
+                $output .= '<a href="'.$CFG->wwwroot.'/admin/tool/lp/plan.php?id='.$value['id'].'" target="_blank" class="card-title">' . $value['name'] . '</a>';
                 $duedate = $DB->get_field('competency_plan', 'duedate', ['id' => $value['id']]);
                 $date    = ($duedate != 0) ? convertunixtime('l, d m Y, H:i A', $duedate, 'Asia/Ho_Chi_Minh') : ''.get_string('nodatatable','local_newsvnr').'';
                 $output .= '<p class="card-text grey">'.get_string('deadline','local_newsvnr').': ' . $date . '</p>';

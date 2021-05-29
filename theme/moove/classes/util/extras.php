@@ -215,7 +215,7 @@ class extras {
                     'name' => $plan->get('name'),
                     'competencycount' => $competencycount,
                     'proficientcount' => $proficientcount,
-                    'proficientcompetencypercentage' => $proficientcompetencypercentage,
+                    'proficientcompetencypercentage' => round($proficientcompetencypercentage),
                     'progressclass' => $progressclass
                 ];
             }
