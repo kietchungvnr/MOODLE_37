@@ -832,7 +832,12 @@ function theme_moove_layout_check() {
     $object->settingexam = ($COURSE->id == 1) ? true : false;
     $check_is_teacher = check_teacherrole($USER->id);
     $check_is_student = check_studentrole($USER->id);
-    $url = $_SERVER['REQUEST_SCHEME'] . "://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+        $protocol = 'https://';
+    } else {
+        $protocol = 'http://';
+    }
+    $url = $protocol . "://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
     $url_components = parse_url($url);
     if(isset($url_components['query'])) {
         parse_str($url_components['query'], $params); 
