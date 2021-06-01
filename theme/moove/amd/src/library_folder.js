@@ -83,7 +83,11 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
                 var setting = $('.popup-setting');
                 var y = $(this).position();
                 setting.css('top', y.top + 5);
-                setting.css('left', x - 75);
+                if($('#page-wrapper').hasClass('slide-nav-toggle')) {
+                    setting.css('left', x - 256);
+                } else {
+                    setting.css('left', x - 75);
+                }
                 $.ajax(scriptfolder, settings).then(function(response) {
                     var obj = $.parseJSON(response);
                     $.when($('.popup-setting ul').replaceWith(obj.setting)).then(setting.show());
@@ -261,7 +265,6 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
             $("#course-section-input").kendoDropDownList(kendoCourseSection);
             
             $("#share-module-library").click(function() {
-                debugger
                 var moduleid = $('#share-module-library').attr('moduleid');
                 var courseid = $('#course-share-input').val();
                 var sectionid = $('#course-section-input').val();

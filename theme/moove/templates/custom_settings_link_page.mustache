@@ -98,13 +98,13 @@
                                     <a href="{{action}}">{{text}}</a>
                                     {{#node.isedit}}
                                         {{#hidden}}
-                                            <div class="config-admin title-tab switch" action="show">
+                                            <div class="config-admin title-tab switch" action="show" key={{key}}>
                                                 <input type="checkbox">
                                                 <span class="slider round"></span>
                                             </div>
                                         {{/hidden}}
                                         {{^hidden}}
-                                            <div class="config-admin title-tab switch" action="hide">
+                                            <div class="config-admin title-tab switch" action="hide" key={{key}}>
                                                 <input type="checkbox" checked>
                                                 <span class="slider round"></span>
                                             </div>
@@ -187,13 +187,13 @@
                                                 <a href="{{action}}">{{text}}</a>
                                                 {{#node.isedit}}
                                                     {{#hidden}}
-                                                        <div class="config-admin title-tab switch" action="show">
+                                                        <div class="config-admin title-tab switch" action="show" key={{key}}>
                                                             <input type="checkbox">
                                                             <span class="slider round"></span>
                                                         </div>
                                                     {{/hidden}}
                                                     {{^hidden}}
-                                                        <div class="config-admin title-tab switch" action="hide">
+                                                        <div class="config-admin title-tab switch" action="hide" key={{key}}>
                                                             <input type="checkbox" checked>
                                                             <span class="slider round"></span>
                                                         </div>
