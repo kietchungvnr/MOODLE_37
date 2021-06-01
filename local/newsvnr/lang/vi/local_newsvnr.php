@@ -686,3 +686,4 @@ $string['topercent'] = 'Đến phần trăm';
 $string['select'] = 'Chọn';
 $string['saveandreturn'] = 'Lưu và trở về';
 $string['currentplan'] = 'Lộ trình hiện tại';
+$string['entergrade'] = 'Nhập điểm';

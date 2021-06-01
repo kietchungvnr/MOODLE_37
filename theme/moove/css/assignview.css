@@ -102,7 +102,8 @@
     .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .submissioneditable,
     .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .timeremaining,
     .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .submissiongraded,
-    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .latesubmission  {
+    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .latesubmission,
+    .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .overdue  {
         border-bottom: 1px solid #dee2e6;
         padding: 10px;
     }
