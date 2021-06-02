@@ -1123,8 +1123,11 @@ abstract class moodleform_mod extends moodleform {
             $buttonarray[] = &$mform->createElement('submit', 'submitbutton2', $submit2label);
         }
 
-        if ($submitlabel !== false) {
-            $buttonarray[] = &$mform->createElement('submit', 'submitbutton', $submitlabel);
+        // Custom by Vũ: Bỏ nút lưu và xem ngày khi module resource
+        if($mform->_formName != 'mod_resource_mod_form') {
+            if ($submitlabel !== false) {
+                $buttonarray[] = &$mform->createElement('submit', 'submitbutton', $submitlabel);
+            }
         }
 
         if ($cancel) {
