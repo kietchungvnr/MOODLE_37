@@ -49,6 +49,21 @@ if ($draweropenright && $hasblocks) {
     $extraclasses[] = 'drawer-open-right';
 }
 $check = theme_moove_layout_check();
+$theme = theme_config::load('moove');
+if($theme->settings->dashboardrole != 'default') {
+    $check->is_student = false;
+    $check->is_teacher = false;
+    $check->isadmin = false;
+    if($theme->settings->dashboardrole == 'student') {
+        $check->is_student = true;
+    } 
+    if($theme->settings->dashboardrole == 'teacher') {
+        $check->is_teacher = true;
+    }
+    if($theme->settings->dashboardrole == 'admin') {
+        $check->isadmin = true;
+    }
+}
 $PAGE->requires->strings_for_js(array('emptydata','action','viewcourse', 'code', 'email', 'datecreated', 'choosecourse', 'startlearning'), 'local_newsvnr');
 $PAGE->requires->strings_for_js(array('coursestartdate','courseenddate','studenttotal', 'studentcode', 'coursename', 'coursemodules', 'status', 'coursecompletion', 'listuser', 'owncourses', 'viewdetail', 'studentname', 'lastaccess', 'phone', 'notyetselectcourse', 'listmodule', 'course', 'number', 'moduleallocation', 'coursegradeavg', 'access', 'coursecompleted', 'enrollcourse', 'modulename', 'exam', 'moduletype', 'score', 'modulerate', 'spenttimemodule', 'showalldata'), 'theme_moove');
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);

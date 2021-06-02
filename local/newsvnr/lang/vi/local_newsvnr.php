@@ -687,3 +687,6 @@ $string['select'] = 'Chọn';
 $string['saveandreturn'] = 'Lưu và trở về';
 $string['currentplan'] = 'Lộ trình hiện tại';
 $string['entergrade'] = 'Nhập điểm';
+$string['default'] = 'Mặc định';
+$string['dashboardrole'] = 'Dashboard theo vai trò';
+$string['dashboardroledesc'] = 'Chọn làm dashboard mặc định';
