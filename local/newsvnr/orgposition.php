@@ -60,7 +60,11 @@ if($id){
         $orgposition->level = $value->level;
         $orgposition->position_namebylaw = $value->namebylaw;
         $orgposition->jobtitleid = $value->jobtitleid;
-		    $orgposition->orgstructureid = $DB->get_field('orgstructure','name',['id' => $value->orgstructureid]);
+        $getorgstructeid = $DB->get_record('orgstructure', ['id' => $value->orgstructureid]);
+        if($getorgstructeid)
+		    $orgposition->orgstructureid = $getorgstructeid->name;
+        else
+            $orgposition->orgstructureid = '';  
         $orgposition->orgposition_description = $value->description;
     }
 }else{
@@ -112,10 +116,10 @@ $mform_orgposition = new orgposition_edit_form(null,array('orgposition' => $orgp
 if ($mform_orgposition->is_cancelled()){ 
       redirect($orgmanagerurl);
 } else if ($orgposition = $mform_orgposition->get_data()) {
+  $getorgstructeid  = '';
   if($orgposition->orgstructureid)
       $getorgstructeid = $DB->get_field('orgstructure','id',['name' => $orgposition->orgstructureid]);
   if($id){
-      
       $orgpositionupdate = (object)array('id' => $orgposition->id, 'name' => $orgposition->posname,'code' => $orgposition->poscode,'namebylaw' => $orgposition->position_namebylaw,'jobtitleid' => $orgposition->jobtitleid,'orgstructureid' => $getorgstructeid,'description' => $orgposition->orgposition_description,'level' => $orgposition->level);
       if (isset($orgposition->submitbutton)) {
           $message = $strupdate;

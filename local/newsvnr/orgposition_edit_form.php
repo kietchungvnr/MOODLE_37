@@ -65,7 +65,7 @@ class orgposition_edit_form extends moodleform {
         $mform->setType('poscode', PARAM_TEXT);
         $mform->addElement('text', 'position_namebylaw', get_string('namebylaw', 'local_newsvnr'), 'maxlength="255" size="50"');
         $mform->addElement('text', 'level', 'Level', 'maxlength="50" size="50"');
-        $mform->addRule('level', get_string('required'), 'required', null, 'client');
+        // $mform->addRule('level', get_string('required'), 'required', null, 'client');
         $mform->setType('level', PARAM_INT);
         // $mform->addRule('position_namebylaw', get_string('required'), 'required', null, 'client');
         $mform->setType('position_namebylaw', PARAM_TEXT);
