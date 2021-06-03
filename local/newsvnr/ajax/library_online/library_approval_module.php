@@ -61,7 +61,7 @@ $sql = "SELECT *,
                     LEFT JOIN {lesson} l on cm.instance = l.id AND l.course = 1
                     LEFT JOIN {lesson_pages} lp on l.id = lp.lessonid
                     LEFT JOIN {imscp} i on cm.instance = i.id AND i.course = 1
-                    LEFT JOIN {wiki} wk on cm.instance = wk.id AND wk.course = 1 
+                    LEFT JOIN {wiki} wk on cm.instance = wk.id AND wk.course = 1
                     JOIN {user} u on u.id = lm.userid
                     JOIN {library_folder} lf on lf.id = lm.folderid $wheresql) AS Mydata
                 ORDER BY $ordersql";
@@ -92,8 +92,10 @@ foreach ($get_list as $value) {
     if ($value->moduletype == "resource") {
         $obj->type = mime2ext($value->minetype);
     }
-    $obj->size        = $size;
-    $obj->timecreated = convertunixtime('d/m/Y', $value->timecreated, 'Asia/Ho_Chi_Minh');
+    $obj->size = $size;
+    $dt        = new DateTime("@$value->timecreated");
+    $dt->setTimeZone(new DateTimeZone('Asia/Ho_Chi_Minh'));
+    $obj->timecreated = $dt->format('d/m/Y');
     $obj->author      = $value->fullnamet;
     $obj->folder      = get_link_folder($value);
     $obj->total       = $value->total;

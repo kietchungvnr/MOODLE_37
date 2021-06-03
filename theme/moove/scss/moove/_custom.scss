@@ -462,6 +462,7 @@ h6 {
         }
       }
       a {
+        white-space: break-spaces;
         color: #fff;
         transition: all 0.40s linear;
         &:hover {
@@ -477,10 +478,10 @@ h6 {
     text-transform: capitalize;
   }
   .post-review {
-    padding: 20px 20px 10px 20px;
+    padding: 5px 20px 10px 20px;
     border-radius: 0 0 5px 5px;
     position: relative;
-    height: 130px;
+    height: 100px;
   }
   .icons {
     width: 45px;
@@ -488,7 +489,7 @@ h6 {
     border: 4px solid #fff;
     border-radius: 50%;
     position: absolute;
-    top: 16px;
+    top: 5px;
     left: 1px;
     overflow: hidden;
     img {
@@ -1837,8 +1838,6 @@ li {
     line-height: 30px;
     color: #2411c0;
     font-weight: 300;
-    position: absolute;
-    top: 60px;
     font-weight: bold;
   }
   h4 {
@@ -1958,7 +1957,6 @@ li {
 .widget-about {
   img {
     display: block;
-    margin-bottom: 30px;
   }
   p {
     font-weight: 400;
@@ -5915,7 +5913,6 @@ i.expand-icon.active {
   text-overflow: ellipsis;
   overflow: hidden;
   width: auto;
-  height: 1.2em;
   white-space: nowrap;
 }
 .font-title {

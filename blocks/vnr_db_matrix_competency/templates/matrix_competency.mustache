@@ -1,0 +1,17 @@
+<div class="container-fluid p-0">
+    <div id="matrix_grid"></div>
+</div>
+{{#js}}
+require(
+[
+    'jquery',
+    'core/config',
+    'core/notification',
+    'core/str',
+    'block_vnr_db_matrix_competency/matrix_competency'
+],
+// This function runs when the above files have been loaded.
+function ($, Config, Notification, Str, Matrix) {
+    Matrix.init();
+})
+{{/js}}

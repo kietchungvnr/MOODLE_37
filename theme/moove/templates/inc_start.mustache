@@ -149,7 +149,6 @@
     }
     .status {
         color: white;
-        border-radius: 15px;
         padding: 5px;
         text-align: center;
     }
@@ -193,12 +192,24 @@
         max-height: 439px;
         overflow: scroll;
     }
-    #page-admin-tool-lp-coursecompetencies .moodle-dialogue-base .moodle-dialogue-wrap {
+    #page-admin-tool-lp-coursecompetencies .moodle-dialogue-base .moodle-dialogue-wrap,
+    #page-admin-tool-lp-plan .moodle-dialogue-base .moodle-dialogue-wrap,
+    #page-admin-tool-lp-templatecompetencies .moodle-dialogue-base .moodle-dialogue-wrap {
         width: 700px;
     }
     div[data-region="competencylinktree"] .competency-tree {
         border-radius: 0 !important;
         border-top: 0 !important;
+    }
+    div[data-region="competencylinktree"] .btn,
+    div[data-region="competencylinktree"] .form-control {
+        border-radius: 0 !important;
+    }
+    .moodle-dialogue-base .moodle-dialogue-wrap .moodle-dialogue-hd {
+        border-bottom: 0 !important;
+    }
+    select[data-action="chooseframework"] {
+        display: none;
     }
     .chat-panel .chat-content {
         width: calc(100% - 70px);
@@ -329,6 +340,41 @@
     }
     #page-local-newsvnr-roles-permissions .card-body {
         padding: 0 !important;
+    }
+    .path-mod-assign [data-region="configure-filters"] {
+        width: 410px;
+    }
+    .star-course {
+        position: absolute;
+        z-index: 1231214;
+        right: 5px;
+        top: 5px;
+        cursor: pointer;
+    }
+    .starred i {
+        color: #1A7AE8;
+    }
+    .notstarred i {
+        color: white;
+    }
+    [data-block="vnr_db_matrix_competency"] .progress {
+        margin-bottom: 0px;
+        height: 10px;
+    }
+    [data-block="vnr_db_matrix_competency"] td[data-field="competencyframework"] {
+        background-color: #2d5b7c;
+        color: #fff;
+        border-top: 1px solid;
+    }
+    [data-block="vnr_db_matrix_competency"] td[data-field="competency"] {
+        background-color: #2d5b7c;
+        color: #fff;
+        border-top: 1px solid;
+        border-left: 1px solid !important;
+    }
+    
+    #page-badges-index td.status {
+        color: #6c757d;
     }
 }
 </style>

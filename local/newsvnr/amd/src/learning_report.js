@@ -75,12 +75,21 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             max: 1,
             step: 0.01, 
         });
+
         $("#end_process").kendoNumericTextBox({
             format: "p0",
             factor: 100,
             min: 0,
-            max: 1,
-            step: 0.01, 
+            max: 100,
+            step: 1, 
+        });
+
+        $("#grade").kendoNumericTextBox({
+            format: "0",
+           decimals: 0,
+            min: 0,
+            max: 100,
+            step: 1, 
         });
     }
     var initGrid = function(data) {
@@ -158,7 +167,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         }
         $(gridName).kendoGrid(gridData);
     }
-    var gridSearchAccount = function(username,datestart,dateend,courseid,status,startprocess,endprocess) {
+    var gridSearchAccount = function(username,datestart,dateend,courseid,status,startprocess,endprocess,grade) {
         var data = {
             action:'searchaccount',
             username:username,
@@ -167,7 +176,8 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             courseid:courseid,
             status:status,
             startprocess:startprocess,
-            endprocess:endprocess
+            endprocess:endprocess,
+            grade:grade
         }
         initGrid(data);
     }
@@ -181,7 +191,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
     }
 
     var init = function() {
-        initGrid();
+    initGrid();
         $('#searchorgs').click(function() {
             var orgstructureid = $('#orgstructure').val();
             var positionid = $('#orgstructure_position').val();
@@ -195,7 +205,8 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             var status = $('#status').val();
             var startprocess = $('#start_process').val();
             var endprocess = $('#end_process').val();
-            gridSearchAccount(username,datestart,dateend,courseid,status,startprocess,endprocess);
+            var grade = $('#grade').val();
+            gridSearchAccount(username,datestart,dateend,courseid,status,startprocess,endprocess,grade);
         })
         $('#resettable').click(function() {
             initGrid();

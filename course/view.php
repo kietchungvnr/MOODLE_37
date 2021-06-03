@@ -61,6 +61,10 @@
     if(!empty($portalebmtoken)) {
         $get_configapi = $DB->get_record('local_newsvnr_api', ['functionapi' => 'ValidateAuthenticate', 'visible' => '1']);
         if($get_configapi) {
+            if(isset($_COOKIE['cookie'])) {
+                unset($_COOKIE['cookie']); 
+                setcookie('cookie', null, -1, '/'); 
+            }
             $params_portal = [
                 'Token' => $portalebmtoken
             ];

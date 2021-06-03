@@ -32,6 +32,7 @@ $wid          = optional_param('wid', 0, PARAM_INT); // Wiki ID
 $currentgroup = optional_param('group', 0, PARAM_INT); // Group ID
 $userid       = optional_param('uid', 0, PARAM_INT); // User ID
 $groupanduser = optional_param('groupanduser', null, PARAM_TEXT);
+$search       = optional_param('search','',PARAM_TEXT);
 
 if (!$page = wiki_get_page($pageid)) {
     print_error('incorrectpageid', 'wiki');
@@ -100,7 +101,20 @@ echo $renderer->tabs($page, $tabitems, $options);
 
 echo $OUTPUT->box_start('generalbox');
 echo $renderer->wiki_print_subwiki_selector($PAGE->activityrecord, $subwiki, $page, 'files');
-echo $renderer->wiki_files_tree($context, $subwiki);
+
+echo html_writer::start_tag('form',['class' => 'mb-3','action' => "files.php?pageid=$pageid",'method' => 'post']);
+echo html_writer::start_div('input-group mb-3',['style' => 'width:280px']);
+echo html_writer::tag('input','',['class' => 'form-control','type' => 'text','name' => 'search','value' => $search]);
+echo html_writer::tag('button','<i class="fa fa-search"></i>',['class' => 'btn btn-primary mr-1','type' => 'submit']);
+if($search) {
+    echo html_writer::tag('a','<i class="fa fa-refresh"></i>',['class' => 'btn bg-secondary','href' => "files.php?pageid=$pageid"]);
+} else {
+    echo html_writer::tag('a','<i class="fa fa-refresh"></i>',['class' => 'btn bg-secondary disabled','href' => "files.php?pageid=$pageid"]);
+}
+echo html_writer::end_div();
+echo html_writer::start_tag('form');
+
+echo $renderer->wiki_files_tree($context, $subwiki, $search);
 echo $OUTPUT->box_end();
 
 if (has_capability('mod/wiki:managefiles', $context)) {

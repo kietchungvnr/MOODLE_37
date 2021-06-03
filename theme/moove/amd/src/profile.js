@@ -27,9 +27,9 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
             var user_width = $('.user-card.profile').width();
             if(w > 1000) {
                 if($('.check-menu').hasClass('slide-nav-toggle')) {
-                    $('.user-card.profile').width(user_width - 44); 
+                    $('.user-card.profile').width(user_width + 44);
                 } else {
-                    $('.user-card.profile').width(user_width + 44); 
+                    $('.user-card.profile').width(user_width - 44); 
                 }
             }
         })

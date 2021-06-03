@@ -40,7 +40,8 @@ $startprocess = optional_param('startprocess', 0, PARAM_INT);
 $endprocess   = optional_param('endprocess', 0, PARAM_INT);
 $wheresql     = "WHERE ra.roleid=5 AND ue.status = 0 AND c.visible = 1 ";
 $status       = optional_param('status', 0, PARAM_INT);
-if ($pagetake == 0) {
+$grade        = optional_param('grade', 0, PARAM_INT);
+if ($pagetake == 0 || $grade) {
     $ordersql = "RowNum";
 } else {
     $ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
@@ -94,31 +95,6 @@ $sql = "SELECT ROW_NUMBER() OVER (ORDER BY c.id) AS RowNum,CONCAT(u.firstname,' 
             JOIN {context} AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
             JOIN {role} AS r ON r.id= ra.roleid
             LEFT JOIN mdl_course_completions cc ON cc.userid = c.id AND cc.course = c.id $wheresql ORDER BY $ordersql";
-if ($startprocess || $endprocess || $status) {
-    foreach ($all as $key => $value) {
-        $course     = $DB->get_record('course', ['id' => $value->courseid]);
-        $cinfo      = new completion_info($course);
-        $iscomplete = $cinfo->is_course_complete($value->userid);
-        if ($startprocess) {
-            if ($process < $startprocess) {
-                unset($all[$key]);
-            }
-        }
-        if ($endprocess) {
-            if ($process > $endprocess) {
-                unset($all[$key]);
-            }
-        }
-        if ($status) {
-            if ($status == 2 && $iscomplete == false) {
-                unset($all[$key]);
-            }
-            if ($status == 1 && $iscomplete == true) {
-                unset($all[$key]);
-            }
-        }
-    }
-}
 $get_list = $DB->get_records_sql($sql);
 $data     = [];
 foreach ($get_list as $value) {
@@ -144,20 +120,28 @@ foreach ($get_list as $value) {
             continue;
         }
     }
-    $timespenttotal      = 0;
-    $get_grade           = get_finalgrade_student($value->userid, $value->courseid);
-    $object              = new stdClass();
-    $user                = $DB->get_record("user", ['id' => $value->userid]);
-    $object->useravatar  = $OUTPUT->user_picture($user);
-    $object->userhref    = $CFG->wwwroot . '/user/profile.php?id=' . $value->id;
-    $object->name        = $value->name;
-    $object->coursehref  = $CFG->wwwroot . '/course/view.php?id=' . $value->courseid;
-    $object->coursename  = $value->coursename;
-    $object->grade       = (!empty($get_grade)) ? $get_grade->gradefinal : '-';
+    $timespenttotal     = 0;
+    $get_grade          = get_finalgrade_student($value->userid, $value->courseid);
+    $object             = new stdClass();
+    $user               = $DB->get_record("user", ['id' => $value->userid]);
+    $object->useravatar = $OUTPUT->user_picture($user);
+    $object->userhref   = $CFG->wwwroot . '/user/profile.php?id=' . $value->id;
+    $object->name       = $value->name;
+    $object->coursehref = $CFG->wwwroot . '/course/view.php?id=' . $value->courseid;
+    $object->coursename = $value->coursename;
+    $object->grade      = (!empty($get_grade)) ? $get_grade->gradefinal : '-';
+    if ($grade) {
+        if ($object->grade) {
+            $arr = explode('.', $object->grade);
+            if ($arr[0] != $grade) {
+                continue;
+            }
+        }
+    }
     $object->timestart   = convertunixtime('d/m/Y', $value->timestart, 'Asia/Ho_Chi_Minh');
     $object->process     = $process . '%';
     $object->classstatus = ($iscomplete == false) ? 'teacher-bg-2' : 'teacher-bg-3';
-    $object->status      = ($iscomplete == false) ? get_string('unfinished','local_newsvnr') : get_string('finished', 'local_newsvnr');
+    $object->status      = ($iscomplete == false) ? get_string('unfinished', 'local_newsvnr') : get_string('finished', 'local_newsvnr');
     if ($value->timecompleted != null) {
         $object->timecompleted = convertunixtime('d/m/Y', $value->timecompleted, 'Asia/Ho_Chi_Minh');
     } else {
@@ -169,7 +153,11 @@ foreach ($get_list as $value) {
         $timespenttotal += $row->dedicationtime;
     }
     $object->timeaccess = block_dedication_utils::format_dedication($timespenttotal);
-    $object->total      = count($all);
-    $data[]             = $object;
+    if ($grade || $startprocess || $endprocess) {
+        $object->total = '';
+    } else {
+        $object->total = count($all);
+    }
+    $data[] = $object;
 }
 echo json_encode($data, JSON_UNESCAPED_UNICODE);

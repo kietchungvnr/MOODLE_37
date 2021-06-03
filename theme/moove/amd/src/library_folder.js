@@ -83,7 +83,11 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
                 var setting = $('.popup-setting');
                 var y = $(this).position();
                 setting.css('top', y.top + 5);
-                setting.css('left', x - 75);
+                if($('#page-wrapper').hasClass('slide-nav-toggle')) {
+                    setting.css('left', x - 256);
+                } else {
+                    setting.css('left', x - 75);
+                }
                 $.ajax(scriptfolder, settings).then(function(response) {
                     var obj = $.parseJSON(response);
                     $.when($('.popup-setting ul').replaceWith(obj.setting)).then(setting.show());
@@ -244,7 +248,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
             $('#table-library').on('click', 'a#share-module-library', function(e) {
                 $('#share-popup-modal-module').modal('show');
                 var moduleid = $(this).attr('moduleid');
-                $('#module-from-library').attr('moduleid', moduleid);
+                $('#share-module-library').attr('moduleid', moduleid);
             })
             // kendo lọc khóa học 
             var kendoConfig = {};
@@ -261,7 +265,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
             $("#course-section-input").kendoDropDownList(kendoCourseSection);
             
             $("#share-module-library").click(function() {
-                var moduleid = $('#module-from-library').attr('moduleid');
+                var moduleid = $('#share-module-library').attr('moduleid');
                 var courseid = $('#course-share-input').val();
                 var sectionid = $('#course-section-input').val();
                 var settings = {

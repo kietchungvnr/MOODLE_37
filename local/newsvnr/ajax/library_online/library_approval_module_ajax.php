@@ -84,6 +84,9 @@ switch ($action) {
             break;
         }
         foreach ($dataselect as $value) {
+            // Gửi email và thông báo lên chuông khi có yêu cầu duyệt file bị từ chối trong thư viện
+            send_email_rejectedfile($value->id);
+
             $DB->delete_records('library_module', ['coursemoduleid' => $value->id]);
             course_delete_module($value->id);
         }
@@ -97,7 +100,10 @@ switch ($action) {
             break;
         }
         foreach ($dataselect as $value) {
-            $getid = $DB->get_field('library_module', 'id', ['coursemoduleid' => $moduleid]);
+            // Gửi email và thông báo lên chuông khi có yêu cầu duyệt file được chấp nhận trong thư viện
+            send_email_approvedfile($value->id);
+
+            $getid = $DB->get_field('library_module', 'id', ['coursemoduleid' => $value->id]);
             $DB->update_record('library_module', ['id' => $getid, 'approval' => 1]);
         }
         $data['error'] = false;

@@ -319,41 +319,42 @@ class theme_settings {
         $imgurl = $CFG->wwwroot."/theme/moove/pix/f2.png";
         $imgdefault = \html_writer::empty_tag('img',array('src' => $imgurl,'class'=>'userpicture defaultuserpic owl-lazy','width' => '50px','height'=>'50px','alt' => 'Default picture','title'=>'Default picture'));
         $sql = "SELECT concat(u.firstname,' ',u.lastname) as fullnamet,u.email,(select COUNT(*) as sts
-        FROM {user_enrolments} ue
-        JOIN {enrol} e ON ue.enrolid = e.id
-        JOIN {course} c ON e.courseid = c.id
-        JOIN {role_assignments} ra ON ra.userid = ue.userid
-        JOIN {context} as ct on ra.contextid= ct.id AND ct.instanceid = c.id
-        where ra.roleid=5 and c.id=?) as studentnumber,u.id
-        from {role_assignments} as ra
-        join {user} as u on u.id= ra.userid
-        join {user_enrolments} as ue on ue.userid=u.id
-        join {enrol} as e on e.id=ue.enrolid
-        join {course} as c on c.id=e.courseid
-        join {context} as ct on ct.id=ra.contextid and ct.instanceid= c.id
-        join {role} as r on r.id= ra.roleid
-        where c.id=? and ra.roleid=3";
+                                                                                FROM {user_enrolments} ue
+                                                                                    JOIN {enrol} e ON ue.enrolid = e.id
+                                                                                    JOIN {course} c ON e.courseid = c.id
+                                                                                    JOIN {role_assignments} ra ON ra.userid = ue.userid
+                                                                                    JOIN {context} as ct on ra.contextid= ct.id AND ct.instanceid = c.id
+                                                                                WHERE ra.roleid=5 and c.id=?) as studentnumber,u.id
+                FROM {role_assignments} as ra
+                    JOIN {user} as u on u.id= ra.userid
+                    JOIN {user_enrolments} as ue on ue.userid=u.id
+                    JOIN {enrol} as e on e.id=ue.enrolid
+                    JOIN {course} as c on c.id=e.courseid
+                    JOIN {context} as ct on ct.id=ra.contextid and ct.instanceid= c.id
+                    JOIN {role} as r on r.id= ra.roleid
+                WHERE c.id=? and ra.roleid=3";
         $rolecourse = $DB->get_records_sql($sql,array($courseid,$courseid));
+        $get_studentnumber = $DB->get_record_sql('SELECT COUNT(*) as studentnumber
+                                                FROM {user_enrolments} ue
+                                                    JOIN {enrol} e ON ue.enrolid = e.id
+                                                    JOIN {course} c ON e.courseid = c.id
+                                                    JOIN {role_assignments} ra ON ra.userid = ue.userid
+                                                    JOIN {context} as ct on ra.contextid= ct.id AND ct.instanceid = c.id
+                                                WHERE ra.roleid=5 and c.id=?', [$courseid]);
         
-        if (!empty($rolecourse)) 
-        {
-             foreach ($rolecourse as $value) 
-             {
+        if (!empty($rolecourse)) {
+            foreach ($rolecourse as $value) {
                 $infoteacher = new stdclass();
+                $value->studentnumber = $get_studentnumber->studentnumber;
                 $infoteacher = $value;
-             } 
-         }
-          else
-          {
-                    $infoteacher = new stdClass();
-                    $infoteacher->fullnamet = get_string('noteacher', 'theme_moove');
-                    $infoteacher->studentnumber = 0;
-                    $infoteacher->imgdefault = $imgdefault;
-          }
-           return $infoteacher;
-
-        // var_dump($rolecourse);die();
-
+            } 
+        } else {
+            $infoteacher = new stdClass();
+            $infoteacher->fullnamet = get_string('noteacher', 'theme_moove');
+            $infoteacher->studentnumber = $get_studentnumber->studentnumber;
+            $infoteacher->imgdefault = $imgdefault;
+        }
+        return $infoteacher;
     }
 
     public static function role_courses_teacher($courseid)
@@ -704,6 +705,7 @@ class theme_settings {
         for ($i = 1, $j = 0; $i <= count($courses); $i++, $j++) {
             $enrolmethod = get_enrol_method($courses[$j]->id);
             $progress = \core_completion\progress::get_course_progress_percentage($courses[$j],$USER->id);
+            $coursestarred = $DB->get_record('favourite', ['component' => 'core_course', 'itemid' => $courses[$j]->id, 'userid' => $USER->id]);
             $templatecontext['newscourse'][$j]['key'] = $j;
             $templatecontext['newscourse'][$j]['fullname'] = $arr[$j]['fullname'];
             $templatecontext['newscourse'][$j]['summary'] = $arr[$j]['summary'];
@@ -712,12 +714,16 @@ class theme_settings {
             $templatecontext['newscourse'][$j]['countstudent'] = $arr[$j]['countstudent'];
             $templatecontext['newscourse'][$j]['imageteacher'] = $arr[$j]['imageteacher'];
             $templatecontext['newscourse'][$j]['fullnamet'] = $arr[$j]['fullnamet'];
+            $templatecontext['newscourse'][$j]['id'] = $courses[$j]->id;
+            $templatecontext['newscourse'][$j]['hasstarred'] = ($coursestarred) ? true : false;
             if(isset($progress)) {
                 $templatecontext['newscourse'][$j]['progress'] = round($progress);
+                $templatecontext['newscourse'][$j]['hasprogress'] = true;
                 if($templatecontext['newscourse'][$j]['progress'] == 0)
                     $templatecontext['newscourse'][$j]['progress'] = -1;
             } else {
                 $templatecontext['newscourse'][$j]['enrolmethod'] = $enrolmethod;
+                $templatecontext['newscourse'][$j]['hasprogress'] = false;
             }
         }
         // var_dump($templatecontext);die;

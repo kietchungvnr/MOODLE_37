@@ -110,6 +110,16 @@ foreach ($get_list as $value) {
     } else {
         $object->process = 0;
     }
+    if ($startprocess) {
+        if ($object->process < $startprocess) {
+            continue;
+        }
+    }
+    if ($endprocess) {
+        if ($object->process > $endprocess) {
+            continue;
+        }
+    }
     $object->classstatus   = ($object->process == 100 || $value->status == 2) ? 'teacher-bg-3' : 'teacher-bg-2';
     $object->status        = ($object->process == 100 || $value->status == 2) ? get_string('finished','local_newsvnr') : get_string('unfinished','local_newsvnr') ;
     $object->timecompleted = ($value->status == 2) ? convertunixtime('d/m/Y', $value->timemodified, 'Asia/Ho_Chi_Minh') : '-';

@@ -1100,10 +1100,14 @@ abstract class moodleform_mod extends moodleform {
      * @return void
      */
     function add_action_buttons($cancel=true, $submitlabel=null, $submit2label=null) {
+        global $COURSE;
+        // custom by Thắng sửa lại key dịch khi course = 1
         if (is_null($submitlabel)) {
             $submitlabel = get_string('savechangesanddisplay');
         }
-
+        if (is_null($submit2label) && $COURSE->id == 1) {
+            $submit2label = get_string('saveandreturn','local_newsvnr');
+        } 
         if (is_null($submit2label)) {
             $submit2label = get_string('savechangesandreturntocourse');
         }
@@ -1119,8 +1123,11 @@ abstract class moodleform_mod extends moodleform {
             $buttonarray[] = &$mform->createElement('submit', 'submitbutton2', $submit2label);
         }
 
-        if ($submitlabel !== false) {
-            $buttonarray[] = &$mform->createElement('submit', 'submitbutton', $submitlabel);
+        // Custom by Vũ: Bỏ nút lưu và xem ngày khi module resource
+        if($mform->_formName != 'mod_resource_mod_form') {
+            if ($submitlabel !== false) {
+                $buttonarray[] = &$mform->createElement('submit', 'submitbutton', $submitlabel);
+            }
         }
 
         if ($cancel) {

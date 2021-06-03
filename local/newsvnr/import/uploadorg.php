@@ -109,6 +109,7 @@ if($formdata = $mform2->is_cancelled()) {
     $linenum = 1; //column header is first line
     // var_dump($formdata);die;
     $validation = array();
+    $stask = [];
     while ($line = $cir->next()) {
         $linenum++;
         $orgcate = new stdClass();
@@ -131,38 +132,79 @@ if($formdata = $mform2->is_cancelled()) {
             } else {
                 $orgcate->$key = trim($value);
             }
+            if (isset($orgcate->orgstructurename)) {
+                $orgstructureid = $DB->get_field_select('orgstructure', 'id', 'name = :name', ['name' => $orgcate->orgstructurename]);
+                if ($orgstructureid) {
+                    $orgcate->orgstructureid = $orgstructureid;
+                }
+            }
+            if (isset($orgcate->jobtitlename)) {
+                $jobtitleid = $DB->get_field_select('orgstructure_jobtitle', 'id', 'name = :name', ['name' => $orgcate->jobtitlename]);
+                if ($jobtitleid) {
+                    $orgcate->jobtitleid = $jobtitleid;
+                }
+            }
+            if (isset($orgcate->categoryname)) {
+                $categoryid = $DB->get_field_select('orgstructure_category', 'id', 'name = :name', ['name' => $orgcate->categoryname]);
+                if ($categoryid) {
+                    $orgcate->orgstructuretypeid = $categoryid;
+                }
+            }
+            if (isset($orgcate->parentname)) {
+                if($orgcate->parentname == '') {
+                    $orginfo = $DB->get_record('orgstructure', ['name' => $orgcate->parentname]);
+                    if ($orginfo) {
+                        $orgcate->parentid = $orginfo->id;
+                    } else {
+                        $orgcate->parentid = 0;
+                    }
+                } else {
+                    $parentid = array_values($DB->get_records($formdata->tablename, ['name' => $orgcate->parentname]));
+                    if ($parentid) {
+                        $orgcate->parentid = $parentid[0]->id;
+                    } else {
+                        $orgcate->parentid = 0;
+                        $stask[] = $orgcate;
+                    }
+                }
+            }
+        }
+        $orginfo = $DB->get_record($formdata->tablename, ['code' => $orgcate->code]);
+        if ($orginfo) {
+            $orgcate->id = $orginfo->id;
+            if($formdata->tablename == 'orgstructure') {
+                $parentid = array_values($DB->get_records($formdata->tablename, ['name' => $orgcate->parentname]));
+                if(isset($orgcate->parentname) && $orgcate->parentname == '')
+                    $orgcate->parentid = 0;
+                else {
+                    if($parentid)
+                        $orgcate->parentid = $parentid[0]->id;
+                    
+                }
+            }
+            $DB->update_record($formdata->tablename, $orgcate);
+        } else {
+            $DB->insert_record($formdata->tablename, $orgcate);
         }
     }
-    if(isset($orgcate->orgstructurename)) {
-        $orgstructureid = $DB->get_field_select('orgstructure','id','name = :name',['name' => $orgcate->orgstructurename]);
-        if($orgstructureid) {
-            $orgcate->orgstructureid = $orgstructureid;   
-        }        
-    }
-    if(isset($orgcate->jobtitlename)) {
-        $jobtitleid = $DB->get_field_select('orgstructure_jobtitle','id','name = :name',['name' => $orgcate->jobtitlename]);
-        if($jobtitleid) {
-            $orgcate->jobtitleid = $jobtitleid;   
-        } 
-    }
-    if(isset($orgcate->categoryname)) {
-        $categoryid = $DB->get_field_select('orgstructure_category','id','name = :name',['name' => $orgcate->categoryname]);
-        if($categoryid) {
-            $orgcate->orgstructuretypeid = $categoryid;
-        }
-    }
-    if(isset($orgcate->parentname)) {
-        $parentid = $DB->get_field_select('orgstructure','id','name = :name',['name' => $orgcate->parentname]);
-        if($parentid) {
-            $orgcate->parentid = $parentid;
+    if($stask) {
+        foreach($stask as $org) {
+            $orginfo = $DB->get_record('orgstructure', ['name' => $org->name, 'code' => $org->code]);
+            if ($orginfo) {
+                $parentid = array_values($DB->get_records($formdata->tablename, ['name' => $org->parentname]));
+                $org->id = $orginfo->id;
+                $org->parentid = $parentid[0]->id;
+                $DB->update_record($formdata->tablename, $org);
+            } else {
+                continue;
+            }
         }
     }
 
-    $DB->insert_record($formdata->tablename,$orgcate);
     $cir->close();
     $cir->cleanup(true);
     $strsuccess = get_string('successimport', 'local_newsvnr');
-    \core\notification::add($strsuccess,'NOTIFY_SUCCESS');
+    \core\notification::success($strsuccess);
     echo $OUTPUT->continue_button($returnurl);
     echo $OUTPUT->footer();
     die;
@@ -181,71 +223,97 @@ if($tablename) {
 // preview table data
 $data = array();
 $cir->init();
+$cir_temp = new csv_import_reader($iid, 'uploadorrg');
+$cir_temp->init();
+$filecolumns_temp = uu_validate_user_upload_columns($cir_temp, $STD_FIELDS, $PRF_FIELDS, $returnurl);
+$linenum_temp = 1; //column header is first line
 $linenum = 1; //column header is first line
 $noerror = true; // Keep status of any error.
-while ($linenum <= $previewrows and $fields = $cir->next()) {
+$maintemp_org = array();
+while ($linenum_temp <= $previewrows and $fields = $cir->next()) {
+    $linenum_temp++;
+    $temp_org = array();
+    $temp_org['line'] = $linenum_temp;
+    foreach($fields as $key => $field) {
+        $temp_org[$filecolumns[$key]] = s(trim($field));
+    }
+    $maintemp_org[] = $temp_org;
+}
+while ($linenum <= $previewrows and $fields = $cir_temp->next()) {
     $linenum++;
     $orgcate = array();
     $orgcate['line'] = $linenum;
     foreach($fields as $key => $field) {
         $orgcate[$filecolumns[$key]] = s(trim($field));
     }
-
-    // insert_orgcategory($orgcate);
     $orgcate['status'] = array();
-    if($tablename) {
-        if (isset($orgcate['name'])) {
-            if($DB->record_exists_select($tablename,'name = :name',['name' => $orgcate['name']])) {
-            	$orgcate['status'][] = get_string('duplicatenameimport','local_newsvnr',format_string($orgcate['name']));	
-            }
-        } else {
-            $orgcate['status'][] = get_string('missingname','local_newsvnr');
-        }
+    
+    // if($tablename) {
+    //     if (isset($orgcate['name'])) {
+    //         if($DB->record_exists_select($tablename,'name = :name',['name' => $orgcate['name']])) {
+    //             $orgcate['status'][] = get_string('duplicatenameimport','local_newsvnr',format_string($orgcate['name']));   
+    //         }
+    //     } else {
+    //         $orgcate['status'][] = get_string('missingname','local_newsvnr');
+    //     }
 
-        if (isset($orgcate['code'])) {
-            if($DB->record_exists_select($tablename,'code = :code',['code' => $orgcate['code']])) {
-            	$orgcate['status'][] = get_string('duplicatecodeimport','local_newsvnr',format_string($orgcate['code']));	
-            }
-        } else {
-            $orgcate['status'][] = get_string('missingcode','local_newsvnr');
-        }
+    //     if (isset($orgcate['code'])) {
+    //         if($DB->record_exists_select($tablename,'code = :code',['code' => $orgcate['code']])) {
+    //             $orgcate['status'][] = get_string('duplicatecodeimport','local_newsvnr',format_string($orgcate['code']));   
+    //         }
+    //     } else {
+    //         $orgcate['status'][] = get_string('missingcode','local_newsvnr');
+    //     }
 
-        if(isset($orgcate['orgstructurename'])) {
-        	$orgstructureid = $DB->get_field_select('orgstructure','id','name = :name',['name' => $orgcate['orgstructurename']]);
-        	if(!$orgstructureid) {
-        		$orgcate['status'][] = get_string('notfoundorgstructure', 'local_newsvnr',format_string($orgcate['orgstructurename']));
-        	}
-        }
-        if(isset($orgcate['jobtitlename'])) {
-        	$jobtitleid = $DB->get_field_select('orgstructure_jobtitle','id','name = :name',['name' => $orgcate['jobtitlename']]);
-        	if(!$jobtitleid) {
-        		$orgcate['status'][] = get_string('notfoundorgjobtitle', 'local_newsvnr',format_string($orgcate['jobtitlename']));
-        	}
-        }
+    //     if(isset($orgcate['orgstructurename'])) {
+    //         $orgstructureid = $DB->get_field_select('orgstructure','id','name = :name',['name' => $orgcate['orgstructurename']]);
+    //         if(!$orgstructureid) {
+    //             $orgcate['status'][] = get_string('notfoundorgstructure', 'local_newsvnr',format_string($orgcate['orgstructurename']));
+    //         }
+    //     }
+    //     if(isset($orgcate['jobtitlename'])) {
+    //         $jobtitleid = $DB->get_field_select('orgstructure_jobtitle','id','name = :name',['name' => $orgcate['jobtitlename']]);
+    //         if(!$jobtitleid) {
+    //             $orgcate['status'][] = get_string('notfoundorgjobtitle', 'local_newsvnr',format_string($orgcate['jobtitlename']));
+    //         }
+    //     }
 
-        if(isset($orgcate['categoryname'])) {
-            $categoryid = $DB->get_field_select('orgstructure_category','id','name = :name',['name' => $orgcate['categoryname']]);
-            if(!$categoryid) {
-                $orgcate['status'][] = get_string('notfoundorgcategory', 'local_newsvnr',format_string($orgcate['jobtitlename']));
-            }
-        }
+    //     if(isset($orgcate['categoryname'])) {
+    //         $categoryid = $DB->get_field_select('orgstructure_category','id','name = :name',['name' => $orgcate['categoryname']]);
+    //         if(!$categoryid) {
+    //             $orgcate['status'][] = get_string('notfoundorgcategory', 'local_newsvnr',format_string($orgcate['jobtitlename']));
+    //         }
+    //     }
 
-        if(isset($orgcate['parentname'])) {    
-            if($DB->record_exists('orgstructure', ['parentid' => 0])) {
-                $parentid = $DB->get_field_select('orgstructure','id','name = :name',['name' => $orgcate['parentname']]);
-                if(!$parentid) {
-                    $orgcate['status'][] = get_string('notfoundorgparent', 'local_newsvnr', format_string($orgcate['parentname'])); 
-                }    
-            } else {
-                $orgcate['status'][] = get_string('missingorgparent', 'local_newsvnr'); 
-            }
-        }
-    }
+    //     if(isset($orgcate['parentname'])) {
+    //         if($orgcate['parentname'] != '') {
+    //             $check_parentid = false;
+    //             foreach($maintemp_org as $temp) {
+    //                 if($orgcate['parentname'] == $temp['name']) {
+    //                     $check_parentid = true;
+    //                     break;
+    //                 } else {
+    //                     $check_parentid = false;
+    //                 }
+    //             }
+    //             if($check_parentid == false)
+    //                 $orgcate['status'][] = get_string('missingorgparent', 'local_newsvnr');
+    //         }
+    //         // if($DB->record_exists('orgstructure', ['parentid' => 0])) {
+    //         //     $parentid = $DB->get_field_select('orgstructure','id','name = :name',['name' => $orgcate['parentname']]);
+    //         //     if(!$parentid) {
+    //         //         $orgcate['status'][] = get_string('notfoundorgparent', 'local_newsvnr', format_string($orgcate['parentname'])); 
+    //         //     }    
+    //         // } else {
+    //         //     $orgcate['status'][] = get_string('missingorgparent', 'local_newsvnr'); 
+    //         // }
+    //     }
+    // }
     $orgcate['status'] = implode(', <br />', $orgcate['status']);
     if($orgcate['status'] == NULL) {
-    	$noerror = true;
+        $noerror = true;
     } else {
-    	$noerror = false;
+        $noerror = false;
     }
     
     $data[] = $orgcate;
@@ -255,14 +323,14 @@ if ($fields = $cir->next()) {
 }
 $cir->close();
 if($noerror == false) {
-	\core\notification::add($strmessage, 'NOTIFY_WARNING');
+    \core\notification::warning($strmessage);
 
 }
 
 //Xuất file ra những record bị lỗi
 $rowserror = [];
 foreach ($data as $value) {
-    if($value['status'] != '') {
+    if(isset($value['status']) && $value['status'] != '') {
         unset($value['line']);
         $rowserror[] = $value;
     }

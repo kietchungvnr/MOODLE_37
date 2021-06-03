@@ -117,10 +117,14 @@ $mform_orgstructure = new orgstructure_edit_form(null,array('orgstructure' => $o
 if ($mform_orgstructure->is_cancelled()) {
     redirect($orgmanagerurl);
 } else if ($orgstructure = $mform_orgstructure->get_data()) {
-  if($orgstructure->parentid)
-    $getorgstructeid = $DB->get_field('orgstructure','id',['name' => $orgstructure->parentid]);
   if($id){
-
+    if($orgstructure->parentid) {
+      $getorgstructeid = $DB->get_field('orgstructure','id',['name' => $orgstructure->parentid]);
+      if(!$getorgstructeid)
+        $getorgstructeid = 0;
+    } else {
+      $getorgstructeid = 0;
+    }
     $orgstructureupdate = (object)array('id' => $orgstructure->id,'name' => $orgstructure->orgname,'code' => $orgstructure->orgcode,'managerid' => $orgstructure->managerid,'orgstructuretypeid' => $orgstructure->orgstructuretypeid,'parentid' => $getorgstructeid,'numbermargin' => $orgstructure->numbermargin,'numbercurrent' => $orgstructure->numbercurrent,'description' => $orgstructure->org_description);
     if (isset($orgstructure->submitbutton)) {
         $message = $strupdate;

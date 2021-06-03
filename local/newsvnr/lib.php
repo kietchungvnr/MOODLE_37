@@ -2669,9 +2669,10 @@ function get_user_badge($userid) {
 
 // course card info
 function get_coursecard_info($courseid) {
-    global $DB,$OUTPUT,$CFG;
+    global $DB,$OUTPUT,$CFG,$USER;
     $obj = new stdClass;
     $course         = $DB->get_record('course',['id' => $courseid]);
+    $coursestarred = $DB->get_record('favourite', ['component' => 'core_course', 'itemid' => $courseid, 'userid' => $USER->id]);
     $progress = round(\core_completion\progress::get_course_progress_percentage($course));
     $theme_settings = new theme_settings();
     $courseobj      = new \core_course_list_element($course);
@@ -2679,6 +2680,8 @@ function get_coursecard_info($courseid) {
     $arr            = $theme_settings::role_courses_teacher_slider_block_course_recent($courseid);
     $obj->fullnamet      = $arr->fullnamet;
     $obj->countstudent   = $arr->studentnumber;
+    $obj->hasstarred = ($coursestarred) ? true : false;
+    $obj->id = $courseid;
     if($progress > 0) {
         $noprogress = "";
     } else {
@@ -2789,7 +2792,7 @@ function send_email_requestfile($moduleinfo) {
     $message->component = 'local_newsvnr';
     $message->name = 'requestfile';
     $message->userfrom = $USER->id;
-    $message->userto = $CFG->siteadmins;
+    $message->userto = \core_user::get_support_user();
     $message->subject = '[VnR.Admin] Nhắc nhở duyệt tài liệu từ thư viện';
     $message->fullmessage = $fullmessage;
     $message->fullmessageformat = FORMAT_HTML;
@@ -2855,7 +2858,7 @@ function send_email_rejectedfile($moduleid) {
     $message = new \core\message\message();
     $message->component = 'local_newsvnr';
     $message->name = 'rejectedfile';
-    $message->userfrom = $CFG->siteadmins;
+    $message->userfrom = \core_user::get_support_user();
     $message->userto = $get_moduleinfo->userid;
     $message->subject = '[VnR.Admin] Yêu cầu duyệt tài liệu đã bị từ chối';
     $message->fullmessage = $fullmessage;
@@ -2922,7 +2925,7 @@ function send_email_approvedfile($moduleid) {
     $message = new \core\message\message();
     $message->component = 'local_newsvnr';
     $message->name = 'approvedfile';
-    $message->userfrom = $CFG->siteadmins;
+    $message->userfrom = \core_user::get_support_user();
     $message->userto = $get_moduleinfo->userid;
     $message->subject = '[VnR.Admin] Yêu cầu duyệt tài liệu đã được chấp nhận';
     $message->fullmessage = $fullmessage;
