@@ -689,3 +689,4 @@ $string['topercent'] = 'To percent';
 $string['select'] = 'Select';
 $string['saveandreturn'] = 'Save and return';
 $string['currentplan'] = 'Current plan';
+$string['entergrade'] = 'Enter grade';
