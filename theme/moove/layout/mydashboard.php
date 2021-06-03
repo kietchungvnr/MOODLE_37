@@ -50,7 +50,7 @@ if ($draweropenright && $hasblocks) {
 }
 $check = theme_moove_layout_check();
 $theme = theme_config::load('moove');
-if($theme->settings->dashboardrole != 'default') {
+if($theme->settings->dashboardrole != 'default' && !is_siteadmin()) {
     $check->is_student = false;
     $check->is_teacher = false;
     $check->isadmin = false;

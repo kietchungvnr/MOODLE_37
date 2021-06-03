@@ -192,12 +192,24 @@
         max-height: 439px;
         overflow: scroll;
     }
-    #page-admin-tool-lp-coursecompetencies .moodle-dialogue-base .moodle-dialogue-wrap {
+    #page-admin-tool-lp-coursecompetencies .moodle-dialogue-base .moodle-dialogue-wrap,
+    #page-admin-tool-lp-plan .moodle-dialogue-base .moodle-dialogue-wrap,
+    #page-admin-tool-lp-templatecompetencies .moodle-dialogue-base .moodle-dialogue-wrap {
         width: 700px;
     }
     div[data-region="competencylinktree"] .competency-tree {
         border-radius: 0 !important;
         border-top: 0 !important;
+    }
+    div[data-region="competencylinktree"] .btn,
+    div[data-region="competencylinktree"] .form-control {
+        border-radius: 0 !important;
+    }
+    .moodle-dialogue-base .moodle-dialogue-wrap .moodle-dialogue-hd {
+        border-bottom: 0 !important;
+    }
+    select[data-action="chooseframework"] {
+        display: none;
     }
     .chat-panel .chat-content {
         width: calc(100% - 70px);
