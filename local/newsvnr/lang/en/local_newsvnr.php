@@ -690,3 +690,6 @@ $string['select'] = 'Select';
 $string['saveandreturn'] = 'Save and return';
 $string['currentplan'] = 'Current plan';
 $string['entergrade'] = 'Enter grade';
+$string['default'] = 'Default';
+$string['dashboardrole'] = 'Dashboard role';
+$string['dashboardroledesc'] = 'Select dashboard role default';
