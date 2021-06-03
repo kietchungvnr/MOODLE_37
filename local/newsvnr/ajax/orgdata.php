@@ -95,9 +95,9 @@ switch ($section) {
 			$OUTPUT->pix_icon('t/show', get_string('show')),
 			array('title' => get_string('show'),'id' => $value->id, 'class' => 'show-item','data-active' => 'orgcate_list','id' => $value->id,'onclick' => 'org_active('.$value->id.',1)'));	
 		}
-		$buttons[] = html_writer::link(new moodle_url('/local/newsvnr/orgcate.php',array('id' => $value->id)),
+		$buttons[] = html_writer::link('javascript:void(0)',
 			$OUTPUT->pix_icon('t/edit', get_string('edit')),
-			array('title' => get_string('edit')));
+			array('title' => get_string('edit'),'onclick' => 'org_edit_popup('.$value->id.')','data-toggle' => 'modal','data-target' => '#modal-iframe-org'));
 		$buttons[] = html_writer::link('javascript:void(0)',
 			$OUTPUT->pix_icon('t/delete', get_string('delete')),
 			array('title' => get_string('delete'),'id' => $value->id, 'class' => 'delete-item','data-section' => 'orgcate','id' => $value->id,'onclick' => 'org_delete('.$value->id.')'));
