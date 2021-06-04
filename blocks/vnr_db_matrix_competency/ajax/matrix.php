@@ -45,13 +45,13 @@ $all_competency = $data = $columns = [];
 $obj_competency_framework_column = new stdClass;
 $obj_competency_framework_column->field = "competencyframework";
 $obj_competency_framework_column->template = "function(e) { return e.competencyframework; }";
-$obj_competency_column->title = get_string('competencyframework', ' block_vnr_db_matrix_competency');
+$obj_competency_framework_column->title = get_string('competencyframework', 'block_vnr_db_matrix_competency');
 $obj_competency_framework_column->width = 200;
 $columns[] = $obj_competency_framework_column;
 $obj_competency_column = new stdClass;
 $obj_competency_column->field = "competency";
 $obj_competency_column->template = "function(e) { return e.competency; }";
-$obj_competency_column->title = get_string('competency', ' block_vnr_db_matrix_competency');
+$obj_competency_column->title = get_string('competency', 'block_vnr_db_matrix_competency');
 $obj_competency_column->width = 200;
 $columns[] = $obj_competency_column;
 if($get_all_positions) {
