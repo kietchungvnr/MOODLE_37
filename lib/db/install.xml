@@ -929,9 +929,9 @@
         <FIELD NAME="alternatename" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Alternate name - Useful for three-name countries."/>
         <FIELD NAME="moodlenetprofile" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Moodle.net profile information"/>
         <!-- Custom by Vũ: Thêm field vào bảng user -->
-        <FIELD NAME="usercode" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false" DEFAULT="0"/>
-        <FIELD NAME="orgpositionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0"/>
-        <FIELD NAME="orgstructureid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0"/>
+        <FIELD NAME="usercode" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="orgpositionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" DEFAULT="0"/>
+        <FIELD NAME="orgstructureid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" DEFAULT="0"/>
         <FIELD NAME="typeofuser" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" DEFAULT="0"/>
       </FIELDS>
       <KEYS>
