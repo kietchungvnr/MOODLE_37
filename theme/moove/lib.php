@@ -824,6 +824,8 @@ function theme_moove_layout_check() {
         if(get_pathname_url($referer) == '/course/view.php') {
             $object->portalcourse = false;
         }
+    } else {
+        $object->portalcourse = false;
     }
     
     $object->hasfocusmod = (isset($_COOKIE['cookie']) == 'focusmod') ? true : false;

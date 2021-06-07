@@ -115,18 +115,17 @@ function user_create_user($user, $updatepassword = true, $triggerevent = true) {
 
     // Insert competency_template table
 
-    if($newuserid and !isset($newuserid->typeofuser))
-    {   
-        $orgpositionid = '';
-        $orgpositionid = $user->orgpositionid;
+    if($newuserid and !isset($newuserid->typeofuser)) {
 
+        $orgpositionid = '';
+        if(isset($user->orgpositionid)) {
+            $orgpositionid = $user->orgpositionid;
+        }   
 
         $sql_comp_template = "SELECT * FROM {competency_template} where positionid = ?";      
         $comp_template_data = '';
-        if($comp_template_data)
-        {
+        if($comp_template_data) {
             $comp_template_data = $DB->get_record_sql($sql_comp_template, array($orgpositionid));
-
 
             $id_template = $comp_template_data->id;
 
