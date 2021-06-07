@@ -2709,7 +2709,7 @@ function get_coursecard_info($courseid) {
 }
 ////
 function form_comment_wiki($title,$contextid,$pageid,$userid,$action,$commentid = null) {
-    $cancel = ($commentid) ? '<button type="button" action="'.$action.'" commentid="'.$commentid.'" class="mt-2 btn btn-danger cancel-comment">Hủy</button>' : '';
+    $cancel = ($commentid) ? '<button type="button" action="'.$action.'" commentid="'.$commentid.'" class="mt-2 btn btn-danger cancel-comment">Hủy</button>' : '<div class="filename"></div><button class="mt-2 btn post_file btn-secondary" style="background-color:#ced4da !important">Chọn file</button>';
     $output =   '<div class="wiki-add new-detail-comment">
                      <div class="new-detail-comment-body">
                         <label class="new-detail-comment-title">'.$title.'</label>
