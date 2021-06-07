@@ -56,6 +56,14 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             var commentid = $(this).attr('commentid');
             $('.edit_comment#'+commentid).addClass('d-none');
         })
+        $('.post_file').click(function() {
+            $('.fp-btn-add').click();
+        })
+        $('body').on('change','input[name="repo_upload_file"]', function () {
+            var filename = $('.fp-formset input[type="file"]').val();
+            filename = filename.replace('C:\\fakepath\\', '');
+            $('.filename').html(filename);
+        });
     }
     return {
         init:init

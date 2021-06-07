@@ -27,7 +27,7 @@
 $string['pluginname'] = 'Ma trận năng lực';
 $string['competencyframework'] = 'Khung năng lực';
 $string['competency'] = 'Năng lực';
-$string['noenroll'] = 'Chia ghi danh';
+$string['noenroll'] = 'Chưa ghi danh';
 $string['vnr_db_matrix_competency:addinstance'] = 'Thêm mới khối ma trận năng lực';
 $string['vnr_db_matrix_competency:myaddinstance'] = 'Thêm mới khối ma trận năng lực đến trang cá nhân';
 $string['vnr_db_matrix_competency:editblocks'] = 'Chỉnh sửa khối ma trận năng lực đến trang cá nhân';

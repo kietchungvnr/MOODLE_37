@@ -98,10 +98,6 @@ $tabitems = array('view' => 'view', 'edit' => 'edit', 'comments' => 'comments', 
 $options = array('activetab'=>'files');
 echo $renderer->tabs($page, $tabitems, $options);
 
-
-echo $OUTPUT->box_start('generalbox');
-echo $renderer->wiki_print_subwiki_selector($PAGE->activityrecord, $subwiki, $page, 'files');
-
 echo html_writer::start_tag('form',['class' => 'mb-3','action' => "files.php?pageid=$pageid",'method' => 'post']);
 echo html_writer::start_div('input-group mb-3',['style' => 'width:280px']);
 echo html_writer::tag('input','',['class' => 'form-control','type' => 'text','name' => 'search','value' => $search]);
@@ -112,7 +108,12 @@ if($search) {
     echo html_writer::tag('a','<i class="fa fa-refresh"></i>',['class' => 'btn bg-secondary disabled','href' => "files.php?pageid=$pageid"]);
 }
 echo html_writer::end_div();
-echo html_writer::start_tag('form');
+echo html_writer::end_tag('form');
+
+echo $OUTPUT->box_start('generalbox');
+echo $renderer->wiki_print_subwiki_selector($PAGE->activityrecord, $subwiki, $page, 'files');
+
+
 
 echo $renderer->wiki_files_tree($context, $subwiki, $search);
 echo $OUTPUT->box_end();
