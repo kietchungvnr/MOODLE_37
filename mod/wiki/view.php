@@ -35,6 +35,7 @@ require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/wiki/lib.php');
 require_once($CFG->dirroot . '/mod/wiki/locallib.php');
 require_once($CFG->dirroot . '/mod/wiki/pagelib.php');
+require_once("$CFG->dirroot/mod/wiki/filesedit_form.php");
 require_once $CFG->dirroot . '/local/newsvnr/lib.php';
 
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID
@@ -342,4 +343,23 @@ $wikipage->print_header();
 $wikipage->print_content();
 
 $wikicomment->print_content();
+
+$returnurl = new moodle_url('/mod/wiki/files.php', array('subwiki' => $subwiki->id, 'pageid' => $pageid));
+$data = new stdClass();
+$data->returnurl = $returnurl;
+$data->subwikiid = $subwiki->id;
+$maxbytes = get_max_upload_file_size($CFG->maxbytes, $COURSE->maxbytes);
+$types = FILE_INTERNAL | FILE_REFERENCE | FILE_CONTROLLED_LINK;
+$options = array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => -1, 'accepted_types' => '*', 'return_types' => $types);
+file_prepare_standard_filemanager($data, 'files', $options, $context, 'mod_wiki', 'attachments', $subwiki->id);
+
+$mform = new mod_wiki_filesedit_form(null, array('data'=>$data, 'options'=>$options));
+
+if ($mform->is_cancelled()) {
+    redirect($returnurl);
+} else if ($formdata = $mform->get_data()) {
+    $formdata = file_postupdate_standard_filemanager($formdata, 'files', $options, $context, 'mod_wiki', 'attachments', $subwiki->id);
+    redirect($returnurl);
+}
+$mform->display();
 $wikipage->print_footer();

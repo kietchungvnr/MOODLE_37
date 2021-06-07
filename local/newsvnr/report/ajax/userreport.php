@@ -117,7 +117,7 @@ foreach ($get_list as $value) {
     $object->useravatar  = $OUTPUT->user_picture($user);
     $object->name        = $value->name;
     $object->href        = $CFG->wwwroot . '/user/profile.php?id=' . $value->id;
-    $object->shortname   = (isset($value->shortname)) ? $value->shortname : '';
+    $object->shortname   = (isset($value->usercode)) ? $value->usercode : '';
     $object->email       = $value->email;
     $object->timecreated = convertunixtime('d/m/Y', $value->timecreated, 'Asia/Ho_Chi_Minh');
     $timespenttotal      = 0;
