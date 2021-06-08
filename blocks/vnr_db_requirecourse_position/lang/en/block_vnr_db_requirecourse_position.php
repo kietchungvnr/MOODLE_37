@@ -22,7 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Required course by position';
+global $USER, $DB;
+$string['pluginname'] = 'Required course by position (' . $DB->get_field('orgstructure_position', 'name', ['id' => $USER->orgpositionid]) . ')';
 $string['countstudent'] = 'Student';
 $string['teachername'] = 'Teacher';
 $string['vnr_db_requirecourse_position:addinstance'] = 'Add a requirecourse_position user block';

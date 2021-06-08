@@ -22,7 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Course by user plan';
+global $USER, $DB;
+$string['pluginname'] = 'Personalized course for the position: ['. $DB->get_field('orgstructure_position', 'name', ['id' => $USER->orgpositionid]) .']';
 $string['countstudent'] = 'Student';
 $string['teachername'] = 'Teacher';
 $string['nocourse'] = 'There are no courses for this plan';

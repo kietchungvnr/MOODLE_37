@@ -21,8 +21,8 @@
  * @copyright  2019 Le Thanh Vu
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Khóa học bắt buộc chung theo vị trí';
+global $USER, $DB;
+$string['pluginname'] = 'Khóa học bắt buộc chung theo vị trí của bạn (' . $DB->get_field('orgstructure_position', 'name', ['id' => $USER->orgpositionid]) . ')';
 $string['countstudent'] = 'Học viên';
 $string['teachername'] = 'Giáo viên';
 $string['vnr_db_requirecourse_position:addinstance'] = 'Thêm mới block khóa học bắt buộc chung theo vị trí';

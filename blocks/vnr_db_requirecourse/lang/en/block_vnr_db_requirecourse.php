@@ -21,8 +21,7 @@
  * @copyright  2019 Le Thanh Vu
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Required course';
+$string['pluginname'] = 'Your required course';
 $string['countstudent'] = 'Student';
 $string['teachername'] = 'Teacher';
 $string['vnr_db_requirecourse:addinstance'] = 'Add a new requirecourse block';
