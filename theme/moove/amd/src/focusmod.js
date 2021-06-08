@@ -207,6 +207,9 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             } else if(modType == 'quiz') {
                 var iframe = '<iframe id="mod-iframe" src="'+url+'" height="'+iframeheight+'" frameBorder="0"></iframe>';
                 createSession(isMobile);
+            } else if(modType == 'scorm') {
+                iframeheight = iframeheight - 8;
+                var iframe = '<iframe id="mod-iframe" src="'+url+'" height="'+iframeheight+'" width="100%" frameBorder="0"></iframe>';
             } else {
                 $('body').removeAttr('style');
                 var iframe = '<iframe id="mod-iframe" src="'+url+'" frameBorder="0"></iframe>';
@@ -226,10 +229,12 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                             var width = $(window).width();
                             if(width > 576) {
                                 $('#mod-iframe').removeAttr('height');
-                                const iframes = iFrameResize({ log: false }, '#mod-iframe');
+                                const iframes = iFrameResize({ log: true }, '#mod-iframe');
                             } 
+                        } else if(modType == 'scorm') {
+                            // Nothing todo...
                         } else {
-                            const iframes = iFrameResize({ log: false }, '#mod-iframe');
+                            const iframes = iFrameResize({ log: true }, '#mod-iframe');
                         }
                         // Xử lý khi module là quiz thì thay đổi header
                         if(modType == 'quiz') {
