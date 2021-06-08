@@ -204,7 +204,7 @@ if ($editform->is_cancelled()) {
     if(isset($_REQUEST['coursesetup'])) {
         $data->coursesetup = $_REQUEST['coursesetup'][0];
     }
-    if($data->courseoforgstructure) {
+    if(isset($data->courseoforgstructure)) {
         $data->courseoforgstructure = $DB->get_field('orgstructure', 'id', ['name' => $data->courseoforgstructure]);
     }
     $courseposition = [];
@@ -231,7 +231,7 @@ if ($editform->is_cancelled()) {
                 }
             }
         }
-        if($data->courseoforgstructure) {
+        if(isset($data->courseoforgstructure)) {
             foreach ($courseofjobtitle as $jobtitile) {
                 foreach ($courseofposition as $position) {
                     $courseposition_data = new stdClass;
@@ -246,7 +246,7 @@ if ($editform->is_cancelled()) {
                 }
             }
         }
-        if($course->id & $courseposition) {
+        if($course->id & !empty($courseposition)) {
             $courseposition = $DB->insert_records('course_position',$courseposition);
         } 
 

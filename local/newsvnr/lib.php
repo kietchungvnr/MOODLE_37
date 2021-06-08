@@ -2788,6 +2788,33 @@ function send_email_requestfile($moduleinfo) {
                     <br><strong>Thanks &amp; best regards,</strong><br>----------------------------------------<br><span><em><span style=""><span style="">Lưu ý</span></span>:</em>
                     </span> Thư này được gửi tự động từ hệ thống, vui lòng không reply. Để hỗ trợ thông tin, liên hệ bộ phân IT.<br>
                     <p></p>';
+    // lấy danh sách users có quyền duyệt file trong thư viện
+    $get_users_has_capability = $DB->get_records_sql("SELECT ctx.instanceid userid 
+                                                    FROM mdl_role_capabilities rc
+                                                        LEFT JOIN mdl_context ctx ON ctx.id = rc.contextid
+                                                    WHERE rc.capability = :cap
+                                                        AND rc.permission = 1 
+                                                        AND ctx.contextlevel = :contextlevel", ['cap' =>'local/newsvnr:confirmfilelibrary', 'contextlevel' => 30]);
+    if($get_users_has_capability) {
+        foreach($get_users_has_capability as $user) {
+            $userto = $DB->get_record('user', ['id' => $user->userid]);
+            $message = new \core\message\message();
+            $message->component = 'local_newsvnr';
+            $message->name = 'requestfile';
+            $message->userfrom = $USER->id;
+            $message->userto = $userto;
+            $message->subject = '[VnR.Admin] Nhắc nhở duyệt tài liệu từ thư viện';
+            $message->fullmessage = $fullmessage;
+            $message->fullmessageformat = FORMAT_HTML;
+            $message->fullmessagehtml = $fullmessage;
+            $message->smallmessage = 'Yêu cầu duyệt tài liệu';
+            $message->notification = 1;
+            $message->contexturl = (new \moodle_url('/library.php'))->out(false);
+            $message->contexturlname = 'Chi tiết';
+
+            message_send($message);
+        }
+    }
     $message = new \core\message\message();
     $message->component = 'local_newsvnr';
     $message->name = 'requestfile';
