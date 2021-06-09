@@ -38,11 +38,7 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 		{
             key: 'lowestpoint',
             component: 'block_vnr_db_courseinfo_management'
-    	},
-		{
-            key: 'view',
-            component: 'local_newsvnr'
-    	} 
+    	}
     ];
 	$("#coursedatestart").kendoDatePicker({
 		change: onChange
@@ -122,11 +118,6 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 				{
 	                field: "lowestpoint",
 	                title: s[8],
-	                width: "100px"
-				},
-				{
-					field: "view",
-		            title: s[9],
 	                width: "100px"
 				}
 			];

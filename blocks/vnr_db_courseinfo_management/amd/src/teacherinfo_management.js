@@ -59,6 +59,10 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
     	{
             key: 'finishmodulerate',
             component: 'local_newsvnr'
+    	},
+    	{
+            key: 'view',
+            component: 'local_newsvnr'
     	}
     ];
     var initGridCourse = function(userId) {
@@ -95,6 +99,11 @@ define(['jquery', 'core/config','core/str','local_newsvnr/initkendogrid','alertj
 				{
 	                field: "coursename",
 	                title: s[4],
+	                width: "150px"
+				},
+				{
+	                field: "view",
+	                title: s[14],
 	                width: "150px"
 				},
 				{

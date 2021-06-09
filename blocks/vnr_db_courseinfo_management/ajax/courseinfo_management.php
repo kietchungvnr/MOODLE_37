@@ -64,7 +64,6 @@ $sql = "SELECT *,
             ORDER BY $ordersql";
 $get_list = $DB->get_records_sql($sql);
 foreach ($get_list as $value) {
-    $view = $DB->get_record('logstore_standard_log',['courseid' => $value->id,'action' => 'viewed'],'count(*) as count');
     $sttuser       = '';
     $params        = [];
     $i             = $j             = $sum             = $max             = $min             = 0;
@@ -108,7 +107,7 @@ foreach ($get_list as $value) {
     $obj->totalstudent    = count($list_user);
     $obj->studentunfinish = $i . ' / ' . count($list_user);
     if ($sum != 0) {
-        $obj->courseaveragepoint = $sum / $j;
+        $obj->courseaveragepoint = round($sum / $j, 2);
         $obj->highestpoint       = $max;
         $obj->lowestpoint        = $min;
     } else {
@@ -116,7 +115,6 @@ foreach ($get_list as $value) {
         $obj->highestpoint       = '-';
         $obj->lowestpoint        = '-';
     }
-    $obj->view  = $view->count;
     $obj->total = $value->total;
     $data[]     = $obj;
 }
