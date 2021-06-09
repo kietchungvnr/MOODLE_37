@@ -692,7 +692,7 @@ class theme_settings {
      */
     public function get_courses_data($pinned = 1, $required = null, $suggest = null, $userplancourse = null, $planid = 0)
     {
-        global $DB, $USER;
+        global $DB, $USER, $CFG;
         $arr = array();
         $courses = self::user_courses_list($pinned, $required, $suggest, $userplancourse, $planid);
         // $templatecontext['courseendable'] = "1";
@@ -716,6 +716,7 @@ class theme_settings {
             $templatecontext['newscourse'][$j]['fullnamet'] = $arr[$j]['fullnamet'];
             $templatecontext['newscourse'][$j]['id'] = $courses[$j]->id;
             $templatecontext['newscourse'][$j]['hasstarred'] = ($coursestarred) ? true : false;
+            $templatecontext['newscourse'][$j]['viewurl'] = $CFG->wwwroot . '/course/view.php?id='.$courses[$j]->id;
             if(isset($progress)) {
                 $templatecontext['newscourse'][$j]['progress'] = round($progress);
                 $templatecontext['newscourse'][$j]['hasprogress'] = true;
