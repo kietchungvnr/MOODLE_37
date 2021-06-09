@@ -21,8 +21,7 @@
  * @copyright  2019 Le Thanh Vu
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-global $USER, $DB;
-$string['pluginname'] = 'Suggested courses according to your position ('. $DB->get_field('orgstructure_position', 'name', ['id' => $USER->orgpositionid]) .')';
+$string['pluginname'] = 'Suggested courses according to your position';
 $string['countstudent'] = 'Student';
 $string['teachername'] = 'Teacher';
 $string['vnr_db_coursesuggest_position:addinstance'] = 'Add a new coursesuggest_position block';

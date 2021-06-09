@@ -24,7 +24,8 @@
 
 class block_vnr_db_coursesuggest_position extends block_base {
     public function init() {
-        $this->title = get_string('pluginname', 'block_vnr_db_coursesuggest_position');
+        global $USER, $DB;
+        $this->title = get_string('pluginname', 'block_vnr_db_coursesuggest_position') . ' ('. $DB->get_field('orgstructure_position', 'name', ['id' => $USER->orgpositionid]) .')';
     }
 
     function get_content() {

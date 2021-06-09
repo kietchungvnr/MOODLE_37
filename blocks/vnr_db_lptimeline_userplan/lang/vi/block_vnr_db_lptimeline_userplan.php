@@ -21,8 +21,7 @@
  * @copyright  2019 Le Thanh Vu
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-global $USER, $DB;
-$string['pluginname'] = 'Khoá học theo lộ trình cá nhân cho vị trí: ['. $DB->get_field('orgstructure_position', 'name', ['id' => $USER->orgpositionid]) .']';
+$string['pluginname'] = 'Khoá học theo lộ trình cá nhân cho vị trí';
 $string['countstudent'] = 'Học viên';
 $string['teachername'] = 'Giáo viên';
 $string['nocourse'] = 'Không có khoá học cho kế hoạch này';
