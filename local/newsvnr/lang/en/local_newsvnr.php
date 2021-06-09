@@ -694,3 +694,5 @@ $string['default'] = 'Default';
 $string['dashboardrole'] = 'Dashboard role';
 $string['dashboardroledesc'] = 'Select dashboard role default';
 $string['editorgstructure'] = 'Edit orgstructure';
+$string['siteadmin'] = 'Site administration';
+$string['reportlearning'] = 'Learning report';

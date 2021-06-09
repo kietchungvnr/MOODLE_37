@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Quản lý khóa học';
+$string['pluginname'] = 'Quản lý kết quả đào tạo';
 $string['countstudent'] = 'Học viên';
 $string['teachername'] = 'Giáo viên';
 $string['block_vnr_db_courseinfo_management:addinstance'] = 'Thêm mới block quản lý thông tin khóa học';
