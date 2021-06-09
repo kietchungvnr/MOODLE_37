@@ -21,7 +21,7 @@ $app->post('/hrm/courses/course-add-competency', local_newsvnr\api\controllers\h
 $app->put('/hrm/courses/course-add-competency/{id}', local_newsvnr\api\controllers\hrm\CourseAddCompetencyController::class . ':update');
 $app->post('/hrm/courses/course-add-student', local_newsvnr\api\controllers\hrm\CourseAddUserController::class . ':add_student');
 $app->post('/hrm/courses/course-add-teacher', local_newsvnr\api\controllers\hrm\CourseAddUserController::class . ':add_teacher');
-$app->post('/hrm/courses/uneroll-user', local_newsvnr\api\controllers\hrm\CourseAddUserController::class . ':uneroll_user');
+$app->post('/hrm/courses/unenroll-user', local_newsvnr\api\controllers\hrm\CourseAddUserController::class . ':uneroll_user');
 $app->post('/hrm/courses/suspended-user', local_newsvnr\api\controllers\hrm\CourseAddUserController::class . ':suspended_user');
 $app->post('/hrm/courses/training/course-add-student', local_newsvnr\api\controllers\hrm\CourseAddUserController::class . ':enroll_user_training');
 $app->post('/hrm/courses/training/course-delete-student', local_newsvnr\api\controllers\hrm\CourseAddUserController::class . ':delete_enroll_course');
