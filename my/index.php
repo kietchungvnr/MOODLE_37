@@ -142,17 +142,20 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
     $resetstring = get_string('resetpage', 'my');
     $reseturl = new moodle_url("$CFG->wwwroot/my/index.php", array('edit' => 1, 'reset' => 1, 'sesskey'=>sesskey()));
     $url = new moodle_url($currenturl, $params);
-    if (!$currentpage->userid) {
+    $editstring = '';
+    if (!$currentpage->userid && is_siteadmin()) {
         // viewing a system page -- let the user customise it
         $editstring = '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.get_string('updatemymoodleon').'</a></li>';
-    } else if (empty($edit)) {
+    } else if (empty($edit) && is_siteadmin()) {
         // $editstring = get_string('updatemymoodleon');
         $editstring = '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.get_string('updatemymoodleon').'</a></li>';
     } else {
-        $editstring = '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.get_string('updatemymoodleoff').'</a></li>';
-        // $resetbutton = $OUTPUT->single_button($reseturl, $resetstring);
-        $resetbutton = '<li><a href="'.$reseturl.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.$resetstring.'</a></li>';
-        ;
+        if(is_siteadmin()) {
+            $editstring = '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.get_string('updatemymoodleoff').'</a></li>';
+            // $resetbutton = $OUTPUT->single_button($reseturl, $resetstring);
+            $resetbutton = '<li><a href="'.$reseturl.'" class="text-icon-dashboard"><i class="fa fa-cog text-icon-dashboard" aria-hidden="true"></i>'.$resetstring.'</a></li>';
+            ;
+        }
     }
     if (!$currentpage->userid) {
         $params['edit'] = 1;

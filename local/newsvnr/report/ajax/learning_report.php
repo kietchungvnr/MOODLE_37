@@ -90,7 +90,7 @@ $sql = "SELECT ROW_NUMBER() OVER (ORDER BY c.id) AS RowNum,CONCAT(u.firstname,' 
         FROM {role_assignments} AS ra
             JOIN {user} AS u ON u.id= ra.userid
             JOIN {user_enrolments} AS ue ON ue.userid=u.id
-            JOIN {enrol} AS e ON e.id=ue.enrolid
+            JOIN {enrol} AS e ON e.id= ue.enrolid
             JOIN {course} AS c ON c.id=e.courseid
             JOIN {context} AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
             JOIN {role} AS r ON r.id= ra.roleid
@@ -125,7 +125,7 @@ foreach ($get_list as $value) {
     $object             = new stdClass();
     $user               = $DB->get_record("user", ['id' => $value->userid]);
     $object->useravatar = $OUTPUT->user_picture($user);
-    $object->userhref   = $CFG->wwwroot . '/user/profile.php?id=' . $value->id;
+    $object->userhref   = $CFG->wwwroot . '/user/profile.php?id=' . $value->userid;
     $object->name       = $value->name;
     $object->coursehref = $CFG->wwwroot . '/course/view.php?id=' . $value->courseid;
     $object->coursename = $value->coursename;
