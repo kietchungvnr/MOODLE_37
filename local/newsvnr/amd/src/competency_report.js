@@ -129,9 +129,20 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         ];
         var toolbar = ["excel"]
         var excel = { 
-            fileName: "competency_report.xlsx",
+            fileName: "Report.xlsx",
             allPages: true
         }
+        var onChange = function() {
+            var selected = $.map(this.select(), function(item) {
+                return $(item).text();
+            });
+            if(selected.length > 0) {
+                $('#exporttable').addClass('action');
+            } else {
+                $('#exporttable').removeClass('action');
+            }
+        }   
+        kendoConfig.onChange = onChange;
         kendoConfig.toolbar = toolbar;
         kendoConfig.excel = excel;
         kendoConfig.columns = colums;
@@ -178,8 +189,24 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         $('#resettable').click(function() {
             initGrid();
         })
-        $('#exporttable').click(function() {
-            $('.k-grid-excel').click();
+        $("#exporttable").on('click', function(e){
+            var trs = $('#competency_report').find('tr');
+            if ($(trs).find(":checkbox").is(":checked")) {
+                var row = [{
+                    cells: [
+                        { value: M.util.get_string('studentname', 'local_newsvnr') },
+                        { value: M.util.get_string('competency', 'local_newsvnr') },
+                        { value: M.util.get_string('course', 'local_newsvnr') },
+                        { value: M.util.get_string('learningplan', 'local_newsvnr') },
+                        { value: M.util.get_string('status', 'local_newsvnr') },
+                        { value: M.util.get_string('timefinishcourse', 'local_newsvnr') },
+                        { value: M.util.get_string('reviewer', 'local_newsvnr') },
+                    ]
+                }]
+                exportExcelKendo('#competency_report',row);
+            } else {
+                $('.k-grid-excel').click();
+            }
         })
     }
     return {

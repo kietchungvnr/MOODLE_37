@@ -152,11 +152,22 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                 width: "100px"
             }
         ];
+        var onChange = function() {
+            var selected = $.map(this.select(), function(item) {
+                return $(item).text();
+            });
+            if(selected.length > 0) {
+                $('#exporttable').addClass('action');
+            } else {
+                $('#exporttable').removeClass('action');
+            }
+        }   
         var toolbar = ["excel"]
         var excel = { 
-            fileName: "learning_report.xlsx",
+            fileName: "Report.xlsx",
             allPages: true
         }
+        kendoConfig.onChange = onChange;
         kendoConfig.toolbar = toolbar;
         kendoConfig.excel = excel;
         kendoConfig.columns = colums;
@@ -191,7 +202,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
     }
 
     var init = function() {
-    initGrid();
+        initGrid();
         $('#searchorgs').click(function() {
             var orgstructureid = $('#orgstructure').val();
             var positionid = $('#orgstructure_position').val();
@@ -211,15 +222,32 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         $('#resettable').click(function() {
             initGrid();
         })
-        $('#exporttable').click(function() {
-            $('.k-grid-excel').click();
-        })
         $('#changereport').click(function() {
             var report = $('#report').val();
             if(report) {
                 location.replace(Config.wwwroot + '/local/newsvnr/report/' + report + '.php');
             } else {
                 alertify.alert('Thông báo', 'Vui lòng chọn báo cáo!');
+            }
+        })
+        $("#exporttable").on('click', function(e){
+            var trs = $('#learning_report').find('tr');
+            if ($(trs).find(":checkbox").is(":checked")) {
+                var row = [{
+                    cells: [
+                        { value: M.util.get_string('studentname', 'local_newsvnr') },
+                        { value: M.util.get_string('course', 'local_newsvnr') },
+                        { value: M.util.get_string('learningprocess', 'local_newsvnr') },
+                        { value: M.util.get_string('status', 'local_newsvnr') },
+                        { value: M.util.get_string('joindate', 'local_newsvnr') },
+                        { value: M.util.get_string('timefinishcourse', 'local_newsvnr') },
+                        { value: M.util.get_string('timeaccess', 'local_newsvnr') },
+                        { value: M.util.get_string('grade', 'local_newsvnr') },
+                    ]
+                }]
+                exportExcelKendo('#learning_report',row);
+            } else {
+                $('.k-grid-excel').click();
             }
         })
     }
