@@ -168,8 +168,8 @@ $string['duplicateusercode'] = 'Mã nhân viên đã được sử dụng';
 $string['invalidorgposition'] = 'Chức vụ không tồn tại';
 
 // Strings cho core_course
-$string['coursesetup'] = 'Setup khoá học';
-$string['editcoursesetup'] = 'Chỉnh sứa setup khoá học';
+$string['coursesetup'] = 'Khóa setup';
+$string['editcoursesetup'] = 'Chỉnh sửaa setup khoá học';
 $string['category_cs'] = 'Mục';
 $string['fullname_cs'] = 'Tên khoá học';
 $string['shortname_cs'] = 'Tên rút gọn';

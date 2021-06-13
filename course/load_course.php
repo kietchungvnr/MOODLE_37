@@ -95,7 +95,7 @@ $sql .= "SELECT DISTINCT c.id, cc.name category, c.fullname, c.timecreated, CONC
 $notinarr = ['allcourse', 'coursepopular'];
 if ($id < 1 && $keycourse == '' && $teacher == '' && $category == '' && ($filter == '' || $filter == 'allcourse' || $filter == 'coursepopular')) {
     // Hiện thị tất cả khóa học(mặc định lần đầu load page)
-    $sql = "SELECT c.id,c.fullname,c.timecreated
+    $sql = "SELECT c.*
             FROM {course} c
                 JOIN {course_categories} cc ON c.category = cc.id
             WHERE
@@ -122,14 +122,14 @@ if ($id < 1 && $keycourse == '' && $teacher == '' && $category == '' && ($filter
 } elseif ($category != '' || $keycourse != '') {
     // Hiện thị khóa học khi tìm theo tên khóa học hoặc danh mục
     if (in_array($filter, $notinarr)) {
-        $sql = "SELECT c.id,c.fullname,c.timecreated
-            FROM {course} c
-                JOIN {course_categories} cc ON c.category = cc.id
-            WHERE
-                c.visible = 1 AND
-                cc.visible = 1 AND
-                cc.name LIKE $strcategory AND
-                c.fullname LIKE $strcourse $condition";
+        $sql = "SELECT c.*
+                FROM {course} c
+                    JOIN {course_categories} cc ON c.category = cc.id
+                WHERE
+                    c.visible = 1 AND
+                    cc.visible = 1 AND
+                    cc.name LIKE $strcategory AND
+                    c.fullname LIKE $strcourse $condition";
     } else {
         // Hiện thị khóa học theo tên giảng viên (trường hợp k thể xảy ra :D)
         $sql .= " $condition";
@@ -140,7 +140,7 @@ if ($id < 1 && $keycourse == '' && $teacher == '' && $category == '' && ($filter
     }
     if ($id > 1) {
         // Load khóa học khi click vào từng danh mục trên cây danh mục khóa học
-        $sql = "SELECT c.id,c.fullname,c.timecreated
+        $sql = "SELECT c.*
                 FROM {course} c
                     JOIN {course_categories} cc ON c.category = cc.id
                 WHERE
@@ -178,6 +178,7 @@ foreach ($getcourse as $value) {
                                                     JOIN mdl_course c on c.category = cc.id
                                                 where c.id = :courseid", ['courseid' => $courseid]);
     $coursestarred = $DB->get_record('favourite', ['component' => 'core_course', 'itemid' => $courseid, 'userid' => $USER->id]);
+    
     if (isset($arr->id)) {
         $stduser = new stdClass();
         $userid  = $DB->get_records('user', array('id' => $arr->id));
@@ -193,7 +194,11 @@ foreach ($getcourse as $value) {
     echo html_writer::start_div('post-slide6');
     echo html_writer::start_div('post-img');
     echo $value->courseimage;
-    echo html_writer::start_div('post-info');
+    if($CFG->sitetype == MOODLE_BUSINESS) {
+        echo html_writer::start_div('post-info', ['style' => 'padding: 5px']);
+    } else {
+        echo html_writer::start_div('post-info', ['style' => 'padding: 5px']);
+    }
     if($coursestarred) {
         echo html_writer::tag('div','<i class="fa fa-star mr-1"></i>',['class' => 'star-course starred','onclick' => "starCourse($courseid,'unstarred')",'courseid' => $courseid,'title' => 'Khóa học đã đánh sao']);
     } else {
@@ -203,6 +208,18 @@ foreach ($getcourse as $value) {
     echo html_writer::tag('li', get_string('countstudent', 'local_newsvnr') . ': <a href="#">' . $value->countstudent . '</a>');
     echo html_writer::tag('li', get_string('teachername', 'local_newsvnr') . ': <a href="#">' . $value->fullnamet . '</a>');
     echo html_writer::tag('li', get_string('coursecatogories', 'local_newsvnr') . ': ' . $value->category->name);
+    if($CFG->sitetype == MOODLE_BUSINESS) {
+        if(isset($value->coursesetup)) {
+            $coursesetup = $DB->get_field('course_setup', 'fullname', ['id' => $value->coursesetup]);
+            if($coursesetup)
+                echo html_writer::tag('li', get_string('coursesetup', 'local_newsvnr') . ': ' . $coursesetup);
+            else
+                echo html_writer::tag('li', get_string('coursesetup', 'local_newsvnr') . ': -');
+        } else {
+            echo html_writer::tag('li', get_string('coursesetup', 'local_newsvnr') . ': -');
+        }
+    }
+   
     echo html_writer::end_tag('ul');
     echo html_writer::end_div(); // end div post-info
     echo html_writer::end_div(); // end div post-img

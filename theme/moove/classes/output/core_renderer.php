@@ -221,6 +221,14 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output .= '<div class="mr-4"><i class="fa fa-book mr-1" aria-hidden="true"></i><span class="font-bold">'.$module->count.'</span> <span class="text">'.get_string('lesson','local_newsvnr').'</span></div>';
         $output .= '<div class="mr-4"><i class="fa fa-user mr-1" aria-hidden="true"></i><span class="font-bold">'.count($studentdata).'</span> <span class="text">'.get_string('countstudent','local_newsvnr').'</span></div>';
         $output .= '<div class="mr-4"><i class="fa fa-eye mr-1" aria-hidden="true"></i><span class="font-bold">'.$view->count.'</span> <span class="text">'.get_string('view','local_newsvnr').'</span></div>';
+        if($CFG->sitetype == MOODLE_BUSINESS) {
+            $coursesetup = $DB->get_field('course_setup', 'fullname',['id' => $COURSE->coursesetup]);
+            if($coursesetup) {
+                $output .= '<div class="mr-4"></i><span class="text">'.get_string('coursesetup','local_newsvnr').': </span><span class="font-bold">'.$coursesetup.'</span> </div>';
+            } else {
+                $output .= '<div class="mr-4"></i><span class="text">'.get_string('coursesetup','local_newsvnr').':</span><span class="font-bold"> - </span></div>';
+            }
+        }
         $output .= '<div class=""><span class="text">'.get_string('lastupdate','local_newsvnr').'</span> <span class="font-bold">'.converttime($COURSE->timemodified).'</span></div>';
         $output .= '</div>';
         $output .= '<div id="focus-mod" class="open-focusmod mr-2" data-placement="left"><span class="mr-2">'.get_string('startlearning','local_newsvnr').'</span><i class="fa fa-arrow-right" aria-hidden="true"></i></div>';

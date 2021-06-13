@@ -164,7 +164,7 @@ if(!empty($course->id)) {
     }
     $course->courseofjobtitle = $courseofjobtitle;
     $course->courseofposition = $courseofposition;
-    $coursesetup = $DB->get_record_sql('SELECT TOP 1 cs.* FROM {course} c JOIN {course_setup} cs ON c.category = cs.category WHERE c.id = ?', [$course->id]);
+    $coursesetup = $DB->get_record_sql('SELECT TOP 1 cs.* FROM {course} c LEFT JOIN {course_setup} cs ON c.category = cs.category WHERE c.id = ?', [$course->id]);
 }
 
 $args = array(
@@ -201,7 +201,7 @@ if ($editform->is_cancelled()) {
     }
     
     //Custom by Vũ : Add coursesetup vào course data
-    if(isset($_REQUEST['coursesetup'])) {
+    if(isset($data->coursesetup) && $data->coursesetup) {
         $data->coursesetup = $_REQUEST['coursesetup'][0];
     }
     if(isset($data->courseoforgstructure)) {
@@ -321,7 +321,7 @@ if ($editform->is_cancelled()) {
         // Save any changes to the files used in the editor.
         update_course($data, $editoroptions);
         // Cutstom by Vũ: Đẩy khoá học khi cập nhật realtime qua HRM
-        if($params_hrm) {
+        if(isset($params_hrm)) {
             $quizzes = $DB->get_records_sql('SELECT * FROM {quiz} WHERE course = :course',['course' => $data->id]);
             if($quizzes) {
                 $examcode = [];
