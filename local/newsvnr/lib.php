@@ -473,38 +473,40 @@ function delete_orgposition($orgposition) {
 /**
  * Func tạo Treeview
  */
-function showMenuLi($menus, $table_name)
-{
+function showMenuLi($menus, $table_name) {
     switch ($table_name) {
         case 'mdl_orgstructure':
-            $arr = array();
-                foreach ($menus as $value) {
-                    $arr['id'] = $value->id;
-                    $arr['text'] = $value->name;
-                    $arr['parentid'] = $value->parentid;
-                    $arr['encoded'] = false;
-                    $arr['expanded'] = true;
-                    $data[] = $arr;
-                }
+            $arr = $data = array();
+            foreach ($menus as $value) {
+                $arr['id'] = $value->id;
+                $arr['text'] = $value->name;
+                $arr['parentid'] = $value->parentid;
+                $arr['encoded'] = false;
+                $arr['expanded'] = true;
+                $data[] = $arr;
+            }
+            if(!empty($data)) {
+                foreach($data as $key => &$item) {
 
-               foreach($data as $key => &$item) {
-
-                   $itemsByReference[$item['id']] = &$item;
-                   // Children array:
-                   $itemsByReference[$item['id']]['items'] = array();
-                   // Empty data class (so that json_encode adds "data: {}" )
+                $itemsByReference[$item['id']] = &$item;
+                // Children array:
+                $itemsByReference[$item['id']]['items'] = array();
+                // Empty data class (so that json_encode adds "data: {}" )
                 }
                 // Set items as children of the relevant parent item.
                 foreach($data as $key => &$item)
-                   if($item['parentid'] && isset($itemsByReference[$item['parentid']]))
-                      $itemsByReference [$item['parentid']]['items'][] = &$item;
-
+                if($item['parentid'] && isset($itemsByReference[$item['parentid']]))
+                    $itemsByReference [$item['parentid']]['items'][] = &$item;
                 // Remove items that were added to parents elsewhere:
                 foreach($data as $key => &$item) {
-                   if($item['parentid'] && isset($itemsByReference[$item['parentid']]))
-                      unset($data[$key]);
+                if($item['parentid'] && isset($itemsByReference[$item['parentid']]))
+                    unset($data[$key]);
                 }
+            }
             // Encode:
+            if(empty($data)) {
+                $data['message'] = get_string('emptyorgstructure', 'local_newsvnr');
+            }
             echo json_encode($data);
             break;
         case 'mdl_competency':

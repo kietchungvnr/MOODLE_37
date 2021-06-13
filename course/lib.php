@@ -68,6 +68,7 @@ define('COURSE_DB_QUERY_LIMIT', 1000);
 /** Searching for all courses that have no value for the specified custom field. */
 define('COURSE_CUSTOMFIELD_EMPTY', -1);
 // Custom by Vũ: Đinhn nghĩa loại khóa học
+define('COURSE_DEFAULT_LMS', 0);
 define('COURSE_INTERVIEW_HRM', 1);
 define('COURSE_TRAINING_HRM', 2);
 define('COURSE_PORTAL_EBM', 3);

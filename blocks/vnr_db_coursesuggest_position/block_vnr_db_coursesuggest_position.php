@@ -24,8 +24,12 @@
 
 class block_vnr_db_coursesuggest_position extends block_base {
     public function init() {
-        global $USER, $DB;
-        $this->title = get_string('pluginname', 'block_vnr_db_coursesuggest_position') . ' ('. $DB->get_field('orgstructure_position', 'name', ['id' => $USER->orgpositionid]) .')';
+        global $USER, $DB, $CFG;
+        if($USER->id > 2 && $CFG->sitetype = MOODLE_BUSINESS) {
+            $this->title = get_string('pluginname', 'block_vnr_db_coursesuggest_position') . ' ('. $DB->get_field('orgstructure_position', 'name', ['id' => $USER->orgpositionid]) .')';
+        } else {
+            $this->title = get_string('pluginname', 'block_vnr_db_coursesuggest_position');
+        }
     }
 
     function get_content() {

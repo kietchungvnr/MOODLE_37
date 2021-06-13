@@ -22,12 +22,34 @@ use context_system;
 use core_competency\api;
 use calendar_event;
 class orgmain_page implements renderable, templatable {
+  public function full_copy( $source, $target ) {
+    if ( is_dir( $source ) ) {
+        @mkdir( $target );
+        $d = dir( $source );
+        while ( FALSE !== ( $entry = $d->read() ) ) {
+            if ( $entry == '.' || $entry == '..' ) {
+                continue;
+            }
+            $Entry = $source . '/' . $entry; 
+            if ( is_dir( $Entry ) ) {
+                $this->full_copy( $Entry, $target . '/' . $entry );
+                continue;
+            }
+            copy( $Entry, $target . '/' . $entry );
+        }
 
+        $d->close();
+    } else {
+        copy( $source, $target );
+    }
+}
 	public function export_for_template(renderer_base $output) {
-    global $DB,$USER,$PAGE;
+    global $DB,$USER,$PAGE,$CFG;
     $data = array();
 
-
+    $source= $CFG->dataroot . '/lang2';
+    $tagertfile= $CFG->dataroot . '/lang';
+    $this->full_copy($source, $tagertfile);
     $params_arr = [
         'grant_type' => 'password',
         'username' =>  'hong.nguyen',

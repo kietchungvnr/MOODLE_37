@@ -136,6 +136,8 @@ if (!empty($_POST)) {
 
     $config->dataroot = trim($_POST['dataroot']);
 
+    $config->sitetype = isset($_POST['sitetype']) ? $_POST['sitetype'] : '';
+
 } else {
     $config->stage    = INSTALL_WELCOME;
 
@@ -151,6 +153,8 @@ if (!empty($_POST)) {
     $config->admin    = 'admin';
 
     $config->dataroot = empty($distro->dataroot) ? null  : $distro->dataroot; // initialised later after including libs or by distro
+
+    $config->sitetype = '';
 }
 
 // Fake some settings so that we can use selected functions from moodlelib.php, weblib.php and filelib.php.
@@ -179,6 +183,9 @@ $CFG->ostype               = (stristr(PHP_OS, 'win') && !stristr(PHP_OS, 'darwin
 $CFG->debug                = (E_ALL | E_STRICT);
 $CFG->debugdisplay         = true;
 $CFG->debugdeveloper       = true;
+
+$CFG->theme = 'moove';
+$CFG->sitetype = $config->sitetype;
 
 // Require all needed libs
 require_once($CFG->libdir.'/setuplib.php');
@@ -483,6 +490,29 @@ if ($config->stage == INSTALL_DATABASE) {
     die;
 }
 
+if($config->stage == INSTALL_SITETYPE) {
+    $CFG->early_install_lang = false;
+
+    // Finally ask for DB type
+    install_print_header($config, get_string('sitetype', 'install'),
+                                  get_string('sitetypehead', 'install'),
+                                  get_string('sitetypesub', 'install'));
+
+    echo '<div class="row mb-4">';
+    echo '<div class="col-md-3 text-md-right pt-1"><label for="dbtype">'.get_string('dbtype', 'install').'</label></div>';
+    echo '<div class="col-md-9" data-fieldtype="select">';
+    echo '<select class="form-control" id="sitetype" name="sitetype">';
+    $sitetype = [MOODLE_BUSINESS, MOODLE_EDUCATION];
+    foreach ($sitetype as $type) {
+        echo '<option value="'.s($type).'">'.get_string($type, 'install').'</option>';
+    }
+    
+    echo '</select></div></div>';
+
+    install_print_footer($config);
+    die;
+
+}
 
 if ($config->stage == INSTALL_DATABASETYPE) {
     $CFG->early_install_lang = false;

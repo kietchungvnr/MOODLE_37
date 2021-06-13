@@ -39,7 +39,7 @@ if ($hassiteconfig) { // speedup for non-admins, add all caps used on this page
     // "sitepolicies" settingpage
     $temp = new admin_settingpage('sitepolicies', new lang_string('sitepolicies', 'admin'));
     $temp->add(new admin_setting_configcheckbox('protectusernames', new lang_string('protectusernames', 'admin'), new lang_string('configprotectusernames', 'admin'), 1));
-    $temp->add(new admin_setting_configcheckbox('forcelogin', new lang_string('forcelogin', 'admin'), new lang_string('configforcelogin', 'admin'), 0));
+    $temp->add(new admin_setting_configcheckbox('forcelogin', new lang_string('forcelogin', 'admin'), new lang_string('configforcelogin', 'admin'), 1));
     $temp->add(new admin_setting_configcheckbox('forceloginforprofiles', new lang_string('forceloginforprofiles', 'admin'), new lang_string('configforceloginforprofiles', 'admin'), 1));
     $temp->add(new admin_setting_configcheckbox('forceloginforprofileimage', new lang_string('forceloginforprofileimage', 'admin'), new lang_string('forceloginforprofileimage_help', 'admin'), 0));
     $temp->add(new admin_setting_configcheckbox('opentowebcrawlers', new lang_string('opentowebcrawlers', 'admin'), new lang_string('configopentowebcrawlers', 'admin'), 0));
@@ -93,7 +93,7 @@ if ($hassiteconfig) { // speedup for non-admins, add all caps used on this page
     $temp->add(new admin_setting_configduration('lockoutwindow', new lang_string('lockoutwindow', 'admin'), new lang_string('lockoutwindow_desc', 'admin'), 60*30));
     $temp->add(new admin_setting_configduration('lockoutduration', new lang_string('lockoutduration', 'admin'), new lang_string('lockoutduration_desc', 'admin'), 60*30));
 
-    $temp->add(new admin_setting_configcheckbox('passwordpolicy', new lang_string('passwordpolicy', 'admin'), new lang_string('configpasswordpolicy', 'admin'), 1));
+    $temp->add(new admin_setting_configcheckbox('passwordpolicy', new lang_string('passwordpolicy', 'admin'), new lang_string('configpasswordpolicy', 'admin'), 0));
     $temp->add(new admin_setting_configtext('minpasswordlength', new lang_string('minpasswordlength', 'admin'), new lang_string('configminpasswordlength', 'admin'), 8, PARAM_INT));
     $temp->add(new admin_setting_configtext('minpassworddigits', new lang_string('minpassworddigits', 'admin'), new lang_string('configminpassworddigits', 'admin'), 1, PARAM_INT));
     $temp->add(new admin_setting_configtext('minpasswordlower', new lang_string('minpasswordlower', 'admin'), new lang_string('configminpasswordlower', 'admin'), 1, PARAM_INT));

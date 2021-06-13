@@ -182,7 +182,7 @@ if ($editform->is_cancelled()) {
 } else if ($data = $editform->get_data()) {
 
     //Custom by Vũ: Params and url hrm api
-    $course_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecCourse']);
+    $course_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecCourse', 'visible' => 1]);
     if($course_api) {
         $params_el = [
                     'CourseName' => $data->fullname,
@@ -226,12 +226,12 @@ if ($editform->is_cancelled()) {
         if($course && $course_api) {
             if($params_hrm) {
                 $params_hrm['Status'] = "E_CREATE";
-                if($data->typeofcourse == COURSE_INTERVIEW_HRM || $data->typeofcourse == COURSE_TRANING_HRM) {
+                if($data->typeofcourse == COURSE_INTERVIEW_HRM || $data->typeofcourse == COURSE_TRAINING_HRM) {
                     HTTPPost($url_hrm, $params_hrm);
                 }
             }
         }
-        if(isset($data->courseoforgstructure)) {
+        if(isset($data->courseoforgstructure, $courseofjobtitle, $courseofjobtitle)) {
             foreach ($courseofjobtitle as $jobtitile) {
                 foreach ($courseofposition as $position) {
                     $courseposition_data = new stdClass;
@@ -245,10 +245,10 @@ if ($editform->is_cancelled()) {
                     $courseposition[] = $courseposition_data;
                 }
             }
+            if($course->id & !empty($courseposition)) {
+                $courseposition = $DB->insert_records('course_position',$courseposition);
+            }
         }
-        if($course->id & !empty($courseposition)) {
-            $courseposition = $DB->insert_records('course_position',$courseposition);
-        } 
 
         // Get the context of the newly created course.
         $context = context_course::instance($course->id, MUST_EXIST);

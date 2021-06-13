@@ -23,9 +23,13 @@
  */
 
 class block_vnr_db_lptimeline_userplan extends block_base {
-     public function init() {
-        global $USER, $DB;
-        $this->title = get_string('pluginname', 'block_vnr_db_lptimeline_userplan') . ': ['. $DB->get_field('orgstructure_position', 'name', ['id' => $USER->orgpositionid]) .']';
+    public function init() {
+        global $USER, $DB, $CFG;
+        if($USER->id > 2 && $CFG->sitetype = MOODLE_BUSINESS) {
+            $this->title = get_string('pluginname', 'block_vnr_db_lptimeline_userplan') . ' ('. $DB->get_field('orgstructure_position', 'name', ['id' => $USER->orgpositionid]) .')';
+        } else {
+            $this->title = get_string('pluginname', 'block_vnr_db_lptimeline_userplan');
+        }
     }
     
     function get_content() {
