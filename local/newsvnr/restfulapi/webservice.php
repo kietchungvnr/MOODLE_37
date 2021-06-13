@@ -1779,6 +1779,19 @@ if($action == 'search_teacher') {
 	echo json_encode($data,JSON_UNESCAPED_UNICODE);
 }
 
+if($action == 'search_coursesetup') {
+	$sql = "SELECT *
+			FROM {course_setup}";
+	$get_list = $DB->get_records_sql($sql);
+	$data = [];
+	foreach ($get_list as $value) {
+		$object = new stdclass;
+		$object->coursesetup = $value->fullname;
+		$data[] = $object;
+	}
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+}
+
 
 if($action == "library_folder") {
 	$sql = "SELECT * FROM {library_folder}";

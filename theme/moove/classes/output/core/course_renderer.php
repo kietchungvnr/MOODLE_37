@@ -399,7 +399,7 @@ class course_renderer extends \core_course_renderer {
         //Custom by Vũ: Thêm xem danh sách yêu cầu mở  khoá học
         $courserqurl = new moodle_url('/course/listcourserq.php', array());
         // $output .= $this->container_start('buttons');
-        $output .= '<div class="row"><div class="col-xl-3 col-lg-4 col-md-4 menu-tree-course"><div>';
+        $output .= '<div class="row"><div class="col-xl-3 col-lg-4 col-md-4 menu-tree-course mb-2"><div>';
         if ($coursecat->is_uservisible()) {
             $context = get_category_or_system_context($coursecat->id);
             if (has_capability('moodle/course:create', $context)) {
@@ -433,8 +433,14 @@ class course_renderer extends \core_course_renderer {
         $output .= '</div></div>';
         $output .= '<div class="col-xl-9 col-lg-8 col-md-8 position-relative">';
         $output .= '<div class="loading-page"></div>';
-        $output .= $this->course_teacher_search_form();
-        $output .= $this->course_filter();
+        // Đổi giao diện filter theo từng mô hình
+        if($CFG->sitetype == MOODLE_BUSINESS) {
+            $output .= $this->course_teacher_search_form_sitetype_business();
+        } else {
+            $output .= $this->course_teacher_search_form();
+            $output .= $this->course_filter();
+        }
+        
         $output .= ($category) ? '<div id="load-course" category="'.$category.'">' : '<div id="load-course">' ;
         $output .= '</div></div></div>';
         return $output;
@@ -477,6 +483,51 @@ class course_renderer extends \core_course_renderer {
         $output .= '</select>';
         return $output;
     }
+
+    public function course_teacher_search_form_sitetype_business() {
+        $output = '';
+        $output .= '<div id="courses_search_form" class="pb-0">';
+        $output .= '<div class="row">';
+        $output .= '<div class="col-xl-6 col-6 pl-1 tree-search">';
+        $output .= '<input name="category" type="text" class="courses_search_input" id="category"  placeholder="'.get_string('coursecatogories','local_newsvnr').'" value="">';
+        $output .= '</div>';
+        $output .= '<div class="col-xl-6 col-6 pl-1 tree-search">';
+        $output .= '<input name="coursesetup" type="text" class="courses_search_input" id="coursesetup" placeholder="'.get_string('coursesetup','local_newsvnr').'" value="">';
+        $output .= '</div>';
+        $output .= '<div class="col-xl-6 col-6 pl-1 mt-2 tree-search">';
+        $output .= '<input name="keyword" type="text" class="courses_search_input" id="keyword" placeholder="'.get_string('coursename','local_newsvnr').'" value="">';
+        $output .= '</div>';
+        $output .= '<div class="col-xl-6 col-6 pl-1 mt-2 tree-search">';
+        $output .= '<input name="teacher" type="text" class="courses_search_input" id="teacher" placeholder="'.get_string('teachernames','local_newsvnr').'" value="">';
+        $output .= '</div>';
+        $output .= '<div class="col-12 d-flex mt-2 pl-1">';
+        $output .= $this->course_filter_sitetype_business();
+        $output .= '<button id="courses_search_button" class="search-button ml-auto"><i class="fa fa-search mr-1"></i>'.get_string('search','local_newsvnr').'</button>';
+        $output .= '</div>';
+        $output .= '</div>';
+        $output .= '</div>';
+        return $output;
+    }
+
+    public function course_filter_sitetype_business() {
+        global $DB,$USER;
+        $role = $DB->get_records_sql('SELECT ra.roleid FROM {role_assignments} ra JOIN {user} u ON u.id = ra.userid WHERE u.id =:userid GROUP BY ra.roleid',['userid' => $USER->id]);
+        $output  = '';
+        $output .= '<select class="form-control mr-2" id="course-filter">';
+        $output .= '<option value="allcourse">'.get_string('filtercourseall','local_newsvnr').'</option>';
+        $output .= '<option value="coursepopular">'.get_string('filtercoursepopular','local_newsvnr').'</option>';
+        foreach ($role as $value) {
+            if($value->roleid == 5 || is_siteadmin()) {
+                $output .= '<option value="mycourse" >'.get_string('mycourses','theme_moove').'</option>';
+            }
+            if($value->roleid == 3 || is_siteadmin()) {
+                $output .= '<option value="teachercourse" >'.get_string('owncourses','theme_moove').'</option>';
+            }
+        }
+        $output .= '</select>';
+        return $output;
+    }
+
     public function menucoursecategory($menus, $id_parent = 0, &$output = '', $stt = 0) {
         global $DB, $CFG;
         $menu_tmp = array();
