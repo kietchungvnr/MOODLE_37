@@ -36,6 +36,8 @@ $PAGE->set_url($url);
 $PAGE->set_title($title);
 
 $PAGE->set_heading($title);
+$PAGE->navbar->add(get_string('siteadmin','local_newsvnr'),$CFG->wwwroot.'/admin/search.php');
+$PAGE->navbar->add(get_string('user','local_newsvnr'),$CFG->wwwroot.'/admin/search.php#linkusers');
 $PAGE->navbar->add($title,$url);
 $PAGE->navbar->ignore_active();
 $PAGE->requires->js_call_amd('local_newsvnr/user_report', 'init');
