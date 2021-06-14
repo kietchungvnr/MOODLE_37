@@ -693,3 +693,4 @@ $string['dashboardroledesc'] = 'Chọn làm dashboard mặc định';
 $string['editorg'] = 'Chỉnh sửa phòng ban';
 $string['siteadmin'] = 'Quản trị hệ thống';
 $string['reportlearning'] = 'Báo cáo đào tạo';
+$string['nextroute'] = 'Lộ trình kế cận';

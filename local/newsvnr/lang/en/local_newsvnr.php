@@ -696,3 +696,4 @@ $string['dashboardroledesc'] = 'Select dashboard role default';
 $string['editorgstructure'] = 'Edit orgstructure';
 $string['siteadmin'] = 'Site administration';
 $string['reportlearning'] = 'Learning report';
+$string['nextroute'] = 'Next route';

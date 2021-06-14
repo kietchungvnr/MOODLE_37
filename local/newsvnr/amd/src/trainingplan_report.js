@@ -94,7 +94,6 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         var colums = [
             {
                 template:function(e) {
-                    return e.name;
                     return  e.useravatar + "<a href='"+ e.userhref +"' target='_blank'>"+ e.name +"</a>"
                 },
                 field: "name",
@@ -102,6 +101,9 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                 width: "100px"
             },
             {
+                template:function(e) {
+                    return "<a href='"+ e.routehref +"' target='_blank'>"+ e.routename +"</a>"
+                },
                 field: "routename",
                 title: M.util.get_string('currentplan', 'local_newsvnr'),
                 width: "120px"
@@ -124,6 +126,16 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                 field: "timecompleted",
                 title: M.util.get_string('timefinishcourse', 'local_newsvnr'),
                 width: "70px"
+            },
+            {
+                field: "timecompleted",
+                title: M.util.get_string('timefinishcourse', 'local_newsvnr'),
+                width: "70px"
+            },
+            {
+                field: "routenear",
+                title: M.util.get_string('nextroute', 'local_newsvnr'),
+                width: "70px" 
             }
         ];
         var toolbar = ["excel"]
