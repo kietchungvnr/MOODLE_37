@@ -81,7 +81,7 @@ $sql = "SELECT *, (SELECT COUNT(*) from mdl_competency_template ct
                             JOIN mdl_competency_plan cp on cp.templateid = ct.id
                             JOIN mdl_user us on us.id = cp.userid $wheresql) AS total
                 FROM (
-                    SELECT DISTINCT ROW_NUMBER() OVER (ORDER BY us.id) as RowNum,us.id as userid,ct.shortname as routename,CONCAT(us.firstname,' ',us.lastname) as name,cp.id as planid,cp.status,cp.timemodified
+                    SELECT DISTINCT ROW_NUMBER() OVER (ORDER BY us.id) as RowNum,us.id as userid,cp.id as routeid,ct.shortname as routename,CONCAT(us.firstname,' ',us.lastname) as name,cp.id as planid,cp.status,cp.timemodified
                         from mdl_competency_template ct
                             JOIN mdl_competency_plan cp on cp.templateid = ct.id
                             JOIN mdl_user us on us.id = cp.userid $wheresql
@@ -99,12 +99,19 @@ foreach ($get_list as $value) {
             $proficiency++;
         }
     }
-    $user               = $DB->get_record("user", ['id' => $value->userid]);
+    $user         = $DB->get_record("user", ['id' => $value->userid]);
+    $userposition = $DB->get_record("orgstructure_position", ['id' => $user->orgpositionid]);
+    if ($userposition) {
+        $nearposition = $DB->get_record_sql("select top 1 * from mdl_orgstructure_position where orgstructureid = :orgstructureid and level > :level order by level asc", ['orgstructureid' => $userposition->orgstructureid, 'level' => $userposition->orgstructureid]);
+        $routenear    = $DB->get_record('competency_template',['positionid' => $nearposition->id]);
+    }
     $object             = new stdClass();
     $object->useravatar = $OUTPUT->user_picture($user);
     $object->userhref   = $CFG->wwwroot . '/user/profile.php?id=' . $value->userid;
     $object->name       = $value->name;
+    $object->routehref  = $CFG->wwwroot . '/admin/tool/lp/plan.php?id=' . $value->routeid;
     $object->routename  = $value->routename;
+    $object->routenear  = ($routenear) ? $routenear->shortname : '-';
     if (!empty($comptencys)) {
         $object->process = round(($proficiency / count($comptencys)) * 100);
     } else {
@@ -121,7 +128,7 @@ foreach ($get_list as $value) {
         }
     }
     $object->classstatus   = ($object->process == 100 || $value->status == 2) ? 'teacher-bg-3' : 'teacher-bg-2';
-    $object->status        = ($object->process == 100 || $value->status == 2) ? get_string('finished','local_newsvnr') : get_string('unfinished','local_newsvnr') ;
+    $object->status        = ($object->process == 100 || $value->status == 2) ? get_string('finished', 'local_newsvnr') : get_string('unfinished', 'local_newsvnr');
     $object->timecompleted = ($value->status == 2) ? convertunixtime('d/m/Y', $value->timemodified, 'Asia/Ho_Chi_Minh') : '-';
     $object->total         = $value->total;
     $data[]                = $object;

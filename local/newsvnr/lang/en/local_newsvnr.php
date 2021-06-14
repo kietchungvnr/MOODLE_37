@@ -698,3 +698,4 @@ $string['siteadmin'] = 'Site administration';
 $string['reportlearning'] = 'Learning report';
 $string['emptyorgstructure'] = 'No departments have been initialized in the system yet, please check the department section to continue!';
 $string['invalidcoursesetup'] = 'Course setup not exists';
+$string['nextroute'] = 'Next route';

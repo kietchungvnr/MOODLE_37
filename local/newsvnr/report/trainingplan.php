@@ -43,7 +43,7 @@ $PAGE->navbar->ignore_active();
 $PAGE->set_pagetype('trainingplan-report');
 $PAGE->requires->js_call_amd('local_newsvnr/trainingplan_report', 'init');
 $PAGE->requires->js_call_amd('local_newsvnr/trainingplan_report', 'kendoDropdown');
-$PAGE->requires->strings_for_js(array('emptydata','selectorgstructuretype','selectorgstructure','selectjobtitle','selectjobposition','selectcourse','studentcode','action','studentname','status','timefinishcourse','reviewer','course','selectplan','select','progress','currentplan'), 'local_newsvnr'); 	
+$PAGE->requires->strings_for_js(array('emptydata','selectorgstructuretype','selectorgstructure','selectjobtitle','selectjobposition','selectcourse','studentcode','action','studentname','status','timefinishcourse','reviewer','course','selectplan','select','progress','currentplan','nextroute'), 'local_newsvnr'); 	
 $page = new \local_newsvnr\output\trainingplan_report_page();
 
 $output = $PAGE->get_renderer('local_newsvnr');
