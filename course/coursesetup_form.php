@@ -65,6 +65,11 @@ class coursesetup_form extends moodleform {
         $mform->addRule('shortname_cs', get_string('required'), 'required', null, 'client');
         $mform->setType('shortname_cs', PARAM_TEXT);
 
+        $choices = array();
+        $choices['0'] = get_string('hide');
+        $choices['1'] = get_string('show');
+        $mform->addElement('select', 'visible', get_string('visible', 'local_newsvnr'), $choices);
+        $mform->setDefault('visible', 1);
 
         $mform->addElement('textarea', 'description', get_string('description', 'local_newsvnr'),'wrap="virtual" rows="10" cols="52"');
         // $mform->addRule('description',get_string('required'),'required',null,'client');
