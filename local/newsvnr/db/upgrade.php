@@ -2,16 +2,22 @@
 defined('MOODLE_INTERNAL') || die;
 
 function xmldb_local_newsvnr_upgrade($oldversion) {
-    global $CFG;
+    global $DB;
 
-    // Automatically generated Moodle v3.7.0 release upgrade line.
-    // Put any upgrade step following this.
+    $dbman = $DB->get_manager(); // Loads ddl manager and xmldb classes.
 
-    // Automatically generated Moodle v3.8.0 release upgrade line.
-    // Put any upgrade step following this.
+    if ($oldversion < 2019032722 ) {
+        $table = new xmldb_table('course_setup');
+        // Conditionally launch add field completionscorerequired.
+        if (!$dbman->field_exists($table, 'visible')) {
+            $dbman->add_field(
+                $table,
+                new xmldb_field('visible', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, 1, 'shortname')
+            );
+        }
+        // Main savepoint reached.
+        upgrade_plugin_savepoint(true, 2019032722, 'local', 'newsvnr');
+    }
 
-    // Automatically generated Moodle v3.9.0 release upgrade line.
-    // Put any upgrade step following this.
-    // 
     return true;
 }

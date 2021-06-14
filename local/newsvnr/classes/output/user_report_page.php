@@ -26,7 +26,6 @@
 namespace local_newsvnr\output;
 
 require_once('../lib.php');
-require_once("$CFG->dirroot/webservice/externallib.php");
 use renderable;
 use templatable;
 use renderer_base;
@@ -34,13 +33,15 @@ use stdClass;
 
 class user_report_page implements renderable, templatable  {
     public function export_for_template(renderer_base $output) {
-        global $DB,$CFG;
-        $data = array();
+        global $CFG;
+        $data = [];
         $data['confirm'] = $CFG->wwwroot . '/admin/user/user_bulk_confirm.php';
         $data['message'] = $CFG->wwwroot . '/admin/user/user_bulk_message.php';
         $data['display'] = $CFG->wwwroot . '/admin/user/user_bulk_display.php';
         $data['password'] = $CFG->wwwroot . '/admin/user/user_bulk_forcepasswordchange.php';
         $data['group'] = $CFG->wwwroot . '/admin/user/user_bulk_cohortadd.php';
+        if($CFG->sitetype == MOODLE_BUSINESS)
+            $data['isbusiness'] = true;
         return $data;
     }
 

@@ -15,7 +15,7 @@
 	  	<div class="dropdown-menu report user-report d-none" aria-labelledby="dropdownMenuButton">
             <ul class="nav-tabs nav multi-tab" tab="searchuser" style="padding: 0 25px;">
                 <li class="nav-item"><a href="javascript:void(0)" class="nav-link active" data-key="account">{{#str}} accountinfo , local_newsvnr {{/str}}</a></li>
-                <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="department">{{#str}} orgstructure , local_newsvnr {{/str}}</a></li>
+                {{#isbusiness}}<li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="department">{{#str}} orgstructure , local_newsvnr {{/str}}</a></li>{{/isbusiness}}
                 <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-key="advanced">{{#str}} searchadvance , local_newsvnr {{/str}}</a></li>
             </ul>
             <div class="tab-content" tab="searchuser" style="padding: 1.25rem">
