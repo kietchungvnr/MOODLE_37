@@ -694,3 +694,4 @@ $string['editorg'] = 'Chỉnh sửa phòng ban';
 $string['siteadmin'] = 'Quản trị hệ thống';
 $string['reportlearning'] = 'Báo cáo đào tạo';
 $string['emptyorgstructure'] = 'Chưa có phòng ban nào được khởi tạo trong hệ thống, vui lòng kiểm tra lại mục phòng ban để tiếp tục!';
+$string['invalidcoursesetup'] = 'Khóa setup không tồn tại';

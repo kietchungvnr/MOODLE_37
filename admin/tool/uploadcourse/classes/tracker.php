@@ -52,7 +52,7 @@ class tool_uploadcourse_tracker {
     /**
      * @var array columns to display.
      */
-    protected $columns = array('line', 'result', 'id', 'shortname', 'fullname', 'idnumber', 'status');
+    protected $columns = array('line', 'result', 'id', 'shortname', 'fullname', 'coursesetupshortname','idnumber', 'status');
 
     /**
      * @var int row number.
@@ -142,7 +142,7 @@ class tool_uploadcourse_tracker {
      * @return void
      */
     public function output($line, $outcome, $status, $data) {
-        global $OUTPUT;
+        global $OUTPUT, $CFG;
         if ($this->outputmode == self::NO_OUTPUT) {
             return;
         }
@@ -179,6 +179,9 @@ class tool_uploadcourse_tracker {
             echo html_writer::tag('td', isset($data['id']) ? $data['id'] : '', array('class' => 'c' . $ci++));
             echo html_writer::tag('td', isset($data['shortname']) ? $data['shortname'] : '', array('class' => 'c' . $ci++));
             echo html_writer::tag('td', isset($data['fullname']) ? $data['fullname'] : '', array('class' => 'c' . $ci++));
+            if($CFG->sitetype == MOODLE_BUSINESS) {
+                echo html_writer::tag('td', isset($data['coursesetupshortname']) ? $data['coursesetupshortname'] : '', array('class' => 'c' . $ci++));
+            }
             echo html_writer::tag('td', isset($data['idnumber']) ? $data['idnumber'] : '', array('class' => 'c' . $ci++));
             echo html_writer::tag('td', $status, array('class' => 'c' . $ci++));
             echo html_writer::end_tag('tr');
@@ -191,6 +194,7 @@ class tool_uploadcourse_tracker {
      * @return void
      */
     public function start() {
+        global $CFG;
         if ($this->outputmode == self::NO_OUTPUT) {
             return;
         }
@@ -211,6 +215,9 @@ class tool_uploadcourse_tracker {
             echo html_writer::tag('th', get_string('id', 'tool_uploadcourse'), array('class' => 'c' . $ci++, 'scope' => 'col'));
             echo html_writer::tag('th', get_string('shortname'), array('class' => 'c' . $ci++, 'scope' => 'col'));
             echo html_writer::tag('th', get_string('fullname'), array('class' => 'c' . $ci++, 'scope' => 'col'));
+            if($CFG->sitetype == MOODLE_BUSINESS) {
+                echo html_writer::tag('th', 'Khóa setup', array('class' => 'c' . $ci++, 'scope' => 'col'));
+            }
             echo html_writer::tag('th', get_string('idnumber'), array('class' => 'c' . $ci++, 'scope' => 'col'));
             echo html_writer::tag('th', get_string('status'), array('class' => 'c' . $ci++, 'scope' => 'col'));
             echo html_writer::end_tag('tr');
