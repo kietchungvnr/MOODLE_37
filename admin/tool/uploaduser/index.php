@@ -275,7 +275,7 @@ if ($formdata = $mform2->is_cancelled()) {
                 $error = true;
             }
 
-            if(!$DB->record_exists('orgstructure_position',['name' => $user->orgpositionname])) {
+            if(isset($user->orgpositionname) && !$DB->record_exists('orgstructure_position',['name' => $user->orgpositionname])) {
                 $upt->track('orgpositionname', get_string('invalidorgposition','local_newsvnr'),'error');
                 $error = true;
             }
@@ -846,7 +846,7 @@ if ($formdata = $mform2->is_cancelled()) {
                 $upt->track('password', '-', 'normal', false);
             }
 
-            if($user->orgpositionname) {
+            if(isset($user->orgpositionname)) {
                 $user->orgpositionid = $DB->get_field('orgstructure_position', 'id', ['name' => $user->orgpositionname]);
             }
 
