@@ -137,6 +137,63 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
 
 {{/js}}
 <script type="text/javascript">
+    function exportExcelKendo(gridname,rows) {
+            var grid = $(gridname).getKendoGrid();
+            var trs = $(gridname).find('tr');
+            for (var i = 0; i < trs.length; i++) {
+                if ($(trs[i]).find(":checkbox").is(":checked")) {
+                    var dataItem = grid.dataItem(trs[i]);
+                    if(gridname == '#learning_report') {
+                        rows.push({
+                          cells: [
+                            { value: dataItem.name },
+                            { value: dataItem.coursename },
+                            { value: dataItem.process },
+                            { value: dataItem.status },
+                            { value: dataItem.timestart },
+                            { value: dataItem.timecompleted },
+                            { value: dataItem.timeaccess },
+                            { value: dataItem.grade },
+                          ]
+                        })
+                    }
+                    else if(gridname == '#competency_report') {
+                        rows.push({
+                          cells: [
+                            { value: dataItem.name },
+                            { value: dataItem.competencyname },
+                            { value: dataItem.coursename },
+                            { value: dataItem.planname },
+                            { value: dataItem.status },
+                            { value: dataItem.timecompleted },
+                            { value: dataItem.reviewer }
+                          ]
+                        })
+                    }
+                    else if(gridname == '#trainingplan_report') {
+                        rows.push({
+                          cells: [
+                            { value: dataItem.name },
+                            { value: dataItem.routename },
+                            { value: dataItem.process },
+                            { value: dataItem.status },
+                            { value: dataItem.timecompleted },
+                          ]
+                        })
+                    }
+                }
+            }
+            var workbook = new kendo.ooxml.Workbook({
+                sheets: [
+                    {
+                      title: "Orders",
+                      rows: rows
+                    }
+                ]
+            });
+            kendo.saveAs({dataURI: workbook.toDataURL(), fileName: "Report.xlsx"});
+    }
+
     $(document).ready(function() {
         $('body').removeClass('loading');
     })
