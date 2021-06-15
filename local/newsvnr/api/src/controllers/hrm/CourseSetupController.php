@@ -54,6 +54,11 @@ class CourseSetupController extends BaseController {
 		    $this->data->shortname = $request->getParam('code');
 		    $this->data->parentname = $request->getParam('parentname');
 		    $this->data->parentid = $request->getParam('parentid');
+		    if(isset($this->data->visible)) {
+		    	$this->data->visible = $request->getParam('visible');
+		    } else {
+		    	$this->data->visible = 1;
+		    }
 		    $this->data->description = $request->getParam('description');
 
 	    } else {
