@@ -331,17 +331,6 @@ if ($ADMIN->fulltree) {
     get_string('listmenuitemdesc', 'local_newsvnr'), [], $listmenuitem);
     $page->add($setting);
 
-    // Select type dashboard default
-    $name = 'theme_moove/dashboardrole';
-    $listdashboard = [
-            'default' => get_string('default','local_newsvnr'),
-            'admin' => 'Dashboard admin',
-            'student' => get_string('studentdashboard', 'local_newsvnr'),
-            'teacher' => get_string('teacherdashboard','local_newsvnr'),
-    ];
-    $setting = new admin_setting_configselect($name, get_string('dashboardrole','local_newsvnr'),get_string('dashboardroledesc','local_newsvnr'), $default , $listdashboard);
-    $page->add($setting);
-
     // Change portal to full funcs
     $name = 'theme_moove/fullsite';
     $title = get_string('fullsite', 'theme_moove');
