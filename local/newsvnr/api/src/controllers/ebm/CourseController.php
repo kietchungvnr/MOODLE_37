@@ -212,7 +212,8 @@ class CourseController extends BaseController {
 					$this->resp->data[] = $arrtempb;
 				} catch (Exception $e) {
 					$this->resp->error = true;
-					$this->resp->data->message['info'] = "Chỉnh sửa thất bại với lỗi: $e->getMessage()";
+					$error = $e->getMessage();
+					$this->resp->data->message['info'] = "Chỉnh sửa thất bại với lỗi: $error";
 				}		
 			} else {
 				$this->resp->error = true;
@@ -320,7 +321,8 @@ class CourseController extends BaseController {
 					$this->resp->data[] = $arrtempb;
 				} catch (Exception $e) {
 					$this->resp->error = true;
-					$this->resp->data->message['info'] = "Tạo mới thất bại với lỗi: $e->getMessage()";
+					$error = $e->getMessage();
+					$this->resp->data->message['info'] = "Tạo mới thất bại với lỗi: $error";
 				}		
 			} else {
 				$this->resp->error = true;
