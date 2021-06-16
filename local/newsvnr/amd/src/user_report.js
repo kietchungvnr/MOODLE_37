@@ -158,6 +158,11 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                 width: "100px"
             },
             {
+                field: "username",
+                title: M.util.get_string('username_login', 'local_newsvnr'),
+                width: "100px"
+            },
+            {
                 field: "email",
                 title: M.util.get_string('email', 'local_newsvnr'),
                 width: "130px"

@@ -116,6 +116,7 @@ foreach ($get_list as $value) {
     $object->suspended   = $value->suspended;
     $object->useravatar  = $OUTPUT->user_picture($user);
     $object->name        = $value->name;
+    $object->username    = $value->username;
     $object->href        = $CFG->wwwroot . '/user/profile.php?id=' . $value->id;
     $object->shortname   = (isset($value->usercode)) ? $value->usercode : '';
     $object->email       = $value->email;
