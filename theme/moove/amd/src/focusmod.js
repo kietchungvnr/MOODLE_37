@@ -296,19 +296,6 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         $('.back-focusmod').click(function() {
             $('#focus-mod').click();
         })
-        // swipe app 
-        var width = $(window).width();
-        if(width <= 576) {
-            $("html").kendoTouch({
-                enableSwipe: true,
-                swipe: function(e) { 
-                    $('.tab-pane.active').toggle('slide', function(){
-                        $(this).next().toggle('slide', function() {
-                        })
-                    })
-                }
-            });
-        }
         // Hàm tạo session 
         function createSession(devicemobile) {
             var settings = {
