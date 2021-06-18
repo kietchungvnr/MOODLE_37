@@ -1423,6 +1423,7 @@ function file_save_draft_area_files($draftitemid, $contextid, $component, $filea
                 $requestfile = new stdClass;
                 $requestfile->fileid = $storedfile->get_id();
                 $requestfile->requester = $USER->id;
+                $requestfile->reviewer = 0;
                 $requestfile->timecreated = time();
                 $requestfile->timemodified = time();
                 $DB->insert_record('files_request', $requestfile);

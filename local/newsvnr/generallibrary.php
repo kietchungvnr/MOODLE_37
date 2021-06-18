@@ -63,8 +63,8 @@ if(has_capability('local/newsvnr:createfoldersystem', $user_context)) {
 } else {
     $subdirs = 0;
 }
-$accepted_types = ['.png','.doc','.docx','.pdf','.rtf','.tex','.txt','.xls','.xlsm','.xlsx','.ppt','.pptx','.jpeg','.jpg','j.ar','.zip','.rar'];
-$options = array('subdirs' => $subdirs, 'maxbytes' => $maxbytes, 'maxfiles' => -1, array('accepted_types' => $accepted_types));
+$accepted_types = ['.png','.doc','.docx','.pdf','.txt','.xls','.xlsm','.xlsx','.ppt','.pptx','.jpeg','.jpg','.zip','.rar'];
+$options = array('subdirs' => $subdirs, 'maxbytes' => $maxbytes, 'maxfiles' => -1, 'accepted_types' => $accepted_types, 'display_accepted_types' => false);
 
 
 // $options['generallibrary'] = true;

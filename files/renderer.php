@@ -160,6 +160,7 @@ class core_files_renderer extends plugin_renderer_base {
                 $deletefilesystem = 'gl-delete-none';
             }
             $context['deletefilesystem'] = $deletefilesystem;
+            $context['helpfilesystem'] = true;
         }
 
         return $this->render_from_template('core/filemanager_page_generallayout', $context);
