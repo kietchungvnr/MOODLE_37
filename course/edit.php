@@ -209,9 +209,9 @@ if ($editform->is_cancelled()) {
     }
     $courseposition = [];
     
-    if($data->courseofposition)
+    if(isset($data->courseofposition))
         $courseofposition = $data->courseofposition;
-    if($data->courseofposition)
+    if(isset($data->courseofjobtitle))
         $courseofjobtitle = $data->courseofjobtitle;
     //Nếu bảng course k còn pb - cd - cv thì không cần những dòng này
     unset($data->courseofposition);

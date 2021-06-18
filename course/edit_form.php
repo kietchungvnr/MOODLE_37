@@ -76,7 +76,9 @@ class course_edit_form extends moodleform {
 
         // Custom by Vũ: Thêm field mã khóa (code)
         $mform->addElement('text', 'code', get_string('codecourse', 'local_newsvnr'), 'maxlength="100" size="50"');
-        $mform->addRule('code', get_string('missingcode', 'local_newsvnr'), 'required', null, 'client');
+        if($CFG->sitetype == MOODLE_BUSINESS) {
+            $mform->addRule('code', get_string('missingcode', 'local_newsvnr'), 'required', null, 'client');
+        }
         $mform->setType('code', PARAM_TEXT);
 
         // Verify permissions to change course category or keep current.

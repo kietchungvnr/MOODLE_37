@@ -80,15 +80,15 @@ class CourseController extends BaseController {
 		    $this->data->sectionname = $request->getParam('sectionname');
 		    $this->data->usercode = $request->getParam('usercode');
 		    $this->data->idnumber = '';
-			$this->data->format = 'topics';
+			$this->data->format = 'topcoll';
 			$this->data->showgrades = 1;
-			$this->data->numsections = 0;
+			// $this->data->numsections = 0;
 			$this->data->newsitems = 10;
 			$this->data->visible = 1;
 			$this->data->showreports = 1;
 			$this->data->summary = '';
 			$this->data->summaryformat = FORMAT_HTML;
-			$this->data->lang = 'vi';
+			// $this->data->lang = 'vi';
 			$this->data->typeofcourse = 3;
 			$this->data->enablecompletion = 1;
 
