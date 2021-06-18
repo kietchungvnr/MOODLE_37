@@ -700,3 +700,5 @@ $string['emptyorgstructure'] = 'No departments have been initialized in the syst
 $string['invalidcoursesetup'] = 'Course setup not exists';
 $string['nextroute'] = 'Next route';
 $string['studentenrolcourse/all'] = 'Student enrol course/All';
+$string['division'] = 'Division';
+$string['divisionmanagement'] = 'Division management';

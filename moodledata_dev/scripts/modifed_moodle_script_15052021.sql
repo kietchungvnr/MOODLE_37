@@ -376,3 +376,23 @@ CREATE TABLE mdl_email_template
 	usermodified BIGINT NOT NULL,
 )
 --- *** Kết thúc script cho bản build version '15052021' ***--
+
+--- *** Script cho bản build version '14062021' *** ---
+-- Bảng lưu danh sách chi nhánh
+CREATE TABLE mdl_division
+(
+	id bigint NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+	code nvarchar (255) NOT NULL ,
+	divisionname nvarchar (255) NOT NULL,
+	address nvarchar (255) NULL,
+	shortname nvarchar (255) NULL,
+	isactive bigint NOT NULL,
+	dateupdate bigint NULL,
+	datecreated bigint NOT NULL,
+	userupdate bigint NULL,
+	usercreated bigint NOT NULL,
+	phone nvarchar (255) NULL,
+	fax nvarchar (255) NULL,
+	website nvarchar (255) NULL
+)
+--- *** Kết thúc script cho bản build version '14062021' ***--
