@@ -24,8 +24,8 @@
 
 $string['pluginname'] = 'Khóa học của tôi';
 $string['countstudent'] = 'Học viên';
-$string['block_vnr_db_courseinfo_management:addinstance'] = 'Thêm mới block khóa học của tôi';
-$string['block_vnr_db_courseinfo_management:myaddinstance'] = 'Thêm mới block khóa học của tôi vào nhà của tôi';
+$string['vnr_db_mycourse:addinstance'] = 'Thêm mới block khóa học của tôi';
+$string['vnr_db_mycourse:myaddinstance'] = 'Thêm mới block khóa học của tôi vào nhà của tôi';
 $string['timeopencourse'] = "Thời gian mở lớp";
 $string['timeendcourse'] = "Thời gian kết thúc";
 $string['number'] = "STT";

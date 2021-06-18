@@ -1002,3 +1002,4 @@ $string['questiontotal'] = 'Question total';
 $string['changeallmark'] = 'Change';
 $string['selectallquestion'] = 'Select all';
 $string['changeallmarksuccess'] = 'Change all mark success!';
+$string['quizreport'] = 'Quiz report';
