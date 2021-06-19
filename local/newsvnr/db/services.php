@@ -103,6 +103,14 @@ $functions = array(
         'type' => 'read',
         'ajax' => true,
         'capabilities'=> '',
-    )
-
+    ),
+    'local_newsvnr_loadingdivision' => array(
+        'classname' => 'local_newsvnr_external',
+        'methodname' => 'loadingdivision',
+        'classpath' => 'local/newsvnr/externallib.php',
+        'description' => 'Get The division',
+        'type' => 'read',
+        'ajax' => true,
+        'capabilities'=> '',
+    ),
 );

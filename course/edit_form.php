@@ -119,6 +119,24 @@ class course_edit_form extends moodleform {
 
         $mform->addElement('select', 'typeofcourse', get_string('typeofcourse','local_newsvnr'), $typescourse);
         $mform->setType('typeofcourse', PARAM_INT);
+
+        //Lấy danh sách chi nhánh
+        if($CFG->sitetype == MOODLE_EDUCATION) {
+            $division_options = array(
+                'ajax' => 'local_newsvnr/form-search-division',
+                'placeholder' => get_string('search', 'local_newsvnr'),
+                'multiple' => false,                                                  
+                'noselectionstring' => get_string('novalue', 'local_newsvnr'),
+            );
+            $coursesetuplist = $DB->get_records('division');
+            $coursesetupnames = array();
+            foreach ($coursesetuplist as $key => $value) {
+                $coursesetupnames[$key] = $value->divisionname;
+            }
+            $mform->addElement('autocomplete', 'divisionid', get_string('division','local_newsvnr'), $coursesetupnames, $division_options);
+            $mform->setType('divisionid', PARAM_TEXT);
+        }
+
         if($CFG->sitetype == MOODLE_BUSINESS) {
             $orgjobtitle_options = array(
                 'placeholder' => get_string('search', 'local_newsvnr'),
