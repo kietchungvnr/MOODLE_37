@@ -108,22 +108,7 @@ class user_editadvanced_form extends moodleform {
         $mform->addHelpButton('usercode', 'usercode', 'local_newsvnr');
         $mform->setType('usercode', PARAM_RAW);
 
-        // Custom by Thắng:Lấy danh sách chi nhánh
-        if($CFG->sitetype == MOODLE_EDUCATION) {
-            $division_options = array(
-                'ajax' => 'local_newsvnr/form-search-division',
-                'placeholder' => get_string('search', 'local_newsvnr'),
-                'multiple' => false,                                                  
-                'noselectionstring' => get_string('novalue', 'local_newsvnr'),
-            );
-            $coursesetuplist = $DB->get_records('division');
-            $coursesetupnames = array();
-            foreach ($coursesetuplist as $key => $value) {
-                $coursesetupnames[$key] = $value->divisionname;
-            }
-            $mform->addElement('autocomplete', 'divisionid', get_string('division','local_newsvnr'), $coursesetupnames, $division_options);
-            $mform->setType('divisionid', PARAM_TEXT);
-        }
+        
 
         if($CFG->sitetype == MOODLE_BUSINESS) {
             if($userid == -1) {
@@ -160,6 +145,37 @@ class user_editadvanced_form extends moodleform {
                 $mform->addElement('autocomplete', 'orgpositionid', get_string('orgpositionid', 'local_newsvnr'), $orgpositionnames, $options);
                 // $mform->addRule('orgpositionid', get_string('required'), 'required', null, 'client');
                 $mform->setType('orgpositionid', PARAM_INT);
+            }
+        } elseif ($CFG->sitetype == MOODLE_EDUCATION) {
+            // Custom by Thắng:Lấy danh sách chi nhánh
+            if($userid == -1) {
+                $division_options = array(
+                    'ajax' => 'local_newsvnr/form-search-division',
+                    'placeholder' => get_string('search', 'local_newsvnr'),
+                    'multiple' => false,                                                  
+                    'noselectionstring' => get_string('novalue', 'local_newsvnr'),
+                );
+                $coursesetuplist = $DB->get_records('division');
+                $coursesetupnames = array();
+                foreach ($coursesetuplist as $key => $value) {
+                    $coursesetupnames[$key] = $value->divisionname;
+                }
+                $mform->addElement('autocomplete', 'divisionid', get_string('division','local_newsvnr'), $coursesetupnames, $division_options);
+                $mform->setType('divisionid', PARAM_TEXT);
+            } elseif($userid > 2 && $user->typeofuser == 0) {
+                $division_options = array(
+                    'ajax' => 'local_newsvnr/form-search-division',
+                    'placeholder' => get_string('search', 'local_newsvnr'),
+                    'multiple' => false,                                                  
+                    'noselectionstring' => get_string('novalue', 'local_newsvnr'),
+                );
+                $coursesetuplist = $DB->get_records('division');
+                $coursesetupnames = array();
+                foreach ($coursesetuplist as $key => $value) {
+                    $coursesetupnames[$key] = $value->divisionname;
+                }
+                $mform->addElement('autocomplete', 'divisionid', get_string('division','local_newsvnr'), $coursesetupnames, $division_options);
+                $mform->setType('divisionid', PARAM_TEXT);
             }
         }
         /* --- ** --- */
