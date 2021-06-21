@@ -19,7 +19,7 @@ function xmldb_local_newsvnr_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2019032724, 'local', 'newsvnr');
     }
 
-    if ($oldversion < 2019032724.25) {
+    if ($oldversion < 2019032924.01) {
 
         $table = new xmldb_table('division');
 
@@ -42,12 +42,6 @@ function xmldb_local_newsvnr_upgrade($oldversion) {
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
-        
-        // Main savepoint reached.
-        upgrade_plugin_savepoint(true, 2019032724.25, 'local', 'newsvnr');
-    }
-
-    if ($oldversion < 2019032724.26) {
 
         $table = new xmldb_table('division_categories');
 
@@ -65,9 +59,9 @@ function xmldb_local_newsvnr_upgrade($oldversion) {
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
-
+        
         // Main savepoint reached.
-        upgrade_plugin_savepoint(true, 2019032724.26, 'local', 'newsvnr');
+        upgrade_plugin_savepoint(true, 2019032924.01, 'local', 'newsvnr');
     }
 
     return true;
