@@ -395,4 +395,13 @@ CREATE TABLE mdl_division
 	fax nvarchar (255) NULL,
 	website nvarchar (255) NULL
 )
+CREATE TABLE mdl_categories_division
+(
+	id bigint NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+	coursecategorysid bigint NOT NULL ,
+	divisionid bigint NOT NULL,
+	datecreate bigint NOT NULL ,
+	usercreate bigint NOT NULL,
+)
+ALTER TABLE mdl_course ADD divisionid bigint NULL
 --- *** Kết thúc script cho bản build version '14062021' ***--

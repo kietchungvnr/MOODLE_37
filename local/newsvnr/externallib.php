@@ -90,7 +90,52 @@ class local_newsvnr_external extends external_api {
             )
         );
     }
+    //loading division from course categoryid
+    public static function loadingdivision_allowed_from_ajax() {
+        return true;
+    }
 
+    public static function loadingdivision_parameters() {
+        return new external_function_parameters(
+            array(
+                'categoryid' => new external_value(PARAM_RAW, 'The orgstructure id'),
+            )    
+        );
+    }
+
+    public static function loadingdivision($categoryid = null) {
+        global $DB;
+        $params = self::validate_parameters(self::loadingdivision_parameters(), 
+                array(
+                        'categoryid' => $categoryid,
+                    ));
+        if($categoryid) {
+            $sql = "SELECT d.* FROM mdl_division d 
+                                JOIN mdl_categories_division cd on cd.divisionid = d.id
+                            WHERE cd.coursecategorysid = ?";
+            $result = [];
+            $data = $DB->get_records_sql($sql,[$params['categoryid']]);
+        } else {
+            $sql = "SELECT * FROM {division}";
+            $result = [];
+            $data = $DB->get_records_sql($sql);
+        }
+        foreach ($data as $value) {
+            $result[] = (object)['id' => $value->id, 'name' => $value->divisionname];
+        }
+        return $result;
+    }
+
+    public static function loadingdivision_returns() {
+        return new external_multiple_structure(
+            new external_single_structure(
+                array(
+                    'id' => new external_value(PARAM_INT, 'The id of the orgposition'),
+                    'name' => new external_value(PARAM_RAW, 'The name of the orgposition'),
+                )
+            )
+        );
+    }
     //orgcate modal;
     /**
      * Describes the parameters for submit_create_group_form webservice.

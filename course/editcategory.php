@@ -103,8 +103,36 @@ if ($mform->is_cancelled()) {
             print_error('cannotmovecategory');
         }
         $coursecat->update($data, $mform->get_description_editor_options());
+        if($CFG->sitetype == MOODLE_EDUCATION) {
+            if(!empty($data->division)) {
+                $coursedivision = $DB->delete_records('categories_division',['coursecategorysid' => $data->id]);
+                $categoryid = $DB->get_field('course_categories','id',['idnumber' => $data->idnumber]);
+                foreach ($data->division as $value) {
+                    $obj = new stdClass();
+                    $obj->coursecategorysid = $categoryid;
+                    $obj->divisionid = $value;
+                    $obj->datecreate = time();
+                    $obj->usercreate = $USER->id;
+                    $DB->insert_record('categories_division',$obj);
+                }
+            }
+        }
+
     } else {
         $category = core_course_category::create($data, $mform->get_description_editor_options());
+        if($CFG->sitetype == MOODLE_EDUCATION) {
+            if(!empty($data->division)) {
+                $categoryid = $DB->get_field('course_categories','id',['idnumber' => $data->idnumber]);
+                foreach ($data->division as $value) {
+                    $obj = new stdClass();
+                    $obj->coursecategorysid = $categoryid;
+                    $obj->divisionid = $value;
+                    $obj->datecreate = time();
+                    $obj->usercreate = $USER->id;
+                    $DB->insert_record('categories_division',$obj);
+                }
+            }
+        }
     }
     $manageurl->param('categoryid', $category->id);
     redirect($manageurl);
