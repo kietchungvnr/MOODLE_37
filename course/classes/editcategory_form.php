@@ -74,6 +74,23 @@ class core_course_editcategory_form extends moodleform {
         $mform->addHelpButton('idnumber', 'idnumbercoursecategory');
         $mform->setType('idnumber', PARAM_RAW);
 
+        // Custom by Thắng:Lấy danh sách chi nhánh
+        if($CFG->sitetype == MOODLE_EDUCATION) {
+            $division_options = array(
+                'ajax' => 'local_newsvnr/form-search-division',
+                'placeholder' => get_string('search', 'local_newsvnr'),
+                'multiple' => true,                                                  
+                'noselectionstring' => get_string('novalue', 'local_newsvnr'),
+            );
+            $coursesetuplist = $DB->get_records('division');
+            $coursesetupnames = array();
+            foreach ($coursesetuplist as $key => $value) {
+                $coursesetupnames[$key] = $value->name;
+            }
+            $mform->addElement('autocomplete', 'division', get_string('division','local_newsvnr'), $coursesetupnames, $division_options);
+            $mform->setType('division', PARAM_TEXT);
+        }
+
         $mform->addElement('editor', 'description_editor', get_string('description'), null,
             $this->get_description_editor_options());
 
@@ -86,22 +103,6 @@ class core_course_editcategory_form extends moodleform {
                 }
             }
             $mform->addElement('select', 'theme', get_string('forcetheme'), $themes);
-        }
-        // Custom by Thắng:Lấy danh sách chi nhánh
-        if($CFG->sitetype == MOODLE_EDUCATION) {
-            $division_options = array(
-                'ajax' => 'local_newsvnr/form-search-division',
-                'placeholder' => get_string('search', 'local_newsvnr'),
-                'multiple' => true,                                                  
-                'noselectionstring' => get_string('novalue', 'local_newsvnr'),
-            );
-            $coursesetuplist = $DB->get_records('division');
-            $coursesetupnames = array();
-            foreach ($coursesetuplist as $key => $value) {
-                $coursesetupnames[$key] = $value->divisionname;
-            }
-            $mform->addElement('autocomplete', 'division', get_string('division','local_newsvnr'), $coursesetupnames, $division_options);
-            $mform->setType('division', PARAM_TEXT);
         }
 
         $mform->addElement('hidden', 'id', 0);

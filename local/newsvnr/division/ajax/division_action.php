@@ -38,22 +38,24 @@ $fax        = optional_param('fax', '', PARAM_RAW);
 $phone      = optional_param('phone', '', PARAM_RAW);
 $website    = optional_param('website', '', PARAM_RAW);
 $address    = optional_param('address', '', PARAM_RAW);
-$isactive   = optional_param('isactive', '', PARAM_BOOL);
+$visible    = optional_param('visible', 1, PARAM_BOOL);
 $divisionid = optional_param('divisionid', '', PARAM_INT);
 $data       = array();
 switch ($action) {
     case 'add':
         $object               = new stdClass();
         $object->code         = $code;
-        $object->divisionname = $name;
+        $object->name = $name;
         $object->address      = $address;
-        $object->datecreated  = time();
-        $object->usercreated  = $USER->id;
+        $object->timecreated  = time();
+        $object->usercreate   = $USER->id;
+        $object->usermodified = $USER->id;
+        $object->timemodified = time();
         $object->shortname    = $shortname;
         $object->fax          = $fax;
         $object->phone        = $phone;
         $object->website      = $website;
-        $object->isactive     = $isactive;
+        $object->visible      = $visible;
         if ($DB->insert_record('division', $object)) {
             $data['result'] = 'Thêm thành công';
         }
@@ -80,16 +82,16 @@ switch ($action) {
         $object               = new stdClass();
         $object->id           = $divisionid;
         $object->code         = $code;
-        $object->divisionname = $name;
+        $object->name = $name;
         $object->address      = $address;
-        $object->usercreated  = $USER->id;
+        $object->usercreate   = $USER->id;
         $object->shortname    = $shortname;
         $object->fax          = $fax;
         $object->phone        = $phone;
         $object->website      = $website;
-        $object->isactive     = $isactive;
-        $object->userupdate   = $USER->id;
-        $object->dateupdate   = time();
+        $object->visible      = $visible;
+        $object->usermodified = $USER->id;
+        $object->timemodified = time();
         if ($DB->update_record('division', $object)) {
             $data['result'] = 'Chỉnh sửa thành công';
         }
@@ -98,7 +100,7 @@ switch ($action) {
     case 'active':
         $object           = new stdClass();
         $object->id       = $divisionid;
-        $object->isactive = 1;
+        $object->visible  = 1;
         if ($DB->update_record('division', $object)) {
             $data['result'] = 'Kích hoạt thành công';
         }
@@ -107,7 +109,7 @@ switch ($action) {
     case 'unactive':
         $object           = new stdClass();
         $object->id       = $divisionid;
-        $object->isactive = 0;
+        $object->visible  = 0;
         if ($DB->update_record('division', $object)) {
             $data['result'] = 'Hủy kích hoạt thành công';
         }

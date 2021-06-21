@@ -98,7 +98,7 @@ class local_newsvnr_external extends external_api {
     public static function loadingdivision_parameters() {
         return new external_function_parameters(
             array(
-                'categoryid' => new external_value(PARAM_RAW, 'The orgstructure id'),
+                'categoryid' => new external_value(PARAM_RAW, 'The categoryid division'),
             )    
         );
     }
@@ -111,7 +111,7 @@ class local_newsvnr_external extends external_api {
                     ));
         if($categoryid) {
             $sql = "SELECT d.* FROM mdl_division d 
-                                JOIN mdl_categories_division cd on cd.divisionid = d.id
+                                JOIN mdl_division_categories cd on cd.divisionid = d.id
                             WHERE cd.coursecategorysid = ?";
             $result = [];
             $data = $DB->get_records_sql($sql,[$params['categoryid']]);
@@ -130,8 +130,8 @@ class local_newsvnr_external extends external_api {
         return new external_multiple_structure(
             new external_single_structure(
                 array(
-                    'id' => new external_value(PARAM_INT, 'The id of the orgposition'),
-                    'name' => new external_value(PARAM_RAW, 'The name of the orgposition'),
+                    'id' => new external_value(PARAM_INT, 'The id of the division'),
+                    'name' => new external_value(PARAM_RAW, 'The name of the division'),
                 )
             )
         );

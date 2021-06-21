@@ -52,18 +52,19 @@ $get_list = $DB->get_records_sql($sql);
 foreach ($get_list as $value) {
     $object              = new stdClass();
     $object->id          = $value->id;
-    $object->name        = $value->divisionname;
+    $object->name        = $value->name;
     $object->shortname   = $value->shortname;
     $object->code        = $value->code;
     $object->address     = $value->address;
     $object->phone       = $value->phone;
     $object->website     = $value->website;
     $object->fax         = $value->fax;
-    $object->datecreated = convertunixtime('d/m/Y', $value->datecreated, 'Asia/Ho_Chi_Minh');
+    $object->usercreate  = convertunixtime('d/m/Y', $value->usercreate, 'Asia/Ho_Chi_Minh');
+    $object->timemodified = convertunixtime('d/m/Y', $value->timemodified, 'Asia/Ho_Chi_Minh');
     $object->total       = $value->total;
-    $object->isactive    = ($value->isactive == 1) ? '<input class="apple-switch" onclick="activeDevision(' . $value->id . ',\'unactive\')" type="checkbox" checked>' : '<input class="apple-switch" type="checkbox" onclick="activeDevision(' . $value->id . ',\'active\')" check>';
-    $usercreated         = $DB->get_record('user', ['id' => $value->usercreated]);
-    $object->usercreated = $usercreated->firstname . ' ' . $usercreated->lastname;
-    $data[]              = $object;
+    $object->visible     = ($value->visible == 1) ? '<input class="apple-switch" onclick="activeDevision(' . $value->id . ',\'unactive\')" type="checkbox" checked>' : '<input class="apple-switch" type="checkbox" onclick="activeDevision(' . $value->id . ',\'active\')" check>';
+    $usercreate         = $DB->get_record('user', ['id' => $value->usercreate]);
+    $object->usercreate = $usercreate->firstname . ' ' . $usercreate->lastname;
+    $data[]             = $object;
 }
 echo json_encode($data, JSON_UNESCAPED_UNICODE);

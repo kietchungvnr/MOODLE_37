@@ -111,7 +111,7 @@ if ($mform->is_cancelled()) {
                     $obj = new stdClass();
                     $obj->coursecategorysid = $categoryid;
                     $obj->divisionid = $value;
-                    $obj->datecreate = time();
+                    $obj->timecreated = time();
                     $obj->usercreate = $USER->id;
                     $DB->insert_record('categories_division',$obj);
                 }
@@ -127,7 +127,7 @@ if ($mform->is_cancelled()) {
                     $obj = new stdClass();
                     $obj->coursecategorysid = $categoryid;
                     $obj->divisionid = $value;
-                    $obj->datecreate = time();
+                    $obj->timecreated = time();
                     $obj->usercreate = $USER->id;
                     $DB->insert_record('categories_division',$obj);
                 }

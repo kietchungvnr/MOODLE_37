@@ -133,7 +133,7 @@ class course_edit_form extends moodleform {
             $coursesetuplist = $DB->get_records('division');
             $coursesetupnames = array();
             foreach ($coursesetuplist as $key => $value) {
-                $coursesetupnames[$key] = $value->divisionname;
+                $coursesetupnames[$key] = $value->name;
             }
             $mform->addElement('autocomplete', 'divisionid', get_string('division','local_newsvnr'), $coursesetupnames, $division_options);
             $mform->setType('divisionid', PARAM_TEXT);

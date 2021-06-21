@@ -27,7 +27,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             var phone = $('#phone').val();
             var website = $('#website').val();
             var address = $('#address').val();
-            var isactive = $('#isactive').prop("checked");
+            var visible = $('#visible').prop("checked");
             var action = $(this).attr('action');
             var divisionid = $(this).attr('divisionid');
             if(name == "" || shortname == "" || code == "") {
@@ -54,7 +54,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                     phone:phone,
                     website:website,
                     address:address,
-                    isactive:isactive,
+                    visible:visible,
                     divisionid:divisionid
                 }
             }
@@ -121,9 +121,9 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             },
             {
                 template: function(e) {
-                    return e.isactive
+                    return e.visible
                 },
-                field: "isactive",
+                field: "visible",
                 title: "Kích hoạt",
                 width: "120px"
             },
