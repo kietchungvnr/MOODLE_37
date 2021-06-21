@@ -29,8 +29,8 @@ function xmldb_local_newsvnr_upgrade($oldversion) {
         $table->add_field('shortname', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
         $table->add_field('visible', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null);
         $table->add_field('address', XMLDB_TYPE_CHAR, '255', null, null, null, null);
-        $table->add_field('phone', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
-        $table->add_field('fax', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('phone', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('fax', XMLDB_TYPE_CHAR, '255', null, null, null, null);
         $table->add_field('website', XMLDB_TYPE_CHAR, '255', null, null, null, null);
         $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
         $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
@@ -56,6 +56,8 @@ function xmldb_local_newsvnr_upgrade($oldversion) {
         $table->add_field('divisionid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
         $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+        $table->add_field('usercreate', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+        $table->add_field('usermodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
 
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
         $table->add_key('divisionid', XMLDB_KEY_FOREIGN, ['divisionid'], 'division', ['id']);
