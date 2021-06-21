@@ -60,7 +60,6 @@ function xmldb_local_newsvnr_upgrade($oldversion) {
         $table->add_field('usermodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
 
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-        $table->add_key('divisionid', XMLDB_KEY_FOREIGN, ['divisionid'], 'division', ['id']);
         $table->add_index('divisionid', XMLDB_INDEX_NOTUNIQUE, ['divisionid']);
 
         if (!$dbman->table_exists($table)) {
