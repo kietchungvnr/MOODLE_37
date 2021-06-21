@@ -697,3 +697,4 @@ $string['emptyorgstructure'] = 'Chưa có phòng ban nào được khởi tạo 
 $string['invalidcoursesetup'] = 'Khóa setup không tồn tại';
 $string['nextroute'] = 'Lộ trình kế cận';
 $string['username_login'] = 'Tên đăng nhập';
+$string['studentenrolcourse/all'] = 'Học viên tham gia khóa học/Tổng';
