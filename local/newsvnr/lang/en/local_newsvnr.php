@@ -701,3 +701,5 @@ $string['invalidcoursesetup'] = 'Course setup not exists';
 $string['nextroute'] = 'Next route';
 $string['username_login'] = 'User login';
 $string['studentenrolcourse/all'] = 'Student enrol course/All';
+$string['division'] = 'Division';
+$string['divisionmanagement'] = 'Division management';

@@ -260,6 +260,47 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min','alertjs'], function
             }
             eventArr.push(objEventEditUser);
         }
+        if (gridConfig.deleteDivisionEvent != undefined) {
+            var funcDeleteDivision = function(e) {
+                e.preventDefault();
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                var script = Config.wwwroot + '/local/newsvnr/division/ajax/division_action.php';
+                var settings = {
+                    type:"GET",
+                    processData:true,
+                    data:{
+                        divisionid:dataItem.id,
+                        action:'delete'
+                    }
+                }
+                $.ajax(script,settings).then(function() {
+                    var obj = $.parseJSON(response);
+                    alertify.notify(obj.result, 'success', 3);
+                })
+                gridConfig.deleteDivisionEvent(dataItem);
+            }
+            var objEventDeleteDivision = {
+                click: funcDeleteDivision,
+                iconClass: 'fa fa-trash mr-1',
+                text: '',
+                name: 'deletedivision',
+            }
+            eventArr.push(objEventDeleteDivision);
+        }
+        if (gridConfig.editDivisionEvent != undefined) {
+            var funcEditDivision = function(e) {
+                e.preventDefault();
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                gridConfig.editDivisionEvent(dataItem);
+            }
+            var objEventEditDivision = {
+                click: funcEditDivision,
+                iconClass: 'fa fa-cog mr-1',
+                text: '',
+                name: 'editdivision',
+            }
+            eventArr.push(objEventEditDivision);
+        }
         if(eventArr.length > 0) {
             gridConfig.columns.push({
                 title: M.util.get_string('action', 'local_newsvnr'),
