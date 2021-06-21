@@ -21,7 +21,7 @@ if ($hassiteconfig
     $ADMIN->add('accounts', new admin_externalpage('editusers', new lang_string('userlist','admin'), "$CFG->wwwroot/$CFG->admin/user.php", array('moodle/user:update', 'moodle/user:delete')));
     $ADMIN->add('accounts', new admin_externalpage('userbulk', new lang_string('userbulk','admin'), "$CFG->wwwroot/$CFG->admin/user/user_bulk.php", array('moodle/user:update', 'moodle/user:delete')));
     $ADMIN->add('accounts', new admin_externalpage('addnewuser', new lang_string('addnewuser'), "$CFG->wwwroot/user/editadvanced.php?id=-1", 'moodle/user:create'));
-    $ADMIN->add('accounts', new admin_externalpage('userreport',get_string('userreport','local_newsvnr'), "$CFG->wwwroot/local/newsvnr/report/user.php", 'moodle/user:create'));
+    $ADMIN->add('report', new admin_externalpage('userreport',get_string('userreport','local_newsvnr'), "$CFG->wwwroot/local/newsvnr/report/user.php", 'moodle/user:create'));
     $ADMIN->add('report', new admin_externalpage('competencyreport',get_string('competencyreport','local_newsvnr'), "$CFG->wwwroot/local/newsvnr/report/competency.php", 'moodle/user:create'));
     $ADMIN->add('report', new admin_externalpage('learningreport',get_string('learningreport','local_newsvnr'), "$CFG->wwwroot/local/newsvnr/report/learning.php", 'moodle/user:create'));
     $ADMIN->add('report', new admin_externalpage('trainingplan',get_string('trainingplanreport','local_newsvnr'), "$CFG->wwwroot/local/newsvnr/report/trainingplan.php", 'moodle/user:create'));

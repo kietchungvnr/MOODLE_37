@@ -403,5 +403,8 @@ CREATE TABLE mdl_categories_division
 	datecreate bigint NOT NULL ,
 	usercreate bigint NOT NULL,
 )
-ALTER TABLE mdl_course ADD divisionid bigint NULL
+-- Thêm chi nhánh cho khóa học
+ALTER TABLE mdl_course ADD divisionid bigint NOT NULL DEFAULT 0
+-- Thêm chi nhánh cho user
+ALTER TABLE mdl_user ADD divisionid bigint NOT NULL DEFAULT 0
 --- *** Kết thúc script cho bản build version '14062021' ***--

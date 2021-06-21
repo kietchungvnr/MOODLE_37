@@ -87,7 +87,7 @@ class core_course_editcategory_form extends moodleform {
             }
             $mform->addElement('select', 'theme', get_string('forcetheme'), $themes);
         }
-        //Lấy danh sách chi nhánh
+        // Custom by Thắng:Lấy danh sách chi nhánh
         if($CFG->sitetype == MOODLE_EDUCATION) {
             $division_options = array(
                 'ajax' => 'local_newsvnr/form-search-division',

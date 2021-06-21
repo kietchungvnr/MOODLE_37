@@ -29,7 +29,9 @@ define(["jquery", "core/config", "core/str", "core/notification","local_newsvnr/
             var keyword = $('.courses_search_input[name="keyword"]').val().trim().split(' ').join('+');
             var teacher = $('.courses_search_input[name="teacher"]').val().trim().split(' ').join('+');
             var category = $('.courses_search_input[name="category"]').val().trim().split(' ').join('+');
-            var coursesetup = $('.courses_search_input[name="coursesetup"]').val().trim().split(' ').join('+');
+            if($('.courses_search_input[name="coursesetup"]').length > 0) {
+                var coursesetup = $('.courses_search_input[name="coursesetup"]').val().trim().split(' ').join('+');
+            }
             var filter = $("#course-filter :selected").val();
             $('li').removeClass('active');
             $('.dropdown-menu-tree').slideUp();
