@@ -6,7 +6,7 @@ function xmldb_local_newsvnr_upgrade($oldversion) {
 
     $dbman = $DB->get_manager(); // Loads ddl manager and xmldb classes.
 
-    if ($oldversion < 2019032722 ) {
+    if ($oldversion < 2019032724 ) {
         $table = new xmldb_table('course_setup');
         // Conditionally launch add field completionscorerequired.
         if (!$dbman->field_exists($table, 'visible')) {
@@ -16,7 +16,7 @@ function xmldb_local_newsvnr_upgrade($oldversion) {
             );
         }
         // Main savepoint reached.
-        upgrade_plugin_savepoint(true, 2019032722, 'local', 'newsvnr');
+        upgrade_plugin_savepoint(true, 2019032724, 'local', 'newsvnr');
     }
 
     return true;
