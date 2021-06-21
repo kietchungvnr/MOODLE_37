@@ -62,7 +62,12 @@ $start = ($page - 1) * $pagetake;
 if ($start < $pagetake) {
     $start = 0;
 }
-
+$user = $DB->get_record('user',['id' => $USER->id]);
+if($CFG->sitetype == MOODLE_EDUCATION) {
+    if($user->divisionid && !is_siteadmin()) {
+        $condition .= "AND c.divisionid = $user->divisionid";
+    } 
+}
 if ($filter == "coursepopular") {
     // Hiện thị khóa học nổi bật, ghim
     $condition .= "AND c.pinned = 1 ";

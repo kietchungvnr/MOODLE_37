@@ -107,6 +107,24 @@ class user_editadvanced_form extends moodleform {
         $mform->addRule('usercode', get_string('required'), 'required', null, 'client');
         $mform->addHelpButton('usercode', 'usercode', 'local_newsvnr');
         $mform->setType('usercode', PARAM_RAW);
+
+        // Custom by Thắng:Lấy danh sách chi nhánh
+        if($CFG->sitetype == MOODLE_EDUCATION) {
+            $division_options = array(
+                'ajax' => 'local_newsvnr/form-search-division',
+                'placeholder' => get_string('search', 'local_newsvnr'),
+                'multiple' => false,                                                  
+                'noselectionstring' => get_string('novalue', 'local_newsvnr'),
+            );
+            $coursesetuplist = $DB->get_records('division');
+            $coursesetupnames = array();
+            foreach ($coursesetuplist as $key => $value) {
+                $coursesetupnames[$key] = $value->divisionname;
+            }
+            $mform->addElement('autocomplete', 'divisionid', get_string('division','local_newsvnr'), $coursesetupnames, $division_options);
+            $mform->setType('divisionid', PARAM_TEXT);
+        }
+
         if($CFG->sitetype == MOODLE_BUSINESS) {
             if($userid == -1) {
                 if($DB->count_records('user') > 1) {

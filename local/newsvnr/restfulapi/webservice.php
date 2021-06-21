@@ -1752,9 +1752,16 @@ if($action == 'search_category') {
 }
 
 if($action == 'search_course') {
+	$user = $DB->get_record('user',['id' => $USER->id]);
+	$wheresql = '';
+	if($CFG->sitetype == MOODLE_EDUCATION) {
+		if($user->divisionid && !is_siteadmin()) {
+			$wheresql .= "AND c.divisionid = $user->divisionid";
+		}
+	}
 	$sql = "SELECT c.id,c.fullname,cc.name FROM {course} c
 			JOIN {course_categories} cc on c.category = cc.id
-			WHERE c.visible = 1";
+			WHERE c.visible = 1 $wheresql";
 	$get_list = $DB->get_records_sql($sql);
 	$data = [];
 	foreach ($get_list as $value) {
