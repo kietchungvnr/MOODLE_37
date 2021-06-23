@@ -52,7 +52,7 @@ require(['theme_moove/metismenu', 'jquery'], function(metisMenu, $) {
 
 });
 
-require(['jquery', 'core/config'], function($, Config) {
+require(['jquery', 'core/config', 'theme_moove/handle_cookie'], function($, Config, Cookie) {
     var iconsearch = document.querySelector('.moove-search-input .slicon-magnifier');
     var btnclosesearch = document.querySelector('.search-input-form .close-search');
     var searchinputform = document.querySelector('.moove-search-input');
@@ -117,11 +117,11 @@ require(['jquery', 'core/config'], function($, Config) {
             var result = 'a#quiznavbutton' + splitElmAgian[0];
             $(result).addClass('notyetanswered').removeClass('answersaved');
         })
-        // Kiểm tra layout có phải ebm portal không?
-        // Nếu không thì xóa cookie xét layout portal
-        if(Cookie.getCookie('ebmlms') == 'true') {
-            Cookie.setCookieSecure('ebmlms', '-1', 0);
-        }
+    }
+    // Kiểm tra layout có phải ebm portal không?
+    // Nếu không thì xóa cookie xét layout portal
+    if(Cookie.getCookie('ebmlms') == 'true') {
+        Cookie.setCookieSecure('ebmlms', '-1', 0);
     }
 }); 
 
