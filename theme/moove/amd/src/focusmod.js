@@ -227,12 +227,12 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                             var width = $(window).width();
                             if(width > 576) {
                                 $('#mod-iframe').removeAttr('height');
-                                const iframes = iFrameResize({ log: true }, '#mod-iframe');
+                                const iframes = iFrameResize({ log: false }, '#mod-iframe');
                             } 
                         } else if(modType == 'scorm') {
                             // Nothing todo...
                         } else {
-                            const iframes = iFrameResize({ log: true }, '#mod-iframe');
+                            const iframes = iFrameResize({ log: false }, '#mod-iframe');
                         }
                         // Xử lý khi module là quiz thì thay đổi header
                         if(modType == 'quiz') {
