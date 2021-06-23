@@ -118,7 +118,7 @@ echo $renderer->wiki_print_subwiki_selector($PAGE->activityrecord, $subwiki, $pa
 echo $renderer->wiki_files_tree($context, $subwiki, $search);
 echo $OUTPUT->box_end();
 
-if (has_capability('mod/wiki:managefiles', $context)) {
+if (has_capability('mod/wiki:managefiles', $context) || $course->id == 1) {
     echo $OUTPUT->single_button(new moodle_url('/mod/wiki/filesedit.php', array('subwiki'=>$subwiki->id, 'pageid'=>$pageid)), get_string('editfiles', 'wiki'), 'get');
 }
 echo $OUTPUT->footer();

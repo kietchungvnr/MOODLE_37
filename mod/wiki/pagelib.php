@@ -604,7 +604,7 @@ class page_wiki_comments extends page_wiki {
         $wiki = $PAGE->activityrecord;
         list($context, $course, $cm) = get_context_info_array($this->modcontext->id);
 
-        require_capability('mod/wiki:viewcomment', $this->modcontext, NULL, true, 'noviewcommentpermission', 'wiki');
+        // require_capability('mod/wiki:viewcomment', $this->modcontext, NULL, true, 'noviewcommentpermission', 'wiki');
 
         $comments = wiki_get_comments($this->modcontext->id, $page->id);
         // Custom by Thắng : custom chức năng comment wiki
