@@ -184,6 +184,10 @@ if ($userform->is_cancelled()) {
     }
 
     $usernew->timemodified = time();
+    // Custom by Vũ: Bỏ bắt buộc nhập email nhưng vẫn tạo mail ảo!
+    if(empty($usernew->email)) {
+        $usernew->email = $usernew->username . '_' . time() . '@temporary.vn';
+    }
     $createpassword = false;
 
     if ($usernew->id == -1) {

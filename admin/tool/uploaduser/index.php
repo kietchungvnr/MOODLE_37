@@ -1232,7 +1232,9 @@ while ($linenum <= $previewrows and $fields = $cir->next()) {
     foreach($fields as $key => $field) {
         $rowcols[$filecolumns[$key]] = s(trim($field));
     }
-    $rowcols['email'] = '';
+    if(empty($rowcols['email'])) {
+        $rowcols['email'] = '';
+    }
     $rowcols['status'] = array();
 
     if (isset($rowcols['username'])) {

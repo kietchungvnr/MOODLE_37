@@ -288,7 +288,8 @@ function useredit_shared_definition(&$mform, $editoroptions, $filemanageroptions
     } else {
         $purpose = user_edit_map_field_purpose($user->id, 'email');
         $mform->addElement('text', 'email', get_string('email'), 'maxlength="100" size="30"' . $purpose);
-        $mform->addRule('email', $strrequired, 'required', null, 'client');
+        // Custom by Vũ: Bỏ bắt buộc nhập vào nhưng vẫn tạo mail ảo.
+        // $mform->addRule('email', $strrequired, 'required', null, 'client');
         $mform->setType('email', PARAM_RAW_TRIMMED);
     }
 

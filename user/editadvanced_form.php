@@ -374,6 +374,10 @@ class user_editadvanced_form extends moodleform {
         }
 
         if (!$user or (isset($usernew->email) && $user->email !== $usernew->email)) {
+            // Custom by Vũ: Bỏ bắt buộc nhập email nhưng vẫn tạo mail ảo!
+            if(empty($usernew->email)) {
+                $usernew->email = $usernew->username . '_' . time() . '@temporary.vn';
+            }
             if (!validate_email($usernew->email)) {
                 $err['email'] = get_string('invalidemail');
             } else if (empty($CFG->allowaccountssameemail)) {
