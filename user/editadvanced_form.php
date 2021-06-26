@@ -155,12 +155,12 @@ class user_editadvanced_form extends moodleform {
                     'multiple' => false,                                                  
                     'noselectionstring' => get_string('novalue', 'local_newsvnr'),
                 );
-                $coursesetuplist = $DB->get_records('division');
-                $coursesetupnames = array();
-                foreach ($coursesetuplist as $key => $value) {
-                    $coursesetupnames[$key] = $value->divisionname;
+                $divisionlist = $DB->get_records('division');
+                $divisionnames = array();
+                foreach ($divisionlist as $key => $value) {
+                    $divisionnames[$key] = $value->name;
                 }
-                $mform->addElement('autocomplete', 'divisionid', get_string('division','local_newsvnr'), $coursesetupnames, $division_options);
+                $mform->addElement('autocomplete', 'divisionid', get_string('division','local_newsvnr'), $divisionnames, $division_options);
                 $mform->setType('divisionid', PARAM_TEXT);
             } elseif($userid > 2 && $user->typeofuser == 0) {
                 $division_options = array(
@@ -169,12 +169,12 @@ class user_editadvanced_form extends moodleform {
                     'multiple' => false,                                                  
                     'noselectionstring' => get_string('novalue', 'local_newsvnr'),
                 );
-                $coursesetuplist = $DB->get_records('division');
-                $coursesetupnames = array();
-                foreach ($coursesetuplist as $key => $value) {
-                    $coursesetupnames[$key] = $value->divisionname;
+                $divisionlist = $DB->get_records('division');
+                $divisionnames = array();
+                foreach ($divisionlist as $key => $value) {
+                    $divisionnames[$key] = $value->name;
                 }
-                $mform->addElement('autocomplete', 'divisionid', get_string('division','local_newsvnr'), $coursesetupnames, $division_options);
+                $mform->addElement('autocomplete', 'divisionid', get_string('division','local_newsvnr'), $divisionnames, $division_options);
                 $mform->setType('divisionid', PARAM_TEXT);
             }
         }

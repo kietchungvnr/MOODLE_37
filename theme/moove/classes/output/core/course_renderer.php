@@ -304,7 +304,7 @@ class course_renderer extends \core_course_renderer {
      * @param int|stdClass|core_course_category $category
      */
     public function course_category($category) {
-        global $CFG,$DB;
+        global $CFG,$DB,$USER;
         $usertop = core_course_category::user_top();
         if (empty($category)) {
             $coursecat = $usertop;
@@ -427,8 +427,17 @@ class course_renderer extends \core_course_renderer {
         // $output .= $this->course_search_form();
         // // Display course category tree.
         // $output .= $this->coursecat_tree($chelper, $coursecat);
-       
-        $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent, cc.idnumber FROM mdl_course_categories cc LEFT JOIN mdl_course c ON cc.id = c.category OR cc.parent = c.category WHERE cc.visible = 1');
+        $user = $DB->get_record('user',['id' => $USER->id]);
+        if(!is_siteadmin() && $user->divisionid && $CFG->sitetype == MOODLE_EDUCATION) {
+            $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent, cc.idnumber 
+                FROM mdl_course_categories cc 
+                    JOIN mdl_division_categories dc on dc.coursecategorysid = cc.id
+                    LEFT JOIN mdl_course c ON cc.id = c.category OR cc.parent = c.category 
+                WHERE cc.visible = 1');
+        } else {
+            $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent, cc.idnumber FROM mdl_course_categories cc LEFT JOIN mdl_course c ON cc.id = c.category OR cc.parent = c.category WHERE cc.visible = 1');
+        }
+
         $output .= $this->menucoursecategory($categories);
         $output .= '</div></div>';
         $output .= '<div class="col-xl-9 col-lg-8 col-md-8 position-relative">';

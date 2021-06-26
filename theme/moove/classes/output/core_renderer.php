@@ -597,7 +597,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $url = new moodle_url('/my/index.php?student=1');
             $button .= '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-line-chart text-icon-dashboard mr-1" aria-hidden="true"></i>'. get_string('studentdashboard', 'local_newsvnr') .'</a></li>';
         } 
-        if(is_siteadmin() && $check->isadmin != true) {
+        if((is_siteadmin() || user_has_role_assignment($USER->id, 1, context_system::instance()->id)) && $check->isadmin != true) {
             $url = new moodle_url('/my/index.php');
             $button .= '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-line-chart text-icon-dashboard mr-1" aria-hidden="true"></i>Dashboard admin</a></li>';
         }

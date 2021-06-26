@@ -30,6 +30,7 @@ require_once __DIR__ . '/../../../../config.php';
 require_once $CFG->dirroot . '/local/newsvnr/lib.php';
 $action = optional_param('action', null, PARAM_RAW);
 $PAGE->set_context(context_system::instance());
+$user = $DB->get_record('user',['id' => $USER->id]);
 $data   = [];
 $output = '';
 require_login();
@@ -38,10 +39,21 @@ switch ($action) {
     case 'coursestatus':
         require_once "{$CFG->libdir}/completionlib.php";
         $currenttime   = time();
-        $coursefinish  = $DB->get_record_sql("SELECT COUNT(*) as count FROM {course} WHERE enddate < $currenttime AND enddate != 0");
-        $courseopening = $DB->get_record_sql("SELECT COUNT(*) as count FROM {course} WHERE (enddate > $currenttime OR enddate = 0) AND startdate < $currenttime");
-        $coursefuture  = $DB->get_record_sql("SELECT COUNT(*) as count FROM {course} WHERE startdate > $currenttime");
-        $listcourse    = get_list_course_by_student($USER->id);
+        if($CFG->sitetype == MOODLE_EDUCATION && $user->divisionid && !is_siteadmin()) {
+            $coursefinish  = $DB->get_record_sql("SELECT COUNT(*) as count FROM {course} 
+                                                    WHERE enddate < $currenttime AND enddate != 0 AND divisionid = :divisionid",
+                                                    ['divisionid' => $user->divisionid]);
+            $courseopening = $DB->get_record_sql("SELECT COUNT(*) as count FROM {course} 
+                                                    WHERE (enddate > $currenttime OR enddate = 0) AND startdate < $currenttime AND divisionid = :divisionid",
+                                                    ['divisionid' => $user->divisionid]);
+            $coursefuture  = $DB->get_record_sql("SELECT COUNT(*) as count FROM {course} 
+                                                    WHERE startdate > $currenttime AND divisionid = :divisionid",
+                                                    ['divisionid' => $user->divisionid]);
+        } else {
+            $coursefinish  = $DB->get_record_sql("SELECT COUNT(*) as count FROM {course} WHERE enddate < $currenttime AND enddate != 0");
+            $courseopening = $DB->get_record_sql("SELECT COUNT(*) as count FROM {course} WHERE (enddate > $currenttime OR enddate = 0) AND startdate < $currenttime");
+            $coursefuture  = $DB->get_record_sql("SELECT COUNT(*) as count FROM {course} WHERE startdate > $currenttime");
+        }
         $data[0]       = ['name' => get_string('coursefinished','local_newsvnr'), 'y' => (int) $coursefinish->count];
         $data[1]       = ['name' => get_string('courseopening','local_newsvnr'), 'y' => (int) $courseopening->count];
         $data[2]       = ['name' => get_string('coursefuture','local_newsvnr'), 'y' => (int) $coursefuture->count];
@@ -106,12 +118,18 @@ switch ($action) {
                 $befor_unixdate = $sixdaysago_unix;
                 $date = $sevendaysago_date;
             }
-            $wheresql = "WHERE action = 'loggedin' AND (timecreated BETWEEN :unixdate AND :beforunixdate)";
-            $sql =  "
-            SELECT COUNT(id) log
-            FROM mdl_logstore_standard_log
-            $wheresql
-            ";
+            $wheresql = "WHERE lsl.action = 'loggedin' AND (lsl.timecreated BETWEEN :unixdate AND :beforunixdate)";
+            if($CFG->sitetype == MOODLE_EDUCATION && $user->divisionid && !is_siteadmin()) {
+                $sql = "SELECT COUNT(lsl.id) log
+                        FROM mdl_logstore_standard_log lsl
+                            JOIN mdl_user u on u.id = lsl.objectid and u.divisionid = $user->divisionid
+                        $wheresql";
+
+            } else {
+                $sql = "SELECT COUNT(lsl.id) log
+                        FROM mdl_logstore_standard_log lsl
+                        $wheresql";
+            }
             $get_log = $DB->get_field_sql($sql, ['beforunixdate' => $befor_unixdate, 'unixdate' => $unixdate]);
             
             $categories[] = $date;
@@ -127,25 +145,44 @@ switch ($action) {
         break;
         case 'noticeadmin':
         $obj = new stdClass;
+        if($CFG->sitetype == MOODLE_EDUCATION && $user->divisionid && !is_siteadmin()) {
+            $sql = "SELECT COUNT(c.id) course
+                        FROM  mdl_context ct
+                            JOIN mdl_course c ON c.id = ct.instanceid
+                        WHERE ct.contextlevel = 50 AND c.id <> 1 AND c.divisionid = $user->divisionid
+                        AND (NOT EXISTS (SELECT 1 
+                                         FROM mdl_role_assignments r 
+                                         WHERE r.contextid = ct.id AND r.roleid = :roleid))";
 
-        $sql = "SELECT COUNT(c.id) course
-                                FROM  mdl_context ct
-                                    JOIN mdl_course c ON c.id = ct.instanceid
-                                WHERE ct.contextlevel = 50 AND c.id <> 1
-                                AND (NOT EXISTS (SELECT 1 
-                                                 FROM mdl_role_assignments r 
-                                                 WHERE r.contextid = ct.id AND r.roleid = :roleid))";
+            $courseemptysql = "SELECT c.id, c.fullname, COUNT(cm.module) module 
+                    FROM mdl_course_modules cm RIGHT JOIN mdl_course c ON cm.course = c.id
+                    WHERE c.divisionid = $user->divisionid
+                    GROUP BY c.id, c.fullname
+                    HAVING COUNT(cm.module) <= 1
+                    ORDER BY c.fullname";
+        } else {
+            $sql = "SELECT COUNT(c.id) course
+                        FROM  mdl_context ct
+                            JOIN mdl_course c ON c.id = ct.instanceid
+                        WHERE ct.contextlevel = 50 AND c.id <> 1
+                        AND (NOT EXISTS (SELECT 1 
+                                         FROM mdl_role_assignments r 
+                                         WHERE r.contextid = ct.id AND r.roleid = :roleid))";
+
+            $courseemptysql = "SELECT c.id, c.fullname, COUNT(cm.module) module 
+                    FROM mdl_course_modules cm RIGHT JOIN mdl_course c ON cm.course = c.id
+                    GROUP BY c.id, c.fullname
+                    HAVING COUNT(cm.module) <= 1
+                    ORDER BY c.fullname";
+        }
+
         $coursenoteacher = $DB->get_field_sql($sql, ['roleid' => 3]);
         $obj->coursenoteacher = (int)$coursenoteacher;
 
         $coursenostudent = $DB->get_field_sql($sql, ['roleid' => 5]);
         $obj->coursenostudent = (int)$coursenostudent;
 
-        $courseemptysql = "SELECT c.id, c.fullname, COUNT(cm.module) module 
-                            FROM mdl_course_modules cm RIGHT JOIN mdl_course c ON cm.course = c.id
-                            GROUP BY c.id, c.fullname
-                            HAVING COUNT(cm.module) <= 1
-                            ORDER BY c.fullname";
+
         $courseempty = $DB->get_records_sql($courseemptysql);
         $obj->courseempty = count($courseempty);
 

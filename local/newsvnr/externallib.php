@@ -121,7 +121,7 @@ class local_newsvnr_external extends external_api {
             $data = $DB->get_records_sql($sql);
         }
         foreach ($data as $value) {
-            $result[] = (object)['id' => $value->id, 'name' => $value->divisionname];
+            $result[] = (object)['id' => $value->id, 'name' => $value->name];
         }
         return $result;
     }
