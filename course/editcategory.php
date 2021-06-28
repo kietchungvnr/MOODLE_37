@@ -105,7 +105,7 @@ if ($mform->is_cancelled()) {
         $coursecat->update($data, $mform->get_description_editor_options());
         if($CFG->sitetype == MOODLE_EDUCATION) {
             if(!empty($data->division)) {
-                $coursedivision = $DB->delete_records('categories_division',['coursecategorysid' => $data->id]);
+                $coursedivision = $DB->delete_records('division_categories',['coursecategorysid' => $data->id]);
                 $categoryid = $DB->get_field('course_categories','id',['idnumber' => $data->idnumber]);
                 foreach ($data->division as $value) {
                     $obj = new stdClass();
@@ -113,7 +113,7 @@ if ($mform->is_cancelled()) {
                     $obj->divisionid = $value;
                     $obj->timecreated = time();
                     $obj->usercreate = $USER->id;
-                    $DB->insert_record('categories_division',$obj);
+                    $DB->insert_record('division_categories',$obj);
                 }
             }
         }
@@ -129,7 +129,7 @@ if ($mform->is_cancelled()) {
                     $obj->divisionid = $value;
                     $obj->timecreated = time();
                     $obj->usercreate = $USER->id;
-                    $DB->insert_record('categories_division',$obj);
+                    $DB->insert_record('division_categories',$obj);
                 }
             }
         }

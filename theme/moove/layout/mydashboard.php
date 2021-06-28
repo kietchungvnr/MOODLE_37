@@ -77,7 +77,8 @@ $templatecontext = [
 $themesettings = new \theme_moove\util\theme_settings();
 
 $templatecontext = array_merge($templatecontext, $themesettings->footer_items(), $themesettings->get_fullinfo_user(), $themesettings->get_data_dashboard_teacher(), $themesettings->get_vnr_dashboard_config(), $themesettings->get_vnr_chatbot());
-if (is_siteadmin()) {
+$user = $DB->get_record('user',['id' => $USER->id]);
+if (is_siteadmin() || (user_has_role_assignment($USER->id, 1, context_system::instance()->id) && $user->divisionid == 0)) {
     global $DB;
 
     // Get site total users.
@@ -133,6 +134,38 @@ if (is_siteadmin()) {
     $templatecontext['totalmodules'] = $totalmodules;
     $templatecontext['onlineusers'] = $onlineusers;
     $templatecontext['totalcategories'] = $totalcategories;
+    $templatecontext['totalusersjoincourse'] = $totalusersjoincourse->count;
+    $templatecontext['totaluser'] = $totaluser->count;
+}   elseif(user_has_role_assignment($USER->id, 1, context_system::instance()->id) && $user->divisionid) {
+    global $DB;
+
+    // Get site total users.
+    $totalusersjoincourse = $DB->get_record_sql("SELECT DISTINCT count(u.id) as count
+                                                FROM mdl_role_assignments AS ra
+                                                    JOIN mdl_user AS u ON u.id= ra.userid
+                                                    JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
+                                                    JOIN mdl_enrol AS e ON e.id= ue.enrolid
+                                                    JOIN mdl_course AS c ON c.id=e.courseid
+                                                    JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
+                                                    JOIN mdl_role AS r ON r.id= ra.roleid
+                                                    LEFT JOIN mdl_course_completions cc ON cc.userid = c.id AND cc.course = c.id 
+                                                WHERE ra.roleid=5 AND ue.status = 0 AND c.visible = 1 AND u.deleted <> 1 AND u.id <> $CFG->siteguest AND c.divisionid = $user->divisionid AND u.divisionid = $user->divisionid");
+    $totaluser = $DB->get_record_sql("SELECT count(id) as count 
+                                        FROM mdl_user 
+                                    WHERE deleted <> 1 AND id <> $CFG->siteguest AND divisionid = $user->divisionid");
+    $totalmodules = $DB->get_record_sql("SELECT count(cm.id) as count FROM mdl_course_modules cm 
+                                            JOIN mdl_course c on c.id = cm.course
+                                        WHERE c.divisionid = $user->divisionid AND cm.deletioninprogress = 0");
+    $totalcategories = $DB->get_records_sql("SELECT DISTINCT coursecategorysid from mdl_division_categories");
+
+    // Get site total courses.
+    $totalcourses = $DB->count_records('course',['divisionid' => $user->divisionid]);
+
+
+
+    $templatecontext['totalcourses'] = $totalcourses;
+    $templatecontext['totalmodules'] = $totalmodules->count;
+    $templatecontext['totalcategories'] = count($totalcategories);
     $templatecontext['totalusersjoincourse'] = $totalusersjoincourse->count;
     $templatecontext['totaluser'] = $totaluser->count;
 }
