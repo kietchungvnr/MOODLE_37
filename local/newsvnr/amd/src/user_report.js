@@ -10,6 +10,10 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         $('#btn-user-delete').click(function(){
             var arrObject = getSelectRow('#user_report');
             var data = JSON.stringify(arrObject);
+            var strname = '';
+            for(var i=0 ;i < arrObject.length;i++) {
+                strname += arrObject[i]['name'] + ',';
+            }
             var settings = {
                 type: "POST",
                 processData: true,
@@ -18,13 +22,16 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                     action: 'deleteselected'
                 }
             }
-            $.ajax(actionscript,settings).then(function(response) {
-                var obj = $.parseJSON(response);
-                alertify.notify(obj.result, 'success', 3);
-                var grid = $(gridName).data("kendoGrid");
-                grid.dataSource.read();
-                $('.user-report-fuction').addClass('disabled');
-            })
+            alertify.confirm('Cảnh báo', 'Bạn có chắc muốn xóa '+strname.slice(0,-1)+' khỏi danh sách người dùng ?', function(){ 
+                $.ajax(actionscript,settings).then(function(response) {
+                    var obj = $.parseJSON(response);
+                    alertify.notify(obj.result, 'success', 3);
+                    var grid = $(gridName).data("kendoGrid");
+                    grid.dataSource.read();
+                    $('.user-report-fuction').addClass('disabled');
+                })
+            }, function(){});
+
         })
     }
     var openPopUp = function() {
@@ -287,10 +294,37 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             gridSearchAdvance(systemroleid,courseroleid,courseid,datestart,dateend);
         })
         $('#resettable').click(function() {
+            $('#username').val('');
+            $('#useremail').val('');
+            $('#usercode').val('');
+            $('#isnotaccess').prop('checked',false)
+            $('#isnotmodify').prop('checked',false)
+            $('#userstatus').data('kendoDropDownList').value(-1);
+            $('#system_role').data('kendoDropDownList').value(-1);
+            $('#course_role').data('kendoDropDownList').value(-1);
+            $('#list_course').data('kendoDropDownList').value(-1);
+            $('#start_timeaccess').val('')
+            $('#end_timeaccess').val('')
             initGrid();
         })
-        $('#exporttable').click(function() {
-            $('.k-grid-excel').click();
+        $("#exporttable").on('click', function(e){
+            var trs = $(gridName).find('tr');
+            if ($(trs).find(":checkbox").is(":checked")) {
+                var row = [{
+                    cells: [
+                        { value: M.util.get_string('studentname', 'local_newsvnr') },
+                        { value: M.util.get_string('codeuser', 'local_newsvnr') },
+                        { value: M.util.get_string('username_login', 'local_newsvnr') },
+                        { value: M.util.get_string('email', 'local_newsvnr') },
+                        { value: M.util.get_string('createdtime', 'local_newsvnr') },
+                        { value: M.util.get_string('timeaccess', 'local_newsvnr') },
+                        { value: M.util.get_string('lastaccess', 'local_newsvnr') },
+                    ]
+                }]
+                exportExcelKendo(gridName,row);
+            } else {
+                $('.k-grid-excel').click();
+            }
         })
     }
     return {

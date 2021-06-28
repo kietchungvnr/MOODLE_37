@@ -179,13 +179,8 @@ define(['jquery', 'kendo.all.min', 'core/config', 'core/notification', 'dttable'
                         columns: columns
                     }).data('kendoGrid');
                 };
-
-                
-                var clickbtn = false;
+                createGrid('orgcate_list');
                 $('[data-region="orgmanager-page"] button').click(function(event) {
-                        if(clickbtn == false)
-                            createGrid('orgcate_list');
-                        clickbtn = true;
                         var orgcate_columns = [{
                                 field: "name",
                                 title: s[1],
