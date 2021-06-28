@@ -582,6 +582,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $button = '';
         $addblockbutton = '';
         $pageheadingbutton = $this->page_heading_button();
+        $href = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
         $check = theme_moove_layout_check();
         if ($PAGE->user_is_editing() && $PAGE->user_can_edit_blocks() && ($PAGE->blocks->get_addable_blocks())) {
             $url = new moodle_url($PAGE->url, ['bui_addblock' => '', 'sesskey' => sesskey()]);
@@ -607,6 +608,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $html .= html_writer::div($pageheadingbutton, 'breadcrumb-button');
             $html .= html_writer::end_div();
         } else if ($pageheadingbutton) {
+            if(strpos($href,'indexsys') == true) {
+                $pageheadingbutton = '<li><i class="fa fa-refresh text-icon-dashboard" aria-hidden="true"></i>'.$pageheadingbutton.'</li>';
+            }
             $html .= html_writer::div($addblockbutton . $pageheadingbutton . $button, 'action-rightside-fixed');
         } else {
             $html .= html_writer::div($button, 'action-rightside-fixed');
