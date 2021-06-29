@@ -272,8 +272,11 @@ if ($mform->is_cancelled()) {
                     calendar_event::create($event, false);
                 }
             }
-            // Custom by Vũ: Gửi email và thông báo lên chuông khi có yêu cầu duyệt file trong thư viện
-            send_email_requestfile($fromform);
+            if($folderid) {
+                // Custom by Vũ: Gửi email và thông báo lên chuông khi có yêu cầu duyệt file trong thư viện
+                send_email_requestfile($fromform);
+            }
+            
         }
     } else {
         print_error('invaliddata');

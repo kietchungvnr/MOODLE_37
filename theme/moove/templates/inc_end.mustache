@@ -52,7 +52,7 @@ require(['theme_moove/metismenu', 'jquery'], function(metisMenu, $) {
 
 });
 
-require(['jquery', 'core/config'], function($, Config) {
+require(['jquery', 'core/config', 'theme_moove/handle_cookie'], function($, Config, Cookie) {
     var iconsearch = document.querySelector('.moove-search-input .slicon-magnifier');
     var btnclosesearch = document.querySelector('.search-input-form .close-search');
     var searchinputform = document.querySelector('.moove-search-input');
@@ -118,6 +118,11 @@ require(['jquery', 'core/config'], function($, Config) {
             $(result).addClass('notyetanswered').removeClass('answersaved');
         })
     }
+    // Kiểm tra layout có phải ebm portal không?
+    // Nếu không thì xóa cookie xét layout portal
+    if(Cookie.getCookie('ebmlms') == 'true') {
+        Cookie.setCookieSecure('ebmlms', '-1', 0);
+    }
 }); 
 
 require(['theme_moove/general']);
@@ -137,6 +142,76 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
 
 {{/js}}
 <script type="text/javascript">
+    function exportExcelKendo(gridname,rows) {
+            var grid = $(gridname).getKendoGrid();
+            var trs = $(gridname).find('tr');
+            for (var i = 0; i < trs.length; i++) {
+                if ($(trs[i]).find(":checkbox").is(":checked")) {
+                    var dataItem = grid.dataItem(trs[i]);
+                    if(gridname == '#learning_report') {
+                        rows.push({
+                          cells: [
+                            { value: dataItem.name },
+                            { value: dataItem.coursename },
+                            { value: dataItem.process },
+                            { value: dataItem.status },
+                            { value: dataItem.timestart },
+                            { value: dataItem.timecompleted },
+                            { value: dataItem.timeaccess },
+                            { value: dataItem.grade },
+                          ]
+                        })
+                    }
+                    else if(gridname == '#competency_report') {
+                        rows.push({
+                          cells: [
+                            { value: dataItem.name },
+                            { value: dataItem.competencyname },
+                            { value: dataItem.coursename },
+                            { value: dataItem.planname },
+                            { value: dataItem.status },
+                            { value: dataItem.timecompleted },
+                            { value: dataItem.reviewer }
+                          ]
+                        })
+                    }
+                    else if(gridname == '#trainingplan_report') {
+                        rows.push({
+                          cells: [
+                            { value: dataItem.name },
+                            { value: dataItem.routename },
+                            { value: dataItem.process },
+                            { value: dataItem.status },
+                            { value: dataItem.timecompleted },
+                          ]
+                        })
+                    }
+                    else if(gridname == "#user_report") {
+                        rows.push({
+                          cells: [
+                            { value: dataItem.name },
+                            { value: dataItem.shortname },
+                            { value: dataItem.username },
+                            { value: dataItem.email },
+                            { value: dataItem.timecreated },
+                            { value: dataItem.timeaccess },
+                            { value: dataItem.lastaccess },
+                          ]
+                        })
+                    }
+                }
+            }
+            var workbook = new kendo.ooxml.Workbook({
+                sheets: [
+                    {
+                      title: "Orders",
+                      rows: rows
+                    }
+                ]
+            });
+            kendo.saveAs({dataURI: workbook.toDataURL(), fileName: "Report.xlsx"});
+    }
+
     $(document).ready(function() {
         $('body').removeClass('loading');
     })

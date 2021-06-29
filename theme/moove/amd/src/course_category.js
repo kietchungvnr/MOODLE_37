@@ -29,10 +29,13 @@ define(["jquery", "core/config", "core/str", "core/notification","local_newsvnr/
             var keyword = $('.courses_search_input[name="keyword"]').val().trim().split(' ').join('+');
             var teacher = $('.courses_search_input[name="teacher"]').val().trim().split(' ').join('+');
             var category = $('.courses_search_input[name="category"]').val().trim().split(' ').join('+');
+            if($('.courses_search_input[name="coursesetup"]').length > 0) {
+                var coursesetup = $('.courses_search_input[name="coursesetup"]').val().trim().split(' ').join('+');
+            }
             var filter = $("#course-filter :selected").val();
             $('li').removeClass('active');
             $('.dropdown-menu-tree').slideUp();
-            $('#load-course').load('/course/load_course.php?keyword=' + keyword + '&teacher=' + teacher + '&category=' + category + '&filter=' + filter, function() {
+            $('#load-course').load('/course/load_course.php?keyword=' + keyword + '&teacher=' + teacher + '&category=' + category + '&coursesetup=' + coursesetup + '&filter=' + filter, function() {
                 $('.loading-page').removeClass('active');
             });
         })
@@ -116,6 +119,19 @@ define(["jquery", "core/config", "core/str", "core/notification","local_newsvnr/
             }
         var kendoTeacherName = kendoService.initSearchAutoComplete(kendoConfig);
         $("#teacher").kendoAutoComplete(kendoTeacherName);
+
+        // search khóa học setup
+        if($("#coursesetup").length > 0) {
+            var kendoConfig = {};
+            kendoConfig.apiSettings = { url:script + 'search_coursesetup'};
+            kendoConfig.textfield = 'coursesetup';
+            kendoConfig.select = function(e) {
+                setTimeout(function() { $('#courses_search_button').click()},500);
+            }
+            var kendoCourseSetupName = kendoService.initSearchAutoComplete(kendoConfig);
+            $("#coursesetup").kendoAutoComplete(kendoCourseSetupName);
+        }
+        
     }
     return {
         init:init

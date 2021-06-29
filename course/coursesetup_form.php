@@ -46,7 +46,7 @@ class coursesetup_form extends moodleform {
         $mform->addElement('text', 'category_cs', get_string('category_cs', 'local_newsvnr'), 'maxlength="200" size="50" class="mb-0"');
         // $mform->addRule('category_cs', get_string('required'), 'required', null, 'client');
         $mform->setType('category_cs', PARAM_TEXT);
-        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3"></div><div class="col-md-3 pr-0 ml-3 form-inline felement" id="treeview-category-course" style="background-color: #e9ecef"></div></div>');
+        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-2"></div><div class="col-md-3 pr-0 ml-3 form-inline felement" id="treeview-category-course" style="background-color: #e9ecef"></div></div>');
 
         // $mform->addElement('text','competency_cs', get_string('competency_cs', 'local_newsvnr'),'maxlength="200" size="50"');
         // $mform->addRule('competency_cs', get_string('required'), 'required', null, 'client');
@@ -65,6 +65,11 @@ class coursesetup_form extends moodleform {
         $mform->addRule('shortname_cs', get_string('required'), 'required', null, 'client');
         $mform->setType('shortname_cs', PARAM_TEXT);
 
+        $choices = array();
+        $choices['0'] = get_string('hide');
+        $choices['1'] = get_string('show');
+        $mform->addElement('select', 'visible', get_string('visible', 'local_newsvnr'), $choices);
+        $mform->setDefault('visible', 1);
 
         $mform->addElement('textarea', 'description', get_string('description', 'local_newsvnr'),'wrap="virtual" rows="10" cols="52"');
         // $mform->addRule('description',get_string('required'),'required',null,'client');

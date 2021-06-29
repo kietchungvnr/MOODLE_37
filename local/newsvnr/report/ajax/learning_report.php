@@ -55,11 +55,11 @@ switch ($action) {
         $wheresql .= "AND CONCAT(u.firstname,' ',u.lastname) LIKE N'%$username%'";
         $wheresql .= ($courseid) ? "AND c.id = $courseid" : '';
         if ($datestart != 0 && $dateend != 0) {
-            $wheresql .= "AND ue.timestart > $datestart AND ue.timestart < $dateend";
+            $wheresql .= "AND ue.timecreated > $datestart AND ue.timecreated < $dateend";
         } elseif ($datestart != 0) {
-            $wheresql .= "AND ue.timestart > $datestart";
+            $wheresql .= "AND ue.timecreated > $datestart";
         } elseif ($dateend != 0) {
-            $wheresql .= "AND ue.timestart < $dateend";
+            $wheresql .= "AND ue.timecreated < $dateend";
         }
         break;
     case 'searchorgstructure':
@@ -86,11 +86,11 @@ $all = $DB->get_records_sql("SELECT ROW_NUMBER() OVER (ORDER BY c.id) AS RowNum,
                                     JOIN {context} AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
                                     JOIN {role} AS r ON r.id= ra.roleid
                                     LEFT JOIN mdl_course_completions cc ON cc.userid = c.id AND cc.course = c.id $wheresql");
-$sql = "SELECT ROW_NUMBER() OVER (ORDER BY c.id) AS RowNum,CONCAT(u.firstname,' ',u.lastname) as name,c.fullname as coursename,c.*,cc.timecompleted,u.id as userid,c.id as courseid,ue.timestart
+$sql = "SELECT ROW_NUMBER() OVER (ORDER BY c.id) AS RowNum,CONCAT(u.firstname,' ',u.lastname) as name,c.fullname as coursename,c.*,cc.timecompleted,u.id as userid,c.id as courseid,ue.timecreated
         FROM {role_assignments} AS ra
             JOIN {user} AS u ON u.id= ra.userid
             JOIN {user_enrolments} AS ue ON ue.userid=u.id
-            JOIN {enrol} AS e ON e.id=ue.enrolid
+            JOIN {enrol} AS e ON e.id= ue.enrolid
             JOIN {course} AS c ON c.id=e.courseid
             JOIN {context} AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
             JOIN {role} AS r ON r.id= ra.roleid
@@ -125,7 +125,7 @@ foreach ($get_list as $value) {
     $object             = new stdClass();
     $user               = $DB->get_record("user", ['id' => $value->userid]);
     $object->useravatar = $OUTPUT->user_picture($user);
-    $object->userhref   = $CFG->wwwroot . '/user/profile.php?id=' . $value->id;
+    $object->userhref   = $CFG->wwwroot . '/user/profile.php?id=' . $value->userid;
     $object->name       = $value->name;
     $object->coursehref = $CFG->wwwroot . '/course/view.php?id=' . $value->courseid;
     $object->coursename = $value->coursename;
@@ -138,7 +138,7 @@ foreach ($get_list as $value) {
             }
         }
     }
-    $object->timestart   = convertunixtime('d/m/Y', $value->timestart, 'Asia/Ho_Chi_Minh');
+    $object->timestart   = convertunixtime('d/m/Y', $value->timecreated, 'Asia/Ho_Chi_Minh');
     $object->process     = $process . '%';
     $object->classstatus = ($iscomplete == false) ? 'teacher-bg-2' : 'teacher-bg-3';
     $object->status      = ($iscomplete == false) ? get_string('unfinished', 'local_newsvnr') : get_string('finished', 'local_newsvnr');

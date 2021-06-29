@@ -33,7 +33,7 @@ class TokenController extends BaseController
 	    // error_reporting(E_ALL & ~E_NOTICE);
 	    $checkUser = $this->checkUser($request->getParam('username'),$request->getParam('password'));
 	    if($checkUser) {
-	    	$this->logger->info("Xác thực thành công!");
+	    	// $this->logger->info("Xác thực thành công!");
 	        $settings = $this->settings;
 	        $tokenId = Uuid::uuid1()->toString();
 	        $issuedAt = time();

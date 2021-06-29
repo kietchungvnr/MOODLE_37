@@ -62,7 +62,12 @@ $start = ($page - 1) * $pagetake;
 if ($start < $pagetake) {
     $start = 0;
 }
-
+$user = $DB->get_record('user',['id' => $USER->id]);
+if($CFG->sitetype == MOODLE_EDUCATION) {
+    if($user->divisionid && !is_siteadmin()) {
+        $condition .= "AND c.divisionid = $user->divisionid";
+    } 
+}
 if ($filter == "coursepopular") {
     // Hiện thị khóa học nổi bật, ghim
     $condition .= "AND c.pinned = 1 ";
@@ -74,9 +79,12 @@ if ($filter == "coursepopular") {
         $condition .= "AND r.id = 3 AND u.id = $USER->id ";
     }
 }
-
-// Script lấy danh sách khóa học theo giảng viên, tên khóa và tên danh mục
-$sql .= "SELECT DISTINCT c.id, cc.name category, c.fullname, c.timecreated, CONCAT(u.firstname, ' ', u.lastname) fullnamet
+$dbman = $DB->get_manager();
+if($dbman->table_exists('course_setup') && $CFG->sitetype == MOODLE_BUSINESS) {
+    $coursesetup  = optional_param('coursesetup', "", PARAM_TEXT);
+    $strcoursesetup = "N'" . '%' . $coursesetup . '%' . "'";
+    // Script lấy danh sách khóa học theo giảng viên, tên khóa và tên danh mục và tên coursetup
+    $sql .= "SELECT DISTINCT c.id, cc.name category, c.fullname, c.timecreated, c.coursesetup, CONCAT(u.firstname, ' ', u.lastname) fullnamet
             FROM {role_assignments} ra
                 JOIN {user} u ON ra.userid = u.id
                 JOIN {user_enrolments} ue ON u.id = ue.userid
@@ -85,68 +93,176 @@ $sql .= "SELECT DISTINCT c.id, cc.name category, c.fullname, c.timecreated, CONC
                 JOIN {context} ct ON ct.id = ra.contextid AND ct.instanceid = c.id
                 JOIN {role} r ON ra.roleid = r.id
                 JOIN {course_categories} cc ON c.category = cc.id
+                JOIN {course_setup} cs ON c.coursesetup = cs.id
             WHERE
                 c.visible = 1 AND
                 cc.visible = 1 AND
                 cc.name LIKE $strcategory AND
                 c.fullname LIKE $strcourse AND
+                cs.fullname LIKE $strcoursesetup AND
                 CONCAT(u.firstname, ' ', u.lastname) LIKE $strteacher";
 
-$notinarr = ['allcourse', 'coursepopular'];
-if ($id < 1 && $keycourse == '' && $teacher == '' && $category == '' && ($filter == '' || $filter == 'allcourse' || $filter == 'coursepopular')) {
-    // Hiện thị tất cả khóa học(mặc định lần đầu load page)
-    $sql = "SELECT c.id,c.fullname,c.timecreated
-            FROM {course} c
-                JOIN {course_categories} cc ON c.category = cc.id
-            WHERE
-                c.visible = 1 AND
-                cc.visible = 1 AND
-                c.id != 0 $condition";
-} elseif ($teacher != '' && ($category != '' || $keycourse != '')) {
-    // Hiện thị khóa học khi tìm kiếm cả 3 danh mục
-    if (in_array($filter, $notinarr)) {
-        $condition .= 'AND r.id = 3
+    $notinarr = ['allcourse', 'coursepopular'];
+    if ($id < 1 && $keycourse == '' && $teacher == '' && $category == ''  && $coursesetup == '' && ($filter == '' || $filter == 'allcourse' || $filter == 'coursepopular')) {
+        // Hiện thị tất cả khóa học(mặc định lần đầu load page)
+        $sql = "SELECT c.*
+        FROM {course} c
+            JOIN {course_categories} cc ON c.category = cc.id
+        WHERE
+            c.visible = 1 AND
+            cc.visible = 1 AND
+            c.id != 0 $condition";
+    } elseif ($teacher != '' && ($category != '' || $keycourse != '' || $coursesetup != '')) {
+        // Hiện thị khóa học khi tìm kiếm cả 4 danh mục
+        if (in_array($filter, $notinarr)) {
+            $condition .= 'AND r.id = 3
                         AND c.visible = 1
                         AND cc.visible = 1';
-    }
+        }
 
-    $sql .= " $condition";
-} elseif ($teacher != '') {
-    // Hiện thị khóa học khi tìm theo tên giảng viên
-    if (in_array($filter, $notinarr)) {
-        $condition .= 'AND r.id = 3';
-    }
-
-    $sql .= " $condition";
-
-} elseif ($category != '' || $keycourse != '') {
-    // Hiện thị khóa học khi tìm theo tên khóa học hoặc danh mục
-    if (in_array($filter, $notinarr)) {
-        $sql = "SELECT c.id,c.fullname,c.timecreated
-            FROM {course} c
-                JOIN {course_categories} cc ON c.category = cc.id
-            WHERE
-                c.visible = 1 AND
-                cc.visible = 1 AND
-                cc.name LIKE $strcategory AND
-                c.fullname LIKE $strcourse $condition";
+        $sql .= " $condition";
+    } elseif ($teacher != '') {
+        // Hiện thị khóa học khi tìm theo tên giảng viên
+        if (in_array($filter, $notinarr)) {
+            $condition .= 'AND r.id = 3';
+        }
+        $sql .= " $condition";
+    } elseif ($category != '' || $keycourse != '' || $coursesetup != '') {
+        // Hiện thị khóa học khi tìm theo tên khóa học hoặc danh mục
+        if (in_array($filter, $notinarr)) {
+            $sql = "SELECT c.*
+                FROM {course} c
+                    JOIN {course_categories} cc ON c.category = cc.id
+                WHERE
+                    c.visible = 1 AND
+                    cc.visible = 1 AND
+                    cc.name LIKE $strcategory AND
+                    c.fullname LIKE $strcourse $condition";
+            // Hiện thị khóa học khi tìm kiếm có tên khóa setup
+            $coursesetupsql = "SELECT c.*
+                                FROM {course} c
+                                    JOIN {course_categories} cc ON c.category = cc.id
+                                    JOIN {course_setup} cs ON c.coursesetup = cs.id";
+            if($category != '' && $keycourse != '' && $coursesetup != '') {
+                $sql = "$coursesetupsql
+                        WHERE
+                            c.visible = 1 AND
+                            cc.visible = 1 AND
+                            cc.name LIKE $strcategory AND
+                            c.fullname LIKE $strcourse AND
+                            cs.fullname LIKE $strcoursesetup $condition";
+            } elseif ($coursesetup != '' && $category != '') {
+                $sql = "$coursesetupsql
+                        WHERE
+                            c.visible = 1 AND
+                            cc.visible = 1 AND
+                            cc.name LIKE $strcategory AND
+                            cs.fullname LIKE $strcoursesetup $condition";
+            } elseif ($coursesetup != '' && $keycourse != '') {
+                $sql = "$coursesetupsql
+                        WHERE
+                            c.visible = 1 AND
+                            cc.visible = 1 AND
+                            c.fullname LIKE $strcourse AND
+                            cs.fullname LIKE $strcoursesetup $condition";
+            } elseif ($coursesetup != '') {
+                $sql = "$coursesetupsql
+                        WHERE
+                            c.visible = 1 AND
+                            cc.visible = 1 AND
+                            cs.fullname LIKE $strcoursesetup $condition";
+            }
+        } else {
+            // Hiện thị khóa học theo tên giảng viên (trường hợp k thể xảy ra :D)
+            $sql .= " $condition";
+        }
     } else {
-        // Hiện thị khóa học theo tên giảng viên (trường hợp k thể xảy ra :D)
-        $sql .= " $condition";
-    }
-} else {
-    if (!in_array($filter, $notinarr)) {
-        $sql .= " $condition";
-    }
-    if ($id > 1) {
-        // Load khóa học khi click vào từng danh mục trên cây danh mục khóa học
-        $sql = "SELECT c.id,c.fullname,c.timecreated
+        if (!in_array($filter, $notinarr)) {
+            $sql .= " $condition";
+        }
+        if ($id > 0) {
+            // Load khóa học khi click vào từng danh mục trên cây danh mục khóa học
+            $sql = "SELECT c.*
                 FROM {course} c
                     JOIN {course_categories} cc ON c.category = cc.id
                 WHERE
                     c.visible = 1 AND
                     cc.visible = 1 AND
                     c.category = $id $condition";
+        }
+    }
+} else {
+    // Script lấy danh sách khóa học theo giảng viên, tên khóa và tên danh mục
+    $sql .= "SELECT DISTINCT c.id, cc.name category, c.fullname, c.timecreated, CONCAT(u.firstname, ' ', u.lastname) fullnamet
+    FROM {role_assignments} ra
+        JOIN {user} u ON ra.userid = u.id
+        JOIN {user_enrolments} ue ON u.id = ue.userid
+        JOIN {enrol} enr ON ue.enrolid = enr.id
+        JOIN {course} c ON enr.courseid = c.id
+        JOIN {context} ct ON ct.id = ra.contextid AND ct.instanceid = c.id
+        JOIN {role} r ON ra.roleid = r.id
+        JOIN {course_categories} cc ON c.category = cc.id
+    WHERE
+        c.visible = 1 AND
+        cc.visible = 1 AND
+        cc.name LIKE $strcategory AND
+        c.fullname LIKE $strcourse AND
+        CONCAT(u.firstname, ' ', u.lastname) LIKE $strteacher";
+
+    $notinarr = ['allcourse', 'coursepopular'];
+    if ($id < 1 && $keycourse == '' && $teacher == '' && $category == '' && ($filter == '' || $filter == 'allcourse' || $filter == 'coursepopular')) {
+        // Hiện thị tất cả khóa học(mặc định lần đầu load page)
+        $sql = "SELECT c.*
+        FROM {course} c
+            JOIN {course_categories} cc ON c.category = cc.id
+        WHERE
+            c.visible = 1 AND
+            cc.visible = 1 AND
+            c.id != 0 $condition";
+    } elseif ($teacher != '' && ($category != '' || $keycourse != '')) {
+        // Hiện thị khóa học khi tìm kiếm cả 3 danh mục
+        if (in_array($filter, $notinarr)) {
+            $condition .= 'AND r.id = 3
+                        AND c.visible = 1
+                        AND cc.visible = 1';
+        }
+
+        $sql .= " $condition";
+    } elseif ($teacher != '') {
+        // Hiện thị khóa học khi tìm theo tên giảng viên
+        if (in_array($filter, $notinarr)) {
+            $condition .= 'AND r.id = 3';
+        }
+        $sql .= " $condition";
+    } elseif ($category != '' || $keycourse != '') {
+        // Hiện thị khóa học khi tìm theo tên khóa học hoặc danh mục
+        if (in_array($filter, $notinarr)) {
+            $sql = "SELECT c.*
+                FROM {course} c
+                    JOIN {course_categories} cc ON c.category = cc.id
+                WHERE
+                    c.visible = 1 AND
+                    cc.visible = 1 AND
+                    cc.name LIKE $strcategory AND
+                    c.fullname LIKE $strcourse $condition";
+        } else {
+            // Hiện thị khóa học theo tên giảng viên (trường hợp k thể xảy ra :D)
+            $sql .= " $condition";
+        }
+    } else {
+        if (!in_array($filter, $notinarr)) {
+            $sql .= " $condition";
+        }
+        if ($id > 0) {
+            // Load khóa học khi click vào từng danh mục trên cây danh mục khóa học
+            $sql = "SELECT c.*
+                FROM {course} c
+                    JOIN {course_categories} cc ON c.category = cc.id
+                WHERE
+                    c.visible = 1 AND
+                    cc.visible = 1 AND
+                    c.category = $id $condition";
+        }
     }
 }
 
@@ -178,6 +294,7 @@ foreach ($getcourse as $value) {
                                                     JOIN mdl_course c on c.category = cc.id
                                                 where c.id = :courseid", ['courseid' => $courseid]);
     $coursestarred = $DB->get_record('favourite', ['component' => 'core_course', 'itemid' => $courseid, 'userid' => $USER->id]);
+    
     if (isset($arr->id)) {
         $stduser = new stdClass();
         $userid  = $DB->get_records('user', array('id' => $arr->id));
@@ -193,7 +310,11 @@ foreach ($getcourse as $value) {
     echo html_writer::start_div('post-slide6');
     echo html_writer::start_div('post-img');
     echo $value->courseimage;
-    echo html_writer::start_div('post-info');
+    if($CFG->sitetype == MOODLE_BUSINESS) {
+        echo html_writer::start_div('post-info', ['style' => 'padding: 5px']);
+    } else {
+        echo html_writer::start_div('post-info');
+    }
     if($coursestarred) {
         echo html_writer::tag('div','<i class="fa fa-star mr-1"></i>',['class' => 'star-course starred','onclick' => "starCourse($courseid,'unstarred')",'courseid' => $courseid,'title' => 'Khóa học đã đánh sao']);
     } else {
@@ -203,6 +324,18 @@ foreach ($getcourse as $value) {
     echo html_writer::tag('li', get_string('countstudent', 'local_newsvnr') . ': <a href="#">' . $value->countstudent . '</a>');
     echo html_writer::tag('li', get_string('teachername', 'local_newsvnr') . ': <a href="#">' . $value->fullnamet . '</a>');
     echo html_writer::tag('li', get_string('coursecatogories', 'local_newsvnr') . ': ' . $value->category->name);
+    if($CFG->sitetype == MOODLE_BUSINESS) {
+        if(isset($value->coursesetup)) {
+            $coursesetup = $DB->get_field('course_setup', 'fullname', ['id' => $value->coursesetup]);
+            if($coursesetup)
+                echo html_writer::tag('li', get_string('coursesetup', 'local_newsvnr') . ': ' . $coursesetup);
+            else
+                echo html_writer::tag('li', get_string('coursesetup', 'local_newsvnr') . ': -');
+        } else {
+            echo html_writer::tag('li', get_string('coursesetup', 'local_newsvnr') . ': -');
+        }
+    }
+   
     echo html_writer::end_tag('ul');
     echo html_writer::end_div(); // end div post-info
     echo html_writer::end_div(); // end div post-img

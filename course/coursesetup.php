@@ -66,6 +66,7 @@ if($id){
         // $coursesetup->competency_cs = $DB->get_field('competency','name',['id' => $competencydb->shortname]);
         $coursesetup->fullname_cs = $value->fullname;
         $coursesetup->shortname_cs =  $value->shortname;
+        $coursesetup->visible =  $value->visible;
         $coursesetup->description =  $value->description;
        
     }
@@ -86,7 +87,7 @@ if ($editform->is_cancelled()) {
     if($data->category_cs)
         $getcategory = $DB->get_field('course_categories','id',['name' => $data->category_cs]);
     if($id){
-        $coursesetup_update = (object)array('id' => $data->id, 'category' => $getcategory, 'fullname' => $data->fullname_cs, 'shortname' => $data->shortname_cs, 'description' => $data->description, 'usermodified' => $USER->id, 'timemodified' => time());
+        $coursesetup_update = (object)array('id' => $data->id, 'category' => $getcategory, 'fullname' => $data->fullname_cs, 'shortname' => $data->shortname_cs, 'visible' => $data->visible,'description' => $data->description, 'usermodified' => $USER->id, 'timemodified' => time());
         if (isset($data->submitbutton)) {
             $message = $strupdate;
         }
@@ -103,6 +104,7 @@ if ($editform->is_cancelled()) {
         // $coursesetup->courseoforgstructure = $getorgstructeid;
         // $coursesetup->courseofjobtitle = $data->courseofjobtitle;
         // $coursesetup->courseofposition =  $data->courseofposition;
+        $coursesetup->visible = $data->visible;
         $coursesetup->description = $data->description;
         $coursesetup->usermodified = $USER->id;
         $coursesetup->timecreated = time();

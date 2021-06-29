@@ -21,8 +21,7 @@
  * @copyright  2019 Le Thanh Vu
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Course by user plan';
+$string['pluginname'] = 'Personalized course for the position';
 $string['countstudent'] = 'Student';
 $string['teachername'] = 'Teacher';
 $string['nocourse'] = 'There are no courses for this plan';

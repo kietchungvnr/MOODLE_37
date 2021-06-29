@@ -66,6 +66,11 @@ class CourseController extends BaseController {
 		    	$this->data->enddate = strtotime($request->getParam('enddate'));
 		    else 
 		    	$this->data->enddate = 0;
+		    if(isset($this->data->visible)) {
+		    	$this->data->visible = $request->getParam('visible');
+		    } else {
+		    	$this->data->visible = 1;
+		    }
 		    $this->data->description = $request->getParam('description');
 
 	    } else {
@@ -112,7 +117,6 @@ class CourseController extends BaseController {
 				$this->data->showgrades = 1;
 				$this->data->numsections = 4;
 				$this->data->newsitems = 10;
-				$this->data->visible = 1;
 				$this->data->showreports = 1;
 				$this->data->summary = '';
 				$this->data->summaryformat = FORMAT_HTML;
@@ -165,7 +169,6 @@ class CourseController extends BaseController {
 				$this->data->showgrades = 1;
 				$this->data->numsections = 4;
 				$this->data->newsitems = 10;
-				$this->data->visible = 1;
 				$this->data->showreports = 1;
 				$this->data->summary = '';
 				$this->data->summaryformat = FORMAT_HTML;

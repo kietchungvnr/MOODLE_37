@@ -21,8 +21,7 @@
  * @copyright  2019 Le Thanh Vu
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Khoá học theo lộ trình cá nhân';
+$string['pluginname'] = 'Khoá học theo lộ trình cá nhân cho vị trí';
 $string['countstudent'] = 'Học viên';
 $string['teachername'] = 'Giáo viên';
 $string['nocourse'] = 'Không có khoá học cho kế hoạch này';

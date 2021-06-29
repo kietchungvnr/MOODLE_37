@@ -104,6 +104,7 @@
     .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .submissiongraded,
     .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .latesubmission,
     .path-mod-assign [data-region="grade-panel"] div.submissionstatustable .overdue  {
+        text-transform: capitalize;
         border-bottom: 1px solid #dee2e6;
         padding: 10px;
     }
@@ -138,5 +139,9 @@
     }
     .path-mod-assign [data-region="grade-panel"].fullwidth [data-region="grade"] {
         max-width: 100% !important;
+    }
+    .path-mod-assign div[data-region="user-info"] h3 {
+        font-size: 14px;
+        text-align: center;
     }
 </style>

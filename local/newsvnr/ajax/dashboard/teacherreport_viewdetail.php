@@ -147,6 +147,7 @@ switch ($action) {
             foreach ($listuser as $user) {
                 $obj              = new stdClass;
                 $obj->usercode    = $user->usercode;
+                $obj->userid      = $user->id;
                 $userurl = '<a href="'.$CFG->wwwroot . '/user/profile.php?id='.$user->id.'" target="_blank">'.fullname($user).'</a>';
                 $obj->name        = $OUTPUT->user_picture($user, array('size'=>35)) . $userurl;
                 $obj->email       = $user->email;
@@ -157,10 +158,18 @@ switch ($action) {
                 } else {
                     $obj->lastaccess = get_string("never");
                 }
-                $obj->total = $user->total;
                 $data[] = $obj;
             }
         }
+        $tempid = [];
+        $uniquedata = [];
+        foreach ($data as $value) {
+            if(!in_array($value->userid,$tempid)) {
+                $tempid[] = $value->userid;
+                $uniquedata[] = $value;
+            } 
+        }
+        $data = $uniquedata;
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 'viewmodule':

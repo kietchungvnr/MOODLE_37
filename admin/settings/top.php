@@ -52,6 +52,13 @@ $ADMIN->add('root', new admin_category('examvnr', new lang_string('manageexam', 
 
 // hidden unsupported category
 $ADMIN->add('root', new admin_category('unsupported', new lang_string('unsupported', 'admin'), true));
+if($CFG->sitetype == MOODLE_EDUCATION) {
+	$ADMIN->add('root', new admin_category('division', get_string('division','local_newsvnr')));
+	$ADMIN->add('division', new admin_externalpage('divisionmanagement',get_string('divisionmanagement','local_newsvnr'),
+    	new moodle_url('/local/newsvnr/division/index.php'), ['moodle/site:config']));
+}
+
+
 
 // hidden search script
 $ADMIN->add('root', new admin_externalpage('search', new lang_string('search', 'admin'), "$CFG->wwwroot/$CFG->admin/search.php", 'moodle/site:configview', true));

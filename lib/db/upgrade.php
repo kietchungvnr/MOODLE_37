@@ -2557,5 +2557,43 @@ function xmldb_main_upgrade($oldversion) {
         upgrade_main_savepoint(true, 2019052002.07);
     }
 
+    // Custom by Vũ: Thêm field chi nhánh education vào bảng user và course
+    if ($oldversion < 2020061524.28) {
+
+        $table = new xmldb_table('user');
+        $field = new xmldb_field('divisionid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        
+
+        $table = new xmldb_table('course');
+
+        $table->add_field('divisionid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+        $field = new xmldb_field('divisionid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $table = new xmldb_table('user');
+        $index = new xmldb_index('divisionid', XMLDB_INDEX_NOTUNIQUE, ['divisionid']);
+
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+        
+        $table = new xmldb_table('course');
+        $index = new xmldb_index('divisionid', XMLDB_INDEX_NOTUNIQUE, ['divisionid']);
+
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Main savepoint reached.
+        upgrade_main_savepoint(true, 2020061524.28);
+    }
+    
     return true;
 }

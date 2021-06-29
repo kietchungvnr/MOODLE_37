@@ -107,7 +107,7 @@ foreach ($get_list as $value) {
     $obj->totalstudent    = count($list_user);
     $obj->studentunfinish = $i . ' / ' . count($list_user);
     if ($sum != 0) {
-        $obj->courseaveragepoint = $sum / $j;
+        $obj->courseaveragepoint = round($sum / $j, 2);
         $obj->highestpoint       = $max;
         $obj->lowestpoint        = $min;
     } else {

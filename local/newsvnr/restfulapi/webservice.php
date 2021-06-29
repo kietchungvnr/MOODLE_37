@@ -1694,7 +1694,7 @@ if($action == 'coursesetup_management') {
 		$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
 	}
 	$sql = "
-			SELECT *, (SELECT COUNT(id) FROM {course_setup}) AS total
+			SELECT *, (SELECT COUNT(id) FROM {course_setup} $wheresql) AS total
 			FROM (
 			    SELECT *, ROW_NUMBER() OVER (ORDER BY id) AS RowNum
 			    FROM {course_setup}
@@ -1713,6 +1713,15 @@ if($action == 'coursesetup_management') {
 		$buttons[] = html_writer::link(new moodle_url('/course/coursesetup.php',array('id' => $value->id)),
 		$OUTPUT->pix_icon('t/edit', get_string('edit')),
 		array('title' => get_string('edit')));
+		if($value->visible == 1) {
+			$buttons[] = html_writer::link('javascript:void(0)',
+			$OUTPUT->pix_icon('t/hide', get_string('hide')),
+			array('title' => get_string('hide'),'id' => $value->id, 'class' => 'hide-item','data-active' => 'coursesetup_hide','id' => $value->id,'onclick' => 'coursesetup_hide('.$value->id.',0)'));	
+		} else {
+			$buttons[] = html_writer::link('javascript:void(0)',
+			$OUTPUT->pix_icon('t/show', get_string('show')),
+			array('title' => get_string('show'),'id' => $value->id, 'class' => 'show-item','data-active' => 'coursesetup_hide','id' => $value->id,'onclick' => 'coursesetup_hide('.$value->id.',1)'));	
+		}
 		$buttons[] = html_writer::link('javascript:void(0)',
 		$OUTPUT->pix_icon('t/delete', get_string('delete')),
 		array('title' => get_string('delete'),'id' => $value->id, 'class' => 'delete-item','id' => $value->id,'onclick' => 'coursesetup_delete('.$value->id.')'));
@@ -1731,7 +1740,14 @@ if($action == 'coursesetup_management') {
 }
 
 if($action == 'search_category') {
-	$sql = "SELECT * FROM {course_categories} WHERE visible = 1";
+	$user = $DB->get_record('user',['id' => $USER->id]);
+	$wheresql = '';
+	if($CFG->sitetype == MOODLE_EDUCATION) {
+		if($user->divisionid && !is_siteadmin()) {
+			$wheresql .= "JOIN {division_categories} dc on dc.coursecategorysid = cc.id";
+		}
+	} 
+	$sql = "SELECT DISTINCT cc.name FROM {course_categories} cc $wheresql WHERE cc.visible = 1";
 	$get_list = $DB->get_records_sql($sql);
 	$data = [];
 	foreach ($get_list as $value) {
@@ -1743,9 +1759,16 @@ if($action == 'search_category') {
 }
 
 if($action == 'search_course') {
+	$user = $DB->get_record('user',['id' => $USER->id]);
+	$wheresql = '';
+	if($CFG->sitetype == MOODLE_EDUCATION) {
+		if($user->divisionid && !is_siteadmin()) {
+			$wheresql .= "AND c.divisionid = $user->divisionid";
+		}
+	}
 	$sql = "SELECT c.id,c.fullname,cc.name FROM {course} c
 			JOIN {course_categories} cc on c.category = cc.id
-			WHERE c.visible = 1";
+			WHERE c.visible = 1 $wheresql";
 	$get_list = $DB->get_records_sql($sql);
 	$data = [];
 	foreach ($get_list as $value) {
@@ -1774,6 +1797,19 @@ if($action == 'search_teacher') {
 	foreach ($get_list as $value) {
 		$object = new stdclass;
 		$object->fullnamet = $value->fullnamet;
+		$data[] = $object;
+	}
+	echo json_encode($data,JSON_UNESCAPED_UNICODE);
+}
+
+if($action == 'search_coursesetup') {
+	$sql = "SELECT *
+			FROM {course_setup}";
+	$get_list = $DB->get_records_sql($sql);
+	$data = [];
+	foreach ($get_list as $value) {
+		$object = new stdclass;
+		$object->coursesetup = $value->fullname;
 		$data[] = $object;
 	}
 	echo json_encode($data,JSON_UNESCAPED_UNICODE);

@@ -25,7 +25,12 @@
 class block_vnr_db_requirecourse_position extends block_base {
     
     public function init() {
-        $this->title = get_string('pluginname', 'block_vnr_db_requirecourse_position');
+        global $USER, $DB, $CFG;
+        if($USER->id > 2 && $CFG->sitetype = MOODLE_BUSINESS && $USER->orgpositionid > 0) {
+            $this->title = get_string('pluginname', 'block_vnr_db_requirecourse_position') . ' ('. $DB->get_field('orgstructure_position', 'name', ['id' => $USER->orgpositionid]) .')';
+        } else {
+            $this->title = get_string('pluginname', 'block_vnr_db_requirecourse_position');
+        }
     }
     
     function get_content() {

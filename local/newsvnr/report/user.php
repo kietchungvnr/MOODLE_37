@@ -36,13 +36,15 @@ $PAGE->set_url($url);
 $PAGE->set_title($title);
 
 $PAGE->set_heading($title);
+$PAGE->navbar->add(get_string('siteadmin','local_newsvnr'),$CFG->wwwroot.'/admin/search.php');
+$PAGE->navbar->add(get_string('user','local_newsvnr'),$CFG->wwwroot.'/admin/search.php#linkusers');
 $PAGE->navbar->add($title,$url);
 $PAGE->navbar->ignore_active();
 $PAGE->requires->js_call_amd('local_newsvnr/user_report', 'init');
 $PAGE->requires->js_call_amd('local_newsvnr/user_report', 'deleteUser');
 $PAGE->requires->js_call_amd('local_newsvnr/user_report', 'openPopUp');
 $PAGE->requires->js_call_amd('local_newsvnr/user_report', 'kendoDropdown');
-$PAGE->requires->strings_for_js(array('emptydata','selectrole','selectcourse','selectstatus','selectorgstructuretype','selectorgstructure','selectjobtitle','selectjobposition','selectcourse','studentcode','email','timeaccess','createdtime','lastaccess','action','studentname','codeuser'), 'local_newsvnr');
+$PAGE->requires->strings_for_js(array('emptydata','selectrole','selectcourse','selectstatus','selectorgstructuretype','selectorgstructure','selectjobtitle','selectjobposition','selectcourse','studentcode','email','timeaccess','createdtime','lastaccess','action','studentname','codeuser', 'username_login'), 'local_newsvnr');
 $page = new \local_newsvnr\output\user_report_page();
 
 $output = $PAGE->get_renderer('local_newsvnr');

@@ -26,7 +26,6 @@
 namespace local_newsvnr\output;
 
 require_once('../lib.php');
-require_once("$CFG->dirroot/webservice/externallib.php");
 use renderable;
 use templatable;
 use renderer_base;
@@ -34,7 +33,11 @@ use stdClass;
 
 class trainingplan_report_page implements renderable, templatable  {
     public function export_for_template(renderer_base $output) {
-        global $DB,$CFG;
+        global $CFG;
+        $data = [];
+        if($CFG->sitetype == MOODLE_BUSINESS)
+            $data['isbusiness'] = true;
+        return $data;
     }
 
 }

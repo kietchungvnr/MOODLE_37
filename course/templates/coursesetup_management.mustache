@@ -15,6 +15,7 @@ const coursesetup_delete = (section_id) => {
             type: "GET",
             processData: true,
             data:{
+              action: 'delete',
               id: section_id
             },
             contentType: "application/json"
@@ -32,5 +33,45 @@ const coursesetup_delete = (section_id) => {
           }
     })
 }
+
+const coursesetup_hide = (section_id, visible) => {
+    require(["jquery", "core/config", "core/str", 'kendo.all.min'], ($, config, Str, kendo) => {
+        var strings = [
+            {
+                key: "showrecord",
+                component: "local_newsvnr",
+            },
+            {
+                key: "hiderecord",
+                component: "local_newsvnr",
+            },
+        ];
+        Str.get_strings(strings).then(function (s) {
+          if (visible == 0) 
+            var confm = confirm(s[1]);
+          else 
+            var confm = confirm(s[0]);
+          var script = config.wwwroot + "/course/ajax/coursesetup_delete.php";
+          var settings = {
+              type: "GET",
+              processData: true,
+              data: {
+                  action: 'hide',
+                  id: section_id,
+                  visible: visible,
+              },
+              contentType: "application/json",
+          };
+          if (confm) {
+              $.ajax(script, settings).then(function (response) {
+                  if (response) {
+                    var gridCourseSetup = $('#showlistcoursesetup_data').data('kendoGrid');
+                    gridCourseSetup.dataSource.read();
+                  }
+              });
+          }
+        });
+    });
+};
 
 </script>

@@ -530,6 +530,11 @@ define('EMAIL_VIA_ALWAYS', 1);
  */
 define('EMAIL_VIA_NO_REPLY_ONLY', 2);
 
+// Custom by Vũ: Phân 2 loại mô hình là doanh nghiệp và đào tạo
+define('MOODLE_BUSINESS', 'business');
+
+define('MOODLE_EDUCATION', 'education');
+
 // PARAMETER HANDLING.
 
 /**

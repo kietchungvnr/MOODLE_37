@@ -58,6 +58,32 @@
                     <span class="sr-only">{{#str}}loadinghelp{{/str}}</span>
                     {{#pix}}i/loading_small{{/pix}}
                 </span>
+                {{! Custom by Vũ: Thêm trợ giúp vào file manager (Tài nguyên hệ thống) }}
+                {{#helpfilesystem}}
+                <div class="fp-btn-help">
+                    <a role="button" class="btn btn-secondary btn-sm" href="#" data-toggle="tooltip" data-placement="right" data-html="true" 
+                    title='<div class="form-filetypes-descriptions w-100">
+                            <span>{{#str}}filesofthesetypes, form{{/str}}</span>
+                            <ul class="list-unstyled unstyled">
+                                <li>Archive (RAR) <small class="text-muted muted">.rar</small></li>
+                                <li>Archive (ZIP) <small class="text-muted muted">.zip</small></li>
+                                <li>Excel 2007 macro-enabled workbook <small class="text-muted muted">.xlsm</small></li>
+                                <li>Excel 2007 spreadsheet <small class="text-muted muted">.xlsx</small></li>
+                                <li>Excel spreadsheet <small class="text-muted muted">.xls</small></li>
+                                <li>Image (JPEG) <small class="text-muted muted">.jpeg .jpg</small></li>
+                                <li>Image (PNG) <small class="text-muted muted">.png</small></li>
+                                <li>PDF document <small class="text-muted muted">.pdf</small></li>
+                                <li>Powerpoint 2007 presentation <small class="text-muted muted">.pptx</small></li>
+                                <li>Powerpoint presentation <small class="text-muted muted">.ppt</small></li>
+                                <li>Text file <small class="text-muted muted">.txt</small></li>
+                                <li>Word 2007 document <small class="text-muted muted">.docx</small></li>
+                                <li>Word document <small class="text-muted muted">.doc</small></li>
+                            </ul>
+                        </div>'>
+                        <i class="icon slicon-question fa-fw"></i>
+                    </a>
+                </div>
+                {{/helpfilesystem}}
             </div>
             <div class="fp-viewbar btn-group float-sm-right">
                 <a title="{{#str}}displayicons, repository{{/str}}" class="fp-vb-icons btn btn-secondary btn-sm" href="#">

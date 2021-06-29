@@ -57,7 +57,7 @@ require_login($course, true, $cm);
 if (!wiki_user_can_view($subwiki, $wiki)) {
     print_error('cannotviewpage', 'wiki');
 }
-require_capability('mod/wiki:managefiles', $context);
+// require_capability('mod/wiki:managefiles', $context);
 
 if (empty($returnurl)) {
     $referer = get_local_referer(false);

@@ -53,8 +53,10 @@ class MoodleQuickForm_filemanager extends HTML_QuickForm_element implements temp
     // PHP doesn't support 'key' => $value1 | $value2 in class definition
     // We cannot do $_options = array('return_types'=> FILE_INTERNAL | FILE_REFERENCE);
     // So I have to set null here, and do it in constructor
+
+    // Custom by Vũ: Không cho hiện thị các loại file được upload bằn biến 'display_accepted_types'
     protected $_options = array('mainfile' => '', 'subdirs' => 1, 'maxbytes' => -1, 'maxfiles' => -1,
-            'accepted_types' => '*', 'return_types' =>  null, 'areamaxbytes' => FILE_AREA_MAX_BYTES_UNLIMITED);
+            'accepted_types' => '*', 'return_types' =>  null, 'areamaxbytes' => FILE_AREA_MAX_BYTES_UNLIMITED, 'display_accepted_types' => true);
 
     /**
      * Constructor
@@ -290,6 +292,8 @@ class MoodleQuickForm_filemanager extends HTML_QuickForm_element implements temp
         $options->return_types = $this->_options['return_types'];
         $options->context = $PAGE->context;
         $options->areamaxbytes = $this->_options['areamaxbytes'];
+        // Custom by Vũ: Không cho hiện thị các loại file được upload bằn biến 'display_accepted_types'
+        $options->display_accepted_types = $this->_options['display_accepted_types'];
 
         $html = $this->_getTabs();
         $fm = new form_filemanager($options);
@@ -297,8 +301,8 @@ class MoodleQuickForm_filemanager extends HTML_QuickForm_element implements temp
         $html .= $output->render($fm);
 
         $html .= html_writer::empty_tag('input', array('value' => $draftitemid, 'name' => $elname, 'type' => 'hidden', 'id' => $id));
-
-        if (!empty($options->accepted_types) && $options->accepted_types != '*') {
+        // Custom by Vũ: Không cho hiện thị các loại file được upload bằn biến 'display_accepted_types'
+        if (!empty($options->accepted_types) && $options->accepted_types != '*' && $options->display_accepted_types == true) {
             $html .= html_writer::tag('p', get_string('filesofthesetypes', 'form'));
             $util = new \core_form\filetypes_util();
             $filetypes = $options->accepted_types;

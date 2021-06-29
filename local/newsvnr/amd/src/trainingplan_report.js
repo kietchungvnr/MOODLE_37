@@ -94,7 +94,6 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         var colums = [
             {
                 template:function(e) {
-                    return e.name;
                     return  e.useravatar + "<a href='"+ e.userhref +"' target='_blank'>"+ e.name +"</a>"
                 },
                 field: "name",
@@ -102,6 +101,9 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                 width: "100px"
             },
             {
+                template:function(e) {
+                    return "<a href='"+ e.routehref +"' target='_blank'>"+ e.routename +"</a>"
+                },
                 field: "routename",
                 title: M.util.get_string('currentplan', 'local_newsvnr'),
                 width: "120px"
@@ -124,13 +126,34 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                 field: "timecompleted",
                 title: M.util.get_string('timefinishcourse', 'local_newsvnr'),
                 width: "70px"
+            },
+            {
+                field: "timecompleted",
+                title: M.util.get_string('timefinishcourse', 'local_newsvnr'),
+                width: "70px"
+            },
+            {
+                field: "routenear",
+                title: M.util.get_string('nextroute', 'local_newsvnr'),
+                width: "70px" 
             }
         ];
         var toolbar = ["excel"]
         var excel = { 
-            fileName: "trainingplan_report.xlsx",
+            fileName: "Report.xlsx",
             allPages: true
         }
+        var onChange = function() {
+            var selected = $.map(this.select(), function(item) {
+                return $(item).text();
+            });
+            if(selected.length > 0) {
+                $('#exporttable').addClass('action');
+            } else {
+                $('#exporttable').removeClass('action');
+            }
+        }   
+        kendoConfig.onChange = onChange;
         kendoConfig.toolbar = toolbar;
         kendoConfig.excel = excel;
         kendoConfig.columns = colums;
@@ -185,8 +208,22 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         $('#resettable').click(function() {
             initGrid();
         })
-        $('#exporttable').click(function() {
-            $('.k-grid-excel').click();
+        $("#exporttable").on('click', function(e){
+            var trs = $('#trainingplan_report').find('tr');
+            if ($(trs).find(":checkbox").is(":checked")) {
+                var row = [{
+                    cells: [
+                        { value: M.util.get_string('studentname', 'local_newsvnr') },
+                        { value: M.util.get_string('currentplan', 'local_newsvnr') },
+                        { value: M.util.get_string('progress', 'local_newsvnr') },
+                        { value: M.util.get_string('status', 'local_newsvnr') },
+                        { value: M.util.get_string('timefinishcourse', 'local_newsvnr') }
+                    ]
+                }]
+                exportExcelKendo('#trainingplan_report',row);
+            } else {
+                $('.k-grid-excel').click();
+            }
         })
     }
     return {

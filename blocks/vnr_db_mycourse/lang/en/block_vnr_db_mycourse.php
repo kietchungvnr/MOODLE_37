@@ -24,8 +24,8 @@
 
 $string['pluginname'] = 'My course';
 $string['countstudent'] = 'Student';
-$string['block_vnr_db_courseinfo_management:addinstance'] = 'Add a new my course block';
-$string['block_vnr_db_courseinfo_management:myaddinstance'] = 'Add a new my course block to Dashboard';
+$string['vnr_db_mycourse:addinstance'] = 'Add a new my course block';
+$string['vnr_db_mycourse:myaddinstance'] = 'Add a new my course block to Dashboard';
 $string['timeopencourse'] = "Time open course";
 $string['timeendcourse'] = "Time end course";
 $string['number'] = "Number";

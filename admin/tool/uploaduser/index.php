@@ -151,6 +151,10 @@ if (empty($iid)) {
     $filecolumns = uu_validate_user_upload_columns($cir, $STD_FIELDS, $PRF_FIELDS, $returnurl);
 }
 
+if(!in_array('email', $filecolumns)) {
+    array_push($filecolumns, 'email');
+}
+
 $mform2 = new admin_uploaduser_form2(null, array('columns'=>$filecolumns, 'data'=>array('iid'=>$iid, 'previewrows'=>$previewrows)));
 
 // If a file has been uploaded, then process it
@@ -275,7 +279,7 @@ if ($formdata = $mform2->is_cancelled()) {
                 $error = true;
             }
 
-            if(!$DB->record_exists('orgstructure_position',['name' => $user->orgpositionname])) {
+            if(isset($user->orgpositionname) && !$DB->record_exists('orgstructure_position',['name' => $user->orgpositionname])) {
                 $upt->track('orgpositionname', get_string('invalidorgposition','local_newsvnr'),'error');
                 $error = true;
             }
@@ -783,7 +787,11 @@ if ($formdata = $mform2->is_cancelled()) {
 
             $isinternalauth = $auth->is_internal();
 
+            if (empty($user->email) || !isset($user->email)) {
+                $user->email = $user->username . '_' . $linenum . '@temporary.vn';
+            }
             if (empty($user->email)) {
+                
                 $upt->track('email', get_string('invalidemail'), 'error');
                 $upt->track('status', $strusernotaddederror, 'error');
                 $userserrors++;
@@ -846,7 +854,7 @@ if ($formdata = $mform2->is_cancelled()) {
                 $upt->track('password', '-', 'normal', false);
             }
 
-            if($user->orgpositionname) {
+            if(isset($user->orgpositionname)) {
                 $user->orgpositionid = $DB->get_field('orgstructure_position', 'id', ['name' => $user->orgpositionname]);
             }
 
@@ -1224,6 +1232,7 @@ while ($linenum <= $previewrows and $fields = $cir->next()) {
     foreach($fields as $key => $field) {
         $rowcols[$filecolumns[$key]] = s(trim($field));
     }
+    $rowcols['email'] = '';
     $rowcols['status'] = array();
 
     if (isset($rowcols['username'])) {
@@ -1240,7 +1249,8 @@ while ($linenum <= $previewrows and $fields = $cir->next()) {
 
     if (isset($rowcols['email'])) {
         if (!validate_email($rowcols['email'])) {
-            $rowcols['status'][] = get_string('invalidemail');
+            $rowcols['email'] = $rowcols['username'] . '_' . $linenum . '@temporary.vn';
+            // $rowcols['status'][] = get_string('invalidemail');
         }
 
         $select = $DB->sql_like('email', ':email', false, true, false, '|');

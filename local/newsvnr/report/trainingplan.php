@@ -36,12 +36,14 @@ $PAGE->set_url($url);
 $PAGE->set_title($title);
 
 // $PAGE->set_heading($title);
+$PAGE->navbar->add(get_string('siteadmin','local_newsvnr'),$CFG->wwwroot.'/admin/search.php');
+$PAGE->navbar->add(get_string('user','local_newsvnr'),$CFG->wwwroot.'/admin/search.php#linkusers');
 $PAGE->navbar->add($title,$url);
 $PAGE->navbar->ignore_active();
 $PAGE->set_pagetype('trainingplan-report');
 $PAGE->requires->js_call_amd('local_newsvnr/trainingplan_report', 'init');
 $PAGE->requires->js_call_amd('local_newsvnr/trainingplan_report', 'kendoDropdown');
-$PAGE->requires->strings_for_js(array('emptydata','selectorgstructuretype','selectorgstructure','selectjobtitle','selectjobposition','selectcourse','studentcode','action','studentname','status','timefinishcourse','reviewer','course','selectplan','select','progress','currentplan'), 'local_newsvnr'); 	
+$PAGE->requires->strings_for_js(array('emptydata','selectorgstructuretype','selectorgstructure','selectjobtitle','selectjobposition','selectcourse','studentcode','action','studentname','status','timefinishcourse','reviewer','course','selectplan','select','progress','currentplan','nextroute'), 'local_newsvnr'); 	
 $page = new \local_newsvnr\output\trainingplan_report_page();
 
 $output = $PAGE->get_renderer('local_newsvnr');

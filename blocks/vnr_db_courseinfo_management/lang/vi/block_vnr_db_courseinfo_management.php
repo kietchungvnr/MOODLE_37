@@ -22,11 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Quản lý khóa học';
+$string['pluginname'] = 'Quản lý kết quả đào tạo';
 $string['countstudent'] = 'Học viên';
 $string['teachername'] = 'Giáo viên';
-$string['block_vnr_db_courseinfo_management:addinstance'] = 'Thêm mới block quản lý thông tin khóa học';
-$string['block_vnr_db_courseinfo_management:myaddinstance'] = 'Thêm mới block quản lý thông tin khóa học vào nhà của tôi';
+$string['vnr_db_courseinfo_management:addinstance'] = 'Thêm mới block quản lý thông tin khóa học';
+$string['vnr_db_courseinfo_management:myaddinstance'] = 'Thêm mới block quản lý thông tin khóa học vào nhà của tôi';
 $string['privacy:metadata'] = 'Block khóa học gợi ý theo vị trí chỉ hiển thị dữ liệu được lưu trữ ở các vị trí khác';
 $string['timeopencourse'] = "Thời gian mở lớp";
 $string['timeendcourse'] = "Thời gian kết thúc";

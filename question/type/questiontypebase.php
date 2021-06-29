@@ -398,8 +398,12 @@ class question_type {
         if (isset($form->level)) {
             $question->level = $form->level;
         }
-        $question->imgwidth = $form->imgwidth;
-        $question->imgheight = $form->imgheight;
+        if(isset($question->imgwidth)) {
+            $question->imgwidth = $form->imgwidth;
+        }
+        if(isset($question->imgheight)) {
+            $question->imgheight = $form->imgheight;
+        }
         // If the question is new, create it.
         $newquestion = false;
         if (empty($question->id)) {

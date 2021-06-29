@@ -167,6 +167,18 @@ if ($ADMIN->fulltree) {
     * ----------------------
     */
     $page = new admin_settingpage('theme_moove_advanced', get_string('advancedsettings', 'theme_moove'));
+
+    // Choice sitetype for Domain
+    $name = 'theme_moove/sitetype';
+    $title = get_string('settings_sitetype', 'theme_moove');
+    $description = get_string('settings_sitetypedesc', 'theme_moove');
+    $options = [];
+    $options['business'] = get_string('settings_business', 'theme_moove');
+    $options['education'] = get_string('settings_education', 'theme_moove');
+    $setting = new admin_setting_configselect($name, $title, $description, $default, $options);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
     // Show/Hidden tab in site administration
     $listtab = [
             'users' => get_string('users', 'admin'),
@@ -329,17 +341,6 @@ if ($ADMIN->fulltree) {
     ];
     $setting = new admin_setting_configmultiselect('theme_moove/menuitem', get_string('listmenuitem', 'local_newsvnr'),
     get_string('listmenuitemdesc', 'local_newsvnr'), [], $listmenuitem);
-    $page->add($setting);
-
-    // Select type dashboard default
-    $name = 'theme_moove/dashboardrole';
-    $listdashboard = [
-            'default' => get_string('default','local_newsvnr'),
-            'admin' => 'Dashboard admin',
-            'student' => get_string('studentdashboard', 'local_newsvnr'),
-            'teacher' => get_string('teacherdashboard','local_newsvnr'),
-    ];
-    $setting = new admin_setting_configselect($name, get_string('dashboardrole','local_newsvnr'),get_string('dashboardroledesc','local_newsvnr'), $default , $listdashboard);
     $page->add($setting);
 
     // Change portal to full funcs

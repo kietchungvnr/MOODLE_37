@@ -164,7 +164,7 @@ if(!empty($course->id)) {
     }
     $course->courseofjobtitle = $courseofjobtitle;
     $course->courseofposition = $courseofposition;
-    $coursesetup = $DB->get_record_sql('SELECT TOP 1 cs.* FROM {course} c JOIN {course_setup} cs ON c.category = cs.category WHERE c.id = ?', [$course->id]);
+    $coursesetup = $DB->get_record_sql('SELECT TOP 1 cs.* FROM {course} c LEFT JOIN {course_setup} cs ON c.category = cs.category WHERE c.id = ?', [$course->id]);
 }
 
 $args = array(
@@ -182,7 +182,7 @@ if ($editform->is_cancelled()) {
 } else if ($data = $editform->get_data()) {
 
     //Custom by Vũ: Params and url hrm api
-    $course_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecCourse']);
+    $course_api = $DB->get_record('local_newsvnr_api',['functionapi' => 'CreateOrUpdateRecCourse', 'visible' => 1]);
     if($course_api) {
         $params_el = [
                     'CourseName' => $data->fullname,
@@ -201,7 +201,7 @@ if ($editform->is_cancelled()) {
     }
     
     //Custom by Vũ : Add coursesetup vào course data
-    if(isset($_REQUEST['coursesetup'])) {
+    if(isset($data->coursesetup) && $data->coursesetup) {
         $data->coursesetup = $_REQUEST['coursesetup'][0];
     }
     if(isset($data->courseoforgstructure)) {
@@ -209,9 +209,9 @@ if ($editform->is_cancelled()) {
     }
     $courseposition = [];
     
-    if($data->courseofposition)
+    if(isset($data->courseofposition))
         $courseofposition = $data->courseofposition;
-    if($data->courseofposition)
+    if(isset($data->courseofjobtitle))
         $courseofjobtitle = $data->courseofjobtitle;
     //Nếu bảng course k còn pb - cd - cv thì không cần những dòng này
     unset($data->courseofposition);
@@ -226,12 +226,12 @@ if ($editform->is_cancelled()) {
         if($course && $course_api) {
             if($params_hrm) {
                 $params_hrm['Status'] = "E_CREATE";
-                if($data->typeofcourse == COURSE_INTERVIEW_HRM || $data->typeofcourse == COURSE_TRANING_HRM) {
+                if($data->typeofcourse == COURSE_INTERVIEW_HRM || $data->typeofcourse == COURSE_TRAINING_HRM) {
                     HTTPPost($url_hrm, $params_hrm);
                 }
             }
         }
-        if(isset($data->courseoforgstructure)) {
+        if(isset($data->courseoforgstructure, $courseofjobtitle, $courseofjobtitle)) {
             foreach ($courseofjobtitle as $jobtitile) {
                 foreach ($courseofposition as $position) {
                     $courseposition_data = new stdClass;
@@ -245,10 +245,10 @@ if ($editform->is_cancelled()) {
                     $courseposition[] = $courseposition_data;
                 }
             }
+            if($course->id & !empty($courseposition)) {
+                $courseposition = $DB->insert_records('course_position',$courseposition);
+            }
         }
-        if($course->id & !empty($courseposition)) {
-            $courseposition = $DB->insert_records('course_position',$courseposition);
-        } 
 
         // Get the context of the newly created course.
         $context = context_course::instance($course->id, MUST_EXIST);
@@ -321,7 +321,7 @@ if ($editform->is_cancelled()) {
         // Save any changes to the files used in the editor.
         update_course($data, $editoroptions);
         // Cutstom by Vũ: Đẩy khoá học khi cập nhật realtime qua HRM
-        if($params_hrm) {
+        if(isset($params_hrm)) {
             $quizzes = $DB->get_records_sql('SELECT * FROM {quiz} WHERE course = :course',['course' => $data->id]);
             if($quizzes) {
                 $examcode = [];

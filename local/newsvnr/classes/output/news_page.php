@@ -86,53 +86,55 @@ class news_page implements renderable, templatable {
     }
     public static function get_forums_newest_data(){
         global $DB,$CFG;
-        $forumid = $DB->get_field_sql("SELECT TOP 1 id FROM mdl_forum", []);
-        $sql = "SELECT fd.id as disid, fd.countviews, fp.message,fp.subject,fd.timemodified, fn.*,CONCAT(us.firstname,' ',us.lastname) AS name
-        from mdl_forum f 
-        join mdl_forum_discussions fd on fd.forum = f.id
-        join mdl_forum_posts fp on fd.id = fp.discussion 
-        join mdl_files fn on fd.firstpost = fn.itemid 
-        JOIN mdl_user us ON us.id = fp.userid
-        where filesize > 0 and fd.forum = $forumid and fn.filearea='attachment' and f.type = N'news' order by fd.timemodified DESC
-        ";
-        $forumnewstdata = $DB->get_recordset_sql($sql);
-        $contentimage = '';
         $forumarr = array();
-        $i = 1;
-        foreach ($forumnewstdata as $file) {
+        $forumid = $DB->get_field_sql("SELECT TOP 1 id FROM mdl_forum", []);
+        if($forumid) {
+            $sql = "SELECT fd.id as disid, fd.countviews, fp.message,fp.subject,fd.timemodified, fn.*,CONCAT(us.firstname,' ',us.lastname) AS name
+            from mdl_forum f 
+            join mdl_forum_discussions fd on fd.forum = f.id
+            join mdl_forum_posts fp on fd.id = fp.discussion 
+            join mdl_files fn on fd.firstpost = fn.itemid 
+            JOIN mdl_user us ON us.id = fp.userid
+            where filesize > 0 and fd.forum = $forumid and fn.filearea='attachment' and f.type = N'news' order by fd.timemodified DESC
+            ";
+            $forumnewstdata = $DB->get_recordset_sql($sql);
+            $contentimage = '';
+            $i = 1;
+            foreach ($forumnewstdata as $file) {
 
-            $count_comment = get_count_comment_by_discussionid($file->disid);
+                $count_comment = get_count_comment_by_discussionid($file->disid);
 
-            $key = 'key'.$i;
-            $isimage = true;
-            $forumstd = new stdClass();
-            $imageurl = file_encode_url("$CFG->wwwroot/pluginfile.php",
-                '/'. $file->contextid. '/'. $file->component. '/'.
-                $file->filearea. $file->filepath.$file->itemid.'/'. $file->filename, !$isimage);
-            $link = $CFG->wwwroot."/local/newsvnr/news.php?id=".$file->disid;;
-            $time = convertunixtime('l, d m Y',$file->timemodified,'Asia/Ho_Chi_Minh');
-            $forumstd->discussionid = $file->disid;
-            $forumstd->newsurl = $link;
-            $forumstd->title = $file->subject;
-            $forumstd->content = strip_tags($file->message);
-            $forumstd->image = $imageurl;
-            $forumstd->time = $time;
-            $forumstd->countviews = $file->countviews;
-            $forumstd->timeago = converttime($file->timemodified);
-            $forumstd->name = $file->name;
-            if(!empty($count_comment))
-            {                                 
-                $forumstd->countcomments = $count_comment->countcomments;            
+                $key = 'key'.$i;
+                $isimage = true;
+                $forumstd = new stdClass();
+                $imageurl = file_encode_url("$CFG->wwwroot/pluginfile.php",
+                    '/'. $file->contextid. '/'. $file->component. '/'.
+                    $file->filearea. $file->filepath.$file->itemid.'/'. $file->filename, !$isimage);
+                $link = $CFG->wwwroot."/local/newsvnr/news.php?id=".$file->disid;;
+                $time = convertunixtime('l, d m Y',$file->timemodified,'Asia/Ho_Chi_Minh');
+                $forumstd->discussionid = $file->disid;
+                $forumstd->newsurl = $link;
+                $forumstd->title = $file->subject;
+                $forumstd->content = strip_tags($file->message);
+                $forumstd->image = $imageurl;
+                $forumstd->time = $time;
+                $forumstd->countviews = $file->countviews;
+                $forumstd->timeago = converttime($file->timemodified);
+                $forumstd->name = $file->name;
+                if(!empty($count_comment))
+                {                                 
+                    $forumstd->countcomments = $count_comment->countcomments;            
+                }
+                else{
+                    $forumstd->countcomments = 0;
+                }
+
+                $forumstd->$key = true;
+                $forumarr[] = $forumstd;
+                $i++;
+
             }
-            else{
-                $forumstd->countcomments = 0;
-            }
-
-            $forumstd->$key = true;
-            $forumarr[] = $forumstd;
-            $i++;
-
-        }  
+        }
         return $forumarr;
     }
     public static function get_froums_coursenews_data()

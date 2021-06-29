@@ -704,4 +704,100 @@ class CourseAddUserController extends BaseController {
 		return $response->withStatus(200)->withJson($this->resp);
 	}
 	
+	/**
+	 * API rút tên học viên khỏi khoá học 
+	 * @param  [type] $request  [description]
+	 * @param  [type] $response [description]
+	 * @param  [type] $args     [description]
+	 * @return [type]           [description]
+	 */
+	public function unenroll_user($request, $response, $args) {
+		global $DB,$CFG;
+		require_once($CFG->dirroot . '/enrol/locallib.php');
+		$this->validate = $this->validator->validate($this->request, [
+            'usercode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
+            'coursecode' => $this->v::notEmpty()->notBlank()
+        ]);
+
+		if($this->validate->isValid()) {
+			$this->data->usercode = $request->getParam('usercode');
+			$this->data->code = $request->getParam('coursecode');
+		} else {
+			$errors = $this->validate->getErrors();
+        	$this->resp->error = true;
+        	$this->resp->data[] = $errors;
+	        return $response->withStatus(422)->withJson($this->resp);
+		}
+		
+		$courseid = $DB->get_field('course', 'id', ['code' => $this->data->code]);
+		if(!$courseid) {
+			$this->resp->error = true;
+			$this->resp->data['code'] = "coursecode(Mã khoá học) không tồn tại khoá học";
+		}
+		
+		if(!$DB->record_exists('user',['usercode' => $this->data->usercode])) {
+			$this->resp->error = true;
+			$this->resp->data['usercode'] = "usercode(Mã học viên) không tồn tại";
+		}
+
+		if(empty($this->resp->data)) {
+			$usercode = $this->data->usercode;
+			$course = $DB->get_record('course', ['code' => $this->data->code]);
+			
+			if(!$course) {
+				$this->resp->message['info'] = "Ứng viên với mã '$usercode' chưa tham gia khóa học";
+			} else {
+				$userid = find_usercode_by_code($usercode);
+				if($userid) {
+					$instance = $DB->get_record('enrol', array('courseid'=>$course->id, 'enrol'=>'manual'), '*', MUST_EXIST);
+					$get_ueid = find_ueid_by_enrolid($instance->id,$userid);
+					$plugin = enrol_get_plugin($instance->enrol);
+					$plugin->unenrol_user($instance, $get_ueid->userid);
+					$this->resp->message['info'] = "Rút ứng viên với mã '$usercode' từ khóa '$course->fullname' thành công";
+				}
+			}
+				
+		}
+		return $response->withStatus(200)->withJson($this->resp);
+	}
+
+	/**
+	 * API đình chỉ user(suspended)
+	 * @param  [type] $request  [description]
+	 * @param  [type] $response [description]
+	 * @param  [type] $args     [description]
+	 * @return [type]           [description]
+	 */
+	public function suspended_user($request, $response, $args) {
+		global $DB,$CFG;
+		require_once($CFG->dirroot . '/enrol/locallib.php');
+		$this->validate = $this->validator->validate($this->request, [
+            'usercode' => $this->v::notEmpty()->notBlank()->noWhitespace(),
+        ]);
+
+		if($this->validate->isValid()) {
+			$this->data->usercode = $request->getParam('usercode');
+			$this->data->code = $request->getParam('coursecode');
+		} else {
+			$errors = $this->validate->getErrors();
+        	$this->resp->error = true;
+        	$this->resp->data[] = $errors;
+	        return $response->withStatus(422)->withJson($this->resp);
+		}
+		
+		$user = $DB->get_record('user',['usercode' => $this->data->usercode]);
+		if(!$user) {
+			$this->resp->error = true;
+			$this->resp->data['usercode'] = "usercode(Mã học viên) không tồn tại";
+		}
+
+		if(empty($this->resp->data)) {
+			$user->suspended = 1;
+			$fullname = fullname($user);
+			$DB->update_record('user', $user);
+			$this->resp->error = false;
+			$this->resp->message['info'] = "Học viên '$fullname' đã bị khóa";
+		}
+		return $response->withStatus(200)->withJson($this->resp);
+	}
 }

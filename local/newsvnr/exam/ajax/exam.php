@@ -125,10 +125,10 @@ switch ($action) {
 			$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
 		}
     	$sql = "SELECT *, (SELECT COUNT(id) FROM mdl_exam_subject $wheresql) AS total
-					FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY id) AS RowNum
-						  FROM mdl_exam_subject $wheresql
-						 ) AS Mydata
-					ORDER BY $ordersql";
+				FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY timecreated DESC) AS RowNum
+					  FROM mdl_exam_subject $wheresql
+					 ) AS Mydata
+				ORDER BY $ordersql";
     	$get_list = $DB->get_records_sql($sql);
 		$data = [];
 		foreach ($get_list as $value) {
@@ -161,10 +161,10 @@ switch ($action) {
 			$ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
 		}
     	$sql = "SELECT *, (SELECT COUNT(id) FROM mdl_exam $wheresql) AS total
-					FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY id) AS RowNum
-						  FROM mdl_exam $wheresql
-						 ) AS Mydata
-					ORDER BY $ordersql";
+				FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY timecreated DESC) AS RowNum
+					  FROM mdl_exam $wheresql
+					 ) AS Mydata
+				ORDER BY $ordersql";
     	$get_list = $DB->get_records_sql($sql);
 		$data = [];
 		foreach ($get_list as $value) {

@@ -150,22 +150,21 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
 
         // Trong khóa học click vào module sẽ auto chuyển sang chế độ focusmode
         // Chỉ áp dụng khi có role là học viên trong 1 khóa
-        var getBaseUrl = Cookie.getCookie('baseUrl');
-        if(getBaseUrl.includes('course/view.php?id=')) {
-            if($('[data-role=1]').length > 0) {
-                $('.course-content li.activity a.aalink').bind('click', function(e) {
-                    e.preventDefault();
+        if($('.tab-content [data-role=1]').length > 0) {
+            $('.course-content li.activity a.aalink').bind('click', function(e) {
+                e.preventDefault();
+                if($('[data-isportal=true]').length > 0) {
                     Cookie.setCookieSecure('ebmlms', 'true');
-                    var moduleId = $(this).parents('li').attr('id').split('-')[1];
-                    var element = "div.dropdown-content-2 a[module-id=" +moduleId+ "]";
-                    $('#focus-mod').trigger('click');
-                    $('#mod-view-coursepage').html('');
-                    setTimeout(function() {
-                        $(element).trigger('click');
-                        $(element).parents('div.dropdown-content-2').slideDown();
-                    }, 1000);
-                })
-            }
+                }
+                var moduleId = $(this).parents('li').attr('id').split('-')[1];
+                var element = "div.dropdown-content-2 a[module-id=" +moduleId+ "]";
+                $('#focus-mod').trigger('click');
+                $('#mod-view-coursepage').html('');
+                setTimeout(function() {
+                    $(element).trigger('click');
+                    $(element).parents('div.dropdown-content-2').slideDown();
+                }, 1000);
+            })
         }
         
         // Click vào chọn bài học
@@ -179,7 +178,6 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             if($('body').hasClass('focusmod')) {
                 Cookie.setCookie('cookie', 'focusmod');
             }
-            $('#region-main .loading-page').addClass('active');
             $('div.card-header.level2 a').removeClass('active');
             _this.addClass('active').siblings().removeClass('active');
             $('.mid .nav-link.focusmod').html(_this.text() + '<i class="fa fa-angle-down rotate-icon ml-2"></i>');
@@ -207,6 +205,9 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             } else if(modType == 'quiz') {
                 var iframe = '<iframe id="mod-iframe" src="'+url+'" height="'+iframeheight+'" frameBorder="0"></iframe>';
                 createSession(isMobile);
+            } else if(modType == 'scorm') {
+                iframeheight = iframeheight - 8;
+                var iframe = '<iframe id="mod-iframe" src="'+url+'" height="'+iframeheight+'" width="100%" frameBorder="0"></iframe>';
             } else {
                 $('body').removeAttr('style');
                 var iframe = '<iframe id="mod-iframe" src="'+url+'" frameBorder="0"></iframe>';
@@ -228,6 +229,8 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                                 $('#mod-iframe').removeAttr('height');
                                 const iframes = iFrameResize({ log: false }, '#mod-iframe');
                             } 
+                        } else if(modType == 'scorm') {
+                            // Nothing todo...
                         } else {
                             const iframes = iFrameResize({ log: false }, '#mod-iframe');
                         }
@@ -268,7 +271,6 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
                                 }
                             }
                         }
-                        $('#region-main .loading-page').removeClass('active');
                     } catch (e) {
                         if (e.message.indexOf('Blocked a frame with origin') > -1 || e.message.indexOf('from accessing a cross-origin frame.') > -1) {
                             console.log('Same origin Iframe error found!!!');
@@ -291,19 +293,6 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
         $('.back-focusmod').click(function() {
             $('#focus-mod').click();
         })
-        // swipe app 
-        var width = $(window).width();
-        if(width <= 576) {
-            $("html").kendoTouch({
-                enableSwipe: true,
-                swipe: function(e) { 
-                    $('.tab-pane.active').toggle('slide', function(){
-                        $(this).next().toggle('slide', function() {
-                        })
-                    })
-                }
-            });
-        }
         // Hàm tạo session 
         function createSession(devicemobile) {
             var settings = {

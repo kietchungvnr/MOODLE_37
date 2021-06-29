@@ -171,6 +171,8 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min','alertjs'], function
                 }
                 $.ajax(script,settings).then(function() {
                     var obj = $.parseJSON(response);
+                    var grid = $('#user_report').data("kendoGrid");
+                    grid.dataSource.read();
                     alertify.notify(obj.result, 'success', 3);
                 })
                 gridConfig.deleteUserEvent(dataItem);
@@ -249,7 +251,7 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min','alertjs'], function
             var funcEditUser = function(e) {
                 e.preventDefault();
                 var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                window.open(Config.wwwroot + '/user/editadvanced.php?id='+dataItem.id+'&course=1');
+                window.open(Config.wwwroot + '/user/editadvanced.php?id='+dataItem.id+'&course=1&returnto=profile');
                 gridConfig.editUserEvent(dataItem);
             }
             var objEventEditUser = {
@@ -259,6 +261,47 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min','alertjs'], function
                 name: 'edituser',
             }
             eventArr.push(objEventEditUser);
+        }
+        if (gridConfig.deleteDivisionEvent != undefined) {
+            var funcDeleteDivision = function(e) {
+                e.preventDefault();
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                var script = Config.wwwroot + '/local/newsvnr/division/ajax/division_action.php';
+                var settings = {
+                    type:"GET",
+                    processData:true,
+                    data:{
+                        divisionid:dataItem.id,
+                        action:'delete'
+                    }
+                }
+                $.ajax(script,settings).then(function() {
+                    var obj = $.parseJSON(response);
+                    alertify.notify(obj.result, 'success', 3);
+                })
+                gridConfig.deleteDivisionEvent(dataItem);
+            }
+            var objEventDeleteDivision = {
+                click: funcDeleteDivision,
+                iconClass: 'fa fa-trash mr-1',
+                text: '',
+                name: 'deletedivision',
+            }
+            eventArr.push(objEventDeleteDivision);
+        }
+        if (gridConfig.editDivisionEvent != undefined) {
+            var funcEditDivision = function(e) {
+                e.preventDefault();
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                gridConfig.editDivisionEvent(dataItem);
+            }
+            var objEventEditDivision = {
+                click: funcEditDivision,
+                iconClass: 'fa fa-cog mr-1',
+                text: '',
+                name: 'editdivision',
+            }
+            eventArr.push(objEventEditDivision);
         }
         if(eventArr.length > 0) {
             gridConfig.columns.push({

@@ -22,11 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Course management';
+$string['pluginname'] = 'Management training results';
 $string['countstudent'] = 'Student';
 $string['teachername'] = 'Teacher';
-$string['block_vnr_db_courseinfo_management:addinstance'] = 'Add a new course info management block';
-$string['block_vnr_db_courseinfo_management:myaddinstance'] = 'Add a new course info management block to Dashboard';
+$string['vnr_db_courseinfo_management:addinstance'] = 'Add a new course info management block';
+$string['vnr_db_courseinfo_management:myaddinstance'] = 'Add a new course info management block to Dashboard';
 $string['privacy:metadata'] = 'The coursesuggest_position block only shows data stored in other locations.';
 $string['timeopencourse'] = "Time open course";
 $string['timeendcourse'] = "Time end course";

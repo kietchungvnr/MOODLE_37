@@ -29,16 +29,29 @@ define('AJAX_SCRIPT', false);
 
 require_once('../../config.php');
 
-$id = required_param('id',PARAM_INT);
+$id = required_param('id', PARAM_INT);
+$visible = optional_param('visible', 0, PARAM_INT);
+$action = required_param('action', PARAM_TEXT);
 require_login();
 $PAGE->set_context(context_system::instance());
+$data = [];
+switch ($action) {
+    case 'delete':
+        $DB->delete_records('course_setup',array('id' => $id));
+        $data['message'] = get_string('confirmdeleterecord', 'local_newsvnr');
+        break;
+    case 'hide':
+        $obj = new stdClass;
+        $obj->id = $id;
+        $obj->visible = $visible;
+        $DB->update_record('course_setup', $obj);
+        $data['message'] = get_string('hiderecord', 'local_newsvnr');
+        break;
+    default:
+        // code...
+        break;
+}
 
-
-$DB->delete_records('course_setup',array('id' => $id));
-
-echo "success ";
-
-
-// echo json_encode($objdata,JSON_UNESCAPED_UNICODE);
+echo json_encode($data,JSON_UNESCAPED_UNICODE);
 
 die();

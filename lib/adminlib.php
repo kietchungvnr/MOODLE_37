@@ -8725,6 +8725,28 @@ function admin_write_settings($formdata) {
         if ($setting->post_write_settings($original)) {
             $count++;
         }
+        // Custom by Vũ: Chức năng cấu hình trong theme moove 
+        // để phân loại mô hình của site
+        if($setting->name == 'sitetype') {
+            $filename = $_SERVER['DOCUMENT_ROOT'] .'/config.php';
+            $getlines = file($filename);
+            $lastline = array_pop($getlines);
+            $contents = file_get_contents($filename);
+            $contents = str_replace($lastline, '', $contents);
+            file_put_contents($filename, $contents);
+            $contents = file_get_contents($filename);
+            $handle = fopen($filename, 'r');
+            while (($buffer = fgets($handle)) !== false) {
+                if (strpos($buffer, "require_once(__DIR__ . '/lib/setup.php')") !== false) {
+                    $newhandle = fopen($filename, "a");
+                    $sitetype = '$CFG->sitetype  = ' . "'" . $data['s_theme_moove_sitetype'] . "'" .';';
+                    fwrite($newhandle, $sitetype);
+                    fclose($newhandle);
+                    break;
+                }      
+            }
+            fclose($handle);
+        }
     }
 
     if ($olddbsessions != !empty($CFG->dbsessions)) {

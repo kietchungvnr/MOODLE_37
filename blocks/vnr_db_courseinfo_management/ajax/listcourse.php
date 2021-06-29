@@ -77,6 +77,8 @@ foreach ($get_list as $value) {
     $obj->coursename  = $value->fullname;
     $obj->courseid    = $value->shortname;
     $obj->total       = $value->total;
+    $view = $DB->get_record('logstore_standard_log',['courseid' => $value->id,'action' => 'viewed'],'count(*) as count');
+    $obj->view  = $view->count;
     if ($role == 3) {
         $finishmodulerate      = get_course_complete_module_rate($value->id);
         $obj->finishmodulerate = ($finishmodulerate > 0) ? $finishmodulerate . '%' : '-';

@@ -28,18 +28,20 @@ defined('MOODLE_INTERNAL') || die();
 
 /** INSTALL_WELCOME = 0 */
 define('INSTALL_WELCOME',       0);
+// Custom by Vũ: Phân 2 loại mô hình doanh nghiệp và đào tạo
+define('INSTALL_SITETYPE',      1);
 /** INSTALL_ENVIRONMENT = 1 */
-define('INSTALL_ENVIRONMENT',   1);
+define('INSTALL_ENVIRONMENT',   2);
 /** INSTALL_PATHS = 2 */
-define('INSTALL_PATHS',         2);
+define('INSTALL_PATHS',         3);
 /** INSTALL_DOWNLOADLANG = 3 */
-define('INSTALL_DOWNLOADLANG',  3);
+define('INSTALL_DOWNLOADLANG',  4);
 /** INSTALL_DATABASETYPE = 4 */
-define('INSTALL_DATABASETYPE',  4);
+define('INSTALL_DATABASETYPE',  5);
 /** INSTALL_DATABASE = 5 */
-define('INSTALL_DATABASE',      5);
+define('INSTALL_DATABASE',      6);
 /** INSTALL_SAVE = 6 */
-define('INSTALL_SAVE',          6);
+define('INSTALL_SAVE',          7);
 
 /**
  * Tries to detect the right www root setting.
@@ -88,6 +90,7 @@ function install_ini_get_bool($ini_get_arg) {
  * @return bool success
  */
 function install_init_dataroot($dataroot, $dirpermissions) {
+    global $CFG;
     if (file_exists($dataroot) and !is_dir($dataroot)) {
         // file with the same name exists
         return false;
@@ -131,6 +134,9 @@ function install_init_dataroot($dataroot, $dirpermissions) {
         if (!mkdir("$dataroot/lang", $dirpermissions, true)) {
             return false;
         }
+        $langsrc = $CFG->dirroot . '/moodledata_dev/languages/vi/lang';
+        $targetsrc = "$dataroot/lang";
+        install_language_pack_vi($langsrc, $targetsrc);
     }
     if (!is_writable("$dataroot/lang")) {
         return false; // we can not continue
@@ -251,6 +257,10 @@ function install_generate_configphp($database, $cfg) {
     $configphp .= '$CFG->dataroot  = '.var_export($cfg->dataroot, true) . ';' . PHP_EOL;
 
     $configphp .= '$CFG->admin     = '.var_export($cfg->admin, true) . ';' . PHP_EOL . PHP_EOL;
+
+    $configphp .= '$CFG->theme     = '.var_export($cfg->theme, true) . ';' . PHP_EOL . PHP_EOL;
+
+    $configphp .= '$CFG->sitetype  = '.var_export($cfg->sitetype, true) . ';' . PHP_EOL . PHP_EOL;
 
     if (empty($cfg->directorypermissions)) {
         $chmod = '02777';
@@ -525,4 +535,27 @@ function install_cli_database(array $options, $interactive) {
 
     // Redirect to site registration on first login.
     set_config('registrationpending', 1);
+}
+
+
+function install_language_pack_vi( $source, $target ) {
+    if ( is_dir( $source ) ) {
+        @mkdir( $target );
+        $d = dir( $source );
+        while ( FALSE !== ( $entry = $d->read() ) ) {
+            if ( $entry == '.' || $entry == '..' ) {
+                continue;
+            }
+            $Entry = $source . '/' . $entry; 
+            if ( is_dir( $Entry ) ) {
+                install_language_pack_vi( $Entry, $target . '/' . $entry );
+                continue;
+            }
+            copy( $Entry, $target . '/' . $entry );
+        }
+
+        $d->close();
+    } else {
+        copy( $source, $target );
+    }
 }

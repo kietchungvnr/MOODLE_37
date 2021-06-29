@@ -839,7 +839,7 @@ function theme_moove_layout_check() {
     } else {
         $protocol = 'http://';
     }
-    $url = $protocol . "://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    $url = $protocol . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
     $url_components = parse_url($url);
     if(isset($url_components['query'])) {
         parse_str($url_components['query'], $params); 
@@ -854,12 +854,12 @@ function theme_moove_layout_check() {
             $object->is_teacher = false;
         }
         else {
-            $object->isadmin = (is_siteadmin()) ? true : false;
+            $object->isadmin = (is_siteadmin() || user_has_role_assignment($USER->id, 1, context_system::instance()->id)) ? true : false;
             $object->is_teacher = ($check_is_teacher != 0 && $object->isadmin != true) ? true : false; 
             $object->is_student = ($check_is_student != 0 && $object->isadmin != true && $object->is_teacher != true) ? true : false;
         }
     } else {
-        $object->isadmin = (is_siteadmin()) ? true : false;
+        $object->isadmin = (is_siteadmin() || user_has_role_assignment($USER->id, 1, context_system::instance()->id)) ? true : false;
         $object->is_teacher = ($check_is_teacher != 0 && $object->isadmin != true) ? true : false; 
         $object->is_student = ($check_is_student != 0 && $object->isadmin != true && $object->is_teacher != true) ? true : false;
     }
