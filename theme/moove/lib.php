@@ -775,6 +775,7 @@ function theme_moove_layout_check() {
     global $COURSE,$DB,$USER,$CFG;
     require_once $CFG->dirroot . '/local/newsvnr/lib.php';
     $object = new stdClass();
+    $user = $DB->get_record('user',['id' => $USER->id]);
     if(isset($_SERVER['HTTP_REFERER'])) {
         $referer = $_SERVER['HTTP_REFERER'];
         $referer_split = explode('/', $referer);
@@ -863,5 +864,6 @@ function theme_moove_layout_check() {
         $object->is_teacher = ($check_is_teacher != 0 && $object->isadmin != true) ? true : false; 
         $object->is_student = ($check_is_student != 0 && $object->isadmin != true && $object->is_teacher != true) ? true : false;
     }
+    $object->is_divisionmanager = (user_has_role_assignment($USER->id, 1, context_system::instance()->id) && $user->divisionid && !is_siteadmin() && $CFG->sitetype == MOODLE_EDUCATION) ? true : false;
     return $object;
 }
