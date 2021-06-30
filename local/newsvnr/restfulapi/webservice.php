@@ -1597,14 +1597,16 @@ if($action == "courseavg_chart") {
 	$series = [];
 	$categories = [];
    	foreach($courses as $course) {
-   		$categories[] = $DB->get_field('course', 'fullname', ['id' => $course->id]);
-   		$avg = get_course_grade_avg($course->id)[0]->courseavg;
-   		if(is_numeric(get_course_grade_avg($course->id)[0]->courseavg) == "") {
-   			$series[] = 0;
-   		} else {
-   			$series[] = (float)number_format(get_course_grade_avg($course->id)[0]->courseavg, 2);
-   		}
-   		
+   		$categories[] = $course->fullname;
+		$avg = get_course_grade_avg($course->id)[0]->courseavg;
+		if($avg == '-') {
+			$series[] = 0;
+		} else {
+			if(is_numeric($avg))
+				$series[] = $avg;
+			else
+				$series[] = (float)str_replace(',', '.', $avg);
+		}
    	}
    	$response = new stdClass();
    	$response->categories = $categories;
