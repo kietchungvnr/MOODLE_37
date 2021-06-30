@@ -71,7 +71,8 @@ $templatecontext = [
     'hasiframe' => $check->hasiframe,
     'hasgeneraliframe' => $check->hasgeneraliframe,
     'canviewadmininfos' => false,
-    'hasopenmenu' => $check->hasopenmenu
+    'hasopenmenu' => $check->hasopenmenu,
+    'is_divisionmanager' => $check->is_divisionmanager
 ];
 
 $themesettings = new \theme_moove\util\theme_settings();
