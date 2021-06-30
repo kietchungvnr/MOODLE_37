@@ -142,20 +142,6 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min','alertjs'], function
             }
             eventArr.push(objEventDelete);
         }
-        if (gridConfig.joinCourseEvent != undefined) {
-            var funcViewCourseInfoPopup = function(e) {
-                e.preventDefault();
-                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                gridConfig.joinCourseEvent(dataItem);
-            }
-            var objEventJoinCourse = {
-                click: funcViewCourseInfoPopup,
-                iconClass: 'fa fa-arrow-right mr-1',
-                text: M.util.get_string('startlearning', 'local_newsvnr'),
-                name: 'learning',
-            }
-            eventArr.push(objEventJoinCourse);
-        }
         if (gridConfig.deleteUserEvent != undefined) {
             var funcDeleteUser = function(e) {
                 e.preventDefault();

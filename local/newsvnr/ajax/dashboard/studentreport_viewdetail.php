@@ -144,8 +144,8 @@ switch ($action) {
             foreach ($exams as $exam) {
                 $subjects = $DB->get_records_sql('SELECT DISTINCT esx.id, es.id AS subjectid ,es.name, esx.subjectid, e.name AS examname
                                                     FROM mdl_exam_subject_exam esx
-                                                    LEFT JOIN mdl_exam e ON esx.examid = e.id
-                                                    LEFT JOIN mdl_exam_subject es ON esx.subjectid = es.id
+                                                    JOIN mdl_exam e ON esx.examid = e.id
+                                                    JOIN mdl_exam_subject es ON esx.subjectid = es.id
                                                 WHERE e.id =:examid', ['examid' => $exam->examid]);
                 $output .= '<div class="exam-title mt-1">' . $exam->name . '</div>';
                 $output .= '<div class="row" style="padding:0 15px">';
