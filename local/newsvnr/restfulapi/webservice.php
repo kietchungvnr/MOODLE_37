@@ -951,21 +951,24 @@ if($action == "coursecomp_chart_vp") {
 		        join mdl_context as ct on ct.id = ra.contextid and ct.instanceid = c.id
 		        join mdl_role as r on r.id = ra.roleid
    			WHERE $wheresql";
-   	$sql_compcourse = '
-   			SELECT COUNT(*) AS completed_courses
-			FROM mdl_course_completions
-			WHERE course = ? AND timecompleted IS NOT NULL';
-   	$record = $DB->get_records_sql($sql,$params);
-   	$list_coursename = array();
-   	$list_enroll = array();
-   	$list_completion_course = array();
-   	foreach ($record as $value) {
-   		$coursecontext = context_course::instance($value->id, IGNORE_MISSING);
-   		$list_coursename[] = $value->fullname;
-   		$list_enroll[] = count_enrolled_users($coursecontext);
-   		$list_cc_data = $DB->get_record_sql($sql_compcourse,[$value->id]);
-   		$list_completion_course[] = $list_cc_data->completed_courses;
-   	}
+	$record = $DB->get_records_sql($sql,[$USER->id]);
+	$list_coursename = $list_enroll = array();
+	foreach ($record as $value) {
+		$list_coursename[] = $value->fullname;
+		$list_user_enroll = get_listuser_in_course($value->id, 5);
+		$list_enroll[] = count($list_user_enroll);
+		$course    = $DB->get_record('course', ['id' => $value->id]);
+		$cinfo     = new completion_info($course);
+		$usercompletionnumber = 0;
+		if($list_user_enroll) {
+			foreach($list_user_enroll as $user) {
+				$iscomplete = $cinfo->is_course_complete($user->id);
+				if($iscomplete == true)
+					$usercompletionnumber++;
+			}
+		}
+		$list_completion_course[] = $usercompletionnumber;
+	}
 
    	$response = new stdClass();
     $response->chart = (object)['height' => 400,'type' => 'column'];
@@ -1010,7 +1013,7 @@ if($action == "coursecomp_chart") {
 		        JOIN mdl_role AS r ON r.id = ra.roleid
    			WHERE  ra.roleid=3 AND u.id = ?';
    	$record = $DB->get_records_sql($sql,[$USER->id]);
-   	$list_coursename = $list_enroll = $list_user_enroll = array();
+   	$list_coursename = $list_enroll = array();
    	foreach ($record as $value) {
    		$list_coursename[] = $value->fullname;
    		$list_user_enroll = get_listuser_in_course($value->id, 5);
