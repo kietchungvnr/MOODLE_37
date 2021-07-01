@@ -447,7 +447,7 @@ class CourseController extends BaseController {
 					    }
 					}
 					if($this->data->typeofuser == 'teacher') {
-						$enrol_teahcer = check_teacher_in_course($courseid, $teacherid);
+						$enrol_teahcer = check_teacher_in_course($courseid, $userid);
 						if(!$enrol_teahcer) {
 					    	enrol_user($userid, $courseid, 'editingteacher');
 					    	$this->resp->error = false;
