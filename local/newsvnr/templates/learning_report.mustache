@@ -112,6 +112,7 @@
 {{#js}}
 	$('#dropdownMenuButton').click(function() {
 		$('.dropdown-menu.learning-report').toggleClass('d-none');
+		$(this).toggleClass('action');
 		if(!$('.dropdown-menu.change-report').hasClass('d-none')) {
 			$('.dropdown-menu.change-report').addClass('d-none');
 		}

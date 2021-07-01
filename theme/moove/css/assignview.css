@@ -140,4 +140,8 @@
     .path-mod-assign [data-region="grade-panel"].fullwidth [data-region="grade"] {
         max-width: 100% !important;
     }
+    .path-mod-assign div[data-region="user-info"] h3 {
+        font-size: 14px;
+        text-align: center;
+    }
 </style>

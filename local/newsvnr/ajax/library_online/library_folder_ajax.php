@@ -27,7 +27,7 @@
 define('AJAX_SCRIPT', false);
 
 require_once __DIR__ . '/../../../../config.php';
-require_once $CFG->dirroot . '\theme\moove\classes\output\core_renderer.php';
+require_once $CFG->dirroot . '/theme/moove/classes/output/core_renderer.php';
 // require_login();
 $PAGE->set_context(context_system::instance());
 $foldername = optional_param('foldername', "", PARAM_TEXT);

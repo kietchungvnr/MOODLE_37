@@ -186,6 +186,19 @@ $('.new-detail-chat').load('/local/newsvnr/ajax/pagination_comment.php?discussio
                           ]
                         })
                     }
+                    else if(gridname == "#user_report") {
+                        rows.push({
+                          cells: [
+                            { value: dataItem.name },
+                            { value: dataItem.shortname },
+                            { value: dataItem.username },
+                            { value: dataItem.email },
+                            { value: dataItem.timecreated },
+                            { value: dataItem.timeaccess },
+                            { value: dataItem.lastaccess },
+                          ]
+                        })
+                    }
                 }
             }
             var workbook = new kendo.ooxml.Workbook({

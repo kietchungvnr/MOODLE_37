@@ -582,6 +582,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $button = '';
         $addblockbutton = '';
         $pageheadingbutton = $this->page_heading_button();
+        $href = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
         $check = theme_moove_layout_check();
         if ($PAGE->user_is_editing() && $PAGE->user_can_edit_blocks() && ($PAGE->blocks->get_addable_blocks())) {
             $url = new moodle_url($PAGE->url, ['bui_addblock' => '', 'sesskey' => sesskey()]);
@@ -597,7 +598,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $url = new moodle_url('/my/index.php?student=1');
             $button .= '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-line-chart text-icon-dashboard mr-1" aria-hidden="true"></i>'. get_string('studentdashboard', 'local_newsvnr') .'</a></li>';
         } 
-        if(is_siteadmin() && $check->isadmin != true) {
+        if((is_siteadmin() || user_has_role_assignment($USER->id, 1, context_system::instance()->id)) && $check->isadmin != true) {
             $url = new moodle_url('/my/index.php');
             $button .= '<li><a href="'.$url.'" class="text-icon-dashboard"><i class="fa fa-line-chart text-icon-dashboard mr-1" aria-hidden="true"></i>Dashboard admin</a></li>';
         }
@@ -607,6 +608,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $html .= html_writer::div($pageheadingbutton, 'breadcrumb-button');
             $html .= html_writer::end_div();
         } else if ($pageheadingbutton) {
+            if(strpos($href,'indexsys') == true) {
+                $pageheadingbutton = '<li><i class="fa fa-refresh text-icon-dashboard" aria-hidden="true"></i>'.$pageheadingbutton.'</li>';
+            }
             $html .= html_writer::div($addblockbutton . $pageheadingbutton . $button, 'action-rightside-fixed');
         } else {
             $html .= html_writer::div($button, 'action-rightside-fixed');

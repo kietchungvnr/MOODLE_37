@@ -171,6 +171,8 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min','alertjs'], function
                 }
                 $.ajax(script,settings).then(function() {
                     var obj = $.parseJSON(response);
+                    var grid = $('#user_report').data("kendoGrid");
+                    grid.dataSource.read();
                     alertify.notify(obj.result, 'success', 3);
                 })
                 gridConfig.deleteUserEvent(dataItem);
@@ -249,7 +251,7 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min','alertjs'], function
             var funcEditUser = function(e) {
                 e.preventDefault();
                 var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                window.open(Config.wwwroot + '/user/editadvanced.php?id='+dataItem.id+'&course=1');
+                window.open(Config.wwwroot + '/user/editadvanced.php?id='+dataItem.id+'&course=1&returnto=profile');
                 gridConfig.editUserEvent(dataItem);
             }
             var objEventEditUser = {

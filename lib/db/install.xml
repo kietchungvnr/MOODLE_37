@@ -275,6 +275,7 @@
     <TABLE NAME="course_setup" COMMENT="Information course setup HRM">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="category" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="fullname" TYPE="char" LENGTH="254" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="shortname" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="visible" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
