@@ -27,7 +27,7 @@
 define('AJAX_SCRIPT', false);
 require_once __DIR__ . '/../../../../config.php';
 require_once $CFG->dirroot . '/local/newsvnr/lib.php';
-require_once $CFG->dirroot . '\theme\moove\classes\output\core_renderer.php';
+require_once $CFG->dirroot . '/theme/moove/classes/output/core_renderer.php';
 require_once "../system_paginationAll.class.php";
 require_login();
 $PAGE->set_context(context_system::instance());
