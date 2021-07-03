@@ -96,7 +96,7 @@ $sql = "SELECT DISTINCT lm.id,lm.coursemoduleid,lm.moduletype,lm.minetype,lm.fil
                 JOIN {user} u on u.id = lm.userid
                 JOIN {library_folder} lf on lf.id = lm.folderid
                 LEFT JOIN mdl_logstore_standard_log lsl ON lsl.contextinstanceid = cm.id AND lsl.courseid  = cm.course AND lsl.action = 'viewed' and lsl.target = 'course_module' and lsl.courseid = 1
-            $condition $searchsql AND lm.approval = 1 AND (lm.moduletype LIKE $strmodulefilter OR lm.minetype LIKE $strmodulefilter $excelsql)";
+            $condition $searchsql AND lm.approval = 2 AND (lm.moduletype LIKE $strmodulefilter OR lm.minetype LIKE $strmodulefilter $excelsql)";
 
 if ($folderid == 0) {
     $modulebyfolder = $DB->get_records_sql("$sql $odersql");

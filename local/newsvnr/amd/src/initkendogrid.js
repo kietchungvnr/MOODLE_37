@@ -87,7 +87,7 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min','alertjs'], function
             var funcDeleteModule = function(e) {
                 e.preventDefault();
                 var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                var script = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_approval_module_ajax.php?action=delete';
+                var script = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_approval_module_ajax.php?action=reject';
                 var settings = {
                     type:"GET",
                     processData:true,
@@ -155,13 +155,13 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min','alertjs'], function
                         action:'delete'
                     }
                 }
-                $.ajax(script,settings).then(function() {
-                    var obj = $.parseJSON(response);
-                    var grid = $('#user_report').data("kendoGrid");
-                    grid.dataSource.read();
-                    alertify.notify(obj.result, 'success', 3);
-                })
-                gridConfig.deleteUserEvent(dataItem);
+                alertify.confirm(M.util.get_string('alert', 'local_newsvnr'),M.util.get_string('deleteuserconfirm', 'local_newsvnr'), function(){
+                    $.ajax(script,settings).then(function() {
+                        var obj = $.parseJSON(response);
+                        alertify.notify(obj.result, 'success', 3);
+                    })
+                    gridConfig.deleteUserEvent(dataItem);
+                },function(){});
             }
             var objEventDeleteUser = {
                 click: funcDeleteUser,

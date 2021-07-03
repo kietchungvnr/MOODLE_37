@@ -55,6 +55,12 @@ switch ($action) {
         $data['error'] = false;
         $data['message'] = get_string('deletemodulesuccess', 'local_newsvnr');
         break;
+    case 'reject':
+        $getid = $DB->get_field('library_module', 'id', ['coursemoduleid' => $moduleid]);
+        $DB->update_record('library_module', ['id' => $getid, 'approval' => 3]);
+        $data['error'] = false;
+        $data['message'] = get_string('deletemodulesuccess', 'local_newsvnr');
+        break;
     case 'hide':
         
         $DB->update_record('course_modules', ['id' => $moduleid, 'visible' => 0]);
@@ -73,7 +79,7 @@ switch ($action) {
         send_email_approvedfile($moduleid);
 
         $getid = $DB->get_field('library_module', 'id', ['coursemoduleid' => $moduleid]);
-        $DB->update_record('library_module', ['id' => $getid, 'approval' => 1]);
+        $DB->update_record('library_module', ['id' => $getid, 'approval' => 2]);
         $data['error'] = false;
         $data['message'] = get_string('approvalmodulesuccess', 'local_newsvnr');
         break;
@@ -104,10 +110,38 @@ switch ($action) {
             send_email_approvedfile($value->id);
 
             $getid = $DB->get_field('library_module', 'id', ['coursemoduleid' => $value->id]);
-            $DB->update_record('library_module', ['id' => $getid, 'approval' => 1]);
+            $DB->update_record('library_module', ['id' => $getid, 'approval' => 2]);
         }
         $data['error'] = false;
         $data['message'] = get_string('approvalmodulesuccess', 'local_newsvnr');
+        break;
+    case 'deleteselectrequest':
+        foreach ($dataselect as $value) {
+            $DB->delete_records('library_module', ['coursemoduleid' => $value->id]);
+            course_delete_module($value->id);
+        }
+        $data['error'] = false;
+        $data['message'] = get_string('deletemodulesuccess', 'local_newsvnr');
+        break;
+    case 'requestapprovalselect':
+        foreach ($dataselect as $value) {
+            $getid = $DB->get_field('library_module', 'id', ['coursemoduleid' => $value->id]);
+            $DB->update_record('library_module', ['id' => $getid, 'approval' => 1]);
+        }
+        $data['error'] = false;
+        $data['message'] = get_string('requestapprovalsuccess', 'local_newsvnr');
+        break;
+    case 'requestapproval':
+        $getid = $DB->get_field('library_module', 'id', ['coursemoduleid' => $moduleid]);
+        $DB->update_record('library_module', ['id' => $getid, 'approval' => 1]);
+        $data['error'] = false;
+        $data['message'] = get_string('requestapprovalsuccess', 'local_newsvnr');
+        break;
+    case 'cancelrequestapproval':
+        $getid = $DB->get_field('library_module', 'id', ['coursemoduleid' => $moduleid]);
+        $DB->update_record('library_module', ['id' => $getid, 'approval' => 0]);
+        $data['error'] = false;
+        $data['message'] = get_string('requestapprovalsuccess', 'local_newsvnr');
         break;
     default:
 
