@@ -306,6 +306,14 @@ var initKendoMycourse = function() {
                 field: 'timecompleted',
                 title: '{{#str}}timefinishcourse,local_newsvnr{{/str}}',
                 width: "100px"
+			},
+			{
+				template: function(e) {
+					return e.status
+				},
+                field: 'status',
+                title: '{{#str}}status,local_newsvnr{{/str}}',
+                width: "100px"
 			}
 		];
 		var toolbar = false;
@@ -313,9 +321,6 @@ var initKendoMycourse = function() {
 		kendoConfig.toolbar = toolbar;
 		kendoConfig.columns = columns;
 		kendoConfig.apiSettings = settings;
-		kendoConfig.joinCourseEvent = function(dataItem) {
-			window.open(Config.wwwroot + '/course/view.php?id='+dataItem.courseid,'_blank');
-		}
 		var gridData = kendo.initGrid(kendoConfig);
 		$(gridcourse).kendoGrid(gridData);
 }

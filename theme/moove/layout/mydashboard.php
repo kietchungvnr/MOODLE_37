@@ -97,7 +97,7 @@ if (is_siteadmin() || (user_has_role_assignment($USER->id, 1, context_system::in
                                                     JOIN mdl_role AS r ON r.id= ra.roleid
                                                     LEFT JOIN mdl_course_completions cc ON cc.userid = c.id AND cc.course = c.id 
                                                 WHERE ra.roleid=5 AND ue.status = 0 AND c.visible = 1 AND u.deleted <> 1 AND u.id <> $CFG->siteguest");
-    $totaluser = $DB->get_record_sql("SELECT count(id) as count FROM mdl_user WHERE deleted <> 1 AND id <> $CFG->siteguest");
+    $totaluserfinishmodule = $DB->get_records_sql("SELECT DISTINCT userid as count FROM mdl_course_modules_completion");
     $totalusersincourse = $DB->count_records('user', array('deleted' => 0, 'suspended' => 1));
     $totalmodules = $DB->count_records('course_modules',['deletioninprogress' => 0]);
     $totalcategories = $DB->count_records('course_categories',[]);
@@ -136,7 +136,7 @@ if (is_siteadmin() || (user_has_role_assignment($USER->id, 1, context_system::in
     $templatecontext['onlineusers'] = $onlineusers;
     $templatecontext['totalcategories'] = $totalcategories;
     $templatecontext['totalusersjoincourse'] = $totalusersjoincourse->count;
-    $templatecontext['totaluser'] = $totaluser->count;
+    $templatecontext['totaluserfinishmodule'] = count($totaluserfinishmodule);
 }   elseif(user_has_role_assignment($USER->id, 1, context_system::instance()->id) && $user->divisionid) {
     global $DB;
 
@@ -151,9 +151,7 @@ if (is_siteadmin() || (user_has_role_assignment($USER->id, 1, context_system::in
                                                     JOIN mdl_role AS r ON r.id= ra.roleid
                                                     LEFT JOIN mdl_course_completions cc ON cc.userid = c.id AND cc.course = c.id 
                                                 WHERE ra.roleid=5 AND ue.status = 0 AND c.visible = 1 AND u.deleted <> 1 AND u.id <> $CFG->siteguest AND c.divisionid = $user->divisionid AND u.divisionid = $user->divisionid");
-    $totaluser = $DB->get_record_sql("SELECT count(id) as count 
-                                        FROM mdl_user 
-                                    WHERE deleted <> 1 AND id <> $CFG->siteguest AND divisionid = $user->divisionid");
+    $totaluserfinishmodule = $DB->get_records_sql("SELECT DISTINCT userid as count FROM mdl_course_modules_completion");
     $totalmodules = $DB->get_record_sql("SELECT count(cm.id) as count FROM mdl_course_modules cm 
                                             JOIN mdl_course c on c.id = cm.course
                                         WHERE c.divisionid = $user->divisionid AND cm.deletioninprogress = 0");
@@ -168,7 +166,7 @@ if (is_siteadmin() || (user_has_role_assignment($USER->id, 1, context_system::in
     $templatecontext['totalmodules'] = $totalmodules->count;
     $templatecontext['totalcategories'] = count($totalcategories);
     $templatecontext['totalusersjoincourse'] = $totalusersjoincourse->count;
-    $templatecontext['totaluser'] = $totaluser->count;
+    $templatecontext['totaluserfinishmodule'] = count($totaluserfinishmodule);
 }
 // Improve boost navigation.
 theme_moove_extend_flat_navigation($PAGE->flatnav);
