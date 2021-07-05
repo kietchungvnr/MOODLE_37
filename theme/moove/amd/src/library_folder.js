@@ -1,6 +1,6 @@
-define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'kendo.all.min','local_newsvnr/initkendocontrolservices'], function($, Config, Str, Notification, alertify, kendo, kendoService) {
+define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'local_newsvnr/initkendogrid','local_newsvnr/initkendocontrolservices'], function($, Config, Str, Notification, alertify, kendo, kendoService) {
     "use strict";
-    var init = function() {
+    var initLibrary = function() {
         var strings = [{
             key: 'alert',
             component: 'local_newsvnr'
@@ -348,7 +348,145 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'ke
             })           
         })
     }
+    var deleteUser = function() {
+        $('#delete_module_request').click(function(){
+            var actionscript = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_approval_module_ajax.php';
+            var arrObject = getSelectRow('#library-request-approval');
+            var data = JSON.stringify(arrObject);
+            var settings = {
+                type: "POST",
+                processData: true,
+                data: {
+                    dataselect: data,
+                    action: 'deleteselectrequest'
+                }
+            }
+            alertify.confirm('Cảnh báo', 'Bạn có chắc muốn xóa các tài liệu đã chọn?', function(){ 
+                $.ajax(actionscript,settings).then(function(response) {
+                    var obj = $.parseJSON(response);
+                    alertify.notify(obj.message, 'success', 3);
+                    var grid = $('#library-request-approval').data("kendoGrid");
+                    grid.dataSource.read();
+                    $('.request-module-fuction').addClass('disabled');
+                })
+            }, function(){});
+        })
+    }
+    var requestApproval = function() {
+        $('#request_approval').click(function(){
+            var actionscript = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_approval_module_ajax.php';
+            var arrObject = getSelectRow('#library-request-approval');
+            var data = JSON.stringify(arrObject);
+            var settings = {
+                type: "POST",
+                processData: true,
+                data: {
+                    dataselect: data,
+                    action: 'requestapprovalselect'
+                }
+            }
+            $.ajax(actionscript,settings).then(function(response) {
+                var obj = $.parseJSON(response);
+                alertify.notify(obj.message, 'success', 3);
+                var grid = $('#library-request-approval').data("kendoGrid");
+                grid.dataSource.read();
+                $('.request-module-fuction').addClass('disabled');
+            })
+        })
+    }
+    var kendoRequestApproval = function() {
+        var kendoConfig = {};
+        var script = Config.wwwroot + '/local/newsvnr/ajax/library_online/library_request_approval.php';
+        var gridName = '#library-request-approval';
+        var settings = {            
+            url: script,
+            type : 'GET',
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+        };
+        var colums = [
+            {
+                template:function(e) {
+                    return e.name;
+                },
+                field: "name",
+                title: "Tên",
+                width: "130px"
+            },
+            {
+                field: "folder",
+                title: "Thư mục",
+                width: "100px"
+            },
+            {
+                field: "moduletype",
+                title: "Loại",
+                width: "80px"
+            },
+            {
+                field: "size",
+                title: "Kích thước",
+                width: "80px"
+            },
+            {
+                template: function(e) {
+                    return e.download;
+                },
+                field: "download",
+                title: "Tải xuống",
+                width: "100px"
+            },
+            {
+                field: "timecreated",
+                title: "Ngày yêu cầu",
+                width: "100px"
+            },
+            {
+                field: "author",
+                title: "Người yêu cầu",
+                width: "120px"
+            },
+            {
+                template: function(e) {
+                    return e.status;
+                },
+                field: "status",
+                title: 'Trạng thái',
+                width: "100px"
+            },
+            {   
+                template: function(e) {
+                    return e.action;
+                },
+                field: "action",
+                title: "Chức năng",
+                width: "150px"
+            }
+        ];
+        var onChange = function() {
+            var selected = $.map(this.select(), function(item) {
+                return $(item).text();
+            });
+            if(selected.length > 0) {
+                $('.request-module-fuction').removeClass('disabled');
+            } else {
+                $('.request-module-fuction').addClass('disabled');
+            }
+        }   
+        kendoConfig.onChange = onChange;
+        kendoConfig.columns = colums;
+        kendoConfig.apiSettings = settings;
+        var gridData = kendo.initGrid(kendoConfig);
+        $(gridName).kendoGrid(gridData);
+    }
+    var init = function() {
+        initLibrary();
+        kendoRequestApproval();
+        deleteUser();
+        requestApproval();
+    }
+
     return {
-        init: init
+        init:init
     }
 });
