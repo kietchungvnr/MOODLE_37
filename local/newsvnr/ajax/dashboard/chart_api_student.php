@@ -54,8 +54,13 @@ switch ($action) {
             $obj->y           = ($grade != false) ? (int) $grade->gradefinal : 0;
             $obj->id          = $value->id;
             $avggrade[]       = $obj;
-            $avggradecourse[] = (int) get_course_grade_avg($value->id)[0]->courseavg;
+            $objavg           = new stdClass();
+            $objavg->y        = (int) get_course_grade_avg($value->id)[0]->courseavg;
+            $objavg->name     = $value->fullname;
+            $objavg->id       = $value->id;
+            $avggradecourse[] = $objavg;
         }
+
         $data['avggradecourse'] = $avggradecourse;
         // Diểm trung bình học viên trong khóa
         $data['avggrade'] = $avggrade;
@@ -72,10 +77,10 @@ switch ($action) {
         foreach ($listgrade as $value) {
             $obj                   = new stdClass();
             $img                   = '<img class="pr-2 img-module" src="' . $OUTPUT->image_url('icon', $value->itemmodule) . '">';
-            $obj->name             = ($value->finalgrade > $value->gradepass) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2">' . $img . '' . $value->itemname : '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconfail.png" class="img-module mr-2">' . $value->itemname;
+            $obj->name             = ($value->finalgrade > $value->gradepass) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2">' . $value->itemname : '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconfail.png" class="img-module mr-2">' . $value->itemname;
             $obj->finalgrade       = round($value->finalgrade, 2);
             $obj->finalgradecourse = (int) get_course_grade_avg($courseid, false)[$i]->moduleavg;
-            $obj->timeclose        = convertunixtime('d/m/Y', $value->timeclose, 'Asia/Ho_Chi_Minh');
+            $obj->timeclose        = ($value->timeclose) ? convertunixtime('d/m/Y', $value->timeclose, 'Asia/Ho_Chi_Minh') : 'Không giới hạn';
             $obj->total            = count($listgrade);
             $data[]                = $obj;
             $i++;
@@ -90,7 +95,8 @@ switch ($action) {
                         JOIN mdl_role_assignments ra ON ra.userid = ue.userid
                         JOIN mdl_user u ON u.id = ra.userid
                         JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id
-                        LEFT JOIN mdl_course_completions cc ON cc.userid = c.id WHERE u.id = $USER->id) AS total
+                        LEFT JOIN mdl_course_completions cc ON cc.userid = c.id
+                    WHERE u.id = $USER->id AND ra.roleid = 5) AS total
         FROM (SELECT ROW_NUMBER() OVER (ORDER BY c.id) AS RowNum,c.*,cc.timecompleted,ue.timestart
               FROM mdl_user_enrolments ue
                 JOIN mdl_enrol e ON ue.enrolid = e.id
@@ -98,7 +104,8 @@ switch ($action) {
                 JOIN mdl_role_assignments ra ON ra.userid = ue.userid
                 JOIN mdl_user u ON u.id = ra.userid
                 JOIN mdl_context as ct on ra.contextid= ct.id AND ct.instanceid = c.id
-                LEFT JOIN mdl_course_completions cc ON cc.userid = c.id AND cc.course = c.id WHERE u.id = $USER->id) AS Mydata
+                LEFT JOIN mdl_course_completions cc ON cc.course = c.id AND cc.userid = $USER->id
+            WHERE u.id = $USER->id AND ra.roleid = 5) AS Mydata
         ORDER BY $ordersql";
         $get_list = $DB->get_records_sql($sql);
         foreach ($get_list as $value) {
@@ -115,9 +122,16 @@ switch ($action) {
             if ($value->timecompleted != null) {
                 $obj->timecompleted = convertunixtime('d/m/Y', $value->timecompleted, 'Asia/Ho_Chi_Minh');
                 $obj->coursename    = '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2"><a href="' . $obj->href . '" target="_blank">' . $value->fullname . '</a>';
+                $obj->status        = '<span class="badge text-white teacher-bg-3 font-weight-bold rounded p-2">' . get_string('finished', 'local_newsvnr') . '</span>';
             } else {
                 $obj->timecompleted = '-';
                 $obj->coursename    = '<img src="' . $CFG->wwwroot . '\theme\moove\pix\learnicon.png" class="img-module mr-2"><a href="' . $obj->href . '" target="_blank">' . $value->fullname . '</a>';
+                if ($value->enddate && $value->enddate < time()) {
+                    $obj->status = '<span class="badge text-white teacher-bg-2  font-weight-bold rounded p-2">' . get_string('unfinished', 'local_newsvnr') . '</span>';
+                } else {
+                    $obj->status = '<span style="background:#0083ff" class="badge font-weight-bold rounded p-2"><a class="text-white" target="_blank" href="'.$CFG->wwwroot.'/course/view.php?id='.$value->id.'"><i class="fa fa-arrow-right mr-1" aria-hidden="true"></i>' . get_string('startlearning', 'local_newsvnr') . '</a></span>';
+                }
+
             }
             $data[] = $obj;
         }
@@ -135,7 +149,7 @@ switch ($action) {
                                                     JOIN mdl_course_modules cm ON cm.course = c.id
                                                     JOIN mdl_assign ass ON ass.id = cm.instance
                                                     LEFT JOIN mdl_grade_items gi ON gi.courseid = c.id AND gi.itemmodule = 'assign' AND gi.iteminstance = ass.id
-                                                    LEFT JOIN mdl_grade_grades gg ON gg.itemid = gi.id AND gg.userid = u.id 
+                                                    LEFT JOIN mdl_grade_grades gg ON gg.itemid = gi.id AND gg.userid = u.id
                                                 WHERE ra.roleid=5 AND ue.status = 0 AND u.id =:useridcount AND c.visible = 1 AND cm.deletioninprogress = 0 AND cm.visible = 1 AND cm.module = 1) as total
                                             FROM mdl_role_assignments AS ra
                                                 JOIN mdl_user AS u ON u.id= ra.userid
@@ -147,13 +161,13 @@ switch ($action) {
                                                 JOIN mdl_course_modules cm ON cm.course = c.id
                                                 JOIN mdl_assign ass ON ass.id = cm.instance
                                                 LEFT JOIN mdl_grade_items gi ON gi.courseid = c.id AND gi.itemmodule = 'assign' AND gi.iteminstance = ass.id
-                                                LEFT JOIN mdl_grade_grades gg ON gg.itemid = gi.id AND gg.userid = u.id 
+                                                LEFT JOIN mdl_grade_grades gg ON gg.itemid = gi.id AND gg.userid = u.id
                                             WHERE  ra.roleid=5 AND ue.status = 0 AND u.id =:userid AND c.visible = 1 AND cm.deletioninprogress = 0 AND cm.visible = 1 AND cm.module = 1
-                                            ORDER BY $ordersql", ['userid' => $USER->id,'useridcount' => $USER->id]);
+                                            ORDER BY $ordersql", ['userid' => $USER->id, 'useridcount' => $USER->id]);
         foreach ($listhomework as $value) {
-            $obj = new stdClass();
-            $href         = $CFG->wwwroot . '/mod/assign/view.php?id=' .$value->id;
-            $obj->name    = ($value->finalgrade) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2"><a href="'.$href.'" target="_blank">' . $value->name .'</a>': '<img src="' . $OUTPUT->image_url('icon', 'assign') . '" class="img-module mr-2"><a href="'.$href.'" target="_blank">'.$value->name .'</a>';
+            $obj          = new stdClass();
+            $href         = $CFG->wwwroot . '/mod/assign/view.php?id=' . $value->id;
+            $obj->name    = ($value->finalgrade) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2"><a href="' . $href . '" target="_blank">' . $value->name . '</a>' : '<img src="' . $OUTPUT->image_url('icon', 'assign') . '" class="img-module mr-2"><a href="' . $href . '" target="_blank">' . $value->name . '</a>';
             $obj->grade   = ($value->finalgrade) ? $value->finalgrade : '-';
             $obj->timedue = ($value->duedate) ? convertunixtime('d/m/Y', $value->duedate, 'Asia/Ho_Chi_Minh') : 'Không giới hạn';
             $obj->total   = count($listhomework);
@@ -162,7 +176,7 @@ switch ($action) {
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 'myquiz':
-        $myquiz = $DB->get_records_sql("SELECT ROW_NUMBER() OVER (ORDER BY q.id) AS RowNum,c.id,q.name,gg.finalgrade,gg.userid,q.timeclose,cm.id as moduleid, 
+        $myquiz = $DB->get_records_sql("SELECT ROW_NUMBER() OVER (ORDER BY q.id) AS RowNum,c.id,q.name,gg.finalgrade,gg.userid,q.timeclose,cm.id as moduleid,ccc.completionstate,
                                             (SELECT COUNT(q.id) FROM mdl_role_assignments AS ra
                                                 JOIN mdl_user AS u ON u.id= ra.userid
                                                 JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
@@ -174,7 +188,7 @@ switch ($action) {
                                                 JOIN mdl_modules mo ON mo.id = cm.module AND mo.name = 'quiz'
                                                 JOIN mdl_quiz q ON q.id = cm.instance
                                                 LEFT JOIN mdl_grade_items gi ON gi.courseid = c.id AND gi.itemmodule = 'quiz' AND gi.iteminstance = q.id
-                                                LEFT JOIN mdl_grade_grades gg ON gg.itemid = gi.id AND gg.userid = u.id 
+                                                LEFT JOIN mdl_grade_grades gg ON gg.itemid = gi.id AND gg.userid = u.id
                                             WHERE ra.roleid=5 AND ue.status = 0 AND u.id = :useridcount AND c.visible = 1 AND cm.deletioninprogress = 0 AND cm.visible = 1) as total
                                         FROM mdl_role_assignments AS ra
                                             JOIN mdl_user AS u ON u.id= ra.userid
@@ -188,13 +202,14 @@ switch ($action) {
                                             JOIN mdl_quiz q ON q.id = cm.instance
                                             LEFT JOIN mdl_grade_items gi ON gi.courseid = c.id AND gi.itemmodule = 'quiz' AND gi.iteminstance = q.id
                                             LEFT JOIN mdl_grade_grades gg ON gg.itemid = gi.id AND gg.userid = u.id
+                                            LEFT JOIN mdl_course_modules_completion ccc ON ccc.coursemoduleid = cm.id AND ccc.userid = $USER->id
                                         WHERE  ra.roleid=5 AND ue.status = 0 AND u.id = :userid AND c.visible = 1 AND cm.deletioninprogress = 0 AND cm.visible = 1
-                                        ORDER BY $ordersql",['userid' => $USER->id,'useridcount' => $USER->id]);
+                                        ORDER BY $ordersql", ['userid' => $USER->id, 'useridcount' => $USER->id]);
         foreach ($myquiz as $value) {
             $obj          = new stdClass();
             $href         = $CFG->wwwroot . '/mod/quiz/view.php?id=' . $value->moduleid;
-            $obj->name    = ($value->finalgrade) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2"><a href="' . $href . '" target="_blank">' . $value->name . '</a>' : '<img src="' . $OUTPUT->image_url('icon', 'quiz') . '" class="img-module mr-2"><a href="' . $href . '" target="_blank">' . $value->name . '</a></div>';
-            $finalgrade   = number_format($value->finalgrade,1);
+            $obj->name    = (($value->completionstate == 1 && $value->finalgrade) || ($value->finalgrade && ($value->completionstate == 0 || $value->completionstate == NULL ))) ? '<img src="' . $CFG->wwwroot . '\theme\moove\pix\iconsuccess.png" class="img-module mr-2"><a href="' . $href . '" target="_blank">' . $value->name . '</a>' : '<img src="' . $OUTPUT->image_url('icon', 'quiz') . '" class="img-module mr-2"><a href="' . $href . '" target="_blank">' . $value->name . '</a></div>';
+            $finalgrade   = number_format($value->finalgrade, 1);
             $obj->grade   = $value->finalgrade ? $finalgrade : '-';
             $obj->timedue = ($value->timeclose) ? convertunixtime('d/m/Y', $value->timeclose, 'Asia/Ho_Chi_Minh') : 'Không giới hạn';
             $obj->total   = $value->total;

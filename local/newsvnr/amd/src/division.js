@@ -133,12 +133,12 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                 width: "100px"
             },
             {
-                field: "datecreated",
+                field: "timecreated",
                 title: "Ngày tạo",
                 width: "100px"
             },
             {
-                field: "usercreated",
+                field: "usercreate",
                 title: "Người tạo",
                 width: "100px"
             }
@@ -172,6 +172,11 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             $('#address').val(dataItem.address);
             $('#createdivision').attr('action','update');
             $('#createdivision').attr('divisionid',dataItem.id);
+            if(dataItem.isvisible == 1) {
+                $('#visible').prop("checked",true);
+            } else {
+                $('#visible').prop("checked",false);
+            }
         }
         var gridData = kendo.initGrid(kendoConfig);
         if($(gridName).data("kendoGrid")) {
