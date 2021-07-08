@@ -917,6 +917,15 @@ if ($ADMIN->fulltree) {
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
+    // Facebook icon
+    $name = 'theme_moove/facebookicon';
+    $title = get_string('facebookicon', 'local_newsvnr');
+    $description = get_string('facebookicondesc', 'local_newsvnr');
+    $opts = array('accepted_types' => array('.png', '.jpg', '.svg'));
+    $setting = new admin_setting_configstoredfile($name, $title, $description, 'facebookicon', 0, $opts);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
     // Facebook url setting.
     $name = 'theme_moove/facebook';
     $title = get_string('facebook', 'theme_moove');
@@ -944,12 +953,30 @@ if ($ADMIN->fulltree) {
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
+    // Linkdin icon
+    $name = 'theme_moove/linkinicon';
+    $title = get_string('linkinicon', 'local_newsvnr');
+    $description = get_string('linkinicondesc', 'local_newsvnr');
+    $opts = array('accepted_types' => array('.png', '.jpg', '.svg'));
+    $setting = new admin_setting_configstoredfile($name, $title, $description, 'linkinicon', 0, $opts);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
     // Linkdin url setting.
     $name = 'theme_moove/linkedin';
     $title = get_string('linkedin', 'theme_moove');
     $description = get_string('linkedindesc', 'theme_moove');
     $default = '';
     $setting = new admin_setting_configtext($name, $title, $description, $default);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    // Youtube icon
+    $name = 'theme_moove/youtubeicon';
+    $title = get_string('youtubeicon', 'local_newsvnr');
+    $description = get_string('youtubeicondesc', 'local_newsvnr');
+    $opts = array('accepted_types' => array('.png', '.jpg', '.svg'));
+    $setting = new admin_setting_configstoredfile($name, $title, $description, 'youtubeicon', 0, $opts);
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
