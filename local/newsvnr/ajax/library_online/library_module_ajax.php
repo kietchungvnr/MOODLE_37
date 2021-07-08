@@ -50,7 +50,7 @@ $odersql         = "GROUP BY lm.id,lm.coursemoduleid,lm.moduletype,lm.minetype,l
 if ($modulefilter == 'excel') {
     $excelsql = "OR lm.minetype LIKE N'%spreadsheetml%'";
 }
-if (is_siteadmin()) {
+if (is_siteadmin() || has_capability('local/newsvnr:readfolderlibrary', context_user::instance($USER->id))) {
     $condition = "WHERE cm.deletioninprogress = 0 AND ";
 } else {
     $condition = "LEFT JOIN {library_folder_permissions} fp on fp.folderlibraryid = lf.id
@@ -129,8 +129,8 @@ if (!empty($modulebyfolder) && has_capability('local/newsvnr:readfolderlibrary',
         $output .= html_writer::tag('td', $module->fullnamet);
         $output .= html_writer::tag('td', $module->viewed);
         $output .= html_writer::start_tag('td');
-        $output .= (is_siteadmin() || check_teacherrole($USER->id) != 0) ? html_writer::link('javascript:void(0)', '<i class="icon fa fa-share mr-2" aria-hidden="true"></i>', array('id' => 'share-module-library', 'moduleid' => $module->coursemoduleid)) : '';
-        if (is_siteadmin()) {
+        $output .= (is_siteadmin() || check_teacherrole($USER->id) != 0 || has_capability('local/newsvnr:assignmentfilelibrary', context_user::instance($USER->id))) ? html_writer::link('javascript:void(0)', '<i class="icon fa fa-share mr-2" aria-hidden="true"></i>', array('id' => 'share-module-library', 'moduleid' => $module->coursemoduleid)) : '';
+        if (is_siteadmin() || has_capability('local/newsvnr:assignmentfilelibrary', context_user::instance($USER->id))) {
             $output .= html_writer::link('javascript:void(0)', $OUTPUT->pix_icon('t/delete', get_string('delete')), array("onclick" => "actionModule($module->coursemoduleid,'delete',$folderid)"));
             $output .= html_writer::link("/course/modedit.php?update=$module->coursemoduleid&return=0&sr=", $OUTPUT->pix_icon('t/edit', get_string('edit')));
             $output .= ($module->visible == 1) ? html_writer::link('javascript:void(0)', $OUTPUT->pix_icon('t/hide', get_string('hide')), array("onclick" => "actionModule($module->coursemoduleid,'hide',$folderid)")) : html_writer::link('javascript:void(0)', $OUTPUT->pix_icon('t/show', get_string('show')), array("onclick" => "actionModule($module->coursemoduleid,'show',$folderid)"));
