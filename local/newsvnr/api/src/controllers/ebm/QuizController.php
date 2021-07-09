@@ -507,8 +507,18 @@ class QuizController extends BaseController {
 							$message .= 'Tạo kì thi thành công';
 						}
 			    	}
+					
 		    	}
 		    	if($modulequiz) {
+					// Update lại numbersection
+					$maxsection = $DB->get_field_sql('SELECT max(section) from {course_sections}
+						WHERE course = ?', array($course->id));
+					if($maxsection) {
+						$oldcourse = course_get_format($course->id)->get_course();
+						$newcourse = $oldcourse;
+						$newcourse->numsections = $maxsection;
+						course_get_format($course->id)->update_course_format_options($newcourse, $oldcourse);
+					}
 		    		if($this->data->studentcode && $this->data->teachercode) {
 		    			$studentarr = explode(',', $this->data->studentcode);
 		    			$teacherarr = explode(',', $this->data->teachercode);
