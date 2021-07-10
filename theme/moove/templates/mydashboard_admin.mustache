@@ -223,7 +223,24 @@
     {{#is_divisionmanager}}
       <div class="card mt-3">
         <div class="card-body">
-          <h5 class="card-title d-inline">Thống kê học viên tham dự học online</h5>
+          <div class="row">
+              <div class="col-lg-4">
+                <h5 class="card-title d-inline">Thống kê học viên tham dự học online</h5>
+              </div>
+              <div class="col-lg-8 mb-1">
+                  <div class="row d-flex justify-content-end mb-1">
+                      <div class="col-lg-auto">
+                          <div id="daterange" style="background: #f5f5f5; cursor: pointer; padding: 10px; width: 100%">
+                              <i class="fa fa-calendar"></i>&nbsp;
+                              <span></span> <i class="fa fa-caret-down"></i>
+                          </div>
+                      </div>
+                      <div class="col-lg-6 mb-1">
+                          <div id="course-category"></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
           <hr>
           <div id="studentincoursechart" class="mt-3"></div>
         </div>
@@ -239,7 +256,9 @@ require.config({
     paths: {
         // Change this to your server if you do not wish to use our CDN.
         highcharts: 'https://code.highcharts.com',
-        jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr"
+        jspicker: "//cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr",
+        daterangepicker: "//cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min",
+        moment: "//cdn.jsdelivr.net/momentjs/latest/moment.min",
     }
 });
 require(
@@ -254,8 +273,10 @@ require(
     'alertjs', 
     'core/str',
     'core/templates',
-    'local_newsvnr/initkendocontrolservices'
-], function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, Config, kendo, alertify, Str, Templates, kendoService) {
+    'local_newsvnr/initkendocontrolservices',
+    'daterangepicker',
+    'moment',
+], function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, $, Config, kendo, alertify, Str, Templates, kendoService,daterangepicker,moment) {
     {{! chart tròn hiện thị quá trình học }}
     var script = Config.wwwroot + '/local/newsvnr/ajax/dashboard/chart_api_admin.php';
     $.getJSON(script + '?action=coursestatus',function(data) {
@@ -412,79 +433,155 @@ require(
         })
     })
     {{#is_divisionmanager}}
-      $.getJSON(script + '?action=studentincoursechart',function(data) {
-        {{! // Create the chart }}
-        Highcharts.chart('studentincoursechart', {
-            chart: {
-              type: 'column',
-              renderTo: studentincoursechart,
-              height:316,
-          },
-            title: {
-              text: ''
-            },
+      function convertDateToUnix(datetime) {
+        var date = new Date(datetime).toUTCString();
+        var result = (new Date(date).getTime() / 1000);
+        return result;
+      }
 
-            tooltip: {
-              useHTML: true,
-              shared: true,
-                pointFormat: '<span style="color:{point.color}"><i class="fa fa-circle mr-1" aria-hidden="true"></i>Học viên trong khóa</span> :<b>{point.y}</b><br/>',
+      var initStudentInCourseChart = function(categoryid, date) {
+        var filterdate = '';
+        if(date != undefined)
+        filterdate = date;
+        var settings = {
+            type: 'GET',
+            data: {
+                "categoryid":categoryid,
+                "action":"studentincoursechart",
+                "date" : filterdate
             },
-              xAxis: {
-              type: 'category',
-                  labels: {
-                    style: {
-                        color: 'black'
-                    }
-                }
+            processData: true,
+            contentType: "application/json"
+        };
+        $.ajax(script, settings).then(function(response) {
+          var data = $.parseJSON(response);
+          {{! // Create the chart }}
+          Highcharts.chart('studentincoursechart', {
+              chart: {
+                type: 'column',
+                renderTo: studentincoursechart,
+                height:316,
             },
-            yAxis: {
-                title: {
+              title: {
                 text: ''
               },
-            },
-            legend: {
-              enabled: true
-            },
-            plotOptions: {
-              series: {
-                pointWidth: 40,
-                borderWidth: 0,
-                dataLabels: {
-                    enabled: true,
-                    format: '{point.y}',
-                    colors: 'black',
-                    style: {
-                      textOutline: 0
-                  }
+
+              tooltip: {
+                useHTML: true,
+                shared: true,
+                  pointFormat: '<span style="color:{point.color}"><i class="fa fa-circle mr-1" aria-hidden="true"></i>Học viên trong khóa</span> :<b>{point.y}</b><br/>',
+              },
+                xAxis: {
+                type: 'category',
+                    labels: {
+                      style: {
+                          color: 'black'
+                      }
                   }
               },
-            },
-            colors: ['rgb(29, 127, 179)'],
-            series: [
-            {
-                name: "Học viên trong khóa",
-                colorByPoint: false,
-                data: data.avggrade
-            },
-            {
-              name: "Học viên tham gia khóa học",
-                type: 'spline',
-                data: data.avggradecourse,
-                tooltip: {
-                  useHTML: true,
-              headerFormat: '',
-                pointFormat: '<span style="color:{point.color}"><i class="fa fa-circle mr-1" aria-hidden="true"></i>Học viên tham giá khóa học</span>:<b>{point.y}</b><br/>'
-            },
-                color: '#f98d21',
-                marker: {
-                    lineWidth: 3,
-                    lineColor: '#f98d21',
-                    fillColor: '#f98d21'
+              yAxis: {
+                  title: {
+                  text: ''
+                },
+              },
+              legend: {
+                enabled: true
+              },
+              plotOptions: {
+                series: {
+                  pointWidth: 40,
+                  borderWidth: 0,
+                  dataLabels: {
+                      enabled: true,
+                      format: '{point.y}',
+                      colors: 'black',
+                      style: {
+                        textOutline: 0
+                    }
+                    }
+                },
+              },
+              colors: ['rgb(29, 127, 179)'],
+              series: [
+              {
+                  name: "Học viên trong khóa",
+                  colorByPoint: false,
+                  data: data.avggrade
+              },
+              {
+                name: "Học viên tham gia khóa học",
+                  type: 'spline',
+                  data: data.avggradecourse,
+                  tooltip: {
+                    useHTML: true,
+                headerFormat: '',
+                  pointFormat: '<span style="color:{point.color}"><i class="fa fa-circle mr-1" aria-hidden="true"></i>Học viên tham giá khóa học</span>:<b>{point.y}</b><br/>'
+              },
+                  color: '#f98d21',
+                  marker: {
+                      lineWidth: 3,
+                      lineColor: '#f98d21',
+                      fillColor: '#f98d21'
+                  }
                 }
-              }
-            ],
-        });
-      }); 
-    {{/is_divisionmanager}}
+              ],
+          });
+        }); 
+      }
+
+      var scriptdata = Config.wwwroot + '/local/newsvnr/restfulapi/webservice.php?action=';
+      var kendoConfig = {};
+      kendoConfig.apiSettings = { url: scriptdata +'search_category'};
+      kendoConfig.value = 'id';
+      kendoConfig.optionLabel = 'Chọn danh mục khóa học';
+      var kendoCourseCategory = kendoService.initDropDownList(kendoConfig);
+      $("#course-category").kendoDropDownList(kendoCourseCategory);
+      var dropdownlist = $("#course-category").data("kendoDropDownList");
+      dropdownlist.bind("change", function(e) {
+          var categoryid = $("#course-category").data("kendoDropDownList").value();
+          var date = {
+              'start': convertDateToUnix(start._d),
+              'end': convertDateToUnix(end._d)
+          };
+          $('#daterange span').html(start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY'));
+          initStudentInCourseChart(categoryid, JSON.stringify(date));
+      });
+
+      var start = moment().subtract(29, 'days');
+      var end = moment();
+      function cb(start, end) {
+          $('#daterange span').html(start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY'));
+          var typeChart = $('#course-category').data('kendoDropDownList').value();
+          var date = {
+              'start': convertDateToUnix(start._d),
+              'end': convertDateToUnix(end._d)
+          };
+          initStudentInCourseChart(1, JSON.stringify(date));
+      }
+      $('#daterange').daterangepicker({
+          locale: {
+              cancelLabel: 'Clear'
+          },
+          startDate: start,
+          endDate: end,
+          ranges: {
+             'Today': [moment(), moment()],
+             'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+             'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+             'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+             'This Month': [moment().startOf('month'), moment().endOf('month')],
+             'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          }
+      }, cb);
+
+      $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
+        $('#daterange span').html(M.util.get_string('showalldata', 'theme_moove'));
+        var categoryid = $("#course-category").data("kendoDropDownList").value();
+        initStudentInCourseChart(categoryid);
+      });
+
+
+      initStudentInCourseChart();
+    {{/is_divisionmanager}};
 })
 {{/js}}
