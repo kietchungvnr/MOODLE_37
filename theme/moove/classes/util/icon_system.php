@@ -388,6 +388,8 @@ class icon_system extends icon_system_fontawesome {
             'core:t/up' => 'slicon-arrow-up',
             'core:t/user' => 'slicon-user',
             'core:t/viewdetails' => 'slicon-layers',
+            'core:t/downlong' => 'fa-long-arrow-down',
+            'core:t/uplong' => 'fa-long-arrow-up'
         ];
     }
 
