@@ -175,18 +175,21 @@ switch ($action) {
                                 <div class="form-group">
                                   <label for="pwd">' . get_string('description', 'local_newsvnr') . ':</label>
                                   <textarea autocomplete="off" class="form-control" id="folderdes" value="' . $folder->description . '"></textarea>
-                                </div>
+                                </div>';
+        if($CFG->sitetype == MOODLE_BUSINESS) {
+            $output .= '
                                  <div class="form-group">
                                     <label class="mb-1" for="pwd">' . get_string('positionviewfolder', 'local_newsvnr') . ':</label>
                                     <select id="edit-positionpermission" multiple="multiple" data-placeholder="' . get_string('selectposition', 'local_newsvnr') . '"></select>
-                                </div>
-                            </div>
+                                </div>';
+        }
+        $output .= '    
+                        </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-primary" action="update" onclick="updateFolder(' . $folder->id . ')" id="edit-folder-popup">' . get_string('finisheditfolder', 'local_newsvnr') . '</button>
                               <button type="button" class="btn btn-danger" data-dismiss="modal">' . get_string('cancel', 'local_newsvnr') . '</button>
                             </div>
                           </div>
-
                         </div>
                   </div>';
         $permission = $DB->get_record('library_folder_permissions', ['folderlibraryid' => $folderid]);
