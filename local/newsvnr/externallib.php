@@ -112,11 +112,11 @@ class local_newsvnr_external extends external_api {
         if($categoryid) {
             $sql = "SELECT d.* FROM mdl_division d 
                                 JOIN mdl_division_categories cd on cd.divisionid = d.id
-                            WHERE cd.coursecategorysid = ?";
+                            WHERE cd.coursecategorysid = ? AND d.visible = 1";
             $result = [];
             $data = $DB->get_records_sql($sql,[$params['categoryid']]);
         } else {
-            $sql = "SELECT * FROM {division}";
+            $sql = "SELECT * FROM {division} WHERE visible = 1";
             $result = [];
             $data = $DB->get_records_sql($sql);
         }

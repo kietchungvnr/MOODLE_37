@@ -217,7 +217,9 @@ if ($mform->is_cancelled()) {
                 $record->userid = $USER->id;
                 $record->coursemoduleid = $fromform->coursemodule;
                 $record->moduletype = $fromform->modulename;
-                if(!is_siteadmin()) {
+                if(is_siteadmin()) {
+                    $record->approval = 2;
+                } else {
                     $record->approval = 0;
                 }
                 if($fromform->modulename == 'resource') {

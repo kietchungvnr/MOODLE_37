@@ -78,6 +78,7 @@
         justify-content: center;
         min-height: auto;
         display: flex;
+        flex-wrap: wrap;
         margin: 0;
         align-items: center;
     }
@@ -412,11 +413,38 @@
     .action-rightside-fixed .singlebutton button{
         background: none;
         color: white;
+        font-weight: bold;
     }
-    .action-rightside-fixed li div.singlebutton:nth-child(3) {
+    .top-dashboard-function {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: -10px;
+    }
+    .k-grid-header {
+        padding-right: 0 !important;
+    }
+/*    .all-notifications .view-more {
+        display: none;
+    }*/
+    #page-message-output-popup-notifications .page-header-headings {
         display: none;
     }
-}
+    .notification-area {
+        margin-top: 10px;
+    }
+    .notification-area .content-area .header .image-container img {
+        margin-top: 5px;
+        width: 25px;
+    }
+    .notification-area .content-area .header .subject-container {
+        height: 15px;
+    }
+    .notification-area .content-area .content hr {
+        display: none;
+    }
+    .notification-area .content-area>.content {
+        height: auto;
+    }
 </style>
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common-material.min.css" />
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.material.min.css" />

@@ -37,7 +37,7 @@ $pageskip = optional_param('skip', 0, PARAM_INT);
 $q        = optional_param('q', '', PARAM_RAW);
 $data     = array();
 $odersql  = "";
-$wheresql = "WHERE lm.approval = 1";
+$wheresql = "WHERE u.id = $USER->id";
 if ($q) {
     $wheresql = "WHERE lm.approval = 0 AND CONCAT(rs.name,b.name,l.name,i.name,pa.name,ur.name) LIKE N'%$q%'";
 }
@@ -71,28 +71,44 @@ foreach ($get_list as $value) {
     $obj     = new stdClass();
     $nameimg = array();
     if ($value->moduletype == "resource") {
-        $url     = get_link_file($value);
-        $nameimg = html_writer::link('javascript:void(0)', mimetype2Img($value->minetype) . $value->name,
-            array('onclick' => 'iFrameLibrary(\'' . $url . '\',\'' . $value->moduletype . '\')'));
-        $size = display_size($value->filesize);
+        $url             = get_link_file($value);
+        $nameimg         = mimetype2Img($value->minetype) . $value->name;
+        $size            = display_size($value->filesize);
+        $obj->moduletype = mime2ext($value->minetype);
+        $obj->download   = html_writer::link($url, get_string('download','local_newsvnr'), ['target' => '_blank']);
     } else {
         $url = $CFG->wwwroot . '/mod/' . $value->moduletype . '/view.php?id=' . $value->coursemoduleid;
         if ($value->moduletype == "url") {
-            $nameimg = html_writer::link($url, html_writer::img($OUTPUT->image_url('icon', $value->moduletype), $value->moduletype, ['class' => 'pr-1 img-module']) . $value->name,
-                array('target' => '_blank'));
+            $nameimg = html_writer::img($OUTPUT->image_url('icon', $value->moduletype), $value->moduletype, ['class' => 'pr-1 img-module']) . $value->name;
         } else {
-            $nameimg = html_writer::link('javascript:void(0)', html_writer::img($OUTPUT->image_url('icon', $value->moduletype), $value->moduletype, ['class' => 'pr-1 img-module']) . $value->name,
-                array('onclick' => 'iFrameLibrary(\'' . $url . '\',\'' . $value->moduletype . '\')'));
+            $nameimg = html_writer::img($OUTPUT->image_url('icon', $value->moduletype), $value->moduletype, ['class' => 'pr-1 img-module']) . $value->name;
         }
-
-        $size = '';
+        $obj->moduletype = $value->moduletype;
+        $obj->download   = '-';
+        $size            = '';
+    }
+    if ($value->approval == 0) {
+        $action      = 'requestapproval';
+        $obj->status = '<p class="text-secondary font-bold">'.get_string('draft','local_newsvnr').'</p>';
+        $obj->action = '<a class="btn btn-secondary" onclick="requestApprovalModule(' . $value->coursemoduleid . ',\''.$action.'\')">'.get_string('requestapproval','local_newsvnr').'</a>';
+    } elseif ($value->approval == 1) {
+        $action      = 'cancelrequestapproval';
+        $obj->status = '<p class="text-warning font-bold">'.get_string('pending','local_newsvnr').'</p>';
+        $obj->action = '<a class="btn btn-secondary" onclick="requestApprovalModule(' . $value->coursemoduleid . ',\''.$action.'\')">'.get_string('cancelrequestapproval','local_newsvnr').'</a>';
+    } elseif ($value->approval == 2) {
+        $obj->status = '<p class="text-success font-bold">'.get_string('approved','local_newsvnr').'</p>';
+        $obj->action = '';
+    } else {
+        $action      = 'requestapproval';
+        $obj->status = '<p class="text-danger font-bold">'.get_string('reject','local_newsvnr').'</p>';
+        $obj->action = '<a class="btn btn-secondary " onclick="requestApprovalModule(' . $value->coursemoduleid . ',\''.$action.'\')">'.get_string('requestapproval','local_newsvnr').'</a>';
     }
     $obj->name = $nameimg;
     $obj->type = $value->moduletype;
     if ($value->moduletype == "resource") {
         $obj->type = mime2ext($value->minetype);
     }
-    $obj->size = $size;
+    $obj->size = ($size) ? $size : '-';
     $dt        = new DateTime("@$value->timecreated");
     $dt->setTimeZone(new DateTimeZone('Asia/Ho_Chi_Minh'));
     $obj->timecreated = $dt->format('d/m/Y');

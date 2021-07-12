@@ -583,6 +583,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $addblockbutton = '';
         $pageheadingbutton = $this->page_heading_button();
         $href = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        if(strpos($href,'indexsys') == true) {
+            $html .= '<div class="top-dashboard-function mt-3">'.$pageheadingbutton.'</div>';
+        }
         $check = theme_moove_layout_check();
         if ($PAGE->user_is_editing() && $PAGE->user_can_edit_blocks() && ($PAGE->blocks->get_addable_blocks())) {
             $url = new moodle_url($PAGE->url, ['bui_addblock' => '', 'sesskey' => sesskey()]);
@@ -608,10 +611,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $html .= html_writer::div($pageheadingbutton, 'breadcrumb-button');
             $html .= html_writer::end_div();
         } else if ($pageheadingbutton) {
-            if(strpos($href,'indexsys') == true) {
-                $pageheadingbutton = '<li><i class="fa fa-refresh text-icon-dashboard" aria-hidden="true"></i>'.$pageheadingbutton.'</li>';
+            if(strpos($href,'indexsys') == false) {
+                $html .= html_writer::div($addblockbutton . $pageheadingbutton . $button, 'action-rightside-fixed');
             }
-            $html .= html_writer::div($addblockbutton . $pageheadingbutton . $button, 'action-rightside-fixed');
         } else {
             $html .= html_writer::div($button, 'action-rightside-fixed');
         }
@@ -636,7 +638,13 @@ class core_renderer extends \theme_boost\output\core_renderer {
 
         $context->logourl = $this->get_logo();
         $context->sitename = format_string($SITE->fullname, true, array('context' => \context_course::instance(SITEID)));
-
+        $themesettings = new \theme_moove\util\theme_settings();
+        $theme = theme_config::load('moove');
+        $context->loginbgimg = $theme->setting_file_url('loginbgimg', 'loginbgimg');
+        $context->linkinicon = $theme->setting_file_url('linkinicon', 'linkinicon');
+        $context->youtubeicon = $theme->setting_file_url('youtubeicon', 'youtubeicon');
+        $context->facebookicon = $theme->setting_file_url('facebookicon', 'facebookicon');
+        $context =  (object) array_merge((array) $context,(array) $themesettings->footer_items());
         return $this->render_from_template('core/login', $context);
     }
 
@@ -1332,7 +1340,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $countmodule = $DB->get_record_sql("SELECT count(cm.id) as count FROM {library_folder} lf 
                                                 JOIN {library_module} lm on lf.id = lm.folderid
                                                 JOIN {course_modules} cm on lm.coursemoduleid = cm.id
-                                            WHERE lf.id = $folderid and lm.approval = 1 and cm.visible = 1");
+                                            WHERE lf.id = $folderid and lm.approval = 2 and cm.visible = 1");
         $folderidchild = $DB->get_records("library_folder",['parent' => $folderid],'','id');
         $count = $countmodule->count + $count;
         if(!empty(($folderidchild))) {

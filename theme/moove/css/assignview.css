@@ -144,4 +144,10 @@
         font-size: 14px;
         text-align: center;
     }
+    div.radio {
+        display: block !important;
+    }
+    #fitem_id_advancedgrading .form-inline.felement {
+        display: block !Important;
+    }
 </style>

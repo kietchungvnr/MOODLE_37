@@ -82,7 +82,7 @@ class CourseController extends BaseController {
 		    $this->data->idnumber = '';
 			$this->data->format = 'topcoll';
 			$this->data->showgrades = 1;
-			// $this->data->numsections = 0;
+			// $this->data->numsections = count(explode(',', $this->data->sectionname));
 			$this->data->newsitems = 10;
 			$this->data->visible = 1;
 			$this->data->showreports = 1;
@@ -104,6 +104,9 @@ class CourseController extends BaseController {
 	
 		if($courseid) {
 			$this->data->id = $courseid;
+			$numberofsections = count(explode(',', $this->data->sectionname));
+			if($numberofsections > 0)
+				$this->data->numsections = $numberofsections;
 			$course = $DB->get_record($this->table, ['id' => $courseid]);
 			if (!empty($this->data->shortname) && $course->shortname !== $this->data->shortname ) {
 	            $this->check_code = $DB->get_record($this->table,['shortname' => $this->data->shortname], 'shortname');
@@ -315,6 +318,13 @@ class CourseController extends BaseController {
 							}
 		    			}
 		    		}
+					$maxsection = $DB->get_field_sql('SELECT max(section) from {course_sections}
+                            WHERE course = ?', array($course->id));
+					if($maxsection) {
+						$this->data->numsections = $maxsection;
+						$oldcourse = course_get_format($course->id)->get_course();
+						course_get_format($course->id)->update_course_format_options($this->data, $oldcourse);
+					}
 					$this->resp->error = false;
 					$this->resp->message['info'] = "Tạo mới thành công";
 					$this->resp->classid = $course->id;
@@ -447,7 +457,7 @@ class CourseController extends BaseController {
 					    }
 					}
 					if($this->data->typeofuser == 'teacher') {
-						$enrol_teahcer = check_teacher_in_course($courseid, $teacherid);
+						$enrol_teahcer = check_teacher_in_course($courseid, $userid);
 						if(!$enrol_teahcer) {
 					    	enrol_user($userid, $courseid, 'editingteacher');
 					    	$this->resp->error = false;

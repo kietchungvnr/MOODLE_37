@@ -764,8 +764,8 @@ class theme_settings {
         $object->folder = count($DB->get_records('library_folder',['visible' => 1]));
         $object->module = count($DB->get_records_sql('select * from mdl_library_module lm 
                                                                     join mdl_course_modules cm on cm.id = lm.coursemoduleid
-                                                                where visible = 1'));
-        $object->moduleapproval = count($DB->get_records('library_module',['approval' => 0]));
+                                                                where visible = 1 and approval = 2'));
+        $object->moduleapproval = count($DB->get_records('library_module',['approval' => 1]));
         $templatecontext['reportdata'] = $object;
         return $templatecontext;
     }

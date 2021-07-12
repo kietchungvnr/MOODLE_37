@@ -232,6 +232,13 @@ class QuizController extends BaseController {
 								}
 			    			}
 			    		}
+			    		$maxsection = $DB->get_field_sql('SELECT max(section) from {course_sections}
+                            WHERE course = ?', array($courseid));
+						if($maxsection) {
+							$courses->numsections = $maxsection;
+							$oldcourse = course_get_format($courseid)->get_course();
+							course_get_format($courseid)->update_course_format_options($courses, $oldcourse);
+						}
 						$this->resp->error = false;
 						$this->resp->message['info'] = $message;
 						$this->resp->data[] = $modulequiz;
@@ -354,6 +361,13 @@ class QuizController extends BaseController {
 								}
 			    			}
 			    		}
+			    		$maxsection = $DB->get_field_sql('SELECT max(section) from {course_sections}
+                            WHERE course = ?', array($course->id));
+						if($maxsection) {
+							$courses->numsections = $maxsection;
+							$oldcourse = course_get_format($course->id)->get_course();
+							course_get_format($course->id)->update_course_format_options($courses, $oldcourse);
+						}
 						$this->resp->error = false;
 						$this->resp->message['info'] = $message;
 						$this->resp->data[] = $modulequiz;
@@ -493,8 +507,18 @@ class QuizController extends BaseController {
 							$message .= 'Tạo kì thi thành công';
 						}
 			    	}
+					
 		    	}
 		    	if($modulequiz) {
+					// Update lại numbersection
+					$maxsection = $DB->get_field_sql('SELECT max(section) from {course_sections}
+						WHERE course = ?', array($course->id));
+					if($maxsection) {
+						$oldcourse = course_get_format($course->id)->get_course();
+						$newcourse = $oldcourse;
+						$newcourse->numsections = $maxsection;
+						course_get_format($course->id)->update_course_format_options($newcourse, $oldcourse);
+					}
 		    		if($this->data->studentcode && $this->data->teachercode) {
 		    			$studentarr = explode(',', $this->data->studentcode);
 		    			$teacherarr = explode(',', $this->data->teachercode);
