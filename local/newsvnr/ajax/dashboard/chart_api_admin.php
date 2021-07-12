@@ -193,8 +193,19 @@ switch ($action) {
         echo json_encode($obj, JSON_UNESCAPED_UNICODE);
         break;
     case 'studentincoursechart':
+        $date = optional_param('date', '', PARAM_RAW);
+        $wheresql = '';
+        if($date != '') {
+            $date = json_decode($date);
+            $wheresql .= "AND cmc.timemodified BETWEEN $date->start AND $date->end";
+        }
+        $categoryid = optional_param('categoryid', 0, PARAM_INT);
         $user = $DB->get_record('user',['id' => $USER->id]);
-        $listcourse = $DB->get_records('course',['visible' => 1,'divisionid' => $user->divisionid]);
+        if($categoryid) {
+            $listcourse = $DB->get_records('course',['visible' => 1,'divisionid' => $user->divisionid,'category' => $categoryid]);
+        } else {
+            $listcourse = $DB->get_records('course',['visible' => 1,'divisionid' => $user->divisionid]);
+        }
         if($listcourse) {
             foreach ($listcourse as $value) {
                 $obj         = new stdClass();
@@ -202,10 +213,10 @@ switch ($action) {
                 $liststudent = get_listuser_in_course($value->id);
                 $sum         = 0;
                 foreach ($liststudent as $student) {
-                    $studentmdfinish = $DB->get_record_sql('SELECT COUNT(*) as count
+                    $studentmdfinish = $DB->get_record_sql("SELECT COUNT(*) as count
                                             FROM mdl_course_modules_completion cmc
                                             JOIN mdl_course_modules cm ON cm.id = cmc.coursemoduleid
-                                        WHERE cm.course = :courseid AND cmc.userid = :userid', ['courseid' => $value->id, 'userid' => $student->id]);
+                                        WHERE cm.course = :courseid AND cmc.userid = :userid $wheresql", ['courseid' => $value->id, 'userid' => $student->id]);
                     if ($studentmdfinish->count > 0) {
                         $sum++;
                     }

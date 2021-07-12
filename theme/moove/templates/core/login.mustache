@@ -189,11 +189,21 @@ body {
         padding: 3rem !important;
     }
 }
+.btn.btn-icon.btn-round img {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+}
 
 </style>
 <div class="row p-0">
   <div class="col-md-9 hidden-sm hidden-xs p-0">
+    {{#loginbgimg}}
+      <img src="{{loginbgimg}}" class="vh-100 w-100">
+    {{/loginbgimg}}
+    {{^loginbgimg}}
       <img src="/theme/moove/pix/bg.jpg" class="vh-100 w-100">
+    {{/loginbgimg}}
  </div>
  <div class="col-md-3 col-sm-12 col-xs-12 p-0 bg-white">
    <div class="p-0 ">
@@ -242,9 +252,36 @@ body {
                      <footer class="page-copyright py-4">
                         <p class="text-center text-muted">{{#str}}loginfollow, theme_moove{{/str}}</p>
                         <div class="social text-center">
-                           <a href="#" class="btn btn-icon btn-round social-facebook p-0 mr-1"><img src="/theme/moove/pix/youtube.png"></i></a>
-                           <a href="#" class="btn btn-icon btn-round social-twitter p-0 mr-1"><img src="/theme/moove/pix/facebook.png"></i></a>
-                           <a href="#" class="btn btn-icon btn-round social-linkedin p-0 mr-1"><img src="/theme/moove/pix/linkedin.png"></i></a>
+                          {{#youtube}}
+                           <a href="{{{youtube}}}" class="btn btn-icon btn-round social-facebook p-0 mr-1">
+                            {{#youtubeicon}}
+                              <img src="{{youtubeicon}}">
+                            {{/youtubeicon}}
+                            {{^youtubeicon}}
+                              <img src="/theme/moove/pix/youtube.png">
+                            {{/youtubeicon}}
+                          </a>
+                          {{/youtube}}
+                          {{#facebook}} 
+                           <a href="{{{facebook}}}" class="btn btn-icon btn-round social-twitter p-0 mr-1">
+                            {{#facebookicon}}
+                              <img src="{{facebookicon}}"></i>
+                            {{/facebookicon}}
+                            {{^facebookicon}}
+                              <img src="/theme/moove/pix/facebook.png">
+                            {{/facebookicon}}
+                          </a>
+                          {{/facebook}} 
+                          {{#linkedin}} 
+                           <a href="{{{linkedin}}}" class="btn btn-icon btn-round social-linkedin p-0 mr-1">
+                            {{#linkedinicon}}
+                              <img src="{{linkedinicon}}">
+                            {{/linkedinicon}}
+                            {{^linkedinicon}}
+                              <img src="/theme/moove/pix/linkedin.png">
+                            {{/linkedinicon}}
+                          </a>
+                          {{/linkedin}} 
                         </div>
                      </footer>
                   </div>

@@ -1754,11 +1754,12 @@ if($action == 'search_category') {
 			$wheresql .= "JOIN {division_categories} dc on dc.coursecategorysid = cc.id";
 		}
 	} 
-	$sql = "SELECT DISTINCT cc.name FROM {course_categories} cc $wheresql WHERE cc.visible = 1";
+	$sql = "SELECT DISTINCT cc.name,cc.id FROM {course_categories} cc $wheresql WHERE cc.visible = 1";
 	$get_list = $DB->get_records_sql($sql);
 	$data = [];
 	foreach ($get_list as $value) {
 		$object = new stdclass;
+		$object->id = $value->id;
 		$object->name = $value->name;
 		$data[] = $object;
 	}

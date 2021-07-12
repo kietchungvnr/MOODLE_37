@@ -59,7 +59,11 @@ if(is_siteadmin() || has_capability('local/newsvnr:assignmentfilelibrary', conte
 } else {
     $permit->canviewlibrarymanagement = false;
 }
-
+if($CFG->sitetype == MOODLE_BUSINESS)
+    $isbusiness = true;
+else {
+    $isbusiness = false;
+}
 if (isloggedin()) {
     global $DB;
 
@@ -73,6 +77,8 @@ if (isloggedin()) {
     
     $bodyattributes = $OUTPUT->body_attributes($extraclasses);
     $regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
+
+
     // $PAGE->requires->jquery();
     // $PAGE->requires->jquery_plugin('jquery');
     $context = context_course::instance(SITEID);
@@ -91,7 +97,8 @@ if (isloggedin()) {
         'canaddresource' => $permit->canaddresource,
         'canapproval' => $permit->canapproval,
         'hasopenmenu' => $check->hasopenmenu,
-        'isadmin' => $check->isadmin
+        'isadmin' => $check->isadmin,
+        'isbusiness' => $isbusiness
     ];
 
     // Improve boost navigation.
