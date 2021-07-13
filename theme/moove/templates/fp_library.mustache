@@ -131,8 +131,11 @@
                             </div>
                             <div class="title-db-library d-flex justify-content-between">
                                 <h3>{{#str}} listapproval,local_newsvnr{{/str}}</h3>
+                                <i class="cl-cursor fa fa-window-minimize text-white" data-toggle="collapse" data-target="#library-request-approval-toggle" style="font-size: 10px;" aria-hidden="true"></i>
                             </div>
-                            <div id="library-request-approval"></div>
+                            <div id="library-request-approval-toggle" class="collapse in">
+                                <div id="library-request-approval"></div>
+                            </div>
                         </div>
                     </div>
                     {{/canviewlibrarymanagement}}
@@ -603,5 +606,6 @@ require(['jquery','core/config', 'local_newsvnr/initkendogrid','alertjs','core/s
                 },
             },
     });
+    $("#library-request-approval-toggle").collapse('show');
 })
 {{/js}}
