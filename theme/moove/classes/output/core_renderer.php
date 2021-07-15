@@ -101,6 +101,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
     public function menu_focus() {
         global $COURSE, $CFG, $OUTPUT, $DB;
         require_once($CFG->libdir.'/completionlib.php');
+        // Lấy các chức năng trong course renderer
+        $courserenderer = $this->page->get_renderer('core', 'course');
+
         $completioninfo = new completion_info($COURSE);
         $allmodinfo = get_fast_modinfo($COURSE)->get_section_info_all();
         $process = round(\core_completion\progress::get_course_progress_percentage($COURSE));
@@ -154,8 +157,12 @@ class core_renderer extends \theme_boost\output\core_renderer {
                         $url = $CFG->wwwroot . '/mod/' . $cms->modname . '/view.php?id=' . $cms->id;
                         $modname = $cms->name;
                         $modtype = $cms->modname;
-                        $output .= '<div class="card-header level2 justify-content-between">';
-                        // $output .= '<div class="d-flex align-items-center">';
+                        // Kiểm tra xem module có bị set hạn chế hay không?
+                        $get_availability = $courserenderer->course_section_cm_availability_focusmod($cms);
+                        if($get_availability)
+                            $output .= '<div class="card-header level2">';
+                        else
+                            $output .= '<div class="card-header level2 justify-content-between">';
                         if($cms->modname == 'resource') {
                             $img = $OUTPUT->image_url($cms->icon);
                             $displayresource = $DB->get_field('resource', 'display', ['id' => $cms->instance]);
@@ -167,9 +174,11 @@ class core_renderer extends \theme_boost\output\core_renderer {
                             }
                         } else {
                             $img = $OUTPUT->image_url('icon', $cms->modname);
-                            $output .= '<a href="javascript:;" data-mod-type="'.$modtype.'" data-focusmode-url="'.$url.'" module-id="'.$cms->id.'"><img class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
+                            if($get_availability)
+                                $output .= $get_availability;
+                            else
+                                $output .= '<a href="javascript:;" data-mod-type="'.$modtype.'" data-focusmode-url="'.$url.'" module-id="'.$cms->id.'"><img class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
                         }
-                        // $output .= '</div>';
                         $output .= '<div class="position-relative">'.$completionicon.'</div>';
                         $output .= '</div>';    
                     }
