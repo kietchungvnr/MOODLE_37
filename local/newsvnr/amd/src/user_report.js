@@ -4,8 +4,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
     let kendoConfig = {};
     let kendoscript = Config.wwwroot + '/local/newsvnr/report/ajax/userreport.php';
     let actionscript = Config.wwwroot + '/local/newsvnr/report/ajax/userreport_action.php';
-    setCookie('cookie', 'focusmod');
-    setCookie('spa', 'true');
+
     var deleteUser = function() {
         $('#btn-user-delete').click(function(){
             var arrObject = getSelectRow('#user_report');
@@ -26,16 +25,16 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                 $.ajax(actionscript,settings).then(function(response) {
                     var obj = $.parseJSON(response);
                     alertify.notify(obj.result, 'success', 3);
-                    var grid = $(gridName).data("kendoGrid");
-                    grid.dataSource.read();
+                    initGrid();
                     $('.user-report-fuction').addClass('disabled');
                 })
-            }, function(){});
+            }, function(){}).set('labels', {ok:M.util.get_string('yes', 'local_newsvnr'), cancel:M.util.get_string('no', 'local_newsvnr')});
 
         })
     }
     var openPopUp = function() {
         $('.user-report-fuction').click(function() {
+            setCookie('spa', 'true');
             var link = $(this).attr('data-href');
             if(link == undefined) {
                 return;
@@ -62,6 +61,9 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             })
 
         })
+        $('#popup-user-report').on('hidden.bs.modal', function () {
+            setCookie('spa', 'false');
+        }) 
     }
     var kendoDropdown = function() {
         var datascript = "/local/newsvnr/report/ajax/report_data.php?action=";

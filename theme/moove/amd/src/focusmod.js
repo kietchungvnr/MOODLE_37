@@ -181,7 +181,7 @@ define(["jquery", "core/config", "core/str", "core/notification", "theme_moove/h
             $('div.card-header.level2 a').removeClass('active');
             _this.addClass('active').siblings().removeClass('active');
             $('.mid .nav-link.focusmod').html(_this.text() + '<i class="fa fa-angle-down rotate-icon ml-2"></i>');
-
+            $('.mid .nav-link.focusmod').attr('title',_this.text());
             $('.nav-link.next, .nav-link.prev').removeClass('disable');
             // Kiểm tra ngoại lệ tiến lùi trong màn hình khóa học
             if ($('.card-header.level2 a').hasClass('active')) {

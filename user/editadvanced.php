@@ -386,7 +386,7 @@ if ($userform->is_cancelled()) {
         }
     } else {
         \core\session\manager::gc(); // Remove stale sessions.
-        redirect("$CFG->wwwroot/$CFG->admin/user.php");
+        redirect($returnurl);
     }
     // Never reached..
 }
