@@ -751,6 +751,54 @@ abstract class info {
     }
 
     /**
+     * Custom by Vũ: Clone func để fortmat cho chế độ focusmod trong khóa học
+     * Formats the $cm->availableinfo string for display. This includes
+     * filling in the names of any course-modules that might be mentioned.
+     * Should be called immediately prior to display, or at least somewhere
+     * that we can guarantee does not happen from within building the modinfo
+     * object.
+     *
+     * @param \renderable|string $inforenderable Info string or renderable
+     * @param int|\stdClass $courseorid
+     * @return string Correctly formatted info string
+     */
+    public static function format_info_focusmod($inforenderable, $courseorid) {
+        global $PAGE;
+
+        // Use renderer if required.
+        if (is_string($inforenderable)) {
+            $info = $inforenderable;
+        } else {
+            $renderer = $PAGE->get_renderer('core', 'availability');
+            $info = $renderer->render($inforenderable);
+        }
+
+        // Don't waste time if there are no special tags.
+        if (strpos($info, '<AVAILABILITY_') === false) {
+            return $info;
+        }
+
+        // Handle CMNAME tags.
+        $modinfo = get_fast_modinfo($courseorid);
+        $context = \context_course::instance($modinfo->courseid);
+        $info = preg_replace_callback('~<AVAILABILITY_CMNAME_([0-9]+)/>~',
+                function($matches) use($modinfo, $context) {
+                    global $OUTPUT;
+                    $cm = $modinfo->get_cm($matches[1]);
+                    $img = $OUTPUT->image_url('icon', $cm->modname);
+                    if ($cm->has_view() and $cm->uservisible) {
+                        // Help student by providing a link to the module which is preventing availability.
+                        // return '<span><img class="pr-2 img-module" src="'.$img.'">'.format_string($cm->name, true, array('context' => $context)).'</span';
+                        return '<img class="pr-2 img-module" src="'.$img.'">' . \html_writer::span(format_string($cm->name, true, array('context' => $context)));
+                    } else {
+                        return format_string($cm->name, true, array('context' => $context));
+                    }
+                }, $info);
+
+        return $info;
+    }
+
+    /**
      * Used in course/lib.php because we need to disable the completion tickbox
      * JS (using the non-JS version instead, which causes a page reload) if a
      * completion tickbox value may affect a conditional activity.

@@ -477,3 +477,4 @@ $string['settings_sitetype'] = 'Loại mô hình';
 $string['settings_sitetypedesc'] = '<b>Mô hình doanh nghiệp:</b> Loại hình gồm những chức năng riêng biệt chỉ giành riêng cho doanh nghiệp. Nếu dự án là một doanh nghiệp thì chọn loại này.<br><b>Mô hình đào tạo:</b> Loại hình gồm những chức năng riêng biệt chỉ giành riêng cho trung tâm đào tạo. Nếu dự án là một trung tâm như: Trung tâm anh ngữ,... thì chọn loại này.';
 $string['settings_business'] = 'Mô hình doanh nghiệp';
 $string['settings_education'] = 'Mô hình đào tạo';
+$string['require_reload'] = 'Khi hoàn thành hết điều kiện trên, vui lòng tải lại trang';

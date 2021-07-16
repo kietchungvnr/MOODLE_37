@@ -151,7 +151,11 @@ class core_files_renderer extends plugin_renderer_base {
                 'restrictions' => $this->fm_print_restrictions($fm),
         ];
         $generallibraryurl = $CFG->wwwroot . '/local/newsvnr/generallibrary.php';
-        $getcurrenturl = "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]";
+        if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+            $getcurrenturl = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        } else {
+            $getcurrenturl = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        }
         if($getcurrenturl === $generallibraryurl) {
             $contextsystem = context_user::instance($USER->id);
             if(has_capability('local/newsvnr:deletefilesystem', $contextsystem)) {

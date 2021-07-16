@@ -229,7 +229,9 @@
 	                        <h5 class="card-title d-inline">{{#str}} coursenocontent, theme_moove{{/str}}</h5>
 	                    </div>
 	                    <div class="font-title mb-1">
-	                        {{#teacherinfo}}{{courseemptytotal}}{{/teacherinfo}}
+                            <a class="cl-cursor" data-action="viewcoursenocontent">
+                                {{#teacherinfo}}{{courseemptytotal}}{{/teacherinfo}}
+                            </a>
 	                    </div>
 	                </div>
 	                <div>
@@ -1314,6 +1316,42 @@ function(Highcharts, ExportingModule, AccessibilityModule, DrilldownModule, noDa
             $('#content-detail').hide().html(obj.result).fadeIn('fast');
             $('.loading-page').removeClass('active');
         })
+    })
+
+    //Xem chi tiêt khóa học không content
+    $('[data-action=viewcoursenocontent]').click(function() {
+        $('.loading-page').addClass('active');
+        var kendoGridConfig = {};
+        var scriptrp = Config.wwwroot + '/local/newsvnr/ajax/dashboard/teacherreport_viewdetail.php';
+        var action = $(this).attr('data-action')
+        var settings = {
+            url: scriptrp,
+            type: 'GET',
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            data: {
+                action : action
+            }
+        }
+        var viewCourseNoContentColumns = [
+            {
+                template: function(e) {
+                    return e.fullname;
+                },
+                field: "fullname",
+                title: M.util.get_string('coursename', 'theme_moove'),
+                width: "200px"
+            } 
+        ];
+        kendoGridConfig.columns = viewCourseNoContentColumns;
+        kendoGridConfig.apiSettings = settings;
+        kendoGridConfig.toolbar = false;
+        kendoGridConfig.height = 500;
+        openPopup('#viewTeacherDetailReport', M.util.get_string('coursenocontent', 'theme_moove'));
+        var gridModuleData = kendo.initGrid(kendoGridConfig);
+        $('#content-detail').html('');
+        $('#content-detail').kendoGrid(gridModuleData);
+        $('.loading-page').removeClass('active');
     })
 
     // filter chart overview course

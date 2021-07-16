@@ -217,7 +217,7 @@ if ($mform->is_cancelled()) {
                 $record->userid = $USER->id;
                 $record->coursemoduleid = $fromform->coursemodule;
                 $record->moduletype = $fromform->modulename;
-                if(is_siteadmin()) {
+                if(is_siteadmin() || user_has_role_assignment($USER->id, 1, context_system::instance()->id)) {
                     $record->approval = 2;
                 } else {
                     $record->approval = 0;
