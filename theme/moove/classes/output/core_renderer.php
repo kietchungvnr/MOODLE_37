@@ -183,7 +183,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
                             else
                                 $output .= '<a href="javascript:;" data-mod-type="'.$modtype.'" data-focusmode-url="'.$url.'" module-id="'.$cms->id.'"><img class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
                         }
-                        $output .= '<div class="position-relative">'.$completionicon.'</div>';
+                        if(!$get_availability)
+                            $output .= '<div class="position-relative">'.$completionicon.'</div>';
                         $output .= '</div>';    
                     }
                 }
