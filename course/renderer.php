@@ -901,7 +901,7 @@ class core_course_renderer extends plugin_renderer_base {
             // Display information about conditional availability.
             // Don't add availability information if user is not editing and activity is hidden.
             if ($mod->visible || $this->page->user_is_editing()) {
-                $hidinfoclass = 'isrestricted isfullinfo';
+                $hidinfoclass = 'isrestricted isfullinfo text-muted pb-2 pt-2 pl-3';
                 if (!$mod->visible) {
                     $hidinfoclass .= ' hide';
                 }
