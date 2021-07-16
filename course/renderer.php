@@ -908,8 +908,14 @@ class core_course_renderer extends plugin_renderer_base {
                 $ci = new \core_availability\info_module($mod);
                 $fullinfo = $ci->get_full_information();
                 if ($fullinfo) {
-                    $formattedinfo = \core_availability\info::format_info_focusmod(
+                    if($mod->modname == 'resource')
+                        $img = $OUTPUT->image_url($mod->icon);
+                    else
+                        $img = $OUTPUT->image_url('icon', $mod->modname);
+                    $formattedinfo = '<span class="d-block mb-2"><img class="pr-2 img-module" src="'.$img.'">'.$mod->name.'</span>';
+                    $formattedinfo .= \core_availability\info::format_info_focusmod(
                             $fullinfo, $mod->get_course());
+                    $formattedinfo .= '<span class="badge badge-success">'. get_string('require_reload', 'theme_moove') .'</span>';
                     $output .= $this->availability_info($formattedinfo, $hidinfoclass);
                 }
             }
