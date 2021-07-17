@@ -170,17 +170,38 @@
               <ul class="d-flex">
                 {{#youtube}}
                 <li class="mr-2">
-                  <a href="{{{youtube}}}" target="_blank"><img src="/theme/moove/pix/youtube.png"></a>
+                  <a class="btn btn-icon btn-round" href="{{{youtube}}}" target="_blank">
+                    {{#youtubeicon}}
+                      <img src="{{youtubeicon}}">
+                    {{/youtubeicon}}
+                    {{^youtubeicon}}
+                      <img src="/theme/moove/pix/youtube.png">
+                    {{/youtubeicon}}
+                  </a>
                 </li>
                 {{/youtube}}
                 {{#facebook}}
                   <li class="mr-2">
-                  <a href="{{{facebook}}}" target="_blank"><img src="/theme/moove/pix/facebook.png"></a>
+                  <a class="btn btn-icon btn-round" href="{{{facebook}}}" target="_blank">                           
+                    {{#facebookicon}}
+                      <img src="{{facebookicon}}"></i>
+                    {{/facebookicon}}
+                    {{^facebookicon}}
+                      <img src="/theme/moove/pix/facebook.png">
+                    {{/facebookicon}}
+                  </a>
                 </li>
                 {{/facebook}}
                 {{#linkedin}}
                   <li class="mr-2">
-                  <a href="{{{linkedin}}}" target="_blank"><img src="/theme/moove/pix/linkedin.png"></a>
+                  <a class="btn btn-icon btn-round" href="{{{linkedin}}}" target="_blank">
+                    {{#linkedinicon}}
+                      <img src="{{linkedinicon}}">
+                    {{/linkedinicon}}
+                    {{^linkedinicon}}
+                      <img src="/theme/moove/pix/linkedin.png">
+                    {{/linkedinicon}}
+                  </a>
                 </li>
                 {{/linkedin}}
               </ul>

@@ -639,11 +639,6 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $context->logourl = $this->get_logo();
         $context->sitename = format_string($SITE->fullname, true, array('context' => \context_course::instance(SITEID)));
         $themesettings = new \theme_moove\util\theme_settings();
-        $theme = theme_config::load('moove');
-        $context->loginbgimg = $theme->setting_file_url('loginbgimg', 'loginbgimg');
-        $context->linkinicon = $theme->setting_file_url('linkinicon', 'linkinicon');
-        $context->youtubeicon = $theme->setting_file_url('youtubeicon', 'youtubeicon');
-        $context->facebookicon = $theme->setting_file_url('facebookicon', 'facebookicon');
         $context =  (object) array_merge((array) $context,(array) $themesettings->footer_items());
         return $this->render_from_template('core/login', $context);
     }

@@ -97,7 +97,10 @@ class theme_settings {
         if (!empty($theme->settings->disablebottomfooter)) {
             $templatecontext['disablebottomfooter'] = true;
         }
-
+        $templatecontext['loginbgimg'] = $theme->setting_file_url('loginbgimg', 'loginbgimg');
+        $templatecontext['linkinicon'] = $theme->setting_file_url('linkinicon', 'linkinicon');
+        $templatecontext['youtubeicon'] = $theme->setting_file_url('youtubeicon', 'youtubeicon');
+        $templatecontext['facebookicon'] = $theme->setting_file_url('facebookicon', 'facebookicon');
         return $templatecontext;
     }
 
