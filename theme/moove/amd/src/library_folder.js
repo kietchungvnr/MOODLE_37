@@ -23,8 +23,12 @@ define(["jquery", "core/config", "core/str", "core/notification", "alertjs", 'lo
                 var folderid = $(this).attr('forderid');
                 var action = $(this).attr('action');
                 var multiselect = $("#positionpermission").data("kendoMultiSelect")
-                var listposition = multiselect.value();
-                var data = JSON.stringify(listposition);
+                if(multiselect != undefined) {
+                    var listposition = multiselect.value();
+                    var data = JSON.stringify(listposition);
+                } else {
+                    var data = '';
+                }
                 var settings = {
                     type: "GET",
                     processData: true,
