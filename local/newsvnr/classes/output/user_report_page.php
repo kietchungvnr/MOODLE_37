@@ -42,6 +42,9 @@ class user_report_page implements renderable, templatable  {
         $data['group'] = $CFG->wwwroot . '/admin/user/user_bulk_cohortadd.php';
         if($CFG->sitetype == MOODLE_BUSINESS)
             $data['isbusiness'] = true;
+
+        if($CFG->sitetype == MOODLE_EDUCATION)
+            $data['iseducation'] = true;
         return $data;
     }
 
