@@ -237,7 +237,7 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min','alertjs'], function
             var funcEditUser = function(e) {
                 e.preventDefault();
                 var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                window.open(Config.wwwroot + '/user/editadvanced.php?id='+dataItem.id+'&course=1&returnto=profile');
+                window.open(Config.wwwroot + '/user/editadvanced.php?id='+dataItem.id+'&course=1&returnto=userreport');
                 gridConfig.editUserEvent(dataItem);
             }
             var objEventEditUser = {

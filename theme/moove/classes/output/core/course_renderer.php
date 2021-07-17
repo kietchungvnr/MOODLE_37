@@ -435,7 +435,7 @@ class course_renderer extends \core_course_renderer {
                     LEFT JOIN mdl_course c ON cc.id = c.category OR cc.parent = c.category 
                 WHERE cc.visible = 1');
         } else {
-            $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent, cc.idnumber FROM mdl_course_categories cc LEFT JOIN mdl_course c ON cc.id = c.category OR cc.parent = c.category WHERE cc.visible = 1');
+            $categories = $DB->get_records_sql('SELECT DISTINCT cc.name,cc.id, cc.parent, cc.idnumber,CC.sortorder FROM mdl_course_categories cc LEFT JOIN mdl_course c ON cc.id = c.category OR cc.parent = c.category WHERE cc.visible = 1 ORDER BY CC.sortorder ASC');
         }
 
         $output .= $this->menucoursecategory($categories);
