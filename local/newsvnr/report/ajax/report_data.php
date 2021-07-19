@@ -35,8 +35,8 @@ $data   = array();
 switch ($action) {
     case 'get_userstatus':
         $data = [
-            ['name' => get_string('accoutsuspend','local_newsvnr'), 'value' => 1],
-            ['name' => get_string('accoutnormal','local_newsvnr'), 'value' => 0],
+            ['name' => get_string('accoutsuspend', 'local_newsvnr'), 'value' => 1],
+            ['name' => get_string('accoutnormal', 'local_newsvnr'), 'value' => 0],
         ];
 
         break;
@@ -80,16 +80,16 @@ switch ($action) {
         break;
     case 'get_system_role';
         $data = [
-            ['name' => get_string('manager','local_newsvnr'), 'value' => 1],
-            ['name' => get_string('teachereditor','local_newsvnr'), 'value' => 3],
-            ['name' => get_string('supervisor','local_newsvnr'), 'value' => 11],
+            ['name' => get_string('manager', 'local_newsvnr'), 'value' => 1],
+            ['name' => get_string('teachereditor', 'local_newsvnr'), 'value' => 3],
+            ['name' => get_string('supervisor', 'local_newsvnr'), 'value' => 11],
         ];
         break;
     case 'get_course_role';
         $data = [
-            ['name' => get_string('student','local_newsvnr'), 'value' => 5],
-            ['name' => get_string('teacher','local_newsvnr'), 'value' => 3],
-            ['name' => get_string('manager','local_newsvnr'), 'value' => 1],
+            ['name' => get_string('student', 'local_newsvnr'), 'value' => 5],
+            ['name' => get_string('teacher', 'local_newsvnr'), 'value' => 3],
+            ['name' => get_string('manager', 'local_newsvnr'), 'value' => 1],
         ];
         break;
     case 'get_course';
@@ -122,15 +122,15 @@ switch ($action) {
         break;
     case 'get_learning_status':
         $data = [
-            ['name' => get_string('finished','local_newsvnr'), 'value' => 2],
-            ['name' => get_string('unfinished','local_newsvnr'), 'value' => 1],
+            ['name' => get_string('finished', 'local_newsvnr'), 'value' => 2],
+            ['name' => get_string('unfinished', 'local_newsvnr'), 'value' => 1],
         ];
         break;
     case 'get_report':
         $data = [
-            ['name' => get_string('learningreport','local_newsvnr'), 'value' => 'learning'],
-            ['name' => get_string('trainingplanreport','local_newsvnr'), 'value' => 'trainingplan'],
-            ['name' => get_string('competencyreport','local_newsvnr'), 'value' => 'competency'],
+            ['name' => get_string('learningreport', 'local_newsvnr'), 'value' => 'learning'],
+            ['name' => get_string('trainingplanreport', 'local_newsvnr'), 'value' => 'trainingplan'],
+            ['name' => get_string('competencyreport', 'local_newsvnr'), 'value' => 'competency'],
         ];
         break;
     case 'get_route':
@@ -140,6 +140,15 @@ switch ($action) {
             $object->name  = $route->shortname;
             $object->value = $route->id;
             $data[]        = $object;
+        }
+        break;
+    case 'get_division':
+        $divisions = $DB->get_records('division', ['visible' => 1]);
+        foreach ($divisions as $division) {
+            $object       = new stdClass();
+            $object->name = $division->name;
+            $object->id   = $division->id;
+            $data[]       = $object;
         }
         break;
     default:

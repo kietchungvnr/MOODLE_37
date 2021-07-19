@@ -33,6 +33,20 @@ define(["jquery", "core/config", "core/str", "core/notification"], function($, C
                 }
             }
         })
+        $(window).scroll(function(){
+            var card = $('#profile-fix');
+            if($(window).scrollTop() > 287) {
+                card.css({
+                    position: 'absolute',
+                    top: 287
+                })
+            } else {
+                card.css({
+                    position: 'fixed',
+                    top: 72
+                });
+            }
+        })
     }
     return {
         init: init

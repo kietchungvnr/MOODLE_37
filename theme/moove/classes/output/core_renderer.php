@@ -123,7 +123,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
 
         $output .= '<div class="menu-right"><ul class="d-flex">';
         $output .= '<li class="nav-item border-left"><a class="nav-link focusmod prev"><i class="fa fa-angle-left mr-2"></i>'.get_string('prevmodule','theme_moove').'</a></li>
-                    <li class="nav-item border-left mid"><a class="nav-link focusmod">'.get_string('coursedata','theme_moove').'<i class="fa fa-angle-down rotate-icon ml-2"></i></a></li>
+                    <li class="nav-item border-left mid"><a class="nav-link focusmod" title="'.get_string('coursedata','theme_moove').'">'.get_string('coursedata','theme_moove').'<i class="fa fa-angle-down rotate-icon ml-2"></i></a></li>
                     <li class="nav-item border-left"><a class="nav-link focusmod next">'.get_string('nextmodule','theme_moove').'<i class="fa fa-angle-right ml-2"></i></a></li>';
         $output .= '<div id="focus-mod" course="'.$COURSE->id.'" class="d-flex open-focusmod border-left border-right" data-placement="left"><i class="fa fa-external-link"></i><span class="ml-1 mr-1">'.get_string('zoomout','local_newsvnr').'</span></div>';
         $output .= '<div class="dropdown-content">';
@@ -653,11 +653,6 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $context->logourl = $this->get_logo();
         $context->sitename = format_string($SITE->fullname, true, array('context' => \context_course::instance(SITEID)));
         $themesettings = new \theme_moove\util\theme_settings();
-        $theme = theme_config::load('moove');
-        $context->loginbgimg = $theme->setting_file_url('loginbgimg', 'loginbgimg');
-        $context->linkinicon = $theme->setting_file_url('linkinicon', 'linkinicon');
-        $context->youtubeicon = $theme->setting_file_url('youtubeicon', 'youtubeicon');
-        $context->facebookicon = $theme->setting_file_url('facebookicon', 'facebookicon');
         $context =  (object) array_merge((array) $context,(array) $themesettings->footer_items());
         return $this->render_from_template('core/login', $context);
     }

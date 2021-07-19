@@ -74,6 +74,7 @@ switch ($action) {
         $courseid     = optional_param('courseid', 0, PARAM_INT);
         $datestart    = optional_param('datestart', 0, PARAM_INT);
         $dateend      = optional_param('dateend', 0, PARAM_INT);
+        $divisionid   = optional_param('divisionid',0, PARAM_INT);
         if ($systemroleid) {
             $wheresql .= "AND id IN (SELECT userid
                                         FROM {role_assignments} ra
@@ -89,6 +90,9 @@ switch ($action) {
                         INNER JOIN {context} b ON a.contextid=b.id
                         INNER JOIN {course} c ON b.instanceid=c.id
                             WHERE b.contextlevel=50 AND a.roleid = $courseroleid $conditioncourse)";
+        }
+        if($divisionid) {
+            $wheresql .= "AND divisionid = $divisionid";
         }
         if ($datestart != 0 && $dateend != 0) {
             $wheresql .= "AND lastaccess > $datestart AND lastaccess < $dateend";
