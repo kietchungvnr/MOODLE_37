@@ -166,7 +166,10 @@ if ($returnto === 'profile') {
     } else {
         $returnurl = new moodle_url('/user/profile.php', array('id' => $user->id));
     }
-} else {
+} else if ($returnto === 'userreport') {
+    $returnurl = new moodle_url('/local/newsvnr/report/user.php');
+}
+else {
     $returnurl = new moodle_url('/user/preferences.php', array('userid' => $user->id));
 }
 
