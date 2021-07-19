@@ -161,7 +161,7 @@ define(['jquery', 'core/config', 'core/str','kendo.all.min','alertjs'], function
                         alertify.notify(obj.result, 'success', 3);
                     })
                     gridConfig.deleteUserEvent(dataItem);
-                },function(){});
+                },function(){}).set('labels', {ok:M.util.get_string('yes', 'local_newsvnr'), cancel:M.util.get_string('no', 'local_newsvnr')});
             }
             var objEventDeleteUser = {
                 click: funcDeleteUser,

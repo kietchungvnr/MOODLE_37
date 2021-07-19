@@ -151,7 +151,10 @@ if (is_siteadmin() || (user_has_role_assignment($USER->id, 1, context_system::in
                                                     JOIN mdl_role AS r ON r.id= ra.roleid
                                                     LEFT JOIN mdl_course_completions cc ON cc.userid = c.id AND cc.course = c.id 
                                                 WHERE ra.roleid=5 AND ue.status = 0 AND c.visible = 1 AND u.deleted <> 1 AND u.id <> $CFG->siteguest AND c.divisionid = $user->divisionid AND u.divisionid = $user->divisionid");
-    $totaluserfinishmodule = $DB->get_records_sql("SELECT DISTINCT userid as count FROM mdl_course_modules_completion");
+    $totaluserfinishmodule = $DB->get_records_sql("SELECT DISTINCT userid as count 
+                                                    FROM mdl_course_modules_completion cmc
+                                                        JOIN mdl_user u on cmc.userid = u.id
+                                                    WHERE  u.divisionid = $user->id");
     $totalmodules = $DB->get_record_sql("SELECT count(cm.id) as count FROM mdl_course_modules cm 
                                             JOIN mdl_course c on c.id = cm.course
                                         WHERE c.divisionid = $user->divisionid AND cm.deletioninprogress = 0");
