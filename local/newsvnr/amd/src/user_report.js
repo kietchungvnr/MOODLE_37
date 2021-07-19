@@ -125,6 +125,13 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             kendoConfig.optionLabel = M.util.get_string('selectcourse', 'local_newsvnr');
         var kendoListCourse = kendoService.initDropDownList(kendoConfig);
         $("#list_course").kendoDropDownList(kendoListCourse);
+        //dropdown chi nhánh
+        var kendoConfig = {};
+            kendoConfig.apiSettings = { url: datascript + 'get_division'};
+            kendoConfig.value = 'id';
+            kendoConfig.optionLabel = M.util.get_string('selectdivision', 'local_newsvnr');
+        var kendoListDivision = kendoService.initDropDownList(kendoConfig);
+        $("#list_division").kendoDropDownList(kendoListDivision);
         // thời gian truy cập gần nhất
         $("#start_timeaccess").kendoDatePicker({
             change: onChange
@@ -257,14 +264,15 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         initGrid(data);
     }
     /// Tìm kiếm nâng cao
-    var gridSearchAdvance = function(systemroleid,courseroleid,courseid,datestart,dateend) {
+    var gridSearchAdvance = function(systemroleid,courseroleid,courseid,datestart,dateend,divisionid) {
         var data = {
             action:'searchadvance',
             systemroleid:systemroleid,
             courseroleid:courseroleid,
             courseid:courseid,
             datestart:datestart,
-            dateend:dateend
+            dateend:dateend,
+            divisionid:divisionid
         }
         initGrid(data);
     }
@@ -293,7 +301,8 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             var datestart = parseInt((new Date(datestartpicker).getTime() / 1000).toFixed(0));
             var dateendpicker = $("#end_timeaccess").val();
             var dateend = parseInt((new Date(dateendpicker).getTime() / 1000).toFixed(0));
-            gridSearchAdvance(systemroleid,courseroleid,courseid,datestart,dateend);
+            var divisionid = $("#list_division").val();
+            gridSearchAdvance(systemroleid,courseroleid,courseid,datestart,dateend,divisionid);
         })
         $('#resettable').click(function() {
             $('#username').val('');
