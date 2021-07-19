@@ -4,8 +4,7 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
     let kendoConfig = {};
     let kendoscript = Config.wwwroot + '/local/newsvnr/report/ajax/userreport.php';
     let actionscript = Config.wwwroot + '/local/newsvnr/report/ajax/userreport_action.php';
-    setCookie('cookie', 'focusmod');
-    setCookie('spa', 'true');
+
     var deleteUser = function() {
         $('#btn-user-delete').click(function(){
             var arrObject = getSelectRow('#user_report');
@@ -26,16 +25,16 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
                 $.ajax(actionscript,settings).then(function(response) {
                     var obj = $.parseJSON(response);
                     alertify.notify(obj.result, 'success', 3);
-                    var grid = $(gridName).data("kendoGrid");
-                    grid.dataSource.read();
+                    initGrid();
                     $('.user-report-fuction').addClass('disabled');
                 })
-            }, function(){});
+            }, function(){}).set('labels', {ok:M.util.get_string('yes', 'local_newsvnr'), cancel:M.util.get_string('no', 'local_newsvnr')});
 
         })
     }
     var openPopUp = function() {
         $('.user-report-fuction').click(function() {
+            setCookie('spa', 'true');
             var link = $(this).attr('data-href');
             if(link == undefined) {
                 return;
@@ -62,6 +61,9 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             })
 
         })
+        $('#popup-user-report').on('hidden.bs.modal', function () {
+            setCookie('spa', 'false');
+        }) 
     }
     var kendoDropdown = function() {
         var datascript = "/local/newsvnr/report/ajax/report_data.php?action=";
@@ -123,6 +125,13 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             kendoConfig.optionLabel = M.util.get_string('selectcourse', 'local_newsvnr');
         var kendoListCourse = kendoService.initDropDownList(kendoConfig);
         $("#list_course").kendoDropDownList(kendoListCourse);
+        //dropdown chi nhánh
+        var kendoConfig = {};
+            kendoConfig.apiSettings = { url: datascript + 'get_division'};
+            kendoConfig.value = 'id';
+            kendoConfig.optionLabel = M.util.get_string('selectdivision', 'local_newsvnr');
+        var kendoListDivision = kendoService.initDropDownList(kendoConfig);
+        $("#list_division").kendoDropDownList(kendoListDivision);
         // thời gian truy cập gần nhất
         $("#start_timeaccess").kendoDatePicker({
             change: onChange
@@ -255,14 +264,15 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
         initGrid(data);
     }
     /// Tìm kiếm nâng cao
-    var gridSearchAdvance = function(systemroleid,courseroleid,courseid,datestart,dateend) {
+    var gridSearchAdvance = function(systemroleid,courseroleid,courseid,datestart,dateend,divisionid) {
         var data = {
             action:'searchadvance',
             systemroleid:systemroleid,
             courseroleid:courseroleid,
             courseid:courseid,
             datestart:datestart,
-            dateend:dateend
+            dateend:dateend,
+            divisionid:divisionid
         }
         initGrid(data);
     }
@@ -291,7 +301,8 @@ define(['jquery', 'core/config', 'validatefm', 'local_newsvnr/initkendogrid', 'a
             var datestart = parseInt((new Date(datestartpicker).getTime() / 1000).toFixed(0));
             var dateendpicker = $("#end_timeaccess").val();
             var dateend = parseInt((new Date(dateendpicker).getTime() / 1000).toFixed(0));
-            gridSearchAdvance(systemroleid,courseroleid,courseid,datestart,dateend);
+            var divisionid = $("#list_division").val();
+            gridSearchAdvance(systemroleid,courseroleid,courseid,datestart,dateend,divisionid);
         })
         $('#resettable').click(function() {
             $('#username').val('');

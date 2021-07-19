@@ -718,3 +718,4 @@ $string['facebookicon'] = 'Facebook icon';
 $string['facebookicondesc'] = 'Upload your Facebook icon.';
 $string['youtubeicon'] = 'Youtube icon';
 $string['youtubeicondesc'] = 'Upload your Youtube icon.';
+$string['selectdivision'] = 'Select division';

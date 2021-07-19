@@ -476,3 +476,4 @@ $string['settings_sitetype'] = 'Model type';
 $string['settings_sitetypedesc'] = '<b>Business model:</b> Type includes separate functions only for businesses. If the project is an enterprise, choose this type.<br><b>Education model:</b> Type includes separate functions for training centers only. If the project is a center such as: English Center,... then choose this type.';
 $string['settings_business'] = 'Business';
 $string['settings_education'] = 'Education';
+$string['require_reload'] = 'All conditions fulfilled, please reload the page';

@@ -295,6 +295,53 @@ switch ($action) {
         $data['result'] = $output;
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
+    case 'viewcoursenocontent':
+        $data = [];
+        if ($pagetake == 0) {
+            $ordersql = "RowNum";
+        } else {
+            $ordersql = "RowNum OFFSET $pageskip ROWS FETCH NEXT $pagetake ROWS only";
+        }
+        $sql = "SELECT *, (SELECT COUNT(c.id)
+                                FROM mdl_role_assignments AS ra
+                                    JOIN mdl_user AS u ON u.id= ra.userid
+                                    JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
+                                    JOIN mdl_enrol AS e ON e.id=ue.enrolid
+                                    JOIN mdl_course AS c ON c.id=e.courseid
+                                    JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
+                                    JOIN mdl_role AS r ON r.id= ra.roleid
+                                    JOIN mdl_course_modules cm ON cm.course = c.id
+                                WHERE  ra.roleid = 3 AND u.id = :userid1
+                                GROUP BY c.fullname
+                                HAVING COUNT(cm.module) <= 1
+                            ) total
+                        FROM (
+                            SELECT ROW_NUMBER() OVER (ORDER BY c.id) RowNum, c.id courseid,c.fullname, COUNT(cm.module) module
+                            FROM mdl_role_assignments AS ra
+                                JOIN mdl_user AS u ON u.id= ra.userid
+                                JOIN mdl_user_enrolments AS ue ON ue.userid=u.id
+                                JOIN mdl_enrol AS e ON e.id=ue.enrolid
+                                JOIN mdl_course AS c ON c.id=e.courseid
+                                JOIN mdl_context AS ct ON ct.id=ra.contextid AND ct.instanceid= c.id
+                                JOIN mdl_role AS r ON r.id= ra.roleid
+                                JOIN mdl_course_modules cm ON cm.course = c.id
+                            WHERE  ra.roleid = 3 AND u.id = :userid2
+                            GROUP BY c.fullname, c.id
+                            HAVING COUNT(cm.module) <= 1
+                        ) Mydata
+                ORDER BY $ordersql";
+        $courses = $DB->get_records_sql($sql, ['userid1' => $USER->id, 'userid2' => $USER->id]);
+        if($courses) {
+            foreach($courses as $course) {
+                $obj = new stdClass;
+                $courselink = $CFG->wwwroot . '/course/view.php?id=' . $course->courseid;
+                $obj->fullname = '<img src="' . $CFG->wwwroot . '\theme\moove\pix\learnicon.png" class="img-module mr-2"><a href="' . $courselink . '" target="_blank">' . $course->fullname . '</a>';
+                $obj->total = $course->total;
+                $data[] = $obj;
+            }
+        }
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        break;
     default:
         break;
 }

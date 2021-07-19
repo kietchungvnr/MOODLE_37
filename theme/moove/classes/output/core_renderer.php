@@ -101,6 +101,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
     public function menu_focus() {
         global $COURSE, $CFG, $OUTPUT, $DB;
         require_once($CFG->libdir.'/completionlib.php');
+        // Lấy các chức năng trong course renderer
+        $courserenderer = $this->page->get_renderer('core', 'course');
+
         $completioninfo = new completion_info($COURSE);
         $allmodinfo = get_fast_modinfo($COURSE)->get_section_info_all();
         $process = round(\core_completion\progress::get_course_progress_percentage($COURSE));
@@ -120,7 +123,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
 
         $output .= '<div class="menu-right"><ul class="d-flex">';
         $output .= '<li class="nav-item border-left"><a class="nav-link focusmod prev"><i class="fa fa-angle-left mr-2"></i>'.get_string('prevmodule','theme_moove').'</a></li>
-                    <li class="nav-item border-left mid"><a class="nav-link focusmod">'.get_string('coursedata','theme_moove').'<i class="fa fa-angle-down rotate-icon ml-2"></i></a></li>
+                    <li class="nav-item border-left mid"><a class="nav-link focusmod" title="'.get_string('coursedata','theme_moove').'">'.get_string('coursedata','theme_moove').'<i class="fa fa-angle-down rotate-icon ml-2"></i></a></li>
                     <li class="nav-item border-left"><a class="nav-link focusmod next">'.get_string('nextmodule','theme_moove').'<i class="fa fa-angle-right ml-2"></i></a></li>';
         $output .= '<div id="focus-mod" course="'.$COURSE->id.'" class="d-flex open-focusmod border-left border-right" data-placement="left"><i class="fa fa-external-link"></i><span class="ml-1 mr-1">'.get_string('zoomout','local_newsvnr').'</span></div>';
         $output .= '<div class="dropdown-content">';
@@ -154,23 +157,34 @@ class core_renderer extends \theme_boost\output\core_renderer {
                         $url = $CFG->wwwroot . '/mod/' . $cms->modname . '/view.php?id=' . $cms->id;
                         $modname = $cms->name;
                         $modtype = $cms->modname;
-                        $output .= '<div class="card-header level2 justify-content-between">';
-                        // $output .= '<div class="d-flex align-items-center">';
+                        // Kiểm tra xem module có bị set hạn chế hay không?
+                        $get_availability = $courserenderer->course_section_cm_availability_focusmod($cms);
+                        if($get_availability)
+                            $output .= '<div class="card-header level2">';
+                        else
+                            $output .= '<div class="card-header level2 justify-content-between">';
                         if($cms->modname == 'resource') {
                             $img = $OUTPUT->image_url($cms->icon);
-                            $displayresource = $DB->get_field('resource', 'display', ['id' => $cms->instance]);
-                            if($displayresource == RESOURCE_DISPLAY_GOOGLE_DOCS_POPUP) {
-                                $cm = $DB->get_field('course_modules', 'id', ['instance' => $cms->instance]);
-                                $output .= '<a onclick="showmodal('.$cm.', '.$cms->instance.')" href="javascript:;"><img  class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
+                            if($get_availability) {
+                                $output .= $get_availability;
                             } else {
-                                $output .= '<a href="javascript:;" data-mod-type="'.$modtype.'" data-focusmode-url="'.$url.'" module-id="'.$cms->id.'"><img class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
+                                $displayresource = $DB->get_field('resource', 'display', ['id' => $cms->instance]);
+                                if($displayresource == RESOURCE_DISPLAY_GOOGLE_DOCS_POPUP) {
+                                    $cm = $DB->get_field('course_modules', 'id', ['instance' => $cms->instance]);
+                                    $output .= '<a onclick="showmodal('.$cm.', '.$cms->instance.')" href="javascript:;"><img  class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
+                                } else {
+                                    $output .= '<a href="javascript:;" data-mod-type="'.$modtype.'" data-focusmode-url="'.$url.'" module-id="'.$cms->id.'"><img class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
+                                }
                             }
                         } else {
                             $img = $OUTPUT->image_url('icon', $cms->modname);
-                            $output .= '<a href="javascript:;" data-mod-type="'.$modtype.'" data-focusmode-url="'.$url.'" module-id="'.$cms->id.'"><img class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
+                            if($get_availability)
+                                $output .= $get_availability;
+                            else
+                                $output .= '<a href="javascript:;" data-mod-type="'.$modtype.'" data-focusmode-url="'.$url.'" module-id="'.$cms->id.'"><img class="pr-2 img-module" src="'.$img.'">'.$modname.'</a>';
                         }
-                        // $output .= '</div>';
-                        $output .= '<div class="position-relative">'.$completionicon.'</div>';
+                        if(!$get_availability)
+                            $output .= '<div class="position-relative">'.$completionicon.'</div>';
                         $output .= '</div>';    
                     }
                 }
@@ -639,11 +653,6 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $context->logourl = $this->get_logo();
         $context->sitename = format_string($SITE->fullname, true, array('context' => \context_course::instance(SITEID)));
         $themesettings = new \theme_moove\util\theme_settings();
-        $theme = theme_config::load('moove');
-        $context->loginbgimg = $theme->setting_file_url('loginbgimg', 'loginbgimg');
-        $context->linkinicon = $theme->setting_file_url('linkinicon', 'linkinicon');
-        $context->youtubeicon = $theme->setting_file_url('youtubeicon', 'youtubeicon');
-        $context->facebookicon = $theme->setting_file_url('facebookicon', 'facebookicon');
         $context =  (object) array_merge((array) $context,(array) $themesettings->footer_items());
         return $this->render_from_template('core/login', $context);
     }

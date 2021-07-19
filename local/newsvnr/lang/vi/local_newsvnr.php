@@ -715,3 +715,4 @@ $string['facebookicon'] = 'Facebook icon';
 $string['facebookicondesc'] = 'Tải lên icon Facebook.';
 $string['youtubeicon'] = 'Youtube icon';
 $string['youtubeicondesc'] = 'Tải lên icon Youtube.';
+$string['selectdivision'] = 'Chọn chi nhánh';
