@@ -128,20 +128,21 @@ if($get_all_positions) {
                         // Kiểm tra xem có tham gia khóa học chưa và tiến trình...
                         $process = round(\core_completion\progress::get_course_progress_percentage($course, $USER->id));
                         $course_url = $CFG->wwwroot . '/course/view.php?id=' . $course->id;
-                        $list_course .= '
-                                        <div><a href="'. $course_url.'">' . $course->fullname . '</a></div>';
                         $is_enrolled = is_enrolled(context_course::instance($course->id), $USER->id);
-                        if($is_enrolled == true) {
+                        if ($is_enrolled == true) {
+                            $list_course .= '<div class="d-flex align-items-center">';
+                            $list_course .= '
+                                            <div><a href="' . $course_url . '">' . $course->fullname . '</a></div>';
                             $list_course .=
-                                        '<div class="progress">
-                                            <div class="progress-bar" data-toggle="tooltip" title="' . $process . '%" role="progressbar" aria-valuenow="' . $process . '" aria-valuemin="0" aria-valuemax="100" style="width:' . $process . '%">
-                                            </div>
-                                        </div>';
+                                            '<div class="progress-circle custom" data-progress="0"></div>';                
+                            $list_course .= '</div>';
                         } else {
+                            $list_course .= '
+                                            <div><a href="' . $course_url . '">' . $course->fullname . '</a></div>';
                             $list_course .=
-                                        '<div>
-                                            <span class="text-danger">'.get_string('noenroll', 'block_vnr_db_matrix_competency').'</span>
-                                        </div>';
+                                            '<div>
+                                                <span class="text-danger">'.get_string('noenroll', 'block_vnr_db_matrix_competency').'</span>
+                                            </div>';
                         }
                     }
                 } else {
@@ -149,21 +150,24 @@ if($get_all_positions) {
                     $process = round(\core_completion\progress::get_course_progress_percentage($get_courses_by_competency[0], $USER->id));
                     $course = $get_courses_by_competency[0];
                     $course_url = $CFG->wwwroot . '/course/view.php?id=' . $course->id;
-                    $list_course .= '
-                                        <div><a href="' . $course_url . '">' . $course->fullname . '</a></div>';
+                    
                     $is_enrolled = is_enrolled(context_course::instance($course->id), $USER->id);
                     if ($is_enrolled == true) {
+                        $list_course .= '<div class="d-flex align-items-center">';
+                        $list_course .= '
+                                        <div style="width: 145px;"><a href="' . $course_url . '">' . $course->fullname . '</a></div>';
                         $list_course .=
-                                        '<div class="progress">
-                                            <div class="progress-bar" data-toggle="tooltip" title="' . $process . '%" role="progressbar" aria-valuenow="' . $process . '" aria-valuemin="0" aria-valuemax="100" style="width:' . $process . '%">
-                                            </div>
-                                        </div>';
+                                        '<div class="progress-circle custom" data-progress="0"></div>';                
+                        $list_course .= '</div>';
                     } else {
+                        $list_course .= '
+                                        <div style="width: 145px;"><a href="' . $course_url . '">' . $course->fullname . '</a></div>';
                         $list_course .=
                                         '<div>
                                             <span class="text-danger">'.get_string('noenroll', 'block_vnr_db_matrix_competency').'</span>
                                         </div>';
                     }
+                    
                 }
                 $all_competency[$key_comp]->$position = $list_course;
             }
