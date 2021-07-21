@@ -85,7 +85,7 @@ define(['jquery', 'core/config', 'alertjs', 'core/str', 'core/modal_factory', 'c
             var current_position = "[data-field='" + resp.current_orgposition + "']";
             var gridHead = gridMatrix.getKendoGrid().thead;
             var rows = gridHead.find("[role='columnheader']");
-            rows.css({"background-color":"#2d5b7c", "color":"#fff"});
+            rows.css({"background-color":"#2d5b7c", "color":"#fff", "font-size":"15px", "font-weight":"bold"});
             var rows_current_position = gridHead.find(current_position);
             rows_current_position.css({"background-color":"#3c8dbc", "color":"#fff"});
             $('[data-toggle="tooltip"]').tooltip();
