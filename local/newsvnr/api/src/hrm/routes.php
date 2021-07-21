@@ -30,6 +30,10 @@ $app->post('/hrm/courses/interview/course-delete-student', local_newsvnr\api\con
 
 $app->get('/hrm/courses/course-list', local_newsvnr\api\controllers\hrm\ListModuleController::class . ':read_course');
 
+// Tích hợp user (EL - HRM)
+$app->post('/hrm/users/create-update', local_newsvnr\api\controllers\hrm\UserController::class . ':create_and_update');
+$app->post('/hrm/users/suspended-user', local_newsvnr\api\controllers\hrm\UserController::class . ':suspended_user');
+
 $app->post('/hrm/competencies/competency-create', local_newsvnr\api\controllers\hrm\CompetencyController::class . ':create');
 $app->post('/hrm/competencies/competency-framework-create', local_newsvnr\api\controllers\hrm\CompetencyFrameWorkController::class . ':create');
 $app->put('/hrm/competencies/competency-create/{id}', local_newsvnr\api\controllers\hrm\CompetencyController::class . ':update');
